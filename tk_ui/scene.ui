@@ -1,0 +1,688 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>QtUi</class>
+ <widget class="QMainWindow" name="QtUi">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>220</width>
+    <height>254</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>120</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>240</width>
+    <height>1050</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Toolkit</string>
+  </property>
+  <property name="tabShape">
+   <enum>QTabWidget::Triangular</enum>
+  </property>
+  <property name="dockNestingEnabled">
+   <bool>true</bool>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::ForceTabbedDocks</set>
+  </property>
+  <widget class="QWidget" name="mainWindow">
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>24</y>
+      <width>93</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>File</string>
+    </property>
+    <widget class="QComboBox" name="cmb001">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>30</y>
+       <width>97</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>89</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>Recent Project</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QComboBox" name="cmb004">
+     <property name="geometry">
+      <rect>
+       <x>48</x>
+       <y>102</y>
+       <width>58</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>Export</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QComboBox" name="cmb002">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>66</y>
+       <width>109</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>89</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>Recent Autosave</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QComboBox" name="cmb003">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>102</y>
+       <width>58</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>Import</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QPushButton" name="b017">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>12</y>
+       <width>89</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Set Project Dir</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="cmb000">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>48</y>
+       <width>89</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>89</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>Recent File</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QPushButton" name="b000">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>84</y>
+       <width>33</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Save scene</string>
+     </property>
+     <property name="text">
+      <string>Save</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk003">
+     <property name="geometry">
+      <rect>
+       <x>3</x>
+       <y>84</y>
+       <width>22</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Save scene: as ASCII or Binary</string>
+     </property>
+     <property name="text">
+      <string>.ma</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk002">
+     <property name="geometry">
+      <rect>
+       <x>49</x>
+       <y>84</y>
+       <width>13</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Save: Quit after saving</string>
+     </property>
+     <property name="text">
+      <string>q</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk001">
+     <property name="geometry">
+      <rect>
+       <x>39</x>
+       <y>84</y>
+       <width>13</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Save: Increment</string>
+     </property>
+     <property name="text">
+      <string>i</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk000">
+     <property name="geometry">
+      <rect>
+       <x>21</x>
+       <y>84</y>
+       <width>21</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Save: Wireframe</string>
+     </property>
+     <property name="text">
+      <string>wf</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <zorder>cmb003</zorder>
+    <zorder>cmb001</zorder>
+    <zorder>cmb002</zorder>
+    <zorder>b017</zorder>
+    <zorder>cmb000</zorder>
+    <zorder>b000</zorder>
+    <zorder>chk003</zorder>
+    <zorder>chk002</zorder>
+    <zorder>chk001</zorder>
+    <zorder>chk000</zorder>
+    <zorder>cmb004</zorder>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_4">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>150</y>
+      <width>93</width>
+      <height>73</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Naming</string>
+    </property>
+    <widget class="QLineEdit" name="t000">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>30</y>
+       <width>89</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Rename: find (modifiers=startswith*, *endswith, *contains*)</string>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="autoFillBackground">
+      <bool>true</bool>
+     </property>
+     <property name="text">
+      <string>pasted__*</string>
+     </property>
+     <property name="maxLength">
+      <number>99</number>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <property name="placeholderText">
+      <string>find:</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b015">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>12</y>
+       <width>65</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Remove string from all object names.</string>
+     </property>
+     <property name="text">
+      <string>Rename</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="t001">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>48</y>
+       <width>89</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Remove: string</string>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="autoFillBackground">
+      <bool>true</bool>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="maxLength">
+      <number>99</number>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <property name="placeholderText">
+      <string>Replace:</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk004">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>12</y>
+       <width>14</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Rename: Replace given text (else replace entire name)</string>
+     </property>
+     <property name="text">
+      <string>R</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk005">
+     <property name="geometry">
+      <rect>
+       <x>68</x>
+       <y>12</y>
+       <width>14</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Rename: currently selected objects</string>
+     </property>
+     <property name="text">
+      <string>S</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_2">
+    <property name="geometry">
+     <rect>
+      <x>104</x>
+      <y>24</y>
+      <width>89</width>
+      <height>67</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Editors</string>
+    </property>
+    <widget class="QPushButton" name="b002">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>30</y>
+       <width>89</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>HG In/Out</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b001">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>12</y>
+       <width>89</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>HG Hierarchy</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b003">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>48</y>
+       <width>89</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Open the node editor</string>
+     </property>
+     <property name="text">
+      <string>Node Editor</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="b004">
+    <property name="geometry">
+     <rect>
+      <x>176</x>
+      <y>204</y>
+      <width>17</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Close main application</string>
+    </property>
+    <property name="text">
+     <string>☠</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="b004_2">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>204</y>
+      <width>17</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Close main application</string>
+    </property>
+    <property name="text">
+     <string>☐</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="b004_3">
+    <property name="geometry">
+     <rect>
+      <x>144</x>
+      <y>204</y>
+      <width>17</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Close main application</string>
+    </property>
+    <property name="text">
+     <string>—</string>
+    </property>
+   </widget>
+   <widget class="QFrame" name="menubar">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>0</y>
+      <width>189</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <widget class="QLabel" name="lbl000">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>0</y>
+       <width>161</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Current set project</string>
+     </property>
+     <property name="text">
+      <string>Project</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chkpin">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>168</x>
+       <y>0</y>
+       <width>21</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>pin this window to a separate instance.</string>
+     </property>
+     <property name="text">
+      <string>≡</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <zorder>groupBox_2</zorder>
+   <zorder>groupBox</zorder>
+   <zorder>groupBox_4</zorder>
+   <zorder>b004</zorder>
+   <zorder>b004_2</zorder>
+   <zorder>b004_3</zorder>
+   <zorder>menubar</zorder>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+ <designerdata>
+  <property name="gridDeltaX">
+   <number>4</number>
+  </property>
+  <property name="gridDeltaY">
+   <number>6</number>
+  </property>
+  <property name="gridSnapX">
+   <bool>true</bool>
+  </property>
+  <property name="gridSnapY">
+   <bool>true</bool>
+  </property>
+  <property name="gridVisible">
+   <bool>true</bool>
+  </property>
+ </designerdata>
+</ui>
