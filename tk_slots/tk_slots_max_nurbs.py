@@ -3,8 +3,7 @@ from pymxs import runtime as rt
 
 import os.path
 
-from tk_slots import Slot
-import tk_max_shared_functions as func
+from tk_slots_max_init import Init
 
 
 
@@ -16,7 +15,7 @@ import tk_max_shared_functions as func
 #  88    88 88.  .88 88       88.  .88       88 
 #  dP    dP `88888P' dP       88Y8888' `88888P' 
 #                                         
-class Nurbs(Slot):
+class Nurbs(Init):
 	def __init__(self, *args, **kwargs):
 		super(Nurbs, self).__init__(*args, **kwargs)
 

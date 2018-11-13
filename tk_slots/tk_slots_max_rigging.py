@@ -3,8 +3,7 @@ from pymxs import runtime as rt
 
 import os.path
 
-from tk_slots import Slot
-import tk_max_shared_functions as func
+from tk_slots_max_init import Init
 
 
 
@@ -18,7 +17,7 @@ import tk_max_shared_functions as func
 #                  .88      .88                  .88 
 #              d8888P   d8888P               d8888P  
 #
-class Rigging(Slot):
+class Rigging(Init):
 	def __init__(self, *args, **kwargs):
 		super(Rigging, self).__init__(*args, **kwargs)
 

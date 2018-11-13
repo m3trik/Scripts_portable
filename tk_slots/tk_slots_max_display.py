@@ -4,8 +4,7 @@ from pymxs import runtime as rt
 import os.path
 import traceback
 
-from tk_slots import Slot
-import tk_max_shared_functions as func
+from tk_slots_max_init import Init
 
 
 #        dP oo                   dP                   
@@ -17,7 +16,7 @@ import tk_max_shared_functions as func
 #                       88                        .88 
 #                       dP                    d8888P  
 #
-class Display(Slot):
+class Display(Init):
 	def __init__(self, *args, **kwargs):
 		super(Display, self).__init__(*args, **kwargs)
 

@@ -3,8 +3,7 @@ from pymxs import runtime as rt
 
 import os.path
 
-from tk_slots import Slot
-import tk_max_shared_functions as func
+from tk_slots_max_init import Init
 
 
 
@@ -17,7 +16,7 @@ import tk_max_shared_functions as func
 #    88   88       88.  .88 88    88       88 88     88.  .88 88       88  88  88 
 #    dP   dP       `88888P8 dP    dP `88888P' dP     `88888P' dP       dP  dP  dP 
 #                                                                         
-class Transform(Slot):
+class Transform(Init):
 	def __init__(self, *args, **kwargs):
 		super(Transform, self).__init__(*args, **kwargs)
 

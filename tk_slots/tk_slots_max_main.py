@@ -3,7 +3,7 @@ from pymxs import runtime as rt
 
 import os.path
 
-from tk_slots import Slot
+from tk_slots_max_init import Init
 
 
 
