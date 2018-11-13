@@ -1,15 +1,50 @@
 settings:
-
 {
+
+
 	"color_scheme": "Packages/Color Scheme - Default/Monokai.tmTheme",
 	"copy_with_empty_selection": false,
 	"font_size": 11,
 	"ignored_packages":
 	[
-		"Vintage"
+		"Vintage",
+		"AppleScript",
+		"ASP",
+		"Clojure",
+		"D",
+		"Diff",
+		"Erlang",
+		"Go",
+		"Graphviz",
+		"Groovy",
+		"Haskell",
+		"LaTeX",
+		"Lisp",
+		"Lua",
+		"Makefile",
+		"Markdown",
+		"Matlab",
+		"Objective-C",
+		"OCaml",
+		"Pascal",
+		"Perl",
+		"PHP",
+		"R",
+		"Rails",
+		"RestructuredText",
+		"Ruby",
+		"Rust",
+		"Scala",
+		"TCL",
+		"Textile",
+
 	],
 	"tab_size": 2,
 	"translate_tabs_to_spaces": false
+
+
+
+
 }
 
 
