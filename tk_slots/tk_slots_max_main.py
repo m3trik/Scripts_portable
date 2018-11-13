@@ -15,7 +15,7 @@ from tk_slots_max_init import Init
 # 88  88  88 88.  .88 88 88    88 
 # dP  dP  dP `88888P8 dP dP    dP 
 #
-class Main(Slot):
+class Main(Init):
 	def __init__(self, *args, **kwargs):
 		super(Main, self).__init__(*args, **kwargs)
 
