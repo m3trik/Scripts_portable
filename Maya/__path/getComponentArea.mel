@@ -1,0 +1,76 @@
+//You call the main function like this with the mesh shape and the face number you want the area for:
+//$area = areaOfPolygon("pSphereShape1", 25);
+//print ($area + "\n");
+
+
+global proc float areaOfTriangle( string $mesh, string $vertIndices[] ) {
+vector $verts[3];
+
+// get the transform node for the mesh
+string $transform[] = `listRelatives -p $mesh`;
+
+// query the matrix transform
+float $transformMatrix[] = `xform -q -ws -m $transform[0]`;
+
+int $i;
+for ($i=0; $i<3; $i++) {
+// vert pos with tweaks
+vector $vert = `getAttr ($mesh+".vt["+ $vertIndices[$i] +"]")`;
+vector $offset = `getAttr ($mesh+".pt["+ $vertIndices[$i] +"]")`;
+$vert = $vert + $offset;
+
+// apply the transform matrix to the point
+float $v[] = pointMatrixMult($vert, $transformMatrix);
+$verts[$i] = <<$v[0], $v[1], $v[2]>>;
+}
+
+// calculate the area using the cross product of vectors
+vector $v1 = $verts[1] - $verts[0];
+vector $v2 = $verts[2] - $verts[0];
+return abs(cross($v1, $v2)) / 2;
+}
+
+
+global proc float areaOfPolygon( string $mesh, int $face ) {
+float $area = 0;
+
+// get the vertex indices
+select -r ($mesh+".f["+$face+"]");
+string $vertIndicesStr[] = `polyInfo -fv`;
+
+// place the indices into an array
+string $vertIndices[];
+tokenize $vertIndicesStr[0] $vertIndices;
+
+// note the vert count for the polygon
+int $vertCount = `size($vertIndices)` - 2;
+
+// calculate the area based on polygon type
+
+// triangle
+if ($vertCount == 3) {
+string $triangle[3] = {$vertIndices[2], $vertIndices[3], $vertIndices[4]};
+
+$area = areaOfTriangle($mesh, $triangle);
+} 
+// quad (decompose into two triangles)
+else if ($vertCount == 4) {
+// 
+string $triangle1[3] = {$vertIndices[2], $vertIndices[3], $vertIndices[4]};
+string $triangle2[3] = {$vertIndices[2], $vertIndices[4], $vertIndices[5]};
+
+$area = areaOfTriangle($mesh, $triangle1) + areaOfTriangle($mesh, $triangle2);
+} 
+// n-gon (decompose into n - 2 triangles where n = # of verts)
+else {
+int $i;
+for ($i=0; $i < $vertCount-2; $i++) { 
+string $triangle[3] = {$vertIndices[2], $vertIndices[$i+3], $vertIndices[$i+4]};
+
+$area += areaOfTriangle($mesh, $triangle);
+}
+}
+
+return $area;
+}
+

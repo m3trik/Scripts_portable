@@ -1,0 +1,50 @@
+
+// * This script enables you to calculate the area of a selected face 
+// * or a set of selected faces.
+// * 
+// * Usage:
+// * polyFaceArea (componentList)
+
+
+global proc float polyFaceArea(string $list[]) {
+	float $totalArea = 0;
+	for ($origFace in $list) {
+		string $sel = $origFace;
+		string $tokens[];
+		int $num = `tokenize $sel "." $tokens`;
+		string $object = $tokens[0];
+		polyTriangulate -ch 1 $sel;
+		string $listOfFaces[] =`ls -sl -flatten`;
+		for ($face in $listOfFaces) {
+			if ( size(`match "\.f\[[0-9]+\]$" $face`) > 0 ) {
+				string $listOfVertsToToke[] = `polyInfo -fv $face`;
+				tokenize $listOfVertsToToke[0] " " $tokens;
+				float $x[],$y[],$z[];
+				for ($i = 2; $i<5;$i++) {
+					string $vertName = ($object+".vtx["+$tokens[$i]+"]");
+					float $loc[] = `xform -q -ws -t $vertName`;
+					$x[$i-2] = $loc[0];
+					$y[$i-2] = $loc[1];
+					$z[$i-2] = $loc[2];
+				}
+				float $a = `distanceBetween {$x[0],$y[0],$z[0]} {$x[1],$y[1],$z[1]}`;
+				float $b = `distanceBetween {$x[1],$y[1],$z[1]} {$x[2],$y[2],$z[2]}`;
+				float $c = `distanceBetween {$x[2],$y[2],$z[2]} {$x[0],$y[0],$z[0]}`;
+				float $area = .25* sqrt ( ($a+$b+$c) * ($b+$c-$a) *($c+$a-$b)*($a+$b-$c) );
+				$totalArea += $area;
+			}
+	}
+	undo;
+}
+
+	print ("\nTotal Area = "+$totalArea+"\n");
+	return $totalArea;
+} 
+
+global proc float distanceBetween(float $loc1[], float $loc2[]) {
+	float $a = `pow ($loc2[0] - $loc1[0]) 2`;
+	float $b = `pow ($loc2[1] - $loc1[1]) 2`;
+	float $c = `pow ($loc2[2] - $loc1[2]) 2`;
+	float $distance = `sqrt ( $a+$b+$c )`;
+	return $distance;
+}

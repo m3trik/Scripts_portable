@@ -1,0 +1,244 @@
+{
+
+proc string [] createArrayFromSelection (string $sel[])	/* returns a string array of the selected transform nodes */
+	{
+	select -hierarchy;
+	string $nodes [] = `ls -selection -transforms`;
+	string $groupedNodes [] = `listRelatives -type "transform"`;	/* if the nodes are grouped then just get the children */
+
+	if ($groupedNodes[0] != "")	/* check to see if the nodes are grouped */
+		{
+		int $size = `size($groupedNodes)`;
+		clear ($nodes);
+		appendStringArray($nodes, $groupedNodes, $size);
+		}
+
+	clear $sel; 
+	for ($node in $nodes)
+		{
+		$sel[size($sel)] = $node;	/* print $node; */
+		}
+	return $sel;
+	}
+
+
+proc int[] numFaces (string $node)
+	{
+	if ($node != "")
+		{
+		$numFaces = `polyEvaluate -face $node`;
+		return $numFaces;
+		}
+	}
+
+
+proc float[] boundingBox (string $node)
+	{
+	if ($node != "")
+		{
+		float $boundingBox[] = `getAttr ($node + ".center")`;
+		return $boundingBox;		
+		}
+	}
+
+
+proc batchShadingSetsScript (	string $sel1[], 
+															string $sel2[], 
+															int $sMethod,
+															int $sSpace	)
+	{
+	int $size = size($sel2);
+
+	for ($i=0; $i<$size; ++$i) 
+		{
+		for ($node in $sel1)
+			{
+			$numFacesSel1 = numFaces($node);
+			$numFacesSel2 = numFaces($sel2[$i]);
+			$boundBoxSel1 = boundingBox($node);
+			$boundBoxSel2 = boundingBox($sel2[$i]);
+
+			if (($numFacesSel1[0] == $numFacesSel2[0]) &&
+					($boundBoxSel1[0] == $boundBoxSel2[0]) &&
+					($boundBoxSel1[1] == $boundBoxSel2[1]) &&
+					($boundBoxSel1[2] == $boundBoxSel2[2]))
+				{
+				cycleCheck -evaluation off;
+				transferShadingSets -sampleSpace $sSpace
+														-searchMethod $sMethod
+														$node $sel2[$i];
+
+				string $remove[] = {$node};
+				$sel1 = stringArrayRemove($remove, $sel1);
+
+				print $node; print " to ";print $sel2[$i];print "\n";
+				// print "numFaces1 ";print $numFacesSel1;print "numFaces2 ";print $numFacesSel2;print "\n";
+				// print $boundBoxSel1[0];print " ";print $boundBoxSel2[0];print "\n";print $boundBoxSel1[1];print " ";print $boundBoxSel2[1];print "\n";print $boundBoxSel1[2];print " ";print $boundBoxSel2[2];print "\n";
+				}
+
+			}
+		}
+
+	}
+
+
+proc batchAttrTransScript (	string $sel1[], 
+														string $sel2[], 
+														int $transUVs, 
+														int $transColors, 
+														int $transNormals, 
+														string $sUvSpace, 
+														string $tUvSpace, 
+														int $fUVs, 
+														int $sSpace, 
+														int $sMethod, 
+														int $transPositions, 
+														int $cBorders	)
+	{
+	select -clear;
+	for ($node in $sel1)
+		{
+		select -add $node;	/* print ("select "+$node+"\n"); */
+		}
+	int $size = size($sel2);
+	for ($i=0; $i<$size; ++$i) 
+		{
+		if ($i>0)
+			{
+			select -deselect $sel2[$i-1]; /* print ("deselect   "+$tk_batchAttrSelection2[$i-1] +"\n"); */
+			}
+		select -add $sel2[$i]; /* print ("select    "+$tk_batchAttrSelection2[$i] +"\n"); */
+		cycleCheck -evaluation off;
+		transferAttributes 	-transferUVs $transUVs
+												-sourceUvSpace $sUvSpace
+												-targetUvSpace $tUvSpace 
+												-flipUVs $fUVs
+												-sampleSpace $sSpace
+												-searchMethod $sMethod
+												-transferPositions $transPositions
+												-transferNormals $transNormals
+												-transferColors $transColors
+												-colorBorders $cBorders;
+		/* print ("transf UV "+$tk_batchAttrSelection2[$i]+"\n"); */
+		}
+	}
+
+
+global proc tk_batchAttrRouter (string $i)
+	{
+	global string $tk_selection1[];
+	global string $tk_selection2[];
+
+	int $transferUVs = 2; /* 0 no UV sets, 1 single UV set (specified by sourceUVSet/targetUVSet), 2 all UV sets are transferred. */
+	string $sourceUvSpace = "map1"; /* only used when the operation is configured to transfer a single UV set */
+	string $targetUvSpace = "map1"; //name of a single UV set on the target surface that should be receive the sampled UV data
+	int $flipUVs = 0; /* 0 no flipping; 1 UV data flipped U direction; 2 UV data flipped V direction; 3 flipped both directions */
+	int $sampleSpace = 0; //0 is world space, 1 is model space, 4 is component-based, 5 is topology-based. The default is world space.
+	int $searchMethod = 3; //0 is closest along normal, 3 is closest to point. The default is closest to point.
+	int $transferPositions = 0; //1 vertex position sampled, causing the target surface to "wrap" to the source surface. 0 off.
+	int $transferNormals = 0; //1 vertex normals sampled and written into user normals on the target surface. 0 off.
+	int $transferColors = 0; //2 all color sets, 1 single color set (specified by sourceColorSet and targetColorSet) is transferred, 0 off
+	int $colorBorders = 1; //1 color borders will be mapped onto the nearest edge on the target geometry. 0 color borders will be smoothly blended onto the vertices of the target geometry.
+
+	if ($i == "from")
+		{
+	  createArrayFromSelection($tk_selection1);	
+	  //print "from";
+		}
+	if ($i == "to")
+		{
+	  createArrayFromSelection($tk_selection2);	
+	  //print "to";
+		}
+	if ($i == "uv")
+		{
+	  $transferUVs = 2;
+	  $transferColors = 0;
+	  $transferNormals = 0;
+	  batchAttrTransScript(	$tk_selection1,
+													$tk_selection2,
+													$transferUVs,
+													$transferColors,
+													$transferNormals,
+													$sourceUvSpace,
+													$targetUvSpace,
+													$flipUVs,
+													$sampleSpace,
+													$searchMethod,
+													$transferPositions,
+													$colorBorders	);
+		//print "uv";
+		}
+	if ($i == "color")
+		{
+	  $transferUVs = 0;
+	  $transferColors = 2;
+	  $transferNormals = 0;
+	  batchAttrTransScript(	$tk_selection1,
+													 $tk_selection2,
+													 $transferUVs,
+													 $transferColors,
+													 $transferNormals,
+													 $sourceUvSpace,
+													 $targetUvSpace,
+													 $flipUVs,
+													 $sampleSpace,
+													 $searchMethod,
+													 $transferPositions,
+													 $colorBorders	);
+	  //print "color";
+		}
+	if ($i == "normal")
+		{
+	  $transferUVs = 0;
+	  $transferColors = 0;
+	  $transferNormals = 1;
+	  batchAttrTransScript(	$tk_selection1,
+													$tk_selection2,
+													$transferUVs,
+													$transferColors,
+													$transferNormals,
+													$sourceUvSpace,
+													$targetUvSpace,
+													$flipUVs,
+													$sampleSpace,
+													$searchMethod,
+													$transferPositions,
+													$colorBorders	);
+	  // print "normal";
+		}
+	if ($i == "shading")
+		{
+		$sampleSpace = 0;	//0 is world space, 1 is model space
+		$searchMethod = 3;	//0 is closest along normal, 3 is closest to point
+		batchShadingSetsScript( $tk_selection1,
+														$tk_selection2,
+														$sampleSpace,
+														$searchMethod	);
+		//print "shading";
+		}
+	}
+
+
+global proc tk_batchAttrTransfer ()
+	{
+	string $windowName = "tk_batchAttrTransfer";
+	if (`window -query -exists $windowName`)
+		{
+		deleteUI $windowName;
+		}
+	window -width 150 $windowName;
+		columnLayout -adjustableColumn true;
+		
+		button -label "transfer from				" -command "tk_batchAttrRouter(\"from\")";
+		button -label "transfer to					"	-command "tk_batchAttrRouter(\"to\")";
+		button -label "transfer UV					"	-command "tk_batchAttrRouter(\"uv\")";
+		button -label "transfer Color				"	-command "tk_batchAttrRouter(\"color\")";
+		button -label "transfer Normals			" -command "tk_batchAttrRouter(\"normal\")";
+		button -label "transfer Shading Sets"	-command "tk_batchAttrRouter(\"shading\")";
+	showWindow;
+	}
+
+// tk_batchAttrTransfer ();
+
+}
