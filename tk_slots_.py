@@ -1,4 +1,4 @@
-from PySide2 import QtGui, QtCore, QtWidgets
+from PySide2 import QtCore, QtWidgets
 
 import os.path
 
@@ -18,20 +18,14 @@ class Slot(object):
 
 
 		#init styleSheet
-		initStyleSheet(self.ui, self.hotBox.name)
+		self.initStyleSheet(self.ui, self.hotBox.name)
 
-		# try: #get the current layout from the stackedLayout
-		# 	self.ui = self.hotBox.stackedLayout.widget(self.hotBox.index)
 
-		# 	#init styleSheet
-		# 	styleSheet.initStyleSheet(self.ui, self.hotBox.name)
-		# 	print "initStyleSheet:", self.hotBox.name
-			
-		# except Exception as exc:
-		# 	import traceback; traceback.format_exc()
+
+
 
 		#returns a list of objects from a supplied range, or string list.
-	def getObject(class_, objectNames, range_=None, showError_=True):
+	def getObject(self, class_, objectNames, range_=None, showError_=True):
 		#args: class_=class object
 		#			 objectNames='string' - single name when used with range arg. ie. 's'  else; names separated by ','. ie. ['s000,s001,s002'] 
 		#			 range_=[int list] - integers representing start, end of range. used with single string type objectName.  ie. [2,10]
@@ -57,12 +51,12 @@ class Slot(object):
 
 
 	#init signals, button states etc. for a stacked widget class
-	def initWidgets(class_):
+	def initWidgets(self, class_):
 		#arg: class_=class instance
 
 		if class_.__class__.__name__ != 'Create':
 			#ex. initWidgets(self)
-			for comboBox in getObject(class_, 'cmb', [0,50], False):
+			for comboBox in self.getObject(class_, 'cmb', [0,50], False):
 				# combobox.currentIndexChanged.connect(self.combobox.objectName())
 				comboBox()
 
@@ -88,7 +82,7 @@ class Slot(object):
 				spinbox.setVisible(False)
 
 
-	def comboBox(comboBox, items, title=None):
+	def comboBox(self, comboBox, items, title=None):
 		#args: comboBox=QComboBox object - list of items to fill the comboBox with
 		#			title='string' - optional value for the first index of the comboboxs list
 		#returns: combobox's current item list
@@ -122,46 +116,46 @@ class Slot(object):
 
 
 	#ex. set various states for multiple buttons at once  
-	def setButtons (ui, checked=None, unchecked=None, enable=None, disable=None, visible=None, invisible=None):
+	def setButtons (self, ui, checked=None, unchecked=None, enable=None, disable=None, visible=None, invisible=None):
 		#args: setButtons=dynamic ui object
 		#			checked/unchecked/enable/disable/visible/invisible=string - the names of buttons to modify separated by ','. ie. 'b000,b001,b022'
 		#ex. setButtons(self.ui, disable=['b000'], unchecked=['b009,b010,b012'])
 		if checked:
-			checked = getObject(ui,checked)
+			checked = self.getObject(ui,checked)
 			[button.setChecked(True) for button in checked]
 			
 		if unchecked:
-			unchecked = getObject(ui,unchecked)
+			unchecked = self.getObject(ui,unchecked)
 			[button.setChecked(False) for button in unchecked]
 				
 		if enable:
-			enable = getObject(ui,enable)
+			enable = self.getObject(ui,enable)
 			[button.setEnabled(True) for button in enable]
 				
 		if disable:
-			disable = getObject(ui,disable)
+			disable = self.getObject(ui,disable)
 			[button.setDisabled(True) for button in disable]
 				
 		if visible:
-			visible = getObject(ui,visible)
+			visible = self.getObject(ui,visible)
 			[button.setVisible(True) for button in visible]
 				
 		if invisible:
-			invisible = getObject(ui,invisible)
+			invisible = self.getObject(ui,invisible)
 			[button.setVisible(False) for button in invisible]
 				
 
 
-	def setSpinboxes(ui, values, range_=[0,9], spinboxNames=None):
+	def setSpinboxes(self, ui, values, range_=[0,9], spinboxNames=None):
 		#args: spinboxNames=[string list] - spinbox string object names (used in place of the range argument). ie. ['s000,s001,s002']
 		#			 range_=[int list] - [int start, int end] of spinbox range. ie. spinboxes 2-10.  ie. [2,10]
 		#			 values=int or [tuple list] - tuple representing a string prefix and value, and/or just a value. [(string prefix,int value)] ie. [("size",5), 20, ("width",8)]
 		#returns: list of values without prefix
 		#ex. setSpinboxes (self.ui, values=[("width",1),("length ratio",1),("patches U",1),("patches V",1)])
 		if spinboxNames: #get spinbox objects
-			spinboxes = getObject(ui, spinboxNames)
+			spinboxes = self.getObject(ui, spinboxNames)
 		else:
-			spinboxes = getObject(ui, 's', range_)
+			spinboxes = self.getObject(ui, 's', range_)
 
 		#clear previous values
 		for spinbox in spinboxes:
@@ -190,7 +184,7 @@ class Slot(object):
 
 	cycleDict={}
 	#used for maintaining toggling sequences for multiple objects simultaniously
-	def cycle(id_sequence, query=False): #toggle between numbers in a given sequence
+	def cycle(self, id_sequence, query=False): #toggle between numbers in a given sequence
 		#args: id_sequence=string or int list - id_numberical sequence ie. 'name_123' or [1,2,3].
 		#			takes the string argument and splits it at '_'
 		#			converting the second numberical half to integers and putting them in a list.
@@ -210,7 +204,7 @@ class Slot(object):
 		return int(value) #return an integer from string value
 
 
-	def try_ (expressions, exceptions='pass', showError_=True):
+	def try_ (self, expressions, exceptions='pass', showError_=True):
 		#args: expressions='string' - expression separated by ';'
 		#			exceptions='string' - separated by ';'
 		#			showError_=bool - hide or show any errors
@@ -234,14 +228,14 @@ class Slot(object):
 	# ------------------------------------------------
 
 
-	def initStyleSheet(ui, name=None):
+	def initStyleSheet(self, ui, name=None):
 		#args: ui=dynamic ui object
 		#			name='string' - call the function with specific requirements. if 'None' then general case style sheet will be applied.
-		#ex. func.initStyleSheet(self.ui)
+		#ex. initStyleSheet(self.ui)
 
 		#specific case StyleSheet
 		if name=='main':
-			buttons = func.getObject(ui, 'i', [3,25], False)
+			buttons = self.getObject(ui, 'i', [3,25], False)
 			for button in buttons:
 				button.setStyleSheet('''QPushButton:hover {   
 					border: 1px solid black;
@@ -249,12 +243,12 @@ class Slot(object):
 					background-color:#66c0ff;
 					}''')
 			#setStyleSheet for transparent buttons
-			buttons = func.getObject(ui, 'v', [0,8])+func.getObject(ui, 'i', [20,24])
+			buttons = self.getObject(ui, 'v', [0,8])+self.getObject(ui, 'i', [20,24])
 			for button in buttons:
 				button.setStyleSheet("border: 1px solid transparent;")
 
 		if name=='viewport':
-			buttons = func.getObject(ui, 'v', [0,8])
+			buttons = self.getObject(ui, 'v', [0,8])
 			for button in buttons:
 				button.setStyleSheet('''QPushButton:hover {   
 					border: 1px solid black;
@@ -262,27 +256,25 @@ class Slot(object):
 					background-color:#66c0ff;
 					}''')
 			#setStyleSheet for transparent buttons
-			buttons = func.getObject(ui, 'v', [8,16])
+			buttons = self.getObject(ui, 'v', [8,16])
 			for button in buttons:
 				button.setStyleSheet("border: 1px solid transparent;")
 
 		#general case style sheet
-		buttons = func.getObject(ui, 'chk', [0,50], False)
-		# buttons.append (func.getObject(ui, ['chkpin']))
+		buttons = self.getObject(ui, 'chk', [0,50], False)
+		# buttons.append (self.getObject(ui, ['chkpin']))
 		for button in buttons:
 			button.setStyleSheet('''QPushButton:checked{
 			background-color: rgb(170, 70, 255);
 			}''')
 
-		buttons = func.getObject(ui, 'b', [0,100], False)
+		buttons = self.getObject(ui, 'b', [0,100], False)
 		for button in buttons:
 			button.setStyleSheet('''QPushButton:hover {   
 				border: 1px solid black;
 				border-radius: 5px;
 				background-color:#66c0ff;
 				}''')
-
-
 
 
 #print module name

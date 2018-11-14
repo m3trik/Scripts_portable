@@ -1,3 +1,5 @@
+from PySide2 import QtGui
+
 import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
 from pymxs import runtime as rt
 
@@ -14,7 +16,7 @@ class Init(Slot):
 		super(Init, self).__init__(*args, **kwargs)
 
 		#init widgets
-		initWidgets(self)
+		self.initWidgets(self)
 
 
 		# self.ui.t000.clearFocus()
