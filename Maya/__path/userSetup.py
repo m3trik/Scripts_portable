@@ -9,7 +9,8 @@ version = versions.current()
 
 #maya python path----------------------------------------------------
 #Append directory to system path
-paths = r'%CLOUD%/____Graphics/Maya/scripts/__path;%CLOUD%/____Graphics/Maya/scripts/__path/tk_slots;%CLOUD%/_Programming/Qt/__path;%CLOUD%/_Programming/Qt/__path/tk_ui'
+#paths = r'%CLOUD%/____Graphics/Maya/scripts/__path;%CLOUD%/____Graphics/Maya/scripts/__path/tk_slots;%CLOUD%/_Programming/Qt/__path;%CLOUD%/_Programming/Qt/__path/tk_ui'
+paths = r'%USERPROFILE%/Documents/_portable/Scripts/__path;%USERPROFILE%/Documents/_portable/Scripts/__path/tk_ui;%USERPROFILE%/Documents/_portable/Maya/__path;%USERPROFILE%/Documents/_portable/Maya/__path/tk_slots'
 for path in paths.split(';'):
 	sys.path.append(os.path.expandvars(path))
 
