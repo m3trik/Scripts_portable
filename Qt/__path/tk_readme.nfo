@@ -93,7 +93,6 @@ ie. path = os.path.expandvars(r'%CLOUD%/____Graphics/Maya/Scripts/_Python/_path/
 
 #read ui folder file list to populate uiList
 
-#combine max and maya shared functions and move app specific procedures to the slot class that uses it.
 
 #create; creating a primitive doesnt align to set axis
 #spinboxes visible on set point

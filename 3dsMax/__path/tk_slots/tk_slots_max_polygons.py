@@ -59,13 +59,14 @@ class Polygons(Init):
 			self.ui.s001.setSingleStep(.5)
 
 	def b000(self): #Merge vertex options
-		maxEval('PolyMergeOptions;')
+		maxEval('macros.run \"Modifiers\" \"VertexWeld\"')
 
 	def b001(self): #Fill holes
-		maxEval('FillHole;')
+		maxEval('macros.run \"Modifiers\" \"Cap_Holes\"')
 
 	def b002(self): #Separate
-		maxEval('SeparatePolygon;')
+		sel = makeSelection ("Current", 1, classInfo)
+		detachElement(sel)
 
 	def b003(self): #Combine
 		# pm.polyUnite( 'plg1', 'plg2', 'plg3', name='result' ) #for future reference. if more functionality is needed use polyUnite
@@ -204,7 +205,7 @@ class Polygons(Init):
 	def b039(self): #Assign invisible options
 		mel.eval("PolyAssignSubdivHoleOptions;")
 
-	def b040(self): #Merge All
+	def b040(self): #Merge All Vertices
 		floatXYZ = float(self.ui.s002.value())
 		mergeAll = self.ui.chk006.isChecked()
 
@@ -231,7 +232,7 @@ class Polygons(Init):
 	def b041(self): #
 		pass
 
-	def b042(self): #Merge Center
+	def b042(self): #Merge Vertices Center
 		mel.eval("MergeToCenter;")
 
 	def b043(self): #Target weld
@@ -432,18 +433,8 @@ class Polygons(Init):
 
 
 
-	def b000(self): #Merge
-		self.hbHide()
-		maxEval('macros.run \"Modifiers\" \"VertexWeld\"')
 
-	def b001(self): #Fill holes
-		self.hbHide()
-		maxEval('macros.run \"Modifiers\" \"Cap_Holes\"')
-
-	def b002(self): #Separate
-		self.hbHide()
-		sel = makeSelection ("Current", 1, classInfo)
-		detachElement(sel)
+		
 
 	def b003(self): #Combine
 		self.hbHide()

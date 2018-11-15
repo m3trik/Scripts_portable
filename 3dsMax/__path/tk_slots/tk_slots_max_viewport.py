@@ -27,126 +27,30 @@ class Viewport(Init):
 	
 
 	def v000(self): #viewport: back view
-		maxEval('''
-		if (`objExists back`)
-		{
-		  lookThru back;
-		}
-		else
-		{
-		  //create camera
-		  string $cameraName[] = `camera`;
-		  //cameraName[0] = camera node
-		  //cameraName[1] = camera shape node
-
-		  //rename camera node
-		  rename($cameraName[0], "back");
-		  lookThru back;
-
-		  //initialize the camera view
-		  viewSet -back;
-
-		  //add to camera group
-		  if (`objExists cameras`)
-		  {
-			parent back cameras;
-		  }
-		}
-		''')
+		maxEval("max vpt back")
 
 	def v001(self): #viewport: top view
-		pm.lookThru ("topShape")
+		maxEval("max vpt top")
 
 	def v002(self): #viewport: right view
-		pm.lookThru ("sideShape")
+		maxEval("max vpt right")
 
 	def v003(self): #viewport: left view
-		maxEval('''
-		if (`objExists left`)
-		{
-		  lookThru left;
-		}
-		else
-		{
-		  string $cameraName[] = `camera`;
-		  //cameraName[0] = camera node
-		  //cameraName[1] = camera shape node
-
-		  rename($cameraName[0], "left");
-		  lookThru left;
-
-		  //initialize the camera view
-		  viewSet -leftSide;
-
-		  //add to camera group
-		  if (`objExists cameras`)
-		  {
-			parent left cameras;
-		  }
-		}
-		''')
+		maxEval("max vpt left")
 
 	def v004(self): #viewport: perspective view
-		pm.lookThru ("perspShape")
+		maxEval("max vpt persp user")
 
 	def v005(self): #viewport: front view
-		pm.lookThru ("frontShape")
+		maxEval("max vpt front")
 
 	def v006(self): #viewport: bottom view
-		maxEval('''
-		if (`objExists bottom`)
-		{
-		  lookThru bottom;
-		}
-		else
-		{
-		  //create camera
-		  string $cameraName[] = `camera`;
-		  //cameraName[0] = camera node
-		  //cameraName[1] = camera shape node
-
-		  //rename camera node
-		  rename($cameraName[0], "bottom");
-		  lookThru bottom;
-
-		  //initialize the camera view
-		  viewSet -bottom;
-
-		  //add to camera group
-		  if (`objExists cameras`)
-		  {
-			parent bottom cameras;
-		  }
-		}
-		''')
+		maxEval("max vpt bottom")
 
 	def v007(self): #viewport: align view
 		maxEval('''
-		$cameraExists = `objExists alignToPoly`; //check exists if not create camera
-		if ($cameraExists != 1)
-		{ 
-			string $camera[] = `camera`;
-			string $cameraShape = $camera[1];
-
-			rename $camera[0] ("alignToPoly");
-			hide alignToPoly;
-		}
-
-		int $isPerspective = !`camera -query -orthographic alignToPoly`; //check if camera view is orthoraphicz
-		if ($isPerspective) 
-		{
-			viewPlace -ortho alignToPoly;
-		}
-
-		lookThru alignToPoly;
-		AlignCameraToPolygon;
-		viewFit -fitFactor 5.0;
-
-		//add to camera group
-		if (`objExists cameras`)
-		{
-			parent alignToPoly cameras;
-		}
+		max vpt iso user
+		max align camera
 		''')
 
 	def v008(self): #component mode:vertex
@@ -181,42 +85,6 @@ class Viewport(Init):
 
 	def v015(self): #
 		pass
-
-
-	def v000(self): #viewport: back view
-		self.hbHide()
-		maxEval("max vpt back")
-
-	def v001(self): #viewport: top view
-		self.hbHide()
-		maxEval("max vpt top")
-
-	def v002(self): #viewport: right view
-		self.hbHide()
-		maxEval("max vpt right")
-
-	def v003(self): #viewport: left view
-		self.hbHide()
-		maxEval("max vpt left")
-
-	def v004(self): #viewport: perspective view
-		self.hbHide()
-		maxEval("max vpt persp user")
-
-	def v005(self): #viewport: front view
-		self.hbHide()
-		maxEval("max vpt front")
-
-	def v006(self): #viewport: bottom view
-		self.hbHide()
-		maxEval("max vpt bottom")
-
-	def v007(self): #viewport: align view
-		self.hbHide()
-		maxEval('''
-		max vpt iso user
-		max align camera
-		''')
 
 
 #print module name

@@ -7,7 +7,8 @@
 -- python.Execute("sys.path.append(os.path.expandvars('%CLOUD%/_Programming/Qt/__path'))")
 
 tk_main = python.Import "tk_main" --hotBox module
-func = python.Import "tk_max_shared_functions"
+func = python.Import "tk_slots_max_init"
+func=func.Init
 
 --macro syntax:
 --	macroScript scriptName
