@@ -20,22 +20,22 @@
 -- subsequently the windows paths.
 --------------------------------------------------------------------------------
 
--- [ iniitalize python ]
+-- initalize python
 python.Init()
 
 --load the python path setup file.
 -- not working with environment variable.
 --fullPath = "O:\\Cloud\\____Graphics\\3ds Max\\Scripts\\__path\\userSetup.py"
-fullPath = "C:\\Users\\render\\Documents\\_portable\\3dsMax\\__path\\userSetup.py"
+fullPath = "C:\\Users\\render\\Documents\\Scripts_portable\\3dsMax\\__path\\userSetup.py"
 python.ExecuteFile fullPath
 
 --fullPath = "O:\\Cloud\\____Graphics\\3ds Max\\Scripts\\___path\\macros\\tk_macroScript.ms"
-fullPath = "C:\\Users\\render\\Documents\\_portable\\3dsMax\\__path\\tk_macroScript.ms"
+fullPath = "C:\\Users\\render\\Documents\\Scripts_portable\\3dsMax\\__path\\tk_macroScript.ms"
 FileIn fullPath
 
 
 
--- [ ui ]
+-- ui --
 
 -- hide statusPanel
 statusPanel.visible = false
@@ -52,12 +52,11 @@ else
 )
 
 
--- [ hotkeys ]
+-- hotkeys --
 kbdx = actionMan.getKeyboardFile()	--get current keyboard file
 actionMan.loadKeyboardFile (kbdx)		--loadKeyboardFile()
 -- actionMan.saveKeyboardFile		--saveKeyboardFile()
 
 
 
--- [ commands ]
 
