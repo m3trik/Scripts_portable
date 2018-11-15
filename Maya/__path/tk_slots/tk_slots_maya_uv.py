@@ -3,10 +3,7 @@ import pymel.core as pm
 
 import os.path
 
-from tk_slots_maya_init import Slot
-import tk_maya_shared_functions as func
-
-
+from tk_slots_max_init import Init
 
 
 
@@ -17,17 +14,17 @@ import tk_maya_shared_functions as func
 # 88.  .88 88 .88'  
 # `88888P' 8888P'
 #
-class Uv(Slot):
+class Uv(Init):
 	def __init__(self, *args, **kwargs):
 		super(Uv, self).__init__(*args, **kwargs)
 
 		#init widgets
-		func.initWidgets(self)
+		self.initWidgets(self)
 
 
 	def cmb000(self): #UV editors comboBox
 		index = self.ui.cmb000.currentIndex() #get current index before refreshing list
-		func.comboBox (self.ui.cmb000, ["UV Editor", "UV Set Editor", "UV Tool Kit", "UV Linking: Texture-Centric", "UV Linking: UV-Centric", "UV Linking: Paint Effects/UV", "UV Linking: Hair/UV"], "Editors")
+		self.comboBox (self.ui.cmb000, ["UV Editor", "UV Set Editor", "UV Tool Kit", "UV Linking: Texture-Centric", "UV Linking: UV-Centric", "UV Linking: Paint Effects/UV", "UV Linking: Hair/UV"], "Editors")
 
 		if index !=0: #hide hotbox then perform operation
 			self.hotBox.hbHide()
@@ -127,7 +124,7 @@ class Uv(Slot):
 		mel.eval('bt_checkSelectionOrderPref; bt_polyflipUVsAcrossLast 1;')
 
 	def b017(self): #Align UV shells
-		func.try_('from AlignUVShells import *; AlignUVShellsWindow()')
+		self.try_('from AlignUVShells import *; AlignUVShellsWindow()')
 		
 	def b018(self): #Unfold UV's
 		mel.eval('performUnfold 0;')

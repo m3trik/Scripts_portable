@@ -3,8 +3,7 @@ import pymel.core as pm
 
 import os.path
 
-from tk_slots_maya_init import Slot
-import tk_maya_shared_functions as func
+from tk_slots_max_init import Init
 
 
 
@@ -17,12 +16,12 @@ import tk_maya_shared_functions as func
 #  88.  ... 88.  .88 88   88
 #  `88888P' `88888P8 dP   dP   
 #                         
-class Edit(Slot):
+class Edit(Init):
 	def __init__(self, *args, **kwargs):
 		super(Edit, self).__init__(*args, **kwargs)
 
 		#init widgets
-		func.initWidgets(self)
+		self.initWidgets(self)
 		
 
 		self.ui.s000.valueChanged.connect(self.chk011) #update radial array
@@ -45,21 +44,21 @@ class Edit(Slot):
 
 	#set check states
 	def chk002(self): #delete: x axis
-		func.setButtons(self.ui, unchecked='chk003,chk004')
+		self.setButtons(self.ui, unchecked='chk003,chk004')
 		axis = "X"
 		if self.ui.chk001.isChecked():
 			axis = "-X"
 		self.ui.b000.setText("Mirror "+axis)
 
 	def chk003(self): #delete: y axis
-		func.setButtons(self.ui, unchecked='chk002,chk004')
+		self.setButtons(self.ui, unchecked='chk002,chk004')
 		axis = "Y"
 		if self.ui.chk001.isChecked():
 			axis = "-Y"
 		self.ui.b000.setText("Mirror "+axis)
 
 	def chk004(self): #delete: z axis
-		func.setButtons(self.ui, unchecked='chk003,chk002')
+		self.setButtons(self.ui, unchecked='chk003,chk002')
 		axis = "Z"
 		if self.ui.chk001.isChecked():
 			axis = "-Z"
@@ -67,10 +66,10 @@ class Edit(Slot):
 
 	def chk007(self): #delete: translate to components
 		if self.ui.chk007.isChecked():
-			func.setButtons(self.ui, enable='chk008,b034,cmb000',disable='chk000,chk009,s005')
+			self.setButtons(self.ui, enable='chk008,b034,cmb000',disable='chk000,chk009,s005')
 			self.b034()
 		else:
-			func.setButtons(self.ui, disable='chk008,b034,cmb000',enable='chk000,chk009,s005')
+			self.setButtons(self.ui, disable='chk008,b034,cmb000',enable='chk000,chk009,s005')
 
 	def chk010(self): #Radial Array: set pivot
 		global radialPivot
@@ -82,7 +81,7 @@ class Edit(Slot):
 				pivot = pm.xform (selection, query=1, translation=1, relative=1)
 			except:
 				print "# Warning: Nothing selected. #"
-				func.setButtons(self.ui, unchecked='chk010')
+				self.setButtons(self.ui, unchecked='chk010')
 				return
 			# radialPivot.extend ([pivot[0],pivot[1],pivot[2]])
 			radialPivot.extend (pivot) #extend the list contents
@@ -96,15 +95,15 @@ class Edit(Slot):
 		self.chk015() #calling chk015 directly from valueChanged would pass the returned spinbox value to the create arg
 
 	def chk012(self): #Radial array: x axis
-		func.setButtons(self.ui, checked='chk012', unchecked='chk013,chk014')
+		self.setButtons(self.ui, checked='chk012', unchecked='chk013,chk014')
 		self.chk015()
 
 	def chk013(self): #Radial array: y axis
-		func.setButtons(self.ui, checked='chk013', unchecked='chk012,chk014')
+		self.setButtons(self.ui, checked='chk013', unchecked='chk012,chk014')
 		self.chk015()
 
 	def chk014(self): #Radial array: z axis
-		func.setButtons(self.ui, checked='chk014', unchecked='chk012,chk013')
+		self.setButtons(self.ui, checked='chk014', unchecked='chk012,chk013')
 		self.chk015()
 
 	def chk015(self, create=False): #Duplicate radial array.
@@ -114,13 +113,13 @@ class Edit(Slot):
 		instance = self.ui.chk011.isChecked() #instance object
 
 		if self.ui.chk015.isChecked():
-			func.setButtons(self.ui, enable='b008')
+			self.setButtons(self.ui, enable='b008')
 
 			selection = pm.ls (selection=1, type="transform", flatten=1)
 			if len(selection):				
 				objectName = str(selection[0])
 				if len(radialArrayObjList):
-					func.try_ ('pm.delete (radialArrayObjList)')
+					self.try_ ('pm.delete (radialArrayObjList)')
 					del radialArrayObjList[:]
 
 				numDuplicates = int(self.ui.s000.value())
@@ -160,7 +159,7 @@ class Edit(Slot):
 				pm.undoInfo (closeChunk=1)
 			else: #if both lists objects are empty:
 				print "# Warning: Nothing selected. #"
-				func.setButtons(self.ui, disable='b008',unchecked='chk015')
+				self.setButtons(self.ui, disable='b008',unchecked='chk015')
 				return
 		else: #if chk015 is unchecked by user or by create button
 			if create:
@@ -170,8 +169,8 @@ class Edit(Slot):
 				print "# Result: "+str(radialArrayObjList)+" #"
 				pm.delete (radialArrayObjList); del radialArrayObjList[:]
 				return
-			func.try_('pm.delete (radialArrayObjList)'); del radialArrayObjList[:]
-			func.setButtons(self.ui, disable='b008')
+			self.try_('pm.delete (radialArrayObjList)'); del radialArrayObjList[:]
+			self.setButtons(self.ui, disable='b008')
 			
 
 	def b000(self): #Mirror geometry
@@ -260,7 +259,7 @@ class Edit(Slot):
 		pm.polySelectConstraint (disable=1)
 		#Populate an in-view message
 		nGons = pm.polyEvaluate (faceComponent=1)
-		func.viewPortMessage("<hl>"+str(nGons[0])+"</hl> N-Gon(s) found.")
+		self.viewPortMessage("<hl>"+str(nGons[0])+"</hl> N-Gon(s) found.")
 
 	def b013(self): #Select components for cleanup from all visible geometry in the scene
 		scene = pm.ls (visible=1, geometry=1)
@@ -297,14 +296,14 @@ class Edit(Slot):
 		#display viewPort messages
 		if all_:
 			if deformers:
-				func.viewPortMessage("delete <hl>all</hl> history.")
+				self.viewPortMessage("delete <hl>all</hl> history.")
 			else:
-				func.viewPortMessage("delete <hl>all non-deformer</hl> history.")
+				self.viewPortMessage("delete <hl>all non-deformer</hl> history.")
 		else:
 			if deformers:
-				func.viewPortMessage("delete history on "+str(objects))
+				self.viewPortMessage("delete history on "+str(objects))
 			else:
-				func.viewPortMessage("delete <hl>non-deformer</hl> history on "+str(objects))
+				self.viewPortMessage("delete <hl>non-deformer</hl> history on "+str(objects))
 
 	def b017(self): #
 		pass
@@ -359,11 +358,11 @@ class Edit(Slot):
 
 		if all([selectionMask==1, maskEdge==1]): #delete edges
 			pm.polyDelEdge (cleanVertices=True)
-			func.viewPortMessage("delete <hl>edge(s)</hl>.")
+			self.viewPortMessage("delete <hl>edge(s)</hl>.")
 
 		if all([selectionMask==1, maskVertex==1]): #delete vertices
 			pm.polyDelVertex()
-			func.viewPortMessage("delete <hl>vertice(s)</hl>.")
+			self.viewPortMessage("delete <hl>vertice(s)</hl>.")
 
 		if selectionMask==0: #object mode /delete faces along axis
 			if self.ui.chk002.isChecked():
@@ -379,14 +378,14 @@ class Edit(Slot):
 				if self.ui.chk001.isChecked():
 					axis = "-z"
 
-			faces = func.getAllFacesOnAxis (axis)
+			faces = self.getAllFacesOnAxis (axis)
 			pm.delete(faces)
-			func.viewPortMessage("delete faces on <hl>"+axis+"</hl>.")
+			self.viewPortMessage("delete faces on <hl>"+axis+"</hl>.")
 			return axis
 
 		else:
 			pm.delete()
-			func.viewPortMessage("delete.")
+			self.viewPortMessage("delete.")
 
 	def b033(self): #duplicate
 			instance = self.ui.chk000.isChecked()
@@ -483,7 +482,7 @@ class Edit(Slot):
 				print "# Warning: Nothing selected. #"
 
 	def b034(self): #add selected components to cmb000
-		func.comboBox (self.ui.cmb000, pm.ls (selection=1, flatten=1))
+		self.comboBox (self.ui.cmb000, pm.ls (selection=1, flatten=1))
 
 	def b035(self): #
 		pass
@@ -518,9 +517,9 @@ class Edit(Slot):
 				self.ui.b042.setText(creaseSet)
 			else:
 				self.ui.b042.setText("must select set first")
-				func.setButtons(self.ui, unchecked='b042')
+				self.setButtons(self.ui, unchecked='b042')
 			if self.ui.b043.isChecked():
-				func.setButtons(self.ui, enable='b052')
+				self.setButtons(self.ui, enable='b052')
 		else:
 			self.ui.b042.setText("Crease Set")
 
@@ -536,9 +535,9 @@ class Edit(Slot):
 				self.ui.b043.setText(newObject)
 			else:
 				self.ui.b043.setText("must select obj first")
-				func.setButtons(self.ui, unchecked='b043')
+				self.setButtons(self.ui, unchecked='b043')
 			if self.ui.b042.isChecked():
-				func.setButtons(self.ui, enable='b052')
+				self.setButtons(self.ui, enable='b052')
 		else:
 			self.ui.b043.setText("Object")
 
@@ -594,7 +593,7 @@ class Edit(Slot):
 			# print "crease:", name
 		pm.undoInfo (closeChunk=1)
 
-		func.setButtons(self.ui, disable='b052', unchecked='b042')#,self.ui.b043])
+		self.setButtons(self.ui, disable='b052', unchecked='b042')#,self.ui.b043])
 		self.ui.b042.setText("Crease Set")
 		# self.ui.b043.setText("Object")
 

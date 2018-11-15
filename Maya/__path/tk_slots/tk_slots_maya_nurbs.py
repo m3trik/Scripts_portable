@@ -3,8 +3,7 @@ import pymel.core as pm
 
 import os.path
 
-from tk_slots_maya_init import Slot
-import tk_maya_shared_functions as func
+from tk_slots_max_init import Init
 
 
 
@@ -17,12 +16,12 @@ import tk_maya_shared_functions as func
 #  88    88 88.  .88 88       88.  .88       88 
 #  dP    dP `88888P' dP       88Y8888' `88888P' 
 #                                         
-class Nurbs(Slot):
+class Nurbs(Init):
 	def __init__(self, *args, **kwargs):
 		super(Nurbs, self).__init__(*args, **kwargs)
 
 		#init widgets
-		func.initWidgets(self)
+		self.initWidgets(self)
 		
 
 	def b000(self): #Ep curve tool

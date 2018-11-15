@@ -1,0 +1,89 @@
+// //maya version
+// string $mayaVer = `about -version`; // float $mayaVersion = `getApplicationVersionAsFloat`; //alternative version check
+
+
+// Set the initial state of the tool settings.
+workspaceControl -edit -minimumWidth false "ToolSettings";
+// Set the initial state of the attribute editor.
+workspaceControl -edit -minimumWidth false "AttributeEditor";
+
+
+//execute python userSetup file
+python ("import os");
+python ("path = os.path.expandvars('%CLOUD%/____Graphics/Maya/scripts/__path/userSetup.py')");
+python ("execfile(path)");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// deprecated ---------------------------------------------------------------------------------
+
+//modeling toolkit prefs
+//if check maya version
+// string $version = `about -version`;
+// if ($version == 2016)
+// 	{
+// 	loadPlugin "modelingToolkit.mll";
+// 	dockControl -edit -area "right" NEXDockControl;
+// 	ToggleModelingToolkit;
+// 	}
+
+
+//main menu bar; turn off //turned off via internal menu option
+// if (`optionVar -query mainWindowMenubarVis`)
+// 	{
+// 		setMainMenubarVisible 0;
+// }else{
+// 		setMainMenubarVisible 0;
+// 	}
+
+
+//toolPropertyWindow; turn off
+// if (`optionVar -q toolSettingsVisible`) {setToolSettingsVisible 0;} else {setToolSettingsVisible 0;};
+//toolPropertyWindow; turn on, dock right
+// string $tool_settings = `toolPropertyWindow -inMainWindow true -location "right"`;
+// evalDeferred -lowestPriority $tool_settings;
+//initToolSettings_mod window script
+//evalDeferred -low "initToolSettings_mod_window";  //window coming up blank
+
+
+//initialize the left menu window
+//source ("initLeftMenu.mel");
+//evalDeferred ("initLeftMenu()");
+
+
+//source dev_outliner script
+// evalDeferred -lowPriority "dev_dockOutliner";
+// evalDeferred -lowestPriority "dev_outlinerMenuItem";
+
+//statusline_mod mel window script
+//evalDeferred -lowPriority "statusLine_mod_window";
+
+//ninja dojo
+// if ($mayaVer == "2016")
+// 	{
+// 		string $env=`getenv "CLOUD_graphics"`;
+// 		string $file = $env + "/Maya/Scripts/_MEL/MEL_source/third_party_scripts/Ninja Dojo/Ninja_Dojo.mel";
+// 		source $file;
+// 		string $folder_location = $env + "/Maya/Scripts/_MEL/_MEL_startup/third_party_scripts/Ninja Dojo/";
+// 		Ninja_Dojo($folder_location);
+// 	}
+
+//shutdown script
+//eval("source maya_exit.mel");
+
+//GoZ
+//check directory//eval(“source \"C:/Users/Public/Pixologic/GoZApps/Maya/GoZBrushToMaya.mel\””);

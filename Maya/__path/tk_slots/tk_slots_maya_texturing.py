@@ -3,8 +3,9 @@ import pymel.core as pm
 
 import os.path
 
-from tk_slots_maya_init import Slot
-import tk_maya_shared_functions as func
+from tk_slots_max_init import Init
+
+
 
 
 
@@ -17,17 +18,17 @@ import tk_maya_shared_functions as func
 #                                                                     .88 
 #                                                                 d8888P
 #
-class Texturing(Slot):
+class Texturing(Init):
 	def __init__(self, *args, **kwargs):
 		super(Texturing, self).__init__(*args, **kwargs)
 
 		#init widgets
-		func.initWidgets(self)
+		self.initWidgets(self)
 		
 
 	def cmb000(self): #existing materials
 		index = self.ui.cmb000.currentIndex() #get current index before refreshing list
-		materials = func.comboBox (self.ui.cmb000, [str(mat) for mat in pm.ls(materials=1)], "Existing Materials")
+		materials = self.comboBox (self.ui.cmb000, [str(mat) for mat in pm.ls(materials=1)], "Existing Materials")
 
 		if index!=0:
 			print materials[index]
@@ -47,7 +48,7 @@ class Texturing(Slot):
 		shell = self.ui.chk000.isChecked()
 		invert = self.ui.chk001.isChecked()
 
-		if func.try_('pm.ls(selection=1, objectsOnly=1)[0]', 'print "# Warning: Nothing selected #"'):
+		if self.try_('pm.ls(selection=1, objectsOnly=1)[0]', 'print "# Warning: Nothing selected #"'):
 			pm.hyperShade (pm.ls(sl=1, objectsOnly=1, visible=1)[0], shaderNetworksSelectMaterialNodes=1) #get material node from selection
 			pm.hyperShade (objects="") #select all with material. "" defaults to currently selected materials.
 

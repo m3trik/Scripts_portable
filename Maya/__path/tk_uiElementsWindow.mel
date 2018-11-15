@@ -1,0 +1,88 @@
+global proc tk_uiElementsWindow(){
+	if (`window -query -exists ui_window`)
+		{
+		deleteUI ui_window;
+		}
+	window -title "Ui " -toolbox true -sizeable false -resizeToFitChildren true -widthHeight 100 200 ui_window;
+
+		formLayout -numberOfDivisions 100 ui_formLayout;
+			gridLayout -numberOfColumns 1 -cellWidthHeight 130 20 g1;
+				button	-label "Hgraph:Heirarchy"		-command "HypergraphHierarchyWindow;deleteUI ui_window;";
+				button	-label "Hgraph:Connection"		-command "HypergraphDGWindow;deleteUI ui_window;";
+				button  -label "Attr Spread Sheet"		-command "SpreadSheetEditor;deleteUI ui_window;";
+				button  -label "Charcoal Editor"		-command "charcoalEditor;deleteUI ui_window;";
+				button	-label "Outliner"			-command "OutlinerWindow;";
+				button	-label "Grid"					-command "ToggleGrid;";
+				button	-label "Shelf"					-command "ToggleShelf;";
+			setParent ..;
+			gridLayout -numberOfColumns 1 -cellWidthHeight 20 20 g2;
+				button -label "?"						-command "HypergraphHierarchyWindowOptions;deleteUI ui_window;";//Hypergraph:Heirarchy options
+				button -label "?"						-command "HypergraphDGWindowOptions;deleteUI ui_window;";//Hypergraph:Connections options
+			setParent ..;
+		setParent..;
+		frameLayout  -label "Animation Editors"  -labelAlign "top" -collapsable true -collapse true f1;
+			gridLayout -numberOfColumns 1 -cellWidthHeight 130 20;
+			button	-label "Attribute Editor"		-command "AttributeEditor;deleteUI ui_window;";
+			button	-label "Node Editor"			-command "NodeEditorWindow;deleteUI ui_window;";
+			button  -label "Graph Editor"			-command "GraphEditor;deleteUI ui_window;";
+			button  -label "Trax Editor"			-command "CharacterAnimationEditor;deleteUI ui_window;";
+			button  -label "Camera Sequencer"		-command "SequenceEditor;deleteUI ui_window;";
+			button  -label "Dope Sheet"				-command "DopeSheetEditor;deleteUI ui_window;";
+			button  -label "HumanIK"				-command "HIKCharacterControlsTool;deleteUI ui_window;";
+			button  -label "Blend Shape"			-command "BlendShapeEditor;deleteUI ui_window;";
+			button  -label "Expression Editor"		-command "ExpressionEditor;deleteUI ui_window;";
+			setParent..;
+		setParent..;
+		frameLayout  -label "General Editors"  -labelAlign "top" -collapsable true -collapse true f2;
+			gridLayout -numberOfColumns 1 -cellWidthHeight 130 20;
+			button  -label "Asset Editor"			-command "AssetEditor;deleteUI ui_window;";
+			button  -label "Component Editor"		-command "ComponentEditor;deleteUI ui_window;";
+			button  -label "Connection Editor"		-command "ConnectionEditor;deleteUI ui_window;";
+			button  -label "Display Layer Editor"	-command "DisplayLayerEditorWindow;";
+			button  -label "File Path Editor"		-command "FilePathEditor;deleteUI ui_window;";
+			button  -label "NamespaceEditor"		-command "NamespaceEditor;deleteUI ui_window;";
+			button  -label "Visor"					-command "VisorWindow;deleteUI ui_window;";
+			button  -label "Channel Control"		-command "ChannelControlEditor;deleteUI ui_window;";
+			button  -label "Script Editor"			-command "ScriptEditor;deleteUI ui_window;";
+			button  -label "Command Shell"			-command "CommandShell;deleteUI ui_window;";
+			button  -label "Profiler"				-command "ProfilerTool;deleteUI ui_window;";
+			setParent..;
+		setParent..;
+		frameLayout  -label "Relationship Editors"  -labelAlign "top" -collapsable true -collapse true f3;
+			gridLayout -numberOfColumns 1 -cellWidthHeight 130 20;
+			button  -label "Animation Layers"		-command "AnimLayerRelationshipEditor;deleteUI ui_window;";
+			button  -label "Camera Sets"			-command "CameraSetEditor;deleteUI ui_window;";
+			button  -label "Character Sets"			-command "CharacterSetEditor;deleteUI ui_window;";
+			button  -label "Crease Sets"			-command "python 'from maya.app.general import creaseSetEditor; creaseSetEditor.showCreaseSetEditor()';deleteUI ui_window;";
+			button  -label "Deformer Sets"			-command "DeformerSetEditor;deleteUI ui_window;";
+			button  -label "Display Layers"			-command "displayLayerEditor;deleteUI ui_window;";
+			button  -label "Dyn Relationships"		-command "DynamicRelationshipEditor;deleteUI ui_window;";
+			button  -label "Light Linking"			-command "lightLinkingEditor;deleteUI ui_window;";
+			button  -label "Partitions"				-command "PartitionEditor;deleteUI ui_window;";
+			button  -label "Render Layers"			-command "renderLayerEditor;deleteUI ui_window;";
+			button  -label "Render Pass Sets"		-command "RenderPassSetEditor;deleteUI ui_window;";
+			button  -label "Sets"					-command "SetEditor;deleteUI ui_window;";
+			button  -label "UV Linking"				-command "textureCentricUvLinkingEditor;deleteUI ui_window;";
+			setParent..;
+		setParent ..;
+		frameLayout  -label "Rendering Editors"  -labelAlign "top" -collapsable true -collapse true f4;
+			gridLayout -numberOfColumns 1 -cellWidthHeight 130 20;
+			button  -label "Render View"			-command "RenderViewWindow;deleteUI ui_window;";
+			button  -label "Render Settings"		-command "RenderGlobalsWindow;deleteUI ui_window;";
+			button  -label "Hypershade"				-command "HypershadeWindow;deleteUI ui_window;";
+			button  -label "Render Layer Editor"	-command "RenderLayerEditorWindow;deleteUI ui_window;";
+			button  -label "Cust Stereo Rig Editor"	-command "stereoCameraCBwrapper('stereoRigToolEditor','customRigEditor()');deleteUI ui_window;";
+			button  -label "Rendering Flags"		-command "RenderFlagsWindow;deleteUI ui_window;";
+			button  -label "Shading Group Attr"		-command "ShadingGroupAttributeEditor;";
+			button  -label "Hardware Render Buffer"	-command "HardwareRenderBuffer;deleteUI ui_window;";
+			setParent..;
+		setParent ..;
+		formLayout -edit
+			-attachControl 		g2 "left"	0	g1
+			-attachControl		f1 "top"	5	g1
+			-attachControl		f2 "top"	5	f1
+			-attachControl		f3 "top"	5	f2
+			-attachControl		f4 "top"	5	f3
+		ui_formLayout;
+	showWindow ui_window;
+}

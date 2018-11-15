@@ -3,26 +3,18 @@ import pymel.core as pm
 
 import os.path
 
-from tk_slots_maya_init import Slot
-import tk_maya_shared_functions as func
+from tk_slots_max_init import Init
 
 
 
 
 
-
-
-
-
-
-
-
-class I023(Slot):
+class I023(Init):
 	def __init__(self, *args, **kwargs):
 		super(I023, self).__init__(*args, **kwargs)
 
 		#init widgets
-		func.initWidgets(self)
+		self.initWidgets(self)
 
 
 	def b000(self): #

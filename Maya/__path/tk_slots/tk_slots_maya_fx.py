@@ -3,8 +3,7 @@ import pymel.core as pm
 
 import os.path
 
-from tk_slots_maya_init import Slot
-import tk_maya_shared_functions as func
+from tk_slots_max_init import Init
 
 
 
@@ -17,12 +16,12 @@ import tk_maya_shared_functions as func
 # 88      .d88b.  
 # dP     dP'  `dP 
 #
-class Fx(Slot):
+class Fx(Init):
 	def __init__(self, *args, **kwargs):
 		super(Fx, self).__init__(*args, **kwargs)
 
 		#init widgets
-		func.initWidgets(self)
+		self.initWidgets(self)
 
 
 	def b000(self): #

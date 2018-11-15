@@ -4,8 +4,7 @@ import pymel.core as pm
 import os.path
 from pydoc import locate
 
-from tk_slots_maya_init import Slot
-import tk_maya_shared_functions as func
+from tk_slots_max_init import Init
 
 
 
@@ -17,7 +16,7 @@ import tk_maya_shared_functions as func
 # 88  88  88 88.  .88 88 88    88 
 # dP  dP  dP `88888P8 dP dP    dP 
 #
-class Main(Slot):
+class Main(Init):
 	def __init__(self, *args, **kwargs):
 		super(Main, self).__init__(*args, **kwargs)
 
@@ -48,7 +47,7 @@ class Main(Slot):
 		pass
 
 	def v006(self): #Toggle mode
-		func.cycle('shortCutMode_01234')
+		self.cycle('shortCutMode_01234')
 
 	def v007(self): #Minimize main application
 		mel.eval("minimizeApp;")

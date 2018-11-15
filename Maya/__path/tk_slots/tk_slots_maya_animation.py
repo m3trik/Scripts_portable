@@ -3,8 +3,7 @@ import pymel.core as pm
 
 import os.path
 
-from tk_slots_maya_init import Slot
-import tk_maya_shared_functions as func
+from tk_slots_max_init import Init
 
 
 
@@ -17,12 +16,12 @@ import tk_maya_shared_functions as func
 #  88.  .88 88    88 88 88  88  88 88.  .88   88   88 88.  .88 88    88 
 #  `88888P8 dP    dP dP dP  dP  dP `88888P8   dP   dP `88888P' dP    dP 
 #                                                       
-class Animation(Slot):
+class Animation(Init):
 	def __init__(self, *args, **kwargs):
 		super(Animation, self).__init__(*args, **kwargs)
 
 		#init widgets
-		func.initWidgets(self)
+		self.initWidgets(self)
 
 
 	def chk000(self): #pin open a separate instance of the ui in a new window

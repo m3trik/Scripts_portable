@@ -3,8 +3,7 @@ import pymel.core as pm
 
 import os.path
 
-from tk_slots_maya_init import Slot
-import tk_maya_shared_functions as func
+from tk_slots_max_init import Init
 
 
 
@@ -17,12 +16,12 @@ import tk_maya_shared_functions as func
 #    88   88       88.  .88 88    88       88 88     88.  .88 88       88  88  88 
 #    dP   dP       `88888P8 dP    dP `88888P' dP     `88888P' dP       dP  dP  dP 
 #                                                                         
-class Transform(Slot):
+class Transform(Init):
 	def __init__(self, *args, **kwargs):
 		super(Transform, self).__init__(*args, **kwargs)
 
 		#init widgets
-		func.initWidgets(self)
+		self.initWidgets(self)
 		
 
 		#set input masks for text fields
@@ -41,25 +40,25 @@ class Transform(Slot):
 			self.ui.chk013.setChecked(False)
 
 	def chk005(self): #transform: scale
-		func.setButtons(self.ui, unchecked='chk008,chk009',checked='chk000,chk001,chk002')
+		self.setButtons(self.ui, unchecked='chk008,chk009',checked='chk000,chk001,chk002')
 		self.ui.s000.setValue(2)
 		self.ui.s000.setSingleStep(1)
 
 	def chk008(self): #transform: move
-		func.setButtons(self.ui, unchecked='chk005,chk009,chk000,chk001,chk002')
+		self.setButtons(self.ui, unchecked='chk005,chk009,chk000,chk001,chk002')
 		self.ui.s000.setValue(0.1)
 		self.ui.s000.setSingleStep(0.1)
 
 	def chk009(self): #transform: rotate
-		func.setButtons(self.ui, unchecked='chk005,chk008,chk000,chk001,chk002')
+		self.setButtons(self.ui, unchecked='chk005,chk008,chk000,chk001,chk002')
 		self.ui.s000.setValue(45)
 		self.ui.s000.setSingleStep(5)
 
 	def chk010(self): #align: auto align
 		if self.ui.chk010.isChecked():
-			func.setButtons(self.ui, disable='b029,b030,b031')
+			self.setButtons(self.ui, disable='b029,b030,b031')
 		else:
-			func.setButtons(self.ui, enable='b029,b030,b031')
+			self.setButtons(self.ui, enable='b029,b030,b031')
 
 	def chk012(self): #Constrain to edge
 		if self.ui.chk012.isChecked():
@@ -184,18 +183,18 @@ class Transform(Slot):
 
 				if self.ui.chk011.isChecked():
 					if axis == x: #"yz"
-						func.setButtons(self.ui, checked='b030,b031', unchecked='b029')
+						self.setButtons(self.ui, checked='b030,b031', unchecked='b029')
 					if axis == y: #"xz"
-						func.setButtons(self.ui, checked='b029,b031', unchecked='b030')
+						self.setButtons(self.ui, checked='b029,b031', unchecked='b030')
 					if axis == z: #"xy"
-						func.setButtons(self.ui, checked='b029,b030', unchecked='b031')
+						self.setButtons(self.ui, checked='b029,b030', unchecked='b031')
 				else:
 					if any ([axis == x and tangent == ty, axis == y and tangent == tx]): #"z"
-						func.setButtons(self.ui, checked='b031', unchecked='b029,b030')
+						self.setButtons(self.ui, checked='b031', unchecked='b029,b030')
 					if any ([axis == x and tangent == tz, axis == z and tangent == tx]): #"y"
-						func.setButtons(self.ui, checked='b030', unchecked='b029,b031')
+						self.setButtons(self.ui, checked='b030', unchecked='b029,b031')
 					if any ([axis == y and tangent == tz, axis == z and tangent == ty]): #"x"
-						func.setButtons(self.ui, checked='b029', unchecked='b030,b031')
+						self.setButtons(self.ui, checked='b029', unchecked='b030,b031')
 			else:
 				print "// Warning: An edge must be selected. //"
 				return
@@ -208,25 +207,25 @@ class Transform(Slot):
 		loop = self.ui.chk007.isChecked()
 
 		if all ([x, not y, not z]): #align x
-			func.alignVertices(mode=3,average=avg,edgeloop=loop)
+			self.alignVertices(mode=3,average=avg,edgeloop=loop)
 
 		if all ([not x, y, not z]): #align y
-			func.alignVertices(mode=4,average=avg,edgeloop=loop)
+			self.alignVertices(mode=4,average=avg,edgeloop=loop)
 
 		if all ([not x, not y, z]): #align z
-			func.alignVertices(mode=5,average=avg,edgeloop=loop)
+			self.alignVertices(mode=5,average=avg,edgeloop=loop)
 
 		if all ([not x, y, z]): #align yz
-			func.alignVertices(mode=0,average=avg,edgeloop=loop)
+			self.alignVertices(mode=0,average=avg,edgeloop=loop)
 
 		if all ([x, not y, z]): #align xz
-			func.alignVertices(mode=1,average=avg,edgeloop=loop)
+			self.alignVertices(mode=1,average=avg,edgeloop=loop)
 
 		if all ([x, y, not z]): #align xy
-			func.alignVertices(mode=2,average=avg,edgeloop=loop)
+			self.alignVertices(mode=2,average=avg,edgeloop=loop)
 
 		if all ([x, y, z]): #align xyz
-			func.alignVertices(mode=6,average=avg,edgeloop=loop)
+			self.alignVertices(mode=6,average=avg,edgeloop=loop)
 
 	def b005(self): #
 		pass

@@ -3,8 +3,7 @@ import pymel.core as pm
 
 import os.path
 
-from tk_slots_maya_init import Slot
-import tk_maya_shared_functions as func
+from tk_slots_max_init import Init
 
 
 
@@ -17,34 +16,34 @@ import tk_maya_shared_functions as func
 #  88    88 88.  .88 88       88  88  88 88.  .88 88       88 
 #  dP    dP `88888P' dP       dP  dP  dP `88888P8 dP `88888P' 
 #                                                                                                                 
-class Normals(Slot):
+class Normals(Init):
 	def __init__(self, *args, **kwargs):
 		super(Normals, self).__init__(*args, **kwargs)
 
 		#init widgets
-		func.initWidgets(self)
+		self.initWidgets(self)
 
 
 	def b000(self): #Display face normals
 		size = float(self.ui.s001.value())
 		# state = pm.polyOptions (query=True, displayNormal=True)
-		state = func.cycle('displayNormals_1230')
+		state = self.cycle('displayNormals_1230')
 		if state ==0: #off
 			pm.polyOptions (displayNormal=0, sizeNormal=0)
 			pm.polyOptions (displayTangent=False)
-			func.viewPortMessage("Normals Display <hl>Off</hl>.")
+			self.viewPortMessage("Normals Display <hl>Off</hl>.")
 		if state ==1: #facet
 			pm.polyOptions (displayNormal=1, facet=True, sizeNormal=size)
 			pm.polyOptions (displayTangent=False)
-			func.viewPortMessage("<hl>Facet</hl> Normals Display <hl>On</hl>.")
+			self.viewPortMessage("<hl>Facet</hl> Normals Display <hl>On</hl>.")
 		if state ==2: #Vertex
 			pm.polyOptions (displayNormal=1, point=True, sizeNormal=size)
 			pm.polyOptions (displayTangent=False)
-			func.viewPortMessage("<hl>Vertex</hl> Normals Display <hl>On</hl>.")
+			self.viewPortMessage("<hl>Vertex</hl> Normals Display <hl>On</hl>.")
 		if state ==3: #tangent
 			pm.polyOptions (displayTangent=True)
 			pm.polyOptions (displayNormal=0)
-			func.viewPortMessage("<hl>Tangent</hl> Display <hl>On</hl>.")
+			self.viewPortMessage("<hl>Tangent</hl> Display <hl>On</hl>.")
 			
 	def b001(self): #Soften edge normal
 		pm.polySoftEdge (angle=180, constructionHistory=0)
@@ -75,7 +74,7 @@ class Normals(Slot):
 		edges = pm.ls (edges, flatten=1)
 
 		pm.undoInfo (openChunk=1)
-		func.mainProgressBar (len(edges))
+		self.mainProgressBar (len(edges))
 
 		soften = self.ui.chk000.isChecked()
 
@@ -151,16 +150,16 @@ class Normals(Slot):
 						else:
 							pm.polyNormalPerVertex(vertex, freezeNormal=1)
 					if state:
-						func.viewPortMessage("Normals <hl>UnLocked</hl>.")
+						self.viewPortMessage("Normals <hl>UnLocked</hl>.")
 					else:
-						func.viewPortMessage("Normals <hl>Locked</hl>.")
+						self.viewPortMessage("Normals <hl>Locked</hl>.")
 			elif maskVertex and not maskObject:
 				if state:
 					pm.polyNormalPerVertex(unFreezeNormal=1)
-					func.viewPortMessage("Normals <hl>UnLocked</hl>.")
+					self.viewPortMessage("Normals <hl>UnLocked</hl>.")
 				else:
 					pm.polyNormalPerVertex(freezeNormal=1)
-					func.viewPortMessage("Normals <hl>Locked</hl>.")
+					self.viewPortMessage("Normals <hl>Locked</hl>.")
 			else:
 				print "// Warning: Selection must be object or vertex. //"
 		else:

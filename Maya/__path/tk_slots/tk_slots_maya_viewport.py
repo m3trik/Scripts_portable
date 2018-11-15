@@ -3,8 +3,9 @@ import pymel.core as pm
 
 import os.path
 
-from tk_slots_maya_init import Slot
-import tk_maya_shared_functions as func
+from tk_slots_max_init import Init
+
+
 
 
 
@@ -17,12 +18,12 @@ import tk_maya_shared_functions as func
 #                                 88                                
 #                                 dP                                
 #
-class Viewport(Slot):
+class Viewport(Init):
 	def __init__(self, *args, **kwargs):
 		super(Viewport, self).__init__(*args, **kwargs)
 
 		#init widgets
-		func.initWidgets(self)
+		self.initWidgets(self)
 	
 
 	def v000(self): #viewport: back view
@@ -151,26 +152,26 @@ class Viewport(Slot):
 	def v008(self): #component mode:vertex
 		pm.selectMode (component=True)
 		pm.selectType (subdivMeshPoint=1, polymeshVertex=True)
-		func.viewPortMessage("<hl>vertex</hl> mask.")
+		self.viewPortMessage("<hl>vertex</hl> mask.")
 
 	def v009(self): #component mode:edge
 		pm.selectMode (component=True)
 		pm.selectType (subdivMeshEdge=1, polymeshEdge=True)
-		func.viewPortMessage("<hl>edge</hl> mask.")
+		self.viewPortMessage("<hl>edge</hl> mask.")
 
 	def v010(self): #component mode:facet
 		pm.selectMode (component=True)
 		pm.selectType (subdivMeshFace=1, polymeshFace=True)
-		func.viewPortMessage("<hl>facet</hl> mask.")
+		self.viewPortMessage("<hl>facet</hl> mask.")
 
 	def v011(self): #object mode
 		pm.selectMode (object=True)
-		func.viewPortMessage("<hl>object</hl> mode.")
+		self.viewPortMessage("<hl>object</hl> mode.")
 
 	def v012(self): #component mode:uv
 		pm.selectMode (component=True)
 		pm.selectType (subdivMeshUV=True, polymeshUV=True)
-		func.viewPortMessage("<hl>UV</hl> mask.")
+		self.viewPortMessage("<hl>UV</hl> mask.")
 
 	def v013(self): #
 		pass

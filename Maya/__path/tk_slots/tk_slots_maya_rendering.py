@@ -3,8 +3,9 @@ import pymel.core as pm
 
 import os.path
 
-from tk_slots_maya_init import Slot
-import tk_maya_shared_functions as func
+from tk_slots_max_init import Init
+
+
 
 
 
@@ -17,16 +18,16 @@ import tk_maya_shared_functions as func
 #                                                                        .88 
 #                                                                    d8888P  
 #
-class Rendering(Slot):
+class Rendering(Init):
 	def __init__(self, *args, **kwargs):
 		super(Rendering, self).__init__(*args, **kwargs)
 
 		#init widgets
-		func.initWidgets(self)
+		self.initWidgets(self)
 		
 
 		#checkable comboBox not working
-		comboBox = func.CheckableComboBox(self.ui.cmb000)
+		comboBox = self.CheckableComboBox(self.ui.cmb000)
 		for num in range(6):
 			comboBox.addItem("checkbox " + str(num))
 		comboBox.checkIndex(1)

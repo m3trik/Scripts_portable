@@ -3,10 +3,7 @@ import pymel.core as pm
 
 import os.path
 
-from tk_slots_maya_init import Slot
-import tk_maya_shared_functions as func
-
-
+from tk_slots_max_init import Init
 
 
 
@@ -17,12 +14,12 @@ import tk_maya_shared_functions as func
 #       88 88.  ... 88.  ... 88    88 88.  ... 
 # `88888P' `88888P' `88888P' dP    dP `88888P' 
 #
-class Scene(Slot):
+class Scene(Init):
 	def __init__(self, *args, **kwargs):
 		super(Scene, self).__init__(*args, **kwargs)
 
 		#init widgets
-		func.initWidgets(self)
+		self.initWidgets(self)
 		
 
 		self.ui.lbl000.setText(pm.workspace (query=1, rd=1).split('/')[-2]) #add current project path string to label. strip path and trailing '/'
@@ -32,7 +29,7 @@ class Scene(Slot):
 	def cmb000(self): #recent files
 		index = self.ui.cmb000.currentIndex() #get current index before refreshing list
 		files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in file_]
-		files = func.comboBox (self.ui.cmb000, files, "Recent Files")
+		files = self.comboBox (self.ui.cmb000, files, "Recent Files")
 
 		if index!=0:
 			force=True; force if str(mel.eval("file -query -sceneName -shortName;")) else not force #if sceneName prompt user to save; else force open
@@ -42,7 +39,7 @@ class Scene(Slot):
 	def cmb001(self): #recent projects
 		index = self.ui.cmb001.currentIndex() #get current index before refreshing list
 		files = (list(reversed(mel.eval("optionVar -query RecentProjectsList;"))))
-		func.comboBox (self.ui.cmb001, files, "Recent Projects")
+		self.comboBox (self.ui.cmb001, files, "Recent Projects")
 
 		if index!=0:
 			mel.eval('setProject "'+files[index]+'"')
@@ -51,7 +48,7 @@ class Scene(Slot):
 	def cmb002(self): #recent autosave
 		index = self.ui.cmb002.currentIndex() #get current index before refreshing list
 		files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" in file_]
-		func.comboBox (self.ui.cmb002, files, "Recent Autosave")
+		self.comboBox (self.ui.cmb002, files, "Recent Autosave")
 
 		if index!=0:
 			force=True; force if str(mel.eval("file -query -sceneName -shortName;")) else not force #if sceneName prompt user to save; else force open
@@ -60,7 +57,7 @@ class Scene(Slot):
 			
 	def cmb003(self): #import
 		index = self.ui.cmb003.currentIndex() #get current index before refreshing list
-		func.comboBox (self.ui.cmb003,["Import file", "Import Options"], "Import")
+		self.comboBox (self.ui.cmb003,["Import file", "Import Options"], "Import")
 		
 		if index!=0: #hide hotbox then perform operation
 			self.hotBox.hbHide()
@@ -72,7 +69,7 @@ class Scene(Slot):
 
 	def cmb004(self): #export
 		index = self.ui.cmb004.currentIndex() #get current index before refreshing list
-		func.comboBox (self.ui.cmb004, ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ"], "Export")
+		self.comboBox (self.ui.cmb004, ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ"], "Export")
 
 		if index !=0: #hide hotbox then perform operation
 			self.hotBox.hbHide()
@@ -128,7 +125,7 @@ class Scene(Slot):
 					for root, directories, files in os.walk(dir_):
 						for filename in files:
 							if all([filename==oldName+ext for ext in ('.ma','.ma.swatches','.mb','.mb.swatches')]):
-								func.try_('os.remove(filename)')
+								self.try_('os.remove(filename)')
 				except OSError:
 					print "# Warning: could not delete "+currentPath+oldName+" #"
 					pass
@@ -143,7 +140,7 @@ class Scene(Slot):
 		if self.ui.chk002.isChecked(): #quit maya
 			import time
 			for timer in range(5):
-				func.viewPortMessage("shutting down:<hl>"+str(timer)+"</hl>")
+				self.viewPortMessage("shutting down:<hl>"+str(timer)+"</hl>")
 				time.sleep(timer)
 			mel.eval("quit;")
 			# pm.Quit()

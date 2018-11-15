@@ -3,8 +3,9 @@ import pymel.core as pm
 
 import os.path
 
-from tk_slots_maya_init import Slot
-import tk_maya_shared_functions as func
+from tk_slots_max_init import Init
+
+
 
 
 
@@ -17,12 +18,12 @@ import tk_maya_shared_functions as func
 #                               88                               .88 
 #                               dP                           d8888P 
 #
-class Scripting(Slot):
+class Scripting(Init):
 	def __init__(self, *args, **kwargs):
 		super(Scripting, self).__init__(*args, **kwargs)
 
 		#init widgets
-		func.initWidgets(self)
+		self.initWidgets(self)
 
 
 		tk_cmdScrollFieldReporter = pm.cmdScrollFieldReporter (

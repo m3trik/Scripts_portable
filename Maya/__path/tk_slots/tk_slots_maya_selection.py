@@ -3,8 +3,7 @@ import pymel.core as pm
 
 import os.path
 
-from tk_slots_maya_init import Slot
-import tk_maya_shared_functions as func
+from tk_slots_max_init import Init
 
 
 
@@ -17,12 +16,12 @@ import tk_maya_shared_functions as func
 #        88 88.  ... 88 88.  ... 88.  ...   88   88 88.  .88 88    88 
 #  `88888P' `88888P' dP `88888P' `88888P'   dP   dP `88888P' dP    dP 
 #                                                           
-class Selection(Slot):
+class Selection(Init):
 	def __init__(self, *args, **kwargs):
 		super(Selection, self).__init__(*args, **kwargs)
 
 		#init widgets
-		func.initWidgets(self)
+		self.initWidgets(self)
 		
 
 		#set checked button states
@@ -64,27 +63,27 @@ class Selection(Slot):
 			selection = pm.select (pm.ls (searchStr))
 
 	def chk000(self): #Symmetry X
-		func.setButtons(self.ui, unchecked='chk001,chk002')
+		self.setButtons(self.ui, unchecked='chk001,chk002')
 		state = self.ui.chk000.isChecked() #symmetry button state
 		self.setSymmetry("x", symmetry=state)
 
 	def chk001(self): #Symmetry Y
-		func.setButtons(self.ui, unchecked='chk000,chk002')
+		self.setButtons(self.ui, unchecked='chk000,chk002')
 		state = self.ui.chk001.isChecked() #symmetry button state
 		self.setSymmetry("y", symmetry=state)
 
 	def chk002(self): #Symmetry Z
-		func.setButtons(self.ui, unchecked='chk000,chk001')
+		self.setButtons(self.ui, unchecked='chk000,chk001')
 		state = self.ui.chk002.isChecked() #symmetry button state
 		self.setSymmetry("z", symmetry=state)
 
 	def chk004(self): #Ignore backfacing (camera based selection)
 		if self.ui.chk004.isChecked():
 			pm.selectPref(useDepth=True)
-			func.viewPortMessage("Camera-based selection <hl>On</hl>.")
+			self.viewPortMessage("Camera-based selection <hl>On</hl>.")
 		else:
 			pm.selectPref(useDepth=False)
-			func.viewPortMessage("Camera-based selection <hl>Off</hl>.")
+			self.viewPortMessage("Camera-based selection <hl>Off</hl>.")
 
 	def chk005(self): #Symmetry: object
 		self.ui.chk006.setChecked(False) #uncheck symmetry:topological
@@ -93,12 +92,12 @@ class Selection(Slot):
 		self.ui.chk005.setChecked(False) #uncheck symmetry:object space
 		if any ([self.ui.chk000.isChecked(), self.ui.chk001.isChecked(), self.ui.chk002.isChecked()]): #(symmetry)
 			pm.symmetricModelling(edit=True, symmetry=False)
-			func.setButtons(self.ui, unchecked='chk000,chk001,chk002')
+			self.setButtons(self.ui, unchecked='chk000,chk001,chk002')
 			print "# Warning: First select a seam edge and then check the symmetry button to enable topographic symmetry #"
 
 	def cmb000(self): #List selection sets
 		index = self.ui.cmb000.currentIndex() #get current index before refreshing list
-		sets = func.comboBox (self.ui.cmb000, [str(set_) for set_ in pm.ls (et="objectSet", flatten=1)], "Sets")
+		sets = self.comboBox (self.ui.cmb000, [str(set_) for set_ in pm.ls (et="objectSet", flatten=1)], "Sets")
 
 		if index!=0:
 			pm.select (sets[index])
@@ -106,7 +105,7 @@ class Selection(Slot):
 
 	def cmb001(self): #currently selected objects
 		index = self.ui.cmb001.currentIndex() #get current index before refreshing list
-		items = func.comboBox (self.ui.cmb001, [str(s) for s in pm.ls (selection=1, flatten=1)], "Currently Selected")
+		items = self.comboBox (self.ui.cmb001, [str(s) for s in pm.ls (selection=1, flatten=1)], "Currently Selected")
 
 		if index!=0:
 			pm.select (items[index])
@@ -166,7 +165,7 @@ class Selection(Slot):
 		mel.eval('SelectContiguousEdgesOptions;')
 
 	def b011(self): #Shortest edge path
-		func.shortestEdgePath()
+		self.shortestEdgePath()
 		# mel.eval('SelectShortestEdgePathTool;')
 
 	def b012(self): #Selection constraints
@@ -195,7 +194,7 @@ class Selection(Slot):
 
 	def b020(self): #select edge ring
 		print "# Warning: add correct arguments for this tool #" 
-		func.shortestEdgePath()
+		self.shortestEdgePath()
 
 
 

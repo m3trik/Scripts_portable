@@ -3,8 +3,9 @@ import pymel.core as pm
 
 import os.path
 
-from tk_slots_maya_init import Slot
-import tk_maya_shared_functions as func
+from tk_slots_max_init import Init
+
+
 
 
 
@@ -17,37 +18,37 @@ import tk_maya_shared_functions as func
 #  88                        .88      .88                            
 #  dP                    d8888P   d8888P                             
 #
-class Polygons(Slot):
+class Polygons(Init):
 	def __init__(self, *args, **kwargs):
 		super(Polygons, self).__init__(*args, **kwargs)
 
 		#init widgets
-		func.initWidgets(self)
+		self.initWidgets(self)
 
 
 	def chk002(self): #Un-crease
 		if self.ui.chk002.isChecked():
 			self.ui.s003.setValue(0) #crease value
 			self.ui.s004.setValue(180) #normal angle
-			func.setButtons(self.ui, unchecked='chk003')
+			self.setButtons(self.ui, unchecked='chk003')
 		else:
 			self.ui.s003.setValue(7.5) #crease value
 			self.ui.s004.setValue(30) #normal angle
 
 	def chk008(self): #Split U
-		func.setButtons(self.ui, unchecked='chk010')
+		self.setButtons(self.ui, unchecked='chk010')
 
 	def chk009(self): #Split V
-		func.setButtons(self.ui, unchecked='chk010')
+		self.setButtons(self.ui, unchecked='chk010')
 
 	def chk010(self): #tris
-		func.setButtons(self.ui, unchecked='chk008,chk009')
+		self.setButtons(self.ui, unchecked='chk008,chk009')
 
 	def chk003(self): #Crease: Max
 		if self.ui.chk003.isChecked():
 			self.ui.s003.setValue(10) #crease value
 			self.ui.s004.setValue(30) #normal angle
-			func.setButtons(self.ui, unchecked='chk002')
+			self.setButtons(self.ui, unchecked='chk002')
 		else:
 			self.ui.s003.setValue(7.5) #crease value
 			self.ui.s004.setValue(60) #normal angle
