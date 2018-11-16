@@ -60,7 +60,7 @@ class Slot(object):
 				# combobox.currentIndexChanged.connect(self.combobox.objectName())
 				comboBox()
 
-		print 'initWidgets', class_.__class__.__name__
+		# print 'initWidgets', class_.__class__.__name__
 		if class_.__class__.__name__ == 'Create':
 			setButtons(class_.ui, invisible='s000,s010,s011,t000')
 			#temp fix for function below calling setAttributes with only last arg
