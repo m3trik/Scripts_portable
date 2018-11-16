@@ -116,7 +116,7 @@ class Slot(object):
 
 
 	#ex. set various states for multiple buttons at once  
-	def setButtons (self, ui, checked=None, unchecked=None, enable=None, disable=None, visible=None, invisible=None):
+	def setButtons(self, ui, checked=None, unchecked=None, enable=None, disable=None, visible=None, invisible=None):
 		#args: setButtons=dynamic ui object
 		#			checked/unchecked/enable/disable/visible/invisible=string - the names of buttons to modify separated by ','. ie. 'b000,b001,b022'
 		#ex. setButtons(self.ui, disable=['b000'], unchecked=['b009,b010,b012'])
@@ -204,7 +204,7 @@ class Slot(object):
 		return int(value) #return an integer from string value
 
 
-	def try_ (self, expressions, exceptions='pass', showError_=True):
+	def try_(self, expressions, exceptions='pass', showError_=True):
 		#args: expressions='string' - expression separated by ';'
 		#			exceptions='string' - separated by ';'
 		#			showError_=bool - hide or show any errors

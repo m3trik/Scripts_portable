@@ -13,15 +13,15 @@ import MaxPlus
 
 
 # ------------------------------------------------
-MaxPlus.FileManager.Reset(True)
+# MaxPlus.FileManager.Reset(True)
 
 
 
 
 
 #Append directory to system path -----------------
-paths = r'%CLOUD%/____Graphics/3ds Max/Scripts/__path;%CLOUD%/____Graphics/3ds Max/scripts/__path/tk_slots;%CLOUD%/_Programming/Qt/__path;%CLOUD%/_Programming/Qt/__path/tk_ui'
-#paths = r'%USERPROFILE%/Documents/_portable/Scripts_portable/Qt/__path;%USERPROFILE%/Documents/_portable/Scripts_portable/Qt/__path/tk_ui;%USERPROFILE%/Documents/_portable/Scripts_portable/3dsMax/__path;%USERPROFILE%/Documents/_portable/3dsMax/__path/tk_slots'
+#paths = r'%CLOUD%/____Graphics/3ds Max/Scripts/__path;%CLOUD%/____Graphics/3ds Max/scripts/__path/tk_slots;%CLOUD%/_Programming/Qt/__path;%CLOUD%/_Programming/Qt/__path/tk_ui'
+paths = r'%USERPROFILE%/Documents/_portable/Scripts_portable/Qt/__path;%USERPROFILE%/Documents/_portable/Scripts_portable/Qt/__path/tk_ui;%USERPROFILE%/Documents/_portable/Scripts_portable/3dsMax/__path;%USERPROFILE%/Documents/_portable/Scripts_portable/3dsMax/__path/tk_slots'
 for path in paths.split(';'):
 	sys.path.append(os.path.expandvars(path))
 

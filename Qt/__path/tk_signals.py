@@ -55,7 +55,7 @@ class Signal(QtCore.QObject):
 							method = [method, lambda m=method: self.onPressedEvent(m)]
 						#add signal/slot dict value to connectionDict[name] key
 					self.connectionDict[name].update ({buttonWithSignal:method})
-				except: pass
+				except Exception as err: print err
 		# print self.connectionDict
 		return self.connectionDict
 

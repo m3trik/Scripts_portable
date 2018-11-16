@@ -25,19 +25,19 @@ python.Init()
 
 --load the python path setup file.
 -- not working with environment variable.
-fullPath = "O:\\Cloud\\____Graphics\\3ds Max\\Scripts\\__path\\userSetup.py"
---fullPath = "C:\\Users\\render\\Documents\\Scripts_portable\\3dsMax\\__path\\userSetup.py"
+--fullPath = "O:\\Cloud\\____Graphics\\3ds Max\\Scripts\\__path\\userSetup.py"
+fullPath = "C:\\Users\\render\\Documents\\_portable\\Scripts_portable\\3dsMax\\__path\\userSetup.py"
 python.ExecuteFile fullPath
 
-fullPath = "O:\\Cloud\\____Graphics\\3ds Max\\Scripts\\macros\\tk_macroScript.ms"
---fullPath = "C:\\Users\\render\\Documents\\Scripts_portable\\3dsMax\\__path\\tk_macroScript.ms"
+--fullPath = "O:\\Cloud\\____Graphics\\3ds Max\\Scripts\\macros\\tk_macroScript.ms"
+fullPath = "C:\\Users\\render\\Documents\\_portable\\Scripts_portable\\3dsMax\\__path\\macros\\tk_macroScript.ms"
 FileIn fullPath
 
 
 -- ui
 
 -- hide statusPanel
-statusPanel.visible = false
+statusPanel.visible = true
 
 -- check to see if its open and if not, open the scene explorer
 if sceneexplorermanager.ExplorerExists "Scene Explorer" then 

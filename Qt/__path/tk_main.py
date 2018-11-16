@@ -77,9 +77,6 @@ class HotBox(QtWidgets.QWidget):
 	def __init__(self, parent):
 		QtWidgets.QWidget.__init__(self)
 
-		#garbage collection management
-		_GCProtector.widgets.append(self)  # Required to avoid destruction of widget after script has completed execution
-
 		self.setObjectName('hotBox')
 
 		#set window style
