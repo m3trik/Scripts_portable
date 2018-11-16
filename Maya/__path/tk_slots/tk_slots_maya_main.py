@@ -4,7 +4,7 @@ import pymel.core as pm
 import os.path
 from pydoc import locate
 
-from tk_slots_max_init import Init
+from tk_slots_maya_init import Init
 
 
 
