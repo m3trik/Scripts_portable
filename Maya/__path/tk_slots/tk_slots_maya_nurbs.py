@@ -9,13 +9,6 @@ from tk_slots_maya_init import Init
 
 
 
-#                             dP                
-#                             88                
-#  88d888b. dP    dP 88d888b. 88d888b. .d8888b. 
-#  88'  `88 88    88 88'  `88 88'  `88 Y8ooooo. 
-#  88    88 88.  .88 88       88.  .88       88 
-#  dP    dP `88888P' dP       88Y8888' `88888P' 
-#                                         
 class Nurbs(Init):
 	def __init__(self, *args, **kwargs):
 		super(Nurbs, self).__init__(*args, **kwargs)

@@ -9,13 +9,6 @@ from tk_slots_max_init import Init
 
 
 
-
-
-
-
-
-
-
 class I020(Init):
 	def __init__(self, *args, **kwargs):
 		super(I020, self).__init__(*args, **kwargs)

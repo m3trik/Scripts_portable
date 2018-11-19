@@ -9,13 +9,6 @@ from tk_slots_maya_init import Init
 
 
 
-#                    oo                       dP   oo                   
-#                                             88                        
-#  .d8888b. 88d888b. dP 88d8b.d8b. .d8888b. d8888P dP .d8888b. 88d888b. 
-#  88'  `88 88'  `88 88 88'`88'`88 88'  `88   88   88 88'  `88 88'  `88 
-#  88.  .88 88    88 88 88  88  88 88.  .88   88   88 88.  .88 88    88 
-#  `88888P8 dP    dP dP dP  dP  dP `88888P8   dP   dP `88888P' dP    dP 
-#                                                       
 class Animation(Init):
 	def __init__(self, *args, **kwargs):
 		super(Animation, self).__init__(*args, **kwargs)

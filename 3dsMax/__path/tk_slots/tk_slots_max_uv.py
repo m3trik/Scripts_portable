@@ -9,11 +9,6 @@ from tk_slots_max_init import Init
 
 
 
-# dP    dP dP   .dP 
-# 88    88 88   d8' 
-# 88.  .88 88 .88'  
-# `88888P' 8888P'
-#
 class Uv(Init):
 	def __init__(self, *args, **kwargs):
 		super(Uv, self).__init__(*args, **kwargs)

@@ -9,13 +9,6 @@ from tk_slots_max_init import Init
 
 
 
-#                 dP oo   dP   
-#                 88      88   
-#  .d8888b. .d888b88 dP d8888P
-#  88ooood8 88'  `88 88   88   
-#  88.  ... 88.  .88 88   88
-#  `88888P' `88888P8 dP   dP   
-#                         
 class Edit(Init):
 	def __init__(self, *args, **kwargs):
 		super(Edit, self).__init__(*args, **kwargs)

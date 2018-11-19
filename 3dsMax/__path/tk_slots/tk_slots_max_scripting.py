@@ -9,15 +9,6 @@ from tk_slots_max_init import Init
 
 
 
-#                            oo            dP   oo                   
-#                                          88                        
-# .d8888b. .d8888b. 88d888b. dP 88d888b. d8888P dP 88d888b. .d8888b. 
-# Y8ooooo. 88'  `"" 88'  `88 88 88'  `88   88   88 88'  `88 88'  `88 
-#       88 88.  ... 88       88 88.  .88   88   88 88    88 88.  .88 
-# `88888P' `88888P' dP       dP 88Y888P'   dP   dP dP    dP `8888P88 
-#                               88                               .88 
-#                               dP                           d8888P 
-#
 class Scripting(Init):
 	def __init__(self, *args, **kwargs):
 		super(Scripting, self).__init__(*args, **kwargs)

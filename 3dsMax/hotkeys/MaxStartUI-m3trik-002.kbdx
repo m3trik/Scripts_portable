@@ -318,7 +318,7 @@
     <shortcut fVirt="3" accleleratorKey="187" actionID="418" actionTableID="0" />
     <shortcut fVirt="19" accleleratorKey="88" actionID="373" actionTableID="0" />
     <shortcut fVirt="7" accleleratorKey="73" actionID="30" actionTableID="0" />
-    <shortcut fVirt="11" accleleratorKey="69" actionID="278" actionTableID="0" />
+    <shortcut fVirt="11" accleleratorKey="69" actionID="154" actionTableID="0" />
     <shortcut fVirt="19" accleleratorKey="90" actionID="40104" actionTableID="0" />
     <shortcut fVirt="3" accleleratorKey="116" actionID="50004" actionTableID="0" />
     <shortcut fVirt="11" accleleratorKey="89" actionID="40016" actionTableID="0" />
@@ -337,7 +337,7 @@
     <shortcut fVirt="3" accleleratorKey="104" actionID="362" actionTableID="0" />
     <shortcut fVirt="3" accleleratorKey="111" actionID="368" actionTableID="0" />
     <shortcut fVirt="3" accleleratorKey="222" actionID="40470" actionTableID="0" />
-    <shortcut fVirt="11" accleleratorKey="82" actionID="40203" actionTableID="0" />
+    <shortcut fVirt="11" accleleratorKey="82" actionID="158" actionTableID="0" />
     <shortcut fVirt="11" accleleratorKey="34" actionID="40180" actionTableID="0" />
     <shortcut fVirt="11" accleleratorKey="192" actionID="63446" actionTableID="0" />
     <shortcut fVirt="7" accleleratorKey="65" actionID="49" actionTableID="0" />
@@ -367,6 +367,7 @@
     <shortcut fVirt="15" accleleratorKey="81" actionID="59232" actionTableID="0" />
     <shortcut fVirt="3" accleleratorKey="54" actionID="550" actionTableID="0" />
     <shortcut fVirt="3" accleleratorKey="53" actionID="470" actionTableID="0" />
+    <shortcut fVirt="11" accleleratorKey="87" actionID="40203" actionTableID="0" />
     <shortcut fVirt="3" accleleratorKey="188" actionID="50020" actionTableID="1" />
     <shortcut fVirt="3" accleleratorKey="190" actionID="50022" actionTableID="1" />
     <shortcut fVirt="11" accleleratorKey="65" actionID="50035" actionTableID="1" />

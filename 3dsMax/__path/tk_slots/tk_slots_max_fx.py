@@ -9,13 +9,6 @@ from tk_slots_max_init import Init
 
 
 
-# .8888b          
-# 88   "          
-# 88aaa  dP.  .dP 
-# 88      `8bd8'  
-# 88      .d88b.  
-# dP     dP'  `dP 
-#
 class Fx(Init):
 	def __init__(self, *args, **kwargs):
 		super(Fx, self).__init__(*args, **kwargs)

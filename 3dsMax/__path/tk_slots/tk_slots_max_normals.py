@@ -8,13 +8,7 @@ from tk_slots_max_init import Init
 
 
 
-#                                                 dP          
-#                                                 88          
-#  88d888b. .d8888b. 88d888b. 88d8b.d8b. .d8888b. 88 .d8888b. 
-#  88'  `88 88'  `88 88'  `88 88'`88'`88 88'  `88 88 Y8ooooo. 
-#  88    88 88.  .88 88       88  88  88 88.  .88 88       88 
-#  dP    dP `88888P' dP       dP  dP  dP `88888P8 dP `88888P' 
-#                                                                                                                 
+
 class Normals(Init):
 	def __init__(self, *args, **kwargs):
 		super(Normals, self).__init__(*args, **kwargs)

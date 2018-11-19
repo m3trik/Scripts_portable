@@ -9,13 +9,6 @@ from tk_slots_maya_init import Init
 
 
 
-#                     oo          
-#                           
-# 88d8b.d8b. .d8888b. dP 88d888b. 
-# 88'`88'`88 88'  `88 88 88'  `88 
-# 88  88  88 88.  .88 88 88    88 
-# dP  dP  dP `88888P8 dP dP    dP 
-#
 class Main(Init):
 	def __init__(self, *args, **kwargs):
 		super(Main, self).__init__(*args, **kwargs)
