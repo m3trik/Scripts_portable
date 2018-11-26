@@ -77,7 +77,7 @@ class HotBox(QtWidgets.QWidget):
 	def __init__(self, parent):
 		QtWidgets.QWidget.__init__(self)
 
-		self.setObjectName('hotBox')
+		self.setObjectName(self.__class__.__name__)
 
 		#set window style
 		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint|QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.X11BypassWindowManagerHint)
@@ -93,7 +93,7 @@ class HotBox(QtWidgets.QWidget):
 		self.prevName=[] #when a new ui is called its name is last and the previous ui is at element[-2]. ie. [previousNameString, previousNameString, currentNameString]
 		
 		self.app = parent.objectName().rstrip('Window').lower()
-		self.init = locate('tk_slots_'+self.app+'_init.Init') ##remove 'Window' from objectName ie. 'Maya' from 'MayaWindow' and set lowercase. ie. import tk_slots_maya_init.Init
+		self.init = locate('tk_slots_'+self.app+'_init.Init') #remove 'Window' from objectName ie. 'Maya' from 'MayaWindow' and set lowercase. ie. import tk_slots_maya_init.Init
 		self.signal = locate('tk_signals.Signal')(self)
 		self.layoutStack(self.uiList.index('init'))
 		self.overlay = Overlay(self)
@@ -169,7 +169,6 @@ class HotBox(QtWidgets.QWidget):
 			# 	# windll.user32.mouse_event(0x2, 0, 0, 0,0) #left down
 			# self.mousePressOn = True
 
-		return True
 
 
 
