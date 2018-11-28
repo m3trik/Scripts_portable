@@ -62,7 +62,7 @@ class Slot(object):
 
 		# print 'initWidgets', class_.__class__.__name__
 		if class_.__class__.__name__ == 'Create':
-			setButtons(class_.ui, invisible='s000,s010,s011,t000')
+			self.setButtons(class_.ui, invisible='s000,s010,s011,t000')
 			#temp fix for function below calling setAttributes with only last arg
 			class_.ui.s000.valueChanged.connect (lambda: class_.setAttributes(0))
 			class_.ui.s001.valueChanged.connect (lambda: class_.setAttributes(1))
@@ -76,7 +76,7 @@ class Slot(object):
 			class_.ui.s009.valueChanged.connect (lambda: class_.setAttributes(9))
 			class_.ui.s010.valueChanged.connect (lambda: class_.setAttributes(10))
 			class_.ui.s011.valueChanged.connect (lambda: class_.setAttributes(11))
-			spinboxes = getObject(class_.ui, 's', [0,12], False)
+			spinboxes = self.getObject(class_.ui, 's', [0,12], False)
 			for index, spinbox in enumerate(spinboxes):
 				# spinbox.valueChanged.connect (lambda i=index: class_.setAttributes(i)) #use lambda to call method with argument: index of spinbox
 				spinbox.setVisible(False)
@@ -277,7 +277,7 @@ class Slot(object):
 				}''')
 
 
-#print module name
+#module name
 print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes

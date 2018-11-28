@@ -19,14 +19,14 @@ class Signal(QtCore.QObject):
 		self.prevCommand=[] #history of commands. last used command method at element[-1]
 
 
-	def buildConnectionDict(self, name):
-		currentIndex = self.hotBox.uiList.index(name)
+	def buildConnectionDict(self):
+		currentIndex = self.hotBox.uiList.index(self.hotBox.name)
 		ui = self.hotBox.stackedLayout.widget(currentIndex)
 
 		buttonType = {'b':'clicked','v':'clicked','s':'valueChanged','chk':'released','cmb':'currentIndexChanged','t':'returnPressed'}
-		if name=='main' or name=='viewport': buttonType = {'i':'clicked','v':'clicked'}
+		if self.hotBox.name=='main' or self.hotBox.name=='viewport': buttonType = {'i':'clicked','v':'clicked'}
 
-		self.connectionDict[name] = {} #initialize the key before attempting to add any values, so that a placeholder key will be generated even if no values are present.
+		self.connectionDict[self.hotBox.name] = {} #initialize the key before attempting to add any values, so that a placeholder key will be generated even if no values are present.
 		for prefix,signal in buttonType.iteritems(): #button/method's that start with ie. 'b'
 			size = 200
 			for num in xrange(size):
@@ -53,23 +53,26 @@ class Signal(QtCore.QObject):
 						method = getattr(self.hotBox.class_(self.hotBox), buttonString) #use 'buttonString' (ie. b006) to get method of the same name in current class_.
 						if prefix!='v':	#add onPressedEvent
 							method = [method, lambda m=method: self.onPressedEvent(m)]
-						#add signal/slot dict value to connectionDict[name] key
-					self.connectionDict[name].update ({buttonWithSignal:method})
-				except Exception as err: print err
-		# print self.connectionDict
+						#add signal/slot dict value to connectionDict[self.hotBox.name] key
+					self.connectionDict[self.hotBox.name].update ({buttonWithSignal:method})
+				except Exception as err:
+					if err!=AttributeError:
+						pass
+						# print 'Exception:',err
+		print self.connectionDict
 		return self.connectionDict
 
 
-	def addSignal(self, name):
+	def addSignal(self):
 		#args: [string]
-		for buttonObject,method in self.connectionDict[name].iteritems():
+		for buttonObject,method in self.connectionDict[self.hotBox.name].iteritems():
 			try: map(buttonObject.connect, method) #add multiple slots
 			except: buttonObject.connect(method) #add single slot (main and viewport)
 
 
-	def removeSignal(self, name):
+	def removeSignal(self):
 		#args: [string]
-		for buttonObject,method in self.connectionDict[name].iteritems():
+		for buttonObject,method in self.connectionDict[self.hotBox.name].iteritems():
 			try: map(buttonObject.disconnect, method) #remove multiple slots
 			except: buttonObject.disconnect(method) #remove single slot (main and viewport)
 
@@ -88,7 +91,7 @@ class Signal(QtCore.QObject):
 
 
 
-#print module name
+#module name
 print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes

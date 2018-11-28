@@ -134,15 +134,15 @@ class HotBox(QtWidgets.QWidget):
 			self.init(self).info()
 		else:
 			if self.name not in self.signal.connectionDict: #construct the signals and slots for the ui 
-				self.signal.buildConnectionDict(self.name)
+				self.signal.buildConnectionDict()
 
 			#remove old and add new signals for current ui from connectionDict
 			if len(self.prevName)>1:
 				if self.name!=self.prevName[-2]:
 					self.signal.removeSignal(self.prevName[-2])
-					self.signal.addSignal(self.name)
+					self.signal.addSignal()
 			else: #if no previous ui exists
-				self.signal.addSignal(self.name)
+				self.signal.addSignal()
 
 			#build array that stores prevName string for removeSignal and open last used window command
 			self.prevName.append(self.name)
@@ -435,7 +435,7 @@ def createInstance():
 
 
 
-#print module name
+#module name
 print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes

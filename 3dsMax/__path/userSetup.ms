@@ -30,7 +30,7 @@ fullPath = "C:\\Users\\render\\Documents\\_portable\\Scripts_portable\\3dsMax\\_
 python.ExecuteFile fullPath
 
 --fullPath = "O:\\Cloud\\____Graphics\\3ds Max\\Scripts\\macros\\tk_macroScript.ms"
-fullPath = "C:\\Users\\render\\Documents\\_portable\\Scripts_portable\\3dsMax\\__path\\macros\\tk_macroScript.ms"
+fullPath = "C:\\Users\\render\\Documents\\_portable\\Scripts_portable\\3dsMax\\__path\\tk_macroScript.ms"
 FileIn fullPath
 
 
