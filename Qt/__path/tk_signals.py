@@ -37,8 +37,9 @@ class Signal(QtCore.QObject):
 					buttonObject = getattr(ui, buttonString)  #equivilent to: self.ui.b000
 					size-=1 #decrease search length on each successful match
 
-					#add signal
+					#add signal to buttonObject
 					buttonWithSignal = getattr(buttonObject, signal)
+					print '---',buttonWithSignal
 
 					#add eventfilter
 					if prefix=='i' or prefix=='v': #layoutStack index and viewport signals
@@ -63,16 +64,16 @@ class Signal(QtCore.QObject):
 		return self.connectionDict
 
 
-	def addSignal(self):
+	def addSignal(self, name):
 		#args: [string]
-		for buttonObject,method in self.connectionDict[self.hotBox.name].iteritems():
+		for buttonObject,method in self.connectionDict[name].iteritems():
 			try: map(buttonObject.connect, method) #add multiple slots
 			except: buttonObject.connect(method) #add single slot (main and viewport)
 
 
-	def removeSignal(self):
+	def removeSignal(self, name):
 		#args: [string]
-		for buttonObject,method in self.connectionDict[self.hotBox.name].iteritems():
+		for buttonObject,method in self.connectionDict[name].iteritems():
 			try: map(buttonObject.disconnect, method) #remove multiple slots
 			except: buttonObject.disconnect(method) #remove single slot (main and viewport)
 

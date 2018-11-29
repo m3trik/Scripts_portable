@@ -140,9 +140,9 @@ class HotBox(QtWidgets.QWidget):
 			if len(self.prevName)>1:
 				if self.name!=self.prevName[-2]:
 					self.signal.removeSignal(self.prevName[-2])
-					self.signal.addSignal()
+					self.signal.addSignal(self.name)
 			else: #if no previous ui exists
-				self.signal.addSignal()
+				self.signal.addSignal(self.name)
 
 			#build array that stores prevName string for removeSignal and open last used window command
 			self.prevName.append(self.name)
