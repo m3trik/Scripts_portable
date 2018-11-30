@@ -39,7 +39,6 @@ class Signal(QtCore.QObject):
 
 					#add signal to buttonObject
 					buttonWithSignal = getattr(buttonObject, signal)
-					print '---',buttonWithSignal
 
 					#add eventfilter
 					if prefix=='i' or prefix=='v': #layoutStack index and viewport signals
@@ -51,7 +50,8 @@ class Signal(QtCore.QObject):
 						method = lambda i=index: self.hotBox.layoutStack(i) #lambda function to call index. ie. hotBox.layoutStack(6)
 					else: #add class method
 						# if hasattr(self.hotBox.class_(self.hotBox), buttonString):
-						method = getattr(self.hotBox.class_(self.hotBox), buttonString) #use 'buttonString' (ie. b006) to get method of the same name in current class_.
+						method = getattr(self.hotBox.class_, buttonString) #use signal 'buttonString' (ie. b006) to get method/slot of the same name in current class_.
+						print 'method--',method
 						if prefix!='v':	#add onPressedEvent
 							method = [method, lambda m=method: self.onPressedEvent(m)]
 						#add signal/slot dict value to connectionDict[self.hotBox.name] key

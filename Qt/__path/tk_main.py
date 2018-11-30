@@ -93,7 +93,7 @@ class HotBox(QtWidgets.QWidget):
 		self.prevName=[] #when a new ui is called its name is last and the previous ui is at element[-2]. ie. [previousNameString, previousNameString, currentNameString]
 		
 		self.app = parent.objectName().rstrip('Window').lower()
-		self.init = locate('tk_slots_'+self.app+'_init.Init') #remove 'Window' from objectName ie. 'Maya' from 'MayaWindow' and set lowercase. ie. import tk_slots_maya_init.Init
+		
 		self.signal = locate('tk_signals.Signal')(self)
 		self.layoutStack(self.uiList.index('init'))
 		self.overlay = Overlay(self)
@@ -121,7 +121,7 @@ class HotBox(QtWidgets.QWidget):
 
 		self.index = index
 		self.name = self.uiList[self.index] #use index to get name
-		self.class_ = locate('tk_slots_'+self.app+'_'+self.name+'.'+self.name.capitalize()) #ie.  import tk_slots_maya_main.Main
+		self.class_ = locate('tk_slots_'+self.app+'_'+self.name+'.'+self.name.capitalize())(self) #equivalent to: import tk_slots_maya_main.Main
 
 		#get ui size from uiSideDict and resize window
 		self.width = self.uiSizeDict[self.name][0]
@@ -130,8 +130,10 @@ class HotBox(QtWidgets.QWidget):
 		
 		self.point = QtCore.QPoint(self.width/2, self.height/2) #set point to the middle of the layout
 		
+		self.init = locate('tk_slots_'+self.app+'_init.Init')(self) #remove 'Window' from objectName ie. 'Maya' from 'MayaWindow' and set lowercase. ie. import tk_slots_maya_init.Init
+		
 		if self.name=='init':
-			self.init(self).info()
+			self.init.info()
 		else:
 			if self.name not in self.signal.connectionDict: #construct the signals and slots for the ui 
 				self.signal.buildConnectionDict()
