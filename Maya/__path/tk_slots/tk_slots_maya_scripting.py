@@ -9,12 +9,19 @@ from tk_slots_maya_init import Init
 
 
 
+#                            oo            dP   oo                   
+#                                          88                        
+# .d8888b. .d8888b. 88d888b. dP 88d888b. d8888P dP 88d888b. .d8888b. 
+# Y8ooooo. 88'  `"" 88'  `88 88 88'  `88   88   88 88'  `88 88'  `88 
+#       88 88.  ... 88       88 88.  .88   88   88 88    88 88.  .88 
+# `88888P' `88888P' dP       dP 88Y888P'   dP   dP dP    dP `8888P88 
+#                               88                               .88 
+#                               dP                           d8888P 
+#
 class Scripting(Init):
 	def __init__(self, *args, **kwargs):
 		super(Scripting, self).__init__(*args, **kwargs)
 
-		#init widgets
-		self.initWidgets(self)
 
 
 		tk_cmdScrollFieldReporter = pm.cmdScrollFieldReporter (
@@ -24,14 +31,14 @@ class Scripting(Init):
 																echoAllCommands=False,
 																filterSourceType="")
 
-		self.ui.plainTextEdit.appendPlainText(tk_cmdScrollFieldReporter)
+		self.hotBox.ui.plainTextEdit.appendPlainText(tk_cmdScrollFieldReporter)
 		
 
 	def chk000(self): #toggle mel/python
-		if self.ui.chk000.isChecked():
-			self.ui.chk000.setText("python")
+		if self.hotBox.ui.chk000.isChecked():
+			self.hotBox.ui.chk000.setText("python")
 		else:
-			self.ui.chk000.setText("MEL")
+			self.hotBox.ui.chk000.setText("MEL")
 
 
 	def b000(self): #toggle script output window
@@ -46,14 +53,14 @@ class Scripting(Init):
 
 	def b003(self): #new tab
 		label = "MEL"
-		if self.ui.chk000.isChecked():
+		if self.hotBox.ui.chk000.isChecked():
 			label = ".py"
-		# self.ui.tabWidget.addTab(label)
-		self.ui.tabWidget.insertTab(0, label)
+		# self.hotBox.ui.tabWidget.addTab(label)
+		self.hotBox.ui.tabWidget.insertTab(0, label)
 
 	def b004(self): #delete tab
-		index = self.ui.tabWidget.currentIndex()
-		self.ui.tabWidget.removeTab(index)
+		index = self.hotBox.ui.tabWidget.currentIndex()
+		self.hotBox.ui.tabWidget.removeTab(index)
 
 	def b005(self): #
 		mel.eval('')

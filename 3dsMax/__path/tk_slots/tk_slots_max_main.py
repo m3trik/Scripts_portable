@@ -13,7 +13,6 @@ class Main(Init):
 	def __init__(self, *args, **kwargs):
 		super(Main, self).__init__(*args, **kwargs)
 
-		print '-'*10, self.hotBox, self.ui
 
 
 	def v000(self): #Extrude

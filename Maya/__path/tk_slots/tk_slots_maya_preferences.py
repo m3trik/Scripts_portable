@@ -9,12 +9,20 @@ from tk_slots_maya_init import Init
 
 
 
+#                            .8888b                                                                
+#                            88   "                                                                
+# 88d888b. 88d888b. .d8888b. 88aaa  .d8888b. 88d888b. .d8888b. 88d888b. .d8888b. .d8888b. .d8888b. 
+# 88'  `88 88'  `88 88ooood8 88     88ooood8 88'  `88 88ooood8 88'  `88 88'  `"" 88ooood8 Y8ooooo. 
+# 88.  .88 88       88.  ... 88     88.  ... 88       88.  ... 88    88 88.  ... 88.  ...       88 
+# 88Y888P' dP       `88888P' dP     `88888P' dP       `88888P' dP    dP `88888P' `88888P' `88888P' 
+# 88                                                                                               
+# dP 
+#
 class Preferences(Init):
 	def __init__(self, *args, **kwargs):
 		super(Preferences, self).__init__(*args, **kwargs)
 
-		#init widgets
-		self.initWidgets(self)
+
 
 
 	def b000(self): #init tk_main

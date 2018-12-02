@@ -13,13 +13,11 @@ class Uv(Init):
 	def __init__(self, *args, **kwargs):
 		super(Uv, self).__init__(*args, **kwargs)
 
-		#init widgets
-		self.initWidgets(self)
 
 
 	def cmb000(self): #UV editors comboBox
-		index = self.ui.cmb000.currentIndex() #get current index before refreshing list
-		self.comboBox (self.ui.cmb000, ["UV Editor", "UV Set Editor", "UV Tool Kit", "UV Linking: Texture-Centric", "UV Linking: UV-Centric", "UV Linking: Paint Effects/UV", "UV Linking: Hair/UV"], "Editors")
+		index = self.hotBox.ui.cmb000.currentIndex() #get current index before refreshing list
+		self.comboBox (self.hotBox.ui.cmb000, ["UV Editor", "UV Set Editor", "UV Tool Kit", "UV Linking: Texture-Centric", "UV Linking: UV-Centric", "UV Linking: Paint Effects/UV", "UV Linking: Hair/UV"], "Editors")
 
 		if index !=0: #hide hotbox then perform operation
 			self.hotBox.hbHide()
@@ -37,7 +35,7 @@ class Uv(Init):
 			maxEval('pfxUVLinkingEditor;')
 		if index == 7: #UV Linking: Hair/UV
 			mel.evel('hairUVLinkingEditor;')
-		self.ui.cmb000.setCurrentIndex(0)
+		self.hotBox.ui.cmb000.setCurrentIndex(0)
 
 	def b000(self): #cut uv hard edges
 		mel.eval("tk_cutUvHardEdge ();")
@@ -91,8 +89,8 @@ class Uv(Init):
 		pm.polyMapSew()
 
 	def b012(self): #Auto unwrap
-		scaleMode = self.ui.chk000.isChecked() #0 No scale is applied. 1 Uniform scale to fit in unit square. 2 Non proportional scale to fit in unit square.
-		createNewMap = self.ui.chk001.isChecked() #Create a new UV set, as opposed to editing the current one, or the one given by the -uvSetName flag.
+		scaleMode = self.hotBox.ui.chk000.isChecked() #0 No scale is applied. 1 Uniform scale to fit in unit square. 2 Non proportional scale to fit in unit square.
+		createNewMap = self.hotBox.ui.chk001.isChecked() #Create a new UV set, as opposed to editing the current one, or the one given by the -uvSetName flag.
 		objects = pm.ls(selection=1, objectsOnly=1, flatten=1) #get shape nodes
 
 		for obj in objects:
@@ -128,8 +126,8 @@ class Uv(Init):
 		maxEval('performPolyOptimizeUV 0;')
 
 	def b020(self): #Move to UV space
-		u = str(self.ui.s000.value())
-		v = str(self.ui.s001.value())
+		u = str(self.hotBox.ui.s000.value())
+		v = str(self.hotBox.ui.s001.value())
 
 		pm.polyEditUV (u=u, v=v)
 

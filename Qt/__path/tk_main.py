@@ -77,7 +77,7 @@ class HotBox(QtWidgets.QWidget):
 	def __init__(self, parent):
 		QtWidgets.QWidget.__init__(self)
 
-		self.setObjectName(self.__class__.__name__)
+		self.setObjectName(self.__class__.__name__) #set object name to: 'HotBox'
 
 		#set window style
 		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint|QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.X11BypassWindowManagerHint)
@@ -92,16 +92,16 @@ class HotBox(QtWidgets.QWidget):
 		self.uiSizeDict={} #key is the ui name string identifier. value is a list containing width int, height int. ie. {'selection': [295, 234], 'scene': [203, 254], 'rendering': [195, 177]}
 		self.prevName=[] #when a new ui is called its name is last and the previous ui is at element[-2]. ie. [previousNameString, previousNameString, currentNameString]
 		
-		self.app = parent.objectName().rstrip('Window').lower()
+		self.app = parent.objectName().rstrip('Window').lower() #remove 'Window' from objectName ie. 'Maya' from 'MayaWindow' and set lowercase.
 		
 		self.signal = locate('tk_signals.Signal')(self)
-		self.layoutStack(self.uiList.index('init'))
+		self.layoutStack()
 		self.overlay = Overlay(self)
 		# self.pin = Pin()
 		
 		
 
-	def layoutStack(self, index):
+	def layoutStack(self, index=None):
 		#args: [int]
 		if not self.layout(): #if layout doesnt exist; init stackedLayout.
 			self.stackedLayout = QtWidgets.QStackedLayout()
@@ -113,6 +113,7 @@ class HotBox(QtWidgets.QWidget):
 				# add ui to layoutStack
 				self.stackedLayout.addWidget(ui) #add each ui
 			self.setLayout(self.stackedLayout)
+			index = self.uiList.index('init') #Initialize layout index to 'init'
 
 		#set ui from stackedLayout
 		self.stackedLayout.setCurrentIndex(index)
@@ -121,8 +122,7 @@ class HotBox(QtWidgets.QWidget):
 
 		self.index = index
 		self.name = self.uiList[self.index] #use index to get name
-		self.class_ = locate('tk_slots_'+self.app+'_'+self.name+'.'+self.name.capitalize())(self) #equivalent to: import tk_slots_maya_main.Main
-
+		
 		#get ui size from uiSideDict and resize window
 		self.width = self.uiSizeDict[self.name][0]
 		self.height = self.uiSizeDict[self.name][1]
@@ -130,7 +130,7 @@ class HotBox(QtWidgets.QWidget):
 		
 		self.point = QtCore.QPoint(self.width/2, self.height/2) #set point to the middle of the layout
 		
-		self.init = locate('tk_slots_'+self.app+'_init.Init')(self) #remove 'Window' from objectName ie. 'Maya' from 'MayaWindow' and set lowercase. ie. import tk_slots_maya_init.Init
+		self.init = locate('tk_slots_'+self.app+'_init.Init')(self) #equivalent to: import tk_slots_maya_init.Init
 		
 		if self.name=='init':
 			self.init.info()

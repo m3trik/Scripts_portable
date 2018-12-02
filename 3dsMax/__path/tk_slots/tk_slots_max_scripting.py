@@ -13,8 +13,7 @@ class Scripting(Init):
 	def __init__(self, *args, **kwargs):
 		super(Scripting, self).__init__(*args, **kwargs)
 
-		#init widgets
-		self.initWidgets(self)
+
 
 
 		tk_cmdScrollFieldReporter = pm.cmdScrollFieldReporter (
@@ -24,14 +23,14 @@ class Scripting(Init):
 																echoAllCommands=False,
 																filterSourceType="")
 
-		self.ui.plainTextEdit.appendPlainText(tk_cmdScrollFieldReporter)
+		self.hotBox.ui.plainTextEdit.appendPlainText(tk_cmdScrollFieldReporter)
 		
 
 	def chk000(self): #toggle mel/python
-		if self.ui.chk000.isChecked():
-			self.ui.chk000.setText("python")
+		if self.hotBox.ui.chk000.isChecked():
+			self.hotBox.ui.chk000.setText("python")
 		else:
-			self.ui.chk000.setText("MEL")
+			self.hotBox.ui.chk000.setText("MEL")
 
 
 	def b000(self): #toggle script output window
@@ -46,14 +45,14 @@ class Scripting(Init):
 
 	def b003(self): #new tab
 		label = "MEL"
-		if self.ui.chk000.isChecked():
+		if self.hotBox.ui.chk000.isChecked():
 			label = ".py"
-		# self.ui.tabWidget.addTab(label)
-		self.ui.tabWidget.insertTab(0, label)
+		# self.hotBox.ui.tabWidget.addTab(label)
+		self.hotBox.ui.tabWidget.insertTab(0, label)
 
 	def b004(self): #delete tab
-		index = self.ui.tabWidget.currentIndex()
-		self.ui.tabWidget.removeTab(index)
+		index = self.hotBox.ui.tabWidget.currentIndex()
+		self.hotBox.ui.tabWidget.removeTab(index)
 
 	def b005(self): #
 		maxEval('')

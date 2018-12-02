@@ -9,16 +9,24 @@ from tk_slots_maya_init import Init
 
 
 
+#                                  dP                   oo                   
+#                                  88                                        
+# 88d888b. .d8888b. 88d888b. .d888b88 .d8888b. 88d888b. dP 88d888b. .d8888b. 
+# 88'  `88 88ooood8 88'  `88 88'  `88 88ooood8 88'  `88 88 88'  `88 88'  `88 
+# 88       88.  ... 88    88 88.  .88 88.  ... 88       88 88    88 88.  .88 
+# dP       `88888P' dP    dP `88888P8 `88888P' dP       dP dP    dP `8888P88 
+#                                                                        .88 
+#                                                                    d8888P  
+#
 class Rendering(Init):
 	def __init__(self, *args, **kwargs):
 		super(Rendering, self).__init__(*args, **kwargs)
 
-		#init widgets
-		self.initWidgets(self)
+
 		
 
 		#checkable comboBox not working
-		comboBox = self.CheckableComboBox(self.ui.cmb000)
+		comboBox = self.CheckableComboBox(self.hotBox.ui.cmb000)
 		for num in range(6):
 			comboBox.addItem("checkbox " + str(num))
 		comboBox.checkIndex(1)

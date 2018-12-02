@@ -13,8 +13,6 @@ class Viewport(Init):
 	def __init__(self, *args, **kwargs):
 		super(Viewport, self).__init__(*args, **kwargs)
 
-		#init widgets
-		self.initWidgets(self)
 	
 
 	def v000(self): #viewport: back view

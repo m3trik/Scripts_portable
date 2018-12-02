@@ -9,53 +9,59 @@ from tk_slots_maya_init import Init
 
 
 
+#    dP                                       .8888b                              
+#    88                                       88   "                              
+#  d8888P 88d888b. .d8888b. 88d888b. .d8888b. 88aaa  .d8888b. 88d888b. 88d8b.d8b. 
+#    88   88'  `88 88'  `88 88'  `88 Y8ooooo. 88     88'  `88 88'  `88 88'`88'`88 
+#    88   88       88.  .88 88    88       88 88     88.  .88 88       88  88  88 
+#    dP   dP       `88888P8 dP    dP `88888P' dP     `88888P' dP       dP  dP  dP 
+#                                                                         
 class Transform(Init):
 	def __init__(self, *args, **kwargs):
 		super(Transform, self).__init__(*args, **kwargs)
 
-		#init widgets
-		self.initWidgets(self)
+
 		
 
 		#set input masks for text fields
-		# self.ui.t000.setInputMask("00.00") #change to allow for neg values
+		# self.hotBox.ui.t000.setInputMask("00.00") #change to allow for neg values
 
 		#chk012, chk013 component constraints. query and set initial value
 		state = pm.xformConstraint(query=True, type=True)
 		if state == 'edge':
-			self.ui.chk012.setChecked(True)
+			self.hotBox.ui.chk012.setChecked(True)
 		else:
-			self.ui.chk012.setChecked(False)
+			self.hotBox.ui.chk012.setChecked(False)
 		#b021 object or world space
 		if state == 'surface':
-			self.ui.chk013.setChecked(True)
+			self.hotBox.ui.chk013.setChecked(True)
 		else:
-			self.ui.chk013.setChecked(False)
+			self.hotBox.ui.chk013.setChecked(False)
 
 	def chk005(self): #transform: scale
-		self.setButtons(self.ui, unchecked='chk008,chk009',checked='chk000,chk001,chk002')
-		self.ui.s000.setValue(2)
-		self.ui.s000.setSingleStep(1)
+		self.setButtons(self.hotBox.ui, unchecked='chk008,chk009',checked='chk000,chk001,chk002')
+		self.hotBox.ui.s000.setValue(2)
+		self.hotBox.ui.s000.setSingleStep(1)
 
 	def chk008(self): #transform: move
-		self.setButtons(self.ui, unchecked='chk005,chk009,chk000,chk001,chk002')
-		self.ui.s000.setValue(0.1)
-		self.ui.s000.setSingleStep(0.1)
+		self.setButtons(self.hotBox.ui, unchecked='chk005,chk009,chk000,chk001,chk002')
+		self.hotBox.ui.s000.setValue(0.1)
+		self.hotBox.ui.s000.setSingleStep(0.1)
 
 	def chk009(self): #transform: rotate
-		self.setButtons(self.ui, unchecked='chk005,chk008,chk000,chk001,chk002')
-		self.ui.s000.setValue(45)
-		self.ui.s000.setSingleStep(5)
+		self.setButtons(self.hotBox.ui, unchecked='chk005,chk008,chk000,chk001,chk002')
+		self.hotBox.ui.s000.setValue(45)
+		self.hotBox.ui.s000.setSingleStep(5)
 
 	def chk010(self): #align: auto align
-		if self.ui.chk010.isChecked():
-			self.setButtons(self.ui, disable='b029,b030,b031')
+		if self.hotBox.ui.chk010.isChecked():
+			self.setButtons(self.hotBox.ui, disable='b029,b030,b031')
 		else:
-			self.setButtons(self.ui, enable='b029,b030,b031')
+			self.setButtons(self.hotBox.ui, enable='b029,b030,b031')
 
 	def chk012(self): #Constrain to edge
-		if self.ui.chk012.isChecked():
-			self.ui.chk013.setChecked(False)
+		if self.hotBox.ui.chk012.isChecked():
+			self.hotBox.ui.chk013.setChecked(False)
 			# pm.manipMoveSetXformConstraint(edge=True);
 			pm.xformConstraint(type='edge')
 		else:
@@ -63,8 +69,8 @@ class Transform(Init):
 			pm.xformConstraint(type='none')
 
 	def chk013(self): #Constrain to surface
-		if self.ui.chk013.isChecked():
-			self.ui.chk012.setChecked(False)
+		if self.hotBox.ui.chk013.isChecked():
+			self.hotBox.ui.chk012.setChecked(False)
 			# pm.manipMoveSetXformConstraint(surface=True);
 			pm.xformConstraint(type='surface')
 		else:
@@ -75,32 +81,32 @@ class Transform(Init):
 		pass
 
 	def transformChecks(self):
-		floatXYZ = float(self.ui.s000.text())
+		floatXYZ = float(self.hotBox.ui.s000.text())
 		floatX=floatY=floatZ = 0
 
-		if self.ui.chk005.isChecked():
+		if self.hotBox.ui.chk005.isChecked():
 			currentScale = pm.xform (query=1, scale=1)
 			floatX = round(currentScale[0], 2)
 			floatY = round(currentScale[1], 2)
 			floatZ = round(currentScale[2], 2)
 
-		if self.ui.chk000.isChecked():
+		if self.hotBox.ui.chk000.isChecked():
 			floatX = floatXYZ
-		if self.ui.chk001.isChecked():
+		if self.hotBox.ui.chk001.isChecked():
 			floatY = floatXYZ
-		if self.ui.chk002.isChecked():
+		if self.hotBox.ui.chk002.isChecked():
 			floatZ = floatXYZ
 
 		xyz = [floatX, floatY, floatZ]
 		return xyz
 
 	def transform(self): #transform
-		relative = bool(self.ui.chk003.isChecked())#Move absolute/relative toggle
-		worldspace = bool(self.ui.chk004.isChecked())#Move object/worldspace toggle
+		relative = bool(self.hotBox.ui.chk003.isChecked())#Move absolute/relative toggle
+		worldspace = bool(self.hotBox.ui.chk004.isChecked())#Move object/worldspace toggle
 		xyz = self.transformChecks()
 		
 		#Scale selected.
-		if self.ui.chk005.isChecked():
+		if self.hotBox.ui.chk005.isChecked():
 			if xyz[0] != -1: #negative values are only valid in relative mode and cannot scale relatively by one so prevent the math below which would scale incorrectly in this case.
 				#convert the decimal place system xform uses for negative scale values to an standard negative value
 				if xyz[0] < 0:
@@ -112,27 +118,27 @@ class Transform(Init):
 				pm.xform (relative=relative, worldSpace=worldspace, objectSpace=(not worldspace), scale=(xyz[0], xyz[1], xyz[2]))
 	
 		#Move selected relative/absolute, object/worldspace by specified amount.
-		if self.ui.chk008.isChecked():
+		if self.hotBox.ui.chk008.isChecked():
 			pm.xform (relative=relative, worldSpace=worldspace, objectSpace=(not worldspace), translation=(xyz[0], xyz[1], xyz[2]))
 
 		#Rotate selected
-		if self.ui.chk009.isChecked():
+		if self.hotBox.ui.chk009.isChecked():
 			pm.xform (relative=relative, worldSpace=worldspace, objectSpace=(not worldspace), rotation=(xyz[0], xyz[1], xyz[2]))
 
 	def b000(self): #transform -
 		#change the textfield to neg value and call transform
-		textfield = float(self.ui.s000.value())
+		textfield = float(self.hotBox.ui.s000.value())
 		if textfield >=0:
 			newText = -textfield
-			self.ui.s000.setValue(newText)
+			self.hotBox.ui.s000.setValue(newText)
 		self.transform()
 
 	def b001(self): #transform +
 		#change the textfield to pos value and call transform
-		textfield = float(self.ui.s000.value())
+		textfield = float(self.hotBox.ui.s000.value())
 		if textfield <0:
 			newText = abs(textfield)
-			self.ui.s000.setValue(newText)
+			self.hotBox.ui.s000.setValue(newText)
 		self.transform()
 
 	def b002(self): #Freeze transformations
@@ -144,7 +150,7 @@ class Transform(Init):
 		mel.eval("CenterPivot;")
 		
 	def b004(self): #Align vertices
-		if self.ui.chk010.isChecked(): #if checked; set coordinates for auto align:
+		if self.hotBox.ui.chk010.isChecked(): #if checked; set coordinates for auto align:
 			sel = pm.ls (selection=1)
 
 			if len(sel) != 0:
@@ -174,30 +180,30 @@ class Transform(Init):
 				axis = max(x,y,z)
 				tangent = max(tx,ty,tz)
 
-				if self.ui.chk011.isChecked():
+				if self.hotBox.ui.chk011.isChecked():
 					if axis == x: #"yz"
-						self.setButtons(self.ui, checked='b030,b031', unchecked='b029')
+						self.setButtons(self.hotBox.ui, checked='b030,b031', unchecked='b029')
 					if axis == y: #"xz"
-						self.setButtons(self.ui, checked='b029,b031', unchecked='b030')
+						self.setButtons(self.hotBox.ui, checked='b029,b031', unchecked='b030')
 					if axis == z: #"xy"
-						self.setButtons(self.ui, checked='b029,b030', unchecked='b031')
+						self.setButtons(self.hotBox.ui, checked='b029,b030', unchecked='b031')
 				else:
 					if any ([axis == x and tangent == ty, axis == y and tangent == tx]): #"z"
-						self.setButtons(self.ui, checked='b031', unchecked='b029,b030')
+						self.setButtons(self.hotBox.ui, checked='b031', unchecked='b029,b030')
 					if any ([axis == x and tangent == tz, axis == z and tangent == tx]): #"y"
-						self.setButtons(self.ui, checked='b030', unchecked='b029,b031')
+						self.setButtons(self.hotBox.ui, checked='b030', unchecked='b029,b031')
 					if any ([axis == y and tangent == tz, axis == z and tangent == ty]): #"x"
-						self.setButtons(self.ui, checked='b029', unchecked='b030,b031')
+						self.setButtons(self.hotBox.ui, checked='b029', unchecked='b030,b031')
 			else:
 				print "// Warning: An edge must be selected. //"
 				return
 
 		#align
-		x = self.ui.b029.isChecked()
-		y = self.ui.b030.isChecked()
-		z = self.ui.b031.isChecked()
-		avg = self.ui.chk006.isChecked()
-		loop = self.ui.chk007.isChecked()
+		x = self.hotBox.ui.b029.isChecked()
+		y = self.hotBox.ui.b030.isChecked()
+		z = self.hotBox.ui.b031.isChecked()
+		avg = self.hotBox.ui.chk006.isChecked()
+		loop = self.hotBox.ui.chk007.isChecked()
 
 		if all ([x, not y, not z]): #align x
 			self.alignVertices(mode=3,average=avg,edgeloop=loop)
@@ -247,9 +253,9 @@ class Transform(Init):
 		print str(obj)+'is live.' 
 
 	def b013(self): #Drop to grid
-		origin = self.ui.chk014.isChecked()
-		bBoxLowestPoint = self.ui.chk015.isChecked()
-		centerPivot = self.ui.chk016.isChecked()
+		origin = self.hotBox.ui.chk014.isChecked()
+		bBoxLowestPoint = self.hotBox.ui.chk015.isChecked()
+		centerPivot = self.hotBox.ui.chk016.isChecked()
 
 		selection = pm.ls (selection=1, objectsOnly=1)
 

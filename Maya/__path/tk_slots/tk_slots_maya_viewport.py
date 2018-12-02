@@ -9,12 +9,20 @@ from tk_slots_maya_init import Init
 
 
 
+#          oo                                                  dP   
+#                                                              88   
+# dP   .dP dP .d8888b. dP  dP  dP 88d888b. .d8888b. 88d888b. d8888P 
+# 88   d8' 88 88ooood8 88  88  88 88'  `88 88'  `88 88'  `88   88   
+# 88 .88'  88 88.  ... 88.88b.88' 88.  .88 88.  .88 88         88   
+# 8888P'   dP `88888P' 8888P Y8P  88Y888P' `88888P' dP         dP   
+#                                 88                                
+#                                 dP                                
+#
 class Viewport(Init):
 	def __init__(self, *args, **kwargs):
 		super(Viewport, self).__init__(*args, **kwargs)
 
-		#init widgets
-		self.initWidgets(self)
+
 	
 
 	def v000(self): #viewport: back view

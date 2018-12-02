@@ -9,18 +9,22 @@ from tk_slots_maya_init import Init
 
 
 
+# .d8888b. .d8888b. 88d8b.d8b. .d8888b. 88d888b. .d8888b. .d8888b. 
+# 88'  `"" 88'  `88 88'`88'`88 88ooood8 88'  `88 88'  `88 Y8ooooo. 
+# 88.  ... 88.  .88 88  88  88 88.  ... 88       88.  .88       88 
+# `88888P' `88888P8 dP  dP  dP `88888P' dP       `88888P8 `88888P'                                                               
+#
 class Cameras(Init):
 	def __init__(self, *args, **kwargs):
 		super(Cameras, self).__init__(*args, **kwargs)
 
-		#init widgets
-		self.initWidgets(self)
+
 
 
 	def chk000(self): #pin open a separate instance of the ui in a new window
-		if self.ui.chk000.isChecked():
+		if self.hotBox.ui.chk000.isChecked():
 			print 'chk000'
-			self.hotBox.pin(self.ui)
+			self.hotBox.pin(self.hotBox.ui)
 		else:
 			self.hotBox.pin.hide()
 

@@ -13,8 +13,7 @@ class Preferences(Init):
 	def __init__(self, *args, **kwargs):
 		super(Preferences, self).__init__(*args, **kwargs)
 
-		#init widgets
-		self.initWidgets(self)
+
 
 
 	def b000(self): #init tk_main

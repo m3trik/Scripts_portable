@@ -2,7 +2,7 @@ from PySide2 import QtCore
 
 import os.path
 
-
+from pydoc import locate
 
 
 
@@ -18,10 +18,10 @@ class Signal(QtCore.QObject):
 		self.connectionDict={} #<key=ui name string identifier>:<value=dict{button object:method object}> ie."main : b001:main.b001"
 		self.prevCommand=[] #history of commands. last used command method at element[-1]
 
+		
 
 	def buildConnectionDict(self):
-		currentIndex = self.hotBox.uiList.index(self.hotBox.name)
-		ui = self.hotBox.stackedLayout.widget(currentIndex)
+		self.class_ = locate('tk_slots_'+self.hotBox.app+'_'+self.hotBox.name+'.'+self.hotBox.name.capitalize())(self.hotBox) #equivalent to: ie. import tk_slots_maya_main.Main
 
 		buttonType = {'b':'clicked','v':'clicked','s':'valueChanged','chk':'released','cmb':'currentIndexChanged','t':'returnPressed'}
 		if self.hotBox.name=='main' or self.hotBox.name=='viewport': buttonType = {'i':'clicked','v':'clicked'}
@@ -32,9 +32,9 @@ class Signal(QtCore.QObject):
 			for num in xrange(size):
 				numString = '000'[:-len(str(num))]+str(num) #remove zeros from the prefix string corresponding to the length of num
 				buttonString = prefix+numString
-				# if hasattr(ui, buttonString):
+				# if hasattr(self.hotBox.ui, buttonString):
 				try: #get the button from the dynamic ui
-					buttonObject = getattr(ui, buttonString)  #equivilent to: self.ui.b000
+					buttonObject = getattr(self.hotBox.ui, buttonString)  #equivilent to: self.hotBox.ui.b000
 					size-=1 #decrease search length on each successful match
 
 					#add signal to buttonObject
@@ -42,7 +42,7 @@ class Signal(QtCore.QObject):
 
 					#add eventfilter
 					if prefix=='i' or prefix=='v': #layoutStack index and viewport signals
-						buttonObject.installEventFilter(self.hotBox) #ie. ui.i000.installEventFilter(self)
+						buttonObject.installEventFilter(self.hotBox) #ie. self.hotBox.ui.i000.installEventFilter(self)
 
 					#get the corresponding method
 					if prefix=='i': #add slot to change index
@@ -50,16 +50,14 @@ class Signal(QtCore.QObject):
 						method = lambda i=index: self.hotBox.layoutStack(i) #lambda function to call index. ie. hotBox.layoutStack(6)
 					else: #add class method
 						# if hasattr(self.hotBox.class_(self.hotBox), buttonString):
-						method = getattr(self.hotBox.class_, buttonString) #use signal 'buttonString' (ie. b006) to get method/slot of the same name in current class_.
-						print 'method--',method
+						method = getattr(self.class_, buttonString) #use signal 'buttonString' (ie. b006) to get method/slot of the same name in current class_.
 						if prefix!='v':	#add onPressedEvent
 							method = [method, lambda m=method: self.onPressedEvent(m)]
 						#add signal/slot dict value to connectionDict[self.hotBox.name] key
 					self.connectionDict[self.hotBox.name].update ({buttonWithSignal:method})
 				except Exception as err:
-					if err!=AttributeError:
-						pass
-						# print 'Exception:',err
+					if err==AttributeError:
+						print 'Exception:',err
 		print self.connectionDict
 		return self.connectionDict
 

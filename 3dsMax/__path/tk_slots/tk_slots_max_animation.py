@@ -13,12 +13,11 @@ class Animation(Init):
 	def __init__(self, *args, **kwargs):
 		super(Animation, self).__init__(*args, **kwargs)
 
-		#init widgets
-		self.initWidgets(self)
+
 
 
 	def chk000(self): #pin open a separate instance of the ui in a new window
-		if self.ui.chk000.isChecked():
+		if self.hotBox.ui.chk000.isChecked():
 			self.hotBox.pin()
 		else:
 			self.hotBox.pin.hide()

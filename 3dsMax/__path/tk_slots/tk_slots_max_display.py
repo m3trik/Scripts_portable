@@ -13,54 +13,53 @@ class Display(Init):
 	def __init__(self, *args, **kwargs):
 		super(Display, self).__init__(*args, **kwargs)
 
-		#init widgets
-		self.initWidgets(self)
+
 
 
 	def chk000(self): #division level 1
 		self.setAttributesOnSelected (attribute=".smoothLevel", value=1)
 		pm.optionVar (intValue=["proxyDivisions",1]) #subDiv proxy options: 'divisions' 
-		self.setButtons(self.ui, unchecked='chk001,chk002,chk003,chk004')
+		self.setButtons(self.hotBox.ui, unchecked='chk001,chk002,chk003,chk004')
 
 	def chk001(self): #division level 2
 		self.setAttributesOnSelected (attribute=".smoothLevel", value=2)
 		pm.optionVar (intValue=["proxyDivisions",2]) #subDiv proxy options: 'divisions' 
-		self.setButtons(self.ui, unchecked='chk000,chk002,chk003,chk004')
+		self.setButtons(self.hotBox.ui, unchecked='chk000,chk002,chk003,chk004')
 
 	def chk002(self): #division level 3
 		self.setAttributesOnSelected (attribute=".smoothLevel", value=3)
 		pm.optionVar (intValue=["proxyDivisions",3]) #subDiv proxy options: 'divisions' 
-		self.setButtons(self.ui, unchecked='chk000,chk001,chk003,chk004')
+		self.setButtons(self.hotBox.ui, unchecked='chk000,chk001,chk003,chk004')
 
 	def chk003(self): #division level 4
 		self.setAttributesOnSelected (attribute=".smoothLevel", value=4)
 		pm.optionVar (intValue=["proxyDivisions",4]) #subDiv proxy options: 'divisions' 
-		self.setButtons(self.ui, unchecked='chk000,chk001,chk002,chk004')
+		self.setButtons(self.hotBox.ui, unchecked='chk000,chk001,chk002,chk004')
 
 	def chk004(self): #division level 5
 		self.setAttributesOnSelected (attribute=".smoothLevel", value=5)
 		pm.optionVar (intValue=["proxyDivisions",5]) #subDiv proxy options: 'divisions'
-		self.setButtons(self.ui, unchecked='chk000,chk001,chk002,chk003')
+		self.setButtons(self.hotBox.ui, unchecked='chk000,chk001,chk002,chk003')
 
 	def chk005(self): #tessellation level 6
 		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=6)
-		self.setButtons(self.ui, unchecked='chk006,chk007,chk008,chk009')
+		self.setButtons(self.hotBox.ui, unchecked='chk006,chk007,chk008,chk009')
 
 	def chk006(self): #tessellation level 7
 		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=7)
-		self.setButtons(self.ui, unchecked='chk005,chk007,chk008,chk009')
+		self.setButtons(self.hotBox.ui, unchecked='chk005,chk007,chk008,chk009')
 
 	def chk007(self): #tessellation level 8
 		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=8)
-		self.setButtons(self.ui, unchecked='chk005,chk006,chk008,chk009')
+		self.setButtons(self.hotBox.ui, unchecked='chk005,chk006,chk008,chk009')
 
 	def chk008(self): #tessellation level 9
 		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=9)
-		self.setButtons(self.ui, unchecked='chk005,chk006,chk007,chk009')
+		self.setButtons(self.hotBox.ui, unchecked='chk005,chk006,chk007,chk009')
 
 	def chk009(self): #tessellation level 10
 		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=10)
-		self.setButtons(self.ui, unchecked='chk005,chk006,chk007,chk008')
+		self.setButtons(self.hotBox.ui, unchecked='chk005,chk006,chk007,chk008')
 
 
 	def b000(self): #Toggle subdiv proxy display
@@ -151,9 +150,9 @@ class Display(Init):
 		#check shape for an existing output to a smoothProxy
 		attachedSmoothProxies = pm.listConnections (shape[0], type="polySmoothProxy", s=0, d=1)
 		if len(attachedSmoothProxies) == 0: #subdiv on
-			self.setButtons(self.ui, enable='b000', checked='b009')
+			self.setButtons(self.hotBox.ui, enable='b000', checked='b009')
 		else:
-			self.setButtons(self.ui, disable='b000', unchecked='b009')
+			self.setButtons(self.hotBox.ui, disable='b000', unchecked='b009')
 			mel.eval("smoothingDisplayToggle 0;")
 
 		#toggle performSmoothProxy

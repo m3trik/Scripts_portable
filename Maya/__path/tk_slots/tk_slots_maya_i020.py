@@ -13,8 +13,7 @@ class I020(Init):
 	def __init__(self, *args, **kwargs):
 		super(I020, self).__init__(*args, **kwargs)
 
-		#init widgets
-		self.initWidgets(self)
+
 
 
 	def b000(self): #

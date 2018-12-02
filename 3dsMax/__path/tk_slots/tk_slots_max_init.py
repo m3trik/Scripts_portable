@@ -13,14 +13,7 @@ class Init(Slot):
 	def __init__(self, *args, **kwargs):
 		super(Init, self).__init__(*args, **kwargs)
 
-		#init widgets
-		self.initWidgets(self)
-
-
-		# self.ui.t000.clearFocus()
-		self.ui.t000.viewport().setAutoFillBackground(False)
-		self.ui.t000.setTextBackgroundColor(QtGui.QColor(50, 50, 50))
-
+		
 
 		# live surface #state and obj might need to be saved in external file
 		# 'main' shorcut mode: ie. polygons, uv's, etc
@@ -52,8 +45,8 @@ class Init(Slot):
 		#populate the textedit with any values
 		for key, value in info.iteritems():
 			if value:
-				# self.ui.t000.setText(key+str(value)+'<br>') #<br> html break newline
-				self.ui.t000.setHtml(key+str(value)+'<br>') #<br> html break newline
+				# self.hotBox.ui.t000.setText(key+str(value)+'<br>') #<br> html break newline
+				self.hotBox.ui.t000.setHtml(key+str(value)+'<br>') #<br> html break newline
 
 
 

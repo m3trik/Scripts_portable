@@ -13,46 +13,45 @@ class Scene(Init):
 	def __init__(self, *args, **kwargs):
 		super(Scene, self).__init__(*args, **kwargs)
 
-		#init widgets
-		self.initWidgets(self)
+
 		
 
-		self.ui.lbl000.setText(pm.workspace (query=1, rd=1).split('/')[-2]) #add current project path string to label. strip path and trailing '/'
+		self.hotBox.ui.lbl000.setText(pm.workspace (query=1, rd=1).split('/')[-2]) #add current project path string to label. strip path and trailing '/'
 		
 
 
 	def cmb000(self): #recent files
-		index = self.ui.cmb000.currentIndex() #get current index before refreshing list
+		index = self.hotBox.ui.cmb000.currentIndex() #get current index before refreshing list
 		files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in file_]
-		files = self.comboBox (self.ui.cmb000, files, "Recent Files")
+		files = self.comboBox (self.hotBox.ui.cmb000, files, "Recent Files")
 
 		if index!=0:
 			force=True; force if str(mel.eval("file -query -sceneName -shortName;")) else not force #if sceneName prompt user to save; else force open
 			pm.openFile (files[index], open=1, force=force)
-			self.ui.cmb000.setCurrentIndex(0)
+			self.hotBox.ui.cmb000.setCurrentIndex(0)
 
 	def cmb001(self): #recent projects
-		index = self.ui.cmb001.currentIndex() #get current index before refreshing list
+		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
 		files = (list(reversed(mel.eval("optionVar -query RecentProjectsList;"))))
-		self.comboBox (self.ui.cmb001, files, "Recent Projects")
+		self.comboBox (self.hotBox.ui.cmb001, files, "Recent Projects")
 
 		if index!=0:
 			maxEval('setProject "'+files[index]+'"')
-			self.ui.cmb001.setCurrentIndex(0)
+			self.hotBox.ui.cmb001.setCurrentIndex(0)
 
 	def cmb002(self): #recent autosave
-		index = self.ui.cmb002.currentIndex() #get current index before refreshing list
+		index = self.hotBox.ui.cmb002.currentIndex() #get current index before refreshing list
 		files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" in file_]
-		self.comboBox (self.ui.cmb002, files, "Recent Autosave")
+		self.comboBox (self.hotBox.ui.cmb002, files, "Recent Autosave")
 
 		if index!=0:
 			force=True; force if str(mel.eval("file -query -sceneName -shortName;")) else not force #if sceneName prompt user to save; else force open
 			pm.openFile (files[index], open=1, force=force)
-			self.ui.cmb002.setCurrentIndex(0)
+			self.hotBox.ui.cmb002.setCurrentIndex(0)
 			
 	def cmb003(self): #import
-		index = self.ui.cmb003.currentIndex() #get current index before refreshing list
-		self.comboBox (self.ui.cmb003,["Import file", "Import Options"], "Import")
+		index = self.hotBox.ui.cmb003.currentIndex() #get current index before refreshing list
+		self.comboBox (self.hotBox.ui.cmb003,["Import file", "Import Options"], "Import")
 		
 		if index!=0: #hide hotbox then perform operation
 			self.hotBox.hbHide()
@@ -60,11 +59,11 @@ class Scene(Init):
 			maxEval('Import;')
 		if index == 2: #Import options
 			maxEval('ImportOptions;')
-		self.ui.cmb003.setCurrentIndex(0)
+		self.hotBox.ui.cmb003.setCurrentIndex(0)
 
 	def cmb004(self): #export
-		index = self.ui.cmb004.currentIndex() #get current index before refreshing list
-		self.comboBox (self.ui.cmb004, ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ"], "Export")
+		index = self.hotBox.ui.cmb004.currentIndex() #get current index before refreshing list
+		self.comboBox (self.hotBox.ui.cmb004, ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ"], "Export")
 
 		if index !=0: #hide hotbox then perform operation
 			self.hotBox.hbHide()
@@ -78,17 +77,17 @@ class Scene(Init):
 			maxEval('SendToUnitySelection;')
 		if index == 5: #GoZ
 			maxEval('print("GoZ"); source"C:/Users/Public/Pixologic/GoZApps/Maya/GoZBrushFromMaya.mel"; source "C:/Users/Public/Pixologic/GoZApps/Maya/GoZScript.mel";')
-		self.ui.cmb004.setCurrentIndex(0)
+		self.hotBox.ui.cmb004.setCurrentIndex(0)
 
 	def b000(self): #save
 		preSaveScript = ""
 		postSaveScript = ""
 
 		type_ = "mayaBinary"
-		if self.ui.chk003.isChecked(): #toggle ascii/ binary
+		if self.hotBox.ui.chk003.isChecked(): #toggle ascii/ binary
 			type_ = "mayaAscii" #type: mayaAscii, mayaBinary, mel, OBJ, directory, plug-in, audio, move, EPS, Adobe(R) Illustrator(R)
 
-		if self.ui.chk000.isChecked():
+		if self.hotBox.ui.chk000.isChecked():
 			mel.eval("DisplayWireframe;")
 
 		#get scene name and file path
@@ -97,7 +96,7 @@ class Scene(Init):
 		curFullName = fullPath[index:] #ie. elise_mid.009.mb
 		currentPath = fullPath[:index] #ie. O:/Cloud/____Graphics/______project_files/elise.proj/elise.scenes/.maya/
 		
-		if self.ui.chk001.isChecked(): #increment filename
+		if self.hotBox.ui.chk001.isChecked(): #increment filename
 			import re, os, fnmatch, shutil
 			incrementAmount = 5
 
@@ -132,7 +131,7 @@ class Scene(Init):
 			pm.saveFile (force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
 			print "// Result: ", currentPath+currentName
 
-		if self.ui.chk002.isChecked(): #quit maya
+		if self.hotBox.ui.chk002.isChecked(): #quit maya
 			import time
 			for timer in range(5):
 				self.viewPortMessage("shutting down:<hl>"+str(timer)+"</hl>")
@@ -166,10 +165,10 @@ class Scene(Init):
 		pass
 
 	def b015(self): #Remove string from object names.
-		from_ = str(self.ui.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
-		to = str(self.ui.t001.text())
-		replace = self.ui.chk004.isChecked()
-		selected = self.ui.chk005.isChecked()
+		from_ = str(self.hotBox.ui.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
+		to = str(self.hotBox.ui.t001.text())
+		replace = self.hotBox.ui.chk004.isChecked()
+		selected = self.hotBox.ui.chk005.isChecked()
 
 		objects = pm.ls (from_) #Stores a list of all objects starting with 'from_'
 		if selected:

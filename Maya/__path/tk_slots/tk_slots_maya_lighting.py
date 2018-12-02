@@ -9,12 +9,20 @@ from tk_slots_maya_init import Init
 
 
 
+# dP oo          dP         dP   oo                   
+# 88             88         88                        
+# 88 dP .d8888b. 88d888b. d8888P dP 88d888b. .d8888b. 
+# 88 88 88'  `88 88'  `88   88   88 88'  `88 88'  `88 
+# 88 88 88.  .88 88    88   88   88 88    88 88.  .88 
+# dP dP `8888P88 dP    dP   dP   dP dP    dP `8888P88 
+#            .88                                  .88 
+#        d8888P                               d8888P
+#
 class Lighting(Init):
 	def __init__(self, *args, **kwargs):
 		super(Lighting, self).__init__(*args, **kwargs)
 
-		#init widgets
-		self.initWidgets(self)
+
 
 
 	def b000(self): #

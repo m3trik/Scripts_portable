@@ -13,8 +13,7 @@ class Rigging(Init):
 	def __init__(self, *args, **kwargs):
 		super(Rigging, self).__init__(*args, **kwargs)
 
-		#init widgets
-		self.initWidgets(self)
+
 
 
 	def b000(self): #

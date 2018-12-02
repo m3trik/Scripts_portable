@@ -13,12 +13,11 @@ class Rendering(Init):
 	def __init__(self, *args, **kwargs):
 		super(Rendering, self).__init__(*args, **kwargs)
 
-		#init widgets
-		self.initWidgets(self)
+
 		
 
 		#checkable comboBox not working
-		comboBox = self.CheckableComboBox(self.ui.cmb000)
+		comboBox = self.CheckableComboBox(self.hotBox.ui.cmb000)
 		for num in range(6):
 			comboBox.addItem("checkbox " + str(num))
 		comboBox.checkIndex(1)

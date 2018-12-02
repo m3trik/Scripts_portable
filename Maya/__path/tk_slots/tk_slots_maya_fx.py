@@ -9,12 +9,18 @@ from tk_slots_maya_init import Init
 
 
 
+# .8888b          
+# 88   "          
+# 88aaa  dP.  .dP 
+# 88      `8bd8'  
+# 88      .d88b.  
+# dP     dP'  `dP 
+#
 class Fx(Init):
 	def __init__(self, *args, **kwargs):
 		super(Fx, self).__init__(*args, **kwargs)
 
-		#init widgets
-		self.initWidgets(self)
+
 
 
 	def b000(self): #
