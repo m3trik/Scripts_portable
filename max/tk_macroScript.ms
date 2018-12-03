@@ -2,11 +2,6 @@
 --||||||||||      3ds max macros     |||||||||||
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
--- python.Import "time"
--- python.Import "sys, os.path"
--- -- python.Execute("sys.path.append(os.path.expandvars('%CLOUD%/_Programming/Qt/__path'))")
--- python.Execute("sys.path.append(os.path.expandvars('C:/Users/render/Documents/_portable/Scripts_portable/Qt/__path'))")
--- python.Execute("sys.path.append(os.path.expandvars('C:/Users/render/Documents/_portable/Scripts_portable/3dsMax/__path/tk_slots'))")
 
 tk_main = python.Import "tk_main" --hotBox module
 func = python.Import "tk_slots_max_init"

@@ -15,7 +15,7 @@ try: import MaxPlus
 except: pass
 
 
-#see readme.
+
 
 # ------------------------------------------------
 # Get relative path to ui files

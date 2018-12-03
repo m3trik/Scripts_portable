@@ -42,29 +42,19 @@ class Viewport(Init):
 		max align camera
 		''')
 
-	def v008(self): #component mode:vertex
-		pm.selectMode (component=True)
-		pm.selectType (subdivMeshPoint=1, polymeshVertex=True)
-		self.viewPortMessage("<hl>vertex</hl> mask.")
+	def v008(self): #camera: dolly/zoom
+		maxEval("max dolly mode")
 
-	def v009(self): #component mode:edge
-		pm.selectMode (component=True)
-		pm.selectType (subdivMeshEdge=1, polymeshEdge=True)
-		self.viewPortMessage("<hl>edge</hl> mask.")
+	def v009(self): #camera: roll
+		maxEval("max roll")
 
-	def v010(self): #component mode:facet
-		pm.selectMode (component=True)
-		pm.selectType (subdivMeshFace=1, polymeshFace=True)
-		self.viewPortMessage("<hl>facet</hl> mask.")
+	def v010(self): #camera: truck/pan
+		maxEval("max truck")
 
-	def v011(self): #object mode
-		pm.selectMode (object=True)
-		self.viewPortMessage("<hl>object</hl> mode.")
+	def v011(self): #camera: orbit
+		maxEval("max pancamera")
 
-	def v012(self): #component mode:uv
-		pm.selectMode (component=True)
-		pm.selectType (subdivMeshUV=True, polymeshUV=True)
-		self.viewPortMessage("<hl>UV</hl> mask.")
+	def v012(self): #
 
 	def v013(self): #
 		pass
@@ -81,3 +71,4 @@ print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
+

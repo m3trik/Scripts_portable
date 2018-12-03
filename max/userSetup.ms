@@ -25,9 +25,11 @@ python.Init()
 
 --load the python path setup file.
 -- not working with environment variable.
---fullPath = "O:\\Cloud\\____Graphics\\3ds Max\\Scripts\\__path\\userSetup.py"
-fullPath = "C:\\Users\\render\\Documents\\_portable\\__scripts\\__path\\max\\"
+systemVar = python.Execute "Import os.path; os.path.expandvars(%userprofile%)"
+--fullPath = "O:\\Cloud\\____Graphics\\3ds Max\\Scripts\\__path\\"
+fullPath = systemVar+"\\Documents\\_portable\\__scripts\\__path\\max\\"
 
+print fullPath
 python.ExecuteFile fullPath+"userSetup.py"
 FileIn fullPath+"tk_macroScript.ms""
 

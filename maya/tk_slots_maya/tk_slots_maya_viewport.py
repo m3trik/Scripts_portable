@@ -9,15 +9,6 @@ from tk_slots_maya_init import Init
 
 
 
-#          oo                                                  dP   
-#                                                              88   
-# dP   .dP dP .d8888b. dP  dP  dP 88d888b. .d8888b. 88d888b. d8888P 
-# 88   d8' 88 88ooood8 88  88  88 88'  `88 88'  `88 88'  `88   88   
-# 88 .88'  88 88.  ... 88.88b.88' 88.  .88 88.  .88 88         88   
-# 8888P'   dP `88888P' 8888P Y8P  88Y888P' `88888P' dP         dP   
-#                                 88                                
-#                                 dP                                
-#
 class Viewport(Init):
 	def __init__(self, *args, **kwargs):
 		super(Viewport, self).__init__(*args, **kwargs)
@@ -148,29 +139,20 @@ class Viewport(Init):
 		}
 		''')
 
-	def v008(self): #component mode:vertex
-		pm.selectMode (component=True)
-		pm.selectType (subdivMeshPoint=1, polymeshVertex=True)
-		self.viewPortMessage("<hl>vertex</hl> mask.")
+	def v008(self): #camera: dolly/zoom
+		pass
 
-	def v009(self): #component mode:edge
-		pm.selectMode (component=True)
-		pm.selectType (subdivMeshEdge=1, polymeshEdge=True)
-		self.viewPortMessage("<hl>edge</hl> mask.")
+	def v009(self): #camera: roll
+		pass
 
-	def v010(self): #component mode:facet
-		pm.selectMode (component=True)
-		pm.selectType (subdivMeshFace=1, polymeshFace=True)
-		self.viewPortMessage("<hl>facet</hl> mask.")
+	def v010(self): #camera: truck/pan
+		pass
 
-	def v011(self): #object mode
-		pm.selectMode (object=True)
-		self.viewPortMessage("<hl>object</hl> mode.")
+	def v011(self): #camera: orbit
+		pass
 
-	def v012(self): #component mode:uv
-		pm.selectMode (component=True)
-		pm.selectType (subdivMeshUV=True, polymeshUV=True)
-		self.viewPortMessage("<hl>UV</hl> mask.")
+	def v012(self): #
+		pass
 
 	def v013(self): #
 		pass
@@ -190,3 +172,28 @@ print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
+
+
+# component mode:vertex
+# 		pm.selectMode (component=True)
+# 		pm.selectType (subdivMeshPoint=1, polymeshVertex=True)
+# 		self.viewPortMessage("<hl>vertex</hl> mask.")
+
+# component mode:edge
+# 		pm.selectMode (component=True)
+# 		pm.selectType (subdivMeshEdge=1, polymeshEdge=True)
+# 		self.viewPortMessage("<hl>edge</hl> mask.")
+
+# component mode:facet
+# 		pm.selectMode (component=True)
+# 		pm.selectType (subdivMeshFace=1, polymeshFace=True)
+# 		self.viewPortMessage("<hl>facet</hl> mask.")
+
+# object mode
+# 		pm.selectMode (object=True)
+# 		self.viewPortMessage("<hl>object</hl> mode.")
+
+# component mode:uv
+# 		pm.selectMode (component=True)
+# 		pm.selectType (subdivMeshUV=True, polymeshUV=True)
+# 		self.viewPortMessage("<hl>UV</hl> mask.")
