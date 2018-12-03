@@ -1,0 +1,135 @@
+{
+
+// what this script does: 
+// creates array of selected objects
+// uses selection constraints to select edges based on angle and put them in an array
+// cuts the UV seams of the edges in that array
+
+// new in this version:
+// added progress bar
+// changed default angle to 77
+
+// status: working
+// known bugs:
+// lags on single, heavy mesh objects. should work better on split parts.
+
+
+proc mainProgressBar (string $name, int $size, int $count)
+  {
+  string $status = "cutting UV seam "+$count+"; of "+$size+".";
+  int $stepAmount = 1;
+
+  progressBar -edit
+              -beginProgress
+              -isInterruptable true
+              -status $status
+              -maxValue $size
+              -step $stepAmount
+              $name;
+  }
+
+
+proc string [] createArrayFromSelection ()//(string $sel[])	/* returns a string array of the selected transform nodes */
+	{	
+	select -hierarchy;
+	string $nodes[] = `ls -selection -transforms`;
+	string $groupedNodes [] = `listRelatives -type "transform"`;	/* if the nodes are grouped then just get the children */
+
+	if ($groupedNodes[0] != "")	/* check to see if the nodes are grouped */
+		{
+		int $size = `size($groupedNodes)`;
+		clear ($nodes);
+		appendStringArray($nodes, $groupedNodes, $size);
+		}
+	// print ("_______selected_nodes:"+"\n"); print $nodes;
+	return $nodes;
+	}
+
+
+proc string[] findHardEdges ()
+	{
+	string $allHardEdges[], $currentHardEdges[], $history[];
+	$angle = `textField -query -text edgeAngle`;
+	$nodes = createArrayFromSelection();
+
+	for ($node in $nodes)
+		{
+		select -replace $node;
+		$history = `polySoftEdge -angle $angle -constructionHistory 1`;
+		polySelectConstraint -mode 3 -type 0x8000 -smoothness 1; //0x8000 = edge
+		polySelectConstraint -mode 0 -smoothness 0;
+		$currentHardEdges = `filterExpand -selectionMask 32 -expand 0 -fullPath 1`;
+		int $size = `size($currentHardEdges)`;
+		appendStringArray($allHardEdges, $currentHardEdges, $size);
+		delete $history;
+		}
+	return $allHardEdges;
+	}
+
+
+proc cutUvSeams ()
+	{
+  $hardEdges = findHardEdges();
+
+	global string $gMainProgressBar;
+	int $size = `size($hardEdges)`;
+	int $count = 0;
+	// mainProgressBar ($gMainProgressBar, $size, $count);
+
+	// for ($num=0; $num < $size; $num++)
+	// 	{
+		for ($edge in $hardEdges)
+			{
+			if(`progressBar -query -isCancelled $gMainProgressBar`)
+				{
+				break;
+				}
+			// print $edge;
+			polyMapCut $edge;
+			$count++;
+			mainProgressBar ($gMainProgressBar, $size, $count);
+			// progressBar -edit -step 1 -status $gMainProgressBar;
+			}
+		// print ("____________cut_seams:"+"\n"); print $hardEdges;
+		select -replace $hardEdges;
+
+		progressBar -edit -endProgress $gMainProgressBar;
+		// }
+	}
+
+global proc tk_cutUvHardEdge_router (string $i)
+	{
+	if ($i == "cutSeams")
+		{
+	  cutUvSeams();
+		}
+
+	// if ($i == "")
+	// 	{
+
+	// 	}
+	}
+
+
+global proc tk_cutUvHardEdge ()
+	{
+	string $windowName = "tk_cutUvHardEdge";
+	if (`window -query -exists $windowName`)
+		{
+		deleteUI $windowName;
+		}
+	window -width 150 $windowName;
+		rowColumnLayout -numberOfColumns 2 -columnAttach 1 "right" 0
+    -columnWidth 1 100 -columnWidth 2 50;
+		button -label "Cut UV Seams"	-command "tk_cutUvHardEdge_router(\"cutSeams\")";
+		textField -text "77"
+					-annotation "specify angle amount in degrees of edges to cut"
+					-enterCommand ("")
+					edgeAngle;
+
+	showWindow;
+	}
+
+// tk_cutUvHardEdge ();
+
+}

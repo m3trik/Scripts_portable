@@ -1,0 +1,245 @@
+{
+
+proc string [] createArrayFromSelection () /* returns a string array of the selected transform selection */
+	{	
+	select -hierarchy;
+	string $selection[] = `ls -selection -transforms`;
+	string $groupedNodes [] = `listRelatives -type "transform"`;	/* if the selection are grouped then just get the children */
+
+	if ($groupedNodes[0] != "")	/* check to see if the selection are grouped */
+		{
+		int $size = `size($groupedNodes)`;
+		clear ($selection);
+		appendStringArray($selection, $groupedNodes, $size);
+		}
+	// print ("_______selected_nodes:"+"\n"); print $selection;
+	return $selection;
+	}
+
+
+proc centerPivot (string $action)
+	{
+	$selection = createArrayFromSelection();
+
+	for ($object in $selection)
+		{
+		if ($action == "center pivot")
+			{
+			xform -centerPivots $object;
+			}
+		if ($action == "reset pivot")
+			{
+			manipPivotReset true true;
+			// xform -zeroTransformPivots $object;
+			}
+		if ($action == "move pivot")
+			{
+			$x = `textField -query -text XaxisTextField`;
+			$y = `textField -query -text YaxisTextField`;
+			$z = `textField -query -text ZaxisTextField`;
+			xform -worldSpace -pivots $x $y $z $object;
+			}
+		}	
+	}
+
+
+proc batchTranslateGeometry ()
+	{
+	$selection = createArrayFromSelection();
+
+	string $textField = `textField -query -text axisTextField`;
+	int $checkBox = `checkBox -query -value cpCheckBox`;
+
+	for ($object in $selection)
+		{
+		if ($checkBox == 1)
+			{
+			centerPivot ("center pivot");
+			}
+
+		if ($textField == "X" ||
+				$textField == "x")
+			{
+			move -rotatePivotRelative -moveX 0 0 0 $object;
+			}
+
+		if ($textField == "Y" ||
+				$textField == "y")
+			{
+			move -rotatePivotRelative -moveY 0 0 0 $object;
+			}
+
+		if ($textField == "Z" ||
+				$textField == "z")
+			{
+			move -rotatePivotRelative -moveZ 0 0 0 $object;
+			}
+
+		if ($textField == "XY" ||
+				$textField == "YX" ||
+				$textField == "xy" ||
+				$textField == "yx")
+			{
+			move -rotatePivotRelative -moveXY 0 0 0 $object;
+			}
+
+		if ($textField == "XZ" ||
+				$textField == "ZX" ||
+				$textField == "xz" ||
+				$textField == "zx")
+			{
+			move -rotatePivotRelative -moveXZ 0 0 0 $object;
+			}
+
+		if ($textField == "ZY" ||
+				$textField == "YZ" ||
+				$textField == "zy" ||
+				$textField == "yz")
+			{
+			move -rotatePivotRelative -moveYZ 0 0 0 $object;
+			}
+
+		if ($textField == "XYZ" ||
+				$textField == "YZX" ||
+				$textField == "ZXY" ||
+				$textField == "YXZ" ||
+				$textField == "XZY" ||
+				$textField == "ZYX" ||
+				$textField == "xyz" ||
+				$textField == "yzx" ||
+				$textField == "zxy" ||
+				$textField == "yxz" ||
+				$textField == "xzy" ||
+				$textField == "zyx")
+			{
+			move -rotatePivotRelative 0 0 0 $object;
+			}
+
+		//for some unknow reason, this executes even when a valid character is used.
+		// else
+		// 	{
+		// 	print "// Error: Incorrect user input. Valid characters are \'x y z\', or any combination thereof.";
+		// 	textField -edit -text "" axisTextField;
+		// 	}
+		}
+	}
+
+
+proc dropToGrid ()
+	{
+	$selection = createArrayFromSelection();
+
+	for ($object in $selection)
+		{
+		float $osPivot[] = `xform -query -objectSpace -rotatePivot $object`;	/* save the object space (relative) pivot */
+		float $wsPivot[] = `xform -query -worldSpace -rotatePivot $object`;	/* save world space $object pivot */
+
+	 	select $object; 
+		FreezeTransformations;	/* ensure the bounding box is not rotated */
+
+		float $bbox[] = `exactWorldBoundingBox $object`;	/* get bounding box world space coords */
+		float $lowest = $bbox[1];	/* get lowest vert (ymin) */
+		 
+		undo;	/*undo the FreezeTransformation command*/ 
+
+		xform -worldSpace -rotatePivot $wsPivot[0] $lowest $wsPivot[2] $object;	/* reset the pivot to the lowest point in world space */
+		move -rotatePivotRelative $wsPivot[0] 0 $wsPivot[2] $object;	/* move the object to the grid */
+		
+		xform -centerPivots $object;
+		}
+	select $selection;	/* retore the original selection */
+	}
+
+
+global proc tk_batchTransform_router (string $address)
+	{
+	if ($address == "origin")
+		{
+		batchTranslateGeometry();
+		}
+	if ($address == "grid")
+		{
+		dropToGrid();
+		}
+	if ($address == "center pivot")
+		{
+		centerPivot($address);	//pass the string "center pivot" to the fuction.
+		}
+	if ($address == "reset pivot")
+		{
+		centerPivot($address);	//pass the string "reset pivot" to the fuction.
+		}
+	if ($address == "move pivot")
+		{
+		centerPivot($address);	//pass the string "move pivot" to the fuction.
+		}
+	}
+
+
+global proc tk_batchTransform ()
+	{
+	string $windowName = "tk_batchTransform";
+	if (`window -query -exists $windowName`)
+		{
+		deleteUI $windowName;
+		}
+	window -width 150 -height 75 $windowName;
+		columnLayout 	-columnAttach "both" 3
+									-rowSpacing 5
+									-columnWidth 185;
+			frameLayout -label "Batch Translate" -collapsable 0;
+				rowColumnLayout -numberOfColumns 3
+									-columnAttach 1 "left" 0
+									-columnWidth 1 100 -columnWidth 2 40;
+					button	-label "Move To Origin"
+									-annotation "Move selected geometry to the origin of the specified axis/axes."
+									-command "tk_batchTransform_router(\"origin\")";
+					textField -text "x"
+									-annotation "Specify the axis/axes. Valid characters are \'x y z\', or any combination of."
+									axisTextField;
+					checkBox -label "CP"
+									-annotation "Center Pivot"
+									-value 1 //default state
+									cpCheckBox;
+				columnLayout;
+					button	-label "Drop To Grid"
+									-annotation "Drop selected object to grid."
+									-command "tk_batchTransform_router(\"grid\")";
+					setParent ..;
+				setParent ..;
+			frameLayout -label "Batch Pivot Operations" -collapsable 0;
+				rowLayout -numberOfColumns 4
+									-columnWidth4 65 35 35 35
+									-columnAlign  1 "left"
+									-columnAlign  2 "both"
+									-columnAlign  3 "both"
+									-columnAlign	4 "both";
+					button	-label "Move Pivot"
+									-annotation "Move selected geometry to the origin of the specified axis/axes."
+									-command "tk_batchTransform_router(\"move pivot\")";
+					textField -text "0"
+									-annotation "Move pivot: \'X\' coordinate" 
+									XaxisTextField;
+					textField -text "0"
+									-annotation "Move pivot: \'Y\' coordinate"
+									YaxisTextField;
+					textField -text "0"
+									-annotation "Move pivot: \'Z\' coordinate"
+									ZaxisTextField;
+					setParent ..;
+				columnLayout;
+					button	-label "Center Pivot"
+									-annotation "Individually center the pivots of all selected geometry."
+									-command "tk_batchTransform_router(\"center pivot\")";
+					button	-label "Reset Pivot"
+									-annotation "Reset the pivots of all selected geometry."
+									-command "tk_batchTransform_router(\"reset pivot\")";
+					setParent ..;
+				setParent ..;
+				
+	showWindow;
+	}
+
+// tk_batchTransform();
+
+}

@@ -1,0 +1,54 @@
+global proc tk_convertSelectionWindow(){
+	if (`window -query -exists scene_window`)
+		{
+		deleteUI scene_window;
+		}
+	window -title "Convert Selection" -toolbox true -sizeable true -resizeToFitChildren true -widthHeight 110 300 scene_window;
+		formLayout -numberOfDivisions 100 scene_formLayout;
+			frameLayout -label "To Vertices:"	-labelAlign "top" -collapsable true -collapse false f1;
+				gridLayout -numberOfColumns 1 -cellWidthHeight 100 20 g1;
+					button -label "Vertices"				-command "ConvertSelectionToVertices;";
+					button -label "Vertex Faces"		-command "ConvertSelectionToVertexFaces;";
+					button -label "Vertex Perimeter"-command "ConvertSelectionToVertexPerimeter;";
+					setParent ..;
+				setParent..;
+			frameLayout -label "To Edges:"	-labelAlign "top" -collapsable true -collapse false f2;
+				gridLayout -numberOfColumns 1 -cellWidthHeight 100 20 g1;
+					button -label "Edges"						-command "ConvertSelectionToEdges;";
+					button -label "Edge Loop"				-command "SelectEdgeLoopSp;";
+					button -label "Edge Ring"				-command "SelectEdgeRingSp;";
+					button -label "Contained Edges"	-command "ConvertSelectionToContainedEdges;";
+					button -label "Edge Parimeter"	-command "ConvertSelectionToEdgePerimeter;";
+					setParent ..;
+				setParent ..;
+			frameLayout -label "To Faces:"  	-labelAlign "top" -collapsable true -collapse false f3;
+				gridLayout -numberOfColumns 1 -cellWidthHeight 100 20 g1;
+					button -label "Faces"						-command "ConvertSelectionToFaces;";
+					button -label "Face Path"				-command "SelectFacePath;";
+					button -label "Contained Faces"	-command "SelectFacePath;";
+					setParent ..;
+				setParent ..;
+			frameLayout -label "To UVs:"  	-labelAlign "top" -collapsable true -collapse true f4;
+				gridLayout -numberOfColumns 1 -cellWidthHeight 100 20 g1;
+					button -label "UVs"						-command "ConvertSelectionToUVs;";
+					button -label "UV Shell" 			-command "ConvertSelectionToUVShell;";
+					button -label "UV Border"			-command "ConvertSelectionToUVShellBorder;";
+					button -label "UV Parimeter"	-command "ConvertSelectionToUVPerimeter;";
+					button -label "UV Edge Loop"	-command "ConvertSelectionToUVEdgeLoop;";
+					setParent ..;
+				setParent ..;
+			frameLayout -label "To Shell:"  	-labelAlign "top" -collapsable true -collapse true f5;
+				gridLayout -numberOfColumns 1 -cellWidthHeight 100 20 g1;
+					button -label "Shell"					-command "polyConvertToShell;";
+					button -label "Shell Border" 	-command "polyConvertToShellBorder;";
+					setParent ..;
+				setParent ..;
+		formLayout -edit
+			-attachControl 		f2 "top"	5	f1
+			-attachControl 		f3 "top"	5	f2
+			-attachControl		f4 "top"	5	f3
+			-attachControl		f5 "top"	5	f4
+		scene_formLayout;
+		
+	showWindow scene_window;
+}

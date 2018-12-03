@@ -1,0 +1,306 @@
+{
+
+
+proc string[] createArrayFromSelection ()//(string $sel[])	/* returns a string array of the selected transform nodes */
+	{	
+	select -hierarchy;
+	string $nodes[] = `ls -selection -transforms`;
+	string $groupedNodes [] = `listRelatives -type "transform"`;	/* if the nodes are grouped then just get the children */
+
+	if ($groupedNodes[0] != "")	/* check to see if the nodes are grouped */
+		{
+		int $size = `size($groupedNodes)`;
+		clear ($nodes);
+		appendStringArray($nodes, $groupedNodes, $size);
+		}
+	// print ("_______selected_nodes:"+"\n"); print $nodes;
+	return $nodes;
+	}
+
+
+proc string sourceDirectory(string $fileType)
+	{
+	string $caption = ($fileType+" Export Destination");
+
+	string $selectedDirectory[] = `fileDialog2 -caption $caption
+																							-startingDirectory ""
+																							-fileMode 2`;
+	string $directoryStr = $selectedDirectory[0];
+	return $directoryStr;
+	}
+
+
+proc batchExport (string $fileType)
+	{
+	$selection = createArrayFromSelection();
+	$exportPath = sourceDirectory($fileType);
+
+	for ($node in $selection)
+		{
+		$finalExportPath = ($exportPath+"/"+$node);
+
+		if ($fileType == "obj")
+			{
+			// select -replace $node;
+			file -force
+						-exportSelected
+						-preserveReferences 
+						-type "OBJexport"
+						-options "-groups 0 \
+											-ptgroups 0 \
+											-materials 0 \
+											-smoothing 1 \
+											-normals 1"
+						// ($node+".obj");
+						($finalExportPath+".obj");
+						print ($finalExportPath+".obj"+"\n");
+			}
+
+		if ($fileType == "fbx")
+			{
+			// // Uncomment for export options
+			// // Geometry
+			// FBXExportSmoothingGroups -v true;
+			// FBXExportHardEdges -v false;
+			// FBXExportTangents -v false;
+			// FBXExportSmoothMesh -v true;
+			// FBXExportInstances -v false;
+			// FBXExportReferencedContainersContent -v false;
+			// // Animation
+			// FBXExportBakeComplexAnimation -v false;
+			// // FBXExportBakeComplexStart -v "";
+			// // FBXExportBakeComplexEnd -v "";
+			// FBXExportBakeComplexStep -v 1;
+			// // FBXExportBakeResampleAll -v true;
+			// FBXExportUseSceneName -v false;
+			// // FBXExportQuaternion -v euler;
+			// FBXExportShapes -v true;
+			// FBXExportSkins -v true;
+			// // Constraints
+			// FBXExportConstraints -v false;
+			// // Cameras
+			// FBXExportCameras -v false;
+			// // Lights
+			// FBXExportLights -v false;
+			// // Embed Media
+			// FBXExportEmbeddedTextures -v false;
+			// // Connections
+			// FBXExportInputConnections -v false;
+			// // Axis Conversion
+			// FBXExportUpAxis y;
+
+			// print ($finalExportPath+"\n");
+			FBXExport -selected -file ($finalExportPath+".fbx");
+			print ($finalExportPath+".fbx"+"\n");
+			}
+		}
+	}
+
+
+global proc tk_sceneOptionsRouter(string $command)
+	{
+	if ($command == "batch export obj")
+			{
+			batchExport ("obj");
+			}
+
+	if ($command == "batch export fbx")
+			{
+			batchExport ("fbx");
+			}
+	}
+
+
+global proc tk_sceneOptionsWindow()
+	{
+	if (`window -query -exists scene_window`)
+		{
+		deleteUI scene_window;
+		}
+	window -title "Scene" -toolbox true -sizeable true -resizeToFitChildren true -widthHeight 110 300 scene_window;
+		formLayout -numberOfDivisions 100 scene_formLayout;
+			frameLayout -label "Utilities"	-labelAlign "top" -collapsable true -collapse true f1;
+				gridLayout -numberOfColumns 1 -cellWidthHeight 100 20 g1;
+					button -label "measure"
+									-command "DistanceTool;"
+									-annotation "Measuring tools";
+
+					button -label "annotation"
+									-command "CreateAnnotateNode;"
+									-annotation "Add an annotation to the selected object";
+
+					button -label "calculator"
+									-command "calculator;"
+									-annotation "Open a calculator window";
+
+					button -label "grease pencil"
+									-command "greasePencilCtx;"
+									-annotation "Grease pencil";
+					setParent ..;
+				setParent..;
+			frameLayout -label "Working Units" -labelAlign "top" -collapsable true -collapse true f2;
+				gridLayout -numberOfColumns 1 -cellWidthHeight 100 20 g1;
+					button -label "milimeters"
+									-command "currentUnit -linear mm;	\
+														inViewMessage -statusMessage \"Working units set to <hl>milimeters</hl>.\" -fade -position topCenter;"
+									-annotation "";
+
+					button -label "centimeters"
+									-command "currentUnit -linear cm;	\
+														inViewMessage -statusMessage \"Working units set to <hl>centimeters</hl>.\" -fade -position topCenter;"
+									-annotation "";
+
+					button -label "meters"
+									-command "currentUnit -linear m;	\
+														inViewMessage -statusMessage \"Working units set to <hl>meters</hl>.\" -fade -position topCenter;"
+									-annotation "";
+
+					button -label "inches"
+									-command "currentUnit -linear inch;	\
+														inViewMessage -statusMessage \"Working units set to <hl>inches</hl>.\" -fade -position topCenter;"
+									-annotation "";
+
+					button -label "feet"
+									-command "currentUnit -linear ft;	\
+														inViewMessage -statusMessage \"Working units set to <hl>feet</hl>.\" -fade -position topCenter;"
+									-annotation "";
+					setParent ..;
+				setParent..;
+			frameLayout -label "Import/Export" -labelAlign "top" -collapsable true -collapse false f3;
+			menuBarLayout;
+				menu -label "Import";
+					menuItem -label "Import"
+										-command "Import;	\
+															evalDeferred (\"deleteUI scene_window;\")" //deleteUI scene_window;"; this was crashing maya. evalDeferred seems to fix that
+										-annotation "";
+
+					menuItem -optionBox true
+										-command "ImportOptions;	\
+															deleteUI scene_window;"
+										-annotation "";
+					setParent ..;
+				setParent ..;
+				menu -label "Export";
+					menuItem -label "Export"
+										-command "ExportSelection;	\
+															evalDeferred (\"deleteUI scene_window;\")"
+										-annotation "";
+
+					menuItem -optionBox true
+										-command "ExportSelectionOptions;"
+										-annotation "";
+
+					menuItem -label "Export All"
+										-command "Export;	\
+															evalDeferred (\"deleteUI scene_window;\")"//export all
+										-annotation "";
+
+					menuItem -optionBox true
+										-command "ExportOptions;"
+										-annotation "";
+
+					menuItem -label "Batch"
+										-annotation ""
+										-subMenu true;
+
+						menuItem -label "Batch Export Obj"
+										-command "tk_sceneOptionsRouter(\"batch export obj\");	\
+															evalDeferred (\"deleteUI scene_window;\")"//export all
+										-annotation "Export all selected objects individually as .obj";
+
+						menuItem -label "Batch Export Fbx"
+										-command "tk_sceneOptionsRouter(\"batch export fbx\");	\
+															evalDeferred (\"deleteUI scene_window;\")"//export all
+										-annotation "Export all selected objects individually as .fbx";
+
+						setParent -menu ..;
+					menuItem -label "Unreal"
+										-command "SendToUnrealSelection;	\
+															evalDeferred (\"deleteUI scene_window;\")"
+										-annotation "";
+
+					menuItem -label "Unity"
+										-command "SendToUnitySelection;	\
+															evalDeferred (\"deleteUI scene_window;\")"
+										-annotation "";
+
+					menuItem -label "GoZ"
+										-command "print(\"GoZ\") ;	\
+															\nsource \"C:/Users/Public/Pixologic/GoZApps/Maya/GoZBrushFromMaya.mel\" ;	\
+															\nsource \"C:/Users/Public/Pixologic/GoZApps/Maya/GoZScript.mel\" ;	\
+															\n\n;	\
+															evalDeferred (\"deleteUI scene_window;\")"
+										-annotation "";
+					setParent ..;
+				setParent ..;
+			frameLayout -label "Open/Save" -labelAlign "top" -collapsable true -collapse false f4;
+				gridLayout -numberOfColumns 1 -cellWidthHeight 100 20 g1;
+					button -label "Open Last Scene"		
+									-command "$recentFiles = `optionVar -query RecentFilesList`;	\
+														int $array_length = `size $recentFiles`;	\
+														file -open -force $recentFiles[$array_length -1];	\
+														deleteUI scene_window;"
+									-annotation "";
+
+					button -label "Open Last Project"	
+									-command "$recentProjects = `optionVar -query RecentProjectsList`;	\
+														int $array_length = `size $recentProjects`;	\
+														file -open -force $recentProjects[$array_length -1];	\
+														deleteUI scene_window;"
+									-annotation "";
+
+					button -label "Save wf && Quit"
+									-command "DisplayWireframe;	\
+														SaveScene;	\
+														quit;"
+									-annotation "";z
+					setParent ..;
+				setParent ..;
+			frameLayout -label "Project" -labelAlign "top" -collapsable true -collapse false f5;
+				gridLayout -numberOfColumns 1 -cellWidthHeight 100 20 g1;
+					button -label "Set Project"
+									-command "SetProject; 	\
+														deleteUI scene_window;";
+
+					button -label "Create Layers"
+									-command "createDisplayLayer -empty -name \"_import\";	\
+														createDisplayLayer -empty -name \"_orig\";	\
+														createDisplayLayer -empty -name \"_cage\";	\
+														createDisplayLayer -empty -name \"_low\";	\
+														createDisplayLayer -empty -name \"_high\";	\
+														deleteUI scene_window;"
+									-annotation "";
+
+					button -label "FilePath Editor"
+									-command "FilePathEditor;	\
+														deleteUI scene_window;"
+									-annotation "";
+
+					button -label "Pattern Rename"
+									-command "bt_patternRename;"
+									-annotation "";
+
+					button -label "Find && Replace"
+									-command "searchReplaceNames;"
+									-annotation "searchReplaceNames \"string to remove\" \".\" \"all\";";//searchReplaceNames "string to remove" "." "all";//the period replaces the string with nothing
+
+					button -label "Plugins"
+									-command "pluginWin;"
+									-annotation "";
+					setParent..;
+		formLayout -edit
+			-attachControl 		f2 "top"	5	f1
+			-attachControl 		f3 "top"	5	f2
+			-attachControl 		f4 "top"	5	f3
+			-attachControl		f5 "top"	5 f4
+			//when attaching new conrols dont forget to setParent
+		scene_formLayout;
+	
+	showWindow scene_window;
+	}
+
+
+
+
+
+}
