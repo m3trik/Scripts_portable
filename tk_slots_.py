@@ -78,41 +78,6 @@ class Slot(object):
 				# spinbox.valueChanged.connect (lambda i=index: self.hotBox.setAttributes(i)) #use lambda to call method with argument: index of spinbox
 				spinbox.setVisible(False)
 
-	# #init signals, button states etc. for a stacked widget class
-	# def initWidgets(self, class_):
-	# 	#arg: class_=class instance
-
-	# 	if class_.__class__.__name__ != 'Create':
-	# 		#ex. initWidgets(self)
-	# 		for comboBox in self.getObject(class_, 'cmb', [0,50], False):
-	# 			# combobox.currentIndexChanged.connect(self.combobox.objectName())
-	# 			comboBox()
-
-	# 	# print 'initWidgets', class_.__class__.__name__
-	# 	if class_.__class__.__name__ == 'Create':
-	# 		self.setButtons(class_.ui, invisible='s000,s010,s011,t000')
-	# 		#temp fix for function below calling setAttributes with only last arg
-	# 		class_.ui.s000.valueChanged.connect (lambda: class_.setAttributes(0))
-	# 		class_.ui.s001.valueChanged.connect (lambda: class_.setAttributes(1))
-	# 		class_.ui.s002.valueChanged.connect (lambda: class_.setAttributes(2))
-	# 		class_.ui.s003.valueChanged.connect (lambda: class_.setAttributes(3))
-	# 		class_.ui.s004.valueChanged.connect (lambda: class_.setAttributes(4))
-	# 		class_.ui.s005.valueChanged.connect (lambda: class_.setAttributes(5))
-	# 		class_.ui.s006.valueChanged.connect (lambda: class_.setAttributes(6))
-	# 		class_.ui.s007.valueChanged.connect (lambda: class_.setAttributes(7))
-	# 		class_.ui.s008.valueChanged.connect (lambda: class_.setAttributes(8))
-	# 		class_.ui.s009.valueChanged.connect (lambda: class_.setAttributes(9))
-	# 		class_.ui.s010.valueChanged.connect (lambda: class_.setAttributes(10))
-	# 		class_.ui.s011.valueChanged.connect (lambda: class_.setAttributes(11))
-	# 		spinboxes = self.getObject(class_.ui, 's', [0,12], False)
-	# 		for index, spinbox in enumerate(spinboxes):
-	# 			# spinbox.valueChanged.connect (lambda i=index: class_.setAttributes(i)) #use lambda to call method with argument: index of spinbox
-	# 			spinbox.setVisible(False)
-
-	# 	if self.hotBox.name == 'init':
-	# 		# self.hotBox.ui.t000.clearFocus()
-	# 		self.hotBox.ui.t000.viewport().setAutoFillBackground(False)
-
 
 	def comboBox(self, comboBox, items, title=None):
 		#args: comboBox=QComboBox object - list of items to fill the comboBox with

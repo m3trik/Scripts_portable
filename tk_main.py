@@ -180,7 +180,7 @@ class HotBox(QtWidgets.QWidget):
 
 
 	def eventFilter(self, button, event):
-		#args: [object]
+		#args: [source object]
 		#			 [QEvent]
 		if event.type()==QtCore.QEvent.Type.Enter:
 			self.mouseHover.emit(True)
@@ -191,6 +191,7 @@ class HotBox(QtWidgets.QWidget):
 		if event.type()==QtCore.QEvent.Type.HoverLeave:
 			self.mouseHover.emit(False)
 			return False
+		return QtWidgets.QWidget.eventFilter(self, button, event)
 
 # ------------------------------------------------
 
