@@ -10,7 +10,7 @@ workspaceControl -edit -minimumWidth false "AttributeEditor";
 
 //execute python userSetup file
 python ("import os");
-python ("path = os.path.expandvars('%CLOUD%/____Graphics/Maya/scripts/__path/userSetup.py')");
+python ("path = os.path.expandvars('%CLOUD%/____Graphics/__general/_portable/_scripts/__path/maya/userSetup.py')");
 python ("execfile(path)");
 
 

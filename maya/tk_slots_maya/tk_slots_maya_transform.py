@@ -9,13 +9,6 @@ from tk_slots_maya_init import Init
 
 
 
-#    dP                                       .8888b                              
-#    88                                       88   "                              
-#  d8888P 88d888b. .d8888b. 88d888b. .d8888b. 88aaa  .d8888b. 88d888b. 88d8b.d8b. 
-#    88   88'  `88 88'  `88 88'  `88 Y8ooooo. 88     88'  `88 88'  `88 88'`88'`88 
-#    88   88       88.  .88 88    88       88 88     88.  .88 88       88  88  88 
-#    dP   dP       `88888P8 dP    dP `88888P' dP     `88888P' dP       dP  dP  dP 
-#                                                                         
 class Transform(Init):
 	def __init__(self, *args, **kwargs):
 		super(Transform, self).__init__(*args, **kwargs)
@@ -362,7 +355,7 @@ class Transform(Init):
 
 
 
-#print module name
+#module name
 print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes

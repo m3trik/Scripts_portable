@@ -9,15 +9,6 @@ from tk_slots_maya_init import Init
 
 
 
-# dP oo          dP         dP   oo                   
-# 88             88         88                        
-# 88 dP .d8888b. 88d888b. d8888P dP 88d888b. .d8888b. 
-# 88 88 88'  `88 88'  `88   88   88 88'  `88 88'  `88 
-# 88 88 88.  .88 88    88   88   88 88    88 88.  .88 
-# dP dP `8888P88 dP    dP   dP   dP dP    dP `8888P88 
-#            .88                                  .88 
-#        d8888P                               d8888P
-#
 class Lighting(Init):
 	def __init__(self, *args, **kwargs):
 		super(Lighting, self).__init__(*args, **kwargs)
@@ -56,7 +47,7 @@ class Lighting(Init):
 		mel.eval('')
 
 
-#print module name
+#module name
 print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes

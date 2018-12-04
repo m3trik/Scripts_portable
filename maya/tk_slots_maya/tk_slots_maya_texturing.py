@@ -9,15 +9,6 @@ from tk_slots_maya_init import Init
 
 
 
-#    dP                       dP                     oo                   
-#    88                       88                                          
-#  d8888P .d8888b. dP.  .dP d8888P dP    dP 88d888b. dP 88d888b. .d8888b. 
-#    88   88ooood8  `8bd8'    88   88    88 88'  `88 88 88'  `88 88'  `88 
-#    88   88.  ...  .d88b.    88   88.  .88 88       88 88    88 88.  .88 
-#    dP   `88888P' dP'  `dP   dP   `88888P' dP       dP dP    dP `8888P88 
-#                                                                     .88 
-#                                                                 d8888P
-#
 class Texturing(Init):
 	def __init__(self, *args, **kwargs):
 		super(Texturing, self).__init__(*args, **kwargs)
@@ -202,7 +193,7 @@ class Texturing(Init):
 
 
 
-#print module name
+#module name
 print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes

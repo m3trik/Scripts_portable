@@ -9,15 +9,6 @@ from tk_slots_maya_init import Init
 
 
 
-#                                  dP                   oo                   
-#                                  88                                        
-# 88d888b. .d8888b. 88d888b. .d888b88 .d8888b. 88d888b. dP 88d888b. .d8888b. 
-# 88'  `88 88ooood8 88'  `88 88'  `88 88ooood8 88'  `88 88 88'  `88 88'  `88 
-# 88       88.  ... 88    88 88.  .88 88.  ... 88       88 88    88 88.  .88 
-# dP       `88888P' dP    dP `88888P8 `88888P' dP       dP dP    dP `8888P88 
-#                                                                        .88 
-#                                                                    d8888P  
-#
 class Rendering(Init):
 	def __init__(self, *args, **kwargs):
 		super(Rendering, self).__init__(*args, **kwargs)
@@ -84,7 +75,7 @@ class Rendering(Init):
 
 
 
-#print module name
+#module name
 print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes

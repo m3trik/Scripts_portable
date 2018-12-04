@@ -9,13 +9,6 @@ from tk_slots_maya_init import Init
 
 
 
-# .8888b          
-# 88   "          
-# 88aaa  dP.  .dP 
-# 88      `8bd8'  
-# 88      .d88b.  
-# dP     dP'  `dP 
-#
 class Fx(Init):
 	def __init__(self, *args, **kwargs):
 		super(Fx, self).__init__(*args, **kwargs)
@@ -54,7 +47,7 @@ class Fx(Init):
 		mel.eval('')
 
 
-#print module name
+#module name
 print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes

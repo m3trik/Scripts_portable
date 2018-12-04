@@ -9,11 +9,6 @@ from tk_slots_maya_init import Init
 
 
 
-# dP    dP dP   .dP 
-# 88    88 88   d8' 
-# 88.  .88 88 .88'  
-# `88888P' 8888P'
-#
 class Uv(Init):
 	def __init__(self, *args, **kwargs):
 		super(Uv, self).__init__(*args, **kwargs)
@@ -145,7 +140,7 @@ class Uv(Init):
 
 
 
-#print module name
+#module name
 print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes

@@ -15,12 +15,6 @@ class Init(Slot):
 
 
 
-
-		# self.hotBox.ui.t000.clearFocus()
-		self.hotBox.ui.t000.viewport().setAutoFillBackground(False)
-		self.hotBox.ui.t000.setTextBackgroundColor(QtGui.QColor(50, 50, 50))
-
-
 		# live surface #state and obj might need to be saved in external file
 		# 'main' shorcut mode: ie. polygons, uv's, etc
 		# pm.helpLine(width=20, height=8)
@@ -505,7 +499,7 @@ class Init(Slot):
 
 
 
-#print module name
+#module name
 print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes

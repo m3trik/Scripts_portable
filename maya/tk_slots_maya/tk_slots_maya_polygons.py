@@ -9,15 +9,6 @@ from tk_slots_maya_init import Init
 
 
 
-#                    dP                                              
-#                    88                                              
-#  88d888b. .d8888b. 88 dP    dP .d8888b. .d8888b. 88d888b. .d8888b. 
-#  88'  `88 88'  `88 88 88    88 88'  `88 88'  `88 88'  `88 Y8ooooo. 
-#  88.  .88 88.  .88 88 88.  .88 88.  .88 88.  .88 88    88       88 
-#  88Y888P' `88888P' dP `8888P88 `8888P88 `88888P' dP    dP `88888P' 
-#  88                        .88      .88                            
-#  dP                    d8888P   d8888P                             
-#
 class Polygons(Init):
 	def __init__(self, *args, **kwargs):
 		super(Polygons, self).__init__(*args, **kwargs)
@@ -429,7 +420,7 @@ class Polygons(Init):
 		pass
 
 
-#print module name
+#module name
 print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes

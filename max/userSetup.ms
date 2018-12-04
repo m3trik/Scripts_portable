@@ -25,9 +25,8 @@ python.Init()
 
 --load the python path setup file.
 -- not working with environment variable.
-systemVar = python.Execute "Import os.path; os.path.expandvars(%userprofile%)"
---fullPath = "O:\\Cloud\\____Graphics\\3ds Max\\Scripts\\__path\\"
-fullPath = systemVar+"\\Documents\\_portable\\__scripts\\__path\\max\\"
+fullPath = python.Execute "Import os.path; os.path.expandvars('%CLOUD%\\____Graphics\\__general\\_portable\\_scripts\\__path\\max\\')"
+-- fullPath = python.Execute "Import os.path; os.path.expandvars('%userprofile%\\Documents\\_portable\\__scripts\\__path\\max\\')"
 
 print fullPath
 python.ExecuteFile fullPath+"userSetup.py"
