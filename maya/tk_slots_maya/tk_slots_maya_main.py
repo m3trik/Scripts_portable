@@ -15,7 +15,6 @@ class Main(Init):
 
 
 
-
 	def v000(self): #Extrude
 		print "# Result: perform extrude #"
 		locate('Polygons(self.hotBox).b006()')

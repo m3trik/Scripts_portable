@@ -55,6 +55,7 @@ class Viewport(Init):
 		maxEval("max pancamera")
 
 	def v012(self): #
+		pass
 
 	def v013(self): #
 		pass

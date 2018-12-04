@@ -23,14 +23,16 @@
 -- initalize python
 python.Init()
 
---load the python path setup file.
--- not working with environment variable.
-fullPath = python.Execute "Import os.path; os.path.expandvars('%CLOUD%\\____Graphics\\__general\\_portable\\_scripts\\__path\\max\\')"
--- fullPath = python.Execute "Import os.path; os.path.expandvars('%userprofile%\\Documents\\_portable\\__scripts\\__path\\max\\')"
+--load the python path setup file and user macros.
 
-print fullPath
-python.ExecuteFile fullPath+"userSetup.py"
-FileIn fullPath+"tk_macroScript.ms""
+-- envVar = systemTools.getEnvVariable("CLOUD")
+-- fullPath = envVar+"\\____Graphics\\__general\\_portable\\_scripts\\__path\\max\\"
+
+envVar = systemTools.getEnvVariable("USERPROFILE")
+fullPath = envVar+"\\Documents\\_portable\\_scripts\\__path\\max\\"
+
+python.ExecuteFile (fullPath+"userSetup.py")
+FileIn (fullPath+"tk_macroScript.ms")
 
 
 -- ui

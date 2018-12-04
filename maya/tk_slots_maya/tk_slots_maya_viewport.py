@@ -172,28 +172,3 @@ print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
-
-
-# component mode:vertex
-# 		pm.selectMode (component=True)
-# 		pm.selectType (subdivMeshPoint=1, polymeshVertex=True)
-# 		self.viewPortMessage("<hl>vertex</hl> mask.")
-
-# component mode:edge
-# 		pm.selectMode (component=True)
-# 		pm.selectType (subdivMeshEdge=1, polymeshEdge=True)
-# 		self.viewPortMessage("<hl>edge</hl> mask.")
-
-# component mode:facet
-# 		pm.selectMode (component=True)
-# 		pm.selectType (subdivMeshFace=1, polymeshFace=True)
-# 		self.viewPortMessage("<hl>facet</hl> mask.")
-
-# object mode
-# 		pm.selectMode (object=True)
-# 		self.viewPortMessage("<hl>object</hl> mode.")
-
-# component mode:uv
-# 		pm.selectMode (component=True)
-# 		pm.selectType (subdivMeshUV=True, polymeshUV=True)
-# 		self.viewPortMessage("<hl>UV</hl> mask.")
