@@ -189,11 +189,11 @@ class Edit(Init):
 	def b002(self): #Mirror options
 		maxEval('MirrorPolygonGeometryOptions;')
 
-	def b003(self): #Maya bonus tools: Convert N-sided faces to quads
-		maxEval('bt_polyNSidedToQuad;')
+	def b003(self): #Convert N-sided faces to quads
+		maxEval('macros.run \"Modifiers\" \"QuadifyMeshMod\"')
 
 	def b004(self): #Measure
-		mel.eval("DistanceTool;")
+		maxEval('macros.run \"Tools\" \"two_point_dist\"')
 
 	def b005(self): #
 		pass
@@ -546,13 +546,20 @@ class Edit(Init):
 		mel.eval("SmoothPolygonOptions;")
 
 	def b048(self): #Add Divisions - subdivide mesh
-		maxEval('SubdividePolygon')
+		maxEval('macros.run \"Modifiers\" \"Tessellate\"')
 
 	def b049(self): #Smooth
-		maxEval('SmoothPolygon;')
+		maxEval('macros.run \"Modifiers\" \"Smooth\"')
 
 	def b050(self): #add divisions options
-		mel.eval("SubdividePolygonOptions")
+		maxEval('''
+		Try 
+		(
+			local A = modPanel.getCurrentObject()
+			A.popupDialog #Tessellate
+		)
+		Catch ()
+		''')
 
 	def b051(self): #Apply smooth preview
 		mel.eval("performSmoothMeshPreviewToPolygon;") #convert smooth mesh preview to polygons
@@ -592,50 +599,17 @@ class Edit(Init):
 
 
 
-	def b000(self): #Mirror
-		self.hbHide()
-		maxEval('max mirror')
-
-	def b001(self): #Array
-		self.hbHide()
-		maxEval('max array')
-
-	def b002(self): #
-		self.hbHide()
-		maxEval('')
-
-	def b003(self): #Convert N to quads
-		self.hbHide()
-		maxEval('macros.run \"Modifiers\" \"QuadifyMeshMod\"')
-
-	def b004(self): #Measure
-		self.hbHide()
-		maxEval('macros.run \"Tools\" \"two_point_dist\"')
-
-	def b005(self): #
-		self.hbHide()
-		maxEval('')
-
-	def b006(self): #
-		self.hbHide()
-		maxEval('')
-
-	def b007(self): #
-		self.hbHide()
-		maxEval('')
-
-	def b008(self): #
-		self.hbHide()
-		maxEval("")
-
-	def b009(self): #
-		self.hbHide()
-		maxEval('')
 
 
-#print module name
+
+
+
+#module name
 print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
-	# b008, b009, b011
+
+# maxEval('max array')
+
+# maxEval('max mirror')

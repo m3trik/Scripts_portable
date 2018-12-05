@@ -187,10 +187,8 @@ class HotBox(QtWidgets.QWidget):
 			button.click()
 			# if event.type() == QtCore.QEvent.Type.MouseButtonRelease:
 				# button.release()
-			return True
 		if event.type()==QtCore.QEvent.Type.HoverLeave:
 			self.mouseHover.emit(False)
-			return False
 		return QtWidgets.QWidget.eventFilter(self, button, event)
 
 # ------------------------------------------------
@@ -201,15 +199,12 @@ class HotBox(QtWidgets.QWidget):
 		if event.key()==QtCore.Qt.Key_F12 and not event.isAutoRepeat(): #Key_Meta or Key_Menu =windows key
 			if all ([self.name!="init", self.name!="main", self.name!="viewport"]):
 				self.layoutStack(self.uiList.index('init')) #reset layout back to init on keyPressEvent
-		else:
-			return super(HotBox, self).eventFilter(self, event) #returns the event that occurred
+			
 			
 	def keyReleaseEvent(self, event):
 		#args: [QEvent]
 		if event.key()==QtCore.Qt.Key_F12 and not event.isAutoRepeat():
 			self.hide_()
-		else:
-			return super(HotBox, self).eventFilter(self, event)
 
 
 	def mousePressEvent(self, event):
@@ -220,8 +215,7 @@ class HotBox(QtWidgets.QWidget):
 					self.layoutStack(self.uiList.index('viewport'))
 				if event.button()==QtCore.Qt.RightButton:
 					self.layoutStack(self.uiList.index('main'))
-		else:
-			return super(HotBox, self).eventFilter(self, event)
+
 
 	def mouseDoubleClickEvent(self, event):
 		#args: [QEvent]
@@ -244,8 +238,7 @@ class HotBox(QtWidgets.QWidget):
 			try:
 				buttons.repeatLastCommand()
 			except: print "# Warning: No recent commands in history. #"
-		else:
-			return super(HotBox, self).eventFilter(self, event)
+
 
 	def mouseMoveEvent(self, event):
 		#args: [QEvent]
@@ -258,8 +251,7 @@ class HotBox(QtWidgets.QWidget):
 					moveWindow(self, -self.point.x(), -self.point.y()*.1) #set mouse position and move window with mouse down
 					self.ui.chkpin.setChecked(True)
 					# Pin(self).show()
-		else:
-			return super(HotBox, self).eventFilter(self, event)
+
 
 	def showEvent(self, event):
 		try: MaxPlus.CUI.DisableAccelerators()
@@ -273,20 +265,20 @@ class HotBox(QtWidgets.QWidget):
 		self.raise_()
 		self.setFocus()
 
+
 	def hide_(self):
 		try:
-			if hasattr (self.ui, 'chkpin') and self.ui.chkpin.isChecked():
-				return False
+			if hasattr (self.ui, 'chkpin') and self.ui.chkpin.isChecked(): 
+				pass
 			else:
 				self.hide()
-				return True
 		except Exception as exc:
 			if not exc==RuntimeWarning: print exc
 
 	def hideEvent(self, event):
 		try: MaxPlus.CUI.EnableAccelerators()
 		except: pass
-		return self.layoutStack(self.uiList.index('init'))
+		self.layoutStack(self.uiList.index('init'))
 
 
 # ------------------------------------------------

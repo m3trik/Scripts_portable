@@ -24,16 +24,16 @@ class Rendering(Init):
 		comboBox.checkIndex(2)
 
 	def b000(self): #render current frame
-		maxEval('RenderIntoNewWindow;')
+		maxEval('max quick render')
 
 	def b001(self): #Open render settings window
 		maxEval('unifiedRenderGlobalsWindow;')
 
 	def b002(self): #Redo previous render
-		maxEval('redoPreviousRender render;')
+		pass
 
 	def b003(self): #Editor: Render setup
-		maxEval('RenderSetupWindow;')
+		maxEval('max render scene')
 
 	def b004(self): #Editor: Rendering flags
 		maxEval('renderFlagsWindow;')
@@ -75,7 +75,7 @@ class Rendering(Init):
 
 
 
-#print module name
+#module name
 print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes

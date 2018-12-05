@@ -534,107 +534,37 @@ class Create(Init):
 
 
 
-	def b000(self): #box
-		self.hbHide()
-		maxEval('Box realWorldMapSize:on')
+	
 
-	def b001(self): #Cone
-		self.hbHide()
-		maxEval('Cone realWorldMapSize:on')
 
-	def b002(self): #Sphere
-		self.hbHide()
-		maxEval('Sphere realWorldMapSize:on')
 
-	def b003(self): #GeoSphere
-		self.hbHide()
-		maxEval('GeoSphere realWorldMapSize:on')
 
-	def b004(self): #Cylinder
-		self.hbHide()
-		maxEval('Cylinder realWorldMapSize:on')
 
-	def b005(self): #Tube
-		self.hbHide()
-		maxEval('Tube realWorldMapSize:on')
 
-	def b006(self): #Torus
-		self.hbHide()
-		maxEval('Torus realWorldMapSize:on')
 
-	def b007(self): #Pyramid
-		self.hbHide()
-		maxEval('Pyramid realWorldMapSize:on')
-
-	def b008(self): #TextPlus
-		self.hbHide()
-		maxEval('TextPlus layouttype:0 Plane:0')
-
-	def b009(self): #Plane
-		self.hbHide()
-		maxEval('Plane realWorldMapSize:on')
-
-	def b010(self): #Shapes
-		self.hbHide()
-		try:
-			self.shapes.hbShow()
-		except:
-			self.shapes = ToolBar(name="shapes", style=1, size=[100,220], offset=[-75,-50])
-			self.shapes.hbShow()
-		# shapes.hbShow()
-
-	def b011(self): #Lights
-		self.hbHide()
-
-		try:
-			self.lights.hbShow()
-		except:
-			self.lights = ToolBar(name="lights", style=1, size=[100,220], offset=[-75,-50])
-			self.lights.hbShow()
-		# lights.hbShow()
-
-	def b012(self): #Cameras
-		self.hbHide()
-
-		try:
-			self.cameras.hbShow()
-		except:
-			self.cameras = ToolBar(name="cameras", style=1, size=[100,220], offset=[-75,-50])
-			self.cameras.hbShow()
-		# cameras.hbShow()
-
-	def b013(self): #Helpers
-		self.hbHide()
-
-		try:
-			self.helpers.hbShow()
-		except:
-			self.helpers = ToolBar(name="helpers", style=1, size=[100,220], offset=[-75,-50])
-			self.helpers.hbShow()
-		# helpers.hbShow()
-
-	def b014(self): #Space Warps
-		self.hbHide()
-
-		try:
-			self.spacewarps.hbShow()
-		except:
-			self.spacewarps = ToolBar(name="spacewarps", style=1, size=[100,220], offset=[-75,-50])
-			self.spacewarps.hbShow()
-		# spacewarps.hbShow()
-
-	def b015(self): #Systems
-		self.hbHide()
-
-		try:
-			self.systems.hbShow()
-		except:
-			self.systems = ToolBar(name="systems", style=1, size=[100,220], offset=[-75,-50])
-			self.systems.hbShow()
-		# systems.hbShow()
-
-#print module name
+#module name
 print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
+
+
+# maxEval('Box realWorldMapSize:on')
+
+# maxEval('Cone realWorldMapSize:on')
+
+# maxEval('Sphere realWorldMapSize:on')
+
+# maxEval('GeoSphere realWorldMapSize:on')
+
+# maxEval('Cylinder realWorldMapSize:on')
+
+# maxEval('Tube realWorldMapSize:on')
+
+# maxEval('Torus realWorldMapSize:on')
+
+# maxEval('Pyramid realWorldMapSize:on')
+
+# maxEval('TextPlus layouttype:0 Plane:0')
+
+# maxEval('Plane realWorldMapSize:on')

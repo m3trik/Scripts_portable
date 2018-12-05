@@ -237,10 +237,14 @@ class Display(Init):
 		# mel.eval("polysDisplaySetup 1;")
 
 
-#print module name
+
+
+
+
+#module name
 print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
-	#b012
+
 

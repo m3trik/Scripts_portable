@@ -38,25 +38,33 @@ class Texturing(Init):
 		shell = self.hotBox.ui.chk000.isChecked()
 		invert = self.hotBox.ui.chk001.isChecked()
 
-		if self.try_('pm.ls(selection=1, objectsOnly=1)[0]', 'print "# Warning: Nothing selected #"'):
-			pm.hyperShade (pm.ls(sl=1, objectsOnly=1, visible=1)[0], shaderNetworksSelectMaterialNodes=1) #get material node from selection
-			pm.hyperShade (objects="") #select all with material. "" defaults to currently selected materials.
+		maxEval('''
+		if subobjectlevel == undefined then
+			max modify mode; \
+		if subobjectlevel != 4 then 
+			subobjectlevel = 4; \
+		Try(ApplyOperation Edit_Patch PatchOps.SelectByMatID)Catch();
+		''')
 
-			faces = pm.filterExpand (selectionMask=34, expand=1)
-			transforms = [node.replace('Shape','') for node in pm.ls(sl=1, objectsOnly=1, visible=1)] #get transform node name from shape node
-			pm.select (faces, deselect=1)
+		# if self.try_('pm.ls(selection=1, objectsOnly=1)[0]', 'print "# Warning: Nothing selected #"'):
+		# 	pm.hyperShade (pm.ls(sl=1, objectsOnly=1, visible=1)[0], shaderNetworksSelectMaterialNodes=1) #get material node from selection
+		# 	pm.hyperShade (objects="") #select all with material. "" defaults to currently selected materials.
 
-			if shell or invert: #deselect so that the selection can be modified.
-				pm.select (faces, deselect=1)
+		# 	faces = pm.filterExpand (selectionMask=34, expand=1)
+		# 	transforms = [node.replace('Shape','') for node in pm.ls(sl=1, objectsOnly=1, visible=1)] #get transform node name from shape node
+		# 	pm.select (faces, deselect=1)
 
-			if shell:
-				for shell in transforms:
-					pm.select (shell, add=1)
+		# 	if shell or invert: #deselect so that the selection can be modified.
+		# 		pm.select (faces, deselect=1)
+
+		# 	if shell:
+		# 		for shell in transforms:
+		# 			pm.select (shell, add=1)
 			
-			if invert:
-				for shell in transforms:
-					allFaces = [shell+".f["+str(num)+"]" for num in range(pm.polyEvaluate (shell, face=1))] #create a list of all faces per shell
-					pm.select (list(set(allFaces)-set(faces)), add=1) #get inverse of previously selected faces from allFaces
+		# 	if invert:
+		# 		for shell in transforms:
+		# 			allFaces = [shell+".f["+str(num)+"]" for num in range(pm.polyEvaluate (shell, face=1))] #create a list of all faces per shell
+		# 			pm.select (list(set(allFaces)-set(faces)), add=1) #get inverse of previously selected faces from allFaces
 
 
 	def b001(self): #
@@ -194,22 +202,12 @@ class Texturing(Init):
 
 
 
-	def b000(self): #UVW map
-		self.hbHide()
-		maxEval('modPanel.addModToSelection (Uvwmap ()) ui:on')
-
-	def b001(self): #Select by material ID
-		self.hbHide()
-		maxEval('''
-		if subobjectlevel == undefined then
-			max modify mode; \
-		if subobjectlevel != 4 then 
-			subobjectlevel = 4; \
-		Try(ApplyOperation Edit_Patch PatchOps.SelectByMatID)Catch();
-		''')
 
 
-#print module name
+		
+
+
+#module name
 print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes

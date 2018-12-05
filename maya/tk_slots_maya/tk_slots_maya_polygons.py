@@ -74,7 +74,7 @@ class Polygons(Init):
 	def b006(self): #Extrude
 		mel.eval('PolyExtrude;')
 
-	def b007(self): #Bevel
+	def b007(self): #Bevel\Chamfer
 		width = float(self.hotBox.ui.s000.value())
 		chamfer = True
 		pm.polyBevel3 (fraction=width, offsetAsFraction=1, autoFit=1, depth=1, mitering=0, 

@@ -47,7 +47,7 @@ class I023(Init):
 		maxEval('')
 
 
-#print module name
+#module name
 print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes

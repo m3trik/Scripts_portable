@@ -134,14 +134,19 @@ class Transform(Init):
 		self.transform()
 
 	def b002(self): #Freeze transformations
-		# mel.eval("performFreezeTransformations(0);")
-		pm.makeIdentity(apply=True) #freeze transforms
-		# pm.makeIdentity (obj, apply=1, t=1, r=1, s=1, n=0, pn=1)
+		maxEval('macros.run \"Animation Tools\" \"FreezeTransform\"')
 		
 	def b003(self): #Center pivot object
-		mel.eval("CenterPivot;")
+		maxEval('''
+		if selection.count > 0 then
+		(
+			selection.pivot = selection.center
+		)
+		''')
 		
 	def b004(self): #Align vertices
+
+		#a previous version of this has been translated to max
 		if self.hotBox.ui.chk010.isChecked(): #if checked; set coordinates for auto align:
 			sel = pm.ls (selection=1)
 
@@ -354,60 +359,20 @@ class Transform(Init):
 
 
 
-	def b000(self): #Scale
-		self.hbHide()
-		maxEval('max tti')
 
-	def b001(self): #Transform tools
-		self.hbHide()
-		maxEval('macros.run \"PolyTools\" \"TransformTools\"')
-
-	def b002(self): #Freeze transformations
-		self.hbHide()
-		maxEval('macros.run \"Animation Tools\" \"FreezeTransform\"')
-
-	def b003(self): #Center pivot on selection
-		self.hbHide()
-		maxEval('''
-		if selection.count > 0 then
-		(
-			selection.pivot = selection.center
-		)
-		''')
-
-	def b004(self): #alignX
-		self.hbHide()
-		sel = makeSelection ("Current", 1)
-		alignVertices(sel, 3)
-
-	def b005(self): ##alignY
-		self.hbHide()
-		sel = makeSelection ("Current", 1)
-		alignVertices(sel, 4)
-
-	def b006(self): ##alignZ
-		self.hbHide()
-		sel = makeSelection ("Current", 1)
-		alignVertices(sel, 5)
-
-	def b007(self): ##alignYZ
-		self.hbHide()
-		sel = makeSelection ("Current", 1)
-		alignVertices(sel, 0)
-
-	def b008(self): ##alignXZ
-		self.hbHide()
-		sel = makeSelection ("Current", 1)
-		alignVertices(sel, 1)
-
-	def b009(self): ##alignXY
-		self.hbHide()
-		sel = makeSelection ("Current", 1)
-		alignVertices(sel, 2)
+	
 
 
-#print module name
+
+
+
+#module name
 print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
+
+# maxEval('max tti')
+
+# maxEval('macros.run \"PolyTools\" \"TransformTools\"')
+

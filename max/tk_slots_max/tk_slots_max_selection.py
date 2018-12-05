@@ -89,11 +89,13 @@ class Selection(Init):
 
 	def cmb000(self): #List selection sets
 		index = self.hotBox.ui.cmb000.currentIndex() #get current index before refreshing list
-		sets = self.comboBox (self.hotBox.ui.cmb000, [str(set_) for set_ in pm.ls (et="objectSet", flatten=1)], "Sets")
+		# sets = self.comboBox (self.hotBox.ui.cmb000, [str(set_) for set_ in pm.ls (et="objectSet", flatten=1)], "Sets")
 
-		if index!=0:
-			pm.select (sets[index])
-			self.hotBox.ui.cmb000.setCurrentIndex(0)
+		maxEval('macros.run \"Edit\" \"namedSelSets\"')
+
+		# if index!=0:
+		# 	pm.select (sets[index])
+		# 	self.hotBox.ui.cmb000.setCurrentIndex(0)
 
 	def cmb001(self): #currently selected objects
 		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
@@ -151,7 +153,17 @@ class Selection(Init):
 		mel.eval("selectEveryNEdge;")
 
 	def b009(self): #Select contigious edge loop
-		maxEval('SelectContiguousEdges;')
+		maxEval('''
+		curmod = Modpanel.getcurrentObject()
+		if ( Ribbon_Modeling.IsEditablePoly() ) then
+		(
+			curmod.SelectEdgeRing();
+		)
+		else
+		(
+			curmod.ButtonOp #SelectEdgeRing;
+		)
+		''')
 
 	def b10(self): #Select contigious edge loop options
 		maxEval('SelectContiguousEdgesOptions;')
@@ -167,51 +179,19 @@ class Selection(Init):
 		mel.eval("LassoTool;")
 
 	def b014(self): #Grow selection
-		maxEval('GrowPolygonSelectionRegion;')
-
-	def b015(self): #Shrink selection
-		maxEval('ShrinkPolygonSelectionRegion;')
-
-	def b016(self): #Convert selection to vertices
-		maxEval('PolySelectConvert 3;')
-
-	def b017(self): #Convert selection to edges
-		maxEval('PolySelectConvert 2;')
-
-	def b018(self): #Convert selection to faces
-		maxEval('PolySelectConvert 1;')
-
-	def b019(self): #Convert selection to edge ring
-		maxEval('SelectEdgeRingSp;')
-
-	def b020(self): #select edge ring
-		print "# Warning: add correct arguments for this tool #" 
-		self.shortestEdgePath()
-
-
-
-
-	def b000(self): #Selection sets
-		self.hbHide()
-		maxEval('macros.run \"Edit\" \"namedSelSets\"')
-
-	def b001(self): #select contigious edge loop
-		self.hbHide()
+		# expand functionalitly to grow according to selection type
+		#grow line #PolytoolsSelect.Pattern7 1
+		#grow loop #PolytoolsSelect.GrowLoop()
+		#grow ring #PolytoolsSelect.GrowRing()
 		maxEval('''
 		curmod = Modpanel.getcurrentObject()
 		if ( Ribbon_Modeling.IsEditablePoly() ) then
-		(
-			curmod.SelectEdgeRing();
-		)
+			curmod.GrowSelection()
 		else
-		(
-			curmod.ButtonOp #SelectEdgeRing;
-		)
+			curmod.ButtonOp #GrowSelection
 		''')
 
-	def b002(self): #Shrink selection
-		self.hbHide()
-		#expand functionalitly as outlined below
+	def b015(self): #Shrink selection
 		maxEval('''
 		classString = makeSelection "Current" 1 classInfo
 
@@ -233,45 +213,35 @@ class Selection(Init):
 		)
 		''')
 
-	def b003(self): #Grow selection
-		self.hbHide()
-		# expand functionalitly to grow according to selection type
-		#grow line #PolytoolsSelect.Pattern7 1
-		#grow loop #PolytoolsSelect.GrowLoop()
-		#grow ring #PolytoolsSelect.GrowRing()
-		maxEval('''
-		curmod = Modpanel.getcurrentObject()
-		if ( Ribbon_Modeling.IsEditablePoly() ) then
-			curmod.GrowSelection()
-		else
-			curmod.ButtonOp #GrowSelection
-		''')
+	def b016(self): #Convert selection to vertices
+		maxEval('PolySelectConvert 3;')
 
-	def b004(self): #
-		self.hbHide()
-		maxEval('')
+	def b017(self): #Convert selection to edges
+		maxEval('PolySelectConvert 2;')
 
-	def b005(self): #
-		self.hbHide()
-		maxEval('')
+	def b018(self): #Convert selection to faces
+		maxEval('PolySelectConvert 1;')
 
-	def b006(self): #
-		self.hbHide()
-		maxEval('')
+	def b019(self): #Convert selection to edge ring
+		maxEval('SelectEdgeRingSp;')
 
-	def b007(self): #
-		self.hbHide()
-		maxEval('')
+	def b020(self): #select edge ring
+		print "# Warning: add correct arguments for this tool #" 
+		self.shortestEdgePath()
 
-	def b008(self): #
-		self.hbHide()
-		maxEval("")
 
-	def b009(self): #
-		self.hbHide()
-		maxEval('')
 
-#print module name
+
+
+		
+
+
+
+		
+
+
+
+#module name
 print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes

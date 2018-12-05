@@ -58,7 +58,7 @@ class Signal(QtCore.QObject):
 				except Exception as err:
 					if err==AttributeError:
 						print 'Exception:',err
-		print self.connectionDict
+		# print self.connectionDict
 		return self.connectionDict
 
 

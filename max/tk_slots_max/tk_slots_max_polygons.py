@@ -60,33 +60,84 @@ class Polygons(Init):
 		detachElement(sel)
 
 	def b003(self): #Combine
-		# pm.polyUnite( 'plg1', 'plg2', 'plg3', name='result' ) #for future reference. if more functionality is needed use polyUnite
 		if self.hotBox.ui.chk000.isChecked():
-			maxEval('bt_mergeCombineMeshes;')
-		else:
-			maxEval('CombinePolygons;')
+			pass
+			#from maya:
+		# 	maxEval('bt_mergeCombineMeshes;')
+		# else:
+		# 	maxEval('CombinePolygons;')
+		sel = makeSelection ("Current", 0)
+		maxEval('''
+		j = 1;
+		count = sel.count;
+
+		undo off;
+
+		while sel.count > 1 do
+		(
+			if classof sel != Editable_Poly then converttopoly sel
+			(
+				polyop.attach sel sel;
+			  deleteItem sel (j+1);
+
+			  j += 1;
+
+			  if (j + 1) > sel.count then 
+			  (
+			      j = 1
+			  )
+			)
+		)
+		''')
 
 	def b004(self):#
 		pass
 		
 	def b005(self): #Bridge
-		maxEval('polyBridgeEdge -divisions 0;')
+		maxEval('$.EditablePoly.Bridge ()')
 
 	def b006(self): #Extrude
-		maxEval('PolyExtrude;')
+		sel = makeSelection("Current", 0)
+    	
+		if (sel != "noSelection"):
+			for obj in sel:
+				extrudeObject(obj)
+				# classInfo = classInfo(obj)
+				# componentArray = []
 
-	def b007(self): #Bevel
+				# if classInfo[9] == 4
+				#		subObject = ""
+				#		componentArray.append(subObject)
+				#		extrudeObject(obj)
+				#	option #maxEval('maxOps.CollapseNode $ off; --collapse modifier stack')
+
+	def b007(self): #Bevel \Chamfer
 		width = float(self.hotBox.ui.s000.value())
 		chamfer = True
-		pm.polyBevel3 (fraction=width, offsetAsFraction=1, autoFit=1, depth=1, mitering=0, 
-			miterAlong=0, chamfer=chamfer, segments=1, worldSpace=1, smoothingAngle=30, subdivideNgons=1,
-			mergeVertices=1, mergeVertexTolerance=0.0001, miteringAngle=180, angleTolerance=180, ch=0)
+		if chamfer:
+			maxEval('macros.run \"Modifiers\" \"ChamferMod\"')
+		else: #bevel
+			maxEval('modPanel.addModToSelection (Bevel ()) ui:on')
 
 	def b008(self): #
 		pass
 
 	def b009(self): #Collapse component
-		maxEval('PolygonCollapse;')
+		#--[mesh] 0=object level,1=vertex level,2=edge level,3=face,4=polygon,5=element,
+		#--[poly] 0=object level,1=vertex level,2=edge level,3=border,4=polygon,5=element
+		
+		if (rt.subObjectLevel == 1): #--vertex level
+			maxEval('''
+			$.EditablePoly.collapse #Vertex
+			''')
+		if (rt.subObjectLevel == 2): #--edge level
+			maxEval('''
+			$.EditablePoly.collapse #Edge
+			''')
+		if (rt.subObjectLevel == 3): #--face level
+			maxEval('''
+			$.EditablePoly.collapse #Face
+			''')
 
 	def b010(self): #
 		pass
@@ -95,26 +146,70 @@ class Polygons(Init):
 		pass
 
 	def b012(self): #Multi-cut tool
-		maxEval('dR_multiCutTool;')
+		maxEval('''
+		Try
+		(
+			If SubObjectLevel == undefined then Max Modify Mode
+			local A = Filters.GetModOrObj()
+			if (Filters.Is_This_EditPolyMod A) then (A.ToggleCommandMode #Cut)
+			else (A.toggleCommandMode #CutVertex)   -- (Really a general Cut mode.)
+		)
+		Catch (print "cut (poly) error")
+		''')
 
 	def b013(self): #Combine polygon options
 		maxEval('CombinePolygonsOptions;')
 
 	def b014(self): # Bevel options
-		maxEval('BevelPolygonOptions;')
+		maxEval('')
 
 	def b015(self): #Delete edgeloop
-		mel.eval("bt_polyDeleteEdgeLoopTool;")
+		maxEval('$.EditablePoly.Remove ()')
 
 	def b016(self): #Inset face region
 		offset = float(self.hotBox.ui.s001.value())
-		pm.polyExtrudeFacet (keepFacesTogether=1, pvx=0, pvy=40.55638003, pvz=33.53797107, divisions=1, twist=0, taper=1, offset=offset, thickness=0, smoothingAngle=30)
+		maxEval('''
+		Try 
+		(
+			If SubObjectLevel == undefined then Max Modify Mode
+			local A = modPanel.getCurrentObject()
+			if keyboard.shiftpressed then A.popupDialog #Inset
+			else A.toggleCommandMode #InsetFace
+		)
+		Catch()
+		''')
 
 	def b017(self): #Bridge options
-		mel.eval("BridgeEdgeOptions;")
+		maxEval('''
+		if Ribbon_Modeling.ValidSOMode() and (subobjectlevel == 2 or subobjectlevel == 3) then
+		(
+			curmod = Modpanel.getcurrentObject()
+			if subobjectlevel == 2 then
+			(   
+			    curmod.popupDialog #BridgeEdge
+			)
+			else 
+			(
+			    curmod.popupDialog #BridgeBorder
+			)
+		)
+		''')
 
 	def b018(self): #Extrude options
-		mel.eval("PolyExtrudeOptions;")
+		maxEval('''
+		If SubObjectLevel == undefined then Max Modify Mode
+		-- default to Face level:
+		if subobjectLevel == 0 then subobjectLevel = 4
+		local A = modPanel.getCurrentObject()
+		if (Filters.Is_This_EditPolyMod A) then
+		(
+			local level = A.GetMeshSelLevel()
+			if (level == #Vertex) then (A.PopupDialog #ExtrudeVertex)
+			else if (level == #Edge) then (A.PopupDialog #ExtrudeEdge)
+			else if (level == #Face) then (A.PopupDialog #ExtrudeFace)
+		)
+		else (A.popupDialog #Extrude)
+		''')
 
 	def b019(self): #
 		pass
@@ -230,47 +325,14 @@ class Polygons(Init):
 		mel.eval("dR_targetWeldTool;")
 
 	def b044(self): #Detach
-		maskVertex = pm.selectType (query=True, vertex=True)
-		if maskVertex:
-			mel.eval("DetachComponent;")
-		else:
-			selFace = pm.ls (ni=1, sl=1)
-			selObj = pm.ls (objectsOnly=1, noIntermediate=1, sl=1) #to errorcheck if more than 1 obj selected
-
-			if len(selFace) < 1:
-				print "// Warning: Nothing selected. //"
-				return
-			if len(selObj) > 1:
-				print "// Warning: Only components from a single object can be extracted. //"
-				return
-			else:
-				pm.undoInfo (openChunk=1)
-				sel = str(selFace[0]).split(".") #creates ex. ['polyShape', 'f[553]']
-				print sel
-				extractedObject = "extracted_"+sel[0]
-				pm.duplicate (sel[0], name=extractedObject)
-				if self.hotBox.ui.chk007.isChecked(): #delete original
-					pm.delete (selFace)
-
-				allFace = [] #populate a list of all faces in the duplicated object
-				numFaces = pm.polyEvaluate(extractedObject, face=1)
-				num=0
-				for _ in range(numFaces):
-					allFace.append(extractedObject+".f["+str(num)+"]")
-					num+=1
-
-				extFace = [] #faces to keep
-				for face in selFace:
-					fNum = str(face.split(".")[0]) #ex. f[4]
-					extFace.append(extractedObject+"."+fNum)
-
-				delFace = [x for x in allFace if x not in extFace] #all faces not in extFace
-				pm.delete (delFace)
-
-				pm.select (extractedObject)
-				pm.xform (cpc=1) #center pivot
-				pm.undoInfo (closeChunk=1)
-				return extractedObject
+		maxEval('''
+		if subObjectLevel == 4 then
+			$.EditablePoly.detachToElement #Face keepOriginal:off --element
+			--$.EditablePoly.detachToElement #Face keepOriginal:on --clone
+		if subObjectLevel == 2 then
+			$.EditablePoly.detachToElement #Edge keepOriginal:off --element
+			--$.EditablePoly.detachToElement #Face keepOriginal:on --clone
+		''')
 
 	def b045(self): #Re-order vertices
 		symmetryOn = pm.symmetricModelling(query=True, symmetry=True) #query symmetry state
@@ -427,213 +489,45 @@ class Polygons(Init):
 
 		
 
-	def b003(self): #Combine
-		self.hbHide()
-		sel = makeSelection ("Current", 0)
-		maxEval('''
-		j = 1;
-		count = sel.count;
-
-		undo off;
-
-		while sel.count > 1 do
-		(
-			if classof sel != Editable_Poly then converttopoly sel
-			(
-				polyop.attach sel sel;
-			  deleteItem sel (j+1);
-
-			  j += 1;
-
-			  if (j + 1) > sel.count then 
-			  (
-			      j = 1
-			  )
-			)
-		)
-		''')
-
-	def b004(self): #Detach
-		self.hbHide()
-		maxEval('''
-		if subObjectLevel == 4 then
-			$.EditablePoly.detachToElement #Face keepOriginal:off --element
-			--$.EditablePoly.detachToElement #Face keepOriginal:on --clone
-		if subObjectLevel == 2 then
-			$.EditablePoly.detachToElement #Edge keepOriginal:off --element
-			--$.EditablePoly.detachToElement #Face keepOriginal:on --clone
-		''')
-
-	def b005(self): #Bridge
-		self.hbHide()
-		maxEval('$.EditablePoly.Bridge ()')
-
-	def b006(self): #Extrude
-		self.hbHide()
-		sel = makeSelection("Current", 0)
-    	
-		if (sel != "noSelection"):
-			for obj in sel:
-				extrudeObject(obj)
-				# classInfo = classInfo(obj)
-				# componentArray = []
-
-				# if classInfo[9] == 4
-				#		subObject = ""
-				#		componentArray.append(subObject)
-				#		extrudeObject(obj)
-				#	option #maxEval('maxOps.CollapseNode $ off; --collapse modifier stack')
-
-	def b007(self): #Bevel
-		self.hbHide()
-		maxEval('modPanel.addModToSelection (Bevel ()) ui:on')
-
-	def b008(self): #Chamfer
-		self.hbHide()
-		maxEval('macros.run \"Modifiers\" \"ChamferMod\"')
-
-	def b009(self): #Collapse component
-		self.hbHide()
-		#--[mesh] 0=object level,1=vertex level,2=edge level,3=face,4=polygon,5=element,
-		#--[poly] 0=object level,1=vertex level,2=edge level,3=border,4=polygon,5=element
 		
-		if (rt.subObjectLevel == 1): #--vertex level
-			maxEval('''
-			$.EditablePoly.collapse #Vertex
-			''')
-		if (rt.subObjectLevel == 2): #--edge level
-			maxEval('''
-			$.EditablePoly.collapse #Edge
-			''')
-		if (rt.subObjectLevel == 3): #--face level
-			maxEval('''
-			$.EditablePoly.collapse #Face
-			''')
-
-	def b010(self): #Add divisions
-		self.hbHide()
-		maxEval('macros.run \"Modifiers\" \"Tessellate\"')
-
-	def b011(self): #Smooth
-		self.hbHide()
-		maxEval('macros.run \"Modifiers\" \"Smooth\"')
-
-	def b012(self): #Multi-cut
-		self.hbHide()
-		maxEval('''
-		Try
-		(
-			If SubObjectLevel == undefined then Max Modify Mode
-			local A = Filters.GetModOrObj()
-			if (Filters.Is_This_EditPolyMod A) then (A.ToggleCommandMode #Cut)
-			else (A.toggleCommandMode #CutVertex)   -- (Really a general Cut mode.)
-		)
-		Catch (print "cut (poly) error")
-		''')
-
-	def b013(self): #Slice plane
-		self.hbHide()
-		maxEval('''
-		local retValue = false
-		if( Ribbon_Modeling.ValidSOMode() ) then
-		(
-			curmod = Modpanel.getcurrentObject()
-			retValue = (curmod.getCommandMode() == #SlicePlane)
-		)
-		retValue
-		''')
-
-	def b014(self): #Quick Slice
-		self.hbHide()
-		maxEval('''
-		if( Ribbon_Modeling.ValidSelection() ) then
-		(
-			curmod = Modpanel.getcurrentObject()
-			(curmod.getCommandMode() == #QuickSlice)
-		)
-		else
-		(
-			false
-		)
-		''')
-
-	def b015(self): #Delete edgeloop
-		self.hbHide()
-		maxEval('''
-		$.EditablePoly.Remove ()
-		''')
-
-	def b016(self): #Inset
-		self.hbHide()
-		maxEval('''
-		Try 
-		(
-			If SubObjectLevel == undefined then Max Modify Mode
-			local A = modPanel.getCurrentObject()
-			if keyboard.shiftpressed then A.popupDialog #Inset
-			else A.toggleCommandMode #InsetFace
-		)
-		Catch()
-		''')
-
-	def b017(self): #Bridge options
-		self.hbHide()
-		maxEval('''
-		if Ribbon_Modeling.ValidSOMode() and (subobjectlevel == 2 or subobjectlevel == 3) then
-		(
-			curmod = Modpanel.getcurrentObject()
-			if subobjectlevel == 2 then
-			(   
-			    curmod.popupDialog #BridgeEdge
-			)
-			else 
-			(
-			    curmod.popupDialog #BridgeBorder
-			)
-		)
-		''')
-
-	def b018(self): #Extrude options
-		self.hbHide()
-		maxEval('''
-		If SubObjectLevel == undefined then Max Modify Mode
-		-- default to Face level:
-		if subobjectLevel == 0 then subobjectLevel = 4
-		local A = modPanel.getCurrentObject()
-		if (Filters.Is_This_EditPolyMod A) then
-		(
-			local level = A.GetMeshSelLevel()
-			if (level == #Vertex) then (A.PopupDialog #ExtrudeVertex)
-			else if (level == #Edge) then (A.PopupDialog #ExtrudeEdge)
-			else if (level == #Face) then (A.PopupDialog #ExtrudeFace)
-		)
-		else (A.popupDialog #Extrude)
-		''')
-
-	def b019(self): #Tessellate options
-		self.hbHide()
-		maxEval('''
-		Try 
-		(
-			local A = modPanel.getCurrentObject()
-			A.popupDialog #Tessellate
-		)
-		Catch ()
-		''')
-
-	def b020(self): #Inset options
-		self.hbHide()
-		maxEval('''
- 		local A = modPanel.getCurrentObject()
-		A.popupDialog #Inset
-		''')
 
 
 
 
-#print module name
+
+
+#module name
 print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
-#b008, b010, b011, b019, b024-27, b058, b059, b060
+
+# #slice plane
+# maxEval('''
+# 		local retValue = false
+# 		if( Ribbon_Modeling.ValidSOMode() ) then
+# 		(
+# 			curmod = Modpanel.getcurrentObject()
+# 			retValue = (curmod.getCommandMode() == #SlicePlane)
+# 		)
+# 		retValue
+# 		''')
+
+# #quick slice
+# 		maxEval('''
+# 		if( Ribbon_Modeling.ValidSelection() ) then
+# 		(
+# 			curmod = Modpanel.getcurrentObject()
+# 			(curmod.getCommandMode() == #QuickSlice)
+# 		)
+# 		else
+# 		(
+# 			false
+# 		)
+# 		''')
+
+# #inset options
+# maxEval('''
+#  		local A = modPanel.getCurrentObject()
+# 		A.popupDialog #Inset
+# 		''')
