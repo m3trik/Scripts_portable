@@ -224,12 +224,13 @@ class Transform(Init):
 			self.alignVertices(mode=6,average=avg,edgeloop=loop)
 
 	def b005(self): #move to
-		sel = rt.getCurrentSelection()
+		sel = [s for s in rt.getCurrentSelection()] #rebuild selection array in python.
 
-		source = sel[0]
-		target = sel[1]
-		#move object to center of the last selected items bounding box
-		source.center = target.center
+		objects = sel[:-1]
+		target = sel[-1]
+		#move object(s) to center of the last selected items bounding box
+		for obj in objects: 
+			obj.center = target.center
 
 	def b006(self): #
 		pass

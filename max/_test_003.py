@@ -7,7 +7,11 @@ from pymxs import runtime as rt
 
 
 
-source = rt.getNodeByName('Point001')
-target = rt.getNodeByName('Box001')
+sel = [s for s in rt.getCurrentSelection()]
 
-source.center = target.center
+objects = sel[:-1]
+target = sel[-1]
+
+for obj in objects: 
+	print obj
+	obj.center = target.center

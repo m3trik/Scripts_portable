@@ -2,17 +2,20 @@ import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
 from pymxs import runtime as rt
 
 
-#~ sel = rt.getCurrentSelection()
-#~ print sel
-
-#~ source = sel[0]
-#~ target = sel[1]
-
-#~ source.center = target.center
-
 sel = [s for s in rt.getCurrentSelection()]
+print sel
+# getModContextTM <node> <modifier>
+# getModContextBBoxMin <node> <modifier>
+#~ print sel.typeInPos, sel.height
 
-objects = sel[:-1]
-target = sel[-1]
 
-[obj.center = target.center for obj in objects]
+
+for obj in sel:
+	obj.pivot = [obj.center.x, obj.center.y, obj.center.z] #center, min, max
+
+	transform = [obj.transform.pos.x, obj.transform.pos.y, obj.transform.pos.z]
+	scale = [obj.scale.x, obj.scale.y, obj.scale.z]
+	rotate = [obj.rotate.x, obj.rotate.y, obj.rotate.z]
+	
+	print transform, scale, rotate
+

@@ -16,8 +16,8 @@ class Viewport(Init):
 	def cmb000(self): #list scene cameras
 		index = self.hotBox.ui.cmb000.currentIndex() #get current index before refreshing list
 		cameras = [cam.name for cam in rt.cameras if 'Target' not in cam.name]
-		items = self.comboBox (self.hotBox.ui.cmb000, cameras, "Scene Cameras:")
-    # for cam in cameras do (print cam.name)
+		items = self.comboBox (self.hotBox.ui.cmb000, cameras, "Cameras:")
+		
 		if index!=0:
 			rt.select (rt.getNodeByName(items[index]))
 			self.hotBox.ui.cmb000.setCurrentIndex(0)
