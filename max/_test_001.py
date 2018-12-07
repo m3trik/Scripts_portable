@@ -1,16 +1,16 @@
 
 
-from PySide2 import QtCore, QtGui
+from PySide2 import QtCore, QtGui, QtWidgets
 
 
-class Window(QtGui.QMainWindow):
+class Window(QtWidgets.QMainWindow):
 	def __init__(self):
-		QtGui.QMainWindow.__init__(self)
+		QtWidgets.QMainWindow.__init__(self)
 		# add a few widgets for testing
-		widget = QtGui.QWidget(self)
-		edit = QtGui.QTextEdit(widget)
-		button = QtGui.QPushButton('Button', widget)
-		layout = QtGui.QVBoxLayout(widget)
+		widget = QtWidgets.QWidget(self)
+		edit = QtWidgets.QTextEdit(widget)
+		button = QtWidgets.QPushButton('Button', widget)
+		layout = QtWidgets.QVBoxLayout(widget)
 		layout.addWidget(edit)
 		layout.addWidget(button)
 		self.setCentralWidget(widget)
@@ -47,7 +47,7 @@ def eventFilter(self, source, event):
 
 if __name__ == '__main__':
 	import sys
-	app = QtGui.QApplication(sys.argv)
+	app = QtWidgets.QApplication(sys.argv)
 	window = Window()
 	window.setGeometry(500, 300, 300, 100)
 	window.show()
