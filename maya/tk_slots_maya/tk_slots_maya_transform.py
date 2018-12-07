@@ -219,8 +219,13 @@ class Transform(Init):
 		if all ([x, y, z]): #align xyz
 			self.alignVertices(mode=6,average=avg,edgeloop=loop)
 
-	def b005(self): #
-		pass
+	def b005(self): #move to
+		sel = rt.getCurrentSelection()
+
+		source = sel[0]
+		target = sel[1]
+		#move object to center of the last selected items bounding box
+		source.center = target.center
 
 	def b006(self): #
 		pass

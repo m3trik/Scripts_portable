@@ -13,7 +13,14 @@ class Viewport(Init):
 	def __init__(self, *args, **kwargs):
 		super(Viewport, self).__init__(*args, **kwargs)
 
-	
+	def cmb000(self): #list scene cameras
+		index = self.hotBox.ui.cmb000.currentIndex() #get current index before refreshing list
+		cameras = [cam.name for cam in rt.cameras if 'Target' not in cam.name]
+		items = self.comboBox (self.hotBox.ui.cmb000, cameras, "Scene Cameras:")
+    # for cam in cameras do (print cam.name)
+		if index!=0:
+			rt.select (rt.getNodeByName(items[index]))
+			self.hotBox.ui.cmb000.setCurrentIndex(0)
 
 	def v000(self): #viewport: back view
 		maxEval("max vpt back")
