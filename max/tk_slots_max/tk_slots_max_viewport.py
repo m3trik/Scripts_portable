@@ -42,17 +42,17 @@ class Viewport(Init):
 		max align camera
 		''')
 
-	def v008(self): #camera: dolly/zoom
-		maxEval("max dolly mode")
+	def v008(self):
+		pass
 
-	def v009(self): #camera: roll
-		maxEval("max roll")
+	def v009(self):
+		pass
 
-	def v010(self): #camera: truck/pan
-		maxEval("max truck")
+	def v010(self):
+		pass
 
-	def v011(self): #camera: orbit
-		maxEval("max pancamera")
+	def v011(self):
+		pass
 
 	def v012(self): #
 		pass
@@ -65,6 +65,24 @@ class Viewport(Init):
 
 	def v015(self): #
 		pass
+
+
+# g009 camera transforms --------------
+
+	def b000(self): #camera: dolly/zoom
+		maxEval("max dolly mode")
+
+	def b001(self): #camera: roll
+		maxEval("max roll")
+
+	def b002(self): #camera: truck/pan
+		maxEval("max truck")
+
+	def b003(self): #camera: orbit
+		maxEval("max pancamera")
+
+
+
 
 
 #module name
