@@ -1,7 +1,45 @@
+#-----------------------------------------------------
+
+
+#ignore
+#*  (uncomment to ignore all with specific exceptions)
+/max/startup/userSetup.ms
+/max/userSetup.py
+/maya/userSetup.py
+
+
+
+#except
+#!.gitignore
+
+
+#exception for subdirectories
+#!*/__path
+#!*/macros
+
+
+#exception for subdirectory files
+
+
+
+
+
+
+#-----------------------------------------------------
+
+
+
+
+
+
+
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+
 
 # C extensions
 *.so
