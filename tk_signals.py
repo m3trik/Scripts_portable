@@ -23,8 +23,7 @@ class Signal(QtCore.QObject):
 	def buildConnectionDict(self):
 		self.class_ = locate('tk_slots_'+self.hotBox.app+'_'+self.hotBox.name+'.'+self.hotBox.name.capitalize())(self.hotBox) #equivalent to: ie. import tk_slots_maya_main.Main
 
-		buttonType = {'b':'clicked','v':'clicked','s':'valueChanged','chk':'released','cmb':'currentIndexChanged','t':'returnPressed'}
-		if self.hotBox.name=='main' or self.hotBox.name=='viewport': buttonType = {'i':'clicked','v':'clicked'}
+		buttonType = {'i':'clicked','b':'clicked','v':'clicked','s':'valueChanged','chk':'released','cmb':'currentIndexChanged','t':'returnPressed'}
 
 		self.connectionDict[self.hotBox.name] = {} #initialize the key before attempting to add any values, so that a placeholder key will be generated even if no values are present.
 		for prefix,signal in buttonType.iteritems(): #button/method's that start with ie. 'b'

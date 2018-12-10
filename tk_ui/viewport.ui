@@ -356,24 +356,216 @@
      <string/>
     </property>
    </widget>
-   <widget class="QComboBox" name="cmb000">
+   <widget class="QGroupBox" name="g009">
     <property name="geometry">
      <rect>
-      <x>105</x>
-      <y>200</y>
-      <width>89</width>
+      <x>110</x>
+      <y>0</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QPushButton" name="b003">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>0</y>
+       <width>21</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Camera: Rotate</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../icons/selectAndRotate.png</normaloff>../icons/selectAndRotate.png</iconset>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b001">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>0</y>
+       <width>21</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Camera: Truck</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../icons/Pan Non-Camera View Mode - 0000C361_00000000 - 32.png</normaloff>../icons/Pan Non-Camera View Mode - 0000C361_00000000 - 32.png</iconset>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b000">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>21</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Camera: Dolly</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../icons/Dolly Mode - 00000099_00000000 - 32.png</normaloff>../icons/Dolly Mode - 00000099_00000000 - 32.png</iconset>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b002">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>0</y>
+       <width>21</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Camera: Orbit</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../icons/Orbit View Mode - 00009D0B_00000000 - 32.png</normaloff>../icons/Orbit View Mode - 00009D0B_00000000 - 32.png</iconset>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QComboBox" name="cmb000_2">
+    <property name="geometry">
+     <rect>
+      <x>195</x>
+      <y>0</y>
+      <width>106</width>
       <height>19</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>89</width>
+      <width>106</width>
       <height>0</height>
      </size>
     </property>
     <property name="maximumSize">
      <size>
-      <width>16777215</width>
+      <width>106</width>
+      <height>19</height>
+     </size>
+    </property>
+    <property name="sizeAdjustPolicy">
+     <enum>QComboBox::AdjustToContents</enum>
+    </property>
+    <property name="frame">
+     <bool>false</bool>
+    </property>
+    <item>
+     <property name="text">
+      <string>Editors:</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QComboBox" name="cmb000_3">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>200</y>
+      <width>106</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>106</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>106</width>
+      <height>19</height>
+     </size>
+    </property>
+    <property name="sizeAdjustPolicy">
+     <enum>QComboBox::AdjustToContents</enum>
+    </property>
+    <property name="frame">
+     <bool>false</bool>
+    </property>
+    <item>
+     <property name="text">
+      <string>Create:</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QComboBox" name="cmb000_4">
+    <property name="geometry">
+     <rect>
+      <x>195</x>
+      <y>200</y>
+      <width>106</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>106</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>106</width>
+      <height>19</height>
+     </size>
+    </property>
+    <property name="sizeAdjustPolicy">
+     <enum>QComboBox::AdjustToContents</enum>
+    </property>
+    <property name="frame">
+     <bool>false</bool>
+    </property>
+    <item>
+     <property name="text">
+      <string>Modify:</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QComboBox" name="cmb000">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>200</y>
+      <width>81</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>81</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>81</width>
       <height>19</height>
      </size>
     </property>
@@ -389,60 +581,8 @@
      </property>
     </item>
    </widget>
-   <widget class="QPushButton" name="b000">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>0</y>
-      <width>21</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="b001">
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>0</y>
-      <width>21</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="b002">
-    <property name="geometry">
-     <rect>
-      <x>150</x>
-      <y>0</y>
-      <width>21</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="b003">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>0</y>
-      <width>21</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <zorder>b001</zorder>
-   <zorder>b000</zorder>
+   <zorder>v011</zorder>
+   <zorder>v009</zorder>
    <zorder>v014</zorder>
    <zorder>v015</zorder>
    <zorder>left</zorder>
@@ -455,13 +595,13 @@
    <zorder>right</zorder>
    <zorder>v008</zorder>
    <zorder>v010</zorder>
-   <zorder>v011</zorder>
-   <zorder>v009</zorder>
    <zorder>v013</zorder>
    <zorder>v012</zorder>
+   <zorder>g009</zorder>
+   <zorder>cmb000_2</zorder>
+   <zorder>cmb000_3</zorder>
+   <zorder>cmb000_4</zorder>
    <zorder>cmb000</zorder>
-   <zorder>b002</zorder>
-   <zorder>b003</zorder>
   </widget>
  </widget>
  <resources/>

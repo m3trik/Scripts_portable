@@ -14,7 +14,83 @@ class Viewport(Init):
 		super(Viewport, self).__init__(*args, **kwargs)
 
 
-	
+
+	def cmb000(self): #Scene Cameras
+		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
+		list_ = []
+		self.comboBox (self.hotBox.ui.cmb001, list_, "")
+
+		if index!=0:
+			
+			self.hotBox.ui.cmb001.setCurrentIndex(0)
+
+
+	def cmb001(self): #Create
+		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
+		list_ = ['Custom Camera','Set Custom Camera','Camera From View']
+		self.comboBox (self.hotBox.ui.cmb001, list_, "")
+
+		if index!=0:
+			if index==1:
+				mel.eval('cameraView -edit -camera persp -setCamera $homeName;')
+			if index==2:
+				mel.eval('string $homeName = `cameraView -camera persp`;')
+			if index==3:
+				mel.eval('print "--no code--"')
+			self.hotBox.ui.cmb001.setCurrentIndex(0)
+
+
+	def cmb002(self): #Modify
+		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
+		list_ = ['Group Cameras']
+		self.comboBox (self.hotBox.ui.cmb001, list_, "")
+
+		if index!=0:
+			if index==1:
+				mel.eval('''
+				if (`objExists cameras`)
+				{
+				  print "Group 'cameras' already exists";
+				}
+				else
+				{
+				  group -world -name cameras side front top persp;
+				  hide cameras;
+				  // Now add non-default cameras to group
+				  if (`objExists back`)
+				  {
+				  	parent back cameras;
+				  }
+				  if (`objExists bottom`)
+				  {
+				  	parent bottom cameras;
+				  }
+				  if (`objExists left`)
+				  {
+				  	parent left cameras;
+				  }
+				  if (`objExists alignToPoly`)
+				  {
+				  	parent alignToPoly cameras;
+				  }
+				}
+				''')
+			self.hotBox.ui.cmb001.setCurrentIndex(0)
+
+
+	def cmb003(self): #Editors
+		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
+		list_ = ['Camera Sequencer',Camera Set Editor]
+		self.comboBox (self.hotBox.ui.cmb001, list_, "")
+
+		if index!=0:
+			if index==1:
+				mel.eval('SequenceEditor;')
+			if index==2:
+				mel.eval('cameraSetEditor;')
+			self.hotBox.ui.cmb001.setCurrentIndex(0)
+
+
 
 	def v000(self): #viewport: back view
 		mel.eval('''
@@ -139,16 +215,16 @@ class Viewport(Init):
 		}
 		''')
 
-	def v008(self): #camera: dolly/zoom
+	def v008(self): #
 		pass
 
-	def v009(self): #camera: roll
+	def v009(self): #
 		pass
 
-	def v010(self): #camera: truck/pan
+	def v010(self): #
 		pass
 
-	def v011(self): #camera: orbit
+	def v011(self): #
 		pass
 
 	def v012(self): #
@@ -162,6 +238,21 @@ class Viewport(Init):
 
 	def v015(self): #
 		pass
+
+	# g009 camera transforms -------------
+	def b000(self): #camera: dolly/zoom
+		pass
+
+	def b001(self): #camera: roll
+		pass
+
+	def b002(self): #camera: truck/pan
+		pass
+
+	def b003(self): #camera: orbit
+		pass
+	# ------------------------------------
+
 
 
 

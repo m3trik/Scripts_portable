@@ -20,6 +20,18 @@ class Slot(object):
 		self.initWidgets()
 
 
+
+
+	def chk000(self): #pin open a separate instance of the ui in a new window
+		if self.hotBox.ui.chk000.isChecked():
+			print 'chk000'
+			self.hotBox.pin(self.hotBox.ui)
+		else:
+			self.hotBox.pin.hide()
+
+
+
+
 		#returns a list of objects from a supplied range, or string list.
 	def getObject(self, class_, objectNames, range_=None, showError_=True):
 		#args: class_=class object

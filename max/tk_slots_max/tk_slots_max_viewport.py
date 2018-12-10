@@ -13,7 +13,50 @@ class Viewport(Init):
 	def __init__(self, *args, **kwargs):
 		super(Viewport, self).__init__(*args, **kwargs)
 
-	
+
+
+
+
+	def cmb000(self): #Scene Cameras
+		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
+		list_ = []
+		self.comboBox (self.hotBox.ui.cmb001, list_, "")
+
+		if index!=0:
+			
+			self.hotBox.ui.cmb001.setCurrentIndex(0)
+
+
+	def cmb001(self): #Create
+		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
+		list_ = []
+		self.comboBox (self.hotBox.ui.cmb001, list_, "")
+
+		if index!=0:
+			
+			self.hotBox.ui.cmb001.setCurrentIndex(0)
+
+
+	def cmb002(self): #Modify
+		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
+		list_ = []
+		self.comboBox (self.hotBox.ui.cmb001, list_, "")
+
+		if index!=0:
+			
+			self.hotBox.ui.cmb001.setCurrentIndex(0)
+
+
+	def cmb003(self): #Editors
+		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
+		list_ = []
+		self.comboBox (self.hotBox.ui.cmb001, list_, "")
+
+		if index!=0:
+			
+			self.hotBox.ui.cmb001.setCurrentIndex(0)
+
+
 
 	def v000(self): #viewport: back view
 		maxEval("max vpt back")
@@ -66,9 +109,7 @@ class Viewport(Init):
 	def v015(self): #
 		pass
 
-
-# g009 camera transforms --------------
-
+	# g009 camera transforms --------------
 	def b000(self): #camera: dolly/zoom
 		maxEval("max dolly mode")
 
@@ -80,6 +121,7 @@ class Viewport(Init):
 
 	def b003(self): #camera: orbit
 		maxEval("max pancamera")
+	# ------------------------------------
 
 
 
