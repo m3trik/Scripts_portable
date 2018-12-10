@@ -429,7 +429,7 @@
     <property name="title">
      <string/>
     </property>
-    <widget class="QPushButton" name="i019">
+    <widget class="QPushButton" name="pushButton_2">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -442,7 +442,7 @@
       <string>cameras</string>
      </property>
      <property name="text">
-      <string>Cameras</string>
+      <string/>
      </property>
     </widget>
    </widget>

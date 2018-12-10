@@ -97,8 +97,6 @@ class HotBox(QtWidgets.QWidget):
 		self.signal = locate('tk_signals.Signal')(self)
 		self.layoutStack()
 		self.overlay = Overlay(self)
-		# self.pin = Pin()
-		
 		
 
 	def layoutStack(self, index=None):
@@ -194,6 +192,11 @@ class HotBox(QtWidgets.QWidget):
 # ------------------------------------------------
 
 
+	def hoverEvent(self, event):
+		#args: [QEvent]
+		print "hover"
+
+
 	def keyPressEvent(self, event):
 		#args: [QEvent]
 		if event.key()==QtCore.Qt.Key_F12 and not event.isAutoRepeat(): #Key_Meta or Key_Menu =windows key
@@ -250,7 +253,8 @@ class HotBox(QtWidgets.QWidget):
 				if (event.buttons() & QtCore.Qt.LeftButton): #MiddleButton
 					moveWindow(self, -self.point.x(), -self.point.y()*.1) #set mouse position and move window with mouse down
 					self.ui.chkpin.setChecked(True)
-					# Pin(self).show()
+					# self.popup = Popup(self, self.ui)
+					# self.popup.show()
 
 
 	def showEvent(self, event):
@@ -383,22 +387,43 @@ class Overlay(QtWidgets.QWidget):
 
 
 # ------------------------------------------------
-# Pin Window
+# Popup Window
 # ------------------------------------------------
-class Pin(QtWidgets.QWidget): #keep the layout open using a new instance.
-	def __init__(self, parent=None):
-		super(Pin, self).__init__(parent)
+		# self.stackedLayout = QtWidgets.QStackedLayout()
 
-		self.hotBox = parent
-		self.resize(self.hotBox.width, self.hotBox.height)
+		# 	for uiName in self.uiList:
+		# 		ui = getQtui(uiName) #get the dynamic ui
+		# 		# build dictionary to store size info for each ui
+		# 		self.uiSizeDict [uiName] = [ui.frameGeometry().width(), ui.frameGeometry().height()]
+		# 		# add ui to layoutStack
+		# 		self.stackedLayout.addWidget(ui) #add each ui
+		# 	self.setLayout(self.stackedLayout)
+		# 	index = self.uiList.index('init') #Initialize layout index to 'init'
 
-		self.hotBox.ui.chkpin.setChecked(True)
+		# #set ui from stackedLayout
+		# self.stackedLayout.setCurrentIndex(index)
+		# #get ui from stackedLayout
+		# self.ui = self.stackedLayout.widget(index)
 
-		#set layout
-		# self.layout = QtWidgets.QVBoxLayout()
-		# print self.hotBox.index
-		# self.layout.addWidget(self.hotBox.ui)
-		# self.setLayout(self.layout)
+
+class Popup(QtWidgets.QWidget):
+	def __init__(self, parent = None, ui=None):
+		QtWidgets.QWidget.__init__(self, parent)
+
+		layout = QtWidgets.QGridLayout(self)
+		layout.addWidget(ui)
+
+		layout.setContentsMargins(0, 0, 0, 0) #adjust the margins or you will get an invisible, unintended border
+
+		self.setLayout(layout)
+		self.adjustSize()
+
+		self.setWindowFlags(QtCore.Qt.Popup | QtCore.Qt.Tool | QtCore.Qt.FramelessWindowHint) #tag this widget as a popup
+		
+		# point = ui.rect().bottomRight() #calculate the botoom right point from the parents rectangle
+		# global_point = ui.mapToGlobal(point) #map that point as a global position
+
+		# self.move(global_point - QtCore.QPoint(self.width(), 0)) #widget will be placed from its top-left corner, move it to the left based on the widgets width
 
 
 

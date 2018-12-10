@@ -15,7 +15,7 @@ for obj in sel:
 
 	transform = [obj.transform.pos.x, obj.transform.pos.y, obj.transform.pos.z]
 	scale = [obj.scale.x, obj.scale.y, obj.scale.z]
-	rotate = [obj.rotate.x, obj.rotate.y, obj.rotate.z]
+	rotation = [obj.rotation.x, obj.rotation.y, obj.rotation.z]
 	
-	print transform, scale, rotate
+	print transform, scale, rotation
 
