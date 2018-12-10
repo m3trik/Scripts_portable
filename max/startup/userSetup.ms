@@ -25,10 +25,10 @@ python.Init()
 
 --load the python path setup file and user macros.
 
-envVar = systemTools.getEnvVariable("CLOUD")
-fullPath = envVar+"\\____Graphics\\__general\\_portable\\_scripts\\__path\\max\\"
--- envVar = systemTools.getEnvVariable("USERPROFILE")
--- fullPath = envVar+"\\Documents\\_portable\\_scripts\\__path\\max\\"
+-- envVar = systemTools.getEnvVariable("CLOUD")
+-- fullPath = envVar+"\\____Graphics\\__general\\_portable\\_scripts\\__path\\max\\"
+envVar = systemTools.getEnvVariable("USERPROFILE")
+fullPath = envVar+"\\Documents\\_portable\\_scripts\\__path\\max\\"
 
 python.ExecuteFile (fullPath+"userSetup.py")
 FileIn (fullPath+"tk_macroScript.ms")

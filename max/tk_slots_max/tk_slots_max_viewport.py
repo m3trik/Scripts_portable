@@ -13,7 +13,10 @@ class Viewport(Init):
 	def __init__(self, *args, **kwargs):
 		super(Viewport, self).__init__(*args, **kwargs)
 
-	def cmb000(self): #list scene cameras
+
+
+
+	def cmb000(self): #List scene Cameras
 		index = self.hotBox.ui.cmb000.currentIndex() #get current index before refreshing list
 		cameras = [cam.name for cam in rt.cameras if 'Target' not in cam.name]
 		items = self.comboBox (self.hotBox.ui.cmb000, cameras, "Cameras:")
@@ -21,6 +24,37 @@ class Viewport(Init):
 		if index!=0:
 			rt.select (rt.getNodeByName(items[index]))
 			self.hotBox.ui.cmb000.setCurrentIndex(0)
+
+
+	def cmb001(self): #Create
+		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
+		list_ = []
+		self.comboBox (self.hotBox.ui.cmb001, list_, "")
+
+		if index!=0:
+			
+			self.hotBox.ui.cmb001.setCurrentIndex(0)
+
+
+	def cmb002(self): #Modify
+		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
+		list_ = []
+		self.comboBox (self.hotBox.ui.cmb001, list_, "")
+
+		if index!=0:
+			
+			self.hotBox.ui.cmb001.setCurrentIndex(0)
+
+
+	def cmb003(self): #Editors
+		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
+		list_ = []
+		self.comboBox (self.hotBox.ui.cmb001, list_, "")
+
+		if index!=0:
+			
+			self.hotBox.ui.cmb001.setCurrentIndex(0)
+
 
 	def v000(self): #viewport: back view
 		maxEval("max vpt back")
@@ -49,17 +83,17 @@ class Viewport(Init):
 		max align camera
 		''')
 
-	def v008(self): #camera: dolly/zoom
-		maxEval("max dolly mode")
+	def v008(self):
+		pass
 
-	def v009(self): #camera: roll
-		maxEval("max roll")
+	def v009(self):
+		pass
 
-	def v010(self): #camera: truck/pan
-		maxEval("max truck")
+	def v010(self):
+		pass
 
-	def v011(self): #camera: orbit
-		maxEval("max pancamera")
+	def v011(self):
+		pass
 
 	def v012(self): #
 		pass
@@ -72,6 +106,23 @@ class Viewport(Init):
 
 	def v015(self): #
 		pass
+
+	# g009 camera transforms --------------
+	def b000(self): #camera: dolly/zoom
+		maxEval("max dolly mode")
+
+	def b001(self): #camera: roll
+		maxEval("max roll")
+
+	def b002(self): #camera: truck/pan
+		maxEval("max truck")
+
+	def b003(self): #camera: orbit
+		maxEval("max pancamera")
+	# ------------------------------------
+
+
+
 
 
 #module name

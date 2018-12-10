@@ -7,11 +7,20 @@ from pymxs import runtime as rt
 
 
 
-sel = [s for s in rt.getCurrentSelection()]
+def cmb000(self): #list scene cameras
+		index = self.hotBox.ui.cmb000.currentIndex() #get current index before refreshing list
+		cameras = [cam.name for cam in rt.cameras if 'Target' not in cam.name]
+		items = self.comboBox (self.hotBox.ui.cmb000, cameras, "Cameras:")
+		
+		if index!=0:
+			rt.select (rt.getNodeByName(items[index]))
+			self.hotBox.ui.cmb000.setCurrentIndex(0)
 
-objects = sel[:-1]
-target = sel[-1]
+def b005(self): #move to
+	sel = [s for s in rt.getCurrentSelection()] #rebuild selection array in python.
 
-for obj in objects: 
-	print obj
-	obj.center = target.center
+	objects = sel[:-1]
+	target = sel[-1]
+	#move object(s) to center of the last selected items bounding box
+	for obj in objects: 
+		obj.center = target.center
