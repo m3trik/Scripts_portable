@@ -56,6 +56,17 @@ class Viewport(Init):
 			self.hotBox.ui.cmb001.setCurrentIndex(0)
 
 
+	def cmb004(self): #
+		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
+		list_ = []
+		self.comboBox (self.hotBox.ui.cmb001, list_, "")
+
+		if index!=0:
+			
+			self.hotBox.ui.cmb001.setCurrentIndex(0)
+
+
+
 	def v000(self): #viewport: back view
 		maxEval("max vpt back")
 

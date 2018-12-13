@@ -71,16 +71,34 @@ class Display(Init):
 			print "// Warning: Nothing Selected\n"
 
 	def b001(self): #Toggle visibility
-		maxEval('ToggleVisibilityAndKeepSelection();')
+		sel = [s for s in rt.getCurrentSelection()]
+
+		for obj in sel:
+			if obj.visibility == True:
+				obj.visibility = False
+			else:
+				obj.visibility = True
 
 	def b002(self): #Hide Selected
-		maxEval('HideSelectedObjects;')
+		sel = [s for s in rt.getCurrentSelection()]
+	
+		for obj in sel:
+			if not obj.isHiddenInVpt:
+				obj.isHidden = True
 
 	def b003(self): #Show selected
-		maxEval('ShowSelectedObjects;')
+		sel = [s for s in rt.getCurrentSelection()]
+	
+		for obj in sel:
+			if obj.isHiddenInVpt:
+				obj.isHidden = False
 
 	def b004(self): #Show Geometry
-		maxEval('hideShow -geometry -show;')
+		geometry = rt.geometry
+
+		for obj in geometry:
+			if obj.isHiddenInVpt:
+				obj.isHidden = False
 
 	def b005(self): #Xray selected
 		maxEval('''
@@ -199,8 +217,8 @@ class Display(Init):
 		state = pm.modelEditor (current_panel, query=1, activeOnly=1)
 		pm.modelEditor (current_panel, edit=1, activeOnly=not state)
 
-	def b013(self): #
-		pass
+	def b013(self): #Viewport Configuration
+		maxEval('actionMan.executeAction 0 "40023"')
 
 	def b014(self): #
 		pass
@@ -224,7 +242,13 @@ class Display(Init):
 		pass
 
 	def b021(self): #Template selected
-		mel.eval("toggle -template;")
+		sel = [s for s in rt.getCurrentSelection()]
+
+		for obj in sel:
+			if obj.isFrozen == True:
+				obj.isFrozen = False
+			else:
+				obj.isFrozen = True
 
 	def b022(self): #
 		pass
