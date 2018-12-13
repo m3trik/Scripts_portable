@@ -449,7 +449,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QComboBox" name="cmb000_2">
+   <widget class="QComboBox" name="cmb003">
     <property name="geometry">
      <rect>
       <x>195</x>
@@ -482,7 +482,7 @@
      </property>
     </item>
    </widget>
-   <widget class="QComboBox" name="cmb000_3">
+   <widget class="QComboBox" name="cmb001">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -515,7 +515,7 @@
      </property>
     </item>
    </widget>
-   <widget class="QComboBox" name="cmb000_4">
+   <widget class="QComboBox" name="cmb002">
     <property name="geometry">
      <rect>
       <x>195</x>
@@ -581,6 +581,39 @@
      </property>
     </item>
    </widget>
+   <widget class="QComboBox" name="cmb004">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>106</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>106</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>106</width>
+      <height>19</height>
+     </size>
+    </property>
+    <property name="sizeAdjustPolicy">
+     <enum>QComboBox::AdjustToContents</enum>
+    </property>
+    <property name="frame">
+     <bool>false</bool>
+    </property>
+    <item>
+     <property name="text">
+      <string>:</string>
+     </property>
+    </item>
+   </widget>
    <zorder>v011</zorder>
    <zorder>v009</zorder>
    <zorder>v014</zorder>
@@ -598,10 +631,11 @@
    <zorder>v013</zorder>
    <zorder>v012</zorder>
    <zorder>g009</zorder>
-   <zorder>cmb000_2</zorder>
-   <zorder>cmb000_3</zorder>
-   <zorder>cmb000_4</zorder>
+   <zorder>cmb003</zorder>
+   <zorder>cmb001</zorder>
+   <zorder>cmb002</zorder>
    <zorder>cmb000</zorder>
+   <zorder>cmb004</zorder>
   </widget>
  </widget>
  <resources/>
