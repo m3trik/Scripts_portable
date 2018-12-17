@@ -20,10 +20,22 @@ import sys, os.path
 
 
 #Append directory to system path -----------------
-# paths = r'%CLOUD%/____Graphics/__general/_portable/_scripts/__path;%CLOUD%/____Graphics/__general/_portable/_scripts/__path/tk_ui;%CLOUD%/____Graphics/__general/_portable/_scripts/__path/max;%CLOUD%/____Graphics/__general/_portable/_scripts/__path/max/tk_slots_max'
-paths = r'%USERPROFILE%/Documents/_portable/_scripts/__path;%USERPROFILE%/Documents/_portable/_scripts/__path/tk_ui;%USERPROFILE%/Documents/_portable/_scripts/__path/max;%USERPROFILE%/Documents/_portable/_scripts/__path/max/tk_slots_max'
-for path in paths.split(';'):
-	sys.path.append(os.path.expandvars(path))
+paths = [
+'%CLOUD%/____Graphics/__general/_portable/_scripts/__path',
+'%CLOUD%/____Graphics/__general/_portable/_scripts/__path/tk_ui',
+'%CLOUD%/____Graphics/__general/_portable/_scripts/__path/max',
+'%CLOUD%/____Graphics/__general/_portable/_scripts/__path/max/tk_slots_max',
+
+'%USERPROFILE%/Documents/_portable/_scripts/__path',
+'%USERPROFILE%/Documents/_portable/_scripts/__path/tk_ui',
+'%USERPROFILE%/Documents/_portable/_scripts/__path/max',
+'%USERPROFILE%/Documents/_portable/_scripts/__path/max/tk_slots_max'
+]
+
+for path in paths:
+	try: sys.path.append(os.path.expandvars(path))
+	except: pass
+
 
 
 #load tk_main ------------------------------------

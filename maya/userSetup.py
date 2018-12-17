@@ -7,12 +7,28 @@ from pymel import versions
 version = versions.current()
 
 
+
+
+
 #maya python path----------------------------------------------------
 #Append directory to system path
-paths = r'%CLOUD%/____Graphics/__general/_portable/_scripts/__path;%CLOUD%/____Graphics/__general/_portable/_scripts/__path/tk_ui;%CLOUD%/____Graphics/__general/_portable/_scripts/__path/maya;%CLOUD%/____Graphics/__general/_portable/_scripts/__path/maya/tk_slots_maya'
-# paths = r'%USERPROFILE%/Documents/_portable/__scripts/__path;%USERPROFILE%/Documents/_portable/__scripts/__path/tk_ui;%USERPROFILE%/Documents/_portable/__scripts/__path/maya;%USERPROFILE%/Documents/_portable/__scripts/__path/maya/tk_slots_maya'
+paths = [
+'%CLOUD%/____Graphics/__general/_portable/_scripts/__path',
+'%CLOUD%/____Graphics/__general/_portable/_scripts/__path/tk_ui',
+'%CLOUD%/____Graphics/__general/_portable/_scripts/__path/maya',
+'%CLOUD%/____Graphics/__general/_portable/_scripts/__path/maya/tk_slots_maya',
+
+'%USERPROFILE%/Documents/_portable/__scripts/__path',
+'%USERPROFILE%/Documents/_portable/__scripts/__path/tk_ui',
+'%USERPROFILE%/Documents/_portable/__scripts/__path/maya',
+'%USERPROFILE%/Documents/_portable/__scripts/__path/maya/tk_slots_maya'
+]
+
 for path in paths.split(';'):
-	sys.path.append(os.path.expandvars(path))
+	try: sys.path.append(os.path.expandvars(path))
+	except: pass
+
+
 
 
 #script editor in/output---------------------------------------------
