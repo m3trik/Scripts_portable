@@ -105,6 +105,19 @@ class Selection(Init):
 			pm.select (items[index])
 			self.hotBox.ui.cmb001.setCurrentIndex(0)
 
+  def cmb002(self): #select all of type
+  	index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
+		list_ = []
+		self.comboBox (self.hotBox.ui.cmb001, list_, "")
+
+		if index!=0:
+			
+			self.hotBox.ui.cmb001.setCurrentIndex(0)
+		
+  	#Select all Geometry
+		geometry = rt.geometry
+		rt.select(geometry)
+
 	def b000(self): #Create selection set
 		name = str(self.hotBox.ui.t000.text())+"Set"
 		if pm.objExists (name):

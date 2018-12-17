@@ -38,13 +38,17 @@ viewport = rt.viewport.activeViewport
 #~ 130 ID:40212 
 #~ Desc:'Viewport Selection Shade Selected Objects Toggle' 
 #~ Cat:'Views' 
-#~ BtnTxt:'S&hade Selected' 
+#~ BtnTxt:'S&hade Selected'
 #~ MnuTxt:'S&hade Selected'
-	
+
 atbl = rt.actionMan.getActionTable(62)
-print atbl
+#~ print atbl
 if atbl:
 	aitm = atbl.getActionItem(130)
 	print aitm.isChecked
-	  
-	
+	#~ rt.actionMan.executeAction(0,"40212")
+	#~ print aitm.isChecked
+	aitm.setmxsprop("40212", True)
+	print aitm.isChecked
+	#~ rt.messagebox (str(aitm.isChecked))
+
