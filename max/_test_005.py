@@ -28,12 +28,7 @@ from pymxs import runtime as rt
 		#~ obj.isHidden = True
 		
 
-viewport = rt.viewport.activeViewport
-#~ print rt.viewport.isWire()
-#~ if rt.viewport.isWire():
-	#~ rt.actionMan.executeAction 0 "40212"
-	#~ rt.actionMan.getmxsprop('Views.ShadeSelected', '40212')
-	#~ actionMan.executeAction 0 "40212"
+
 	
 #~ 130 ID:40212 
 #~ Desc:'Viewport Selection Shade Selected Objects Toggle' 
@@ -41,14 +36,27 @@ viewport = rt.viewport.activeViewport
 #~ BtnTxt:'S&hade Selected'
 #~ MnuTxt:'S&hade Selected'
 
-atbl = rt.actionMan.getActionTable(62)
-#~ print atbl
-if atbl:
-	aitm = atbl.getActionItem(130)
-	print aitm.isChecked
-	#~ rt.actionMan.executeAction(0,"40212")
-	#~ print aitm.isChecked
-	aitm.setmxsprop("40212", True)
-	print aitm.isChecked
-	#~ rt.messagebox (str(aitm.isChecked))
+def maxUiSetChecked(id, table, item, state=True):
+	atbl = rt.actionMan.getActionTable(table)
+	if atbl:
+		aitm = atbl.getActionItem(item)
+		print aitm.isChecked
+		if state:
+			if not aitm.isChecked:
+				rt.actionMan.executeAction(0, id)
+				print aitm.isChecked
+		else:
+			if aitm.isChecked:
+				rt.actionMan.executeAction(0, id)
+				print aitm.isChecked
+
+
+
+sel = [s for s in rt.getCurrentSelection()]
+geometry = [g for g in rt.geometry]
+
+for g in geometry:
+	if g not in sel:
+		g.xray = True
+
 

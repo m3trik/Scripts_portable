@@ -739,6 +739,25 @@ class Init(Slot):
 
 
 
+	def maxUiSetChecked(id, table, item, state=True, query=False):
+		#args: id='string' - actionMan ID
+		#			table=int - actionMan table
+		#			item=int - actionMan item number
+		atbl = rt.actionMan.getActionTable(table)
+		if atbl:
+			aitm = atbl.getActionItem(item)
+			if query:
+				return aitm.isChecked
+			else:
+				if state: #check
+					if not aitm.isChecked:
+						rt.actionMan.executeAction(0, id)
+						print aitm.isChecked
+				else: #uncheck
+					if aitm.isChecked:
+						rt.actionMan.executeAction(0, id)
+						print aitm.isChecked
+
 
 
 

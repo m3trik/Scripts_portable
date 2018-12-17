@@ -101,44 +101,24 @@ class Display(Init):
 				obj.isHidden = False
 
 	def b005(self): #Xray selected
-		maxEval('''
-		string $sel[] = `ls -sl -dag -s`;
-		for ($object in $sel) 
-			{
-			int $xState[] = `displaySurface -query -xRay $object`;
-			displaySurface -xRay ( !$xState[0] ) $object;
-			}
-		''')
+		sel = [s for s in rt.getCurrentSelection()]
+
+		for s in sel:
+			s.xray = True
 
 	def b006(self): #Un-Xray all
-		maxEval('''
-		string $scene[] = `ls -visible -flatten -dag -noIntermediate -type surfaceShape`;
-		for ($object in $scene)
-			{
-			int $state[] = `displaySurface -query -xRay $object`;
-			if ($state[0] == 1)
-				{
-				displaySurface -xRay 0 $object;
-				}
-			}
-		''')
+		geometry = [g for g in rt.geometry]
+
+		for g in geometry:
+			g.xray = False
 
 	def b007(self): #Xray other
-		maxEval('''
-		//xray all except currently selected
-		{
-		string $scene[] = `ls -visible -flatten -dag -noIntermediate -type surfaceShape`;
-		string $selection[] = `ls -selection -dagObjects -shapes`;
-		for ($object in $scene)
-			{
-			if (!stringArrayContains ($object, $selection))
-				{
-				int $state[] = `displaySurface -query -xRay $object`;
-				displaySurface -xRay ( !$state[0] ) $object;
-				}
-			}
-		}
-		''')
+		sel = [s for s in rt.getCurrentSelection()]
+		geometry = [g for g in rt.geometry]
+
+		for g in geometry:
+			if g not in sel:
+				g.xray = True
 
 	def b008(self): #Filter objects
 		mel.eval("bt_filterActionWindow;")
@@ -213,9 +193,16 @@ class Display(Init):
 			self.viewPortMessage("component ID <hl>Off</hl>.")
 
 	def b012(self): #wireframe non active (wireframe all but the selected item)
-		current_panel = pm.getPanel (withFocus=1)
-		state = pm.modelEditor (current_panel, query=1, activeOnly=1)
-		pm.modelEditor (current_panel, edit=1, activeOnly=not state)
+		viewport = rt.viewport.activeViewport
+
+		state = self.cycle('wireframeInactive_01')
+
+		if state:
+			if not rt.viewport.isWire():
+				self.maxUiSetChecked("415", 62, 163, True) #set viewport to wireframe
+			self.maxUiSetChecked("40212", 62, 130, True) #Shade selected objects Checked
+		else:
+			self.maxUiSetChecked("40212", 62, 130, False) #Shade selected objects unchecked
 
 	def b013(self): #Viewport Configuration
 		maxEval('actionMan.executeAction 0 "40023"')
