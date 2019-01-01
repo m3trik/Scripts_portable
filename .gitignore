@@ -1,11 +1,16 @@
 #-----------------------------------------------------
 
 
+
+
 #ignore
 #*  (uncomment to ignore all with specific exceptions)
 /max/startup/userSetup.ms
 /max/userSetup.py
 /maya/userSetup.py
+
+*desktop.ini
+*.rar
 
 
 
