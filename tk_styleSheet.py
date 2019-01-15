@@ -6,7 +6,8 @@ import os.path
 #' MainWindow StyleSheet'
 # ------------------------------------------------
 
-
+#qt stylesheet reference
+#http://doc.qt.io/qt-5/stylesheet-reference.html#qtabbar-widget
 
 
 css='''

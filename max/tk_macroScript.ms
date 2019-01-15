@@ -1,11 +1,13 @@
---||||||||||||||||||||||||||||||||||||||||||||||
---||||||||||      3ds max macros     |||||||||||
---!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-- |||||||||||||||||||||||||||||||||||||||||||||||||
+-- |||||||||||      3ds max macros     |||||||||||||
+-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 tk_main = python.Import "tk_main" --hotBox module
-func = python.Import "tk_slots_max_init"
-func=func.Init
+func = (python.Import "tk_slots_max_init").Init
+
+
+
 
 --macro syntax:
 --	macroScript scriptName
@@ -23,14 +25,14 @@ func=func.Init
 
 
 
-
 macroScript tk_main
 category: "tk_macroScript.ui"
 silentErrors: false
 autoUndoEnabled: false
 (
-	python.Execute "if 'tk_hotBox_init' not in locals() or 'tk_hotBox_init' not in globals(): tk_hotBox_init = tk_main.createInstance()"
-	python.Execute "if not tk_hotBox_init.isVisible(): tk_hotBox_init.show()"
+-- 	python.Execute "import tk_main"
+	python.Execute "if 'tk' not in locals() or 'tk' not in globals(): tk = tk_main.createInstance()"
+	python.Execute "if not tk.isVisible(): tk.show()"
 )
 
 macroScript toggleGrid

@@ -23,11 +23,12 @@ class Slot(object):
 
 
 	def chk000(self): #pin open a separate instance of the ui in a new window
-		if self.hotBox.ui.chk000.isChecked():
-			print 'chk000'
-			self.hotBox.pin(self.hotBox.ui)
-		else:
-			self.hotBox.pin.hide()
+		pass
+		# if self.hotBox.ui.chk000.isChecked():
+		# 	print 'chk000'
+		# 	self.hotBox.pin(self.hotBox.ui)
+		# else:
+		# 	self.hotBox.pin.hide()
 
 
 

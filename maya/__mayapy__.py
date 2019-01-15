@@ -2,5 +2,5 @@ import maya.standalone
 
 maya.standalone.initialize(name='python')
 
-import tk_main
+import userSetup
 maya.standalone.uninitialize()

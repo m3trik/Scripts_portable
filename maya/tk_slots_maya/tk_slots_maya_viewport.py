@@ -80,7 +80,7 @@ class Viewport(Init):
 
 	def cmb003(self): #Editors
 		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
-		list_ = ['Camera Sequencer',Camera Set Editor]
+		list_ = ['Camera Sequencer', 'Camera Set Editor']
 		self.comboBox (self.hotBox.ui.cmb001, list_, "")
 
 		if index!=0:
