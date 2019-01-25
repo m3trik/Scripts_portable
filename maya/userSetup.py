@@ -9,25 +9,25 @@ version = versions.current()
 
 
 
-
 #maya python path----------------------------------------------------
-#Append directory to system path
+#get %MAYA_SCRIPT_PATH% directories
+dir_ = [s for s in os.environ['MAYA_SCRIPT_PATH'].split(';') if '__portable/_scripts/' in s][0]
+dir_ = dir_.rstrip('/maya')
+
+if not dir_:
+	print "# Error: in userSetup.py. dir not found in MAYA_SCRIPT_PATH #"
+
+
+#append to system path:
 paths = [
-'%CLOUD%/____Graphics/__general/_portable/_scripts/__path',
-'%CLOUD%/____Graphics/__general/_portable/_scripts/__path/tk_ui',
-'%CLOUD%/____Graphics/__general/_portable/_scripts/__path/maya',
-'%CLOUD%/____Graphics/__general/_portable/_scripts/__path/maya/tk_slots_maya',
+	dir_,
+	dir_+"/tk_ui",
+	dir_+"/maya",
+	dir_+"/maya/tk_slots_maya"
+	]
 
-'%USERPROFILE%/Documents/_portable/__scripts/__path',
-'%USERPROFILE%/Documents/_portable/__scripts/__path/tk_ui',
-'%USERPROFILE%/Documents/_portable/__scripts/__path/maya',
-'%USERPROFILE%/Documents/_portable/__scripts/__path/maya/tk_slots_maya'
-]
-
-for path in paths.split(';'):
-	try: sys.path.append(os.path.expandvars(path))
-	except: pass
-
+for path in paths:
+	sys.path.append(path)
 
 
 
@@ -49,16 +49,23 @@ pm.evalDeferred ("scriptEditorOutputTextHighlighting.wrap()", lowestPriority=1)
 
 
 
-#tk_main-------------------------------------------------------------
-import tk_main
+#--------------------------------------------------------------------
+
+#Set the initial state of the tool settings.
+pm.workspaceControl ("ToolSettings", edit=1, minimumWidth=False)
+#Set the initial state of the attribute editor.
+pm.workspaceControl ("AttributeEditor", edit=1, minimumWidth=False)
+
+
+
+
+# ------------------------------------------------
+#tk_main------------------------------------------
 # if 'tk_main' not in sys.modules:
 # 	import tk_main #tk_maya_main.py -qt hotbox menus and controls
 # else:
 # 	print "reload: tk_main"
 # 	reload(tk_main)
-
-
-#---------------------------------------------------------------------
 
 
 # ------------------------------------------------
@@ -74,7 +81,7 @@ import tk_main
 # ------------------------------------------------
 
 
-# ------------------------------------------------
+
 
 
 

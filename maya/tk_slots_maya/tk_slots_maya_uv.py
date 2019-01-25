@@ -17,11 +17,12 @@ class Uv(Init):
 
 
 	def cmb000(self): #UV editors comboBox
-		index = self.hotBox.ui.cmb000.currentIndex() #get current index before refreshing list
-		self.comboBox (self.hotBox.ui.cmb000, ["UV Editor", "UV Set Editor", "UV Tool Kit", "UV Linking: Texture-Centric", "UV Linking: UV-Centric", "UV Linking: Paint Effects/UV", "UV Linking: Hair/UV"], "Editors")
+		cmb = self.hotBox.ui.cmb000
+		index = cmb.currentIndex() #get current index before refreshing list
+		self.comboBox (cmb, ["UV Editor", "UV Set Editor", "UV Tool Kit", "UV Linking: Texture-Centric", "UV Linking: UV-Centric", "UV Linking: Paint Effects/UV", "UV Linking: Hair/UV"], "Editors")
 
-		if index !=0: #hide hotbox then perform operation
-			self.hotBox.hbHide()
+		if index !=0: #hide hotBox then perform operation
+			self.hotBox.hide()
 		if index == 1: #UV Editor
 			mel.eval('TextureViewWindow;') 
 		if index == 2: #UV Set Editor
@@ -36,7 +37,7 @@ class Uv(Init):
 			mel.eval('pfxUVLinkingEditor;')
 		if index == 7: #UV Linking: Hair/UV
 			mel.evel('hairUVLinkingEditor;')
-		self.hotBox.ui.cmb000.setCurrentIndex(0)
+		cmb.setCurrentIndex(0)
 
 	def b000(self): #cut uv hard edges
 		mel.eval("tk_cutUvHardEdge ();")

@@ -8,7 +8,7 @@ rem The initialize routine takes only one parameter (name), and it is optional. 
 
 rem name of temp file that will perform the imports and the module to import.
 set "tmp=__mayapy__.py"
-set "module=tk_main"
+set "module=userSetup"
 
 rem create a temp python file to import maya standalone and run specified the python module.
 (

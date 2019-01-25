@@ -23,11 +23,12 @@ class Slot(object):
 
 
 	def chk000(self): #pin open a separate instance of the ui in a new window
-		if self.hotBox.ui.chk000.isChecked():
-			print 'chk000'
-			self.hotBox.pin(self.hotBox.ui)
-		else:
-			self.hotBox.pin.hide()
+		pass
+		# if self.hotBox.ui.chk000.isChecked():
+		# 	print 'chk000'
+		# 	self.hotBox.pin(self.hotBox.ui)
+		# else:
+		# 	self.hotBox.pin.hide()
 
 
 
@@ -65,8 +66,7 @@ class Slot(object):
 			self.hotBox.ui.t000.viewport().setAutoFillBackground(False)
 
 		if self.hotBox.name != 'create':
-			#ex. initWidgets(self)
-			for comboBox in self.getObject(self.hotBox, 'cmb', [0,50], False):
+			for comboBox in self.getObject(self, 'cmb', [0,50], False):
 				# combobox.currentIndexChanged.connect(self.combobox.objectName())
 				comboBox()
 
@@ -98,7 +98,7 @@ class Slot(object):
 		#ex. comboBox (self.hotBox.ui.cmb003, ["Import file", "Import Options"], "Import")
 		comboBox.blockSignals(True) #to keep clear from triggering currentIndexChanged
 		comboBox.clear()
-		items = items+['refresh'] #refresh string is a temp work around. until we override to call comboBox on open insead of index change.
+		# items = items+['refresh'] #refresh string is a temp work around until comboBox is called on open insead of index change.
 		if title:
 			comboBox.addItem(title)
 		comboBox.addItems(items)
