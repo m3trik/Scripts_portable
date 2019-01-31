@@ -14,9 +14,10 @@ version = versions.current()
 dir_ = [s for s in os.environ['MAYA_SCRIPT_PATH'].split(';') if '__portable/_scripts/' in s][0]
 dir_ = dir_.rstrip('/maya')
 
+#if path not found, print error and current paths set in maya.env
 if not dir_:
 	print "# Error: in userSetup.py. dir not found in MAYA_SCRIPT_PATH #"
-
+	print "# MAYA_SCRIPT_PATH:"+ str([s for s in os.environ['MAYA_SCRIPT_PATH'].split(';')]) +" #"
 
 #append to system path:
 paths = [

@@ -1,0 +1,54 @@
+// testScript-001
+//  MEL
+//clear maya script editor output:
+cmdScrollFieldReporter -edit -clear $tk_cmdScrollFieldReporter;
+
+//
+//polyHelix -c 3 -h 2 -w 2 -r 0.4 -sa 8 -sco 50 -sc 0 -d 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+
+{
+proc alignVertices (float $alignXYZ)
+{
+string $selection[] = `ls -selection -flatten`;
+string $lastSelected[] = `ls -selection -flatten -tail 1`;//change highlighting color
+float $alignTo[] = `xform -query -translation -worldSpace $lastSelected`;
+float $alignX = $alignTo[0];
+float $alignY = $alignTo[1];
+float $alignZ = $alignTo[2];
+
+if (size($selection)==0)
+  {
+  inViewMessage -statusMessage "No vertices selected"  -fade -position topCenter;
+  }
+
+if (size($selection)<2)
+  {
+  inViewMessage -statusMessage "Selection must contain at least two vertices"  -fade -position topCenter;
+  }
+
+for ($vertex in $selection)
+  {
+  float $vertexXYZ[] = `xform -query -translation -worldSpace $vertex`;
+  float $vertX = $vertexXYZ[0];
+  float $vertY = $vertexXYZ[1];
+  float $vertZ = $vertexXYZ[2];
+  
+  if ($alignXYZ==0)
+    {
+    xform -translation $vertX $alignY $alignZ -worldSpace $vertex;
+    }
+  if ($alignXYZ==1)
+    {
+    xform -translation $alignX $vertY $alignZ -worldSpace $vertex;
+    }
+  if ($alignXYZ==2)
+    {
+    xform -translation $alignX $alignY $vertZ -worldSpace $vertex;
+    }
+
+  // print "-----\n"; print ($vertX +"\n"); print ($alignY+"\n"); print ($alignZ+"\n");
+  }
+}
+
+alignVertices (0);
+}

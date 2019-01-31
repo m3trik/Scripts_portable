@@ -171,6 +171,9 @@
        <height>20</height>
       </rect>
      </property>
+     <property name="whatsThis">
+      <string>add 'whatsThis'</string>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -439,7 +442,7 @@
       </rect>
      </property>
      <property name="whatsThis">
-      <string>cameras</string>
+      <string>add 'whatsThis'</string>
      </property>
      <property name="text">
       <string/>

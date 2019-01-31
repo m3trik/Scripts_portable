@@ -43,15 +43,20 @@ class Signal(QtCore.QObject):
 					if prefix=='i' or prefix=='v': #layoutStack index and viewport signals
 						buttonObject.installEventFilter(self.hotBox) #ie. self.hotBox.ui.i000.installEventFilter(self)
 
-					#get the corresponding method
-					if prefix=='i': #add slot to change index
+					#set the corresponding method
+					if prefix=='i': #connect to layoutStack and pass in an index.
 						index = self.hotBox.uiList.index(buttonObject.whatsThis().lower()) #use the button's 'whatsThis' to get the index from uiList
-						method = lambda i=index: self.hotBox.layoutStack(i) #lambda function to call index. ie. hotBox.layoutStack(6)
+						method = lambda index=index: self.hotBox.layoutStack(index) #lambda function to call index. ie. hotBox.layoutStack(6)
 					else: #add class method
-						# if hasattr(self.hotBox.class_(self.hotBox), buttonString):
-						method = getattr(self.class_, buttonString) #use signal 'buttonString' (ie. b006) to get method/slot of the same name in current class_.
-						if prefix!='v':	#add onPressedEvent
-							method = [method, lambda m=method: self.onPressedEvent(m)]
+						#set the spinboxes for the create menu to connect to the setAttributes method, and pass in the index of the spinbox to set attributes for.
+						if prefix=='s' and self.hotBox.name=='create' and num<=11:
+							# method = lambda index=num: getattr(self.class_, 'setAttributes')(index)
+							pass #moved to class until this is fixed. oddly the above slot calls setAttributes with spinbox value as argument.
+						else:
+							method = getattr(self.class_, buttonString) #use signal 'buttonString' (ie. b006) to get method/slot of the same name in current class_.
+							if prefix!='v':
+								method = [method, lambda m=method: self.onPressedEvent(m)] #add onPressedEvent
+
 						#add signal/slot dict value to connectionDict[self.hotBox.name] key
 					self.connectionDict[self.hotBox.name].update ({buttonWithSignal:method})
 				except Exception as err:

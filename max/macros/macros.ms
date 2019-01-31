@@ -3,7 +3,6 @@
 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-tk_main = python.Import "tk_main" --hotBox module
 func = (python.Import "tk_slots_max_init").Init
 
 
@@ -30,7 +29,7 @@ category: "tk_macroScript.ui"
 silentErrors: false
 autoUndoEnabled: false
 (
-	python.Execute "if 'tk' not in locals() or 'tk' not in globals(): tk = tk_main.createInstance()"
+	python.Execute "if 'tk' not in locals() or 'tk' not in globals(): import tk_main; tk = tk_main.createInstance()"
 	python.Execute "if not tk.isVisible(): tk.show()"
 )
 

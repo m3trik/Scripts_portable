@@ -47,8 +47,9 @@ python.Init()
 --load the python path setup file and user macros.
 
 --get current dir path:
-file = getThisScriptFilename() --ie. "C:\_portable\_scripts\__path\max\startup\userSetup.ms"
+file = getThisScriptFilename() --ie. "C:\__portable\_scripts\max\startup\startup.ms"
 dir_ = substring file 1 (findString file ("max")-2) --take substring from index 1 to the index of max in file string
+
 
 --append to system path:
 paths = #(
@@ -62,6 +63,7 @@ paths = #(
 python.Execute "import sys"
 for path_ in paths do
 (
+	--print ("sys.path.append('"+path_+"')")
 	python.Execute ("sys.path.append('"+path_+"')")
 )
 
@@ -75,15 +77,15 @@ FileIn (dir_+"/max/macros/macros.ms")
 statusPanel.visible = true
 
 -- check to see if its open and if not, open the scene explorer
-if sceneexplorermanager.ExplorerExists "Scene Explorer" then 
-(
-	if (not sceneexplorermanager.ExplorerIsOpen "Scene Explorer") then
-		sceneexplorermanager.OpenExplorer "Scene Explorer"
-)
-else
-(
-	sceneexplorermanager.CreateExplorerFromDefault "Scene Explorer"
-)
+-- if sceneexplorermanager.ExplorerExists "Scene Explorer" then 
+-- (
+-- 	if (not sceneexplorermanager.ExplorerIsOpen "Scene Explorer") then
+-- 		sceneexplorermanager.OpenExplorer "Scene Explorer"
+-- )
+-- else
+-- (
+-- 	sceneexplorermanager.CreateExplorerFromDefault "Scene Explorer"
+-- )
 
 
 

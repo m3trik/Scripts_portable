@@ -194,12 +194,12 @@ class Init(Slot):
 
 
 
-	def createCircle(self, axis='y', numPoints=5, radius=5, center=[0,0,0], mode=None):
+	def createCircle(self, axis='y', numPoints=5, radius=5, center=[0,0,0], mode=0):
 		#args: axis='string' - 'x','y','z' 
 		#			numPoints=int - number of outer points
 		#			radius=int
 		#			center=[float3 list] - point location of circle center
-		#			mode='string' - 'None' no subdivisions, 'tri' subdivide tris, 'quad' subdivide quads
+		#			mode=int - 0 -no subdivisions, 1 -subdivide tris, 2 -subdivide quads
 		#ex. self.createCircle(axis='x', numPoints=20, radius=8, mode='tri')
 		import math
 
@@ -229,9 +229,9 @@ class Init(Slot):
 		pm.undoInfo (openChunk=True)
 		circle = pm.polyCreateFacet (point=vertexPoints, name='pCircle')
 		pm.polyNormal (circle, normalMode=4) #4=reverse and propagate
-		if mode=="tri":
+		if mode==1:
 			pm.polySubdivideFacet (divisions=1, mode=1)
-		if mode=="quad":
+		if mode==2:
 			pm.polySubdivideFacet (divisions=1, mode=0)
 		pm.undoInfo (closeChunk=True)
 

@@ -1,7 +1,7 @@
 from PySide2 import QtGui, QtCore, QtWidgets
+import pymel.core as pm #used when expressions passed into the try_ method
 
 import os.path
-
 
 
 
@@ -32,66 +32,58 @@ class Slot(object):
 
 
 
-
-		#returns a list of objects from a supplied range, or string list.
-	def getObject(self, class_, objectNames, range_=None, showError_=True):
-		#args: class_=class object
-		#			 objectNames='string' - single name when used with range arg. ie. 's'  else; names separated by ','. ie. ['s000,s001,s002'] 
-		#			 range_=[int list] - integers representing start, end of range. used with single string type objectName.  ie. [2,10]
-		#		 	 showError=bool - show attribute error if item doesnt exist
+	#returns a list of objects from a string list.
+	@staticmethod
+	def getObject(class_, objectNames, showError_=False, print_=False):
+		#args:	class_=class object
+		#				objectNames='string' - names separated by ','. ie. 's000,b004-7'. b004-7 specifies buttons b004-b007.  
+		#				showError=bool - show attribute error if item doesnt exist
+		#				print_=bool - print unpacked objectNames to console.
 		#returns: list of corresponding objects
-		#ex. getObject(self.hotBox.ui, 's', [0,10])  or  getObject(self.hotBox.ui, ['s000,s002,s011'])
-		if range_: #if range is given; generate list within given range_
-			start, stop = range_[0], range_[1] #add a numberical suffix to the object name within the given range.
-			names = [str(objectNames)+'000'[:-len(str(num))]+str(num) for num in range(start,stop)] #build list of name strings within given range
-		else: #use the list of names passed in as objectName
-			names = objectNames.split(',')
+		#ex. getObject(self.hotBox.ui, 's000,b002,cmb011-15') #get objects for s000,b002, and cmb011-cmb015
+		packed_names = [n.strip() for n in objectNames.split(',') if '-' in n] #build list of all objectNames passed in containing '-'
+
+		unpacked_names=[]
+		for name in packed_names:
+			name=name.split('-') #ex. split 'b000-8'
+			prefix = name[0].strip('0123456789') #ex. split 'b' from 'b000'
+			start = int(name[0].strip('abcdefghijklmnopqrstuvwxyz') or 0) #start range. #ex. '000' #converting int('000') returns None, if case; assign 0.
+			stop = int(name[1])+1 #end range. #ex. '9' from 'b000-8' for range up to 9 but not including 9.
+			unpacked_names.extend([str(prefix)+'000'[:-len(str(num))]+str(num) for num in range(start,stop)]) #build list of name strings within given range
+
+		names = [n.strip() for n in objectNames.split(',') if '-' not in n] #all objectNames passed in not containing '-'
+		if print_: print names+unpacked_names
+
 		objects=[]
-		for name in names:
-			# if hasattr(class_, name):
+		for name in names+unpacked_names:
 			try:
 				objects.append(getattr(class_, name)) #equivilent to:(self.hotBox.ui.m000)
-			# elif showError_:
 			except: 
 				if showError_:
-					print "# Error:"+str(class_)+" has no attribute "+str(name)+" #"
+					print "# Error in getObject():"+str(class_)+" has no attribute "+str(name)+" #"
 				else: pass
 		return objects
 
 
+
 	#init signals, button states etc. for a stacked widget class
 	def initWidgets(self):
-		if self.hotBox.name == 'init':
-			# self.hotBox.ui.t000.clearFocus()
-			self.hotBox.ui.t000.viewport().setAutoFillBackground(False)
+		for comboBox in self.getObject(self, 'cmb000-50', False):
+			comboBox()
 
-		if self.hotBox.name != 'create':
-			for comboBox in self.getObject(self, 'cmb', [0,50], False):
-				# combobox.currentIndexChanged.connect(self.combobox.objectName())
-				comboBox()
 
 		if self.hotBox.name == 'create':
-			self.setButtons(self.hotBox.ui, invisible='s000,s010,s011,t000')
-			#temp fix for function below calling setAttributes with only last arg
-			self.hotBox.ui.s000.valueChanged.connect (lambda: self.hotBox.setAttributes(0))
-			self.hotBox.ui.s001.valueChanged.connect (lambda: self.hotBox.setAttributes(1))
-			self.hotBox.ui.s002.valueChanged.connect (lambda: self.hotBox.setAttributes(2))
-			self.hotBox.ui.s003.valueChanged.connect (lambda: self.hotBox.setAttributes(3))
-			self.hotBox.ui.s004.valueChanged.connect (lambda: self.hotBox.setAttributes(4))
-			self.hotBox.ui.s005.valueChanged.connect (lambda: self.hotBox.setAttributes(5))
-			self.hotBox.ui.s006.valueChanged.connect (lambda: self.hotBox.setAttributes(6))
-			self.hotBox.ui.s007.valueChanged.connect (lambda: self.hotBox.setAttributes(7))
-			self.hotBox.ui.s008.valueChanged.connect (lambda: self.hotBox.setAttributes(8))
-			self.hotBox.ui.s009.valueChanged.connect (lambda: self.hotBox.setAttributes(9))
-			self.hotBox.ui.s010.valueChanged.connect (lambda: self.hotBox.setAttributes(10))
-			self.hotBox.ui.s011.valueChanged.connect (lambda: self.hotBox.setAttributes(11))
-			spinboxes = self.getObject(self.hotBox.ui, 's', [0,12], False)
-			for index, spinbox in enumerate(spinboxes):
-				# spinbox.valueChanged.connect (lambda i=index: self.hotBox.setAttributes(i)) #use lambda to call method with argument: index of spinbox
-				spinbox.setVisible(False)
+			self.setButtons(self.hotBox.ui, invisible='s000-11, t000')
 
 
-	def comboBox(self, comboBox, items, title=None):
+		if self.hotBox.name == 'init':
+			self.hotBox.ui.t000.viewport().setAutoFillBackground(False)
+
+
+
+
+	@staticmethod
+	def comboBox(comboBox, items, title=None):
 		#args: comboBox=QComboBox object - list of items to fill the comboBox with
 		#			title='string' - optional value for the first index of the comboboxs list
 		#returns: combobox's current item list
@@ -107,6 +99,7 @@ class Slot(object):
 			return [title]+items
 		else:
 			return items
+
 
 
 	class CheckableComboBox(QtWidgets.QComboBox):
@@ -128,7 +121,7 @@ class Slot(object):
 	def setButtons(self, ui, checked=None, unchecked=None, enable=None, disable=None, visible=None, invisible=None):
 		#args: setButtons=dynamic ui object
 		#			checked/unchecked/enable/disable/visible/invisible=string - the names of buttons to modify separated by ','. ie. 'b000,b001,b022'
-		#ex. setButtons(self.hotBox.ui, disable=['b000'], unchecked=['b009,b010,b012'])
+		#ex. setButtons(self.hotBox.ui, disable='b000', unchecked='b009-12', invisible='b015')
 		if checked:
 			checked = self.getObject(ui,checked)
 			[button.setChecked(True) for button in checked]
@@ -152,19 +145,19 @@ class Slot(object):
 		if invisible:
 			invisible = self.getObject(ui,invisible)
 			[button.setVisible(False) for button in invisible]
-				
+			
 
 
-	def setSpinboxes(self, ui, values, range_=[0,9], spinboxNames=None):
-		#args: spinboxNames=[string list] - spinbox string object names (used in place of the range argument). ie. ['s000,s001,s002']
-		#			 range_=[int list] - [int start, int end] of spinbox range. ie. spinboxes 2-10.  ie. [2,10]
-		#			 values=int or [tuple list] - tuple representing a string prefix and value, and/or just a value. [(string prefix,int value)] ie. [("size",5), 20, ("width",8)]
+	#set spinbox values explicitly or for each in range
+	def setSpinboxes(self, ui, spinboxNames='s000-15', values=[]):
+		#args:	ui=<dynamic ui>
+		#				spinboxNames='string' - spinbox string object names (used in place of the range argument). ie. 's001-4, s007'.  
+		#											default value will try to add values to spinboxes starting at s000 and add values in order skipping any spinboxes not found in the ui.
+		#			 	values=int or [(tuple) list] - tuple representing a string prefix label and value, and/or just a value. [(string prefix,int value)] ie. [("size",5), 20, ("width",8)]
 		#returns: list of values without prefix
-		#ex. setSpinboxes (self.hotBox.ui, values=[("width",1),("length ratio",1),("patches U",1),("patches V",1)])
-		if spinboxNames: #get spinbox objects
-			spinboxes = self.getObject(ui, spinboxNames)
-		else:
-			spinboxes = self.getObject(ui, 's', range_)
+		#ex. self.setSpinboxes (self.hotBox.ui, values=[("width",1),("length ratio",1),("patches U",1),("patches V",1)]) #range. dict 'value's will be added to corresponding spinbox starting at s000 through s003.
+		#ex. self.setSpinboxes (self.hotBox.ui, spinboxNames='s000', values=[('size',5)]) #explicit;  set single s000 with a label 'size' and value of 5. multiple spinboxes can be set this way. specify a range of spinboxes using 's010-18'.
+		spinboxes = self.getObject(ui, spinboxNames) #get spinbox objects
 
 		#clear previous values
 		for spinbox in spinboxes:
@@ -191,9 +184,11 @@ class Slot(object):
 		return values_
 
 
+
 	cycleDict={}
+	@staticmethod
 	#used for maintaining toggling sequences for multiple objects simultaniously
-	def cycle(self, id_sequence, query=False): #toggle between numbers in a given sequence
+	def cycle(id_sequence, query=False): #toggle between numbers in a given sequence
 		#args: id_sequence=string or int list - id_numberical sequence ie. 'name_123' or [1,2,3].
 		#			takes the string argument and splits it at '_'
 		#			converting the second numberical half to integers and putting them in a list.
@@ -213,22 +208,33 @@ class Slot(object):
 		return int(value) #return an integer from string value
 
 
-	def try_(self, expressions, exceptions='pass', showError_=True):
+
+	@staticmethod
+	def try_(expressions, exceptions='pass', showError_=True, print_=False, **kwargs):
 		#args: expressions='string' - expression separated by ';'
 		#			exceptions='string' - separated by ';'
 		#			showError_=bool - hide or show any errors
+		#			printCommand=bool - print expression/s to console
+		#			*kwargs=any additional arguments used by expressions.
 		#returns: True if no errors occured, else: False
-		#ex. try_('pm.ls(selection=1, objectsOnly=1)[0]', 'print "# Warning: Nothing selected #"')
-		pass_=True
+		#ex. self.try_('pm.delete(arg1)', arg1=radialArrayObjList) #pass in radialArrayObjList as a **kwarg.
+		#ex. self.try_('pm.ls(selection=1, objectsOnly=1)[0]; <additional command>, exceptions=" ERROR: Nothing selected."')
+		didCodeExecWithoutError=True
+
+		for key,value in kwargs.iteritems():
+			locals()[key]=value #create variables for any kwargs passed in
+
 		for expression in expressions.split(';'): #split string arg at ';'
 			try:
-				print expression
+				expression = expression.lstrip(" ") #strip any leading whitespace
+				if print_: print expression
+				exec (expression)
 			except Exception as err:
-				pass_=False #if any errors occur return False
+				didCodeExecWithoutError=False #if any errors occur return False
 				if showError_:
-					print "# Error: "+str(err)+" #"
+					print "# Error in try_(): "+str(err)+" #"
 				exec (exceptions)
-			return pass_
+		return didCodeExecWithoutError
 
 
 
@@ -237,10 +243,11 @@ class Slot(object):
 	# ------------------------------------------------
 
 
+
 	def initStyleSheet(self):
 		#specific case StyleSheet
 		if self.hotBox.name=='main':
-			buttons = self.getObject(self.hotBox.ui, 'i', [3,25], False)
+			buttons = self.getObject(self.hotBox.ui, 'i003-24', showError_=False)
 			for button in buttons:
 				button.setStyleSheet('''QPushButton:hover {   
 					border: 1px solid black;
@@ -248,12 +255,12 @@ class Slot(object):
 					background-color:#66c0ff;
 					}''')
 			#setStyleSheet for transparent buttons
-			buttons = self.getObject(self.hotBox.ui, 'v', [0,8])+self.getObject(self.hotBox.ui, 'i', [20,24])
+			buttons = self.getObject(self.hotBox.ui, 'v000-8, i020-23', showError_=False)
 			for button in buttons:
 				button.setStyleSheet("border: 1px solid transparent;")
 
 		if self.hotBox.name=='viewport':
-			buttons = self.getObject(self.hotBox.ui, 'v', [0,8])
+			buttons = self.getObject(self.hotBox.ui, 'v000-8')
 			for button in buttons:
 				button.setStyleSheet('''QPushButton:hover {   
 					border: 1px solid black;
@@ -261,7 +268,7 @@ class Slot(object):
 					background-color:#66c0ff;
 					}''')
 			#setStyleSheet for transparent buttons
-			buttons = self.getObject(self.hotBox.ui, 'v', [8,16])
+			buttons = self.getObject(self.hotBox.ui, 'v008-15', showError_=False)
 			for button in buttons:
 				button.setStyleSheet("border: 1px solid transparent;")
 
@@ -270,20 +277,21 @@ class Slot(object):
 
 
 		#general case style sheet
-		buttons = self.getObject(self.hotBox.ui, 'chk', [0,50], False)
-		# buttons.append (self.getObject(self.hotBox.ui, ['chkpin']))
+		buttons = self.getObject(self.hotBox.ui, 'chk000-50', showError_=False)
+		# buttons.append (self.getObject(self.hotBox.ui, 'chkpin'))
 		for button in buttons:
 			button.setStyleSheet('''QPushButton:checked{
 			background-color: rgb(170, 70, 255);
 			}''')
 
-		buttons = self.getObject(self.hotBox.ui, 'b', [0,100], False)
+		buttons = self.getObject(self.hotBox.ui, 'b000-100', showError_=False)
 		for button in buttons:
 			button.setStyleSheet('''QPushButton:hover {   
 				border: 1px solid black;
 				border-radius: 5px;
 				background-color:#66c0ff;
 				}''')
+
 
 
 #module name

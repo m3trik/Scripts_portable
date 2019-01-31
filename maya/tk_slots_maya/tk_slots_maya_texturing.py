@@ -37,7 +37,7 @@ class Texturing(Init):
 		shell = self.hotBox.ui.chk000.isChecked()
 		invert = self.hotBox.ui.chk001.isChecked()
 
-		if self.try_('pm.ls(selection=1, objectsOnly=1)[0]', 'print "# Warning: Nothing selected #"'):
+		if self.try_('pm.ls(selection=1, objectsOnly=1)[0]', exceptions='print "# Warning: Nothing selected #"; pass'):
 			pm.hyperShade (pm.ls(sl=1, objectsOnly=1, visible=1)[0], shaderNetworksSelectMaterialNodes=1) #get material node from selection
 			pm.hyperShade (objects="") #select all with material. "" defaults to currently selected materials.
 

@@ -1,0 +1,197 @@
+// testScript-005
+//  MEL
+//clear maya script editor output:
+cmdScrollFieldReporter -edit -clear $tk_cmdScrollFieldReporter;
+
+//
+//send to maya:  CTRL + Enter
+//
+{
+//    options
+int    $keepExisting  = 0; //1 append to existing name, 0 replaces
+string $substitute    = ""; //add procedure for this
+string $substituteFor = "";
+int    $group         = 1; //1 group opposing geometry along the specified axis, 0 off
+string $groupName     = "_grp";
+string $prefix        = "";
+string $name          = "poly_";
+int    $axis          = 0; //0 for x axis, 1 for y axis, 2 for z axis
+string $neg           = "_L"; //left
+string $pos           = "_R"; //right
+string $ctr           = ""; //center
+string $suffix        = "_low";
+int    $showFacetNum  = 1; //1 append facet count
+
+
+string $leftArray [];
+string $rightArray [];
+string $centerArray [];
+
+
+proc string [] createArray () //returns a string array of the selected transform nodes
+  {
+  string $nodes [];
+  $nodes = `ls -selection -dagObjects -transforms`;
+  string $groupedNodes [] = `listRelatives -type "transform"`;  //if the nodes are grouped then we will need to just get the relatives
+
+  if ($groupedNodes[0] != "") //check to see if the nodes are grouped
+    {
+    int $size = `size($groupedNodes)`;
+    clear ($nodes);
+    appendStringArray ($nodes, $groupedNodes, $size);
+    }
+  return $nodes;
+  }
+
+proc sortArray (string $nodes [])
+  {
+  for ($node in $nodes)
+    {
+    $boundingBox = `getAttr ($node + ".center")`;
+    
+    if ($boundingBox [$axis] < 0) //left
+      {
+      $leftArray [size($leftArray)] = $node;
+      }
+    if ($boundingBox [$axis] > 0) //right
+      {
+      $rightArray [size($rightArray)] = $node;
+      }
+    if ($boundingBox [$axis] == 0)  //center
+      {
+      $centerArray [size($centerArray)] = $node;
+      }
+    }
+  }
+
+proc string numberOfFacets (string $node)
+  {
+  string $facets = "";
+  if ($showFacetNum == 1)
+    {
+    int $numFacets [] = `polyEvaluate -face $node`;
+    $facets = ("_f" + $numFacets [0]);
+    }
+  return $facets;
+  }
+
+proc renameNodes (string $nodes [])
+  {
+  sortArray($nodes);
+    
+  $num = 0;
+  for ($node in $leftArray)
+    {
+    $facets = numberOfFacets ($node);
+    
+    if ($keepExisting == 0)
+      {
+      rename $node ($prefix + $name + $num + $facets + $neg + $suffix);
+      }
+    if ($keepExisting == 1)
+      {
+      rename $node ($prefix + $node + $facets + $neg + $suffix);
+      }
+    $num++;
+    }
+  
+  $num = 0;
+  for ($node in $rightArray)
+    {
+    $facets = numberOfFacets ($node);
+    
+    if ($keepExisting == 0)
+      {
+      rename $node ($prefix + $name + $num + $facets + $pos + $suffix);
+      }
+    if ($keepExisting == 1)
+      {
+      rename $node ($prefix + $node + $facets + $neg + $suffix);
+      }
+    $num++;
+    }
+  
+  if (size($leftArray) > size($rightArray)) //continue the numbering system where the previous arrays left off, accounting for asymmetry
+    {
+    $num = (size($leftArray) + 1);
+    }
+  else
+    {
+    $num = (size($rightArray) + 1);
+    }
+  
+  for ($node in $centerArray)
+    {
+    $facets = numberOfFacets ($node);
+    
+    if ($keepExisting == 0)
+      {
+      rename $node ($prefix + $name + $num + $facets + $ctr + $suffix);
+      }
+    if ($keepExisting == 1)
+      {
+      rename $node ($prefix + $node + $facets + $neg + $suffix);
+      }
+    $num++;
+    }
+  
+}
+  
+proc groupNodes ()
+  {
+  if ($group == 1)
+    {
+    clear ($leftArray); clear ($rightArray); //rehash arrays using new naming convention
+    $nodes = createArray();
+    sortArray($nodes);
+
+    for ($i = 0; $i < size($leftArray); $i++) //use previous check for and use largest array
+      {
+      string $rightNode = `substitute $neg $leftArray[$i] $pos`;
+      print ("rightNode______" + $rightNode + "\n");
+      if (`objExists $rightNode`)
+        {
+        string $objectCenterLeft = `objectCenter -local -y $leftArray[$i]`;
+        string $objectCenterRight = `objectCenter -local -y $rightNode`;
+        int $ii = 1;
+        
+        // if (stringArrayContains ($rightNode, $rightArray) && ($objectCenterLeft == $objectCenterRight))
+        if ($objectCenterLeft == $objectCenterRight)
+          {
+          group -name $groupName -relative $leftArray[$i] $rightNode;//$rightArray[$i];
+          print ("// Result: " + $leftArray[$i] + " <grouped to> " + $rightNode + "\n");
+          }
+        else
+          {
+          while ($objectCenterLeft != $objectCenterRight) && ($ii < size($leftArray))
+            {
+            if (catchQuiet (`group -name $groupName -relative $leftArray[$i + $ii] $rightNode`) != 1)
+              {
+              print ("// Result: " + $leftArray[$i + $ii] + " <grouped to> " + $rightNode + "\n");
+              }
+            else
+              {
+              $ii++;
+              }
+            }
+          }
+        }
+      else
+        {
+        // $i++;
+        }
+      }
+    }
+  }
+
+
+/*
+
+*/
+$nodes = createArray();
+renameNodes($nodes);
+groupNodes();
+}
+
+
+

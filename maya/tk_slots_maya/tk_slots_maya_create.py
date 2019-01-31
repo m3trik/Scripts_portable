@@ -22,16 +22,29 @@ class Create(Init):
 		self.history = []
 
 
+		self.hotBox.ui.s000.valueChanged.connect (lambda: self.setAttributes(0))
+		self.hotBox.ui.s001.valueChanged.connect (lambda: self.setAttributes(1))
+		self.hotBox.ui.s002.valueChanged.connect (lambda: self.setAttributes(2))
+		self.hotBox.ui.s003.valueChanged.connect (lambda: self.setAttributes(3))
+		self.hotBox.ui.s004.valueChanged.connect (lambda: self.setAttributes(4))
+		self.hotBox.ui.s005.valueChanged.connect (lambda: self.setAttributes(5))
+		self.hotBox.ui.s006.valueChanged.connect (lambda: self.setAttributes(6))
+		self.hotBox.ui.s007.valueChanged.connect (lambda: self.setAttributes(7))
+		self.hotBox.ui.s008.valueChanged.connect (lambda: self.setAttributes(8))
+		self.hotBox.ui.s009.valueChanged.connect (lambda: self.setAttributes(9))
+		self.hotBox.ui.s010.valueChanged.connect (lambda: self.setAttributes(10))
+		self.hotBox.ui.s011.valueChanged.connect (lambda: self.setAttributes(11))
+
 
 	def t000(self): #set name
 		newName = self.hotBox.ui.t000.text()
-		print self.history, newName
-		pm.rename (self.history[-1], newName)
+		print 't000:', self.history, newName
+		newName = pm.rename (self.history[-1], newName)
 		self.history = newName
-
+		print 'newName', newName, self.history
 
 	def chk000(self): #rotate x axis
-		self.setButtons(self.hotBox.ui, checked='chk000',unchecked='chk001,chk002')
+		self.setButtons(self.hotBox.ui, checked='chk000',unchecked='chk001, chk002')
 		obj = pm.ls(sl=1)[0]
 		if obj:
 			axis = self.rotation['x']
@@ -42,7 +55,7 @@ class Create(Init):
 			print "# Warning: nothing selected #"
 
 	def chk001(self): #rotate y axis
-		self.setButtons(self.hotBox.ui, checked='chk001',unchecked='chk000,chk002')
+		self.setButtons(self.hotBox.ui, checked='chk001',unchecked='chk000, chk002')
 		obj = pm.ls(sl=1)[0]
 		if obj:
 			axis = self.rotation['y']
@@ -53,7 +66,7 @@ class Create(Init):
 			print "# Warning: nothing selected #"
 
 	def chk002(self): #rotate z axis
-		self.setButtons(self.hotBox.ui, checked='chk002',unchecked='chk001,chk000')
+		self.setButtons(self.hotBox.ui, checked='chk002',unchecked='chk000, chk001')
 		obj = pm.ls(sl=1)[0]
 		if obj:
 			axis = self.rotation['z']
@@ -63,33 +76,30 @@ class Create(Init):
 		else:
 			print "# Warning: nothing selected #"
 
-	def chk003(self): #subdivide tris
-		self.hotBox.ui.chk004.setChecked(False)
-		self.setAttributes(1)
+	def chk003(self): #
+		pass
 
-	def chk004(self): #subdivide quads
-		self.hotBox.ui.chk003.setChecked(False)
-		self.setAttributes(1)
+	def chk004(self): #
+		pass
 
-	def chk005(self): #Create: set point
+	def chk005(self): #Set point
 		#add support for averaging multiple components.
 		selection = pm.ls (selection=1, flatten=1)
 		try:
 			point = pm.xform (selection, query=1, translation=1, worldSpace=1, absolute=1)
 			self.hotBox.ui.s009.setValue(point[0]); self.hotBox.ui.s010.setValue(point[1]); self.hotBox.ui.s011.setValue(point[2])
 			self.point = point #extend the list contents
-			self.setButtons(self.hotBox.ui, visible='s009,s010,s011')
+			self.setButtons(self.hotBox.ui, visible='s009-11')
 		except:
 			print "# Warning: Nothing selected. #"
 			self.hotBox.ui.s009.setValue(0); self.hotBox.ui.s010.setValue(0); self.hotBox.ui.s011.setValue(0)
 			if self.point:
 				del self.point[:]
 
-
-	def cmb000(self): #set create type
-		nurbs = ["Type", "Sphere", "Cube", "Cylinder", "Cone", "Plane", "Torus", "Circle", "Square"]
-		polygons = ["Type", "Cube", "Sphere", "Cylinder", "Plane", "Circle", "Cone", "Pyramid", "Torus", "Tube", "Soccer Ball", "Platonic Solids", "Text"]
-		lights = ["Type", "Ambient", "Directional", "Point", "Spot", "Area", "Volume", "VRay Sphere", "VRay Dome", "VRay Rect", "VRay IES"]
+	def cmb000(self): #Set create type
+		nurbs = ["Create", "Sphere", "Cube", "Cylinder", "Cone", "Plane", "Torus", "Circle", "Square"]
+		polygons = ["Create", "Cube", "Sphere", "Cylinder", "Plane", "Circle", "Cone", "Pyramid", "Torus", "Tube", "Soccer Ball", "Platonic Solids", "Text"]
+		lights = ["Create", "Ambient", "Directional", "Point", "Spot", "Area", "Volume", "VRay Sphere", "VRay Dome", "VRay Rect", "VRay IES"]
 
 		if self.hotBox.ui.cmb000.currentIndex() == 0: #polygons
 			self.hotBox.ui.cmb001.clear()
@@ -103,7 +113,10 @@ class Create(Init):
 			self.hotBox.ui.cmb001.clear()
 			self.hotBox.ui.cmb001.addItems(lights)
 
-	def cmb001(self): #set create object
+	def cmb001(self): #Set create object
+		if self.hotBox.ui.cmb001.currentIndex() == 0:
+			return #prevent referenced before assignment errors with inherited variables during initialization. 
+
 		if self.hotBox.ui.chk000.isChecked():
 			axis = self.rotation['x']
 		if self.hotBox.ui.chk001.isChecked():
@@ -111,12 +124,6 @@ class Create(Init):
 		if self.hotBox.ui.chk002.isChecked():
 			axis = self.rotation['z']
 		self.rotation['last'] = axis
-
-		if self.hotBox.ui.cmb001.currentIndex() == 0:
-			self.setButtons(self.hotBox.ui, disable='b000,chk003,chk004', invisible='t000')
-			return
-		else:
-			self.setButtons(self.hotBox.ui, enable='b000', visible='s009,s010,s011,t000')
 
 		#nurbs
 		if self.hotBox.ui.cmb000.currentIndex() == 1:
@@ -188,18 +195,10 @@ class Create(Init):
 
 			#circle:
 			if self.hotBox.ui.cmb001.currentIndex() == 5:
-				mode = None
-				if self.hotBox.ui.chk003.isChecked(): 
-					mode = "tri"
-				if self.hotBox.ui.chk004.isChecked():
-					mode = "quad"
-
 				axis = next(key for key, value in self.rotation.items() if value==axis and key!='last') #get key from value as createCircle takes the key argument
 
-				self.setButtons(self.hotBox.ui, enable='chk003,chk004')
-				v = self.setSpinboxes (self.hotBox.ui, values=[("size",5), ("sides",5)])
-				node = self.createCircle(axis=axis, numPoints=v[0], radius=v[1], mode=mode)
-
+				v = self.setSpinboxes (self.hotBox.ui, values=[("size",5), ("sides",5), ("tri",0)])
+				node = self.createCircle(axis=axis, numPoints=v[0], radius=v[1], mode=v[2])
 
 			#Cone:
 			if self.hotBox.ui.cmb001.currentIndex() == 6:
@@ -233,25 +232,29 @@ class Create(Init):
 		#translate the newly created node
 		pm.xform (node, translation=self.point, worldSpace=1, absolute=1)
 		#show text field and set name
+		self.setButtons(self.hotBox.ui, visible='t000')
 		self.hotBox.ui.t000.setText(str(node[0]))
 		#set as current node for setting history
 		self.history.extend(node)
-		print self.history[0], self.history[1]
+		print 'self.history[0] (transform):', self.history[0]
+		print 'self.history[1] (history):', self.history[1]
+
+		self.hotBox.ui.cmb001.setCurrentIndex(0)
 
 
 	def setAttributes(self, index): #set history attributes
 		#arg: int (index of the spinbox that called this function)
-		node = str(self.history[-1][1]) if self.history else None #gets the history node
-		# print 's00'+str(index)
+		node = str(self.history[-1]) if self.history else None #gets the history node
+		print 's00'+str(index)
 
 		if node:
 			v=[] #list of integer values
 			#get current spinbox objects
-			spinboxes = self.getObject(self.hotBox.ui, 's', [0,12])
+			spinboxes = self.getObject(self.hotBox.ui, 's000-11')
 			for spinbox in spinboxes:
 				v.append(int(spinbox.value())) #current spinbox values. ie. from s000 get the value of six and add it to the list
 
-			pm.select(str(self.history[-1][0])) #make sure the transform node is selected so that you can see any edits
+			pm.select(str(self.history[-2])) #make sure the transform node is selected so that you can see any edits
 
 			axis = self.rotation['last']
 			pm.undoInfo(openChunk=1)
@@ -259,6 +262,7 @@ class Create(Init):
 			#polygons
 			if self.hotBox.ui.cmb000.currentIndex() == 0:
 				if 'Cube' in node:
+					print node, index
 					if index ==0: #size
 						i=1; value = self.hotBox.ui.s000.value()
 						if self.lastValue > value:
@@ -269,7 +273,7 @@ class Create(Init):
 						pm.setAttr (node+'.width', w)
 						pm.setAttr (node+'.depth', d)
 						pm.setAttr (node+'.height',h)
-						self.setSpinboxes (self.hotBox.ui, range_=[1,4], values=[('width',w),('depth',d),('height',h)])
+						self.setSpinboxes (self.hotBox.ui, spinboxNames='s001-3', values=[('width',w),('depth',d),('height',h)])
 						self.lastValue = value
 					if any([index==1, index==2, index==3]): #width, depth, height
 						pm.setAttr (node+'.width', v[1])
@@ -294,7 +298,7 @@ class Create(Init):
 						h = pm.getAttr (node+'.height')+i
 						pm.setAttr (node+'.radius', r)
 						pm.setAttr (node+'.height', h)
-						self.setSpinboxes (self.hotBox.ui, range_=[1,3], values=[('radius',r),('height',h)])
+						self.setSpinboxes (self.hotBox.ui, spinboxNames='s001-2', values=[('radius',r),('height',h)])
 						self.lastValue = value
 					if any([index==1, index==2]): #radius, height
 						pm.setAttr (node+'.radius', v[1])
@@ -314,7 +318,7 @@ class Create(Init):
 						h = pm.getAttr (node+'.height')+i
 						pm.setAttr (node+'.width', w)
 						pm.setAttr (node+'.height',h)
-						self.setSpinboxes (self.hotBox.ui, range_=[1,3], values=[('width',w),('height',h)])
+						self.setSpinboxes (self.hotBox.ui, spinboxNames='s001-2', values=[('width',w),('height',h)])
 						self.lastValue = value
 					if any([index==1, index==2]): #width, height
 						pm.setAttr (node+'.width', v[1])
@@ -325,15 +329,10 @@ class Create(Init):
 
 				if 'polyCreateFace' in node: #circle
 					pm.delete()
-					mode = None
-					if self.hotBox.ui.chk003.isChecked(): 
-						mode = "tri"
-					if self.hotBox.ui.chk004.isChecked():
-						mode = "quad"
 
 					axis = next(key for key, value in self.rotation.items() if value==axis and key!='last') #get key from value as createCircle takes the key string argument
 
-					circle = self.createCircle(axis=axis, radius=v[0], numPoints=v[1], mode=mode)
+					circle = self.createCircle(axis=axis, radius=v[0], numPoints=v[1], mode=v[2])
 
 				if 'Cone' in node:
 					if index ==0: #size
@@ -344,7 +343,7 @@ class Create(Init):
 						h = pm.getAttr (node+'.height')+i
 						pm.setAttr (node+'.radius', r)
 						pm.setAttr (node+'.height', h)
-						self.setSpinboxes (self.hotBox.ui, range_=[1,3], values=[('radius',r),('height',h)])
+						self.setSpinboxes (self.hotBox.ui, spinboxNames='s001-2', values=[('radius',r),('height',h)])
 						self.lastValue = value
 					if any([index==1, index==2]): #radius, height
 						pm.setAttr (node+'.radius', v[1])
@@ -373,7 +372,7 @@ class Create(Init):
 						s = pm.getAttr (node+'.sectionRadius')+i
 						pm.setAttr (node+'.radius', r)
 						pm.setAttr (node+'.sectionRadius', s)
-						self.setSpinboxes (self.hotBox.ui, range_=[1,3], values=[('radius',r),('section radius',s)])
+						self.setSpinboxes (self.hotBox.ui, spinboxNames='s001-2', values=[('radius',r),('section radius',s)])
 						self.lastValue = value
 					if any([index==1, index==2]): #radius, section radius
 						pm.setAttr (node+'.radius', v[1])
@@ -392,7 +391,7 @@ class Create(Init):
 						t = pm.getAttr (node+'.thickness')+i
 						pm.setAttr (node+'.radius', r)
 						pm.setAttr (node+'.thickness', t)
-						self.setSpinboxes (self.hotBox.ui, range_=[1,3], values=[('radius',r),('thickness',t)])
+						self.setSpinboxes (self.hotBox.ui, spinboxNames='s001-2', values=[('radius',r),('thickness',t)])
 						self.lastValue = value
 					if any([index==1, index==2]): #radius, thickness
 						pm.setAttr (node+'.radius', v[1])
@@ -410,7 +409,7 @@ class Create(Init):
 						s = pm.getAttr (node+'.sideLength')+i
 						pm.setAttr (node+'.radius', r)
 						pm.setAttr (node+'.sideLength', s)
-						self.setSpinboxes (self.hotBox.ui, range_=[1,3], values=[('radius',r),('side length',s)])
+						self.setSpinboxes (self.hotBox.ui, spinboxNames='s001-2', values=[('radius',r),('side length',s)])
 						self.lastValue = value
 					if any([index==1]): #radius
 						pm.setAttr (node+'.radius', v[1])
@@ -497,13 +496,13 @@ class Create(Init):
 					pm.setAttr (node+'.spansPerSide', v[8])
 
 			#translate
-			pm.xform (self.node, translation=[self.hotBox.ui.s009.value(),self.hotBox.ui.s009.value(),self.hotBox.ui.s009.value()], worldSpace=1, absolute=1)
+			pm.xform (node, translation=[self.hotBox.ui.s009.value(),self.hotBox.ui.s009.value(),self.hotBox.ui.s009.value()], worldSpace=1, absolute=1)
 
-			pm.undoinfo(closeChunk=1)
+			pm.undoInfo(closeChunk=1)
 
 
-	def b000(self): #Create object 
-		self.cmb001()
+	def b000(self): #
+		pass
 
 	def b001(self): #
 		pass

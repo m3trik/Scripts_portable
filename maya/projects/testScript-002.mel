@@ -1,0 +1,92 @@
+// testScript-003
+//  MEL
+//clear maya script editor output:
+cmdScrollFieldReporter -edit -clear $tk_cmdScrollFieldReporter;
+
+//
+// --Start Code ---------------------------------------------
+
+
+
+// The transformation matrix for a node is built by post-multiplying the following matrices in the given order (Note: rotations are applied according to the rotation order parameter and the 6 different rotation possibilities are not shown below)
+// -1                       -1
+// [M]  = [sp]x[s]x[sh]x[sp]x[st]x[rp]x[ar]x[ro]x[rp]x[rt]x[t]
+
+// where:
+
+[sp] = |  1      0        0       0 | = scale pivot matrix
+|  0      1        0       0 |
+|  0      0        1       0 |
+| -spx   -spy     -spz     1 |
+
+
+[s]  = |  sx     0        0       0 | = scale matrix
+|  0      sy       0       0 |
+|  0      0        sz      0 |
+|  0      0        0       1 |
+
+
+[sh] = |  1      0        0       0 | = shear matrix
+|  xy     1        0       0 |
+|  xz     yz       1       0 |
+|  0      0        0       1 |
+
+-1
+[sp] = |  1       0       0       0 | = scale pivot inverse matrix
+|  0       1       0       0 |
+|  0       0       1       0 |
+|  spx     spy     spz     1 |
+
+
+[st] = |  1       0       0       0 | = scale translate matrix
+|  0       1       0       0 |
+|  0       0       1       0 |
+|  stx     sty     stz     1 |
+
+
+[rp] = |  1       0       0       0 | = rotate pivot matrix
+|  0       1       0       0 |
+|  0       0       1       0 |
+| -rpx    -rpy    -rpz     1 |
+
+
+[ar] = |  *       *       *       0 | = axis rotation matrix
+|  *       *       *       0 |   (composite rotation,
+|  *       *       *       0 |    see [rx], [ry], [rz]
+|  0       0       0       1 |    below for details)
+
+
+[rx] = |  1       0       0       0 | = rotate X matrix
+|  0       cos(x)  sin(x)  0 |
+|  0      -sin(x)  cos(x)  0 |
+|  0       0       0       1 |
+
+
+[ry] = |  cos(y)  0      -sin(y)  0 | = rotate Y matrix
+|  0       1       0       0 |
+|  sin(y)  0       cos(y)  0 |
+|  0       0       0       1 |
+
+
+[rz] = |  cos(z)  sin(z)  0       0 | = rotate Z matrix
+| -sin(z)  cos(z)  0       0 |
+|  0       0       1       0 |
+|  0       0       0       1 |
+
+-1
+[rp] = |  1       0       0       0 | = rotate pivot matrix
+|  0       1       0       0 |
+|  0       0       1       0 |
+|  rpx     rpy     rpz     1 |
+
+
+[rt] = |  1       0       0       0 | = rotate translate matrix
+|  0       1       0       0 |
+|  0       0       1       0 |
+|  rtx     rty     rtz     1 |
+
+
+[t]  = |  1       0       0       0 | = translation matrix
+|  0       1       0       0 |
+|  0       0       1       0 |
+|  tx      ty      tz      1 |

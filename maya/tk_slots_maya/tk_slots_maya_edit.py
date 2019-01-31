@@ -13,7 +13,7 @@ class Edit(Init):
 	def __init__(self, *args, **kwargs):
 		super(Edit, self).__init__(*args, **kwargs)
 
-		
+
 
 		self.hotBox.ui.s000.valueChanged.connect(self.chk011) #update radial array
 		self.hotBox.ui.s001.valueChanged.connect(self.chk011) 
@@ -97,9 +97,10 @@ class Edit(Init):
 		self.setButtons(self.hotBox.ui, checked='chk014', unchecked='chk012,chk013')
 		self.chk015()
 
+
+	global radialArrayObjList; radialArrayObjList=[]
 	def chk015(self, create=False): #Duplicate radial array.
-		global radialArrayObjList
-		radialArrayObjList=[]
+		self.hotBox.ui.chkpin.setChecked(True) #keep the window open
 		setPivot = self.hotBox.ui.chk010.isChecked() #set pivot point
 		instance = self.hotBox.ui.chk011.isChecked() #instance object
 
@@ -107,47 +108,46 @@ class Edit(Init):
 			self.setButtons(self.hotBox.ui, enable='b008')
 
 			selection = pm.ls (selection=1, type="transform", flatten=1)
-			if len(selection):				
-				objectName = str(selection[0])
-				if len(radialArrayObjList):
-					self.try_ ('pm.delete (radialArrayObjList)')
-					del radialArrayObjList[:]
+			if selection:
+				if radialArrayObjList:
+					self.try_ ('pm.delete(arg1)', showError_=False, arg1=radialArrayObjList) #delete all the geometry in the list
+					del radialArrayObjList[:] #clear the list
+				for object_ in selection:
+					pm.select (object_)
+					objectName = str(object_)
 
-				numDuplicates = int(self.hotBox.ui.s000.value())
-				angle = float(self.hotBox.ui.s001.value())
+					numDuplicates = int(self.hotBox.ui.s000.value())
+					angle = float(self.hotBox.ui.s001.value())
 
-				x=y=z = 0
-				if self.hotBox.ui.chk012.isChecked():
-					x = angle
-				if self.hotBox.ui.chk013.isChecked():
-					y = angle
-				if self.hotBox.ui.chk014.isChecked():
-					z = angle
+					x=y=z = 0
+					if self.hotBox.ui.chk012.isChecked(): x = angle
+					if self.hotBox.ui.chk013.isChecked(): y = angle
+					if self.hotBox.ui.chk014.isChecked(): z = angle
 
-				pm.undoInfo (openChunk=1)
-				for i in xrange(1,numDuplicates):
-					if instance:
-						name = objectName+"_ins"+str(i)
-						pm.instance (name=name)
-					else:
-						name = objectName+"_dup"+str(i)
-						pm.duplicate (returnRootsOnly=1, name=name)
-					if setPivot:
-						if len(radialPivot):
-							pm.rotate (x, y, z, relative=1, pivot=radialPivot)
+					pm.undoInfo (openChunk=1)
+					for i in xrange(1,numDuplicates):
+						if instance:
+							name = objectName+"_ins"+str(i)
+							pm.instance (name=name)
 						else:
-							print "# Warning: No pivot point set. #"
-					else:
-						pm.rotate (x, y, z, relative=1)
-					radialArrayObjList.append(name)
-				#if in isolate select mode; add object	
-				currentPanel = pm.paneLayout('viewPanes', q=True, pane1=True) #get the current modelPanel view
-				if pm.isolateSelect (currentPanel, query=1, state=1):
-					for obj in radialArrayObjList:
-						pm.isolateSelect (currentPanel, addDagObject=obj)
-				#re-select the original selected object
-				pm.select (objectName)
-				pm.undoInfo (closeChunk=1)
+							name = objectName+"_dup"+str(i)
+							pm.duplicate (returnRootsOnly=1, name=name)
+						if setPivot:
+							if len(radialPivot):
+								pm.rotate (x, y, z, relative=1, pivot=radialPivot) #euler=1
+							else:
+								print "# Warning: No pivot point set. #"
+						else:
+							pm.rotate (x, y, z, relative=1) #euler=1
+						radialArrayObjList.append(name)
+					#if in isolate select mode; add object	
+					currentPanel = pm.paneLayout('viewPanes', q=True, pane1=True) #get the current modelPanel view
+					if pm.isolateSelect (currentPanel, query=1, state=1):
+						for obj_ in radialArrayObjList:
+							pm.isolateSelect (currentPanel, addDagObject=obj_)
+					#re-select the original selected object
+					pm.select (objectName)
+					pm.undoInfo (closeChunk=1)
 			else: #if both lists objects are empty:
 				print "# Warning: Nothing selected. #"
 				self.setButtons(self.hotBox.ui, disable='b008',unchecked='chk015')
@@ -158,11 +158,12 @@ class Edit(Init):
 				radialArrayObjList.append(originalObj)
 				pm.polyUnite (radialArrayObjList, name=originalObj+"_array") #combine objects. using the original name results in a duplicate object error on deletion
 				print "# Result: "+str(radialArrayObjList)+" #"
-				pm.delete (radialArrayObjList); del radialArrayObjList[:]
+				pm.delete (radialArrayObjList); del radialArrayObjList[:] #delete all geometry and clear the list
 				return
-			self.try_('pm.delete (radialArrayObjList)'); del radialArrayObjList[:]
+			self.try_ ('pm.delete(arg1)', showError_=False, arg1=radialArrayObjList) #delete all the geometry in the list
+			del radialArrayObjList[:] #clear the list
 			self.setButtons(self.hotBox.ui, disable='b008')
-			
+
 
 	def b000(self): #Mirror geometry
 		mergeThreshold=0.005

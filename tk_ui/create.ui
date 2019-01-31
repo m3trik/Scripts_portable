@@ -91,52 +91,7 @@
      </property>
      <item>
       <property name="text">
-       <string>Type</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Cube</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Sphere</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Cylinder</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Plane</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Circle</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Cone</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Pyramid</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Torus</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Tube</string>
+       <string>Create</string>
       </property>
      </item>
     </widget>
@@ -350,7 +305,7 @@
      <double>9999.000000000000000</double>
     </property>
    </widget>
-   <widget class="QPushButton" name="b000">
+   <widget class="QPushButton" name="b000_1">
     <property name="enabled">
      <bool>false</bool>
     </property>
@@ -369,10 +324,10 @@
      </size>
     </property>
     <property name="toolTip">
-     <string>Create object</string>
+     <string/>
     </property>
     <property name="text">
-     <string>Create</string>
+     <string/>
     </property>
     <property name="checkable">
      <bool>false</bool>
@@ -422,7 +377,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="chk003">
+   <widget class="QPushButton" name="chk003_1">
     <property name="enabled">
      <bool>false</bool>
     </property>
@@ -435,10 +390,10 @@
      </rect>
     </property>
     <property name="toolTip">
-     <string>Create Circle: subdivide as triangles.</string>
+     <string/>
     </property>
     <property name="text">
-     <string>Tris</string>
+     <string/>
     </property>
     <property name="checkable">
      <bool>true</bool>
@@ -447,7 +402,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="chk004">
+   <widget class="QPushButton" name="chk004_1">
     <property name="enabled">
      <bool>false</bool>
     </property>
@@ -466,10 +421,10 @@
      </size>
     </property>
     <property name="toolTip">
-     <string>Create Circle: subdivide as four sided.</string>
+     <string/>
     </property>
     <property name="text">
-     <string>Quads</string>
+     <string/>
     </property>
     <property name="checkable">
      <bool>true</bool>

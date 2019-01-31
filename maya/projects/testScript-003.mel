@@ -1,0 +1,122 @@
+// testScript-003
+//  MEL
+//clear maya script editor output:
+cmdScrollFieldReporter -edit -clear $tk_cmdScrollFieldReporter;
+
+//
+//
+proc string filterComponentNumber (string $selection)
+  {
+  string $componentName = `substitute "[A-Z]*_[A-Z]* *[0-9]*: " ($selection) ""`;
+  return $componentName;
+  }
+
+proc string filterNamespace (string $selection)
+  {
+  string $namespace = `substitute "[[0-9]*]" ($selection) ""`;
+  return $namespace;
+  }
+
+proc string [] filterNormalDir (string $normal)
+  {
+  string $selNormalDir = `substitute "[A-Z]*_[A-Z]* *[0-9]*: " ($normal) ""`;
+
+  string $buffer[];
+  tokenize $selNormalDir " " $buffer;
+  return $buffer;
+  }
+
+proc string [] getNormalDir (string $face)
+  {
+  string $normalDir[] = `polyInfo -faceNormals $face`;
+  return $normalDir;
+  }
+
+proc string [] getAllNormalDir (string $namespace)
+  {
+  int $numFaces[] = `polyEvaluate -face`;//returns number of faces as an integer
+  string $getNormal[];
+
+  for ($componentNum=0; $componentNum < $numFaces[0]; $componentNum++) //for (number of faces):
+    {
+    string $array[] = `polyInfo -faceNormals ($namespace+"["+$componentNum+"]")`;//get normal info from the rest of the object's faces
+    $string = stringArrayToString ($array, " ");
+    $getNormal[size($getNormal)] = $string;
+    }
+  return $getNormal;
+  }
+
+proc string [] getContiguousFaces (string $face)
+  {
+  string $adjEdges[] = `polyListComponentConversion -fromFace -toEdge $face`;
+  string $adjFaces[] = `polyListComponentConversion -fromEdge -toFace $adjEdges`;
+  return $adjFaces;
+  }
+
+proc string [] initialUserSelection ()
+  {
+  string $selection[] = `ls -selection`;//  List objects that are currently selected.
+  return $selection;
+  }
+
+proc string [] initialUserSelectionNormals ()
+  {
+  string $normal[] = `polyInfo -faceNormals`;//returns the face normals of selected faces
+
+  $selNormalDir = filterNormalDir($normal[0]);//normal dir of selected face
+  return $selNormalDir;
+  }
+
+proc finalSelection (string $namespace, float $rangeX, float $rangeY, float $rangeZ)
+  {
+  $selNormalDir = initialUserSelectionNormals();
+  float $sX = $selNormalDir[0];
+  float $sY = $selNormalDir[1]; 
+  float $sZ = $selNormalDir[2];
+
+  $initialUserSelection = initialUserSelection();
+  $adjFaces = getContiguousFaces ($initialUserSelection[0]);
+  $adjFaces = `filterExpand -selectionMask 34 -expand true $adjFaces`;
+
+  for ($face in $adjFaces)
+    {
+    // print $face;
+    $normalDir = getNormalDir($face);
+    // print $normalDir;
+    $filterNormalDir = filterNormalDir($normalDir[0]);
+
+    float $nX = $filterNormalDir[0];
+    float $nY = $filterNormalDir[1]; 
+    float $nZ = $filterNormalDir[2];
+    // print ($sX +" ");
+    // print ($sY +" ");
+    // print ($sZ +"\n");
+    // print ($nX +" ");
+    // print ($nX +" ");
+    // print ($nX +"\n");
+
+    if ($sX <= $nX + $rangeX && $sX >= $nX - $rangeX
+      && $sY <= $nY + $rangeY && $sY >= $nY - $rangeY 
+      && $sZ <= $nZ + $rangeZ && $sZ >= $nZ - $rangeZ)
+      {
+      // print "add--->";
+      select -add $face;
+      }
+    }
+  }
+
+global proc tk_selectPolyFaceIsland (float $rangeX, float $rangeY, float $rangeZ)
+  {
+  $initialUserSelection = initialUserSelection();
+  // print ($initialUserSelection[0]+"\n");
+  $namespace = filterNamespace($initialUserSelection[0]);
+
+  int $numFaces[] = `polyEvaluate -face`;
+
+  for ($num=0; $num < $numFaces[0]; $num++)
+    finalSelection($namespace, $rangeX, $rangeY, $rangeZ);
+  }
+
+float $range = 0.5;
+tk_selectPolyFaceIsland($range, $range, $range);
+// tk_selectPolyFaceIsland (0.5, 0.5, 0.5);
