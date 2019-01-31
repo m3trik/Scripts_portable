@@ -29,7 +29,7 @@ path = os.path.join(os.path.dirname(__file__), 'tk_ui') #get absolute path from 
 # Ui List
 # ------------------------------------------------
 
-#create a list of the names of the files in the ui folder, removing the prefix and extension.
+#create a list of the names of the files in the ui folder, removing the extension.
 def uiList():
 	return [file_.replace('.ui','') for file_ in os.listdir(path) if file_.endswith('.ui')] #gets uiList from directory contents
 
@@ -91,7 +91,6 @@ class HotBox(QtWidgets.QWidget):
 		self.prevName=[] #when a new ui is called its name is last and the previous ui is at element[-2]. ie. [previousNameString, previousNameString, currentNameString]
 		
 		self.app = parent.objectName().rstrip('Window').lower() #remove 'Window' from objectName ie. 'Maya' from 'MayaWindow' and set lowercase.
-		print self.app
 		self.signal = locate('tk_signals.Signal')(self)
 		self.layoutStack()
 		self.overlay = Overlay(self)
