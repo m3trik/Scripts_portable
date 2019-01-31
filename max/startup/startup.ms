@@ -63,38 +63,70 @@ paths = #(
 python.Execute "import sys"
 for path_ in paths do
 (
-	--print ("sys.path.append('"+path_+"')")
 	python.Execute ("sys.path.append('"+path_+"')")
 )
 
 
-FileIn (dir_+"/max/macros/macros.ms")
+
+
+-- delayed commands
+function PerformDelayedTasks sender evt=
+(
+	sender.enabled = false --important: don't repeat this timer event
+	dotnet.RemoveEventHandler sender "Elapsed" PerformDelayedTasks --for sanity and cleanup    
+
+	-- commands --
+
+	-- user macros:
+	FileIn (dir_+"/max/macros/macros.ms")
+
+	-- ui:
+	-- hide statusPanel
+	statusPanel.visible = true
+
+	-- open the scene explorer
+	-- if sceneexplorermanager.ExplorerExists "Scene Explorer" then 
+	-- (
+	-- 	if (not sceneexplorermanager.ExplorerIsOpen "Scene Explorer") then
+	-- 		sceneexplorermanager.OpenExplorer "Scene Explorer"
+	-- )
+	-- else
+	-- (
+	-- 	sceneexplorermanager.CreateExplorerFromDefault "Scene Explorer"
+	-- )
+
+	-- 	macros.run "Track View" "LaunchFCurveEditor" -- Curve Editor Toggle
+	-- 	macros.run "Scene Explorer" "SELayerExplorer" -- Scene Explorer Toggle
+
+	-- 	actionMan.executeAction 135018554 "32771" -- Particle View Toggle
+	-- 	actionMan.executeAction 0 "50048" -- Tools: Material Editor Toggle
+	-- 	actionMan.executeAction 0 "60010" -- Render: Render SetUp Toggle
+	-- 	actionMan.executeAction 0 "40029" -- Render: Environment Dialog Toggle
+
+	-- hotkeys:
+	kbdx = actionMan.getKeyboardFile()	--get current keyboard file
+	actionMan.loadKeyboardFile (kbdx)		--loadKeyboardFile()
+	-- actionMan.saveKeyboardFile		--saveKeyboardFile()           
+)
+
+delayTimer= dotnetobject "Windows.Forms.Timer"
+delayTimer.Interval=5000
+
+dotnet.AddEventHandler delayTimer "Tick" PerformDelayedTasks
+
+delayTimer.enabled = true
 
 
 
 
--- hide statusPanel
-statusPanel.visible = true
-
--- check to see if its open and if not, open the scene explorer
--- if sceneexplorermanager.ExplorerExists "Scene Explorer" then 
--- (
--- 	if (not sceneexplorermanager.ExplorerIsOpen "Scene Explorer") then
--- 		sceneexplorermanager.OpenExplorer "Scene Explorer"
--- )
--- else
--- (
--- 	sceneexplorermanager.CreateExplorerFromDefault "Scene Explorer"
--- )
 
 
 
 
 
--- hotkeys
-kbdx = actionMan.getKeyboardFile()	--get current keyboard file
-actionMan.loadKeyboardFile (kbdx)		--loadKeyboardFile()
--- actionMan.saveKeyboardFile		--saveKeyboardFile()
+
+
+
 
 
 
