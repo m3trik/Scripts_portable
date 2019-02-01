@@ -5,18 +5,15 @@ except: pass
 
 ''' Start Code '''
 
+# slice tool
 
-history = ['pCube1', 'polyCube1']
-
-node = str(history[-1]) if history else None #gets the history node
-
-print node
-
-print str(history[-2])
+duplicate
+move
+loft w/ output polygon
+boolean
 
 
-# node = str(self.history[-1][1]) if self.history else None
-# pm.select(str(self.history[-1][0]))
+
 
 # def getObject(class_, objectNames, showError_=True, print_=False):
 # 	#args: 	class_=class object

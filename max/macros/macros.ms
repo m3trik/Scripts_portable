@@ -30,7 +30,8 @@ silentErrors: false
 autoUndoEnabled: false
 (
 	python.Execute "if 'tk' not in locals() or 'tk' not in globals(): import tk_main; tk = tk_main.createInstance()"
-	python.Execute "if not tk.isVisible(): tk.show()"
+	python.Execute "tk.hide(); tk.show()"
+-- 	python.Execute "if not tk.isVisible(): tk.show()"
 )
 
 macroScript toggleGrid
