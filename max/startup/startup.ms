@@ -84,16 +84,19 @@ function PerformDelayedTasks sender evt=
 	-- hide statusPanel
 	statusPanel.visible = true
 
+	-- open the layer explorer
+	macros.run "Scene Explorer" "SELayerExplorer"
+
 	-- open the scene explorer
-	-- if sceneexplorermanager.ExplorerExists "Scene Explorer" then 
-	-- (
-	-- 	if (not sceneexplorermanager.ExplorerIsOpen "Scene Explorer") then
-	-- 		sceneexplorermanager.OpenExplorer "Scene Explorer"
-	-- )
-	-- else
-	-- (
-	-- 	sceneexplorermanager.CreateExplorerFromDefault "Scene Explorer"
-	-- )
+-- 	if sceneexplorermanager.ExplorerExists "Scene Explorer" then 
+-- 	(
+-- 		if (not sceneexplorermanager.ExplorerIsOpen "Scene Explorer") then
+-- 			sceneexplorermanager.OpenExplorer "Scene Explorer"
+-- 	)
+-- 	else
+-- 	(
+-- 		sceneexplorermanager.CreateExplorerFromDefault "Scene Explorer"
+-- 	)
 
 	-- 	macros.run "Track View" "LaunchFCurveEditor" -- Curve Editor Toggle
 	-- 	macros.run "Scene Explorer" "SELayerExplorer" -- Scene Explorer Toggle

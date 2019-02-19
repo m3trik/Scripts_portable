@@ -14,6 +14,8 @@ class Scene(Init):
 		super(Scene, self).__init__(*args, **kwargs)
 
 
+
+
 		self.hotBox.ui.lbl000.setText(pm.workspace (query=1, rd=1).split('/')[-2]) #add current project path string to label. strip path and trailing '/'
 		
 

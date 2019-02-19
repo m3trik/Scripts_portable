@@ -21,13 +21,39 @@ class Scene(Init):
 
 
 	def cmb000(self): #recent files
+	
+		#convert to pymxs
+		maxEval('''
+		Fn LoadRecentFileList =
+		(
+		local recentfiles = (getdir #maxData) + "RecentDocuments.xml"
+		if doesfileexist recentfiles then
+			(
+			XMLArray = #()		
+			xDoc = dotnetobject "system.xml.xmldocument"	
+			xDoc.Load recentfiles
+			Rootelement = xDoc.documentelement
+
+			XMLArray = for i = 0 to rootelement.childnodes.item[4].childnodes.itemof[0].childnodes.count-1 collect 
+				(
+				rootelement.childnodes.item[4].childnodes.itemof[0].childnodes.itemof[i].childnodes.itemof[3].innertext	
+				)
+				
+			Return XMLArray
+			LRXML = Undefined
+			XDoc = Undefined
+			XDoc = nothing	
+			)
+		)
+		''')
+
 		index = self.hotBox.ui.cmb000.currentIndex() #get current index before refreshing list
-		files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in file_]
+		files = []#Loadrecentfilelist(); print files
 		files = self.comboBox (self.hotBox.ui.cmb000, files, "Recent Files")
 
 		if index!=0:
-			force=True; force if str(mel.eval("file -query -sceneName -shortName;")) else not force #if sceneName prompt user to save; else force open
-			pm.openFile (files[index], open=1, force=force)
+			# force=True; force if maxEval("maxFileName;") else not force #if sceneName prompt user to save; else force open.  also: checkForSave(); If the scene has been modified since the last file save (if any), calling this function displays the message box prompting the user that the scene has been modified and requests to save.
+			maxEval('loadMaxFile '+files[index])
 			self.hotBox.ui.cmb000.setCurrentIndex(0)
 
 	def cmb001(self): #recent projects
@@ -189,7 +215,7 @@ class Scene(Init):
 		pass
 
 	def b017(self): #set project
-		mel.eval ("SetProject;")
+		maxEval('macros.run "Tools" "SetProjectFolder"')
 
 
 #module name

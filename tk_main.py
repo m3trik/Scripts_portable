@@ -94,7 +94,9 @@ class HotBox(QtWidgets.QWidget):
 		self.signal = locate('tk_signals.Signal')(self)
 		self.layoutStack()
 		self.overlay = Overlay(self)
-		
+
+		self.classDict = {name: locate('tk_slots_'+self.app+'_'+name+'.'+name.capitalize()) for name in self.uiList}
+
 
 	def layoutStack(self, index=None):
 		#args: [int]

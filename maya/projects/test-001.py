@@ -3,9 +3,10 @@ except ImportError as error: print error
 try: tk_scrollFieldReporter = pm.melGlobals['tk_scrollFieldReporter']; pm.scrollFieldReporter (tk_scrollFieldReporter, edit=1, clear=1)
 except: pass
 
-
+from pydoc import locate
 # from tk_slots_maya_init import Init as func
 from tk_slots_ import Slot
+
 
 
 
@@ -15,15 +16,21 @@ class Test001(Slot):
 
 
 ''' Start Code '''
+		# classes=[]
+		# for name in self.hotBox.uiList:
+		# 	class_ = locate('tk_slots_'+self.hotBox.app+'_'+name+'.'+name.capitalize())(self.hotBox)
+
+
+	def method(self):
+		classes = [locate('tk_slots_'+self.hotBox.app+'_'+name+'.'+name.capitalize())(self.hotBox) for name in self.hotBox.uiList]
+		for class_ in classes:
+			print str(class_), class_
 
 
 
 
-
-
-
-
-
+test=Test001()
+test.method()
 
 
 

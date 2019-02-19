@@ -1,9 +1,10 @@
 from PySide2 import QtGui, QtCore, QtWidgets
-import pymel.core as pm #used when expressions passed into the try_ method
+
 
 import os.path
 
 
+from pydoc import locate
 
 
 
@@ -13,6 +14,8 @@ class Slot(object):
 	def __init__(self, hotBox):
 
 		self.hotBox = hotBox
+
+		
 
 		#init styleSheet
 		self.initStyleSheet()
@@ -219,6 +222,9 @@ class Slot(object):
 		#returns: True if no errors occured, else: False
 		#ex. self.try_('pm.delete(arg1)', arg1=radialArrayObjList) #pass in radialArrayObjList as a **kwarg.
 		#ex. self.try_('pm.ls(selection=1, objectsOnly=1)[0]; <additional command>, exceptions=" ERROR: Nothing selected."')
+		try: import pymel.core as pm; #used when expressions are passed into the try_ method
+		except: pass
+
 		didCodeExecWithoutError=True
 
 		for key,value in kwargs.iteritems():

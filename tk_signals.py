@@ -21,7 +21,7 @@ class Signal(QtCore.QObject):
 		
 
 	def buildConnectionDict(self):
-		self.class_ = locate('tk_slots_'+self.hotBox.app+'_'+self.hotBox.name+'.'+self.hotBox.name.capitalize())(self.hotBox) #equivalent to: ie. import tk_slots_maya_main.Main
+		class_ = self.hotBox.classDict[self.hotBox.name](self.hotBox)
 
 		buttonType = {'i':'clicked','b':'clicked','v':'clicked','s':'valueChanged','chk':'released','cmb':'currentIndexChanged','t':'returnPressed'}
 
@@ -50,10 +50,10 @@ class Signal(QtCore.QObject):
 					else: #add class method
 						#set the spinboxes for the create menu to connect to the setAttributes method, and pass in the index of the spinbox to set attributes for.
 						if prefix=='s' and self.hotBox.name=='create' and num<=11:
-							# method = lambda index=num: getattr(self.class_, 'setAttributes')(index)
+							# method = lambda index=num: getattr(class_, 'setAttributes')(index)
 							pass #moved to class until this is fixed. oddly the above slot calls setAttributes with spinbox value as argument.
 						else:
-							method = getattr(self.class_, buttonString) #use signal 'buttonString' (ie. b006) to get method/slot of the same name in current class_.
+							method = getattr(class_, buttonString) #use signal 'buttonString' (ie. b006) to get method/slot of the same name in current class.
 							if prefix!='v':
 								method = [method, lambda m=method: self.onPressedEvent(m)] #add onPressedEvent
 

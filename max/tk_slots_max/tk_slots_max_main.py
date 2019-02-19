@@ -2,9 +2,10 @@ import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
 from pymxs import runtime as rt
 
 import os.path
-from pydoc import locate
+
 
 from tk_slots_max_init import Init
+
 
 
 
@@ -16,24 +17,24 @@ class Main(Init):
 
 
 	def v000(self): #Extrude
+		self.hotBox.classDict['polygons'](self.hotBox).b006()
 		print "# Result: perform extrude #"
-		locate('Polygons(self.hotBox).b006()')
 
 	def v001(self): #Bridge
+		self.hotBox.classDict['polygons'](self.hotBox).b005()
 		print "# Result: bridge #"
-		locate('Polygons(self.hotBox).b005()')
 
 	def v002(self): #Multi-cut tool
+		self.hotBox.classDict['polygons'](self.hotBox).b012()
 		print "# Result: multi-cut #"
-		locate('Polygons(self.hotBox).b012()')
 
 	def v003(self): #Delete history
+		self.hotBox.classDict['edit'](self.hotBox).b016()
 		print "# Result: delete history #"
-		locate('Edit(self.hotBox).b016()')
 
 	def v004(self): #Delete
+		self.hotBox.classDict['edit'](self.hotBox).b032()
 		print "# Result: delete #"
-		locate('Edit(self.hotBox).b032()')
 
 	def v005(self): #
 		pass
