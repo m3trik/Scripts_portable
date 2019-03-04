@@ -33,7 +33,8 @@ class Main(Init):
 		print "# Result: delete history #"
 
 	def v004(self): #Delete
-		self.hotBox.classDict['edit'](self.hotBox).b032()
+		pm.delete()
+		# self.hotBox.classDict['edit'](self.hotBox).b032()
 		print "# Result: delete #"
 
 	def v005(self): #

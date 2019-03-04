@@ -179,14 +179,22 @@ class HotBox(QtWidgets.QWidget):
 	def eventFilter(self, button, event):
 		#args: [source object]
 		#			 [QEvent]
-		if event.type()==QtCore.QEvent.Type.Enter:
+		if event.type()==QtCore.QEvent.Type.Enter: #enter event
 			self.mouseHover.emit(True)
-			button.click()
-			# if event.type() == QtCore.QEvent.Type.MouseButtonRelease:
-				# button.release()
+			# print button.__class__.__name__
+			if button.__class__.__name__ == 'QComboBox':
+				button.setStyleSheet('color: white;')
+				button.showPopup()
+			else:
+				button.click()
+
 		if event.type()==QtCore.QEvent.Type.HoverLeave:
 			self.mouseHover.emit(False)
+			if button.__class__.__name__ == 'QComboBox':
+				button.setStyleSheet('color: transparent;')
+
 		return QtWidgets.QWidget.eventFilter(self, button, event)
+
 
 # ------------------------------------------------
 

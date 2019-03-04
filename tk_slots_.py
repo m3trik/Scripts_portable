@@ -5,7 +5,7 @@ import os.path
 
 
 from pydoc import locate
-
+import tk_styleSheet as styleSheet
 
 
 
@@ -251,52 +251,41 @@ class Slot(object):
 
 
 	def initStyleSheet(self):
-		#specific case StyleSheet
+		#general case style sheet
+		buttons = self.getObject(self.hotBox.ui, 'i000-50, v000-50, b000-100, t000-50, s000-50, chk000-50, cmb000-50', showError_=False)
+		# buttons.append (self.getObject(self.hotBox.ui, 'chkpin'))
+		for button in buttons:
+			button.setStyleSheet(styleSheet.css)
+
+		#specific case StyleSheet overrides:
 		if self.hotBox.name=='main':
-			buttons = self.getObject(self.hotBox.ui, 'i003-24', showError_=False)
-			for button in buttons:
-				button.setStyleSheet('''QPushButton:hover {   
-					border: 1px solid black;
-					border-radius: 5px;
-					background-color:#66c0ff;
-					}''')
 			#setStyleSheet for transparent buttons
-			buttons = self.getObject(self.hotBox.ui, 'v000-8, i020-23', showError_=False)
+			buttons = self.getObject(self.hotBox.ui, 'v000-8, i020-23, cmb000-25', showError_=False)
 			for button in buttons:
-				button.setStyleSheet("border: 1px solid transparent;")
+				button.setStyleSheet('''
+					border: 1px solid transparent;
+					QComboBox::drop-down {border-width: 0px;}
+					QComboBox::down-arrow {image: url(noimg); border-width: 0px;}
+					''')
 
 		if self.hotBox.name=='viewport':
-			buttons = self.getObject(self.hotBox.ui, 'v000-8')
-			for button in buttons:
-				button.setStyleSheet('''QPushButton:hover {   
-					border: 1px solid black;
-					border-radius: 5px;   
-					background-color:#66c0ff;
-					}''')
 			#setStyleSheet for transparent buttons
-			buttons = self.getObject(self.hotBox.ui, 'v008-15', showError_=False)
+			buttons = self.getObject(self.hotBox.ui, 'v008-15, cmb000-25', showError_=False)
 			for button in buttons:
-				button.setStyleSheet("border: 1px solid transparent;")
+				button.setStyleSheet('''
+					border: 1px solid transparent;
+					background-color: transparent;
+					color: transparent;
+					QComboBox::drop-down {border-width: 0px;}
+					QComboBox::down-arrow {border-width: 0px; image: none;}
+					''')
+
 
 		if self.hotBox.name == 'init':
 			self.hotBox.ui.t000.setTextBackgroundColor(QtGui.QColor(50, 50, 50))
 
 
-		#general case style sheet
-		buttons = self.getObject(self.hotBox.ui, 'chk000-50', showError_=False)
-		# buttons.append (self.getObject(self.hotBox.ui, 'chkpin'))
-		for button in buttons:
-			button.setStyleSheet('''QPushButton:checked{
-			background-color: rgb(170, 70, 255);
-			}''')
 
-		buttons = self.getObject(self.hotBox.ui, 'b000-100', showError_=False)
-		for button in buttons:
-			button.setStyleSheet('''QPushButton:hover {   
-				border: 1px solid black;
-				border-radius: 5px;
-				background-color:#66c0ff;
-				}''')
 
 
 

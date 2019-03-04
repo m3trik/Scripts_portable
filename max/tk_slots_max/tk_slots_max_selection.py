@@ -25,14 +25,14 @@ class Selection(Init):
 		self.hotBox.ui.chk003.clicked.connect(self.b001) #un-paint
 
 		#symmetry: set initial checked state
-		state = pm.symmetricModelling(query=True, symmetry=True) #application symmetry state
-		axis = pm.symmetricModelling(query=True, axis=True)
-		if axis == "x":
-			self.hotBox.ui.chk000.setChecked(state)
-		if axis == "y":
-			self.hotBox.ui.chk001.setChecked(state)
-		if axis == "z":
-			self.hotBox.ui.chk002.setChecked(state)
+		# state = pm.symmetricModelling(query=True, symmetry=True) #application symmetry state
+		# axis = pm.symmetricModelling(query=True, axis=True)
+		# if axis == "x":
+		# 	self.hotBox.ui.chk000.setChecked(state)
+		# if axis == "y":
+		# 	self.hotBox.ui.chk001.setChecked(state)
+		# if axis == "z":
+		# 	self.hotBox.ui.chk002.setChecked(state)
 
 	def setSymmetry(self, axis, symmetry):
 		if self.hotBox.ui.chk005.isChecked():
@@ -105,16 +105,15 @@ class Selection(Init):
 			pm.select (items[index])
 			self.hotBox.ui.cmb001.setCurrentIndex(0)
 
-  def cmb002(self): #select all of type
-  	index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
+	def cmb002(self): #select all of type
+		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
 		list_ = []
 		self.comboBox (self.hotBox.ui.cmb001, list_, "")
 
 		if index!=0:
-			
 			self.hotBox.ui.cmb001.setCurrentIndex(0)
 		
-  	#Select all Geometry
+		#Select all Geometry
 		geometry = rt.geometry
 		rt.select(geometry)
 

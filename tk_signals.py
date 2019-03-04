@@ -40,7 +40,7 @@ class Signal(QtCore.QObject):
 					buttonWithSignal = getattr(buttonObject, signal)
 
 					#add eventfilter
-					if prefix=='i' or prefix=='v': #layoutStack index and viewport signals
+					if prefix=='i' or prefix=='v' or prefix=='cmb' and self.hotBox.name=='viewport': #layoutStack index and viewport signals
 						buttonObject.installEventFilter(self.hotBox) #ie. self.hotBox.ui.i000.installEventFilter(self)
 
 					#set the corresponding method

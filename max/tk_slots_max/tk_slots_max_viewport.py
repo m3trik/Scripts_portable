@@ -15,55 +15,92 @@ class Viewport(Init):
 
 
 
+	def cmb000(self): #Editors
+		cmb = self.hotBox.ui.cmb000
+		index = cmb.currentIndex() #get current index before refreshing list
+		list_ = ['Camera Sequencer', 'Camera Set Editor']
+		self.comboBox (cmb, list_, "Editors")
 
-	def cmb000(self): #List scene Cameras
-		index = self.hotBox.ui.cmb000.currentIndex() #get current index before refreshing list
-		cameras = [cam.name for cam in rt.cameras if 'Target' not in cam.name]
-		items = self.comboBox (self.hotBox.ui.cmb000, cameras, "Cameras:")
+		if index!=0:
+			if index==1:
+				mel.eval('SequenceEditor;')
+			if index==2:
+				mel.eval('cameraSetEditor;')
+			cmb.setCurrentIndex(0)
+
+
+	def cmb001(self): #Cameras
+		cmb = self.hotBox.ui.cmb001
+		index = cmb.currentIndex() #get current index before refreshing list
+		cameras = [cam.name for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
+		items = self.comboBox (cmb, cameras, "Cameras:")
 		
 		if index!=0:
 			rt.select (rt.getNodeByName(items[index]))
-			self.hotBox.ui.cmb000.setCurrentIndex(0)
+			cmb.setCurrentIndex(0)
 
 
-	def cmb001(self): #Create
-		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
-		list_ = []
-		self.comboBox (self.hotBox.ui.cmb001, list_, "")
-
-		if index!=0:
-			
-			self.hotBox.ui.cmb001.setCurrentIndex(0)
-
-
-	def cmb002(self): #Modify
-		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
-		list_ = []
-		self.comboBox (self.hotBox.ui.cmb001, list_, "")
+	def cmb002(self): #Options
+		cmb = self.hotBox.ui.cmb002
+		index = cmb.currentIndex() #get current index before refreshing list
+		list_ = ['Create: Custom Camera','Create: Set Custom Camera','Create: Camera From View''Group Cameras']
+		self.comboBox (cmb, list_, "Options")
 
 		if index!=0:
-			
-			self.hotBox.ui.cmb001.setCurrentIndex(0)
+			if index==1:
+				mel.eval('cameraView -edit -camera persp -setCamera $homeName;')
+			if index==2:
+				mel.eval('string $homeName = `cameraView -camera persp`;')
+			if index==3:
+				mel.eval('print "--no code--"')
+			if index==4:
+				mel.eval('''
+				if (`objExists cameras`)
+				{
+				  print "Group 'cameras' already exists";
+				}
+				else
+				{
+				  group -world -name cameras side front top persp;
+				  hide cameras;
+				  // Now add non-default cameras to group
+				  if (`objExists back`)
+				  {
+				  	parent back cameras;
+				  }
+				  if (`objExists bottom`)
+				  {
+				  	parent bottom cameras;
+				  }
+				  if (`objExists left`)
+				  {
+				  	parent left cameras;
+				  }
+				  if (`objExists alignToPoly`)
+				  {
+				  	parent alignToPoly cameras;
+				  }
+				}
+				''')
+			cmb.setCurrentIndex(0)
 
 
-	def cmb003(self): #Editors
-		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
-		list_ = []
-		self.comboBox (self.hotBox.ui.cmb001, list_, "")
+	def cmb003(self): #Camera settings
+		cmb = self.hotBox.ui.cmb003
+		index = cmb.currentIndex() #get current index before refreshing list
+		list_ = ['Dolly', 'Roll', 'Truck', 'Pan']
+		self.comboBox (cmb, list_, "Settings")
 
 		if index!=0:
-			
-			self.hotBox.ui.cmb001.setCurrentIndex(0)
-
-
-	def cmb004(self): #
-		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
-		list_ = []
-		self.comboBox (self.hotBox.ui.cmb001, list_, "")
-
-		if index!=0:
-			
-			self.hotBox.ui.cmb001.setCurrentIndex(0)
+			if index==1: #camera: dolly/zoom
+				maxEval("max dolly mode")
+			if index==2: #camera: roll
+				maxEval("max roll")
+			if index==1: #camera: truck/pan
+				maxEval("max truck")
+			if index==2: #camera: orbit
+				maxEval("max pancamera")
+			cmb.setCurrentIndex(0)
 
 
 
@@ -118,18 +155,7 @@ class Viewport(Init):
 	def v015(self): #
 		pass
 
-	# g009 camera transforms --------------
-	def b000(self): #camera: dolly/zoom
-		maxEval("max dolly mode")
 
-	def b001(self): #camera: roll
-		maxEval("max roll")
-
-	def b002(self): #camera: truck/pan
-		maxEval("max truck")
-
-	def b003(self): #camera: orbit
-		maxEval("max pancamera")
 	# ------------------------------------
 
 

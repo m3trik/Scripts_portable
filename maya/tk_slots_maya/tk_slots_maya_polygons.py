@@ -87,11 +87,12 @@ class Polygons(Init):
 	def b009(self): #Collapse component
 		mel.eval('PolygonCollapse;')
 
-	def b010(self): #
-		pass
+	def b010(self): #Extract curve
+		# mel.eval('CreateCurveFromPoly;')
+		pm.polyToCurve (form=2, degree=3, conformToSmoothMeshPreview=True) #degree: 1=linear,2= ,3=cubic,5= ,7=
 
-	def b011(self): #
-		pass
+	def b011(self): #Extract curve options
+		mel.eval('CreateCurveFromPolyOptions;')
 
 	def b012(self): #Multi-cut tool
 		mel.eval('dR_multiCutTool;')
@@ -162,8 +163,12 @@ class Polygons(Init):
 			subdMethod=0
 			u=v=0
 		#perform operation
-		for face in selectedFaces: #when performing polySubdivideFacet on multiple faces, adjacent subdivided faces will make the next face an n-gon and therefore not able to be subdivided. 
-			pm.polySubdivideFacet (face, divisions=0, divisionsU=2, divisionsV=2, mode=0, subdMethod=1)
+		selectedFaces = pm.filterExpand (pm.ls(sl=1), selectionMask=34, expand=1)
+		if selectedFaces:
+			for face in selectedFaces: #when performing polySubdivideFacet on multiple faces, adjacent subdivided faces will make the next face an n-gon and therefore not able to be subdivided. 
+				pm.polySubdivideFacet (face, divisions=0, divisionsU=2, divisionsV=2, mode=0, subdMethod=1)
+		else:
+			print '# Warning: No faces selected. #'
 
 	def b030(self): #
 		pass

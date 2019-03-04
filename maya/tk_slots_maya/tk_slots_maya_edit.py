@@ -14,7 +14,7 @@ class Edit(Init):
 		super(Edit, self).__init__(*args, **kwargs)
 
 
-
+		
 		self.hotBox.ui.s000.valueChanged.connect(self.chk011) #update radial array
 		self.hotBox.ui.s001.valueChanged.connect(self.chk011) 
 

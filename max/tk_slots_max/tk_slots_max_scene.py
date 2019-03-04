@@ -47,37 +47,41 @@ class Scene(Init):
 		)
 		''')
 
-		index = self.hotBox.ui.cmb000.currentIndex() #get current index before refreshing list
+		cmb = self.hotBox.ui.cmb000
+		index = cmb.currentIndex() #get current index before refreshing list
 		files = []#Loadrecentfilelist(); print files
-		files = self.comboBox (self.hotBox.ui.cmb000, files, "Recent Files")
+		files = self.comboBox (cmb, files, "Recent Files")
 
 		if index!=0:
 			# force=True; force if maxEval("maxFileName;") else not force #if sceneName prompt user to save; else force open.  also: checkForSave(); If the scene has been modified since the last file save (if any), calling this function displays the message box prompting the user that the scene has been modified and requests to save.
 			maxEval('loadMaxFile '+files[index])
-			self.hotBox.ui.cmb000.setCurrentIndex(0)
+			cmb.setCurrentIndex(0)
 
 	def cmb001(self): #recent projects
-		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
+		cmb = self.hotBox.ui.cmb001
+		index = cmb.currentIndex() #get current index before refreshing list
 		files = (list(reversed(mel.eval("optionVar -query RecentProjectsList;"))))
-		self.comboBox (self.hotBox.ui.cmb001, files, "Recent Projects")
+		self.comboBox (cmb, files, "Recent Projects")
 
 		if index!=0:
 			maxEval('setProject "'+files[index]+'"')
-			self.hotBox.ui.cmb001.setCurrentIndex(0)
+			cmb.setCurrentIndex(0)
 
 	def cmb002(self): #recent autosave
-		index = self.hotBox.ui.cmb002.currentIndex() #get current index before refreshing list
+		cmb = self.hotBox.ui.cmb002
+		index = cmb.currentIndex() #get current index before refreshing list
 		files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" in file_]
-		self.comboBox (self.hotBox.ui.cmb002, files, "Recent Autosave")
+		self.comboBox (cmb, files, "Recent Autosave")
 
 		if index!=0:
 			force=True; force if str(mel.eval("file -query -sceneName -shortName;")) else not force #if sceneName prompt user to save; else force open
 			pm.openFile (files[index], open=1, force=force)
-			self.hotBox.ui.cmb002.setCurrentIndex(0)
+			cmb.setCurrentIndex(0)
 			
 	def cmb003(self): #import
-		index = self.hotBox.ui.cmb003.currentIndex() #get current index before refreshing list
-		self.comboBox (self.hotBox.ui.cmb003,["Import file", "Import Options"], "Import")
+		cmb = self.hotBox.ui.cmb003
+		index = cmb.currentIndex() #get current index before refreshing list
+		self.comboBox (cmb, ["Import file", "Import Options"], "Import")
 		
 		if index!=0: #hide hotbox then perform operation
 			self.hotBox.hbHide()
@@ -85,11 +89,12 @@ class Scene(Init):
 			maxEval('Import;')
 		if index == 2: #Import options
 			maxEval('ImportOptions;')
-		self.hotBox.ui.cmb003.setCurrentIndex(0)
+		cmb.setCurrentIndex(0)
 
 	def cmb004(self): #export
-		index = self.hotBox.ui.cmb004.currentIndex() #get current index before refreshing list
-		self.comboBox (self.hotBox.ui.cmb004, ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ"], "Export")
+		cmb = self.hotBox.ui.cmb004
+		index = cmb.currentIndex() #get current index before refreshing list
+		self.comboBox (cmb, ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ"], "Export")
 
 		if index !=0: #hide hotbox then perform operation
 			self.hotBox.hbHide()
@@ -103,7 +108,7 @@ class Scene(Init):
 			maxEval('SendToUnitySelection;')
 		if index == 5: #GoZ
 			maxEval('print("GoZ"); source"C:/Users/Public/Pixologic/GoZApps/Maya/GoZBrushFromMaya.mel"; source "C:/Users/Public/Pixologic/GoZApps/Maya/GoZScript.mel";')
-		self.hotBox.ui.cmb004.setCurrentIndex(0)
+		cmb.setCurrentIndex(0)
 
 	def b000(self): #save
 		preSaveScript = ""

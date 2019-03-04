@@ -139,11 +139,11 @@ class Polygons(Init):
 			$.EditablePoly.collapse #Face
 			''')
 
-	def b010(self): #
-		pass
+	def b010(self): #Extract curve
+		maxEval('')
 
-	def b011(self): #
-		pass
+	def b011(self): #Extract curve options
+		maxEval('')
 
 	def b012(self): #Multi-cut tool
 		maxEval('''
