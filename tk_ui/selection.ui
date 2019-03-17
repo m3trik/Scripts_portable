@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>295</width>
-    <height>254</height>
+    <width>279</width>
+    <height>280</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -162,92 +162,21 @@
       <x>9</x>
       <y>30</y>
       <width>121</width>
-      <height>211</height>
+      <height>151</height>
      </rect>
     </property>
     <property name="title">
      <string>Select</string>
     </property>
-    <widget class="QPushButton" name="b011">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>190</y>
-       <width>120</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>120</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Select shortest edge path between two selected vertices or UV's.</string>
-     </property>
-     <property name="text">
-      <string>Shortest Edge Path</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>18</width>
-       <height>18</height>
-      </size>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-     <property name="default">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="b009">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>170</y>
-       <width>101</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Select all contiguous edges that form a loop with the current selection [select&gt;contiguous edges] </string>
-     </property>
-     <property name="text">
-      <string>Contiguous</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>18</width>
-       <height>18</height>
-      </size>
-     </property>
-    </widget>
     <widget class="QPushButton" name="b006">
      <property name="enabled">
       <bool>true</bool>
      </property>
      <property name="geometry">
       <rect>
-       <x>30</x>
-       <y>90</y>
-       <width>46</width>
+       <x>0</x>
+       <y>110</y>
+       <width>76</width>
        <height>19</height>
       </rect>
      </property>
@@ -277,125 +206,6 @@
      </property>
      <property name="flat">
       <bool>false</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="b008">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>150</y>
-       <width>120</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>120</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Select 2 edges along a loop/ring that are spaced apart, then apply to propagate selection</string>
-     </property>
-     <property name="text">
-      <string>Select N-th Edge</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>18</width>
-       <height>18</height>
-      </size>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-     <property name="default">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="chk004">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>90</y>
-       <width>31</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Ignore backfacing</string>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="autoFillBackground">
-      <bool>true</bool>
-     </property>
-     <property name="text">
-      <string>cam</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>18</width>
-       <height>18</height>
-      </size>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="b010">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>100</x>
-       <y>170</y>
-       <width>21</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>8</pointsize>
-      </font>
-     </property>
-     <property name="toolTip">
-      <string>select contiguous edges options</string>
-     </property>
-     <property name="text">
-      <string>☐</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>16</width>
-       <height>16</height>
-      </size>
      </property>
     </widget>
     <widget class="QPushButton" name="b001">
@@ -528,8 +338,8 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>110</y>
-       <width>46</width>
+       <y>130</y>
+       <width>76</width>
        <height>19</height>
       </rect>
      </property>
@@ -565,7 +375,7 @@
      <property name="geometry">
       <rect>
        <x>75</x>
-       <y>90</y>
+       <y>110</y>
        <width>46</width>
        <height>19</height>
       </rect>
@@ -684,76 +494,20 @@
       <enum>QAbstractSpinBox::NoButtons</enum>
      </property>
     </widget>
-    <widget class="QDoubleSpinBox" name="s003">
-     <property name="geometry">
-      <rect>
-       <x>70</x>
-       <y>110</y>
-       <width>26</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="toolTip">
-      <string>Select face island: normal Y range</string>
-     </property>
-     <property name="buttonSymbols">
-      <enum>QAbstractSpinBox::NoButtons</enum>
-     </property>
-     <property name="prefix">
-      <string/>
-     </property>
-     <property name="suffix">
-      <string/>
-     </property>
-     <property name="decimals">
-      <number>1</number>
-     </property>
-     <property name="singleStep">
-      <double>0.100000000000000</double>
-     </property>
-     <property name="value">
-      <double>0.500000000000000</double>
-     </property>
-    </widget>
-    <widget class="QDoubleSpinBox" name="s004">
-     <property name="geometry">
-      <rect>
-       <x>95</x>
-       <y>110</y>
-       <width>26</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="toolTip">
-      <string>Select face island: normal Z range</string>
-     </property>
-     <property name="buttonSymbols">
-      <enum>QAbstractSpinBox::NoButtons</enum>
-     </property>
-     <property name="prefix">
-      <string/>
-     </property>
-     <property name="suffix">
-      <string/>
-     </property>
-     <property name="decimals">
-      <number>1</number>
-     </property>
-     <property name="singleStep">
-      <double>0.100000000000000</double>
-     </property>
-     <property name="value">
-      <double>0.500000000000000</double>
-     </property>
-    </widget>
     <widget class="QDoubleSpinBox" name="s002">
      <property name="geometry">
       <rect>
-       <x>45</x>
-       <y>110</y>
-       <width>26</width>
+       <x>75</x>
+       <y>130</y>
+       <width>46</width>
        <height>19</height>
       </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>19</height>
+      </size>
      </property>
      <property name="toolTip">
       <string>Select face island: normal X range</string>
@@ -775,68 +529,6 @@
      </property>
      <property name="value">
       <double>0.500000000000000</double>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="b020">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>130</y>
-       <width>96</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>121</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Create edge ring from selection</string>
-     </property>
-     <property name="text">
-      <string>Select Edge Ring</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>18</width>
-       <height>18</height>
-      </size>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-     <property name="default">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-    </widget>
-    <widget class="QSpinBox" name="s004_2">
-     <property name="geometry">
-      <rect>
-       <x>95</x>
-       <y>130</y>
-       <width>26</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="toolTip">
-      <string>Select Edge Ring: Step </string>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="buttonSymbols">
-      <enum>QAbstractSpinBox::NoButtons</enum>
-     </property>
-     <property name="minimum">
-      <number>1</number>
      </property>
     </widget>
     <widget class="QLineEdit" name="t001">
@@ -924,13 +616,51 @@
       </property>
      </item>
     </widget>
+    <widget class="QPushButton" name="chk004">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>90</y>
+       <width>121</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>999</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Ignore backfacing</string>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="autoFillBackground">
+      <bool>true</bool>
+     </property>
+     <property name="text">
+      <string>ignore Backfacing</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+    </widget>
     <zorder>t001</zorder>
-    <zorder>b011</zorder>
-    <zorder>b009</zorder>
     <zorder>b006</zorder>
-    <zorder>b008</zorder>
-    <zorder>chk004</zorder>
-    <zorder>b010</zorder>
     <zorder>b001</zorder>
     <zorder>chk003</zorder>
     <zorder>b013</zorder>
@@ -939,13 +669,10 @@
     <zorder>b014</zorder>
     <zorder>b015</zorder>
     <zorder>s001</zorder>
-    <zorder>s003</zorder>
-    <zorder>s004</zorder>
     <zorder>s002</zorder>
-    <zorder>b020</zorder>
-    <zorder>s004_2</zorder>
     <zorder>cmb003</zorder>
     <zorder>cmb001</zorder>
+    <zorder>chk004</zorder>
    </widget>
    <widget class="QGroupBox" name="groupBox_3">
     <property name="geometry">
@@ -997,8 +724,8 @@
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>135</x>
-      <y>150</y>
+      <x>10</x>
+      <y>210</y>
       <width>120</width>
       <height>31</height>
      </rect>
@@ -1610,6 +1337,228 @@
      </property>
      <property name="checkable">
       <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_6">
+    <property name="geometry">
+     <rect>
+      <x>135</x>
+      <y>150</y>
+      <width>120</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Edge Selection</string>
+    </property>
+    <widget class="QPushButton" name="b008">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>120</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>120</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Select 2 edges along a loop/ring that are spaced apart, then apply to propagate selection</string>
+     </property>
+     <property name="text">
+      <string>N-th Edge</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b020">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>30</y>
+       <width>96</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>121</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Create edge ring from selection</string>
+     </property>
+     <property name="text">
+      <string>Edge Ring</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="s004_2">
+     <property name="geometry">
+      <rect>
+       <x>95</x>
+       <y>30</y>
+       <width>26</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Select Edge Ring: Step </string>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b009">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>50</y>
+       <width>101</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Select all contiguous edges that form a loop with the current selection [select&gt;contiguous edges] </string>
+     </property>
+     <property name="text">
+      <string>Contiguous</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b010">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>50</y>
+       <width>21</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>select contiguous edges options</string>
+     </property>
+     <property name="text">
+      <string>☐</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b011">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>70</y>
+       <width>120</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>120</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Select shortest edge path between two selected vertices or UV's.</string>
+     </property>
+     <property name="text">
+      <string>Shortest Edge Path</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
      </property>
     </widget>
    </widget>

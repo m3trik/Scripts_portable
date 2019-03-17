@@ -25,15 +25,6 @@ class Polygons(Init):
 			self.hotBox.ui.s003.setValue(7.5) #crease value
 			self.hotBox.ui.s004.setValue(30) #normal angle
 
-	def chk008(self): #Split U
-		self.setButtons(self.hotBox.ui, unchecked='chk010')
-
-	def chk009(self): #Split V
-		self.setButtons(self.hotBox.ui, unchecked='chk010')
-
-	def chk010(self): #tris
-		self.setButtons(self.hotBox.ui, unchecked='chk008,chk009')
-
 	def chk003(self): #Crease: Max
 		if self.hotBox.ui.chk003.isChecked():
 			self.hotBox.ui.s003.setValue(10) #crease value
@@ -43,11 +34,27 @@ class Polygons(Init):
 			self.hotBox.ui.s003.setValue(7.5) #crease value
 			self.hotBox.ui.s004.setValue(60) #normal angle
 
-	def chk006(self): #
+	def chk006(self): #Merge: All
 		if self.hotBox.ui.chk006.isChecked():
-			self.hotBox.ui.s001.setSingleStep(.01)
+			self.hotBox.ui.s002.setSingleStep(.01)
 		else:
-			self.hotBox.ui.s001.setSingleStep(.5)
+			self.hotBox.ui.s002.setSingleStep(.5)
+
+	def chk008(self): #Split U
+		self.setButtons(self.hotBox.ui, unchecked='chk010')
+
+	def chk009(self): #Split V
+		self.setButtons(self.hotBox.ui, unchecked='chk010')
+
+	def chk010(self): #tris
+		self.setButtons(self.hotBox.ui, unchecked='chk008,chk009')
+
+	def chk011(self): #Crease: Auto
+		if self.hotBox.ui.chk011.isChecked():
+			self.setButtons(self.hotBox.ui, enabled='s005,s006')
+		else:
+			self.setButtons(self.hotBox.ui, disabled='s005,s006')
+
 
 	def b000(self): #Merge vertex options
 		mel.eval('PolyMergeOptions;')
@@ -222,13 +229,16 @@ class Polygons(Init):
 			for obj in selection:
 				pm.select(obj, add=1)
 		else:
-			pm.polyMergeVertex(distance=floatXYZ, alwaysMergeTwoVertices=True, constructionHistory=True)
+			if pm.filterExpand(selectionMask=31): #returns True if selectionMask=vertices
+				pm.polyMergeVertex(distance=floatXYZ, alwaysMergeTwoVertices=True, constructionHistory=True)
+			else: #if selection type =edges or facets:
+				mel.eval("MergeToCenter;")
 
 	def b041(self): #
 		pass
 
-	def b042(self): #Merge Center
-		mel.eval("MergeToCenter;")
+	def b042(self): #
+		pass
 
 	def b043(self): #Target weld
 		mel.eval("dR_targetWeldTool;")
@@ -326,6 +336,13 @@ class Polygons(Init):
 		creaseAmount = float(self.hotBox.ui.s003.value())
 		normalAngle = int(self.hotBox.ui.s004.value()) 
 
+		if self.hotBox.ui.chk011.isChecked(): #crease: Auto
+			angleLow = int(self.hotBox.ui.s005.value()) 
+			angleHigh = int(self.hotBox.ui.s006.value()) 
+
+			mel.eval("PolySelectConvert 2;") #convert selection to edges
+			contraint = pm.polySelectConstraint( mode=3, type=0x8000, angle=True, anglebound=(angleLow, angleHigh) ) # to get edges with angle between two degrees. mode=3 (All and Next) type=0x8000 (edge). 
+
 		operation = 0 #Crease selected components
 		pm.polySoftEdge (angle=0, constructionHistory=0) #Harden edge normal
 		if self.hotBox.ui.chk002.isChecked():
@@ -343,6 +360,9 @@ class Polygons(Init):
 
 		if self.hotBox.ui.chk005.isChecked(): #adjust normal angle
 			pm.polySoftEdge (angle=normalAngle)
+
+		if self.hotBox.ui.chk011.isChecked(): #crease: Auto
+			pm.polySelectConstraint( angle=False ) # turn off angle constraint
 
 	def b056(self): #Split vertices
 		mel.eval("polySplitVertex()")
@@ -417,7 +437,6 @@ class Polygons(Init):
 		pass
 
 	def b059(self): #Crease editor
-		print "crease"
 		from maya.app.general import creaseSetEditor
 		creaseSetEditor.showCreaseSetEditor()
 

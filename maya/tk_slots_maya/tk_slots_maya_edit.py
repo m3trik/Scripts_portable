@@ -192,8 +192,8 @@ class Edit(Init):
 	def b003(self): #Maya bonus tools: Convert N-sided faces to quads
 		mel.eval('bt_polyNSidedToQuad;')
 
-	def b004(self): #Measure
-		mel.eval("DistanceTool;")
+	def b004(self): #
+		pass
 
 	def b005(self): #
 		pass
@@ -333,14 +333,14 @@ class Edit(Init):
 	def b028(self): #Shading sets options
 		mel.eval('performTransferShadingSets 1;')
 
-	def b029(self): #Annotation
-		mel.eval('CreateAnnotateNode;')
+	def b029(self): #
+		pass
 
-	def b030(self): #Calculator
-		mel.eval('calculator;')
+	def b030(self): #
+		pass
 
-	def b031(self): #Grease Pencil
-		mel.eval('greasePencilCtx;')
+	def b031(self): #
+		pass
 
 	def b032(self): #Delete component or if object selected, along axis   #mel.eval('polyMirrorCut 1 1 0.001;')
 		selectionMask = pm.selectMode (query=True, component=True)
@@ -533,29 +533,29 @@ class Edit(Init):
 		else:
 			self.hotBox.ui.b043.setText("Object")
 
-	def b044(self): #Poly reduce
-		mel.eval("polyReduce -version 1 -keepCreaseEdgeWeight 1;")
+	def b044(self): #
+		pass
 
-	def b045(self): #Reduce
-		mel.eval("ReducePolygon;")
+	def b045(self): #
+		pass
 
-	def b046(self): #Reduce options
-		mel.eval("ReducePolygonOptions;")
+	def b046(self): #
+		pass
 
-	def b047(self): #Smooth options
-		mel.eval("SmoothPolygonOptions;")
+	def b047(self): #
+		pass
 
-	def b048(self): #Add Divisions - subdivide mesh
-		mel.eval('SubdividePolygon')
+	def b048(self): #
+		pass
 
-	def b049(self): #Smooth
-		mel.eval('SmoothPolygon;')
+	def b049(self): #
+		pass
 
-	def b050(self): #add divisions options
-		mel.eval("SubdividePolygonOptions")
+	def b050(self): #
+		pass
 
-	def b051(self): #Apply smooth preview
-		mel.eval("performSmoothMeshPreviewToPolygon;") #convert smooth mesh preview to polygons
+	def b051(self): #
+		pass
 
 	def b052(self): #transfer crease edges
 		'''

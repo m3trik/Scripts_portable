@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>254</width>
+    <width>266</width>
     <height>418</height>
    </rect>
   </property>
@@ -146,9 +146,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>100</y>
+      <y>140</y>
       <width>110</width>
-      <height>151</height>
+      <height>111</height>
      </rect>
     </property>
     <property name="title">
@@ -362,37 +362,6 @@
       </palette>
      </property>
     </widget>
-    <widget class="QPushButton" name="b042">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>90</y>
-       <width>111</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Merge selected components to their center point</string>
-     </property>
-     <property name="text">
-      <string>Merge Center</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>18</width>
-       <height>18</height>
-      </size>
-     </property>
-    </widget>
     <widget class="QPushButton" name="b046">
      <property name="enabled">
       <bool>true</bool>
@@ -473,74 +442,6 @@
       <bool>false</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="b043">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>70</y>
-       <width>111</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Merge two edges or vertices into a single component</string>
-     </property>
-     <property name="text">
-      <string>Target Weld</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>18</width>
-       <height>18</height>
-      </size>
-     </property>
-     <property name="balette" stdset="0">
-      <palette>
-       <active>
-        <colorrole role="Button">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>80</red>
-           <green>80</green>
-           <blue>80</blue>
-          </color>
-         </brush>
-        </colorrole>
-       </active>
-       <inactive>
-        <colorrole role="Button">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>80</red>
-           <green>80</green>
-           <blue>80</blue>
-          </color>
-         </brush>
-        </colorrole>
-       </inactive>
-       <disabled>
-        <colorrole role="Button">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>80</red>
-           <green>80</green>
-           <blue>80</blue>
-          </color>
-         </brush>
-        </colorrole>
-       </disabled>
-      </palette>
-     </property>
-    </widget>
     <widget class="QPushButton" name="b022">
      <property name="enabled">
       <bool>true</bool>
@@ -548,7 +449,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>110</y>
+       <y>70</y>
        <width>111</width>
        <height>19</height>
       </rect>
@@ -579,7 +480,7 @@
      <property name="geometry">
       <rect>
        <x>90</x>
-       <y>130</y>
+       <y>90</y>
        <width>21</width>
        <height>19</height>
       </rect>
@@ -616,7 +517,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>130</y>
+       <y>90</y>
        <width>91</width>
        <height>19</height>
       </rect>
@@ -674,10 +575,8 @@
     <zorder>b018</zorder>
     <zorder>b006</zorder>
     <zorder>b007</zorder>
-    <zorder>b042</zorder>
     <zorder>b046</zorder>
     <zorder>b009</zorder>
-    <zorder>b043</zorder>
     <zorder>b014</zorder>
     <zorder>b022</zorder>
     <zorder>chk007</zorder>
@@ -688,7 +587,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>270</y>
+      <y>250</y>
       <width>110</width>
       <height>131</height>
      </rect>
@@ -1226,8 +1125,8 @@
    <widget class="QGroupBox" name="Face">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>290</y>
+      <x>10</x>
+      <y>30</y>
       <width>111</width>
       <height>111</height>
      </rect>
@@ -2124,7 +2023,7 @@
     <property name="geometry">
      <rect>
       <x>130</x>
-      <y>100</y>
+      <y>210</y>
       <width>110</width>
       <height>171</height>
      </rect>
@@ -3084,7 +2983,7 @@
       <x>130</x>
       <y>30</y>
       <width>110</width>
-      <height>51</height>
+      <height>71</height>
      </rect>
     </property>
     <property name="title">
@@ -3149,7 +3048,7 @@
       </size>
      </property>
      <property name="toolTip">
-      <string>Merge vertices</string>
+      <string>Merge selected components.  (default: to center)</string>
      </property>
      <property name="text">
       <string>Merge</string>
@@ -3312,14 +3211,82 @@
       <bool>false</bool>
      </property>
     </widget>
+    <widget class="QPushButton" name="b043">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>50</y>
+       <width>111</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Merge two edges or vertices into a single component</string>
+     </property>
+     <property name="text">
+      <string>Target Weld</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="balette" stdset="0">
+      <palette>
+       <active>
+        <colorrole role="Button">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>80</red>
+           <green>80</green>
+           <blue>80</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </active>
+       <inactive>
+        <colorrole role="Button">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>80</red>
+           <green>80</green>
+           <blue>80</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </inactive>
+       <disabled>
+        <colorrole role="Button">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>80</red>
+           <green>80</green>
+           <blue>80</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </disabled>
+      </palette>
+     </property>
+    </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>30</y>
+      <x>130</x>
+      <y>110</y>
       <width>111</width>
-      <height>51</height>
+      <height>71</height>
      </rect>
     </property>
     <property name="title">
@@ -3871,6 +3838,157 @@
      </property>
      <property name="value">
       <number>30</number>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="s006">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>50</y>
+       <width>41</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="baseSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Auto crease: max angle constraint</string>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::UpDownArrows</enum>
+     </property>
+     <property name="minimum">
+      <number>0</number>
+     </property>
+     <property name="maximum">
+      <number>180</number>
+     </property>
+     <property name="singleStep">
+      <number>1</number>
+     </property>
+     <property name="value">
+      <number>95</number>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="s005">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>50</y>
+       <width>41</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="baseSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Auto crease: low angle constraint</string>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::UpDownArrows</enum>
+     </property>
+     <property name="minimum">
+      <number>0</number>
+     </property>
+     <property name="maximum">
+      <number>180</number>
+     </property>
+     <property name="singleStep">
+      <number>1</number>
+     </property>
+     <property name="value">
+      <number>85</number>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk011">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>50</y>
+       <width>31</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Auto crease selected object(s) within set angle tolerance.</string>
+     </property>
+     <property name="text">
+      <string>Auto</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="balette" stdset="0">
+      <palette>
+       <active>
+        <colorrole role="Highlight">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>168</red>
+           <green>152</green>
+           <blue>250</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </active>
+       <inactive>
+        <colorrole role="Highlight">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>168</red>
+           <green>152</green>
+           <blue>250</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </inactive>
+       <disabled>
+        <colorrole role="Highlight">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>0</red>
+           <green>120</green>
+           <blue>215</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </disabled>
+      </palette>
      </property>
     </widget>
    </widget>

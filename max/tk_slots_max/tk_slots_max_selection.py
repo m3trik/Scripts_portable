@@ -156,10 +156,19 @@ class Selection(Init):
 		mel.eval("doSelectSimilar 1 {\""+ tolerance +"\"}")
 
 	def b007(self): #Select polygon face island
-		rangeX = float(self.hotBox.ui.s002.value())
-		rangeY = float(self.hotBox.ui.s003.value())
-		rangeZ = float(self.hotBox.ui.s004.value())
-		mel.eval("tk_selectPolyFaceIsland("+str(rangeX)+","+str(rangeY)+","+str(rangeZ)+")")
+		rangeX=rangeY=rangeZ = float(self.hotBox.ui.s002.value())
+
+		curmod = rt.Modpanel.getcurrentObject()
+		curmod.selectAngle=rangeX
+		curmod.selectByAngle= not curmod.selectByAngle
+
+		# $.selectAngle=rangeX
+		# $.selectByAngle = on
+		# sel = $.selectedfaces as bitarray #maintains current single selection. need to reselect with angle contraint active to make work.
+		# $.selectByAngle = off
+		# print sel
+		# setFaceSelection sel #{}
+
 
 	def b008(self): #Select N-th edge
 		mel.eval("selectEveryNEdge;")

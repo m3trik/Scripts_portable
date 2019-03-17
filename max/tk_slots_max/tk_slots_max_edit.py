@@ -15,7 +15,6 @@ class Edit(Init):
 
 
 		
-
 		self.hotBox.ui.s000.valueChanged.connect(self.chk011) #update radial array
 		self.hotBox.ui.s001.valueChanged.connect(self.chk011) 
 
@@ -192,8 +191,8 @@ class Edit(Init):
 	def b003(self): #Convert N-sided faces to quads
 		maxEval('macros.run \"Modifiers\" \"QuadifyMeshMod\"')
 
-	def b004(self): #Measure
-		maxEval('macros.run \"Tools\" \"two_point_dist\"')
+	def b004(self): #
+		pass
 
 	def b005(self): #
 		pass
@@ -333,14 +332,14 @@ class Edit(Init):
 	def b028(self): #Shading sets options
 		maxEval('performTransferShadingSets 1;')
 
-	def b029(self): #Annotation
-		maxEval('CreateAnnotateNode;')
+	def b029(self): #
+		pass
 
-	def b030(self): #Calculator
-		maxEval('calculator;')
+	def b030(self): #
+		pass
 
-	def b031(self): #Grease Pencil
-		maxEval('greasePencilCtx;')
+	def b031(self): #
+		pass
 
 	def b032(self): #Delete component or if object selected, along axis   #maxEval('polyMirrorCut 1 1 0.001;')
 		selectionMask = pm.selectMode (query=True, component=True)
@@ -533,36 +532,29 @@ class Edit(Init):
 		else:
 			self.hotBox.ui.b043.setText("Object")
 
-	def b044(self): #Poly reduce
-		mel.eval("polyReduce -version 1 -keepCreaseEdgeWeight 1;")
+	def b044(self): #
+		pass
 
-	def b045(self): #Reduce
-		mel.eval("ReducePolygon;")
+	def b045(self): #
+		pass
 
-	def b046(self): #Reduce options
-		mel.eval("ReducePolygonOptions;")
+	def b046(self): #
+		pass
 
-	def b047(self): #Smooth options
-		mel.eval("SmoothPolygonOptions;")
+	def b047(self): #
+		pass
 
-	def b048(self): #Add Divisions - subdivide mesh
-		maxEval('macros.run \"Modifiers\" \"Tessellate\"')
+	def b048(self): #
+		pass
 
-	def b049(self): #Smooth
-		maxEval('macros.run \"Modifiers\" \"Smooth\"')
+	def b049(self): #
+		pass
 
-	def b050(self): #add divisions options
-		maxEval('''
-		Try 
-		(
-			local A = modPanel.getCurrentObject()
-			A.popupDialog #Tessellate
-		)
-		Catch ()
-		''')
+	def b050(self): #
+		pass
 
-	def b051(self): #Apply smooth preview
-		mel.eval("performSmoothMeshPreviewToPolygon;") #convert smooth mesh preview to polygons
+	def b051(self): #
+		pass
 
 	def b052(self): #transfer crease edges
 		'''

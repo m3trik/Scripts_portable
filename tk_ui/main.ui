@@ -37,6 +37,9 @@
   <property name="windowTitle">
    <string>Toolkit</string>
   </property>
+  <property name="toolButtonStyle">
+   <enum>Qt::ToolButtonIconOnly</enum>
+  </property>
   <property name="tabShape">
    <enum>QTabWidget::Triangular</enum>
   </property>
@@ -59,7 +62,7 @@
     <property name="title">
      <string/>
     </property>
-    <widget class="QPushButton" name="i004">
+    <widget class="QComboBox" name="cmb000">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -68,12 +71,35 @@
        <height>20</height>
       </rect>
      </property>
-     <property name="whatsThis">
-      <string>display</string>
+     <property name="minimumSize">
+      <size>
+       <width>66</width>
+       <height>20</height>
+      </size>
      </property>
-     <property name="text">
-      <string>Display</string>
+     <property name="maximumSize">
+      <size>
+       <width>9999</width>
+       <height>19</height>
+      </size>
      </property>
+     <property name="statusTip">
+      <string>Viewport display options</string>
+     </property>
+     <property name="maxVisibleItems">
+      <number>50</number>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>Display</string>
+      </property>
+     </item>
     </widget>
    </widget>
    <widget class="QPushButton" name="v000">
@@ -162,7 +188,7 @@
     <property name="title">
      <string/>
     </property>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="i004">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -172,10 +198,10 @@
       </rect>
      </property>
      <property name="whatsThis">
-      <string>add 'whatsThis'</string>
+      <string>subdivision</string>
      </property>
      <property name="text">
-      <string/>
+      <string>Subdivision</string>
      </property>
     </widget>
    </widget>
@@ -218,7 +244,7 @@
      </rect>
     </property>
     <property name="whatsThis">
-     <string>i023</string>
+     <string>utilities</string>
     </property>
     <property name="text">
      <string/>
@@ -420,7 +446,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="cameras">
+   <widget class="QGroupBox" name="commands">
     <property name="geometry">
      <rect>
       <x>115</x>
@@ -432,7 +458,7 @@
     <property name="title">
      <string/>
     </property>
-    <widget class="QPushButton" name="pushButton_2">
+    <widget class="QComboBox" name="cmb001">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -441,12 +467,35 @@
        <height>20</height>
       </rect>
      </property>
-     <property name="whatsThis">
-      <string>add 'whatsThis'</string>
+     <property name="minimumSize">
+      <size>
+       <width>66</width>
+       <height>20</height>
+      </size>
      </property>
-     <property name="text">
-      <string/>
+     <property name="maximumSize">
+      <size>
+       <width>9999</width>
+       <height>19</height>
+      </size>
      </property>
+     <property name="statusTip">
+      <string>Recent hotbox commands</string>
+     </property>
+     <property name="maxVisibleItems">
+      <number>50</number>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>Recent</string>
+      </property>
+     </item>
     </widget>
    </widget>
    <widget class="QGroupBox" name="polygons">
@@ -1021,6 +1070,7 @@
      <string/>
     </property>
    </widget>
+   <zorder>v002</zorder>
    <zorder>l006</zorder>
    <zorder>l020</zorder>
    <zorder>l007</zorder>
@@ -1043,7 +1093,6 @@
    <zorder>i021</zorder>
    <zorder>v003</zorder>
    <zorder>i023</zorder>
-   <zorder>v002</zorder>
    <zorder>display</zorder>
    <zorder>rigging</zorder>
    <zorder>scene</zorder>
@@ -1053,7 +1102,7 @@
    <zorder>transform</zorder>
    <zorder>Fx</zorder>
    <zorder>selection</zorder>
-   <zorder>cameras</zorder>
+   <zorder>commands</zorder>
    <zorder>polygons</zorder>
    <zorder>scripting</zorder>
    <zorder>uv</zorder>

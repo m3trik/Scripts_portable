@@ -9,24 +9,24 @@ from tk_slots_max_init import Init
 
 
 
-class I023(Init):
+class Utilities(Init):
 	def __init__(self, *args, **kwargs):
-		super(I023, self).__init__(*args, **kwargs)
+		super(Utilities, self).__init__(*args, **kwargs)
 
 
 
 
-	def b000(self): #
-		pass
+	def b000(self): #Measure
+		maxEval('macros.run \"Tools\" \"two_point_dist\"')
 
-	def b001(self): #
-		maxEval('')
+	def b001(self): #Annotation
+		mel.eval('CreateAnnotateNode;')
 
-	def b002(self): #
-		maxEval('')
+	def b002(self): #Calculator
+		mel.eval('calculator;')
 
-	def b003(self): #
-		maxEval('')
+	def b003(self): #Grease Pencil
+		mel.eval('greasePencilCtx;')
 
 	def b004(self): #
 		maxEval('')

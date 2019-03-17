@@ -16,8 +16,8 @@ class Scene(Init):
 
 		
 
-		self.hotBox.ui.lbl000.setText(pm.workspace (query=1, rd=1).split('/')[-2]) #add current project path string to label. strip path and trailing '/'
-		
+		self.hotBox.ui.lbl000.setText("") #add current project path string to label. strip path and trailing '/'
+		# maya get project #pm.workspace (query=1, rd=1).split('/')[-2]
 
 
 	def cmb000(self): #recent files
@@ -60,7 +60,7 @@ class Scene(Init):
 	def cmb001(self): #recent projects
 		cmb = self.hotBox.ui.cmb001
 		index = cmb.currentIndex() #get current index before refreshing list
-		files = (list(reversed(mel.eval("optionVar -query RecentProjectsList;"))))
+		files = []
 		self.comboBox (cmb, files, "Recent Projects")
 
 		if index!=0:
@@ -70,7 +70,7 @@ class Scene(Init):
 	def cmb002(self): #recent autosave
 		cmb = self.hotBox.ui.cmb002
 		index = cmb.currentIndex() #get current index before refreshing list
-		files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" in file_]
+		files = []
 		self.comboBox (cmb, files, "Recent Autosave")
 
 		if index!=0:

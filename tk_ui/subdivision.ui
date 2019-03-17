@@ -1,0 +1,1040 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>QtUi</class>
+ <widget class="QMainWindow" name="QtUi">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>225</width>
+    <height>254</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1050</width>
+    <height>1050</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Toolkit</string>
+  </property>
+  <property name="tabShape">
+   <enum>QTabWidget::Triangular</enum>
+  </property>
+  <property name="dockNestingEnabled">
+   <bool>true</bool>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::ForceTabbedDocks</set>
+  </property>
+  <widget class="QWidget" name="mainWindow">
+   <widget class="QGroupBox" name="groupBox_2">
+    <property name="geometry">
+     <rect>
+      <x>115</x>
+      <y>150</y>
+      <width>96</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>SubDiv Proxy</string>
+    </property>
+    <widget class="QPushButton" name="b002">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>75</x>
+       <y>30</y>
+       <width>21</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>Subdiv Proxy: subdiv proxy options</string>
+     </property>
+     <property name="text">
+      <string>☐</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
+     </property>
+     <property name="balette" stdset="0">
+      <palette>
+       <active>
+        <colorrole role="ButtonText">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>155</red>
+           <green>155</green>
+           <blue>155</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </active>
+       <inactive>
+        <colorrole role="ButtonText">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>155</red>
+           <green>155</green>
+           <blue>155</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </inactive>
+       <disabled>
+        <colorrole role="ButtonText">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>120</red>
+           <green>120</green>
+           <blue>120</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </disabled>
+      </palette>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b001">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>30</y>
+       <width>76</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Subdiv Proxy</string>
+     </property>
+     <property name="text">
+      <string>SubDiv Proxy</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b000">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>96</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Toggle subdiv proxy display</string>
+     </property>
+     <property name="text">
+      <string>Toggle Subd Proxy</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="smoothPreview">
+    <property name="geometry">
+     <rect>
+      <x>115</x>
+      <y>30</y>
+      <width>96</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Smooth Preview</string>
+    </property>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>15</y>
+       <width>96</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Division Level</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>45</y>
+       <width>96</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Adaptive Level</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk004">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>76</x>
+       <y>30</y>
+       <width>20</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Division level: 20x</string>
+     </property>
+     <property name="text">
+      <string>5</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk002">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>38</x>
+       <y>30</y>
+       <width>20</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Division level: 12x</string>
+     </property>
+     <property name="text">
+      <string>3</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk000">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>30</y>
+       <width>20</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Division level: 4x</string>
+     </property>
+     <property name="text">
+      <string>1</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk003">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>57</x>
+       <y>30</y>
+       <width>20</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Division level: 16x</string>
+     </property>
+     <property name="text">
+      <string>4</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk001">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>19</x>
+       <y>30</y>
+       <width>20</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Division level: 8x</string>
+     </property>
+     <property name="text">
+      <string>2</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk009">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>75</x>
+       <y>60</y>
+       <width>20</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Tesselation level</string>
+     </property>
+     <property name="text">
+      <string>10</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk005">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>-1</x>
+       <y>60</y>
+       <width>20</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Tesselation level</string>
+     </property>
+     <property name="text">
+      <string>6</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk006">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>18</x>
+       <y>60</y>
+       <width>20</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Tesselation level</string>
+     </property>
+     <property name="text">
+      <string>7</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk008">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>56</x>
+       <y>60</y>
+       <width>20</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Tesselation level</string>
+     </property>
+     <property name="text">
+      <string>9</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk007">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>37</x>
+       <y>60</y>
+       <width>20</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Tesselation level</string>
+     </property>
+     <property name="text">
+      <string>8</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b011">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>80</y>
+       <width>96</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Convert smooth mesh preview to polygons</string>
+     </property>
+     <property name="text">
+      <string>Convert Preview</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="menubar">
+    <property name="geometry">
+     <rect>
+      <x>5</x>
+      <y>0</y>
+      <width>206</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <widget class="QPushButton" name="chkpin">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>0</y>
+       <width>21</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>pin this window to a separate instance.</string>
+     </property>
+     <property name="text">
+      <string>≡</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="subdivision">
+    <property name="geometry">
+     <rect>
+      <x>5</x>
+      <y>30</y>
+      <width>101</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Subdivision</string>
+    </property>
+    <widget class="QPushButton" name="b005">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>30</y>
+       <width>81</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Reduce number of poliginal components for selected objects</string>
+     </property>
+     <property name="text">
+      <string>Reduce</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b008">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>50</y>
+       <width>81</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Tesselate modifier</string>
+     </property>
+     <property name="text">
+      <string>Add Divisions</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="balette" stdset="0">
+      <palette>
+       <active>
+        <colorrole role="Base">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>255</red>
+           <green>255</green>
+           <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </active>
+       <inactive>
+        <colorrole role="Base">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>255</red>
+           <green>255</green>
+           <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </inactive>
+       <disabled>
+        <colorrole role="Base">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>255</red>
+           <green>85</green>
+           <blue>0</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </disabled>
+      </palette>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b009">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>70</y>
+       <width>81</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Smooth modifier</string>
+     </property>
+     <property name="text">
+      <string>Smooth</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b007">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>70</y>
+       <width>21</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>Smooth options</string>
+     </property>
+     <property name="text">
+      <string>☐</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
+     </property>
+     <property name="balette" stdset="0">
+      <palette>
+       <active>
+        <colorrole role="ButtonText">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>155</red>
+           <green>155</green>
+           <blue>155</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </active>
+       <inactive>
+        <colorrole role="ButtonText">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>155</red>
+           <green>155</green>
+           <blue>155</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </inactive>
+       <disabled>
+        <colorrole role="ButtonText">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>120</red>
+           <green>120</green>
+           <blue>120</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </disabled>
+      </palette>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b006">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>30</y>
+       <width>21</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>Reduce options</string>
+     </property>
+     <property name="text">
+      <string>☐</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
+     </property>
+     <property name="balette" stdset="0">
+      <palette>
+       <active>
+        <colorrole role="ButtonText">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>155</red>
+           <green>155</green>
+           <blue>155</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </active>
+       <inactive>
+        <colorrole role="ButtonText">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>155</red>
+           <green>155</green>
+           <blue>155</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </inactive>
+       <disabled>
+        <colorrole role="ButtonText">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>120</red>
+           <green>120</green>
+           <blue>120</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </disabled>
+      </palette>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b010">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>50</y>
+       <width>21</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>Add divisions options</string>
+     </property>
+     <property name="text">
+      <string>☐</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
+     </property>
+     <property name="balette" stdset="0">
+      <palette>
+       <active>
+        <colorrole role="ButtonText">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>155</red>
+           <green>155</green>
+           <blue>155</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </active>
+       <inactive>
+        <colorrole role="ButtonText">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>155</red>
+           <green>155</green>
+           <blue>155</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </inactive>
+       <disabled>
+        <colorrole role="ButtonText">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>120</red>
+           <green>120</green>
+           <blue>120</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </disabled>
+      </palette>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b004">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>101</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Simplify a polygonal object by reducing geometry while preserving the overall shape of the mesh.</string>
+     </property>
+     <property name="text">
+      <string>PolyReduce</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="b003">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>115</x>
+      <y>210</y>
+      <width>96</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>111</width>
+      <height>19</height>
+     </size>
+    </property>
+    <property name="toolTip">
+     <string>Open the option box with all of the options for polygon display.</string>
+    </property>
+    <property name="text">
+     <string>Poly Display Opt</string>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>18</width>
+      <height>18</height>
+     </size>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+ <designerdata>
+  <property name="gridDeltaX">
+   <number>5</number>
+  </property>
+  <property name="gridDeltaY">
+   <number>10</number>
+  </property>
+  <property name="gridSnapX">
+   <bool>true</bool>
+  </property>
+  <property name="gridSnapY">
+   <bool>true</bool>
+  </property>
+  <property name="gridVisible">
+   <bool>true</bool>
+  </property>
+ </designerdata>
+</ui>

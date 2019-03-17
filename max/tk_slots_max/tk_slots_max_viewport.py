@@ -43,7 +43,7 @@ class Viewport(Init):
 	def cmb002(self): #Options
 		cmb = self.hotBox.ui.cmb002
 		index = cmb.currentIndex() #get current index before refreshing list
-		list_ = ['Create: Custom Camera','Create: Set Custom Camera','Create: Camera From View''Group Cameras']
+		list_ = ['Create: Custom Camera','Create: Set Custom Camera','Create: Camera From View','Group Cameras']
 		self.comboBox (cmb, list_, "Options")
 
 		if index!=0:
@@ -85,11 +85,11 @@ class Viewport(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def cmb003(self): #Camera settings
+	def cmb003(self): #Camera transforms
 		cmb = self.hotBox.ui.cmb003
 		index = cmb.currentIndex() #get current index before refreshing list
 		list_ = ['Dolly', 'Roll', 'Truck', 'Pan']
-		self.comboBox (cmb, list_, "Settings")
+		self.comboBox (cmb, list_, "Transform")
 
 		if index!=0:
 			if index==1: #camera: dolly/zoom

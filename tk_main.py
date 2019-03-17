@@ -28,22 +28,26 @@ path = os.path.join(os.path.dirname(__file__), 'tk_ui') #get absolute path from 
 # ------------------------------------------------
 # Ui List
 # ------------------------------------------------
-
 #create a list of the names of the files in the ui folder, removing the extension.
 def uiList():
 	return [file_.replace('.ui','') for file_ in os.listdir(path) if file_.endswith('.ui')] #gets uiList from directory contents
 
 
+
+
 # ------------------------------------------------
 # Generate individual ui file paths
 # ------------------------------------------------
-
 #set path to ui files
 def getQtui(name):
-	#arg: string
-	#returns: dynamic ui object
+	'''
+	arg:	 string
+	returns: dynamic ui object
+	'''
 	qtui = QUiLoader().load(path+'/'+name+'.ui')
 	return qtui
+
+
 
 
 # ------------------------------------------------
@@ -63,6 +67,108 @@ def moveWindow(window, x, y):
 	x = mPos['x']+x
 	y = mPos['y']+y
 	window.move(x, y)
+
+
+
+
+# ------------------------------------------------
+#	Manage Ui elements
+# ------------------------------------------------
+class Switchboard(object):
+	def __init__(self):
+
+		self.uiList_ = uiList()
+		self.sbDict = {name:{} for name in self.uiList_} #initialize sbDict using the class names from uiList. ie. { 'edit':{}, 'create':{}, 'animation':{}, 'cameras':{}, 'display':{} }
+
+		'''
+		# key:values
+		# 'class name' : 'string name of class'
+				'class' : 'class object' 
+				'size' : list containing width int, height int. ie. [295, 234]
+				'connectionDict' : {'b001':{'buttonObject':b001, 'buttonObjectWithSignal':b001.connect, 'methodObject':main.b001, 'methodName':'Multi-Cut Tool'}},
+		# uiList : formatted string list of all ui filenames in the ui folder.
+		# prevName #when a new ui is called its name is last and the previous ui is at element[-2]. ie. [previousNameString, previousNameString, currentNameString]
+		# prevCommand #history of commands. last used command method at element[-1].  list of 2 element lists. [[methodObject,'methodNameString']]  ie. [{b00, 'multi-cut tool'}]
+		ex.
+		sbDict={
+		'polygons':{ 
+		'class':Polygons, 
+		'size':[295, 234], 
+		'connectionDict':{'b001':{'buttonObject':b001, 'buttonObjectWithSignal':b001.connect, 'methodObject':main.b001, 'methodName':'Multi-Cut Tool'}},
+		}
+		'uiList':['animation', 'cameras', 'create', 'display', 'edit'],
+		'prevName':['previousName', 'previousName', 'currentName'], 
+		'prevCommand':[{b00, 'multi-cut tool'}] }
+		
+		'''
+
+	def uiList(self): #ie. ['animation', 'cameras', 'create', 'display', 'edit']
+		if not 'uiList' in self.sbDict: self.sbDict['uiList'] = self.uiList_
+		return self.sbDict['uiList']
+
+	def getUiName(self, index):
+		return self.sbDict['uiList'][index]
+
+	def getUiIndex(self, name):
+		return self.sbDict['uiList'].index(name)
+
+	def setUiSize(self, name, size): #set ui size
+		self.sbDict[name]['size'] = size
+		return self.sbDict[name]['size']
+
+	def getUiSize(self, name): #get ui size
+		return self.sbDict[name]['size']
+
+	def setClassObject(self, name, fileName):
+		if not name in self.sbDict: self.sbDict[name] = {}
+		self.sbDict[name]['class'] = locate(fileName)
+		return self.sbDict[name]['class']
+
+	def getClassObject(self, name):
+		return self.sbDict[name]['class']
+
+	def prevName(self):
+		if not 'prevName' in self.sbDict: self.sbDict['prevName'] = []
+		return self.sbDict['prevName']
+
+	def prevCommand(self):
+		if not 'prevCommand' in self.sbDict: self.sbDict['prevCommand'] = []
+		return self.sbDict['prevCommand']
+
+	def connectionDict(self, name):
+		if not 'connectionDict' in self.sbDict[name]: self.sbDict[name]['connectionDict'] = {}
+		return self.sbDict[name]['connectionDict']
+
+	def getSignal(self, name, buttonName):
+		return self.sbDict[name]['connectionDict'][buttonName]['buttonObjectWithSignal']
+
+	def getSlot(self, name, buttonName):
+		return self.sbDict[name]['connectionDict'][buttonName]['methodObject']
+
+	def setMethodName(self, name, methodString, methodName):
+		self.sbDict[name]['connectionDict'][methodString]['methodName'] = methodName
+		return self.sbDict[name]['connectionDict'][methodString]['methodName']
+
+	def getMethodName(self, name, methodString):
+		return self.sbDict[name]['connectionDict'][methodString]['methodName']
+		
+	def getMethod(self, name, methodString):
+		return self.sbDict[name]['connectionDict'][methodString]['methodObject']
+
+	def dict(self):
+		return self.sbDict
+
+	def hasKey(self, *args):
+		if len(args)==1:
+			if args[0] in self.sbDict: return True
+			else: return False
+		if len(args)==2:
+			if args[1] in self.sbDict[args[0]]: return True
+			else: return False
+		if len(args)==3:
+			if args[2] in self.sbDict[args[0]][args[1]]: return True
+			else: return False
+
 
 
 # ------------------------------------------------
@@ -86,67 +192,66 @@ class HotBox(QtWidgets.QWidget):
 		self.mousePosition = None
 		self.mousePressOn = True
 
-		self.uiList = uiList() #ie. ['animation', 'cameras', 'create', 'display', 'edit']
-		self.uiSizeDict={} #key is the ui name string identifier. value is a list containing width int, height int. ie. {'selection': [295, 234], 'scene': [203, 254], 'rendering': [195, 177]}
-		self.prevName=[] #when a new ui is called its name is last and the previous ui is at element[-2]. ie. [previousNameString, previousNameString, currentNameString]
+		self.sb = Switchboard()
 		
 		self.app = parent.objectName().rstrip('Window').lower() #remove 'Window' from objectName ie. 'Maya' from 'MayaWindow' and set lowercase.
-		self.signal = locate('tk_signals.Signal')(self)
+		self.signal = self.sb.setClassObject('signal', 'tk_signals.Signal')(self)
+		for name in self.sb.uiList(): self.sb.setClassObject(name, 'tk_slots_'+self.app+'_'+name+'.'+name.capitalize()) #append each corresponding class object of the uiList to switchboardDict
+
 		self.layoutStack()
 		self.overlay = Overlay(self)
 
-		self.classDict = {name: locate('tk_slots_'+self.app+'_'+name+'.'+name.capitalize()) for name in self.uiList}
-
+		
 
 	def layoutStack(self, index=None):
-		#args: [int]
+		#args:	[int] #layout index
 		if not self.layout(): #if layout doesnt exist; init stackedLayout.
 			self.stackedLayout = QtWidgets.QStackedLayout()
 
-			for uiName in self.uiList:
-				ui = getQtui(uiName) #get the dynamic ui
+			for name in self.sb.uiList():
+				ui = getQtui(name) #get the dynamic ui
 				# build dictionary to store size info for each ui
-				self.uiSizeDict [uiName] = [ui.frameGeometry().width(), ui.frameGeometry().height()]
+				self.sb.setUiSize(name, [ui.frameGeometry().width(), ui.frameGeometry().height()])
 				# add ui to layoutStack
 				self.stackedLayout.addWidget(ui) #add each ui
 			self.setLayout(self.stackedLayout)
-			index = self.uiList.index('init') #Initialize layout index to 'init'
-
-		#set ui from stackedLayout
-		self.stackedLayout.setCurrentIndex(index)
-		#get ui from stackedLayout
-		self.ui = self.stackedLayout.widget(index)
+			index = self.sb.getUiIndex('init') #Initialize layout index to 'init'
 
 		self.index = index
-		self.name = self.uiList[self.index] #use index to get name
+		self.name = self.sb.getUiName(self.index) #use index to get name
+
+		#set ui from stackedLayout
+		self.stackedLayout.setCurrentIndex(self.index)
+		#get ui from stackedLayout
+		self.ui = self.stackedLayout.widget(self.index)
 		
 		#get ui size from uiSideDict and resize window
-		self.width = self.uiSizeDict[self.name][0]
-		self.height = self.uiSizeDict[self.name][1]
+		self.width = self.sb.getUiSize(self.name)[0]
+		self.height = self.sb.getUiSize(self.name)[1]
 		self.resize(self.width, self.height) #window size
 		
 		self.point = QtCore.QPoint(self.width/2, self.height/2) #set point to the middle of the layout
 		
-		self.init = locate('tk_slots_'+self.app+'_init.Init')(self) #equivalent to: import tk_slots_maya_init.Init
-		
+		# self.init = locate('tk_slots_'+self.app+'_init.Init')(self) #equivalent to: import tk_slots_maya_init.Init
+		self.init = self.sb.getClassObject('init')(self)
 		if self.name=='init':
 			self.init.info()
 		else:
-			if self.name not in self.signal.connectionDict: #construct the signals and slots for the ui 
-				self.signal.buildConnectionDict()
+			if not self.sb.hasKey(self.name, 'connectionDict'):
+				self.signal.buildConnectionDict() #construct the signals and slots for the ui 
 
 			#remove old and add new signals for current ui from connectionDict
-			if len(self.prevName)>1:
-				if self.name!=self.prevName[-2]:
-					self.signal.removeSignal(self.prevName[-2])
+			if len(self.sb.prevName())>1:
+				if self.name!=self.sb.prevName()[-2]:
+					self.signal.removeSignal(self.sb.prevName()[-2])
 					self.signal.addSignal(self.name)
 			else: #if no previous ui exists
 				self.signal.addSignal(self.name)
 
 			#build array that stores prevName string for removeSignal and open last used window command
-			self.prevName.append(self.name)
-			if len(self.prevName)>20:
-				del self.prevName[0] #a long list provides the ability to skip past irrellivent windows that may have populated since the window that we are actually looking for.
+			self.sb.prevName().append(self.name)
+			if len(self.sb.prevName())>20:
+				del self.sb.prevName()[0] #a long list provides the ability to skip past irrellivent windows that may have populated since the window that we are actually looking for.
 
 			#close window when pin unchecked
 			# if hasattr (self.ui, 'chkpin'):
@@ -154,7 +259,6 @@ class HotBox(QtWidgets.QWidget):
 			except: pass
 
 
-			#instead try entering main and viewport the same way submenus are entered as this produces the desired state.
 			# self.mousePressOn = False
 			# # import time
 			# if self.name=='main':
@@ -177,21 +281,20 @@ class HotBox(QtWidgets.QWidget):
 
 
 	def eventFilter(self, button, event):
-		#args: [source object]
-		#			 [QEvent]
+		#args:	[source object]
+		#		[QEvent]
 		if event.type()==QtCore.QEvent.Type.Enter: #enter event
 			self.mouseHover.emit(True)
 			# print button.__class__.__name__
 			if button.__class__.__name__ == 'QComboBox':
-				button.setStyleSheet('color: white;')
+				button.setCurrentIndex(99)
+				button.setCurrentIndex(0)
 				button.showPopup()
 			else:
 				button.click()
 
 		if event.type()==QtCore.QEvent.Type.HoverLeave:
 			self.mouseHover.emit(False)
-			if button.__class__.__name__ == 'QComboBox':
-				button.setStyleSheet('color: transparent;')
 
 		return QtWidgets.QWidget.eventFilter(self, button, event)
 
@@ -208,7 +311,7 @@ class HotBox(QtWidgets.QWidget):
 		#args: [QEvent]
 		if event.key()==QtCore.Qt.Key_F12 and not event.isAutoRepeat(): #Key_Meta or Key_Menu =windows key
 			if all ([self.name!="init", self.name!="main", self.name!="viewport"]):
-				self.layoutStack(self.uiList.index('init')) #reset layout back to init on keyPressEvent
+				self.layoutStack(self.sb.getUiIndex('init')) #reset layout back to init on keyPressEvent
 			
 			
 	def keyReleaseEvent(self, event):
@@ -222,32 +325,38 @@ class HotBox(QtWidgets.QWidget):
 		if self.mousePressOn:
 			if any ([self.name=="main", self.name=="viewport", self.name=="init"]):
 				if event.button()==QtCore.Qt.LeftButton:
-					self.layoutStack(self.uiList.index('viewport'))
+					self.layoutStack(self.sb.getUiIndex('viewport'))
 				if event.button()==QtCore.Qt.RightButton:
-					self.layoutStack(self.uiList.index('main'))
+					self.layoutStack(self.sb.getUiIndex('main'))
+				if event.button()==QtCore.Qt.MiddleButton:
+					self.layoutStack(self.sb.getUiIndex('display'))
 
 
 	def mouseDoubleClickEvent(self, event):
 		#args: [QEvent]
 		#show last used submenu on double mouseclick 
 		if event.button()==QtCore.Qt.RightButton:
-			if len(self.prevName)>0:
-				if all ([self.prevName[-2]!="init", self.prevName[-2]!="main", self.prevName[-2]!="viewport"]):
-					self.layoutStack(self.uiList.index(self.prevName[-2]))
+			if len(self.sb.prevName())>0:
+				if all ([self.sb.prevName()[-2]!="init", self.sb.prevName()[-2]!="main", self.sb.prevName()[-2]!="viewport"]):
+					self.layoutStack(self.sb.getUiIndex(self.sb.prevName()[-2]))
 				else: #search prevName for valid previously used submenu 
-					if len(self.prevName)>2:
+					if len(self.sb.prevName())>2:
 						i = -3
-						for element in range (len(self.prevName) -2):
-							if all ([self.prevName[i]!="init", self.prevName[i]!="main", self.prevName[i]!="viewport"]): 
-								index = self.uiList.index(self.prevName[i])
+						for element in range (len(self.sb.prevName()) -2):
+							if all ([self.sb.prevName()[i]!="init", self.sb.prevName()[i]!="main", self.sb.prevName()[i]!="viewport"]): 
+								index = self.sb.getUiIndex(self.sb.prevName()[i])
 								if index is not None:
 									self.layoutStack(index)
 							else:
 								i-=1
 		if event.button()==QtCore.Qt.LeftButton:
 			try:
-				buttons.repeatLastCommand()
-			except: print "# Warning: No recent commands in history. #"
+				self.repeatLastCommand()
+			except Exception as error: 
+				if not self.sb.prevCommand():
+					print "# Warning: No recent commands in history. #"
+				else:
+					print error
 
 
 	def mouseMoveEvent(self, event):
@@ -257,7 +366,7 @@ class HotBox(QtWidgets.QWidget):
 				self.mousePosition = event.pos()
 				self.update()
 			elif (self.name!="init"):
-				if (event.buttons() & QtCore.Qt.LeftButton): #MiddleButton
+				if (event.buttons() & QtCore.Qt.LeftButton): #drag window and pin
 					moveWindow(self, -self.point.x(), -self.point.y()*.1) #set mouse position and move window with mouse down
 					self.ui.chkpin.setChecked(True)
 					# self.popup = Popup(self, self.ui)
@@ -283,13 +392,23 @@ class HotBox(QtWidgets.QWidget):
 				pass
 			else:
 				self.hide()
-		except Exception as exc:
-			if not exc==RuntimeWarning: print exc
+		except Exception as error:
+			if error!=RuntimeWarning: print error
 
 	def hideEvent(self, event):
 		try: MaxPlus.CUI.EnableAccelerators()
 		except: pass
-		self.layoutStack(self.uiList.index('init'))
+		self.layoutStack(self.sb.getUiIndex('init'))
+
+
+	def repeatLastCommand(self):
+		self.sb.prevCommand()[-1][0]() #execute command object
+		print self.sb.prevCommand()[-1][1] #print command name string
+		
+
+
+
+
 
 
 # ------------------------------------------------
@@ -398,14 +517,14 @@ class Overlay(QtWidgets.QWidget):
 # ------------------------------------------------
 		# self.stackedLayout = QtWidgets.QStackedLayout()
 
-		# 	for uiName in self.uiList:
-		# 		ui = getQtui(uiName) #get the dynamic ui
+		# 	for name in self.sb.uiList():
+		# 		ui = getQtui(name) #get the dynamic ui
 		# 		# build dictionary to store size info for each ui
-		# 		self.uiSizeDict [uiName] = [ui.frameGeometry().width(), ui.frameGeometry().height()]
+		# 		self.uiSizeDict [name] = [ui.frameGeometry().width(), ui.frameGeometry().height()]
 		# 		# add ui to layoutStack
 		# 		self.stackedLayout.addWidget(ui) #add each ui
 		# 	self.setLayout(self.stackedLayout)
-		# 	index = self.uiList.index('init') #Initialize layout index to 'init'
+		# 	index = self.sb.getUiIndex('init') #Initialize layout index to 'init'
 
 		# #set ui from stackedLayout
 		# self.stackedLayout.setCurrentIndex(index)

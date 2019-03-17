@@ -1,5 +1,3 @@
-from PySide2 import QtGui
-
 import maya.mel as mel
 import pymel.core as pm
 
