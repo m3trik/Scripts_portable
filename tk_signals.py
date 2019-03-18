@@ -23,7 +23,7 @@ class Signal(QtCore.QObject):
 
 	def buildConnectionDict(self):
 		class_ = self.hotBox.sb.getClassObject(self.hotBox.name)(self.hotBox)
-		print class_
+
 		buttonType = {'i':'clicked','b':'clicked','v':'clicked','s':'valueChanged','chk':'released','cmb':'currentIndexChanged','t':'returnPressed'}
 
 		for prefix,signal in buttonType.iteritems(): #button/method's that start with ie. 'b'
@@ -62,7 +62,7 @@ class Signal(QtCore.QObject):
 					if error==AttributeError:
 						print 'Exception:',error
 		self.buildCommandNameDict()
-		print self.hotBox.sb.connectionDict(self.hotBox.name)
+		# print self.hotBox.sb.connectionDict(self.hotBox.name)
 		return self.hotBox.sb.connectionDict(self.hotBox.name)
 
 
