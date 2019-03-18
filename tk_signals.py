@@ -2,13 +2,13 @@ from PySide2 import QtCore
 
 import os.path
 
-from pydoc import locate
 
 
 
 
-
-
+# ------------------------------------------------
+#	Manage signal connections
+# ------------------------------------------------
 class Signal(QtCore.QObject):
 	def __init__(self, hotBox):
 		QtCore.QObject.__init__(self)
