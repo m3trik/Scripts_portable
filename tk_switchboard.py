@@ -16,7 +16,7 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 		# 'class name' : 'string name of class'
 				'class' : 'class object' 
 				'size' : list containing width int, height int. ie. [295, 234]
-				'connectionDict' : {'b001':{'buttonObject':b001, 'buttonObjectWithSignal':b001.connect, 'methodObject':main.b001, 'methodName':'Multi-Cut Tool'}},
+				'connectionDict' : {'b001':{'buttonObject':b001, 'buttonObjectWithSignal':b001.connect, 'methodObject':main.b001, 'docString':'Multi-Cut Tool'}},
 		# uiList : formatted string list of all ui filenames in the ui folder.
 		# prevName #when a new ui is called its name is last and the previous ui is at element[-2]. ie. [previousNameString, previousNameString, currentNameString]
 		# prevCommand #history of commands. last used command method at element[-1].  list of 2 element lists. [[methodObject,'methodNameString']]  ie. [{b00, 'multi-cut tool'}]
@@ -25,7 +25,7 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 		'polygons':{ 
 		'class':Polygons, 
 		'size':[295, 234], 
-		'connectionDict':{'b001':{'buttonObject':b001, 'buttonObjectWithSignal':b001.connect, 'methodObject':main.b001, 'methodName':'Multi-Cut Tool'}},
+		'connectionDict':{'b001':{'buttonObject':b001, 'buttonObjectWithSignal':b001.connect, 'methodObject':main.b001, 'docString':'Multi-Cut Tool'}},
 		}
 		'uiList':['animation', 'cameras', 'create', 'display', 'edit'],
 		'prevName':['previousName', 'previousName', 'currentName'], 
@@ -119,8 +119,8 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 		#	'buttonObject':button ui object.  ie. b001
 		#	'buttonObjectWithSignal':button ui object with signal attached. ie. b001.connect
 		#	'methodObject':class method object for the corresponding ui button. ie. main.b001
-		#	'methodName': string description of command from method docstring.  ie. 'Multi-Cut Tool'}
-		#ie. {'b001':{'buttonObject':b001, 'buttonObjectWithSignal':b001.onPressed, 'methodObject':main.b001, 'methodName':'Multi-Cut Tool'}},
+		#	'docString': string description of command from method docstring.  ie. 'Multi-Cut Tool'}
+		#ie. {'b001':{'buttonObject':b001, 'buttonObjectWithSignal':b001.onPressed, 'methodObject':main.b001, 'docString':'Multi-Cut Tool'}},
 		'''
 		if not 'connectionDict' in self.sbDict[name]: self.sbDict[name]['connectionDict'] = {}
 		return self.sbDict[name]['connectionDict']
@@ -143,25 +143,25 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 		'''
 		return self.sbDict[name]['connectionDict'][buttonName]['methodObject']
 
-	def setMethodName(self, name, methodString, methodName):
+	def setDocString(self, name, methodString, docString):
 		'''
 		#args:
 		#	name='string' name of class. ie. 'polygons'
 		#	methodString='string' name of method. ie. 'b001'
-		#	methodName='string' docstring name of method
+		#	docString='string' docstring name of method
 		#returns: given docstring name of method
 		'''
-		self.sbDict[name]['connectionDict'][methodString]['methodName'] = methodName
-		return self.sbDict[name]['connectionDict'][methodString]['methodName']
+		self.sbDict[name]['connectionDict'][methodString]['docString'] = docString
+		return self.sbDict[name]['connectionDict'][methodString]['docString']
 
-	def getMethodName(self, name, methodString):
+	def getDocString(self, name, methodString):
 		'''
 		#args:
 		#	name='string' name of class. ie. 'polygons'
 		#	methodString='string' name of method. ie. 'b001'
 		#returns: stored docstring name of method
 		'''
-		return self.sbDict[name]['connectionDict'][methodString]['methodName']
+		return self.sbDict[name]['connectionDict'][methodString]['docString']
 		
 	def getMethod(self, name, methodString):
 		'''

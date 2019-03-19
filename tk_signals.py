@@ -61,7 +61,7 @@ class Signal(QtCore.QObject):
 				except Exception as error:
 					if error==AttributeError:
 						print 'Exception:',error
-		self.buildCommandNameDict()
+		self.getDocString()
 		# print self.hotBox.sb.connectionDict(self.hotBox.name)
 		return self.hotBox.sb.connectionDict(self.hotBox.name)
 
@@ -86,29 +86,18 @@ class Signal(QtCore.QObject):
 
 	def onPressedEvent(self, method):
 		#args: [method object]
-		if type(method)==str and method.__name__.startswith('b'): #ie. 'b012'
-			commandName = self.hotBox.sb.connectionDict(self.hotBox.name, method.__name__) #get the 'command name' value from the 'methodName' key.
-			self.hotBox.prevCommand.append([method, commandName]) #build array that stores the command method object and the corresponding command name string (ie. 'Multi-cut tool') for repeatLastCommand
-			# if len(self.hotBox.prevCommand)>20: #keep a list of the last 20 used commands.
-			# 	del self.hotBox.prevCommand[0]
+		# if type(method)==str and method.__name__.startswith('b'): #ie. 'b012'
+		docString = self.hotBox.sb.getDocString(self.hotBox.name, method.__name__) #get the 'docString'. ie. 'Multi-Cut Tool'
+		self.hotBox.prevCommand.append([method, docString]) #build array that stores the command method object and the corresponding docString (ie. 'Multi-cut tool')
 
 
+	def getDocString(self): #dictionary of user friendly command names derived from the comment in the declaration line of button command methods.
+		#'class':{connectionDict':{'methodString':{'docString':'doc string'}} ie. 'polygons':{connectionDict':{'b000':{'docString':'Multi_Cut Tool'}},
+		for methodString in self.hotBox.sb.connectionDict(self.hotBox.name):
+			method = self.hotBox.sb.getMethod(self.hotBox.name, methodString)
+			self.hotBox.sb.setDocString(self.hotBox.name, methodString, method.__doc__)
 
-	def buildCommandNameDict(self): #dictionary of user friendly command names derived from the comment in the declaration line of button command methods.
-		#'class':{connectionDict':{'methodString':{'methodName':'commentString'}} ie. 'polygons':{connectionDict':{'b000':{'methodName':'Multi_Cut Tool'}},
-		path = os.path.join(os.path.dirname(__file__), self.hotBox.app+'/tk_slots_'+self.hotBox.app) #get absolute path from dir of this module + relative path to directory
-		file = path+'/'+'tk_slots_'+self.hotBox.app+'_'+self.hotBox.name+'.py'
 
-		with open(file) as f:
-			for line in f.readlines():
-				if 'def b' in line and '#' in line:
-					methodString = line.split('#')[0].strip().lstrip('def ').rstrip('(self):')
-					commentString = line.split('#')[1]
-					try:
-						self.hotBox.sb.setMethodName(self.hotBox.name, methodString, commentString)
-					except Exception as error:
-						if error==KeyError:
-							print "#Exception: ", error
 
 
 

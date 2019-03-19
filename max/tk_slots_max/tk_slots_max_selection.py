@@ -18,7 +18,8 @@ class Selection(Init):
 
 		#set checked button states
 		#chk004 ignore backfacing (camera based selection)
-		state = pm.selectPref(query=True, useDepth=True)
+		sel = rt.Filters.GetModOrObj()
+		state = sel.ignoreBackfacing
 		self.hotBox.ui.chk004.setChecked(state)
 
 		#on click event
@@ -70,12 +71,14 @@ class Selection(Init):
 		self.setSymmetry("z", symmetry=state)
 
 	def chk004(self): #Ignore backfacing (camera based selection)
+		sel = rt.Filters.GetModOrObj()
+
 		if self.hotBox.ui.chk004.isChecked():
-			pm.selectPref(useDepth=True)
-			self.viewPortMessage("Camera-based selection <hl>On</hl>.")
+			sel.ignoreBackfacing = True
+			# self.viewPortMessage("Camera-based selection <hl>On</hl>.")
 		else:
-			pm.selectPref(useDepth=False)
-			self.viewPortMessage("Camera-based selection <hl>Off</hl>.")
+			sel.ignoreBackfacing = False
+			# self.viewPortMessage("Camera-based selection <hl>Off</hl>.")
 
 	def chk005(self): #Symmetry: object
 		self.hotBox.ui.chk006.setChecked(False) #uncheck symmetry:topological
@@ -151,7 +154,10 @@ class Selection(Init):
 	def b005(self): #
 		pass
 
-	def b006(self): #Select similar
+	def b006(self):
+		'''
+		Select Similar
+		'''
 		tolerance = str(self.hotBox.ui.s000.value()) #string value because mel.eval is sending a command string
 		mel.eval("doSelectSimilar 1 {\""+ tolerance +"\"}")
 
@@ -170,7 +176,10 @@ class Selection(Init):
 		# setFaceSelection sel #{}
 
 
-	def b008(self): #Select N-th edge
+	def b008(self):
+		'''
+		Select N-th Edge
+		'''
 		mel.eval("selectEveryNEdge;")
 
 	def b009(self): #Select contigious edge loop

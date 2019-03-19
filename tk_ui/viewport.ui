@@ -238,19 +238,6 @@
     <property name="title">
      <string/>
     </property>
-    <widget class="QPushButton" name="v007">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Align</string>
-     </property>
-    </widget>
    </widget>
    <widget class="QPushButton" name="v008">
     <property name="geometry">
@@ -427,46 +414,95 @@
      </property>
     </item>
    </widget>
-   <widget class="QComboBox" name="cmb003">
+   <widget class="QPushButton" name="v007">
     <property name="geometry">
      <rect>
-      <x>105</x>
-      <y>0</y>
-      <width>120</width>
-      <height>31</height>
+      <x>118</x>
+      <y>150</y>
+      <width>66</width>
+      <height>20</height>
      </rect>
     </property>
-    <property name="minimumSize">
-     <size>
-      <width>91</width>
-      <height>31</height>
-     </size>
+    <property name="text">
+     <string>Align</string>
     </property>
-    <property name="maximumSize">
-     <size>
-      <width>9999</width>
-      <height>31</height>
-     </size>
-    </property>
-    <property name="currentText">
-     <string>Camera Transforms</string>
-    </property>
-    <property name="maxVisibleItems">
-     <number>50</number>
-    </property>
-    <property name="sizeAdjustPolicy">
-     <enum>QComboBox::AdjustToContents</enum>
-    </property>
-    <property name="frame">
+   </widget>
+   <widget class="QPushButton" name="v009">
+    <property name="enabled">
      <bool>false</bool>
     </property>
-    <item>
-     <property name="text">
-      <string>Camera Transforms</string>
-     </property>
-    </item>
+    <property name="geometry">
+     <rect>
+      <x>85</x>
+      <y>0</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Camera: Dolly</string>
+    </property>
+    <property name="text">
+     <string>Dolly</string>
+    </property>
    </widget>
-   <zorder>cmb003</zorder>
+   <widget class="QPushButton" name="v011">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>0</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Camera: Roll</string>
+    </property>
+    <property name="text">
+     <string>Roll</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="v012">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>85</x>
+      <y>20</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Camera: Truck</string>
+    </property>
+    <property name="text">
+     <string>Truck</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="v013">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>20</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Camera: Pan</string>
+    </property>
+    <property name="text">
+     <string>Orbit</string>
+    </property>
+   </widget>
    <zorder>cmb000</zorder>
    <zorder>cmb001</zorder>
    <zorder>v008</zorder>
@@ -482,6 +518,11 @@
    <zorder>top</zorder>
    <zorder>right</zorder>
    <zorder>cmb002</zorder>
+   <zorder>v007</zorder>
+   <zorder>v009</zorder>
+   <zorder>v011</zorder>
+   <zorder>v012</zorder>
+   <zorder>v013</zorder>
   </widget>
  </widget>
  <resources/>

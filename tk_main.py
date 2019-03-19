@@ -26,17 +26,15 @@ path = os.path.join(os.path.dirname(__file__), 'tk_ui') #get absolute path from 
 
 
 # ------------------------------------------------
-# Ui List
+# Generate Ui List
 # ------------------------------------------------
 #create a list of the names of the files in the ui folder, removing the extension.
 def uiList():
 	return [file_.replace('.ui','') for file_ in os.listdir(path) if file_.endswith('.ui')] #gets uiList from directory contents
 
 
-
-
 # ------------------------------------------------
-# Generate individual ui file paths
+# Load individual ui file paths
 # ------------------------------------------------
 #set path to ui files
 def getQtui(name):
@@ -149,8 +147,7 @@ class HotBox(QtWidgets.QWidget):
 
 			#build array that stores prevName string for removeSignal and open last used window command
 			self.sb.prevName().append(self.name)
-			if len(self.sb.prevName())>20:
-				del self.sb.prevName()[0] #a long list provides the ability to skip past irrellivent windows that may have populated since the window that we are actually looking for.
+			
 
 			#close window when pin unchecked
 			# if hasattr (self.ui, 'chkpin'):
@@ -185,7 +182,7 @@ class HotBox(QtWidgets.QWidget):
 			self.mouseHover.emit(True)
 			# print button.__class__.__name__
 			if button.__class__.__name__ == 'QComboBox':
-				button.setCurrentIndex(99)
+				# button.setCurrentIndex(99)
 				button.setCurrentIndex(0)
 				button.showPopup()
 			else:

@@ -240,7 +240,7 @@ class Slot(object):
 
 
 	# ------------------------------------------------
-	#' Set widget initial state and style'
+	#' Set widget initial state and style overrides'
 	# ------------------------------------------------
 
 
