@@ -1,5 +1,5 @@
 # tk_hotBox
-# PySide hotbox style layered ui and toolkit for maya and max
+# PySide hotbox style layered ui and toolkit for maya and max.
 
 
 # Work in progress..
@@ -19,23 +19,23 @@
 # -----------------------------------------------
 
 # tk_main: #handles main gui construction.
-# 	get dynamic ui files relative to folder location
+# 	get dynamic ui files relative to folder location.
 #   handle coordinates to populate ui at cursor position.
-# 	add each ui to a layout stack
-# 	set window flags and attributes
-# 	set event filters and overrides
-# 	construct paint event overlay
+# 	add each ui to a layout stack.
+# 	set window flags and attributes.
+# 	set event filters and overrides.
+# 	construct paint event overlay.
 
 
 
 # tk_signals: #constructs signal connections
-# 	build connection dict in switchboard for each class with corresponding signals and slots
-# 	add/remove signals using the switchboard dict each time the stacked layout index is changed
+# 	build connection dict in switchboard for each class with corresponding signals and slots.
+# 	add/remove signals using the switchboard dict each time the stacked layout index is changed.
 
 
 
 # tk_slots:
-# 	master class holding methods that are inherited across all app specific class modules
+# 	master class holding methods that are inherited across all app specific class modules.
 
 
 
@@ -85,9 +85,10 @@
 # -----------------------------------------------
 
 # pressed hotkey shows instance. release hides.
-# mouse not pressed; general scene heads up info
-# right mouse down shows main window.
+# mouse not pressed; heads up info
+# right mouse down shows main navigation window.
 # left mouse down shows viewport navigation.
+# middle mouse down shows mesh display options.
 # releasing the mouse over any of the buttons in those windows takes you to the corresponding submenu.
 # double left mouseclick produces last used window.
 # double right mouseclick repeats last command.
