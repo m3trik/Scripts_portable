@@ -18,8 +18,10 @@ simple location, in one simple way.*
  Structure:
 -----------------------------------------------
 
-## tk_main: *handles main gui construction.*
+## tk_main: 
 ######
+*handles main gui construction.*
+
 * get dynamic ui files relative to folder location.
 
 * handle coordinates to populate ui at cursor position.
@@ -33,15 +35,19 @@ simple location, in one simple way.*
 * construct paint event overlay.
 
 
-## tk_signals: *constructs signal connections.*
+## tk_signals: 
 ######
+*constructs signal connections.*
+
 * build connection dict in switchboard for each class with corresponding signals and slots.
 
 * add/remove signals using the switchboard dict each time the stacked layout index is changed.
 
 
 
-## tk_slots: *master class holding methods that are inherited across all app specific slot class modules.*
+## tk_slots: 
+######
+*master class holding methods that are inherited across all app specific slot class modules.*
 
 
 
