@@ -6,7 +6,7 @@
 
 ## Design:
 ######
-*To build a app agnostic modular ui to house tools where each piece is constructed dynamically to allow 
+*To build an app agnostic modular ui to house tools where each piece is constructed dynamically to allow 
 for as little overhead as possible in construction and maintainence. Literally all you have to do to have 
 a new ui up and running, is to drop a qt ui file into the ui folder, and create a module and class of the 
 same name. Naming convention allows for a stacked ui to be built, signals added/removed, and a master dictionary 
