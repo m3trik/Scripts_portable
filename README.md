@@ -2,13 +2,13 @@
 # PySide hotbox style layered ui and toolkit for maya and max.
 
 
-# Work in progress..
+# work in progress..
 
 # Design:
-# To build a modular ui to house tools where each piece is constructed dynamically to allow for as little 
-# overhead as possible in construction and maintainence. Literally all you have to do to have a new ui up
-# and running, is to drop a qt ui file into the ui folder, and create a module and class of the same name.
-# Naming convention allows for a stacked ui to be built, signals added/removed, and a master dictionary 
+# To build a app agnostic modular ui to house tools where each piece is constructed dynamically to allow 
+# for as little overhead as possible in construction and maintainence. Literally all you have to do to have 
+# a new ui up and running, is to drop a qt ui file into the ui folder, and create a module and class of the 
+# same name. Naming convention allows for a stacked ui to be built, signals added/removed, and a master dictionary 
 # (stored in the switchboard module) to be created, that handles the getting/setting of all data from one 
 # simple location, in one simple way. 
 
@@ -34,14 +34,13 @@
 
 
 
-# tk_slots:
-# 	master class holding methods that are inherited across all app specific class modules.
+# tk_slots: # master class holding methods that are inherited across all app specific slot class modules.
 
 
 
 # tk_switchboard: 
 # holds the following information for each tool class instance. From this information, you can call switchboard methods to 
-# get most relevent information easily whereever you need it.
+# get most relevent information easily wherever you need it.
 #   class name as string
 #   class object 
 #   widget size
@@ -84,14 +83,14 @@
 # basic use:
 # -----------------------------------------------
 
-# pressed hotkey shows instance. release hides.
-# mouse not pressed; heads up info
-# right mouse down shows main navigation window.
-# left mouse down shows viewport navigation.
-# middle mouse down shows mesh display options.
+# pressed hotkey shows instance. release hides;
+# mouse not pressed: heads up info
+# right mouse down: shows main navigation window.
+# left mouse down: shows viewport navigation.
+# middle mouse down: shows mesh display options.
 # releasing the mouse over any of the buttons in those windows takes you to the corresponding submenu.
-# double left mouseclick produces last used window.
-# double right mouseclick repeats last command.
+# double left mouseclick: produces last used window.
+# double right mouseclick: repeats last command.
 # dragging on an empty are of the widget moves the window and pins it open in a separate instance.
 # holding ctrl while using Spinboxes increments/decrements by an extra decimal place.
 # mouse over buttons while window pinned to get an explanation of its function.
