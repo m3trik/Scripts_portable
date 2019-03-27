@@ -15,7 +15,7 @@ simple location, in one simple way.*
 
 ##
 -----------------------------------------------
- structure:
+ Structure:
 -----------------------------------------------
 
 ## tk_main: *handles main gui construction.*
@@ -76,7 +76,7 @@ get most relevent information easily wherever you need it.*
 
 ##
 -----------------------------------------------
- naming convention:
+ Naming convention:
 -----------------------------------------------
 
 ######
@@ -108,7 +108,7 @@ instance is populated. Any of the buttons will also connect to a corresponding c
 
 ##
 -----------------------------------------------
- basic use:
+ Basic use:
 -----------------------------------------------
 
 ######
