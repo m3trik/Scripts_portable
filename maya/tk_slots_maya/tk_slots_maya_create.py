@@ -36,14 +36,22 @@ class Create(Init):
 		self.hotBox.ui.s011.valueChanged.connect (lambda: self.setAttributes(11))
 
 
-	def t000(self): #set name
+	def t000(self):
+		'''
+		Set Name
+
+		'''
 		newName = self.hotBox.ui.t000.text()
 		print 't000:', self.history, newName
 		newName = pm.rename (self.history[-1], newName)
 		self.history = newName
 		print 'newName', newName, self.history
 
-	def chk000(self): #rotate x axis
+	def chk000(self):
+		'''
+		Rotate X Axis
+
+		'''
 		self.setButtons(self.hotBox.ui, checked='chk000',unchecked='chk001, chk002')
 		obj = pm.ls(sl=1)[0]
 		if obj:
@@ -54,7 +62,11 @@ class Create(Init):
 		else:
 			print "# Warning: nothing selected #"
 
-	def chk001(self): #rotate y axis
+	def chk001(self):
+		'''
+		Rotate Y Axis
+
+		'''
 		self.setButtons(self.hotBox.ui, checked='chk001',unchecked='chk000, chk002')
 		obj = pm.ls(sl=1)[0]
 		if obj:
@@ -65,7 +77,11 @@ class Create(Init):
 		else:
 			print "# Warning: nothing selected #"
 
-	def chk002(self): #rotate z axis
+	def chk002(self):
+		'''
+		Rotate Z Axis
+
+		'''
 		self.setButtons(self.hotBox.ui, checked='chk002',unchecked='chk000, chk001')
 		obj = pm.ls(sl=1)[0]
 		if obj:
@@ -76,13 +92,25 @@ class Create(Init):
 		else:
 			print "# Warning: nothing selected #"
 
-	def chk003(self): #
+	def chk003(self):
+		'''
+		
+
+		'''
 		pass
 
-	def chk004(self): #
+	def chk004(self):
+		'''
+		
+
+		'''
 		pass
 
-	def chk005(self): #Set point
+	def chk005(self):
+		'''
+		Set Point
+
+		'''
 		#add support for averaging multiple components.
 		selection = pm.ls (selection=1, flatten=1)
 		try:
@@ -96,7 +124,11 @@ class Create(Init):
 			if self.point:
 				del self.point[:]
 
-	def cmb000(self): #Set create type
+	def cmb000(self):
+		'''
+		Set Create Type
+
+		'''
 		nurbs = ["Create", "Sphere", "Cube", "Cylinder", "Cone", "Plane", "Torus", "Circle", "Square"]
 		polygons = ["Create", "Cube", "Sphere", "Cylinder", "Plane", "Circle", "Cone", "Pyramid", "Torus", "Tube", "Soccer Ball", "Platonic Solids", "Text"]
 		lights = ["Create", "Ambient", "Directional", "Point", "Spot", "Area", "Volume", "VRay Sphere", "VRay Dome", "VRay Rect", "VRay IES"]
@@ -113,7 +145,11 @@ class Create(Init):
 			self.hotBox.ui.cmb001.clear()
 			self.hotBox.ui.cmb001.addItems(lights)
 
-	def cmb001(self): #Set create object
+	def cmb001(self):
+		'''
+		Set Create Object
+
+		'''
 		if self.hotBox.ui.cmb001.currentIndex() == 0:
 			return #prevent referenced before assignment errors with inherited variables during initialization. 
 
@@ -501,34 +537,74 @@ class Create(Init):
 			pm.undoInfo(closeChunk=1)
 
 
-	def b000(self): #
+	def b000(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b001(self): #
+	def b001(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b002(self): #
+	def b002(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b003(self): #
+	def b003(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b004(self): #
+	def b004(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b005(self): #
+	def b005(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b006(self): #
+	def b006(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b007(self): #
+	def b007(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b008(self): #
+	def b008(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b009(self): #
+	def b009(self):
+		'''
+		
+
+		'''
 		pass
 
 

@@ -20,7 +20,11 @@ class Scene(Init):
 		
 
 
-	def cmb000(self): #recent files
+	def cmb000(self):
+		'''
+		Recent Files
+
+		'''
 		cmb = self.hotBox.ui.cmb000
 		index = cmb.currentIndex() #get current index before refreshing list
 		files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in file_]
@@ -31,7 +35,11 @@ class Scene(Init):
 			pm.openFile (files[index], open=1, force=force)
 			cmb.setCurrentIndex(0)
 
-	def cmb001(self): #recent projects
+	def cmb001(self):
+		'''
+		Recent Projects
+
+		'''
 		cmb = self.hotBox.ui.cmb001
 		index = cmb.currentIndex() #get current index before refreshing list
 		files = (list(reversed(mel.eval("optionVar -query RecentProjectsList;"))))
@@ -41,7 +49,11 @@ class Scene(Init):
 			mel.eval('setProject "'+files[index]+'"')
 			cmb.setCurrentIndex(0)
 
-	def cmb002(self): #recent autosave
+	def cmb002(self):
+		'''
+		Recent Autosave
+
+		'''
 		cmb = self.hotBox.ui.cmb002
 		index = cmb.currentIndex() #get current index before refreshing list
 		files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" in file_]
@@ -52,7 +64,11 @@ class Scene(Init):
 			pm.openFile (files[index], open=1, force=force)
 			cmb.setCurrentIndex(0)
 			
-	def cmb003(self): #import
+	def cmb003(self):
+		'''
+		Import
+
+		'''
 		cmb = self.hotBox.ui.cmb003
 		index = cmb.currentIndex() #get current index before refreshing list
 		self.comboBox (cmb,["Import file", "Import Options"], "Import")
@@ -65,7 +81,11 @@ class Scene(Init):
 			mel.eval('ImportOptions;')
 		cmb.setCurrentIndex(0)
 
-	def cmb004(self): #export
+	def cmb004(self):
+		'''
+		Export
+
+		'''
 		cmb = self.hotBox.ui.cmb004
 		index = cmb.currentIndex() #get current index before refreshing list
 		self.comboBox (cmb, ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ"], "Export")
@@ -84,7 +104,11 @@ class Scene(Init):
 			mel.eval('print("GoZ"); source"C:/Users/Public/Pixologic/GoZApps/Maya/GoZBrushFromMaya.mel"; source "C:/Users/Public/Pixologic/GoZApps/Maya/GoZScript.mel";')
 		cmb.setCurrentIndex(0)
 
-	def b000(self): #save
+	def b000(self):
+		'''
+		Save
+
+		'''
 		preSaveScript = ""
 		postSaveScript = ""
 
@@ -144,32 +168,64 @@ class Scene(Init):
 			mel.eval("quit;")
 			# pm.Quit()
 
-	def b001(self): #Hypergraph: hierarchy
+	def b001(self):
+		'''
+		Hypergraph: Hierarchy
+
+		'''
 		mel.eval("hyperGraphWindow \"\" \"DAG\";")
 
-	def b002(self): #Hypergraph: input/output
+	def b002(self):
+		'''
+		Hypergraph: Input/Output
+
+		'''
 		mel.eval('hyperGraphWindow \"\" \"DG\";')
 
-	def b003(self): #Node editor
+	def b003(self):
+		'''
+		Node Editor
+
+		'''
 		mel.eval("nodeEditorWindow;")
 
-	def b004(self): #Close main application
+	def b004(self):
+		'''
+		Close Main Application
+
+		'''
 		# force=false #pymel has no attribute quit error.
 		# exitcode=""
 		sceneName = str(mel.eval("file -query -sceneName -shortName;")) #if sceneName prompt user to save; else force close
 		mel.eval("quit;") if sceneName else mel.eval("quit -f;")
 		# pm.quit (force=force, exitcode=exitcode)
 
-	def b005(self): #
+	def b005(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b006(self): #
+	def b006(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b007(self): #
+	def b007(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b015(self): #Remove string from object names.
+	def b015(self):
+		'''
+		Remove String From Object Names.
+
+		'''
 		from_ = str(self.hotBox.ui.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
 		to = str(self.hotBox.ui.t001.text())
 		replace = self.hotBox.ui.chk004.isChecked()
@@ -190,10 +246,18 @@ class Scene(Init):
 				newName = obj.replace(from_, to)
 			pm.rename(obj, newName) #Rename the object with the new name
 
-	def b016(self): #
+	def b016(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b017(self): #set project
+	def b017(self):
+		'''
+		Set Project
+
+		'''
 		mel.eval ("SetProject;")
 
 

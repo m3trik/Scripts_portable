@@ -16,7 +16,11 @@ class Texturing(Init):
 
 		
 
-	def cmb000(self): #existing materials
+	def cmb000(self):
+		'''
+		Existing Materials
+
+		'''
 		index = self.hotBox.ui.cmb000.currentIndex() #get current index before refreshing list
 		materials = self.comboBox (self.hotBox.ui.cmb000, [str(mat) for mat in pm.ls(materials=1)], "Existing Materials")
 
@@ -34,7 +38,11 @@ class Texturing(Init):
 		self.hotBox.ui.chk000.setChecked(False)
 
 
-	def b000(self): #Select by material ID
+	def b000(self):
+		'''
+		Select By Material Id
+
+		'''
 		shell = self.hotBox.ui.chk000.isChecked()
 		invert = self.hotBox.ui.chk001.isChecked()
 
@@ -67,24 +75,40 @@ class Texturing(Init):
 		# 			pm.select (list(set(allFaces)-set(faces)), add=1) #get inverse of previously selected faces from allFaces
 
 
-	def b001(self): #
+	def b001(self):
+		'''
+		
+
+		'''
 		pass
 
 
-	def b002(self): #Store material Id
+	def b002(self):
+		'''
+		Store Material Id
+
+		'''
 		pm.hyperShade("", shaderNetworksSelectMaterialNodes=1) #selects the material node 
 		matID = pm.ls(selection=1, materials=1)[0] #now add the selected node to a variable
 		self.hotBox.ui.lbl000.setText(str(matID))
 
 		
-	def b003(self): #Assign material Id
+	def b003(self):
+		'''
+		Assign Material Id
+
+		'''
 		matID = str(self.hotBox.ui.lbl000.text())
 
 		for obj in pm.ls(selection=1):
 			pm.hyperShade(obj, assign=matID) #select and assign material per object in selection
 
 
-	def b004(self): #Assign random material
+	def b004(self):
+		'''
+		Assign Random Material
+
+		'''
 		maxEval('''
 		string $selection[] = `ls -selection`;
 
@@ -114,7 +138,11 @@ class Texturing(Init):
 		 ''')
 
 
-	def b005(self): #Re-Assign random ID material
+	def b005(self):
+		'''
+		Re-Assign Random Id Material
+
+		'''
 		maxEval('''
 		string $objList[] = `ls -selection -flatten`;
 		$material = `hyperShade -shaderNetworksSelectMaterialNodes ""`;
@@ -158,46 +186,102 @@ class Texturing(Init):
 		''')
 
 
-	def b006(self): #
+	def b006(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b007(self): #
+	def b007(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b008(self): #
+	def b008(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b009(self): #
+	def b009(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b010(self): #
+	def b010(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b011(self): #
+	def b011(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b012(self): #
+	def b012(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b013(self): #
+	def b013(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b014(self): #
+	def b014(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b015(self): #
+	def b015(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b016(self): #
+	def b016(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b017(self): #
+	def b017(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b018(self): #
+	def b018(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b019(self): #hyperShade editor
+	def b019(self):
+		'''
+		Hypershade Editor
+
+		'''
 		mel.eval("HypershadeWindow;")
 
 

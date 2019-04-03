@@ -15,7 +15,11 @@ class Viewport(Init):
 
 
 
-	def cmb000(self): #Editors
+	def cmb000(self):
+		'''
+		Editors
+
+		'''
 		cmb = self.hotBox.ui.cmb000
 		index = cmb.currentIndex() #get current index before refreshing list
 		list_ = ['Camera Sequencer', 'Camera Set Editor']
@@ -29,18 +33,28 @@ class Viewport(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def cmb001(self): #Cameras
+	def cmb001(self):
+		'''
+		Cameras
+
+		'''
 		cmb = self.hotBox.ui.cmb001
 		index = cmb.currentIndex() #get current index before refreshing list
 		cameras = [cam.name for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
 		items = self.comboBox (cmb, cameras, "Cameras:")
 		
 		if index!=0:
-			rt.select (rt.getNodeByName(items[index]))
+			cam = rt.getNodeByName(items[index])
+			rt.select (cam) #select the camera
+			rt.viewport.setCamera (cam) #set viewport to camera
 			cmb.setCurrentIndex(0)
 
 
-	def cmb002(self): #Options
+	def cmb002(self):
+		'''
+		Options
+
+		'''
 		cmb = self.hotBox.ui.cmb002
 		index = cmb.currentIndex() #get current index before refreshing list
 		list_ = ['Create: Custom Camera','Create: Set Custom Camera','Create: Camera From View','Group Cameras']
@@ -85,74 +99,117 @@ class Viewport(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def cmb003(self): #Camera transforms
-		cmb = self.hotBox.ui.cmb003
-		index = cmb.currentIndex() #get current index before refreshing list
-		list_ = ['Dolly', 'Roll', 'Truck', 'Pan']
-		self.comboBox (cmb, list_, "Transform")
-
-		if index!=0:
-			if index==1: #camera: dolly/zoom
-				maxEval("max dolly mode")
-			if index==2: #camera: roll
-				maxEval("max roll")
-			if index==1: #camera: truck/pan
-				maxEval("max truck")
-			if index==2: #camera: orbit
-				maxEval("max pancamera")
-			cmb.setCurrentIndex(0)
 
 
+	def v000(self):
+		'''
+		Viewport: Back View
 
-	def v000(self): #viewport: back view
+		'''
 		maxEval("max vpt back")
 
-	def v001(self): #viewport: top view
+	def v001(self):
+		'''
+		Viewport: Top View
+
+		'''
 		maxEval("max vpt top")
 
-	def v002(self): #viewport: right view
+	def v002(self):
+		'''
+		Viewport: Right View
+
+		'''
 		maxEval("max vpt right")
 
-	def v003(self): #viewport: left view
+	def v003(self):
+		'''
+		Viewport: Left View
+
+		'''
 		maxEval("max vpt left")
 
-	def v004(self): #viewport: perspective view
+	def v004(self):
+		'''
+		Viewport: Perspective View
+
+		'''
 		maxEval("max vpt persp user")
 
-	def v005(self): #viewport: front view
+	def v005(self):
+		'''
+		Viewport: Front View
+
+		'''
 		maxEval("max vpt front")
 
-	def v006(self): #viewport: bottom view
+	def v006(self):
+		'''
+		Viewport: Bottom View
+
+		'''
 		maxEval("max vpt bottom")
 
-	def v007(self): #viewport: align view
+	def v007(self):
+		'''
+		Viewport: Align View
+
+		'''
 		maxEval('''
 		max vpt iso user
 		max align camera
 		''')
 
 	def v008(self):
+		'''
+
+		'''
 		pass
 
 	def v009(self):
+		'''
+
+		'''
 		pass
 
 	def v010(self):
-		pass
+		'''
+		Camera: Dolly
+		'''
+		maxEval("max dolly mode")
 
 	def v011(self):
+		'''
+		Camera: Roll
+		'''
+		maxEval("max roll")
+
+	def v012(self):
+		'''
+		Camera: Truck
+
+		'''
+		maxEval("max truck")
+
+	def v013(self):
+		'''
+		Camera: Orbit
+
+		'''
+		maxEval("max pancamera")
+
+	def v014(self):
+		'''
+		
+
+		'''
 		pass
 
-	def v012(self): #
-		pass
+	def v015(self):
+		'''
+		
 
-	def v013(self): #
-		pass
-
-	def v014(self): #
-		pass
-
-	def v015(self): #
+		'''
 		pass
 
 

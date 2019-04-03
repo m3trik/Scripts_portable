@@ -16,38 +16,82 @@ class Preferences(Init):
 
 
 
-	def b000(self): #init tk_main
-			print "init: tk_main"
-			reload(tk_main)
+	def b000(self):
+		'''
+		Init Tk_Main
 
-	def b001(self): #color settings
+		'''
+		print "init: tk_main"
+		reload(tk_main)
+
+	def b001(self):
+		'''
+		Color Settings
+
+		'''
 		mel.eval('colorPrefWnd;')
 
-	def b002(self): #fbx presets
+	def b002(self):
+		'''
+		Fbx Presets
+
+		'''
 		mel.eval('FBXUICallBack -1 editExportPresetInNewWindow fbx;')
 
-	def b003(self): #obj presets
+	def b003(self):
+		'''
+		Obj Presets
+
+		'''
 		mel.eval('FBXUICallBack -1 editExportPresetInNewWindow obj;')
 
-	def b004(self): #
+	def b004(self):
+		'''
+		
+
+		'''
 		mel.eval('')
 
-	def b005(self): #
+	def b005(self):
+		'''
+		
+
+		'''
 		mel.eval('')
 
-	def b006(self): #
+	def b006(self):
+		'''
+		
+
+		'''
 		mel.eval('')
 
-	def b007(self): #
+	def b007(self):
+		'''
+		
+
+		'''
 		mel.eval('')
 
-	def b008(self): #Hotkeys
+	def b008(self):
+		'''
+		Hotkeys
+
+		'''
 		mel.eval("HotkeyPreferencesWindow;")
 
-	def b009(self): #Plug-in manager
+	def b009(self):
+		'''
+		Plug-In Manager
+
+		'''
 		mel.eval('PluginManager;')
 
-	def b010(self): #Settings/preferences
+	def b010(self):
+		'''
+		Settings/Preferences
+
+		'''
 		mel.eval("PreferencesWindow;")
 
 

@@ -16,7 +16,11 @@ class Polygons(Init):
 
 
 
-	def chk002(self): #Un-crease
+	def chk002(self):
+		'''
+		Un-Crease
+
+		'''
 		if self.hotBox.ui.chk002.isChecked():
 			self.hotBox.ui.s003.setValue(0) #crease value
 			self.hotBox.ui.s004.setValue(180) #normal angle
@@ -25,16 +29,32 @@ class Polygons(Init):
 			self.hotBox.ui.s003.setValue(7.5) #crease value
 			self.hotBox.ui.s004.setValue(30) #normal angle
 
-	def chk008(self): #Split U
+	def chk008(self):
+		'''
+		Split U
+
+		'''
 		self.setButtons(self.hotBox.ui, unchecked='chk010')
 
-	def chk009(self): #Split V
+	def chk009(self):
+		'''
+		Split V
+
+		'''
 		self.setButtons(self.hotBox.ui, unchecked='chk010')
 
-	def chk010(self): #tris
+	def chk010(self):
+		'''
+		Tris
+
+		'''
 		self.setButtons(self.hotBox.ui, unchecked='chk008,chk009')
 
-	def chk003(self): #Crease: Max
+	def chk003(self):
+		'''
+		Crease: Max
+
+		'''
 		if self.hotBox.ui.chk003.isChecked():
 			self.hotBox.ui.s003.setValue(10) #crease value
 			self.hotBox.ui.s004.setValue(30) #normal angle
@@ -43,23 +63,43 @@ class Polygons(Init):
 			self.hotBox.ui.s003.setValue(7.5) #crease value
 			self.hotBox.ui.s004.setValue(60) #normal angle
 
-	def chk006(self): #
+	def chk006(self):
+		'''
+		
+
+		'''
 		if self.hotBox.ui.chk006.isChecked():
 			self.hotBox.ui.s001.setSingleStep(.01)
 		else:
 			self.hotBox.ui.s001.setSingleStep(.5)
 
-	def b000(self): #Merge vertex options
+	def b000(self):
+		'''
+		Merge Vertex Options
+
+		'''
 		maxEval('macros.run \"Modifiers\" \"VertexWeld\"')
 
-	def b001(self): #Fill holes
+	def b001(self):
+		'''
+		Fill Holes
+
+		'''
 		maxEval('macros.run \"Modifiers\" \"Cap_Holes\"')
 
-	def b002(self): #Separate
+	def b002(self):
+		'''
+		Separate
+
+		'''
 		sel = makeSelection ("Current", 1, classInfo)
 		detachElement(sel)
 
-	def b003(self): #Combine
+	def b003(self):
+		'''
+		Combine
+
+		'''
 		if self.hotBox.ui.chk000.isChecked():
 			pass
 			#from maya:
@@ -90,13 +130,25 @@ class Polygons(Init):
 		)
 		''')
 
-	def b004(self):#
+	def b004(self):
+		'''
+		
+
+		'''
 		pass
 		
-	def b005(self): #Bridge
+	def b005(self):
+		'''
+		Bridge
+
+		'''
 		maxEval('$.EditablePoly.Bridge ()')
 
-	def b006(self): #Extrude
+	def b006(self):
+		'''
+		Extrude
+
+		'''
 		sel = makeSelection("Current", 0)
     	
 		if (sel != "noSelection"):
@@ -111,7 +163,11 @@ class Polygons(Init):
 				#		extrudeObject(obj)
 				#	option #maxEval('maxOps.CollapseNode $ off; --collapse modifier stack')
 
-	def b007(self): #Bevel \Chamfer
+	def b007(self):
+		'''
+		Bevel \Chamfer
+
+		'''
 		width = float(self.hotBox.ui.s000.value())
 		chamfer = True
 		if chamfer:
@@ -119,10 +175,18 @@ class Polygons(Init):
 		else: #bevel
 			maxEval('modPanel.addModToSelection (Bevel ()) ui:on')
 
-	def b008(self): #
+	def b008(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b009(self): #Collapse component
+	def b009(self):
+		'''
+		Collapse Component
+
+		'''
 		#--[mesh] 0=object level,1=vertex level,2=edge level,3=face,4=polygon,5=element,
 		#--[poly] 0=object level,1=vertex level,2=edge level,3=border,4=polygon,5=element
 		
@@ -139,13 +203,25 @@ class Polygons(Init):
 			$.EditablePoly.collapse #Face
 			''')
 
-	def b010(self): #Extract curve
+	def b010(self):
+		'''
+		Extract Curve
+
+		'''
 		maxEval('')
 
-	def b011(self): #Extract curve options
+	def b011(self):
+		'''
+		Extract Curve Options
+
+		'''
 		maxEval('')
 
-	def b012(self): #Multi-cut tool
+	def b012(self):
+		'''
+		Multi-Cut Tool
+
+		'''
 		maxEval('''
 		Try
 		(
@@ -154,19 +230,35 @@ class Polygons(Init):
 			if (Filters.Is_This_EditPolyMod A) then (A.ToggleCommandMode #Cut)
 			else (A.toggleCommandMode #CutVertex)   -- (Really a general Cut mode.)
 		)
-		Catch (print "cut (poly) error")
+		Catch (print "# Error: invalid multi-cut Selection Type. #")
 		''')
 
-	def b013(self): #Combine polygon options
+	def b013(self):
+		'''
+		Combine Polygon Options
+
+		'''
 		maxEval('CombinePolygonsOptions;')
 
-	def b014(self): # Bevel options
+	def b014(self):
+		'''
+		 Bevel Options
+
+		'''
 		maxEval('')
 
-	def b015(self): #Delete edgeloop
+	def b015(self):
+		'''
+		Delete Edgeloop
+
+		'''
 		maxEval('$.EditablePoly.Remove ()')
 
-	def b016(self): #Inset face region
+	def b016(self):
+		'''
+		Inset Face Region
+
+		'''
 		offset = float(self.hotBox.ui.s001.value())
 		maxEval('''
 		Try 
@@ -179,7 +271,11 @@ class Polygons(Init):
 		Catch()
 		''')
 
-	def b017(self): #Bridge options
+	def b017(self):
+		'''
+		Bridge Options
+
+		'''
 		maxEval('''
 		if Ribbon_Modeling.ValidSOMode() and (subobjectlevel == 2 or subobjectlevel == 3) then
 		(
@@ -195,7 +291,11 @@ class Polygons(Init):
 		)
 		''')
 
-	def b018(self): #Extrude options
+	def b018(self):
+		'''
+		Extrude Options
+
+		'''
 		maxEval('''
 		If SubObjectLevel == undefined then Max Modify Mode
 		-- default to Face level:
@@ -211,37 +311,81 @@ class Polygons(Init):
 		else (A.popupDialog #Extrude)
 		''')
 
-	def b019(self): #
+	def b019(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b020(self): #
+	def b020(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b021(self): #Connect border edges
+	def b021(self):
+		'''
+		Connect Border Edges
+
+		'''
 		mel.eval("performPolyConnectBorders 0;")
 
-	def b022(self): #Connect
+	def b022(self):
+		'''
+		Connect
+
+		'''
 		mel.eval("dR_connectTool;")
 
-	def b023(self): #Boolean
+	def b023(self):
+		'''
+		Boolean
+
+		'''
 		mel.eval("PolygonBooleanUnion;")
 
-	def b024(self): #
+	def b024(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b025(self): #
+	def b025(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b026(self): #
+	def b026(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b027(self): #
+	def b027(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b028(self): #Quad draw
+	def b028(self):
+		'''
+		Quad Draw
+
+		'''
 		mel.eval("dR_quadDrawTool;")
 
-	def b029(self): #Divide facet
+	def b029(self):
+		'''
+		Divide Facet
+
+		'''
 		dv=u=v=0
 		if self.hotBox.ui.chk008.isChecked(): #Split U
 			u=2
@@ -261,37 +405,81 @@ class Polygons(Init):
 		for face in selectedFaces: #when performing polySubdivideFacet on multiple faces, adjacent subdivided faces will make the next face an n-gon and therefore not able to be subdivided. 
 			pm.polySubdivideFacet (face, divisions=0, divisionsU=2, divisionsV=2, mode=0, subdMethod=1)
 
-	def b030(self): #
+	def b030(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b031(self): #
+	def b031(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b032(self): #Poke
+	def b032(self):
+		'''
+		Poke
+
+		'''
 		mel.eval("PokePolygon;")
 
-	def b033(self): #Poke options
+	def b033(self):
+		'''
+		Poke Options
+
+		'''
 		mel.eval("PokePolygonOptions;")
 
-	def b034(self): #Wedge
+	def b034(self):
+		'''
+		Wedge
+
+		'''
 		mel.eval("WedgePolygon;")
 
-	def b035(self): #Wedge options
+	def b035(self):
+		'''
+		Wedge Options
+
+		'''
 		mel.eval("WedgePolygonOptions;")
 
-	def b036(self): #
+	def b036(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b037(self): #
+	def b037(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b038(self): #Assign invisible
+	def b038(self):
+		'''
+		Assign Invisible
+
+		'''
 		mel.eval("polyHole -assignHole 1;")
 
-	def b039(self): #Assign invisible options
+	def b039(self):
+		'''
+		Assign Invisible Options
+
+		'''
 		mel.eval("PolyAssignSubdivHoleOptions;")
 
-	def b040(self): #Merge All Vertices
+	def b040(self):
+		'''
+		Merge All Vertices
+
+		'''
 		floatXYZ = float(self.hotBox.ui.s002.value())
 		mergeAll = self.hotBox.ui.chk006.isChecked()
 
@@ -315,16 +503,32 @@ class Polygons(Init):
 		else:
 			pm.polyMergeVertex(distance=floatXYZ, alwaysMergeTwoVertices=True, constructionHistory=True)
 
-	def b041(self): #
+	def b041(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b042(self): #Merge Vertices Center
+	def b042(self):
+		'''
+		Merge Vertices Center
+
+		'''
 		mel.eval("MergeToCenter;")
 
-	def b043(self): #Target weld
+	def b043(self):
+		'''
+		Target Weld
+
+		'''
 		mel.eval("dR_targetWeldTool;")
 
-	def b044(self): #Detach
+	def b044(self):
+		'''
+		Detach
+
+		'''
 		maxEval('''
 		if subObjectLevel == 4 then
 			$.EditablePoly.detachToElement #Face keepOriginal:off --element
@@ -334,7 +538,11 @@ class Polygons(Init):
 			--$.EditablePoly.detachToElement #Face keepOriginal:on --clone
 		''')
 
-	def b045(self): #Re-order vertices
+	def b045(self):
+		'''
+		Re-Order Vertices
+
+		'''
 		symmetryOn = pm.symmetricModelling(query=True, symmetry=True) #query symmetry state
 		if symmetryOn:
 			pm.symmetricModelling(symmetry=False)
@@ -342,7 +550,11 @@ class Polygons(Init):
 		mel.eval("doBakeNonDefHistory( 1, {\"pre\"});") #history must be deleted
 		mel.eval("performPolyReorderVertex;") #start vertex reorder ctx
 
-	def b046(self): #Split
+	def b046(self):
+		'''
+		Split
+
+		'''
 		vertexMask = pm.selectType (query=True, vertex=True)
 		edgeMask = pm.selectType (query=True, edge=True)
 		facetMask = pm.selectType (query=True, facet=True)
@@ -356,31 +568,67 @@ class Polygons(Init):
 		if vertexMask:
 			mel.eval("polyChamferVtx 0 0.25 0;")
 
-	def b047(self): #Insert edgeloop
+	def b047(self):
+		'''
+		Insert Edgeloop
+
+		'''
 		mel.eval("SplitEdgeRingTool;")
 
-	def b048(self): #Collapse edgering
+	def b048(self):
+		'''
+		Collapse Edgering
+
+		'''
 		mel.eval("bt_polyCollapseEdgeRingTool;")
 
-	def b049(self): #Slide edge tool
+	def b049(self):
+		'''
+		Slide Edge Tool
+
+		'''
 		mel.eval("SlideEdgeTool;")
 
-	def b050(self): #Spin edge
+	def b050(self):
+		'''
+		Spin Edge
+
+		'''
 		mel.eval("bt_polySpinEdgeTool;")
 
-	def b051(self): #Offset edgeloop
+	def b051(self):
+		'''
+		Offset Edgeloop
+
+		'''
 		mel.eval("performPolyDuplicateEdge 0;")
 
-	def b052(self): #Offset edgeloop options
+	def b052(self):
+		'''
+		Offset Edgeloop Options
+
+		'''
 		mel.eval("DuplicateEdgesOptions;")
 
-	def b053(self): #Edit edge flow
+	def b053(self):
+		'''
+		Edit Edge Flow
+
+		'''
 		mel.eval("PolyEditEdgeFlow;")
 
-	def b054(self): #Edit edge flow options
+	def b054(self):
+		'''
+		Edit Edge Flow Options
+
+		'''
 		mel.eval("PolyEditEdgeFlowOptions;")
 
-	def b055(self): #Crease
+	def b055(self):
+		'''
+		Crease
+
+		'''
 		creaseAmount = float(self.hotBox.ui.s003.value())
 		normalAngle = int(self.hotBox.ui.s004.value()) 
 
@@ -402,10 +650,22 @@ class Polygons(Init):
 		if self.hotBox.ui.chk005.isChecked(): #adjust normal angle
 			pm.polySoftEdge (angle=normalAngle)
 
-	def b056(self): #Split vertices
-		mel.eval("polySplitVertex()")
+	def b056(self):
+		'''
+		Split Vertices
 
-	def b057(self): #triFill
+		'''
+		obj = rt.selection[0]
+		verts = rt.polyop.getVertSelection(obj)
+
+		rt.polyop.breakVerts (obj, verts)
+		print 'breakVerts: ', verts
+
+	def b057(self):
+		'''
+		Trifill
+
+		'''
 		pm.undoInfo (openChunk=True)
 		selectTypeEdge = pm.filterExpand(selectionMask=32) #returns True if selectionMask=Edges
 
@@ -471,15 +731,27 @@ class Polygons(Init):
 			pm.selectType(edge=True)
 		pm.undoInfo (closeChunk=True)
 
-	def b058(self): #
+	def b058(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b059(self): #Crease editor
+	def b059(self):
+		'''
+		Crease Editor
+
+		'''
 		print "crease"
 		from maya.app.general import creaseSetEditor
 		creaseSetEditor.showCreaseSetEditor()
 
-	def b060(self): #
+	def b060(self):
+		'''
+		
+
+		'''
 		pass
 
 

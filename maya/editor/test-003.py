@@ -5,12 +5,39 @@ except: pass
 
 ''' Start Code '''
 
-# slice tool
+# sbDict={'prevCommand':[['b001', 'multi-cut tool'], ['b002', 'tool2']]}
+sbDict={'prevName':['init', 'polygons', 'viewport']}
 
-duplicate
-move
-loft w/ output polygon
-boolean
+# for dict_ in sbDict['prevCommand']: 
+# 	for key in dict_:
+# 		key.__name__
+
+
+print [i for i in sbDict['prevName'] if all(['viewport' not in i, 'init'not in i])]
+
+
+
+# if not 'prevCommand' in sbDict: sbDict['prevCommand'] = []
+
+# print sbDict['prevCommand']
+# print len(sbDict['prevCommand'])
+# if len(sbDict['prevCommand']):
+# 	print 'true'
+
+# print sbDict['prevCommand'][-1][1]
+
+
+# obj = 'pPyramid1'
+# vtx = pm.ls(obj+'.vtx[*]', flatten=True)
+
+# print vtx
+
+# # slice tool
+
+# duplicate
+# move
+# loft w/ output polygon
+# boolean
 
 
 

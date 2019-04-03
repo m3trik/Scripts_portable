@@ -16,7 +16,11 @@ class Normals(Init):
 
 
 
-	def b000(self): #Display face normals
+	def b000(self):
+		'''
+		Display Face Normals
+
+		'''
 		size = float(self.hotBox.ui.s001.value())
 		# state = pm.polyOptions (query=True, displayNormal=True)
 		state = self.cycle('displayNormals_1230')
@@ -37,30 +41,62 @@ class Normals(Init):
 			pm.polyOptions (displayNormal=0)
 			self.viewPortMessage("<hl>Tangent</hl> Display <hl>On</hl>.")
 			
-	def b001(self): #Soften edge normal
+	def b001(self):
+		'''
+		Soften Edge Normal
+
+		'''
 		pm.polySoftEdge (angle=180, constructionHistory=0)
 
-	def b002(self): #Harden edge normal
+	def b002(self):
+		'''
+		Harden Edge Normal
+
+		'''
 		pm.polySoftEdge (angle=0, constructionHistory=0)
 
-	def b003(self): #Soft edge display
+	def b003(self):
+		'''
+		Soft Edge Display
+
+		'''
 		mel.eval('int $g_cond[1]=`polyOptions -q -ae`; if ($g_cond[0]) polyOptions -se; else polyOptions -ae;')
 
-	def b004(self): #Set normal angle
+	def b004(self):
+		'''
+		Set Normal Angle
+
+		'''
 		normalAngle = str(self.hotBox.ui.s000.value())
 		pm.polySetToFaceNormal (setUserNormal=1) #reset to face
 		pm.polySoftEdge (angle=normalAngle) #smooth if angle is lower than specified amount. default 30
 
-	def b005(self): #Maya bonus tools: Adjust vertex normals
+	def b005(self):
+		'''
+		Maya Bonus Tools: Adjust Vertex Normals
+
+		'''
 		mel.eval('bgAdjustVertexNormalsWin;')
 
-	def b006(self): #Set to face
+	def b006(self):
+		'''
+		Set To Face
+
+		'''
 		mel.eval('polySetToFaceNormal;')
 
-	def b007(self): #Average normals
+	def b007(self):
+		'''
+		Average Normals
+
+		'''
 		mel.eval('polySetToFaceNormal;polyAverageNormal;')
 
-	def b008(self): #harden creased edges
+	def b008(self):
+		'''
+		Harden Creased Edges
+
+		'''
 		mel.eval("PolySelectConvert 2")
 		edges = pm.polyListComponentConversion (toEdge=1)
 		edges = pm.ls (edges, flatten=1)
@@ -83,7 +119,11 @@ class Normals(Init):
 		pm.progressBar ("tk_progressBar", edit=1, endProgress=1)
 		pm.undoInfo (closeChunk=1)
 
-	def b009(self): #Harden UV edges
+	def b009(self):
+		'''
+		Harden Uv Edges
+
+		'''
 		def createArrayFromSelection (): #(string sel[])	/* returns a string array of the selected transform nodes
 			pm.select (hierarchy=1)
 			nodes = pm.ls (selection=1, transforms=1)
@@ -121,10 +161,18 @@ class Normals(Init):
 
 			pm.select (nodes, replace=1)
 
-	def b010(self): #Reverse normals
+	def b010(self):
+		'''
+		Reverse Normals
+
+		'''
 		mel.eval('ReversePolygonNormals;')
 
-	def b011(self): #Lock/unlock vertex normals
+	def b011(self):
+		'''
+		Lock/Unlock Vertex Normals
+
+		'''
 		all_ = self.hotBox.ui.chk001.isChecked()
 		state = self.hotBox.ui.chk002.isChecked()#pm.polyNormalPerVertex(vertex, query=1, freezeNormal=1)
 		selection = pm.ls (selection=1, objectsOnly=1)
@@ -157,7 +205,11 @@ class Normals(Init):
 		else:
 			print "// Warning: No object selected. //"
 
-	def b012(self): #
+	def b012(self):
+		'''
+		
+
+		'''
 		pass
 		
 

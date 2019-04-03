@@ -16,172 +16,396 @@ class Nurbs(Init):
 
 		
 
-	def b000(self): #Ep curve tool
+	def b000(self):
+		'''
+		Ep Curve Tool
+
+		'''
 		maxEval('EPCurveTool;')
 
-	def b001(self): #Ep curve tool options
+	def b001(self):
+		'''
+		Ep Curve Tool Options
+
+		'''
 		maxEval('EPCurveToolOptions;')
 
-	def b002(self): #Bezier curve tool
+	def b002(self):
+		'''
+		Bezier Curve Tool
+
+		'''
 		maxEval('CreateBezierCurveTool;')
 
-	def b003(self): #Bezier curve tool options
+	def b003(self):
+		'''
+		Bezier Curve Tool Options
+
+		'''
 		maxEval('CreateBezierCurveToolOptions')
 
-	def b004(self): #Cv curve tool
+	def b004(self):
+		'''
+		Cv Curve Tool
+
+		'''
 		maxEval('CVCurveTool')
 
-	def b005(self): #Cv curve tool options
+	def b005(self):
+		'''
+		Cv Curve Tool Options
+
+		'''
 		maxEval('CVCurveToolOptions')
 
-	def b006(self): #Pencil curve tool
+	def b006(self):
+		'''
+		Pencil Curve Tool
+
+		'''
 		maxEval('PencilCurveTool;')
 
-	def b007(self): #Pencil curve tool options
+	def b007(self):
+		'''
+		Pencil Curve Tool Options
+
+		'''
 		maxEval('PencilCurveToolOptions;')
 
-	def b008(self): #2 point circular arc
+	def b008(self):
+		'''
+		2 Point Circular Arc
+
+		'''
 		mel.eval("TwoPointArcTool;")
 
-	def b009(self): #2 point circular arc options
+	def b009(self):
+		'''
+		2 Point Circular Arc Options
+
+		'''
 		maxEval('TwoPointArcToolOptions;')
 
-	def b010(self): #3 point circular arc
+	def b010(self):
+		'''
+		3 Point Circular Arc
+
+		'''
 		mel.eval("ThreePointArcTool;")
 
-	def b011(self): #3 point circular arc options
+	def b011(self):
+		'''
+		3 Point Circular Arc Options
+
+		'''
 		mel.eval("ThreePointArcToolOptions;")
 
-	def b012(self): #project curve
+	def b012(self):
+		'''
+		Project Curve
+
+		'''
 		mel.eval("projectCurve;") #ProjectCurveOnMesh;
 
-	def b013(self): #project curve options
+	def b013(self):
+		'''
+		Project Curve Options
+
+		'''
 		mel.eval("ProjectCurveOnSurfaceOptions;")
 
-	def b014(self): #duplicate curve
+	def b014(self):
+		'''
+		Duplicate Curve
+
+		'''
 		mel.eval("DuplicateCurve;")
 
-	def b015(self): #duplicate curve options
+	def b015(self):
+		'''
+		Duplicate Curve Options
+
+		'''
 		mel.eval("DuplicateCurveOptions;")
 
-	def b016(self): #extract curve
+	def b016(self):
+		'''
+		Extract Curve
+
+		'''
 		mel.eval("CreateCurveFromPoly")
 
-	def b017(self): #extract curve options
+	def b017(self):
+		'''
+		Extract Curve Options
+
+		'''
 		mel.eval("CreateCurveFromPolyOptions")
 
-	def b018(self): #Lock curve
+	def b018(self):
+		'''
+		Lock Curve
+
+		'''
 		mel.eval("LockCurveLength;")
 
-	def b019(self): #Unlock curve
+	def b019(self):
+		'''
+		Unlock Curve
+
+		'''
 		mel.eval("UnlockCurveLength;")
 
-	def b020(self): #bend curve
+	def b020(self):
+		'''
+		Bend Curve
+
+		'''
 		mel.eval("BendCurves;")
 
-	def b021(self): #bend curve options
+	def b021(self):
+		'''
+		Bend Curve Options
+
+		'''
 		mel.eval("BendCurvesOptions;")
 
-	def b022(self): #curl curve
+	def b022(self):
+		'''
+		Curl Curve
+
+		'''
 		mel.eval("CurlCurves;")
 
-	def b023(self): #curl curve options
+	def b023(self):
+		'''
+		Curl Curve Options
+
+		'''
 		mel.eval("CurlCurvesOptions;")
 
-	def b024(self): #modify curve curvature
+	def b024(self):
+		'''
+		Modify Curve Curvature
+
+		'''
 		mel.eval("ScaleCurvature;")
 
-	def b025(self): #modify curve curvature options
+	def b025(self):
+		'''
+		Modify Curve Curvature Options
+
+		'''
 		mel.eval("ScaleCurvatureOptions;")
 
-	def b026(self): #Smooth curve
+	def b026(self):
+		'''
+		Smooth Curve
+
+		'''
 		mel.eval("SmoothHairCurves;")
 
-	def b027(self): #Smooth curve options
+	def b027(self):
+		'''
+		Smooth Curve Options
+
+		'''
 		mel.eval("SmoothHairCurvesOptions;")
 
-	def b028(self): #Straighten curve
+	def b028(self):
+		'''
+		Straighten Curve
+
+		'''
 		mel.eval("StraightenCurves;")
 
-	def b029(self): #Straighten curve options
+	def b029(self):
+		'''
+		Straighten Curve Options
+
+		'''
 		mel.eval("StraightenCurvesOptions;")
 
-	def b030(self): #Extrude
+	def b030(self):
+		'''
+		Extrude
+
+		'''
 		mel.eval("Extrude;")
 
-	def b031(self): #Extrude options
+	def b031(self):
+		'''
+		Extrude Options
+
+		'''
 		mel.eval("ExtrudeOptions;")
 
-	def b032(self): #Revolve
+	def b032(self):
+		'''
+		Revolve
+
+		'''
 		mel.eval("Revolve;")
 
-	def b033(self): #Revolve options
+	def b033(self):
+		'''
+		Revolve Options
+
+		'''
 		mel.eval("RevolveOptions;")
 
-	def b034(self): #Loft
+	def b034(self):
+		'''
+		Loft
+
+		'''
 		mel.eval("loft")
 
-	def b035(self): #Loft options
+	def b035(self):
+		'''
+		Loft Options
+
+		'''
 		mel.eval("LoftOptions;")
 
-	def b036(self): #Planar
+	def b036(self):
+		'''
+		Planar
+
+		'''
 		mel.eval("Planar;")
 
-	def b037(self): #Planar options
+	def b037(self):
+		'''
+		Planar Options
+
+		'''
 		mel.eval("PlanarOptions;")
 
-	def b038(self): #Insert isoparm
+	def b038(self):
+		'''
+		Insert Isoparm
+
+		'''
 		mel.eval("InsertIsoparms;")
 
-	def b039(self): #Insert isoparm options
+	def b039(self):
+		'''
+		Insert Isoparm Options
+
+		'''
 		mel.eval("InsertIsoparmsOptions;")
 
-	def b040(self): #Edit curve tool
+	def b040(self):
+		'''
+		Edit Curve Tool
+
+		'''
 		mel.eval("CurveEditTool;")
 
-	def b041(self): #Attach curve
+	def b041(self):
+		'''
+		Attach Curve
+
+		'''
 		mel.eval("AttachCurveOptions;")
 
-	def b042(self): #Detach curve
+	def b042(self):
+		'''
+		Detach Curve
+
+		'''
 		mel.eval("DetachCurve;")
 
-	def b043(self): #Extend curve
+	def b043(self):
+		'''
+		Extend Curve
+
+		'''
 		mel.eval("ExtendCurveOptions;")
 
-	def b044(self): #
+	def b044(self):
+		'''
+		
+
+		'''
 		mel.eval("")
 
-	def b045(self): #Cut curve
+	def b045(self):
+		'''
+		Cut Curve
+
+		'''
 		mel.eval("CutCurve;")
 
-	def b046(self): #Open/Close curve
+	def b046(self):
+		'''
+		Open/Close Curve
+
+		'''
 		mel.eval("OpenCloseCurve;")
 
-	def b047(self): #Insert knot
+	def b047(self):
+		'''
+		Insert Knot
+
+		'''
 		mel.eval("InsertKnot;")
 
-	def b048(self): #Insert knot options
+	def b048(self):
+		'''
+		Insert Knot Options
+
+		'''
 		mel.eval("InsertKnotOptions;")
 
-	def b049(self): #Add points tool
+	def b049(self):
+		'''
+		Add Points Tool
+
+		'''
 		mel.eval("AddPointsTool;")
 
-	def b050(self): #Rebuild curve options
+	def b050(self):
+		'''
+		Rebuild Curve Options
+
+		'''
 		mel.eval("RebuildCurveOptions;")
 
-	def b051(self): #Reverse curve
+	def b051(self):
+		'''
+		Reverse Curve
+
+		'''
 		mel.eval("reverse;")
 
-	def b052(self): #Extend curve
+	def b052(self):
+		'''
+		Extend Curve
+
+		'''
 		mel.eval("ExtendCurve;")
 
-	def b053(self): #Extend curve options
+	def b053(self):
+		'''
+		Extend Curve Options
+
+		'''
 		mel.eval("ExtendCurveOptions;")
 
-	def b054(self): #Extend on surface
+	def b054(self):
+		'''
+		Extend On Surface
+
+		'''
 		mel.eval("ExtendCurveOnSurface;")
 
-	def b055(self): #Extend on surface options
+	def b055(self):
+		'''
+		Extend On Surface Options
+
+		'''
 		mel.eval("ExtendCurveOnSurfaceOptions;")
 
 

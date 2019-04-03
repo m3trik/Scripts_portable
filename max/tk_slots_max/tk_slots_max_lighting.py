@@ -16,34 +16,74 @@ class Lighting(Init):
 
 
 
-	def b000(self): #
+	def b000(self):
+		'''
+		
+
+		'''
 		maxEval('')
 
-	def b001(self): #
+	def b001(self):
+		'''
+		
+
+		'''
 		maxEval('')
 
-	def b002(self): #
+	def b002(self):
+		'''
+		
+
+		'''
 		maxEval('')
 
-	def b003(self): #
+	def b003(self):
+		'''
+		
+
+		'''
 		maxEval('')
 
-	def b004(self): #
+	def b004(self):
+		'''
+		
+
+		'''
 		maxEval('')
 
-	def b005(self): #
+	def b005(self):
+		'''
+		
+
+		'''
 		maxEval('')
 
-	def b006(self): #
+	def b006(self):
+		'''
+		
+
+		'''
 		maxEval('')
 
-	def b007(self): #
+	def b007(self):
+		'''
+		
+
+		'''
 		maxEval('')
 
-	def b008(self): #
+	def b008(self):
+		'''
+		
+
+		'''
 		mel.eval("")
 
-	def b009(self): #
+	def b009(self):
+		'''
+		
+
+		'''
 		maxEval('')
 
 

@@ -23,14 +23,22 @@ class Create(Init):
 
 
 
-	def t000(self): #set name
+	def t000(self):
+		'''
+		Set Name
+
+		'''
 		newName = self.hotBox.ui.t000.text()
 		print self.history, newName
 		pm.rename (self.history[-1], newName)
 		self.history = newName
 
 
-	def chk000(self): #rotate x axis
+	def chk000(self):
+		'''
+		Rotate X Axis
+
+		'''
 		self.setButtons(self.hotBox.ui, checked='chk000',unchecked='chk001,chk002')
 		obj = pm.ls(sl=1)[0]
 		if obj:
@@ -41,7 +49,11 @@ class Create(Init):
 		else:
 			print "# Warning: nothing selected #"
 
-	def chk001(self): #rotate y axis
+	def chk001(self):
+		'''
+		Rotate Y Axis
+
+		'''
 		self.setButtons(self.hotBox.ui, checked='chk001',unchecked='chk000,chk002')
 		obj = pm.ls(sl=1)[0]
 		if obj:
@@ -52,7 +64,11 @@ class Create(Init):
 		else:
 			print "# Warning: nothing selected #"
 
-	def chk002(self): #rotate z axis
+	def chk002(self):
+		'''
+		Rotate Z Axis
+
+		'''
 		self.setButtons(self.hotBox.ui, checked='chk002',unchecked='chk001,chk000')
 		obj = pm.ls(sl=1)[0]
 		if obj:
@@ -63,15 +79,27 @@ class Create(Init):
 		else:
 			print "# Warning: nothing selected #"
 
-	def chk003(self): #subdivide tris
+	def chk003(self):
+		'''
+		Subdivide Tris
+
+		'''
 		self.hotBox.ui.chk004.setChecked(False)
 		self.setAttributes(1)
 
-	def chk004(self): #subdivide quads
+	def chk004(self):
+		'''
+		Subdivide Quads
+
+		'''
 		self.hotBox.ui.chk003.setChecked(False)
 		self.setAttributes(1)
 
-	def chk005(self): #Create: set point
+	def chk005(self):
+		'''
+		Create: Set Point
+
+		'''
 		#add support for averaging multiple components.
 		selection = pm.ls (selection=1, flatten=1)
 		try:
@@ -86,7 +114,11 @@ class Create(Init):
 				del self.point[:]
 
 
-	def cmb000(self): #set create type
+	def cmb000(self):
+		'''
+		Set Create Type
+
+		'''
 		nurbs = ["Type", "Sphere", "Cube", "Cylinder", "Cone", "Plane", "Torus", "Circle", "Square"]
 		polygons = ["Type", "Cube", "Sphere", "Cylinder", "Plane", "Circle", "Cone", "Pyramid", "Torus", "Tube", "Soccer Ball", "Platonic Solids", "Text"]
 		lights = ["Type", "Ambient", "Directional", "Point", "Spot", "Area", "Volume", "VRay Sphere", "VRay Dome", "VRay Rect", "VRay IES"]
@@ -103,7 +135,11 @@ class Create(Init):
 			self.hotBox.ui.cmb001.clear()
 			self.hotBox.ui.cmb001.addItems(lights)
 
-	def cmb001(self): #set create object
+	def cmb001(self):
+		'''
+		Set Create Object
+
+		'''
 		if self.hotBox.ui.chk000.isChecked():
 			axis = self.rotation['x']
 		if self.hotBox.ui.chk001.isChecked():
@@ -502,34 +538,74 @@ class Create(Init):
 			pm.undoinfo(closeChunk=1)
 
 
-	def b000(self): #Create object 
+	def b000(self):
+		'''
+		Create Object 
+
+		'''
 		self.cmb001()
 
-	def b001(self): #
+	def b001(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b002(self): #
+	def b002(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b003(self): #
+	def b003(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b004(self): #
+	def b004(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b005(self): #
+	def b005(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b006(self): #
+	def b006(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b007(self): #
+	def b007(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b008(self): #
+	def b008(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b009(self): #
+	def b009(self):
+		'''
+		
+
+		'''
 		pass
 
 

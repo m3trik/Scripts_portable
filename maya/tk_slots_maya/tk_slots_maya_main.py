@@ -14,40 +14,96 @@ class Main(Init):
 		super(Main, self).__init__(*args, **kwargs)
 
 
+		text = self.hotBox.sb.prevCommand(docString=True) #get button text from last used command
+		self.hotBox.ui.l000.setText(text)
 
-	def v000(self): #Extrude
+
+
+
+	def v000(self):
+		'''
+		Extrude
+
+		'''
+		text = 'Extrude'
+		self.hotBox.ui.v000.setText(text)
+
 		self.hotBox.sb.getMethod('polygons','b006')
 		print "# Result: perform extrude #"
 
-	def v001(self): #Bridge
+	def v001(self):
+		'''
+		Bridge
+
+		'''
+		text = 'Bridge'
+		self.hotBox.ui.v001.setText(text)
+
 		self.hotBox.sb.getMethod('polygons','b005')
 		print "# Result: bridge #"
 
-	def v002(self): #Multi-cut tool
+	def v002(self):
+		'''
+		Multi-Cut Tool
+
+		'''
+		text = 'Multi-Cut'
+		self.hotBox.ui.v002.setText(text)
+
 		self.hotBox.sb.getMethod('polygons','b012')
 		print "# Result: multi-cut #"
 
-	def v003(self): #Delete history
+	def v003(self):
+		'''
+		Delete History
+
+		'''
+		text = 'Delete History'
+		self.hotBox.ui.v003.setText(text)
+
 		self.hotBox.sb.getMethod('edit','b016')
 		print "# Result: delete history #"
 
-	def v004(self): #Delete
+	def v004(self):
+		'''
+		Delete
+
+		'''
+		text = 'Delete'
+		self.hotBox.ui.v004.setText(text)
+		
 		pm.delete()
 		# self.hotBox.sb.getMethod('edit','b032')
 		print "# Result: delete #"
 
-	def v005(self): #
+	def v005(self):
+		'''
+		
+
+		'''
 		pass
 
-	def v006(self): #Toggle mode
+	def v006(self):
+		'''
+		Toggle Mode
+
+		'''
 		self.cycle('shortCutMode_01234')
 
-	def v007(self): #Minimize main application
+	def v007(self):
+		'''
+		Minimize Main Application
+
+		'''
 		mel.eval("minimizeApp;")
 		self.hotBox.hbHide()
 
 
-	def cmb000(self): #Display
+	def cmb000(self):
+		'''
+		Display
+
+		'''
 		cmb = self.hotBox.ui.cmb000
 		index = cmb.currentIndex() #get current index before refreshing list
 		list_ = [
@@ -178,15 +234,19 @@ class Main(Init):
 
 
 
-	def cmb001(self): #Recent Commands
+	def cmb001(self):
+		'''
+		Recent Commands
+
+		'''
 		cmb = self.hotBox.ui.cmb001
 		index = cmb.currentIndex() #get current index before refreshing list
-		list_ = [dict_.values() for dict_ in self.hotBox.prevCommand] #ie. get value 'muti-cut tool' form [{'b000':'multi-cut tool'}]
+		list_ = self.hotBox.sb.prevCommand(methodList=1) #ie. get the list of previous command methods
 		self.comboBox (cmb, list_, "Recent")
 
 		if index!=0:
-			for key in self.hotBox.prevCommand[index]:
-				key()
+			print self.hotBox.sb.prevCommand(docString=1)[index] #prevCommand docString
+			self.hotBox.sb.prevCommand(methodList=1)[index]() #execute command at index
 			cmb.setCurrentIndex(0)
 
 

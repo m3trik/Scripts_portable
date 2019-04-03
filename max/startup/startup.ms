@@ -80,31 +80,20 @@ function PerformDelayedTasks sender evt=
 	-- user macros:
 	FileIn (dir_+"/max/macros/macros.ms")
 
-	-- ui:
 	-- hide statusPanel
 	statusPanel.visible = true
 
 	-- open the layer explorer
-	macros.run "Scene Explorer" "SELayerExplorer"
+	if sceneexplorermanager.ExplorerExists "Layer Explorer" then 
+	(
+		if (not sceneexplorermanager.ExplorerIsOpen "Layer Explorer") then
+			sceneexplorermanager.OpenExplorer "Layer Explorer"
+	)
+	else
+	(
+		sceneexplorermanager.CreateExplorerFromDefault "Layer Explorer"
+	)
 
-	-- open the scene explorer
--- 	if sceneexplorermanager.ExplorerExists "Scene Explorer" then 
--- 	(
--- 		if (not sceneexplorermanager.ExplorerIsOpen "Scene Explorer") then
--- 			sceneexplorermanager.OpenExplorer "Scene Explorer"
--- 	)
--- 	else
--- 	(
--- 		sceneexplorermanager.CreateExplorerFromDefault "Scene Explorer"
--- 	)
-
-	-- 	macros.run "Track View" "LaunchFCurveEditor" -- Curve Editor Toggle
-	-- 	macros.run "Scene Explorer" "SELayerExplorer" -- Scene Explorer Toggle
-
-	-- 	actionMan.executeAction 135018554 "32771" -- Particle View Toggle
-	-- 	actionMan.executeAction 0 "50048" -- Tools: Material Editor Toggle
-	-- 	actionMan.executeAction 0 "60010" -- Render: Render SetUp Toggle
-	-- 	actionMan.executeAction 0 "40029" -- Render: Environment Dialog Toggle
 
 	-- hotkeys:
 	kbdx = actionMan.getKeyboardFile()	--get current keyboard file

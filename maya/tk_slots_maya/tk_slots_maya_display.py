@@ -17,22 +17,46 @@ class Display(Init):
 
 
 
-	def b000(self): #
+	def b000(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b001(self): #Toggle visibility
+	def b001(self):
+		'''
+		Toggle Visibility
+
+		'''
 		mel.eval('ToggleVisibilityAndKeepSelection();')
 
-	def b002(self): #Hide Selected
+	def b002(self):
+		'''
+		Hide Selected
+
+		'''
 		mel.eval('HideSelectedObjects;')
 
-	def b003(self): #Show selected
+	def b003(self):
+		'''
+		Show Selected
+
+		'''
 		mel.eval('ShowSelectedObjects;')
 
-	def b004(self): #Show Geometry
+	def b004(self):
+		'''
+		Show Geometry
+
+		'''
 		mel.eval('hideShow -geometry -show;')
 
-	def b005(self): #Xray selected
+	def b005(self):
+		'''
+		Xray Selected
+
+		'''
 		mel.eval('''
 		string $sel[] = `ls -sl -dag -s`;
 		for ($object in $sel) 
@@ -42,7 +66,11 @@ class Display(Init):
 			}
 		''')
 
-	def b006(self): #Un-Xray all
+	def b006(self):
+		'''
+		Un-Xray All
+
+		'''
 		mel.eval('''
 		string $scene[] = `ls -visible -flatten -dag -noIntermediate -type surfaceShape`;
 		for ($object in $scene)
@@ -55,7 +83,11 @@ class Display(Init):
 			}
 		''')
 
-	def b007(self): #Xray other
+	def b007(self):
+		'''
+		Xray Other
+
+		'''
 		mel.eval('''
 		//xray all except currently selected
 		{
@@ -72,16 +104,32 @@ class Display(Init):
 		}
 		''')
 
-	def b008(self): #Filter objects
+	def b008(self):
+		'''
+		Filter Objects
+
+		'''
 		mel.eval("bt_filterActionWindow;")
 
-	def b009(self): #
+	def b009(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b010(self): #
+	def b010(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b011(self): #toggle component ID display
+	def b011(self):
+		'''
+		Toggle Component Id Display
+
+		'''
 		index = self.cycle('componentID_01234')
 
 		visible = pm.polyOptions (query=1, displayItemNumbers=1)
@@ -114,45 +162,97 @@ class Display(Init):
 		if index == 4:
 			self.viewPortMessage("component ID <hl>Off</hl>.")
 
-	def b012(self): #wireframe non active (wireframe all but the selected item)
+	def b012(self):
+		'''
+		Wireframe Non Active (Wireframe All But The Selected Item)
+
+		'''
 		current_panel = pm.getPanel (withFocus=1)
 		state = pm.modelEditor (current_panel, query=1, activeOnly=1)
 		pm.modelEditor (current_panel, edit=1, activeOnly=not state)
 
-	def b013(self): #
+	def b013(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b014(self): #
+	def b014(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b015(self): #
+	def b015(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b016(self): #
+	def b016(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b017(self): #
+	def b017(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b018(self): #
+	def b018(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b019(self): #
+	def b019(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b020(self): #
+	def b020(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b021(self): #Template selected
+	def b021(self):
+		'''
+		Template Selected
+
+		'''
 		mel.eval("toggle -template;")
 
-	def b022(self): #
+	def b022(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b023(self): #
+	def b023(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b024(self): #
+	def b024(self):
+		'''
+		
+
+		'''
 		pass
 
 

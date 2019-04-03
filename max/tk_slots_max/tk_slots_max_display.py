@@ -16,53 +16,97 @@ class Display(Init):
 
 
 
-	def chk000(self): #division level 1
+	def chk000(self):
+		'''
+		Division Level 1
+
+		'''
 		self.setAttributesOnSelected (attribute=".smoothLevel", value=1)
 		pm.optionVar (intValue=["proxyDivisions",1]) #subDiv proxy options: 'divisions' 
 		self.setButtons(self.hotBox.ui, unchecked='chk001,chk002,chk003,chk004')
 
-	def chk001(self): #division level 2
+	def chk001(self):
+		'''
+		Division Level 2
+
+		'''
 		self.setAttributesOnSelected (attribute=".smoothLevel", value=2)
 		pm.optionVar (intValue=["proxyDivisions",2]) #subDiv proxy options: 'divisions' 
 		self.setButtons(self.hotBox.ui, unchecked='chk000,chk002,chk003,chk004')
 
-	def chk002(self): #division level 3
+	def chk002(self):
+		'''
+		Division Level 3
+
+		'''
 		self.setAttributesOnSelected (attribute=".smoothLevel", value=3)
 		pm.optionVar (intValue=["proxyDivisions",3]) #subDiv proxy options: 'divisions' 
 		self.setButtons(self.hotBox.ui, unchecked='chk000,chk001,chk003,chk004')
 
-	def chk003(self): #division level 4
+	def chk003(self):
+		'''
+		Division Level 4
+
+		'''
 		self.setAttributesOnSelected (attribute=".smoothLevel", value=4)
 		pm.optionVar (intValue=["proxyDivisions",4]) #subDiv proxy options: 'divisions' 
 		self.setButtons(self.hotBox.ui, unchecked='chk000,chk001,chk002,chk004')
 
-	def chk004(self): #division level 5
+	def chk004(self):
+		'''
+		Division Level 5
+
+		'''
 		self.setAttributesOnSelected (attribute=".smoothLevel", value=5)
 		pm.optionVar (intValue=["proxyDivisions",5]) #subDiv proxy options: 'divisions'
 		self.setButtons(self.hotBox.ui, unchecked='chk000,chk001,chk002,chk003')
 
-	def chk005(self): #tessellation level 6
+	def chk005(self):
+		'''
+		Tessellation Level 6
+
+		'''
 		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=6)
 		self.setButtons(self.hotBox.ui, unchecked='chk006,chk007,chk008,chk009')
 
-	def chk006(self): #tessellation level 7
+	def chk006(self):
+		'''
+		Tessellation Level 7
+
+		'''
 		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=7)
 		self.setButtons(self.hotBox.ui, unchecked='chk005,chk007,chk008,chk009')
 
-	def chk007(self): #tessellation level 8
+	def chk007(self):
+		'''
+		Tessellation Level 8
+
+		'''
 		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=8)
 		self.setButtons(self.hotBox.ui, unchecked='chk005,chk006,chk008,chk009')
 
-	def chk008(self): #tessellation level 9
+	def chk008(self):
+		'''
+		Tessellation Level 9
+
+		'''
 		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=9)
 		self.setButtons(self.hotBox.ui, unchecked='chk005,chk006,chk007,chk009')
 
-	def chk009(self): #tessellation level 10
+	def chk009(self):
+		'''
+		Tessellation Level 10
+
+		'''
 		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=10)
 		self.setButtons(self.hotBox.ui, unchecked='chk005,chk006,chk007,chk008')
 
 
-	def b000(self): #Toggle subdiv proxy display
+	def b000(self):
+		'''
+		Toggle Subdiv Proxy Display
+
+		'''
 		state = self.cycle('subdivProxy_110')
 		try:
 			mel.eval("smoothingDisplayToggle "+str(state))
@@ -70,7 +114,11 @@ class Display(Init):
 			traceback.print_exc()
 			print "// Warning: Nothing Selected\n"
 
-	def b001(self): #Toggle visibility
+	def b001(self):
+		'''
+		Toggle Visibility
+
+		'''
 		sel = [s for s in rt.getCurrentSelection()]
 
 		for obj in sel:
@@ -79,40 +127,64 @@ class Display(Init):
 			else:
 				obj.visibility = True
 
-	def b002(self): #Hide Selected
+	def b002(self):
+		'''
+		Hide Selected
+
+		'''
 		sel = [s for s in rt.getCurrentSelection()]
 	
 		for obj in sel:
 			if not obj.isHiddenInVpt:
 				obj.isHidden = True
 
-	def b003(self): #Show selected
+	def b003(self):
+		'''
+		Show Selected
+
+		'''
 		sel = [s for s in rt.getCurrentSelection()]
 	
 		for obj in sel:
 			if obj.isHiddenInVpt:
 				obj.isHidden = False
 
-	def b004(self): #Show Geometry
+	def b004(self):
+		'''
+		Show Geometry
+
+		'''
 		geometry = rt.geometry
 
 		for obj in geometry:
 			if obj.isHiddenInVpt:
 				obj.isHidden = False
 
-	def b005(self): #Xray selected
+	def b005(self):
+		'''
+		Xray Selected
+
+		'''
 		sel = [s for s in rt.getCurrentSelection()]
 
 		for s in sel:
 			s.xray = True
 
-	def b006(self): #Un-Xray all
+	def b006(self):
+		'''
+		Un-Xray All
+
+		'''
 		geometry = [g for g in rt.geometry]
 
 		for g in geometry:
 			g.xray = False
 
-	def b007(self): #Xray other
+	def b007(self):
+		'''
+		Xray Other
+
+		'''
 		sel = [s for s in rt.getCurrentSelection()]
 		geometry = [g for g in rt.geometry]
 
@@ -120,10 +192,18 @@ class Display(Init):
 			if g not in sel:
 				g.xray = True
 
-	def b008(self): #Filter objects
+	def b008(self):
+		'''
+		Filter Objects
+
+		'''
 		mel.eval("bt_filterActionWindow;")
 
-	def b009(self): #Subdiv proxy
+	def b009(self):
+		'''
+		Subdiv Proxy
+
+		'''
 		global polySmoothBaseMesh
 		polySmoothBaseMesh=[]
 		#disable creating seperate layers for subdiv proxy
@@ -156,10 +236,18 @@ class Display(Init):
 		#toggle performSmoothProxy
 		mel.eval("performSmoothProxy 0;") #toggle SubDiv Proxy;
 
-	def b010(self): #Subdiv proxy options
+	def b010(self):
+		'''
+		Subdiv Proxy Options
+
+		'''
 		maxEval('performSmoothProxy 1;') #SubDiv Proxy Options;
 
-	def b011(self): #toggle component ID display
+	def b011(self):
+		'''
+		Toggle Component Id Display
+
+		'''
 		index = self.cycle('componentID_01234')
 
 		visible = pm.polyOptions (query=1, displayItemNumbers=1)
@@ -192,7 +280,11 @@ class Display(Init):
 		if index == 4:
 			self.viewPortMessage("component ID <hl>Off</hl>.")
 
-	def b012(self): #wireframe non active (wireframe all but the selected item)
+	def b012(self):
+		'''
+		Wireframe Non Active (Wireframe All But The Selected Item)
+
+		'''
 		viewport = rt.viewport.activeViewport
 
 		state = self.cycle('wireframeInactive_01')
@@ -204,31 +296,67 @@ class Display(Init):
 		else:
 			self.maxUiSetChecked("40212", 62, 130, False) #Shade selected objects unchecked
 
-	def b013(self): #Viewport Configuration
+	def b013(self):
+		'''
+		Viewport Configuration
+
+		'''
 		maxEval('actionMan.executeAction 0 "40023"')
 
-	def b014(self): #
+	def b014(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b015(self): #
+	def b015(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b016(self): #
+	def b016(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b017(self): #
+	def b017(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b018(self): #
+	def b018(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b019(self): #
+	def b019(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b020(self): #
+	def b020(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b021(self): #Template selected
+	def b021(self):
+		'''
+		Template Selected
+
+		'''
 		sel = [s for s in rt.getCurrentSelection()]
 
 		for obj in sel:
@@ -237,13 +365,25 @@ class Display(Init):
 			else:
 				obj.isFrozen = True
 
-	def b022(self): #
+	def b022(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b023(self): #
+	def b023(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b024(self): #polygon display options
+	def b024(self):
+		'''
+		Polygon Display Options
+
+		'''
 		mel.eval("CustomPolygonDisplayOptions")
 		# mel.eval("polysDisplaySetup 1;")
 

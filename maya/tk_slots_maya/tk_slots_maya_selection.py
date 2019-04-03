@@ -45,31 +45,55 @@ class Selection(Init):
 		tolerance = float(self.hotBox.ui.s005.value())
 		pm.symmetricModelling(edit=True, symmetry=symmetry, axis=axis, about=space, tolerance=tolerance)
 
-	def t000(self): #select the selection set itself (not members of)
+	def t000(self):
+		'''
+		Select The Selection Set Itself (Not Members Of)
+
+		'''
 		name = str(self.hotBox.ui.t000.text())+"Set"
 		pm.select (name, noExpand=1) #noExpand=select set itself
 
-	def t001(self): #Select by name
+	def t001(self):
+		'''
+		Select By Name
+
+		'''
 		searchStr = str(self.hotBox.ui.t001.text()) #asterisk denotes startswith*, *endswith, *contains* 
 		if searchStr:
 			selection = pm.select (pm.ls (searchStr))
 
-	def chk000(self): #Symmetry X
+	def chk000(self):
+		'''
+		Symmetry X
+
+		'''
 		self.setButtons(self.hotBox.ui, unchecked='chk001,chk002')
 		state = self.hotBox.ui.chk000.isChecked() #symmetry button state
 		self.setSymmetry("x", symmetry=state)
 
-	def chk001(self): #Symmetry Y
+	def chk001(self):
+		'''
+		Symmetry Y
+
+		'''
 		self.setButtons(self.hotBox.ui, unchecked='chk000,chk002')
 		state = self.hotBox.ui.chk001.isChecked() #symmetry button state
 		self.setSymmetry("y", symmetry=state)
 
-	def chk002(self): #Symmetry Z
+	def chk002(self):
+		'''
+		Symmetry Z
+
+		'''
 		self.setButtons(self.hotBox.ui, unchecked='chk000,chk001')
 		state = self.hotBox.ui.chk002.isChecked() #symmetry button state
 		self.setSymmetry("z", symmetry=state)
 
-	def chk004(self): #Ignore backfacing (camera based selection)
+	def chk004(self):
+		'''
+		Ignore Backfacing (Camera Based Selection)
+
+		'''
 		if self.hotBox.ui.chk004.isChecked():
 			pm.selectPref(useDepth=True)
 			self.viewPortMessage("Camera-based selection <hl>On</hl>.")
@@ -77,17 +101,29 @@ class Selection(Init):
 			pm.selectPref(useDepth=False)
 			self.viewPortMessage("Camera-based selection <hl>Off</hl>.")
 
-	def chk005(self): #Symmetry: object
+	def chk005(self):
+		'''
+		Symmetry: Object
+
+		'''
 		self.hotBox.ui.chk006.setChecked(False) #uncheck symmetry:topological
 	
-	def chk006(self): #Symmetry: topo
+	def chk006(self):
+		'''
+		Symmetry: Topo
+
+		'''
 		self.hotBox.ui.chk005.setChecked(False) #uncheck symmetry:object space
 		if any ([self.hotBox.ui.chk000.isChecked(), self.hotBox.ui.chk001.isChecked(), self.hotBox.ui.chk002.isChecked()]): #(symmetry)
 			pm.symmetricModelling(edit=True, symmetry=False)
 			self.setButtons(self.hotBox.ui, unchecked='chk000,chk001,chk002')
 			print "# Warning: First select a seam edge and then check the symmetry button to enable topographic symmetry #"
 
-	def cmb000(self): #List selection sets
+	def cmb000(self):
+		'''
+		List Selection Sets
+
+		'''
 		index = self.hotBox.ui.cmb000.currentIndex() #get current index before refreshing list
 		sets = self.comboBox (self.hotBox.ui.cmb000, [str(set_) for set_ in pm.ls (et="objectSet", flatten=1)], "Sets")
 
@@ -95,7 +131,11 @@ class Selection(Init):
 			pm.select (sets[index])
 			self.hotBox.ui.cmb000.setCurrentIndex(0)
 
-	def cmb001(self): #currently selected objects
+	def cmb001(self):
+		'''
+		Currently Selected Objects
+
+		'''
 		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
 		items = self.comboBox (self.hotBox.ui.cmb001, [str(s) for s in pm.ls (selection=1, flatten=1)], "Currently Selected")
 
@@ -103,7 +143,11 @@ class Selection(Init):
 			pm.select (items[index])
 			self.hotBox.ui.cmb001.setCurrentIndex(0)
 
-	def b000(self): #Create selection set
+	def b000(self):
+		'''
+		Create Selection Set
+
+		'''
 		name = str(self.hotBox.ui.t000.text())+"Set"
 		if pm.objExists (name):
 			pm.sets (name, clear=1)
@@ -112,7 +156,11 @@ class Selection(Init):
 			pm.sets (name=name, text="gCharacterSet")
 			self.hotBox.ui.t000.clear()
 			
-	def b001(self): #Paint select
+	def b001(self):
+		'''
+		Paint Select
+
+		'''
 		if pm.contextInfo ("paintSelect", exists=True):
 			pm.deleteUI ("paintSelect")
 
@@ -125,65 +173,137 @@ class Selection(Init):
 		pm.artSelectCtx ("paintSelect", selectop=selectop, radius=radius, lowerradius=lowerradius)#, beforeStrokeCmd=beforeStrokeCmd())
 		pm.setToolTo ("paintSelect")
 
-	def b002(self): #
+	def b002(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b003(self): #
+	def b003(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b004(self): #
+	def b004(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b005(self): #
+	def b005(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b006(self): #Select similar
+	def b006(self):
+		'''
+		Select Similar
+
+		'''
 		tolerance = str(self.hotBox.ui.s000.value()) #string value because mel.eval is sending a command string
 		mel.eval("doSelectSimilar 1 {\""+ tolerance +"\"}")
 
-	def b007(self): #Select polygon face island
+	def b007(self):
+		'''
+		Select Polygon Face Island
+
+		'''
 		rangeX=rangeY=rangeZ = float(self.hotBox.ui.s002.value())
 
 		mel.eval("tk_selectPolyFaceIsland("+str(rangeX)+","+str(rangeY)+","+str(rangeZ)+")")
 
-	def b008(self): #Select N-th edge
+	def b008(self):
+		'''
+		Select N-Th Edge
+
+		'''
 		mel.eval("selectEveryNEdge;")
 
-	def b009(self): #Select contigious edge loop
+	def b009(self):
+		'''
+		Select Contigious Edge Loop
+
+		'''
 		mel.eval('SelectContiguousEdges;')
 
 	def b10(self): #Select contigious edge loop options
 		mel.eval('SelectContiguousEdgesOptions;')
 
-	def b011(self): #Shortest edge path
+	def b011(self):
+		'''
+		Shortest Edge Path
+
+		'''
 		self.shortestEdgePath()
 		# mel.eval('SelectShortestEdgePathTool;')
 
-	def b012(self): #Selection constraints
+	def b012(self):
+		'''
+		Selection Constraints
+
+		'''
 		mel.eval('PolygonSelectionConstraints;')
 
-	def b013(self): #Lasso select
+	def b013(self):
+		'''
+		Lasso Select
+
+		'''
 		mel.eval("LassoTool;")
 
-	def b014(self): #Grow selection
+	def b014(self):
+		'''
+		Grow Selection
+
+		'''
 		mel.eval('GrowPolygonSelectionRegion;')
 
-	def b015(self): #Shrink selection
+	def b015(self):
+		'''
+		Shrink Selection
+
+		'''
 		mel.eval('ShrinkPolygonSelectionRegion;')
 
-	def b016(self): #Convert selection to vertices
+	def b016(self):
+		'''
+		Convert Selection To Vertices
+
+		'''
 		mel.eval('PolySelectConvert 3;')
 
-	def b017(self): #Convert selection to edges
+	def b017(self):
+		'''
+		Convert Selection To Edges
+
+		'''
 		mel.eval('PolySelectConvert 2;')
 
-	def b018(self): #Convert selection to faces
+	def b018(self):
+		'''
+		Convert Selection To Faces
+
+		'''
 		mel.eval('PolySelectConvert 1;')
 
-	def b019(self): #Convert selection to edge ring
+	def b019(self):
+		'''
+		Convert Selection To Edge Ring
+
+		'''
 		mel.eval('SelectEdgeRingSp;')
 
-	def b020(self): #select edge ring
+	def b020(self):
+		'''
+		Select Edge Ring
+
+		'''
 		print "# Warning: add correct arguments for this tool #" 
 		self.shortestEdgePath()
 

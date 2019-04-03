@@ -23,22 +23,46 @@ class Rendering(Init):
 		comboBox.checkIndex(1)
 		comboBox.checkIndex(2)
 
-	def b000(self): #render current frame
+	def b000(self):
+		'''
+		Render Current Frame
+
+		'''
 		mel.eval('RenderIntoNewWindow;')
 
-	def b001(self): #Open render settings window
+	def b001(self):
+		'''
+		Open Render Settings Window
+
+		'''
 		mel.eval('unifiedRenderGlobalsWindow;')
 
-	def b002(self): #Redo previous render
+	def b002(self):
+		'''
+		Redo Previous Render
+
+		'''
 		mel.eval('redoPreviousRender render;')
 
-	def b003(self): #Editor: Render setup
+	def b003(self):
+		'''
+		Editor: Render Setup
+
+		'''
 		mel.eval('RenderSetupWindow;')
 
-	def b004(self): #Editor: Rendering flags
+	def b004(self):
+		'''
+		Editor: Rendering Flags
+
+		'''
 		mel.eval('renderFlagsWindow;')
 
-	def b005(self): #Apply VRay attributes to selected objects
+	def b005(self):
+		'''
+		Apply Vray Attributes To Selected Objects
+
+		'''
 		selection = pm.ls(selection=1)
 		currentID=1
 		for obj in selection:
@@ -53,7 +77,11 @@ class Rendering(Init):
 			pm.setAttr(obj+'.vrayObjectID',currentID)
 			currentID+=1
 
-	def b006(self): #load vray plugin
+	def b006(self):
+		'''
+		Load Vray Plugin
+
+		'''
 		vray = ['vrayformaya.mll','vrayformayapatch.mll']
 		if pm.pluginInfo ('vrayformaya.mll', query=1, loaded=1):
 			try:
@@ -64,13 +92,25 @@ class Rendering(Init):
 		else:
 			pm.loadPlugin (vray)
 
-	def b007(self): #
+	def b007(self):
+		'''
+		
+
+		'''
 		mel.eval('')
 
-	def b008(self): #
+	def b008(self):
+		'''
+		
+
+		'''
 		mel.eval("")
 
-	def b009(self): #
+	def b009(self):
+		'''
+		
+
+		'''
 		mel.eval('')
 
 
