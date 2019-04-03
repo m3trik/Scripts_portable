@@ -16,7 +16,7 @@ class Scene(Init):
 
 
 
-		self.hotBox.ui.lbl000.setText(pm.workspace (query=1, rd=1).split('/')[-2]) #add current project path string to label. strip path and trailing '/'
+		self.ui.lbl000.setText(pm.workspace (query=1, rd=1).split('/')[-2]) #add current project path string to label. strip path and trailing '/'
 		
 
 
@@ -25,7 +25,7 @@ class Scene(Init):
 		Recent Files
 
 		'''
-		cmb = self.hotBox.ui.cmb000
+		cmb = self.ui.cmb000
 		index = cmb.currentIndex() #get current index before refreshing list
 		files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in file_]
 		files = self.comboBox (cmb, files, "Recent Files")
@@ -40,7 +40,7 @@ class Scene(Init):
 		Recent Projects
 
 		'''
-		cmb = self.hotBox.ui.cmb001
+		cmb = self.ui.cmb001
 		index = cmb.currentIndex() #get current index before refreshing list
 		files = (list(reversed(mel.eval("optionVar -query RecentProjectsList;"))))
 		self.comboBox (cmb, files, "Recent Projects")
@@ -54,7 +54,7 @@ class Scene(Init):
 		Recent Autosave
 
 		'''
-		cmb = self.hotBox.ui.cmb002
+		cmb = self.ui.cmb002
 		index = cmb.currentIndex() #get current index before refreshing list
 		files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" in file_]
 		self.comboBox (cmb, files, "Recent Autosave")
@@ -69,12 +69,12 @@ class Scene(Init):
 		Import
 
 		'''
-		cmb = self.hotBox.ui.cmb003
+		cmb = self.ui.cmb003
 		index = cmb.currentIndex() #get current index before refreshing list
 		self.comboBox (cmb,["Import file", "Import Options"], "Import")
 		
-		if index!=0: #hide hotbox then perform operation
-			self.hotBox.hbHide()
+		if index!=0: #hide hotBox then perform operation
+			self.hotBox.hide_()
 		if index == 1: #Import
 			mel.eval('Import;')
 		if index == 2: #Import options
@@ -86,12 +86,12 @@ class Scene(Init):
 		Export
 
 		'''
-		cmb = self.hotBox.ui.cmb004
+		cmb = self.ui.cmb004
 		index = cmb.currentIndex() #get current index before refreshing list
 		self.comboBox (cmb, ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ"], "Export")
 
-		if index !=0: #hide hotbox then perform operation
-			self.hotBox.hbHide()
+		if index !=0: #hide hotBox then perform operation
+			self.hotBox.hide_()
 		if index == 1: #Export selection
 			mel.eval('ExportSelection;')
 		if index == 2: #Export options
@@ -113,10 +113,10 @@ class Scene(Init):
 		postSaveScript = ""
 
 		type_ = "mayaBinary"
-		if self.hotBox.ui.chk003.isChecked(): #toggle ascii/ binary
+		if self.ui.chk003.isChecked(): #toggle ascii/ binary
 			type_ = "mayaAscii" #type: mayaAscii, mayaBinary, mel, OBJ, directory, plug-in, audio, move, EPS, Adobe(R) Illustrator(R)
 
-		if self.hotBox.ui.chk000.isChecked():
+		if self.ui.chk000.isChecked():
 			mel.eval("DisplayWireframe;")
 
 		#get scene name and file path
@@ -125,7 +125,7 @@ class Scene(Init):
 		curFullName = fullPath[index:] #ie. elise_mid.009.mb
 		currentPath = fullPath[:index] #ie. O:/Cloud/____Graphics/______project_files/elise.proj/elise.scenes/.maya/
 		
-		if self.hotBox.ui.chk001.isChecked(): #increment filename
+		if self.ui.chk001.isChecked(): #increment filename
 			import re, os, fnmatch, shutil
 			incrementAmount = 5
 
@@ -160,7 +160,7 @@ class Scene(Init):
 			pm.saveFile (force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
 			print "// Result: ", currentPath+currentName
 
-		if self.hotBox.ui.chk002.isChecked(): #quit maya
+		if self.ui.chk002.isChecked(): #quit maya
 			import time
 			for timer in range(5):
 				self.viewPortMessage("shutting down:<hl>"+str(timer)+"</hl>")
@@ -226,10 +226,10 @@ class Scene(Init):
 		Remove String From Object Names.
 
 		'''
-		from_ = str(self.hotBox.ui.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
-		to = str(self.hotBox.ui.t001.text())
-		replace = self.hotBox.ui.chk004.isChecked()
-		selected = self.hotBox.ui.chk005.isChecked()
+		from_ = str(self.ui.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
+		to = str(self.ui.t001.text())
+		replace = self.ui.chk004.isChecked()
+		selected = self.ui.chk005.isChecked()
 
 		objects = pm.ls (from_) #Stores a list of all objects starting with 'from_'
 		if selected:

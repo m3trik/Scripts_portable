@@ -103,10 +103,11 @@ class Signal(QtCore.QObject):
 				# print button.__class__.__name__
 				if button.__class__.__name__ == 'QComboBox':
 					#switch the index before opening to initialize the contents of the combobox
+					index = button.currentIndex()
 					button.blockSignals(True)#block signals and change from index 0
 					button.setCurrentIndex(99)
 					button.blockSignals(False)
-					button.setCurrentIndex(0) 
+					button.setCurrentIndex(index)
 					button.showPopup()
 				else:
 					button.click()
