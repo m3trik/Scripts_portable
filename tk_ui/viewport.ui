@@ -44,201 +44,6 @@
    <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::ForceTabbedDocks</set>
   </property>
   <widget class="QWidget" name="mainWindow">
-   <widget class="QGroupBox" name="front">
-    <property name="geometry">
-     <rect>
-      <x>48</x>
-      <y>70</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="v005">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Front -Z</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="persp">
-    <property name="geometry">
-     <rect>
-      <x>118</x>
-      <y>50</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="v004">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Persp</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="top">
-    <property name="geometry">
-     <rect>
-      <x>188</x>
-      <y>70</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="v001">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Top -Y</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="left">
-    <property name="geometry">
-     <rect>
-      <x>33</x>
-      <y>100</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="v003">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Left X</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="bottom">
-    <property name="geometry">
-     <rect>
-      <x>48</x>
-      <y>140</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="v006">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Bottom Y</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="right">
-    <property name="geometry">
-     <rect>
-      <x>203</x>
-      <y>100</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="v002">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Right -X</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="back">
-    <property name="geometry">
-     <rect>
-      <x>188</x>
-      <y>140</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="v000">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Back Z</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="align">
-    <property name="geometry">
-     <rect>
-      <x>118</x>
-      <y>170</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-   </widget>
    <widget class="QPushButton" name="v008">
     <property name="geometry">
      <rect>
@@ -252,7 +57,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="v010">
+   <widget class="QPushButton" name="v009">
     <property name="geometry">
      <rect>
       <x>198</x>
@@ -318,6 +123,9 @@
       <height>61</height>
      </size>
     </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
     <property name="currentText">
      <string>Editors</string>
     </property>
@@ -357,6 +165,9 @@
       <height>61</height>
      </size>
     </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
     <property name="currentText">
      <string>Options</string>
     </property>
@@ -378,15 +189,15 @@
    <widget class="QComboBox" name="cmb001">
     <property name="geometry">
      <rect>
-      <x>105</x>
-      <y>200</y>
-      <width>91</width>
+      <x>115</x>
+      <y>193</y>
+      <width>68</width>
       <height>31</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>91</width>
+      <width>66</width>
       <height>31</height>
      </size>
     </property>
@@ -395,6 +206,9 @@
       <width>9999</width>
       <height>31</height>
      </size>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
     </property>
     <property name="currentText">
      <string>Cameras</string>
@@ -414,29 +228,16 @@
      </property>
     </item>
    </widget>
-   <widget class="QPushButton" name="v007">
-    <property name="geometry">
-     <rect>
-      <x>118</x>
-      <y>150</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Align</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="v009">
+   <widget class="QPushButton" name="v010">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
-      <x>85</x>
-      <y>0</y>
+      <x>40</x>
+      <y>40</y>
       <width>66</width>
-      <height>20</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -448,14 +249,14 @@
    </widget>
    <widget class="QPushButton" name="v011">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
-      <x>150</x>
-      <y>0</y>
+      <x>195</x>
+      <y>40</y>
       <width>66</width>
-      <height>20</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -467,14 +268,14 @@
    </widget>
    <widget class="QPushButton" name="v012">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
       <x>85</x>
-      <y>20</y>
+      <y>-1</y>
       <width>66</width>
-      <height>20</height>
+      <height>51</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -486,14 +287,14 @@
    </widget>
    <widget class="QPushButton" name="v013">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
       <x>150</x>
-      <y>20</y>
+      <y>-1</y>
       <width>66</width>
-      <height>20</height>
+      <height>51</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -503,26 +304,129 @@
      <string>Orbit</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="v007">
+    <property name="geometry">
+     <rect>
+      <x>115</x>
+      <y>170</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Align</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="v006">
+    <property name="geometry">
+     <rect>
+      <x>35</x>
+      <y>140</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Bottom Y</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="v000">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>140</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Back Z</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="v002">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>100</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Right -X</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="v003">
+    <property name="geometry">
+     <rect>
+      <x>35</x>
+      <y>100</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Left X</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="v005">
+    <property name="geometry">
+     <rect>
+      <x>45</x>
+      <y>70</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Front -Z</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="v001">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>70</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Top -Y</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="v004">
+    <property name="geometry">
+     <rect>
+      <x>117</x>
+      <y>50</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Persp</string>
+    </property>
+   </widget>
    <zorder>cmb000</zorder>
    <zorder>cmb001</zorder>
    <zorder>v008</zorder>
-   <zorder>v010</zorder>
+   <zorder>v009</zorder>
    <zorder>v014</zorder>
    <zorder>v015</zorder>
-   <zorder>left</zorder>
-   <zorder>align</zorder>
-   <zorder>persp</zorder>
-   <zorder>bottom</zorder>
-   <zorder>back</zorder>
-   <zorder>front</zorder>
-   <zorder>top</zorder>
-   <zorder>right</zorder>
    <zorder>cmb002</zorder>
-   <zorder>v007</zorder>
-   <zorder>v009</zorder>
-   <zorder>v011</zorder>
    <zorder>v012</zorder>
    <zorder>v013</zorder>
+   <zorder>v007</zorder>
+   <zorder>v006</zorder>
+   <zorder>v000</zorder>
+   <zorder>v002</zorder>
+   <zorder>v003</zorder>
+   <zorder>v005</zorder>
+   <zorder>v001</zorder>
+   <zorder>v004</zorder>
+   <zorder>v011</zorder>
+   <zorder>v010</zorder>
   </widget>
  </widget>
  <resources/>

@@ -16,7 +16,11 @@ class Uv(Init):
 
 
 
-	def cmb000(self): #UV editors comboBox
+	def cmb000(self):
+		'''
+		Uv Editors Combobox
+
+		'''
 		cmb = self.hotBox.ui.cmb000
 		index = cmb.currentIndex() #get current index before refreshing list
 		self.comboBox (cmb, ["UV Editor", "UV Set Editor", "UV Tool Kit", "UV Linking: Texture-Centric", "UV Linking: UV-Centric", "UV Linking: Paint Effects/UV", "UV Linking: Hair/UV"], "Editors")
@@ -39,37 +43,77 @@ class Uv(Init):
 			mel.evel('hairUVLinkingEditor;')
 		cmb.setCurrentIndex(0)
 
-	def b000(self): #cut uv hard edges
+	def b000(self):
+		'''
+		Cut Uv Hard Edges
+
+		'''
 		mel.eval("tk_cutUvHardEdge ();")
 
-	def b001(self): #flip UV
+	def b001(self):
+		'''
+		Flip Uv
+
+		'''
 		mel.eval("performPolyForceUV flip 0;")
 
-	def b002(self): #flip UV options
+	def b002(self):
+		'''
+		Flip Uv Options
+
+		'''
 		mel.eval("performPolyForceUV flip 1;")
 
-	def b003(self): #UV shell selection mask
+	def b003(self):
+		'''
+		Uv Shell Selection Mask
+
+		'''
 		pm.selectType (meshUVShell=1)
 
-	def b004(self): #UV selection mask
+	def b004(self):
+		'''
+		Uv Selection Mask
+
+		'''
 		pm.selectType (polymeshUV=1)
 
-	def b005(self): #Cut UV's
+	def b005(self):
+		'''
+		Cut Uv'S
+
+		'''
 		pm.polyMapCut()
 
-	def b006(self): #
+	def b006(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b007(self): #Display checkered pattern
+	def b007(self):
+		'''
+		Display Checkered Pattern
+
+		'''
 		mel.eval('''
 		$state = `textureWindow -query -displayCheckered polyTexturePlacementPanel1`;
 		textureWindow -edit -displayCheckered (!$state) polyTexturePlacementPanel1;
 		''')		
 
-	def b008(self): #Adjust checkered size
+	def b008(self):
+		'''
+		Adjust Checkered Size
+
+		'''
 		mel.eval("bt_textureEditorCheckerSize;")
 
-	def b009(self): #Borders
+	def b009(self):
+		'''
+		Borders
+
+		'''
 		mel.eval('''
 		textureWindowCreatePopupContextMenu "polyTexturePlacementPanel1popupMenusShift";
 		int $borders[] = `polyOptions -query -displayMapBorder`;
@@ -77,7 +121,11 @@ class Uv(Init):
 		polyOptions -displayMapBorder (!$borders[0]) -sizeBorder $borderWidth[1];
 		''')
 
-	def b010(self): #Distortion
+	def b010(self):
+		'''
+		Distortion
+
+		'''
 		mel.eval('''
 		string $winName[] = `getPanel -scriptType polyTexturePlacementPanel`;
 		int $state = `textureWindow -query -displayDistortion $winName[0]`;
@@ -87,10 +135,18 @@ class Uv(Init):
 			textureWindow -edit -displayDistortion 0 $winName[0];
 		''')
 
-	def b011(self): #Sew UV's
+	def b011(self):
+		'''
+		Sew Uv'S
+
+		'''
 		pm.polyMapSew()
 
-	def b012(self): #Auto unwrap
+	def b012(self):
+		'''
+		Auto Unwrap
+
+		'''
 		scaleMode = self.hotBox.ui.chk000.isChecked() #0 No scale is applied. 1 Uniform scale to fit in unit square. 2 Non proportional scale to fit in unit square.
 		createNewMap = self.hotBox.ui.chk001.isChecked() #Create a new UV set, as opposed to editing the current one, or the one given by the -uvSetName flag.
 		objects = pm.ls(selection=1, objectsOnly=1, flatten=1) #get shape nodes
@@ -106,37 +162,77 @@ class Uv(Init):
 			except:
 				pass
  
-	def b013(self): #Auto map multiple
+	def b013(self):
+		'''
+		Auto Map Multiple
+
+		'''
 		mel.eval('bt_autoMapMultipleMeshes;')
 
-	def b014(self): #Rotate on last
+	def b014(self):
+		'''
+		Rotate On Last
+
+		'''
 		mel.eval('bt_checkSelectionOrderPref; bt_rotateUVsAroundLastWin;')
 
-	def b015(self): #Flip horizontally on last
+	def b015(self):
+		'''
+		Flip Horizontally On Last
+
+		'''
 		mel.eval('bt_checkSelectionOrderPref; bt_polyflipUVsAcrossLast 0;')
 
-	def b016(self): #Flip vertically on last
+	def b016(self):
+		'''
+		Flip Vertically On Last
+
+		'''
 		mel.eval('bt_checkSelectionOrderPref; bt_polyflipUVsAcrossLast 1;')
 
-	def b017(self): #Align UV shells
+	def b017(self):
+		'''
+		Align Uv Shells
+
+		'''
 		self.try_('from AlignUVShells import *; AlignUVShellsWindow()')
 		
-	def b018(self): #Unfold UV's
+	def b018(self):
+		'''
+		Unfold Uv'S
+
+		'''
 		mel.eval('performUnfold 0;')
 
-	def b019(self): #Optimize UV's
+	def b019(self):
+		'''
+		Optimize Uv'S
+
+		'''
 		mel.eval('performPolyOptimizeUV 0;')
 
-	def b020(self): #Move to UV space
+	def b020(self):
+		'''
+		Move To Uv Space
+
+		'''
 		u = str(self.hotBox.ui.s000.value())
 		v = str(self.hotBox.ui.s001.value())
 
 		pm.polyEditUV (u=u, v=v)
 
-	def b021(self): #Straighten UV
+	def b021(self):
+		'''
+		Straighten Uv
+
+		'''
 		mel.eval('texStraightenUVs "UV" 30;')
 
-	def b022(self): #Stack similar
+	def b022(self):
+		'''
+		Stack Similar
+
+		'''
 		pm.polyUVStackSimilarShells (to=0.1)
 
 

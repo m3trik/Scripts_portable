@@ -6,7 +6,6 @@ from PySide2 import QtCore, QtGui, QtWidgets
 from ctypes import windll, Structure, c_long, byref
 
 import sys, os.path
-from PySide2.QtUiTools import QUiLoader
 
 from tk_switchboard import Switchboard
 import tk_styleSheet as styleSheet
@@ -15,35 +14,6 @@ try: import MaxPlus
 except: pass
 
 
-
-
-# ------------------------------------------------
-# Get relative path to ui files
-# ------------------------------------------------
-
-#set path to the directory containing the ui files.
-path = os.path.join(os.path.dirname(__file__), 'tk_ui') #get absolute path from dir of this module + relative path to directory
-
-
-# ------------------------------------------------
-# Generate Ui List
-# ------------------------------------------------
-#create a list of the names of the files in the ui folder, removing the extension.
-def uiList():
-	return [file_.replace('.ui','') for file_ in os.listdir(path) if file_.endswith('.ui')] #gets uiList from directory contents
-
-
-# ------------------------------------------------
-# Load individual ui file paths
-# ------------------------------------------------
-#set path to ui files
-def getQtui(name):
-	'''
-	arg:	 string
-	returns: dynamic ui object
-	'''
-	qtui = QUiLoader().load(path+'/'+name+'.ui')
-	return qtui
 
 
 
@@ -74,8 +44,6 @@ def moveWindow(window, x, y):
 # ------------------------------------------------
 class HotBox(QtWidgets.QWidget):
 
-	mouseHover = QtCore.Signal(bool)
-
 	def __init__(self, parent):
 		QtWidgets.QWidget.__init__(self)
 
@@ -90,83 +58,90 @@ class HotBox(QtWidgets.QWidget):
 		self.mousePosition = None
 		self.mousePressOn = True
 
-		self.sb = Switchboard(uiList())
+		self.sb = Switchboard()
 		
-		self.app = parent.objectName().rstrip('Window').lower() #remove 'Window' from objectName ie. 'Maya' from 'MayaWindow' and set lowercase.
-		self.signal = self.sb.setClassObject('signal', 'tk_signals.Signal')(self)
-		for name in self.sb.uiList(): self.sb.setClassObject(name, 'tk_slots_'+self.app+'_'+name+'.'+name.capitalize()) #append each corresponding class object of the uiList to switchboardDict
+		self.app = self.sb.setApp(parent)
 
-		self.layoutStack()
+		self.sb.setClass(self) #add hotbox instance to switchboard dict
+		self.signal = self.sb.setClass('tk_signals.Signal')()
+
+		self.layoutStack(self.sb.getUiIndex('init')) #initialize layout
 		self.overlay = Overlay(self)
 
-		
 
-	def layoutStack(self, index=None):
+
+	def layoutStack(self, index):
 		#args:	[int] #layout index
-		if not self.layout(): #if layout doesnt exist; init stackedLayout.
+		# import timeit
+		# t0=timeit.default_timer()
+
+
+		if not self.layout(): #if layout doesnt exist; initialize stackedLayout.
 			self.stackedLayout = QtWidgets.QStackedLayout()
 
-			for name in self.sb.uiList():
-				ui = getQtui(name) #get the dynamic ui
-				# build dictionary to store size info for each ui
+			for name, ui in self.sb.uiList():
+				# store size info for each ui
 				self.sb.setUiSize(name, [ui.frameGeometry().width(), ui.frameGeometry().height()])
 				# add ui to layoutStack
 				self.stackedLayout.addWidget(ui) #add each ui
 			self.setLayout(self.stackedLayout)
-			index = self.sb.getUiIndex('init') #Initialize layout index to 'init'
+
 
 		self.index = index
-		self.name = self.sb.getUiName(self.index) #use index to get name
+		self.name = self.sb.setUiName(self.index) #get/set current ui name from index
+		self.ui = self.sb.getUi() #get the current dymanic ui
 
 		#set ui from stackedLayout
 		self.stackedLayout.setCurrentIndex(self.index)
-		#get ui from stackedLayout
-		self.ui = self.stackedLayout.widget(self.index)
+
 		
-		#get ui size from uiSideDict and resize window
-		self.width = self.sb.getUiSize(self.name)[0]
-		self.height = self.sb.getUiSize(self.name)[1]
+		#get ui size for current ui and resize window
+		self.width = self.sb.getUiSize(width=1)
+		self.height = self.sb.getUiSize(height=1)
 		self.resize(self.width, self.height) #window size
 		
-		self.point = QtCore.QPoint(self.width/2, self.height/2) #set point to the middle of the layout
+		self.point = QtCore.QPoint(self.sb.getUiSize(percentWidth=50), self.sb.getUiSize(percentHeight=50)) #set point to the middle of the layout
 		
-		self.init = self.sb.getClassObject('init')(self)
+
+		if not self.sb.hasKey(self.name, 'connectionDict'):
+			self.signal.buildConnectionDict() #construct the signals and slots for the ui 
+
+
 		if self.name=='init':
-			self.init.info()
+			pass
+			# self.sb.getClass('init')().info()
 		else:
-			if not self.sb.hasKey(self.name, 'connectionDict'):
-				self.signal.buildConnectionDict() #construct the signals and slots for the ui 
-
 			#remove old and add new signals for current ui from connectionDict
-			if len(self.sb.prevName())>1:
-				if self.name!=self.sb.prevName()[-2]:
-					self.signal.removeSignal(self.sb.prevName()[-2])
+			if self.name!=self.sb.previousName(allowDuplicates=1):
+				if self.sb.previousName():
+					self.signal.removeSignal(self.sb.previousName())
 					self.signal.addSignal(self.name)
-			else: #if no previous ui exists
-				self.signal.addSignal(self.name)
+				else: #if no previous ui exists
+					self.signal.addSignal(self.name)
 
-			#build array that stores prevName string for removeSignal and open last used window command
-			self.sb.prevName().append(self.name)
+
+
+		#close window when pin unchecked
+		# if hasattr (self.ui, 'chkpin'):
+		try: self.ui.chkpin.released.connect(self.hide_)
+		except: pass
+
+		# t1=timeit.default_timer()
+		# print 'time:',t1-t0
+
+
+		# self.mousePressOn = False
+		# # import time
+		# if self.name=='main':
+		# 	windll.user32.mouse_event(0x10, 0, 0, 0,0) #right up
+		# 	# time.sleep(.5)
+		# 	# windll.user32.mouse_event(0x8, 0, 0, 0,0) #right down
 			
-
-			#close window when pin unchecked
-			# if hasattr (self.ui, 'chkpin'):
-			try: self.ui.chkpin.released.connect(self.hide_)
-			except: pass
-
-
-			# self.mousePressOn = False
-			# # import time
-			# if self.name=='main':
-			# 	windll.user32.mouse_event(0x10, 0, 0, 0,0) #right up
-			# 	# time.sleep(.5)
-			# 	# windll.user32.mouse_event(0x8, 0, 0, 0,0) #right down
-				
-			# if self.name=='viewport':
-			# 	windll.user32.mouse_event(0x4, 0, 0, 0,0) #left up
-			# 	# time.sleep(.5)
-			# 	# windll.user32.mouse_event(0x2, 0, 0, 0,0) #left down
-			# self.mousePressOn = True
+		# if self.name=='viewport':
+		# 	windll.user32.mouse_event(0x4, 0, 0, 0,0) #left up
+		# 	# time.sleep(.5)
+		# 	# windll.user32.mouse_event(0x2, 0, 0, 0,0) #left down
+		# self.mousePressOn = True
 
 
 
@@ -175,23 +150,7 @@ class HotBox(QtWidgets.QWidget):
 # ------------------------------------------------
 
 
-	def eventFilter(self, button, event):
-		#args:	[source object]
-		#		[QEvent]
-		if event.type()==QtCore.QEvent.Type.Enter: #enter event
-			self.mouseHover.emit(True)
-			# print button.__class__.__name__
-			if button.__class__.__name__ == 'QComboBox':
-				# button.setCurrentIndex(99)
-				button.setCurrentIndex(0)
-				button.showPopup()
-			else:
-				button.click()
 
-		if event.type()==QtCore.QEvent.Type.HoverLeave:
-			self.mouseHover.emit(False)
-
-		return QtWidgets.QWidget.eventFilter(self, button, event)
 
 
 # ------------------------------------------------
@@ -231,19 +190,9 @@ class HotBox(QtWidgets.QWidget):
 		#args: [QEvent]
 		#show last used submenu on double mouseclick 
 		if event.button()==QtCore.Qt.RightButton:
-			if len(self.sb.prevName())>0:
-				if all ([self.sb.prevName()[-2]!="init", self.sb.prevName()[-2]!="main", self.sb.prevName()[-2]!="viewport"]):
-					self.layoutStack(self.sb.getUiIndex(self.sb.prevName()[-2]))
-				else: #search prevName for valid previously used submenu 
-					if len(self.sb.prevName())>2:
-						i = -3
-						for element in range (len(self.sb.prevName()) -2):
-							if all ([self.sb.prevName()[i]!="init", self.sb.prevName()[i]!="main", self.sb.prevName()[i]!="viewport"]): 
-								index = self.sb.getUiIndex(self.sb.prevName()[i])
-								if index is not None:
-									self.layoutStack(index)
-							else:
-								i-=1
+			try: self.layoutStack(self.sb.previousName(previousIndex=True))
+			except: pass
+
 		if event.button()==QtCore.Qt.LeftButton:
 			try:
 				self.repeatLastCommand()
@@ -264,8 +213,6 @@ class HotBox(QtWidgets.QWidget):
 				if (event.buttons() & QtCore.Qt.LeftButton): #drag window and pin
 					moveWindow(self, -self.point.x(), -self.point.y()*.1) #set mouse position and move window with mouse down
 					self.ui.chkpin.setChecked(True)
-					# self.popup = Popup(self, self.ui)
-					# self.popup.show()
 
 
 	def showEvent(self, event):
@@ -297,8 +244,8 @@ class HotBox(QtWidgets.QWidget):
 
 
 	def repeatLastCommand(self):
-		self.sb.prevCommand()[-1][0]() #execute command object
-		print self.sb.prevCommand()[-1][1] #print command name string
+		self.sb.prevCommand()() #execute command object
+		print self.sb.prevCommand(docString=1) #print command name string
 		
 
 
@@ -460,6 +407,7 @@ class _GCProtector(object):
 # Initialize
 # ------------------------------------------------
 def createInstance():
+
 	app = QtWidgets.QApplication.instance()
 	if not app:
 		app = QtWidgets.QApplication([])
@@ -471,7 +419,6 @@ def createInstance():
 	_GCProtector.widgets.append(hotBox)
 
 	return hotBox
-
 
 
 

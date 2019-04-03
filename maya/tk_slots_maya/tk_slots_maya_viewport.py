@@ -14,11 +14,15 @@ class Viewport(Init):
 		super(Viewport, self).__init__(*args, **kwargs)
 
 
-	def cmb000(self): #Camera Editors
+	def cmb000(self):
+		'''
+		Camera Editors
+
+		'''
 		cmb = self.hotBox.ui.cmb000
 		index = cmb.currentIndex() #get current index before refreshing list
 		list_ = ['Camera Sequencer', 'Camera Set Editor']
-		self.comboBox (cmb, list_, "Camera Editors")
+		self.comboBox (cmb, list_, "Editors")
 
 		if index!=0:
 			if index==1:
@@ -28,7 +32,11 @@ class Viewport(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def cmb001(self): #Cameras
+	def cmb001(self):
+		'''
+		Additional Cameras
+
+		'''
 		# Get all cameras first
 		cameras = pm.ls(type=('camera'), l=True)
 		# Let's filter all startup / default cameras
@@ -43,18 +51,22 @@ class Viewport(Init):
 
 		cmb = self.hotBox.ui.cmb001
 		index = cmb.currentIndex() #get current index before refreshing list
-		self.comboBox (cmb, non_startup_cameras, "Additional Cameras")
+		self.comboBox (cmb, non_startup_cameras, "Cameras")
 
 		if index!=0:
 			pm.select (non_startup_cameras[index])
 			cmb.setCurrentIndex(0)
 
 
-	def cmb002(self): #Options
+	def cmb002(self):
+		'''
+		Camera Options
+
+		'''
 		cmb = self.hotBox.ui.cmb002
 		index = cmb.currentIndex() #get current index before refreshing list
 		list_ = ['Create: Custom Camera','Create: Set Custom Camera','Create: Camera From View','Group Cameras']
-		self.comboBox (cmb, list_, "Camera Options")
+		self.comboBox (cmb, list_, "Options")
 
 		if index!=0:
 			if index==1:
@@ -95,26 +107,13 @@ class Viewport(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def cmb003(self): #Camera Transforms
-		cmb = self.hotBox.ui.cmb003
-		index = cmb.currentIndex() #get current index before refreshing list
-		list_ = ['Dolly', 'Roll', 'Truck', 'Pan']
-		self.comboBox (cmb, list_, "Transform")
-
-		if index!=0:
-			if index==1: #camera: dolly/zoom
-				maxEval("max dolly mode")
-			if index==2: #camera: roll
-				maxEval("max roll")
-			if index==1: #camera: truck/pan
-				maxEval("max truck")
-			if index==2: #camera: orbit
-				maxEval("max pancamera")
-			cmb.setCurrentIndex(0)
 
 
+	def v000(self):
+		'''
+		Viewport: Back View
 
-	def v000(self): #viewport: back view
+		'''
 		mel.eval('''
 		if (`objExists back`)
 		{
@@ -142,13 +141,25 @@ class Viewport(Init):
 		}
 		''')
 
-	def v001(self): #viewport: top view
+	def v001(self):
+		'''
+		Viewport: Top View
+
+		'''
 		pm.lookThru ("topShape")
 
-	def v002(self): #viewport: right view
+	def v002(self):
+		'''
+		Viewport: Right View
+
+		'''
 		pm.lookThru ("sideShape")
 
-	def v003(self): #viewport: left view
+	def v003(self):
+		'''
+		Viewport: Left View
+
+		'''
 		mel.eval('''
 		if (`objExists left`)
 		{
@@ -174,13 +185,25 @@ class Viewport(Init):
 		}
 		''')
 
-	def v004(self): #viewport: perspective view
+	def v004(self):
+		'''
+		Viewport: Perspective View
+
+		'''
 		pm.lookThru ("perspShape")
 
-	def v005(self): #viewport: front view
+	def v005(self):
+		'''
+		Viewport: Front View
+
+		'''
 		pm.lookThru ("frontShape")
 
-	def v006(self): #viewport: bottom view
+	def v006(self):
+		'''
+		Viewport: Bottom View
+
+		'''
 		mel.eval('''
 		if (`objExists bottom`)
 		{
@@ -208,7 +231,11 @@ class Viewport(Init):
 		}
 		''')
 
-	def v007(self): #viewport: align view
+	def v007(self):
+		'''
+		Viewport: Align View
+
+		'''
 		mel.eval('''
 		$cameraExists = `objExists alignToPoly`; //check exists if not create camera
 		if ($cameraExists != 1)
@@ -237,28 +264,60 @@ class Viewport(Init):
 		}
 		''')
 
-	def v008(self): #
+	def v008(self):
+		'''
+		
+
+		'''
 		pass
 
-	def v009(self): #
+	def v009(self):
+		'''
+		
+
+		'''
 		pass
 
-	def v010(self): #
+	def v010(self):
+		'''
+		Camera: Dolly
+
+		'''
 		pass
 
-	def v011(self): #
+	def v011(self):
+		'''
+		Camera: Roll
+
+		'''
 		pass
 
-	def v012(self): #
+	def v012(self):
+		'''
+		Camera: Truck
+
+		'''
 		pass
 
-	def v013(self): #
+	def v013(self):
+		'''
+		Camera: Orbit
+
+		'''
 		pass
 
-	def v014(self): #
+	def v014(self):
+		'''
+		
+
+		'''
 		pass
 
-	def v015(self): #
+	def v015(self):
+		'''
+		
+
+		'''
 		pass
 
 

@@ -31,28 +31,48 @@ class Transform(Init):
 		else:
 			self.hotBox.ui.chk013.setChecked(False)
 
-	def chk005(self): #transform: scale
+	def chk005(self):
+		'''
+		Transform: Scale
+
+		'''
 		self.setButtons(self.hotBox.ui, unchecked='chk008,chk009',checked='chk000,chk001,chk002')
 		self.hotBox.ui.s000.setValue(2)
 		self.hotBox.ui.s000.setSingleStep(1)
 
-	def chk008(self): #transform: move
+	def chk008(self):
+		'''
+		Transform: Move
+
+		'''
 		self.setButtons(self.hotBox.ui, unchecked='chk005,chk009,chk000,chk001,chk002')
 		self.hotBox.ui.s000.setValue(0.1)
 		self.hotBox.ui.s000.setSingleStep(0.1)
 
-	def chk009(self): #transform: rotate
+	def chk009(self):
+		'''
+		Transform: Rotate
+
+		'''
 		self.setButtons(self.hotBox.ui, unchecked='chk005,chk008,chk000,chk001,chk002')
 		self.hotBox.ui.s000.setValue(45)
 		self.hotBox.ui.s000.setSingleStep(5)
 
-	def chk010(self): #align: auto align
+	def chk010(self):
+		'''
+		Align: Auto Align
+
+		'''
 		if self.hotBox.ui.chk010.isChecked():
 			self.setButtons(self.hotBox.ui, disable='b029,b030,b031')
 		else:
 			self.setButtons(self.hotBox.ui, enable='b029,b030,b031')
 
-	def chk012(self): #Constrain to edge
+	def chk012(self):
+		'''
+		Constrain To Edge
+
+		'''
 		if self.hotBox.ui.chk012.isChecked():
 			self.hotBox.ui.chk013.setChecked(False)
 			# pm.manipMoveSetXformConstraint(edge=True);
@@ -61,7 +81,11 @@ class Transform(Init):
 			# pm.manipMoveSetXformConstraint(none=True);
 			pm.xformConstraint(type='none')
 
-	def chk013(self): #Constrain to surface
+	def chk013(self):
+		'''
+		Constrain To Surface
+
+		'''
 		if self.hotBox.ui.chk013.isChecked():
 			self.hotBox.ui.chk012.setChecked(False)
 			# pm.manipMoveSetXformConstraint(surface=True);
@@ -118,7 +142,11 @@ class Transform(Init):
 		if self.hotBox.ui.chk009.isChecked():
 			pm.xform (relative=relative, worldSpace=worldspace, objectSpace=(not worldspace), rotation=(xyz[0], xyz[1], xyz[2]))
 
-	def b000(self): #transform -
+	def b000(self):
+		'''
+		Transform -
+
+		'''
 		#change the textfield to neg value and call transform
 		textfield = float(self.hotBox.ui.s000.value())
 		if textfield >=0:
@@ -126,7 +154,11 @@ class Transform(Init):
 			self.hotBox.ui.s000.setValue(newText)
 		self.transform()
 
-	def b001(self): #transform +
+	def b001(self):
+		'''
+		Transform +
+
+		'''
 		#change the textfield to pos value and call transform
 		textfield = float(self.hotBox.ui.s000.value())
 		if textfield <0:
@@ -134,15 +166,27 @@ class Transform(Init):
 			self.hotBox.ui.s000.setValue(newText)
 		self.transform()
 
-	def b002(self): #Freeze transformations
+	def b002(self):
+		'''
+		Freeze Transformations
+
+		'''
 		# mel.eval("performFreezeTransformations(0);")
 		pm.makeIdentity(apply=True) #freeze transforms
 		# pm.makeIdentity (obj, apply=1, t=1, r=1, s=1, n=0, pn=1)
 		
-	def b003(self): #Center pivot object
+	def b003(self):
+		'''
+		Center Pivot Object
+
+		'''
 		mel.eval("CenterPivot;")
 		
-	def b004(self): #Align vertices
+	def b004(self):
+		'''
+		Align Vertices
+
+		'''
 		if self.hotBox.ui.chk010.isChecked(): #if checked; set coordinates for auto align:
 			sel = pm.ls (selection=1)
 
@@ -219,7 +263,11 @@ class Transform(Init):
 		if all ([x, y, z]): #align xyz
 			self.alignVertices(mode=6,average=avg,edgeloop=loop)
 
-	def b005(self): #move to
+	def b005(self):
+		'''
+		Move To
+
+		'''
 		sel = rt.getCurrentSelection()
 
 		source = sel[0]
@@ -227,30 +275,62 @@ class Transform(Init):
 		#move object to center of the last selected items bounding box
 		source.center = target.center
 
-	def b006(self): #
+	def b006(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b007(self): #
+	def b007(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b008(self): #
+	def b008(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b009(self): #
+	def b009(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b010(self): #
+	def b010(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b011(self): #
+	def b011(self):
+		'''
+		
+
+		'''
 		pass
 
-	def b012(self): #Make live
+	def b012(self):
+		'''
+		Make Live
+
+		'''
 		objects = pm.ls (sl=1)[0] #construction planes, nurbs surfaces and polygon meshes can be made live. makeLive supports one live object at a time.
 		pm.makeLive(obj)
 		print str(obj)+'is live.' 
 
-	def b013(self): #Drop to grid
+	def b013(self):
+		'''
+		Drop To Grid
+
+		'''
 		origin = self.hotBox.ui.chk014.isChecked()
 		bBoxLowestPoint = self.hotBox.ui.chk015.isChecked()
 		centerPivot = self.hotBox.ui.chk016.isChecked()
@@ -296,62 +376,138 @@ class Transform(Init):
 					pm.xform (obj, rotatePivot=osPivot, objectSpace=1) #return pivot to orig position
 				pm.select(selection) #retore the original selection
 
-	def b014(self): #Center pivot component
+	def b014(self):
+		'''
+		Center Pivot Component
+
+		'''
 		[pm.xform (s, centerPivot=1) for s in pm.ls (sl=1, objectsOnly=1, flatten=1)]
 		# mel.eval("moveObjectPivotToComponentCentre;")
 
-	def b015(self): #Center pivot world
+	def b015(self):
+		'''
+		Center Pivot World
+
+		'''
 		mel.eval("xform -worldSpace -pivots 0 0 0;")
 
-	def b016(self): #Set to bounding box
+	def b016(self):
+		'''
+		Set To Bounding Box
+
+		'''
 		mel.eval("bt_alignPivotToBoundingBoxWin;")
 
-	def b017(self): #Bake pivot
+	def b017(self):
+		'''
+		Bake Pivot
+
+		'''
 		mel.eval("BakeCustomPivot;")
 
-	def b018(self): #Snap Align objects: Align objects
+	def b018(self):
+		'''
+		Snap Align Objects: Align Objects
+
+		'''
 		mel.eval("performAlignObjects 1;")
 
-	def b019(self): #Align 1 points
+	def b019(self):
+		'''
+		Align 1 Points
+
+		'''
 		mel.eval("SnapPointToPointOptions;")
 
-	def b020(self): #Align 2 points
+	def b020(self):
+		'''
+		Align 2 Points
+
+		'''
 		mel.eval("Snap2PointsTo2PointsOptions;")
 
-	def b021(self): #Align 3 points
+	def b021(self):
+		'''
+		Align 3 Points
+
+		'''
 		mel.eval("Snap3PointsTo3PointsOptions;")
 
-	def b022(self): #Align tool
+	def b022(self):
+		'''
+		Align Tool
+
+		'''
 		mel.eval("setToolTo alignToolCtx;")
 
-	def b023(self): #Orient to vertex/edge
+	def b023(self):
+		'''
+		Orient To Vertex/Edge
+
+		'''
 		mel.eval("orientToTool;")
 
-	def b024(self): #Snap to component
+	def b024(self):
+		'''
+		Snap To Component
+
+		'''
 		mel.eval("bt_snapAlignObjectToComponent;")
 
-	def b025(self): #Snap together
+	def b025(self):
+		'''
+		Snap Together
+
+		'''
 		mel.eval("setToolTo snapTogetherToolCtx;")
 
-	def b026(self): #Maya bonus tools: snap align objects to component options
+	def b026(self):
+		'''
+		Maya Bonus Tools: Snap Align Objects To Component Options
+
+		'''
 		mel.eval("bt_snapAlignObjectToComponentOptions;")
 
-	def b027(self): #
+	def b027(self):
+		'''
+		
+
+		'''
 		mel.eval("")
 
-	def b028(self): #
+	def b028(self):
+		'''
+		
+
+		'''
 		mel.eval("")
 
-	def b029(self): #
+	def b029(self):
+		'''
+		
+
+		'''
 		mel.eval("")
 
-	def b030(self): #
+	def b030(self):
+		'''
+		
+
+		'''
 		mel.eval("")
 
-	def b031(self): #
+	def b031(self):
+		'''
+		
+
+		'''
 		mel.eval("")
 
-	def b032(self): #Reset pivot transforms
+	def b032(self):
+		'''
+		Reset Pivot Transforms
+
+		'''
 		mel.eval('''
 		{ string $objs[] = `ls -sl -type transform -type geometryShape`;
 		if (size($objs) > 0) { xform -cp; } manipPivot -rp -ro; };

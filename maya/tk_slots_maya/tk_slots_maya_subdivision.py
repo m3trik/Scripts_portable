@@ -16,53 +16,97 @@ class Subdivision(Init):
 
 
 
-	def chk000(self): #division level 1
+	def chk000(self):
+		'''
+		Division Level 1
+
+		'''
 		self.setAttributesOnSelected (attribute=".smoothLevel", value=1)
 		pm.optionVar (intValue=["proxyDivisions",1]) #subDiv proxy options: 'divisions' 
 		self.setButtons(self.hotBox.ui, unchecked='chk001,chk002,chk003,chk004')
 
-	def chk001(self): #division level 2
+	def chk001(self):
+		'''
+		Division Level 2
+
+		'''
 		self.setAttributesOnSelected (attribute=".smoothLevel", value=2)
 		pm.optionVar (intValue=["proxyDivisions",2]) #subDiv proxy options: 'divisions' 
 		self.setButtons(self.hotBox.ui, unchecked='chk000,chk002,chk003,chk004')
 
-	def chk002(self): #division level 3
+	def chk002(self):
+		'''
+		Division Level 3
+
+		'''
 		self.setAttributesOnSelected (attribute=".smoothLevel", value=3)
 		pm.optionVar (intValue=["proxyDivisions",3]) #subDiv proxy options: 'divisions' 
 		self.setButtons(self.hotBox.ui, unchecked='chk000,chk001,chk003,chk004')
 
-	def chk003(self): #division level 4
+	def chk003(self):
+		'''
+		Division Level 4
+
+		'''
 		self.setAttributesOnSelected (attribute=".smoothLevel", value=4)
 		pm.optionVar (intValue=["proxyDivisions",4]) #subDiv proxy options: 'divisions' 
 		self.setButtons(self.hotBox.ui, unchecked='chk000,chk001,chk002,chk004')
 
-	def chk004(self): #division level 5
+	def chk004(self):
+		'''
+		Division Level 5
+
+		'''
 		self.setAttributesOnSelected (attribute=".smoothLevel", value=5)
 		pm.optionVar (intValue=["proxyDivisions",5]) #subDiv proxy options: 'divisions'
 		self.setButtons(self.hotBox.ui, unchecked='chk000,chk001,chk002,chk003')
 
-	def chk005(self): #tessellation level 6
+	def chk005(self):
+		'''
+		Tessellation Level 6
+
+		'''
 		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=6)
 		self.setButtons(self.hotBox.ui, unchecked='chk006,chk007,chk008,chk009')
 
-	def chk006(self): #tessellation level 7
+	def chk006(self):
+		'''
+		Tessellation Level 7
+
+		'''
 		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=7)
 		self.setButtons(self.hotBox.ui, unchecked='chk005,chk007,chk008,chk009')
 
-	def chk007(self): #tessellation level 8
+	def chk007(self):
+		'''
+		Tessellation Level 8
+
+		'''
 		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=8)
 		self.setButtons(self.hotBox.ui, unchecked='chk005,chk006,chk008,chk009')
 
-	def chk008(self): #tessellation level 9
+	def chk008(self):
+		'''
+		Tessellation Level 9
+
+		'''
 		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=9)
 		self.setButtons(self.hotBox.ui, unchecked='chk005,chk006,chk007,chk009')
 
-	def chk009(self): #tessellation level 10
+	def chk009(self):
+		'''
+		Tessellation Level 10
+
+		'''
 		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=10)
 		self.setButtons(self.hotBox.ui, unchecked='chk005,chk006,chk007,chk008')
 
 
-	def b000(self): #Toggle subdiv proxy display
+	def b000(self):
+		'''
+		Toggle Subdiv Proxy Display
+
+		'''
 		state = self.cycle('subdivProxy_110')
 		try:
 			mel.eval("smoothingDisplayToggle "+str(state))
@@ -70,7 +114,11 @@ class Subdivision(Init):
 			traceback.print_exc()
 			print "// Warning: Nothing Selected\n"
 
-	def b001(self): #Subdiv proxy
+	def b001(self):
+		'''
+		Subdiv Proxy
+
+		'''
 		global polySmoothBaseMesh
 		polySmoothBaseMesh=[]
 		#disable creating seperate layers for subdiv proxy
@@ -103,35 +151,75 @@ class Subdivision(Init):
 		#toggle performSmoothProxy
 		mel.eval("performSmoothProxy 0;") #toggle SubDiv Proxy;
 
-	def b002(self): #Subdiv proxy options
+	def b002(self):
+		'''
+		Subdiv Proxy Options
+
+		'''
 		mel.eval('performSmoothProxy 1;') #SubDiv Proxy Options;
 
-	def b003(self): #polygon display options
+	def b003(self):
+		'''
+		Polygon Display Options
+
+		'''
 		mel.eval("CustomPolygonDisplayOptions")
 		# mel.eval("polysDisplaySetup 1;")
 
-	def b004(self): #Poly reduce
+	def b004(self):
+		'''
+		Poly Reduce
+
+		'''
 		mel.eval("polyReduce -version 1 -keepCreaseEdgeWeight 1;")
 
-	def b005(self): #Reduce
+	def b005(self):
+		'''
+		Reduce
+
+		'''
 		mel.eval("ReducePolygon;")
 
-	def b006(self): #Reduce options
+	def b006(self):
+		'''
+		Reduce Options
+
+		'''
 		mel.eval("ReducePolygonOptions;")
 
-	def b007(self): #Smooth options
+	def b007(self):
+		'''
+		Smooth Options
+
+		'''
 		mel.eval("SmoothPolygonOptions;")
 
-	def b008(self): #Add Divisions - subdivide mesh
+	def b008(self):
+		'''
+		Add Divisions - Subdivide Mesh
+
+		'''
 		mel.eval('SubdividePolygon')
 
-	def b009(self): #Smooth
+	def b009(self):
+		'''
+		Smooth
+
+		'''
 		mel.eval('SmoothPolygon;')
 
-	def b010(self): #add divisions options
+	def b010(self):
+		'''
+		Add Divisions Options
+
+		'''
 		mel.eval("SubdividePolygonOptions")
 
-	def b011(self): #Apply smooth preview
+	def b011(self):
+		'''
+		Apply Smooth Preview
+
+		'''
 		mel.eval("performSmoothMeshPreviewToPolygon;") #convert smooth mesh preview to polygons
 
 

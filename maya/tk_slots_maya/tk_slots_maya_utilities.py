@@ -16,34 +16,74 @@ class Utilities(Init):
 
 
 
-	def b000(self): #Measure
+	def b000(self):
+		'''
+		Measure
+
+		'''
 		mel.eval("DistanceTool;")
 
-	def b001(self): #Annotation
+	def b001(self):
+		'''
+		Annotation
+
+		'''
 		mel.eval('CreateAnnotateNode;')
 
-	def b002(self): #Calculator
+	def b002(self):
+		'''
+		Calculator
+
+		'''
 		mel.eval('calculator;')
 
-	def b003(self): #Grease Pencil
+	def b003(self):
+		'''
+		Grease Pencil
+
+		'''
 		mel.eval('greasePencilCtx;')
 
-	def b004(self): #
+	def b004(self):
+		'''
+		
+
+		'''
 		mel.eval('')
 
-	def b005(self): #
+	def b005(self):
+		'''
+		
+
+		'''
 		mel.eval('')
 
-	def b006(self): #
+	def b006(self):
+		'''
+		
+
+		'''
 		mel.eval('')
 
-	def b007(self): #
+	def b007(self):
+		'''
+		
+
+		'''
 		mel.eval('')
 
-	def b008(self): #
+	def b008(self):
+		'''
+		
+
+		'''
 		mel.eval("")
 
-	def b009(self): #
+	def b009(self):
+		'''
+		
+
+		'''
 		mel.eval('')
 
 

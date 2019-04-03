@@ -115,7 +115,7 @@
      <string>Extrude</string>
     </property>
     <property name="text">
-     <string/>
+     <string>Extrude</string>
     </property>
    </widget>
    <widget class="QGroupBox" name="rigging">
@@ -263,7 +263,7 @@
      <string>Delete history</string>
     </property>
     <property name="text">
-     <string/>
+     <string>Delete</string>
     </property>
    </widget>
    <widget class="QGroupBox" name="lighting">
@@ -308,7 +308,7 @@
      <string>Multi-Cut</string>
     </property>
     <property name="text">
-     <string/>
+     <string>Multi-Cut</string>
     </property>
    </widget>
    <widget class="QGroupBox" name="transform">
@@ -369,7 +369,7 @@
      <string>Bridge</string>
     </property>
     <property name="text">
-     <string/>
+     <string>Bridge</string>
     </property>
    </widget>
    <widget class="QGroupBox" name="Fx">
@@ -414,7 +414,7 @@
      <string>Delete</string>
     </property>
     <property name="text">
-     <string/>
+     <string>Delete History</string>
     </property>
    </widget>
    <widget class="QGroupBox" name="selection">
@@ -845,9 +845,9 @@
    <widget class="QLabel" name="l000">
     <property name="geometry">
      <rect>
-      <x>45</x>
-      <y>10</y>
-      <width>66</width>
+      <x>85</x>
+      <y>110</y>
+      <width>131</width>
       <height>16</height>
      </rect>
     </property>
@@ -859,6 +859,9 @@
     </property>
     <property name="text">
      <string/>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QLabel" name="l020">
@@ -866,44 +869,6 @@
      <rect>
       <x>0</x>
       <y>20</y>
-      <width>66</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QLabel" name="l001">
-    <property name="geometry">
-     <rect>
-      <x>115</x>
-      <y>10</y>
-      <width>66</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QLabel" name="l002">
-    <property name="geometry">
-     <rect>
-      <x>185</x>
-      <y>10</y>
       <width>66</width>
       <height>16</height>
      </rect>
@@ -1070,6 +1035,8 @@
      <string/>
     </property>
    </widget>
+   <zorder>v000</zorder>
+   <zorder>v001</zorder>
    <zorder>v002</zorder>
    <zorder>l006</zorder>
    <zorder>l020</zorder>
@@ -1078,17 +1045,12 @@
    <zorder>l005</zorder>
    <zorder>l021</zorder>
    <zorder>l022</zorder>
-   <zorder>l001</zorder>
-   <zorder>l002</zorder>
-   <zorder>l000</zorder>
    <zorder>l003</zorder>
    <zorder>l023</zorder>
-   <zorder>v000</zorder>
    <zorder>v007</zorder>
    <zorder>i022</zorder>
    <zorder>v005</zorder>
    <zorder>i020</zorder>
-   <zorder>v001</zorder>
    <zorder>v004</zorder>
    <zorder>i021</zorder>
    <zorder>v003</zorder>
@@ -1113,6 +1075,7 @@
    <zorder>create</zorder>
    <zorder>texturing</zorder>
    <zorder>v006</zorder>
+   <zorder>l000</zorder>
   </widget>
  </widget>
  <resources/>

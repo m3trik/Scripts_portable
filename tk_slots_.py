@@ -5,14 +5,15 @@ import os.path
 
 
 import tk_styleSheet as styleSheet
-
+from tk_switchboard import Switchboard
 
 
 
 class Slot(object):
-	def __init__(self, hotBox):
+	def __init__(self):
 
-		self.hotBox = hotBox
+		self.sb = Switchboard()
+		self.hotBox = self.sb.getClass('hotbox')
 
 
 		#init styleSheet
@@ -240,16 +241,17 @@ class Slot(object):
 
 
 	# ------------------------------------------------
-	#' Set widget initial state and style overrides'
+	#' Set widget state and style overrides'
 	# ------------------------------------------------
 
 
 
 	#init signals, button states etc. for a stacked widget class
 	def initWidgets(self):
-		pass
-		# for comboBox in self.getObject(self, 'cmb000-50', False):
-		# 	comboBox()
+		for comboBox in self.getObject(self, 'cmb000-50', False):
+			try: comboBox()
+			except: pass
+
 
 
 
