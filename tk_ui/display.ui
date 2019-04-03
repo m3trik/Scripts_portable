@@ -41,7 +41,7 @@
    <widget class="QGroupBox" name="View">
     <property name="geometry">
      <rect>
-      <x>5</x>
+      <x>105</x>
       <y>30</y>
       <width>97</width>
       <height>221</height>
@@ -269,6 +269,84 @@
       <bool>true</bool>
      </property>
     </widget>
+   </widget>
+   <widget class="QComboBox" name="cmb001">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>70</y>
+      <width>86</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>66</width>
+      <height>20</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>9999</width>
+      <height>19</height>
+     </size>
+    </property>
+    <property name="statusTip">
+     <string>Recent hotbox commands</string>
+    </property>
+    <property name="maxVisibleItems">
+     <number>50</number>
+    </property>
+    <property name="sizeAdjustPolicy">
+     <enum>QComboBox::AdjustToContents</enum>
+    </property>
+    <property name="frame">
+     <bool>false</bool>
+    </property>
+    <item>
+     <property name="text">
+      <string>Recent</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QComboBox" name="cmb000">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>50</y>
+      <width>86</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>66</width>
+      <height>20</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>9999</width>
+      <height>19</height>
+     </size>
+    </property>
+    <property name="statusTip">
+     <string>Viewport display options</string>
+    </property>
+    <property name="maxVisibleItems">
+     <number>50</number>
+    </property>
+    <property name="sizeAdjustPolicy">
+     <enum>QComboBox::AdjustToContents</enum>
+    </property>
+    <property name="frame">
+     <bool>false</bool>
+    </property>
+    <item>
+     <property name="text">
+      <string>Display</string>
+     </property>
+    </item>
    </widget>
   </widget>
  </widget>

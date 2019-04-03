@@ -108,8 +108,7 @@ class HotBox(QtWidgets.QWidget):
 
 
 		if self.name=='init':
-			pass
-			# self.sb.getClass('init')().info()
+			self.sb.getClass('init')().info()
 		else:
 			#remove old and add new signals for current ui from connectionDict
 			if self.name!=self.sb.previousName(allowDuplicates=1):
@@ -178,11 +177,13 @@ class HotBox(QtWidgets.QWidget):
 		#args: [QEvent]
 		if self.mousePressOn:
 			if any ([self.name=="main", self.name=="viewport", self.name=="init"]):
-				if event.button()==QtCore.Qt.LeftButton:
+				if event.button()==QtCore.Qt.LeftButton and event.button()==QtCore.Qt.RightButton:
+					self.layoutStack(self.sb.getUiIndex('scripting'))
+				elif event.button()==QtCore.Qt.LeftButton:
 					self.layoutStack(self.sb.getUiIndex('viewport'))
-				if event.button()==QtCore.Qt.RightButton:
+				elif event.button()==QtCore.Qt.RightButton:
 					self.layoutStack(self.sb.getUiIndex('main'))
-				if event.button()==QtCore.Qt.MiddleButton:
+				elif event.button()==QtCore.Qt.MiddleButton:
 					self.layoutStack(self.sb.getUiIndex('display'))
 
 

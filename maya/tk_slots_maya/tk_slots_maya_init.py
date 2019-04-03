@@ -7,6 +7,8 @@ from tk_slots_ import Slot
 
 
 
+
+
 class Init(Slot):
 	def __init__(self, *args, **kwargs):
 		super(Init, self).__init__(*args, **kwargs)
@@ -20,31 +22,35 @@ class Init(Slot):
 
 
 	def info(self): #get current attributes. those with relavant values will be displayed.
-		info={}
+
+		infoDict={}
 		selection = pm.ls(selection=1)
-		objects = pm.ls(selection=1, objectsOnly=1)
-		value = len(objects); info.update({"selected objects: ":value}) #number of selected objects
-		currentSelection = [str(s) for s in pm.ls (selection=1)]; info.update({"Current Selection: ":currentSelection}) #currently selected objects
 		
-		if selection: numQuads = pm.polyEvaluate (selection[0], face=1); info.update({"Num Quads: ":numQuads}) #number of faces
+
+		selectionCount = len(objects); infoDict.update({"Selection Count: ":selectionCount}) #number of selected objects
+		currentSelection = [str(s) for s in pm.ls (selection=1)]; infoDict.update({"Current Selection: ":currentSelection}) #currently selected objects
+		
+		if selection: numQuads = pm.polyEvaluate (selection[0], face=1); infoDict.update({"#Quads: ":numQuads}) #number of faces
 
 		symmetry = pm.symmetricModelling(query=1, symmetry=1);
-		if symmetry==1: symmetry=True; info.update({"symmetry: ":symmetry}) #symmetry state
-		if symmetry: axis = pm.symmetricModelling(query=1, axis=1); info.update({"symmetry axis: ":axis}) #symmetry axis
+		if symmetry==1: symmetry=True; infoDict.update({"Symmetry State: ":symmetry}) #symmetry state
+		if symmetry: axis = pm.symmetricModelling(query=1, axis=1); infoDict.update({"Symmetry Axis: ":axis}) #symmetry axis
 
 		xformConstraint = pm.xformConstraint(query=True, type=True)
-		if xformConstraint=='none': xformConstraint=None; info.update({"xform constrait: ":xformConstraint}) #transform constraits
+		if xformConstraint=='none': xformConstraint=None; infoDict.update({"Xform Constrait: ":xformConstraint}) #transform constraits
 
-		value = pm.polyEvaluate(vertexComponent=1); info.update({"selected vertices: ":value}) #selected verts
-		value = pm.polyEvaluate(edgeComponent=1); info.update({"selected edges: ":value}) #selected edges
-		value = pm.polyEvaluate(faceComponent=1); info.update({"selected faces: ":value}) #selected faces
-		value = pm.polyEvaluate(uvComponent=1); info.update({"selected uv's: ":value}) #selected uv's
+		selectedVerts = pm.polyEvaluate(vertexComponent=1); infoDict.update({"Selected Vertices: ":selectedVerts}) #selected verts
+		selectedEdges = pm.polyEvaluate(edgeComponent=1); infoDict.update({"Selected Edges: ":selectedEdges}) #selected edges
+		selectedFaces = pm.polyEvaluate(faceComponent=1); infoDict.update({"Selected Faces: ":selectedFaces}) #selected faces
+		selectedUVs = pm.polyEvaluate(uvComponent=1); infoDict.update({"Selected UV's: ":selectedUVs}) #selected uv's
+
+		prevCommand = self.sb.prevCommand(docString=True); infoDict.update({"Previous Command: ":prevCommand})  #get button text from last used command
 
 		#populate the textedit with any values
 		for key, value in info.iteritems():
 			if value:
 				# self.hotBox.ui.t000.setText(key+str(value)+'<br>') #<br> html break newline
-				self.hotBox.ui.t000.setHtml(key+str(value)+'<br>') #<br> html break newline
+				self.ui.t000.setHtml(key+str(value)+'<br>') #<br> html break newline
 
 
 

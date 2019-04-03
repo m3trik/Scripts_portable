@@ -50,58 +50,6 @@
    <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::ForceTabbedDocks</set>
   </property>
   <widget class="QWidget" name="mainWindow">
-   <widget class="QGroupBox" name="display">
-    <property name="geometry">
-     <rect>
-      <x>115</x>
-      <y>150</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QComboBox" name="cmb000">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>66</width>
-       <height>20</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>9999</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="statusTip">
-      <string>Viewport display options</string>
-     </property>
-     <property name="maxVisibleItems">
-      <number>50</number>
-     </property>
-     <property name="sizeAdjustPolicy">
-      <enum>QComboBox::AdjustToContents</enum>
-     </property>
-     <property name="frame">
-      <bool>false</bool>
-     </property>
-     <item>
-      <property name="text">
-       <string>Display</string>
-      </property>
-     </item>
-    </widget>
-   </widget>
    <widget class="QPushButton" name="v000">
     <property name="geometry">
      <rect>
@@ -117,122 +65,6 @@
     <property name="text">
      <string>Extrude</string>
     </property>
-   </widget>
-   <widget class="QGroupBox" name="rigging">
-    <property name="geometry">
-     <rect>
-      <x>45</x>
-      <y>150</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="i017">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="whatsThis">
-      <string>rigging</string>
-     </property>
-     <property name="text">
-      <string>Rigging</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="scene">
-    <property name="geometry">
-     <rect>
-      <x>115</x>
-      <y>170</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="i003">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="whatsThis">
-      <string>scene</string>
-     </property>
-     <property name="text">
-      <string>Scene</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="unused">
-    <property name="geometry">
-     <rect>
-      <x>215</x>
-      <y>110</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="i004">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="whatsThis">
-      <string>subdivision</string>
-     </property>
-     <property name="text">
-      <string>Subdivision</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="rendering">
-    <property name="geometry">
-     <rect>
-      <x>45</x>
-      <y>130</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="i016">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="whatsThis">
-      <string>rendering</string>
-     </property>
-     <property name="text">
-      <string>Rendering</string>
-     </property>
-    </widget>
    </widget>
    <widget class="QPushButton" name="i023">
     <property name="geometry">
@@ -254,9 +86,9 @@
     <property name="geometry">
      <rect>
       <x>115</x>
-      <y>194</y>
+      <y>184</y>
       <width>66</width>
-      <height>31</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -265,35 +97,6 @@
     <property name="text">
      <string>Delete</string>
     </property>
-   </widget>
-   <widget class="QGroupBox" name="lighting">
-    <property name="geometry">
-     <rect>
-      <x>185</x>
-      <y>130</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="i014">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="whatsThis">
-      <string>lighting</string>
-     </property>
-     <property name="text">
-      <string>Lighting</string>
-     </property>
-    </widget>
    </widget>
    <widget class="QPushButton" name="v002">
     <property name="geometry">
@@ -310,35 +113,6 @@
     <property name="text">
      <string>Multi-Cut</string>
     </property>
-   </widget>
-   <widget class="QGroupBox" name="transform">
-    <property name="geometry">
-     <rect>
-      <x>185</x>
-      <y>60</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="i008">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="whatsThis">
-      <string>transform</string>
-     </property>
-     <property name="text">
-      <string>Transform</string>
-     </property>
-    </widget>
    </widget>
    <widget class="QPushButton" name="i021">
     <property name="geometry">
@@ -372,42 +146,13 @@
      <string>Bridge</string>
     </property>
    </widget>
-   <widget class="QGroupBox" name="Fx">
-    <property name="geometry">
-     <rect>
-      <x>185</x>
-      <y>150</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="i018">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="whatsThis">
-      <string>fx</string>
-     </property>
-     <property name="text">
-      <string>Fx</string>
-     </property>
-    </widget>
-   </widget>
    <widget class="QPushButton" name="v003">
     <property name="geometry">
      <rect>
       <x>45</x>
-      <y>194</y>
+      <y>184</y>
       <width>66</width>
-      <height>31</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -417,239 +162,13 @@
      <string>Delete History</string>
     </property>
    </widget>
-   <widget class="QGroupBox" name="selection">
-    <property name="geometry">
-     <rect>
-      <x>185</x>
-      <y>40</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="i009">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="whatsThis">
-      <string>selection</string>
-     </property>
-     <property name="text">
-      <string>Selection</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="commands">
-    <property name="geometry">
-     <rect>
-      <x>115</x>
-      <y>130</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QComboBox" name="cmb001">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>66</width>
-       <height>20</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>9999</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="statusTip">
-      <string>Recent hotbox commands</string>
-     </property>
-     <property name="maxVisibleItems">
-      <number>50</number>
-     </property>
-     <property name="sizeAdjustPolicy">
-      <enum>QComboBox::AdjustToContents</enum>
-     </property>
-     <property name="frame">
-      <bool>false</bool>
-     </property>
-     <item>
-      <property name="text">
-       <string>Recent</string>
-      </property>
-     </item>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="polygons">
-    <property name="geometry">
-     <rect>
-      <x>115</x>
-      <y>40</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="i010">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="whatsThis">
-      <string>polygons</string>
-     </property>
-     <property name="text">
-      <string>Polygons</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="scripting">
-    <property name="geometry">
-     <rect>
-      <x>185</x>
-      <y>170</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="i015">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="whatsThis">
-      <string>scripting</string>
-     </property>
-     <property name="text">
-      <string>Scripting</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="uv">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>90</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="i024">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="whatsThis">
-      <string>uv</string>
-     </property>
-     <property name="text">
-      <string>UV</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="animation">
-    <property name="geometry">
-     <rect>
-      <x>45</x>
-      <y>170</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="i013">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="whatsThis">
-      <string>animation</string>
-     </property>
-     <property name="text">
-      <string>Animation</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="edit">
-    <property name="geometry">
-     <rect>
-      <x>45</x>
-      <y>40</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="i007">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="whatsThis">
-      <string>edit</string>
-     </property>
-     <property name="text">
-      <string>Edit</string>
-     </property>
-    </widget>
-   </widget>
    <widget class="QPushButton" name="v005">
     <property name="geometry">
      <rect>
       <x>185</x>
-      <y>194</y>
+      <y>184</y>
       <width>66</width>
-      <height>31</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -678,93 +197,6 @@
      <string/>
     </property>
    </widget>
-   <widget class="QGroupBox" name="normals">
-    <property name="geometry">
-     <rect>
-      <x>215</x>
-      <y>90</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="i005">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="whatsThis">
-      <string>normals</string>
-     </property>
-     <property name="text">
-      <string>Normals</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="nurbs">
-    <property name="geometry">
-     <rect>
-      <x>115</x>
-      <y>60</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="i011">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="whatsThis">
-      <string>nurbs</string>
-     </property>
-     <property name="text">
-      <string>Nurbs</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="create">
-    <property name="geometry">
-     <rect>
-      <x>45</x>
-      <y>60</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="i006">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="whatsThis">
-      <string>create</string>
-     </property>
-     <property name="text">
-      <string>Create</string>
-     </property>
-    </widget>
-   </widget>
    <widget class="QPushButton" name="i020">
     <property name="geometry">
      <rect>
@@ -783,35 +215,6 @@
     <property name="text">
      <string/>
     </property>
-   </widget>
-   <widget class="QGroupBox" name="texturing">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>110</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="i012">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="whatsThis">
-      <string>texturing</string>
-     </property>
-     <property name="text">
-      <string>Texturing</string>
-     </property>
-    </widget>
    </widget>
    <widget class="QPushButton" name="v007">
     <property name="geometry">
@@ -840,28 +243,6 @@
     </property>
     <property name="toolTip">
      <string>Multi-Cut</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="l000">
-    <property name="geometry">
-     <rect>
-      <x>85</x>
-      <y>110</y>
-      <width>131</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
     </property>
    </widget>
    <widget class="QLabel" name="l020">
@@ -1035,6 +416,262 @@
      <string/>
     </property>
    </widget>
+   <widget class="QPushButton" name="i016">
+    <property name="geometry">
+     <rect>
+      <x>115</x>
+      <y>140</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="whatsThis">
+     <string>rendering</string>
+    </property>
+    <property name="text">
+     <string>Rendering</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="i017">
+    <property name="geometry">
+     <rect>
+      <x>45</x>
+      <y>140</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="whatsThis">
+     <string>rigging</string>
+    </property>
+    <property name="text">
+     <string>Rigging</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="i013">
+    <property name="geometry">
+     <rect>
+      <x>45</x>
+      <y>160</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="whatsThis">
+     <string>animation</string>
+    </property>
+    <property name="text">
+     <string>Animation</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="i003">
+    <property name="geometry">
+     <rect>
+      <x>115</x>
+      <y>160</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="whatsThis">
+     <string>scene</string>
+    </property>
+    <property name="text">
+     <string>Scene</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="i014">
+    <property name="geometry">
+     <rect>
+      <x>185</x>
+      <y>140</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="whatsThis">
+     <string>lighting</string>
+    </property>
+    <property name="text">
+     <string>Lighting</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="i018">
+    <property name="geometry">
+     <rect>
+      <x>185</x>
+      <y>160</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="whatsThis">
+     <string>fx</string>
+    </property>
+    <property name="text">
+     <string>Fx</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="i024">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>90</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="whatsThis">
+     <string>uv</string>
+    </property>
+    <property name="text">
+     <string>UV</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="i012">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>110</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="whatsThis">
+     <string>texturing</string>
+    </property>
+    <property name="text">
+     <string>Texturing</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="i005">
+    <property name="geometry">
+     <rect>
+      <x>215</x>
+      <y>90</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="whatsThis">
+     <string>normals</string>
+    </property>
+    <property name="text">
+     <string>Normals</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="i004">
+    <property name="geometry">
+     <rect>
+      <x>215</x>
+      <y>110</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="whatsThis">
+     <string>subdivision</string>
+    </property>
+    <property name="text">
+     <string>Subdivision</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="i006">
+    <property name="geometry">
+     <rect>
+      <x>45</x>
+      <y>60</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="whatsThis">
+     <string>create</string>
+    </property>
+    <property name="text">
+     <string>Create</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="i007">
+    <property name="geometry">
+     <rect>
+      <x>45</x>
+      <y>40</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="whatsThis">
+     <string>edit</string>
+    </property>
+    <property name="text">
+     <string>Edit</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="i011">
+    <property name="geometry">
+     <rect>
+      <x>115</x>
+      <y>60</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="whatsThis">
+     <string>nurbs</string>
+    </property>
+    <property name="text">
+     <string>Nurbs</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="i010">
+    <property name="geometry">
+     <rect>
+      <x>115</x>
+      <y>40</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="whatsThis">
+     <string>polygons</string>
+    </property>
+    <property name="text">
+     <string>Polygons</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="i008">
+    <property name="geometry">
+     <rect>
+      <x>185</x>
+      <y>60</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="whatsThis">
+     <string>transform</string>
+    </property>
+    <property name="text">
+     <string>Transform</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="i009">
+    <property name="geometry">
+     <rect>
+      <x>185</x>
+      <y>40</y>
+      <width>66</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="whatsThis">
+     <string>selection</string>
+    </property>
+    <property name="text">
+     <string>Selection</string>
+    </property>
+   </widget>
    <zorder>v000</zorder>
    <zorder>v001</zorder>
    <zorder>v002</zorder>
@@ -1055,27 +692,23 @@
    <zorder>i021</zorder>
    <zorder>v003</zorder>
    <zorder>i023</zorder>
-   <zorder>display</zorder>
-   <zorder>rigging</zorder>
-   <zorder>scene</zorder>
-   <zorder>unused</zorder>
-   <zorder>rendering</zorder>
-   <zorder>lighting</zorder>
-   <zorder>transform</zorder>
-   <zorder>Fx</zorder>
-   <zorder>selection</zorder>
-   <zorder>commands</zorder>
-   <zorder>polygons</zorder>
-   <zorder>scripting</zorder>
-   <zorder>uv</zorder>
-   <zorder>animation</zorder>
-   <zorder>edit</zorder>
-   <zorder>normals</zorder>
-   <zorder>nurbs</zorder>
-   <zorder>create</zorder>
-   <zorder>texturing</zorder>
    <zorder>v006</zorder>
-   <zorder>l000</zorder>
+   <zorder>i016</zorder>
+   <zorder>i017</zorder>
+   <zorder>i013</zorder>
+   <zorder>i003</zorder>
+   <zorder>i014</zorder>
+   <zorder>i018</zorder>
+   <zorder>i024</zorder>
+   <zorder>i012</zorder>
+   <zorder>i005</zorder>
+   <zorder>i004</zorder>
+   <zorder>i006</zorder>
+   <zorder>i007</zorder>
+   <zorder>i011</zorder>
+   <zorder>i010</zorder>
+   <zorder>i008</zorder>
+   <zorder>i009</zorder>
   </widget>
  </widget>
  <resources/>

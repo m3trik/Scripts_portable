@@ -1,11 +1,11 @@
 from PySide2 import QtGui, QtCore, QtWidgets
 
-
 import os.path
 
-
-import tk_styleSheet as styleSheet
 from tk_switchboard import Switchboard
+import tk_styleSheet as styleSheet
+
+
 
 
 
@@ -14,6 +14,7 @@ class Slot(object):
 
 		self.sb = Switchboard()
 		self.hotBox = self.sb.getClass('hotbox')
+		self.ui = self.sb.getUi()
 
 
 		#init styleSheet
