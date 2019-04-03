@@ -28,7 +28,7 @@ class Scene(Init):
 	
 		#convert to pymxs
 		maxEval('''
-		Fn LoadRecentFileList =
+		Fn getRecentFiles =
 		(
 		local recentfiles = (getdir #maxData) + "RecentDocuments.xml"
 		if doesfileexist recentfiles then
@@ -53,12 +53,12 @@ class Scene(Init):
 
 		cmb = self.hotBox.ui.cmb000
 		index = cmb.currentIndex() #get current index before refreshing list
-		files = []#Loadrecentfilelist(); print files
+		files = rt.getRecentfiles(); print files
 		files = self.comboBox (cmb, files, "Recent Files")
 
 		if index!=0:
 			# force=True; force if maxEval("maxFileName;") else not force #if sceneName prompt user to save; else force open.  also: checkForSave(); If the scene has been modified since the last file save (if any), calling this function displays the message box prompting the user that the scene has been modified and requests to save.
-			maxEval('loadMaxFile '+files[index])
+			rt.loadMaxFile(str(files[index]))
 			cmb.setCurrentIndex(0)
 
 	def cmb001(self):

@@ -16,19 +16,38 @@ class Rendering(Init):
 
 		
 
-		#checkable comboBox not working
-		comboBox = self.CheckableComboBox(self.hotBox.ui.cmb000)
-		for num in range(6):
-			comboBox.addItem("checkbox " + str(num))
-		comboBox.checkIndex(1)
-		comboBox.checkIndex(2)
+		# #checkable comboBox not working
+		# comboBox = self.CheckableComboBox(self.ui.cmb000)
+		# for num in range(6):
+		# 	comboBox.addItem("checkbox " + str(num))
+		# comboBox.checkIndex(1)
+		# comboBox.checkIndex(2)
+
+
+	def cmb000(self):
+		'''
+		Render: camera
+
+		'''
+		cmb = self.ui.cmb000
+
+		self.cams = [cam for cam in rt.cameras if 'Target' not in str(cam)]
+		
+		if self.cams:
+			list_ = [str(cam.name) for cam in self.cams] #camera names
+			self.comboBox (cmb, list_, '')
+
 
 	def b000(self):
 		'''
 		Render Current Frame
 
 		'''
-		maxEval('max quick render')
+		cmb = self.ui.cmb000
+		index = cmb.currentIndex()
+
+		try: rt.render (camera=self.cams[index]) #render with selected camera
+		except: rt.render()
 
 	def b001(self):
 		'''

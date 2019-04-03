@@ -20,7 +20,7 @@ class Display(Init):
 		Display
 
 		'''
-		cmb = self.hotBox.ui.cmb000
+		cmb = self.ui.cmb000
 		index = cmb.currentIndex() #get current index before refreshing list
 		list_ = [
 		'Toggle visibility', 
@@ -167,14 +167,14 @@ class Display(Init):
 		Recent Commands
 
 		'''
-		cmb = self.hotBox.ui.cmb001
+		cmb = self.ui.cmb001
 		index = cmb.currentIndex() #get current index before refreshing list
-		list_ = self.hotBox.sb.prevCommand(methodList=1) #ie. get the list of previous command methods
+		list_ = self.sb.prevCommand(methodList=1) #ie. get the list of previous command methods
 		self.comboBox (cmb, list_, "Recent")
 
 		if index!=0:
-			print self.hotBox.sb.prevCommand(docString=1)[index] #prevCommand docString
-			self.hotBox.sb.prevCommand(methodList=1)[index]() #execute command at index
+			print self.sb.prevCommand(docString=1)[index] #prevCommand docString
+			self.sb.prevCommand(methodList=1)[index]() #execute command at index
 			cmb.setCurrentIndex(0)
 
 

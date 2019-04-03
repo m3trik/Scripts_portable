@@ -49,7 +49,7 @@ class Init(Slot):
 		#populate the textedit with any values
 		for key, value in infoDict.iteritems():
 			if value:
-				# self.hotBox.ui.t000.setText(key+str(value)+'<br>') #<br> html break newline
+				# self.ui.t000.setText(key+str(value)+'<br>') #<br> html break newline
 				self.ui.t000.setHtml(key+str(value)+'<br>') #<br> html break newline
 
 
