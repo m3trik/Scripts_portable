@@ -176,6 +176,7 @@ class Slot(object):
 
 
 
+	global cycleDict
 	cycleDict={}
 	@staticmethod
 	#used for maintaining toggling sequences for multiple objects simultaniously
@@ -185,17 +186,20 @@ class Slot(object):
 							 takes the string argument and splits it at '_'
 							 converting the second numberical half to integers and putting them in a list.
 							 each time this function is called, it returns the next number in that list
-							 using the original string as a unique id.
+							 using the original string (ie. 'name' from name_123) as a unique id.
 		ex. cycle('componentID_01234')
 		'''
 		try:
-			if query:
+			if query: #return the value without changing it.
 				return int(cycleDict[id_sequence][-1]) #get the current value ie. 0
+
 			value = cycleDict[id_sequence] #check if key exists. if so return the value. ie. value = [1,2,3]
+		
 		except KeyError: #else create sequence list for the given key
 			id_ = id_sequence.split('_')[0] #ie. name
 			sequence = id_sequence.split('_')[1] #ie. 123
 			cycleDict[id_sequence] = [i for i in list(sequence)] #ie. {name_123:[1,2,3]}
+
 		value = cycleDict[id_sequence][0] #get the next value ie. 1
 		cycleDict[id_sequence] = cycleDict[id_sequence][1:]+[value] #move the value to the end of the list ie. {name_123:[2,3,1]}
 		return int(value) #return an integer from string value

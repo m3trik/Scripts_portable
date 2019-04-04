@@ -14,8 +14,7 @@ class Main(Init):
 		super(Main, self).__init__(*args, **kwargs)
 
 
-		text = self.hotBox.sb.prevCommand(docString=True) #get button text from last used command
-		self.hotBox.ui.l000.setText(text)
+
 
 
 

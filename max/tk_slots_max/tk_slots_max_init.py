@@ -62,75 +62,11 @@ class Init(Slot):
 	# ------------------------------------------------
 
 
-
-
-
-
-
-
-	#--makeSelection-------------------------------------------------------------------------
-
-	# class Selection:
-
-	#builds a selection array, according to arguments.
-	#arg = selection type. "Current", "Geometry", "All"
-	#index = index of array element to return. 0 = all
-	#functionCall; if specified will call the specified fuction with selection as argument
-	def makeSelection (selectionType, arrayIndex, functionCall=None):
-
-		if (selectionType == "Current"):
-			maxEval("sel = $") #store FPValue
-			sel = rt.sel	#get FPValue
-
-		if (selectionType == "Geometry"):
-			maxEval("sel = Geometry")
-			sel = rt.sel
-
-		if (selectionType == "All"):
-			sel = maxEval("sel = $*")
-			sel = rt.sel
-
-		selectionArray = []
-		
-		if (sel < 1): # check if sel is empty
-			print "-< Nothing selected >-"
-			return "noSelection" #or rt.undefined
-
-		if (len(sel) == 0): #check if selection is not an array
-			selectionArray.append(sel)
-			
-		else: #else if array, build python array
-			for obj in sel:
-				selectionArray.append(obj)
-
-		if (arrayIndex == 0):
-			#~ print selectionArray
-			if (functionCall != None):
-				return functionCall(selectionArray);
-			else:
-				return selectionArray
-
-		if (arrayIndex >= 1): #subtract one index position to match maxscript convention
-			#~ print selectionArray[arrayIndex]
-			if (functionCall != None):
-				return functionCall(selectionArray[arrayIndex-1]); 
-			else:
-				return selectionArray[arrayIndex-1];
-
-
-
-
-
-
-
-
-
-
-
 	#--setSnapState--------------------------------------------------------------------------
 
 	#set grid and snap settings on or off
 	#state = string: "true", "false"
+	@staticmethod
 	def setSnapState (state):
 
 		maxEval('''
@@ -181,6 +117,7 @@ class Init(Slot):
 
 
 	#Detaches editable_mesh elements into new objects	
+	@staticmethod
 	def detachElement (obj):
 
 		elementArray = []
@@ -224,6 +161,7 @@ class Init(Slot):
 	#notes: (align all vertices at once) by putting each vert index and coordinates in a dict (or two arrays) then if when iterating through a vert falls within the tolerance specified in a textfield align that vert in coordinate. then repeat the process for the other coordinates x,y,z specified by checkboxes. using edges may be a better approach. or both with a subObjectLevel check
 	#create edge alignment tool and then use subObjectLevel check to call either that function or this one from the same buttons.
 	#to save ui space; have a single align button, x, y, z, and align 'all' checkboxes and a tolerance textfield.
+	@staticmethod
 	def alignVertices (selection, mode):
 
 		# maxEval('undo "alignVertices" on')
@@ -327,6 +265,7 @@ class Init(Slot):
 	#'s' argument is a textfield scale amount
 	#'x,y,z' arguments are checkbox boolean values. 
 	#basically working except for final 'obj.scale([s, s, s])' command in python. variable definitions included for debugging. to get working an option is to use the maxEval method in the alignVertices function.
+	@staticmethod
 	def scaleObject (size, x, y ,z):
 		# global tk_textField__000
 		tk_textField_000 = 1.50
@@ -372,6 +311,7 @@ class Init(Slot):
 	#~ -- [4] --baseObject class
 	#~ -- [6] --baseObject class type string. eg. Editable,Shape,Geometry
 	#notes: in another function; if selection (subobjectlevel) is == face or edge, store that face if necessary in an array and then extrude by a certain amount (if needed surface normal direction). then switch to move tool (calling a center pivot on component if needed) so that the extrude can be manipulated with widget instead of spinner.
+	@staticmethod
 	def extrudeObject (objects):
 		if (objects == rt.undefined or objects == "noSelection"):
 			print "Nothing selected. Returned string: noSelection"
@@ -419,7 +359,7 @@ class Init(Slot):
 
 
 	#--centerPivotOnSelection----------------------------------------------------------------
-
+	@staticmethod
 	def centerPivotOnSelection ():
 
 		#Get the face vertices, add their positions together, divide by the number of the vertices 
@@ -470,6 +410,7 @@ class Init(Slot):
 
 
 	#third party script to return node information
+	@staticmethod
 	def getElements(node):
 		obj = node.GetObject()
 		objTriMesh = obj.AsTriObject()
@@ -528,17 +469,62 @@ class Init(Slot):
 
 
 
+#--makeSelection-------------------------------------------------------------------------
 
-	# ------------------------------------------------
-	' DAG objects'
-	# ------------------------------------------------
+	# class Selection:
 
+	#builds a selection array, according to arguments.
+	#arg = selection type. "Current", "Geometry", "All"
+	#index = index of array element to return. 0 = all
+	#functionCall; if specified will call the specified fuction with selection as argument
+	@staticmethod
+	def makeSelection (selectionType, arrayIndex, functionCall=None):
+
+		if (selectionType == "Current"):
+			maxEval("sel = $") #store FPValue
+			sel = rt.sel	#get FPValue
+
+		if (selectionType == "Geometry"):
+			maxEval("sel = Geometry")
+			sel = rt.sel
+
+		if (selectionType == "All"):
+			sel = maxEval("sel = $*")
+			sel = rt.sel
+
+		selectionArray = []
+		
+		if (sel < 1): # check if sel is empty
+			print "-< Nothing selected >-"
+			return "noSelection" #or rt.undefined
+
+		if (len(sel) == 0): #check if selection is not an array
+			selectionArray.append(sel)
+			
+		else: #else if array, build python array
+			for obj in sel:
+				selectionArray.append(obj)
+
+		if (arrayIndex == 0):
+			#~ print selectionArray
+			if (functionCall != None):
+				return functionCall(selectionArray);
+			else:
+				return selectionArray
+
+		if (arrayIndex >= 1): #subtract one index position to match maxscript convention
+			#~ print selectionArray[arrayIndex]
+			if (functionCall != None):
+				return functionCall(selectionArray[arrayIndex-1]); 
+			else:
+				return selectionArray[arrayIndex-1];
 
 
 
 	#--filterSelectionByBaseClass-------------------------------------------------------------
 
 	# returns the base class type as a string
+	@staticmethod
 	def filterSelectionByBaseClass (baseObjClass):
 		
 		obj = baseObjClass
@@ -589,6 +575,7 @@ class Init(Slot):
 
 	#returns various object class information as elements in an array
 	#calls filterSelectionByBaseClass()
+	@staticmethod
 	def classInfo (obj, query=False):
 		#functions used:
 		#~ filterSelectionByBaseClass()
@@ -734,6 +721,36 @@ class Init(Slot):
 
 
 
+	# ------------------------------------------------
+	' Display '
+	# ------------------------------------------------
+
+
+	@staticmethod
+	def toggleSmoothPreview():
+		toggle = Slot.cycle('toggleSmoothPreview_01') #cycle 0/1
+
+		geometry = rt.selection #if there is a selection; perform operation on those object/s
+		if not len(geometry): #else: perform operation on all scene geometry.
+			geometry = rt.geometry
+
+		for obj in geometry:
+			try:
+				if toggle==0:
+					obj.modifiers['TurboSmooth'].iterations = 0 #set iterations on objects to 0.
+				else:
+					renderIters = obj.modifiers['TurboSmooth'].renderIterations #get renderIter value.
+					obj.modifiers['TurboSmooth'].iterations = renderIters #apply to iterations value.
+			except: pass
+
+		rt.redrawViews() #refresh viewport. only those parts of the view that have changed are redrawn.
+
+
+
+
+
+
+
 
 
 
@@ -743,7 +760,7 @@ class Init(Slot):
 
 
 
-
+	@staticmethod
 	def maxUiSetChecked(id, table, item, state=True, query=False):
 		#args: id='string' - actionMan ID
 		#			table=int - actionMan table
@@ -765,7 +782,7 @@ class Init(Slot):
 
 
 
-
+	@staticmethod
 	def viewPortMessage (message='', statusMessage='', assistMessage='', position='topCenter'):
 		#args: statusMessage='string' - message to display (accepts html formatting).
 		#			position='string' - position on screen. possible values are: topCenter","topRight","midLeft","midCenter","midCenterTop","midCenterBot","midRight","botLeft","botCenter","botRight"

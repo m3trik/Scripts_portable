@@ -27,7 +27,7 @@ class Init(Slot):
 		selection = pm.ls(selection=1)
 		
 
-		selectionCount = len(objects); infoDict.update({"Selection Count: ":selectionCount}) #number of selected objects
+		selectionCount = len(selection); infoDict.update({"Selection Count: ":selectionCount}) #number of selected objects
 		currentSelection = [str(s) for s in pm.ls (selection=1)]; infoDict.update({"Current Selection: ":currentSelection}) #currently selected objects
 		
 		if selection: numQuads = pm.polyEvaluate (selection[0], face=1); infoDict.update({"#Quads: ":numQuads}) #number of faces
@@ -47,7 +47,7 @@ class Init(Slot):
 		prevCommand = self.sb.prevCommand(docString=True); infoDict.update({"Previous Command: ":prevCommand})  #get button text from last used command
 
 		#populate the textedit with any values
-		for key, value in info.iteritems():
+		for key, value in infoDict.iteritems():
 			if value:
 				# self.ui.t000.setText(key+str(value)+'<br>') #<br> html break newline
 				self.ui.t000.setHtml(key+str(value)+'<br>') #<br> html break newline
@@ -63,7 +63,8 @@ class Init(Slot):
 
 
 	#returns all faces on a specified axis
-	def getAllFacesOnAxis(self, axis="-x", localspace=False):
+	@staticmethod
+	def getAllFacesOnAxis(axis="-x", localspace=False):
 		#args: axis='string' - representing axis ie. "x"
 		#			localspace=bool - specify world or local space
 		#ex. self.getAllFacesOnAxis ('y')
@@ -98,7 +99,8 @@ class Init(Slot):
 
 
 	#select shortest edge path between (two or more) selected edges
-	def shortestEdgePath(self):
+	@staticmethod
+	def shortestEdgePath():
 		#returns: list of lists. each containing an edge paths components
 		selectTypeEdge = pm.filterExpand (selectionMask=32) #returns True if selectionMask=Edges
 		if (selectTypeEdge): #if selection is polygon edges, convert to vertices.
@@ -129,7 +131,8 @@ class Init(Slot):
 
 
 	#align vertices
-	def alignVertices (self, mode, average=False, edgeloop=False):
+	@staticmethod
+	def alignVertices (mode, average=False, edgeloop=False):
 		#args: mode=int - possible values are align: 0-YZ, 1-XZ, 2-XY, 3-X, 4-Y, 5-Z, 6-XYZ 
 		#			average=bool - align to average of all selected vertices. else, align to last selected
 		#			edgeloop=bool - align vertices in edgeloop from a selected edge
@@ -198,7 +201,8 @@ class Init(Slot):
 
 
 
-	def createCircle(self, axis='y', numPoints=5, radius=5, center=[0,0,0], mode=0):
+	@staticmethod
+	def createCircle(axis='y', numPoints=5, radius=5, center=[0,0,0], mode=0):
 		#args: axis='string' - 'x','y','z' 
 		#			numPoints=int - number of outer points
 		#			radius=int
@@ -253,8 +257,8 @@ class Init(Slot):
 
 
 
-
-	def setAttributesOnSelected(self, attribute=None, value=None):
+	@staticmethod
+	def setAttributesOnSelected(attribute=None, value=None):
 		#args: obj='string' - attribute to modify
 		#			value=int - new attribute value
 		#ex. self.setAttributesOnSelected (attribute=".smoothLevel", value=1)
@@ -275,7 +279,8 @@ class Init(Slot):
 
 
 	#to use main progressBar: name=string $gMainProgressBar
-	def mainProgressBar (self, size, name="tk_progressBar", stepAmount=1):
+	@staticmethod
+	def mainProgressBar (size, name="tk_progressBar", stepAmount=1):
 		#args: size=int - total amount
 	  #			name='string' - name of progress bar created
 	  #			stepAmount=int - increment amount
@@ -300,7 +305,8 @@ class Init(Slot):
 	# pm.progressBar ("tk_progressBar", edit=1, endProgress=1)
 
 
-	def viewPortMessage (self, message='', statusMessage='', assistMessage='', position='topCenter'):
+	@staticmethod
+	def viewPortMessage (message='', statusMessage='', assistMessage='', position='topCenter'):
 		#args: statusMessage='string' - message to display (accepts html formatting).
 		#			position='string' - position on screen. possible values are: topCenter","topRight","midLeft","midCenter","midCenterTop","midCenterBot","midRight","botLeft","botCenter","botRight"
 		#ex. self.viewPortMessage("shutting down:<hl>"+str(timer)+"</hl>")
@@ -309,7 +315,8 @@ class Init(Slot):
 
 
 	#output text
-	def outputText (self, text, window_title):
+	@staticmethod
+	def outputText (text, window_title):
 		#window_title = mel.eval(python("window_title"))
 		window = str(pm.window(	widthHeight=(300, 300), 
 								topLeftCorner=(65,265),
@@ -349,7 +356,8 @@ class Init(Slot):
 
 
 	#output scroll layout
-	def outputscrollField (self, text, window_title, width, height):
+	@staticmethod
+	def outputscrollField (text, window_title, width, height):
 		window_width  = width  * 300
 		window_height = height * 600
 		scroll_width  = width  * 294
@@ -373,7 +381,8 @@ class Init(Slot):
 
 
 	#output text field
-	def outputTextField (self, array, window_title):
+	@staticmethod
+	def outputTextField (array, window_title):
 		window = str(pm.window(	widthHeight=(250, 650), 
 								topLeftCorner=(65,275),
 								maximizeButton=False,
@@ -402,8 +411,8 @@ class Init(Slot):
 	# ------------------------------------------------
 
 
-
-	def convertMelToPy(self, melScript): #convert mel to python
+	@staticmethod
+	def convertMelToPy(melScript): #convert mel to python
 		#args: melScript='string' - mel script to convert
 		#returns: converted script as a string
 		from pymel.tools import mel2py
@@ -416,21 +425,24 @@ class Init(Slot):
 		# outputscrollField (python_script, "mel2py", 1.0, 1.0) #text, window_title, width, height
 
 
-	def commandHelp(self, command): #mel command help
+	@staticmethod
+	def commandHelp(command): #mel command help
 		#args: command='string' - mel command
 		command = ('help ' + command)
 		modtext = (mel.eval(command))
 		outputscrollField (modtext, "command help", 1.0, 1.0) #text, window_title, width, height
 
 
-	def keywordSearch (self, keyword): #keyword command search
+	@staticmethod
+	def keywordSearch (keyword): #keyword command search
 		#args: keyword='string' - 
 		keyword = ('help -list' + '"*' + keyword + '*"')
 		array = sorted(mel.eval(keyword))
 		outputTextField(array, "keyword search")
 
 
-	def queryRuntime (self, command): #query runtime command info
+	@staticmethod
+	def queryRuntime (command): #query runtime command info
 		type       = ('whatIs '                           + command + ';')
 		catagory   = ('runTimeCommand -query -category '  + command + ';')
 		command	   = ('runTimeCommand -query -command '   + command + ';')
@@ -443,27 +455,32 @@ class Init(Slot):
 		outputscrollField(output_text, "runTimeCommand", 1.0, 1.0) #text, window_title, width, height
 
 
-	def searchMEL (self, keyword): #search autodest MEL documentation
+	@staticmethod
+	def searchMEL (keyword): #search autodest MEL documentation
 		url = '{}{}{}'.format("http://help.autodesk.com/cloudhelp/2017/ENU/Maya-Tech-Docs/Commands/",keyword,".html")
 		pm.showHelp (url, absolute=True)
 
 
-	def searchPython (self, keyword): #Search autodesk Python documentation
+	@staticmethod
+	def searchPython (keyword): #Search autodesk Python documentation
 		url = '{}{}{}'.format("http://help.autodesk.com/cloudhelp/2017/ENU/Maya-Tech-Docs/CommandsPython/",keyword,".html")
 		pm.showHelp (url, absolute=True)
 
 
-	def searchPymel (self, keyword): #search online pymel documentation
+	@staticmethod
+	def searchPymel (keyword): #search online pymel documentation
 		url = '{}{}{}'.format("http://download.autodesk.com/global/docs/maya2014/zh_cn/PyMel/search.html?q=",keyword,"&check_keywords=yes&area=default")
 		pm.showHelp (url, absolute=True)
 
 
-	def currentCtx (self): #get current tool context
+	@staticmethod
+	def currentCtx(): #get current tool context
 		output_text = mel.eval('currentCtx;')
 		outputscrollField(output_text, "currentCtx", 1.0, 1.0)
 
 
-	def sourceScript (self): #Source External Script file
+	@staticmethod
+	def sourceScript(): #Source External Script file
 		mel_checkBox = checkBox('mel_checkBox', query=1, value=1)
 		python_checkBox = checkBox('python_checkBox', query=1, value=1)
 
@@ -477,17 +494,20 @@ class Init(Slot):
 		pm.openFile(file)
 
 
-	def commandRef (self): #open maya MEL commands list 
+	@staticmethod
+	def commandRef(): #open maya MEL commands list 
 		pm.showHelp ('http://download.autodesk.com/us/maya/2011help/Commands/index.html', absolute=True)
 
 
-	def globalVars (self): #$g List all global mel variables in current scene
+	@staticmethod
+	def globalVars(): #$g List all global mel variables in current scene
 		mel.eval('scriptEditorInfo -clearHistory')
 		array = sorted(mel.eval("env"))
 		outputTextField(array, "Global Variables")
 
 
-	def listUiObjects (self): #lsUI returns the names of UI objects
+	@staticmethod
+	def listUiObjects(): #lsUI returns the names of UI objects
 		windows			= '{}\n{}\n{}\n'.format("Windows", "Windows created using ELF UI commands:", pm.lsUI (windows=True))
 		panels			= '{}\n{}\n{}\n'.format("Panels", "All currently existing panels:", pm.lsUI (panels=True))
 		editors			= '{}\n{}\n{}\n'.format("Editors", "All currently existing editors:", pm.lsUI (editors=True))

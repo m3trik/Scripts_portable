@@ -3,21 +3,33 @@ except: pass
 
 
 
-#~ render camera:theCam outputFile:outFile
 
-cams = [cam for cam in rt.cameras if 'Target' not in str(cam)]
-camNames = [cam.name for cam in cams]
-print camNames
-#~ if cams:
-	#~ for cam in cams:
-		#~ print cam
+#~ geometry = rt.selection
+
+#~ if not len(geometry):
+	#~ geometry = rt.geometry
+
+#~ for obj in geometry:
+	#~ try:
+		
+			#~ obj.modifiers['TurboSmooth'].iterations = 0
+		#~ else:
+			#~ renderIters = obj.modifiers['TurboSmooth'].renderIterations
+			#~ obj.modifiers['TurboSmooth'].iterations = renderIters
+	#~ except: pass
 
 
 
-#~ rt.render (camera=cams[index])
 
 
+#~ sel = rt.selection[0]
+#~ print sel
 
+#~ print sel.modifiers[0].classID
+#~ MaxPlus.Factory.CreateWorldSpaceModifier(MaxPlus.Class_ID(0x000110b4, 0x00007f9e))
+
+#~ sel.modifiers['TurboSmooth'].renderIterations = 0
+#~ print sel.modifiers[-1].renderIterations
 
 
 

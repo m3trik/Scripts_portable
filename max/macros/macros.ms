@@ -201,17 +201,8 @@ macroScript toggleSmoothPreview
 category: "tk_macroScript.viewport"
 silentErrors: false
 autoUndoEnabled: false
-(	--framework for future function.
-	state = false
-	for obj in (selection as array) do
-	(
-		for m in obj.modifiers where --modify this to toggle 
-		(classof m) == TurboSmooth do --classOf checks if m is a TurboSmooth Modifier and then disables it
-		(
-			m.enabled = state
-		)
-	)
-	-- toggle Preferences\viewport\selection highlighting
+(	
+	func.toggleSmoothPreview()
 )
 
 macroScript objectMode
