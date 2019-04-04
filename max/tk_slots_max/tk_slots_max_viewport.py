@@ -62,40 +62,20 @@ class Viewport(Init):
 
 		if index!=0:
 			if index==1:
-				mel.eval('cameraView -edit -camera persp -setCamera $homeName;')
+				rt.StartObjectCreation(rt.Physical_Camera)
 			if index==2:
-				mel.eval('string $homeName = `cameraView -camera persp`;')
+				maxEval('Try(viewport.setcamera $) Catch()')
 			if index==3:
-				mel.eval('print "--no code--"')
+				maxEval('macros.run "Lights and Cameras" "PhysicalCamera_CreateFromView"')
 			if index==4:
-				mel.eval('''
-				if (`objExists cameras`)
-				{
-				  print "Group 'cameras' already exists";
-				}
-				else
-				{
-				  group -world -name cameras side front top persp;
-				  hide cameras;
-				  // Now add non-default cameras to group
-				  if (`objExists back`)
-				  {
-				  	parent back cameras;
-				  }
-				  if (`objExists bottom`)
-				  {
-				  	parent bottom cameras;
-				  }
-				  if (`objExists left`)
-				  {
-				  	parent left cameras;
-				  }
-				  if (`objExists alignToPoly`)
-				  {
-				  	parent alignToPoly cameras;
-				  }
-				}
-				''')
+				cameras = [cam for cam in rt.cameras] #List scene Cameras
+
+				layer = rt.LayerManager.getLayerFromName ("Cameras")
+				if not layer:
+					layer = rt.LayerManager.NewLayerFromName("Cameras")
+
+				for cam in cameras:
+					layer.addnode(cam)
 			cmb.setCurrentIndex(0)
 
 

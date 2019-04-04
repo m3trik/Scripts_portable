@@ -3,6 +3,16 @@ except: pass
 
 
 
+cameras = [cam for cam in rt.cameras] #List scene Cameras
+
+layer = rt.LayerManager.getLayerFromName ("Cameras")
+if not layer:
+	layer = rt.LayerManager.NewLayerFromName("Cameras")
+
+for cam in cameras:
+	layer.addnode(cam)
+
+
 
 #~ geometry = rt.selection
 

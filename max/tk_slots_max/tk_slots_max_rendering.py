@@ -30,12 +30,18 @@ class Rendering(Init):
 
 		'''
 		cmb = self.ui.cmb000
-
+		# text = cmb.currentText() #store current item text so that it can be reset after refreshing the comboBox list.
+		cmb.blockSignals(True)#block signals
+		
 		self.cams = [cam for cam in rt.cameras if 'Target' not in str(cam)]
 		
 		if self.cams:
 			list_ = [str(cam.name) for cam in self.cams] #camera names
-			self.comboBox (cmb, list_, '')
+			self.comboBox (cmb, list_)
+
+		# index = cmb.findText(text)
+		# cmb.setCurrentIndex(index)
+		# cmb.blockSignals(False)
 
 
 	def b000(self):
