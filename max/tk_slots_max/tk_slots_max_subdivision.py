@@ -8,97 +8,48 @@ from tk_slots_max_init import Init
 
 
 
+
 class Subdivision(Init):
 	def __init__(self, *args, **kwargs):
 		super(Subdivision, self).__init__(*args, **kwargs)
 
+		#initialize the smooth preview groupbox
+		self.ui.gb000.setText('TurboSmooth')
+		self.ui.txt000.setText('Iterations:')
+		self.ui.txt001.setText('RenderIters:')
+		self.ui.s000.setValue(0)
+		self.ui.s001.setValue(0)
 
 
 
-	def chk000(self):
+
+	def s000(self):
 		'''
-		Division Level 1
-
-		'''
-		self.setAttributesOnSelected (attribute=".smoothLevel", value=1)
-		pm.optionVar (intValue=["proxyDivisions",1]) #subDiv proxy options: 'divisions' 
-		self.setButtons(self.hotBox.ui, unchecked='chk001,chk002,chk003,chk004')
-
-	def chk001(self):
-		'''
-		Division Level 2
+		Division Level
 
 		'''
-		self.setAttributesOnSelected (attribute=".smoothLevel", value=2)
-		pm.optionVar (intValue=["proxyDivisions",2]) #subDiv proxy options: 'divisions' 
-		self.setButtons(self.hotBox.ui, unchecked='chk000,chk002,chk003,chk004')
+		value = self.ui.s000.getValue()
 
-	def chk002(self):
-		'''
-		Division Level 3
+		geometry = rt.selection
 
-		'''
-		self.setAttributesOnSelected (attribute=".smoothLevel", value=3)
-		pm.optionVar (intValue=["proxyDivisions",3]) #subDiv proxy options: 'divisions' 
-		self.setButtons(self.hotBox.ui, unchecked='chk000,chk001,chk003,chk004')
+		for obj in geometry:
+			try:
+				obj.modifiers['TurboSmooth'].iterations = value
+			except: pass
 
-	def chk003(self):
+	def s001(self):
 		'''
-		Division Level 4
+		Tesselation Level
 
 		'''
-		self.setAttributesOnSelected (attribute=".smoothLevel", value=4)
-		pm.optionVar (intValue=["proxyDivisions",4]) #subDiv proxy options: 'divisions' 
-		self.setButtons(self.hotBox.ui, unchecked='chk000,chk001,chk002,chk004')
+		value = self.ui.s001.getValue()
 
-	def chk004(self):
-		'''
-		Division Level 5
+		geometry = rt.selection
 
-		'''
-		self.setAttributesOnSelected (attribute=".smoothLevel", value=5)
-		pm.optionVar (intValue=["proxyDivisions",5]) #subDiv proxy options: 'divisions'
-		self.setButtons(self.hotBox.ui, unchecked='chk000,chk001,chk002,chk003')
-
-	def chk005(self):
-		'''
-		Tessellation Level 6
-
-		'''
-		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=6)
-		self.setButtons(self.hotBox.ui, unchecked='chk006,chk007,chk008,chk009')
-
-	def chk006(self):
-		'''
-		Tessellation Level 7
-
-		'''
-		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=7)
-		self.setButtons(self.hotBox.ui, unchecked='chk005,chk007,chk008,chk009')
-
-	def chk007(self):
-		'''
-		Tessellation Level 8
-
-		'''
-		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=8)
-		self.setButtons(self.hotBox.ui, unchecked='chk005,chk006,chk008,chk009')
-
-	def chk008(self):
-		'''
-		Tessellation Level 9
-
-		'''
-		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=9)
-		self.setButtons(self.hotBox.ui, unchecked='chk005,chk006,chk007,chk009')
-
-	def chk009(self):
-		'''
-		Tessellation Level 10
-
-		'''
-		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=10)
-		self.setButtons(self.hotBox.ui, unchecked='chk005,chk006,chk007,chk008')
+		for obj in geometry:
+			try:
+				obj.modifiers['TurboSmooth'].renderIterations = value
+			except: pass
 
 
 	def b000(self):
@@ -223,10 +174,20 @@ class Subdivision(Init):
 
 	def b011(self):
 		'''
-		Apply Smooth Preview
+		Convert Smooth Preview
 
 		'''
-		mel.eval("performSmoothMeshPreviewToPolygon;") #convert smooth mesh preview to polygons
+		 #convert smooth mesh preview to polygons
+		 geometry = rt.selection
+
+		if not len(geometry):
+			geometry = rt.geometry
+
+		for obj in geometry:
+			try:
+				renderIters = obj.modifiers['TurboSmooth'].renderIterations
+				obj.modifiers['TurboSmooth'].iterations = renderIters
+			except: pass
 
 
 

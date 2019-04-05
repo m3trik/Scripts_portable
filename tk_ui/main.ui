@@ -175,7 +175,7 @@
      <string>Minimize Window</string>
     </property>
     <property name="text">
-     <string/>
+     <string>Delete Loop</string>
     </property>
    </widget>
    <widget class="QPushButton" name="i022">

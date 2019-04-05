@@ -23,6 +23,8 @@ class Rendering(Init):
 		# comboBox.checkIndex(1)
 		# comboBox.checkIndex(2)
 
+		
+
 
 	def cmb000(self):
 		'''
@@ -30,14 +32,19 @@ class Rendering(Init):
 
 		'''
 		cmb = self.ui.cmb000
+		# cmb.blockSignals(True)#block signals
 		# text = cmb.currentText() #store current item text so that it can be reset after refreshing the comboBox list.
-		cmb.blockSignals(True)#block signals
-		
+
+		# refresh = [cam for cam in rt.cameras if 'Target' not in str(cam)] #
+		# if not set(self.cams)==set(refresh): #compare lists
+		# 	self.cams = refresh
+
 		self.cams = [cam for cam in rt.cameras if 'Target' not in str(cam)]
-		
 		if self.cams:
 			list_ = [str(cam.name) for cam in self.cams] #camera names
 			self.comboBox (cmb, list_)
+		else:
+			cmb.addItem('Render Camera') #if list is empty, add title
 
 		# index = cmb.findText(text)
 		# cmb.setCurrentIndex(index)

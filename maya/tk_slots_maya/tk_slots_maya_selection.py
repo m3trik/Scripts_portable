@@ -133,15 +133,48 @@ class Selection(Init):
 
 	def cmb001(self):
 		'''
-		Currently Selected Objects
+		
+
+		'''
+		pass
+
+	def cmb002(self):
+		'''
+		Select All Of Type
 
 		'''
 		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
-		items = self.comboBox (self.hotBox.ui.cmb001, [str(s) for s in pm.ls (selection=1, flatten=1)], "Currently Selected")
+		list_ = []
+		self.comboBox (self.hotBox.ui.cmb001, list_, "")
 
 		if index!=0:
-			pm.select (items[index])
 			self.hotBox.ui.cmb001.setCurrentIndex(0)
+		
+		#Select all Geometry
+		geometry = rt.geometry
+		rt.select(geometry)
+
+	def cmb003(self):
+		'''
+		Convert Selection to
+
+		'''
+		cmb = self.ui.cmb003
+
+		list_ = ['Verts', 'Edge', 'Face', 'Ring']
+		files = self.comboBox (cmb, list_, 'Convert Selection to')
+
+		if index!=0:
+			if index==files.index('Verts'): #Convert Selection To Vertices
+				mel.eval('PolySelectConvert 3;')
+			if index==files.index('Edges'): #Convert Selection To Edges
+				mel.eval('PolySelectConvert 2;')
+			if index==files.index('Faces'): #Convert Selection To Faces
+				mel.eval('PolySelectConvert 1;')
+			if index==files.index('Ring'): #Convert Selection To Edge Ring
+				mel.eval('SelectEdgeRingSp;')
+			cmb.setCurrentIndex(0)
+
 
 	def b000(self):
 		'''
@@ -220,20 +253,26 @@ class Selection(Init):
 
 	def b008(self):
 		'''
-		Select N-Th Edge
+		Select N-Th in Loop
 
 		'''
 		mel.eval("selectEveryNEdge;")
 
 	def b009(self):
 		'''
-		Select Contigious Edge Loop
+		Select N-th in Ring
 
 		'''
-		mel.eval('SelectContiguousEdges;')
+		print "# Warning: add correct arguments for this tool #" 
+		self.shortestEdgePath()
 
-	def b10(self): #Select contigious edge loop options
-		mel.eval('SelectContiguousEdgesOptions;')
+	def b10(self):
+		'''
+		Select Contigious Loop
+
+		'''
+		# mel.eval('SelectContiguousEdges;')
+		mel.eval('SelectContiguousEdgesOptions;') #Select contigious edge loop options
 
 	def b011(self):
 		'''
@@ -301,11 +340,9 @@ class Selection(Init):
 
 	def b020(self):
 		'''
-		Select Edge Ring
 
 		'''
-		print "# Warning: add correct arguments for this tool #" 
-		self.shortestEdgePath()
+		pass
 
 
 

@@ -24,13 +24,13 @@ class Init(Slot):
 	def info(self): #get current attributes. those with relavant values will be displayed.
 
 		infoDict={}
-		selection = rt.selection
+		sel = rt.selection
 		
 
-		selectionCount = selection.count; infoDict.update({"Selection Count: ":selectionCount}) #number of selected objects
-		currentSelection = [str(s) for s in selection]; infoDict.update({"Current Selection: ":currentSelection}) #currently selected objects
+		selectionCount = sel.count; infoDict.update({"Selection Count: ":selectionCount}) #number of selected objects
+		currentSelection = [str(s.name) for s in sel]; infoDict.update({"Current Selection: ":currentSelection}) #currently selected objects
 		
-		# if selection: numQuads = pm.polyEvaluate (selection[0], face=1); infoDict.update({"#Quads: ":numQuads}) #number of faces
+		# if sel: numQuads = pm.polyEvaluate (selection[0], face=1); infoDict.update({"#Quads: ":numQuads}) #number of faces
 
 		# symmetry = pm.symmetricModelling(query=1, symmetry=1);
 		# if symmetry==1: symmetry=True; infoDict.update({"Symmetry State: ":symmetry}) #symmetry state
@@ -39,18 +39,19 @@ class Init(Slot):
 		# xformConstraint = pm.xformConstraint(query=True, type=True)
 		# if xformConstraint=='none': xformConstraint=None; infoDict.update({"Xform Constrait: ":xformConstraint}) #transform constraits
 
-		# selectedVerts = pm.polyEvaluate(vertexComponent=1); infoDict.update({"Selected Vertices: ":selectedVerts}) #selected verts
-		# selectedEdges = pm.polyEvaluate(edgeComponent=1); infoDict.update({"Selected Edges: ":selectedEdges}) #selected edges
-		# selectedFaces = pm.polyEvaluate(faceComponent=1); infoDict.update({"Selected Faces: ":selectedFaces}) #selected faces
-		# selectedUVs = pm.polyEvaluate(uvComponent=1); infoDict.update({"Selected UV's: ":selectedUVs}) #selected uv's
+		selectedVerts = rt.polyop.getVertSelection; infoDict.update({"Selected Vertices: ":selectedVerts}) #selected verts
+		selectedEdges = rt.polyop.getEdgeSelection; infoDict.update({"Selected Edges: ":selectedEdges}) #selected edges
+		selectedFaces = rt.polyop.getFaceSelection; infoDict.update({"Selected Faces: ":selectedFaces}) #selected faces
+		# selectedUVs = ; infoDict.update({"Selected UV's: ":selectedUVs}) #selected uv's
 
 		prevCommand = self.sb.prevCommand(docString=True); infoDict.update({"Previous Command: ":prevCommand})  #get button text from last used command
 
 		#populate the textedit with any values
+		t = self.ui.t000
+		t.clear()
 		for key, value in infoDict.iteritems():
 			if value:
-				# self.ui.t000.setText(key+str(value)+'<br>') #<br> html break newline
-				self.ui.t000.setHtml(key+str(value)+'<br>') #<br> html break newline
+				t.append(key+str(value))
 
 
 
@@ -116,9 +117,39 @@ class Init(Slot):
 		''')
 
 
+
+	@staticmethod
+	def selectFaceLoop(tolerance, includeOpenEdges=False):
+
+		maxEval('''
+		selEdges = #{}
+		theObj = $
+
+		eCount = polyOp.getNumEdges theObj
+		for e = 1 to eCount do
+		(
+			theFaces = (polyOp.getEdgeFaces theObj e) as array
+			if theFaces.count == 2 then
+			(
+			 theAngle = acos(dot (polyOp.getFaceNormal theObj theFaces[1]) (polyOp.getFaceNormal theObj theFaces[2])) 
+				if theAngle >= tolerance do selEdges[e] = true
+			)	
+			else 
+				if includeOpenEdges do selEdges[e] = true
+		)
+		case classof (modPanel.getCurrentObject()) of
+		(
+			Editable_Poly: polyOp.setEdgeSelection theObj selEdges 
+			Edit_Poly: (modPanel.getCurrentObject()).SetSelection #Edge &selEdges 
+		)	
+		redrawViews()
+		''')
+
+
+
 	#Detaches editable_mesh elements into new objects	
 	@staticmethod
-	def detachElement (obj):
+	def detachElement(obj):
 
 		elementArray = []
 
@@ -577,7 +608,7 @@ class Init(Slot):
 	#calls filterSelectionByBaseClass()
 	@staticmethod
 	def classInfo (obj, query=False):
-		#functions used:
+		#functions referenced:
 		#~ filterSelectionByBaseClass()
 
 		if (obj == "noSelection"):
@@ -585,7 +616,7 @@ class Init(Slot):
 
 		baseObj = obj.baseObject
 		baseObjClass = rt.classOf(baseObj) #get the base object class.  ie. Editable_Poly
-		classTypeString = filterSelectionByBaseClass(baseObjClass) #func takes the base object class and returns the type as a string
+		classTypeString = self.filterSelectionByBaseClass(baseObjClass) #func takes the base object class and returns the type as a string
 		superClass = rt.superClassOf(obj)
 		isValid = rt.isValidNode(obj)
 		subObjectLevel = rt.getSelectionLevel(obj)

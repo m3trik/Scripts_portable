@@ -78,10 +78,12 @@ class Main(Init):
 
 	def v005(self):
 		'''
-		
+		Delete Loop
 
 		'''
-		pass
+		for edge in rt.selection:
+			edge.SelectEdgeLoop()
+			edge.EditablePoly.Remove()
 
 	def v006(self):
 		'''
@@ -95,7 +97,10 @@ class Main(Init):
 		Minimize Main Application
 
 		'''
-		mel.eval("minimizeApp;")
+		obj = rt.createOLEObject('Shell.Application')
+		obj.minimizeAll()
+		#obj.undoMinimizeAll()
+		rt.releaseOLEObject(obj)
 		self.hotBox.hbHide()
 
 

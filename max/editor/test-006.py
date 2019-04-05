@@ -3,48 +3,38 @@ except: pass
 
 
 
-cameras = [cam for cam in rt.cameras] #List scene Cameras
-
-layer = rt.LayerManager.getLayerFromName ("Cameras")
-if not layer:
-	layer = rt.LayerManager.NewLayerFromName("Cameras")
-
-for cam in cameras:
-	layer.addnode(cam)
 
 
 
-#~ geometry = rt.selection
-
-#~ if not len(geometry):
-	#~ geometry = rt.geometry
-
-#~ for obj in geometry:
-	#~ try:
-		
-			#~ obj.modifiers['TurboSmooth'].iterations = 0
-		#~ else:
-			#~ renderIters = obj.modifiers['TurboSmooth'].renderIterations
-			#~ obj.modifiers['TurboSmooth'].iterations = renderIters
-	#~ except: pass
 
 
 
 
 
 #~ sel = rt.selection[0]
-#~ print sel
 
-#~ print sel.modifiers[0].classID
-#~ MaxPlus.Factory.CreateWorldSpaceModifier(MaxPlus.Class_ID(0x000110b4, 0x00007f9e))
+#~ mod = MaxPlus.ClassIds.TurboSmooth
+#~ mod = MaxPlus.Class_ID(0x0d727b3e, 0x491d29a7)
+#~ print mod
+
+#~ rt.modPanel.addModToSelection(mod)
+
+#~ print sel.modifiers[-1].classID
+#~ MaxPlus.Factory.CreateWorldSpaceModifier(MaxPlus.Class_ID(1252338403L, 902438110L))
+
+#~ print MaxPlus.ClassIds.TurboSmooth
+
+
+#~ MaxPlus.Factory.CreateWorldSpaceModifier(MaxPlus.ClassIds.TurboSmooth) #MaxPlus.Class_ID(0x0d727b3e, 0x491d29a7))
 
 #~ sel.modifiers['TurboSmooth'].renderIterations = 0
 #~ print sel.modifiers[-1].renderIterations
 
+#~ modpanel.addmodtoselection myBend 	--adds the bend modifier to the top op the stack
+#~ addmodifier $Box017 myBend	 --this will also work
 
-
-
-
+ 
+ #~ deleteModifier obj index
 
 
 

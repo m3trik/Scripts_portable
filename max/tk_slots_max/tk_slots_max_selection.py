@@ -46,6 +46,7 @@ class Selection(Init):
 		tolerance = float(self.hotBox.ui.s005.value())
 		pm.symmetricModelling(edit=True, symmetry=symmetry, axis=axis, about=space, tolerance=tolerance)
 
+
 	def t000(self):
 		'''
 		Select The Selection Set Itself (Not Members Of)
@@ -122,47 +123,92 @@ class Selection(Init):
 			self.setButtons(self.hotBox.ui, unchecked='chk000,chk001,chk002')
 			print "# Warning: First select a seam edge and then check the symmetry button to enable topographic symmetry #"
 
+
 	def cmb000(self):
 		'''
 		List Selection Sets
 
 		'''
-		index = self.hotBox.ui.cmb000.currentIndex() #get current index before refreshing list
-		# sets = self.comboBox (self.hotBox.ui.cmb000, [str(set_) for set_ in pm.ls (et="objectSet", flatten=1)], "Sets")
+		cmb = self.hotBox.ui.cmb000
+		index = cmb.currentIndex() #get current index before refreshing list
+		
+		selectionSets = [set for set in rt.selectionSets]
+		
+		sets = self.comboBox (cmb, [set.name for set in selectionSets], "Sets")
 
-		maxEval('macros.run \"Edit\" \"namedSelSets\"')
+		
+		if index!=0:
+			rt.select(sets[index])
+			cmb.setCurrentIndex(0)
 
-		# if index!=0:
-		# 	pm.select (sets[index])
-		# 	self.hotBox.ui.cmb000.setCurrentIndex(0)
 
 	def cmb001(self):
 		'''
-		Currently Selected Objects
+		
 
 		'''
-		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
-		items = self.comboBox (self.hotBox.ui.cmb001, [str(s) for s in rt.selection], "Currently Selected")
-
-		if index!=0:
-			rt.select (items[index])
-			self.hotBox.ui.cmb001.setCurrentIndex(0)
+		pass
 
 	def cmb002(self):
 		'''
 		Select All Of Type
 
 		'''
-		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
-		list_ = []
-		self.comboBox (self.hotBox.ui.cmb001, list_, "")
+		cmb = self.hotBox.ui.cmb001
+		index = cmb.currentIndex() #get current index before refreshing list
+		
+		list_ = ['Geometry']
+		self.comboBox (cmb, list_, 'Select by Type')
 
 		if index!=0:
-			self.hotBox.ui.cmb001.setCurrentIndex(0)
-		
-		#Select all Geometry
-		geometry = rt.geometry
-		rt.select(geometry)
+			if index==list_.index('Geometry') #Select all Geometry
+				rt.select(rt.geometry)
+			cmb.setCurrentIndex(0)
+
+
+	def cmb003(self):
+		'''
+		Convert Selection to
+
+		'''
+		cmb = self.ui.cmb003
+
+		list_ = ['Verts', 'Edge', 'Face', 'Border']
+		files = self.comboBox (cmb, list_, 'Convert Selection to')
+
+		sel= rt.selection
+
+		if index!=0:
+			if index==files.index('Verts'): #Convert Selection To Vertices
+				if rt.subObjectLevel==2:
+					sel.convertselection ('Edge', 'Vertices')
+				if rt.subObjectLevel==4:
+					sel.convertselection ('Face', 'Vertices')
+				if rt.subObjectLevel==3:
+					sel.convertselection ('Border', 'Vertices')
+			if index==files.index('Edges'): #Convert Selection To Edges
+				if rt.subObjectLevel==1:
+					sel.convertselection ('Vertex', 'Edge')
+				if rt.subObjectLevel==4:
+					sel.convertselection ('Face', 'Edge')
+				if rt.subObjectLevel==3:
+					sel.convertselection ('Border', 'Edge')
+			if index==files.index('Faces'): #Convert Selection To Faces
+				if rt.subObjectLevel==2:
+					sel.convertselection ('Edge', 'Faces')
+				if rt.subObjectLevel==1:	
+					sel.convertselection ('Vertex', 'Faces')
+				if rt.subObjectLevel==3:	
+					sel.convertselection ('Border', 'Faces')
+			if index==files.index('Border'): #Convert Selection To Border
+				if rt.subObjectLevel==2:	
+					sel.convertselection ('Edge', 'Border')
+				if rt.subObjectLevel==4:	
+					sel.convertselection ('Face', 'Border')
+				if rt.subObjectLevel==1:	
+					sel.convertselection ('Vertex', 'Border')
+			cmb.setCurrentIndex(0)
+
 
 	def b000(self):
 		'''
@@ -250,29 +296,43 @@ class Selection(Init):
 
 	def b008(self):
 		'''
-		Select N-th Edge
+		Select N-th in Loop
 		'''
-		mel.eval("selectEveryNEdge;")
+		if rt.subObjectLevel==2: #Edge
+			mel.eval("selectEveryNEdge;")
+		elif rt.subObjectLevel==4: #Face
+			self.selectFaceLoop(tolerance=50)
 
 	def b009(self):
 		'''
-		Select Contigious Edge Loop
+		Select Edge Ring
 
 		'''
-		maxEval('''
-		curmod = Modpanel.getcurrentObject()
-		if ( Ribbon_Modeling.IsEditablePoly() ) then
-		(
-			curmod.SelectEdgeRing();
-		)
-		else
-		(
-			curmod.ButtonOp #SelectEdgeRing;
-		)
-		''')
+		if rt.subObjectLevel==2: #Edge
+			print "# Warning: add correct arguments for this tool #" 
+			self.shortestEdgePath()
+		elif rt.subObjectLevel==4: #Face
+			pass
 
-	def b10(self): #Select contigious edge loop options
-		maxEval('SelectContiguousEdgesOptions;')
+	def b10(self):
+		'''
+		Select Contigious Loop
+
+		'''
+		if rt.subObjectLevel==2: #Edge
+			maxEval('''
+			curmod = Modpanel.getcurrentObject()
+			if ( Ribbon_Modeling.IsEditablePoly() ) then
+			(
+				curmod.SelectEdgeRing();
+			)
+			else
+			(
+				curmod.ButtonOp #SelectEdgeRing;
+			)
+			''')
+		elif rt.subObjectLevel==4: #Face
+			pass
 
 	def b011(self):
 		'''
@@ -318,39 +378,37 @@ class Selection(Init):
 
 	def b016(self):
 		'''
-		Convert Selection To Vertices
+		
 
 		'''
-		maxEval('PolySelectConvert 3;')
+		pass
 
 	def b017(self):
 		'''
-		Convert Selection To Edges
+		
 
 		'''
-		maxEval('PolySelectConvert 2;')
+		pass
 
 	def b018(self):
 		'''
-		Convert Selection To Faces
+		
 
 		'''
-		maxEval('PolySelectConvert 1;')
+		pass
 
 	def b019(self):
 		'''
-		Convert Selection To Edge Ring
+		
 
 		'''
-		maxEval('SelectEdgeRingSp;')
+		pass
 
 	def b020(self):
 		'''
-		Select Edge Ring
 
 		'''
-		print "# Warning: add correct arguments for this tool #" 
-		self.shortestEdgePath()
+		pass
 
 
 

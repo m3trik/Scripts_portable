@@ -142,7 +142,9 @@ class Polygons(Init):
 		Bridge
 
 		'''
-		maxEval('$.EditablePoly.Bridge ()')
+		rt.selection.EditablePoly.Bridge() #perform bridge
+		rt.redrawViews() #redraw changes in viewport
+
 
 	def b006(self):
 		'''

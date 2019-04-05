@@ -14,92 +14,39 @@ class Subdivision(Init):
 		super(Subdivsion, self).__init__(*args, **kwargs)
 
 
-
-
-	def chk000(self):
+	def cmb000(self):
 		'''
-		Division Level 1
+		Modifiers
 
 		'''
-		self.setAttributesOnSelected (attribute=".smoothLevel", value=1)
-		pm.optionVar (intValue=["proxyDivisions",1]) #subDiv proxy options: 'divisions' 
-		self.setButtons(self.hotBox.ui, unchecked='chk001,chk002,chk003,chk004')
+		cmb = self.ui.cmb001
+		index = cmb.currentIndex() #get current index before refreshing list
+		files = ['']
+		self.comboBox (cmb, files, "Editors")
 
-	def chk001(self):
-		'''
-		Division Level 2
+		if index!=0:
+			if index==files.index(''):
+				mel.eval('')
+			cmb.setCurrentIndex(0)
 
+	def s000(self):
 		'''
-		self.setAttributesOnSelected (attribute=".smoothLevel", value=2)
-		pm.optionVar (intValue=["proxyDivisions",2]) #subDiv proxy options: 'divisions' 
-		self.setButtons(self.hotBox.ui, unchecked='chk000,chk002,chk003,chk004')
-
-	def chk002(self):
-		'''
-		Division Level 3
+		Division Level
 
 		'''
-		self.setAttributesOnSelected (attribute=".smoothLevel", value=3)
-		pm.optionVar (intValue=["proxyDivisions",3]) #subDiv proxy options: 'divisions' 
-		self.setButtons(self.hotBox.ui, unchecked='chk000,chk001,chk003,chk004')
+		value = self.ui.s000.getValue()
 
-	def chk003(self):
-		'''
-		Division Level 4
+		self.setAttributesOnSelected (attribute=".smoothLevel", value=value)
+		pm.optionVar (intValue=["proxyDivisions",1]) #subDiv proxy options: 'divisions'
 
+	def s001(self):
 		'''
-		self.setAttributesOnSelected (attribute=".smoothLevel", value=4)
-		pm.optionVar (intValue=["proxyDivisions",4]) #subDiv proxy options: 'divisions' 
-		self.setButtons(self.hotBox.ui, unchecked='chk000,chk001,chk002,chk004')
-
-	def chk004(self):
-		'''
-		Division Level 5
+		Tesselation Level
 
 		'''
-		self.setAttributesOnSelected (attribute=".smoothLevel", value=5)
-		pm.optionVar (intValue=["proxyDivisions",5]) #subDiv proxy options: 'divisions'
-		self.setButtons(self.hotBox.ui, unchecked='chk000,chk001,chk002,chk003')
+		value = self.ui.s001.getValue()
 
-	def chk005(self):
-		'''
-		Tessellation Level 6
-
-		'''
-		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=6)
-		self.setButtons(self.hotBox.ui, unchecked='chk006,chk007,chk008,chk009')
-
-	def chk006(self):
-		'''
-		Tessellation Level 7
-
-		'''
-		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=7)
-		self.setButtons(self.hotBox.ui, unchecked='chk005,chk007,chk008,chk009')
-
-	def chk007(self):
-		'''
-		Tessellation Level 8
-
-		'''
-		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=8)
-		self.setButtons(self.hotBox.ui, unchecked='chk005,chk006,chk008,chk009')
-
-	def chk008(self):
-		'''
-		Tessellation Level 9
-
-		'''
-		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=9)
-		self.setButtons(self.hotBox.ui, unchecked='chk005,chk006,chk007,chk009')
-
-	def chk009(self):
-		'''
-		Tessellation Level 10
-
-		'''
-		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=10)
-		self.setButtons(self.hotBox.ui, unchecked='chk005,chk006,chk007,chk008')
+		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=value)
 
 
 	def b000(self):
