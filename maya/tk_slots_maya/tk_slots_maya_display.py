@@ -95,7 +95,7 @@ class Display(Init):
 				mel.eval("bt_filterActionWindow;")
 
 			if index==9: #toggle component ID display
-				index = self.cycle('componentID_01234')
+				index = self.cycle([0,1,2,3,4], 'componentID')
 
 				visible = pm.polyOptions (query=1, displayItemNumbers=1)
 				dinArray = [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]
@@ -282,7 +282,7 @@ class Display(Init):
 		Toggle Component Id Display
 
 		'''
-		index = self.cycle('componentID_01234')
+		index = self.cycle([0,1,2,3,4], 'componentID')
 
 		visible = pm.polyOptions (query=1, displayItemNumbers=1)
 		dinArray = [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]

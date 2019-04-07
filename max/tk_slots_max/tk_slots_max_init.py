@@ -39,9 +39,15 @@ class Init(Slot):
 		# xformConstraint = pm.xformConstraint(query=True, type=True)
 		# if xformConstraint=='none': xformConstraint=None; infoDict.update({"Xform Constrait: ":xformConstraint}) #transform constraits
 
-		selectedVerts = rt.polyop.getVertSelection; infoDict.update({"Selected Vertices: ":selectedVerts}) #selected verts
-		selectedEdges = rt.polyop.getEdgeSelection; infoDict.update({"Selected Edges: ":selectedEdges}) #selected edges
-		selectedFaces = rt.polyop.getFaceSelection; infoDict.update({"Selected Faces: ":selectedFaces}) #selected faces
+		selectedVerts = rt.polyop.getVertSelection;
+		if type(selectedVerts)==int: infoDict.update({"Selected Vertices: ":selectedVerts}) #selected verts
+		
+		selectedEdges = rt.polyop.getEdgeSelection; 
+		if type(selectedEdges)==int: infoDict.update({"Selected Edges: ":selectedEdges}) #selected edges
+		
+		selectedFaces = rt.polyop.getFaceSelection;
+		if type(selectedFaces)==int: infoDict.update({"Selected Faces: ":selectedFaces}) #selected faces
+		
 		# selectedUVs = ; infoDict.update({"Selected UV's: ":selectedUVs}) #selected uv's
 
 		prevCommand = self.sb.prevCommand(docString=True); infoDict.update({"Previous Command: ":prevCommand})  #get button text from last used command
@@ -557,7 +563,12 @@ class Init(Slot):
 	# returns the base class type as a string
 	@staticmethod
 	def filterSelectionByBaseClass (baseObjClass):
-		
+		'''
+		#args:
+			baseObjClass = <base class object>
+		#returns:
+			the type of base class object as a 'string'
+		'''
 		obj = baseObjClass
 
 		#Editable Mesh
@@ -573,193 +584,102 @@ class Init(Slot):
 		if (obj == rt.NURBSSurf): #no pymxs.runtime attribute NURBSSurf
 			return "NURBSSurf"
 
-		#Shapes
-		if (obj == rt.Line or \
-			obj == rt.Circle or \
-			obj == rt.Arc or \
-			obj == rt.NGon or \
-			obj == rt.Text or \
-			obj == rt.Egg or \
-			obj == rt.Rectangle or \
-			obj == rt.Ellipse or \
-			obj == rt.Donut or \
-			obj == rt.Star or \
-			obj == rt.Helix or \
-			obj == rt.Section):
-			return "Shape"
+		#Shapes.  If obj matches a shape object; return 'shape'
+		shapes = [rt.Line, rt.Circle, rt.Arc, rt.NGon, rt.Text, rt.Egg, rt.Rectangle, rt.Ellipse, rt.Donut, rt.Star, rt.Helix, rt.Section]
+		for key, value in shapes.iteritems():
+			if obj == key:
+				return "Shape"
 
-		#Geometry
-		if (obj == rt.Box or \
-			obj == rt.Sphere or \
-			obj == rt.Cylinder or \
-			obj == rt.Torus or \
-			obj == rt.Teapot or \
-			obj == rt.TextPlus or \
-			obj == rt.Cone or \
-			obj == rt.GeoSphere or \
-			obj == rt.Tube or \
-			obj == rt.Pyramid or \
-			obj == rt.Plane):
-			return "Geometry"
+		#Geometry.  If obj matches a geometry object; return 'geometry'
+		geometry = [rt.Box, rt.Sphere, rt.Cylinder, rt.Torus, rt.Teapot, rt.TextPlus, rt.Cone, rt.GeoSphere, rt.Tube, rt.Pyramid, rt.Plane]
+		for key, value in geometry.iteritems():
+			if obj == key:
+				return "Geometry"
 
-	#--classInfo-----------------------------------------------------------------------------
+
+	@staticmethod
+	def getSuperClassType(superClass):
+		'''
+		#args:
+			superClass = <super class object>
+		#returns:
+			the type of super class as a 'string'
+		'''
+		# If superclass obj matches a type; return type
+		superClassDict = {rt.GeometryClass:"GeometryClass", rt.shape:"shape", rt.light:"light", rt.camera:"camera", rt.SpacewarpObject:"SpacewarpObject", rt.helper:"helper", rt.system:"system"}
+		#rt.default: "default" #aka unknown type
+		
+		for key, value in superClassDict.iteritems():
+				if (superClass == key):
+					return value
+
+
+	@staticmethod
+	def getBaseObjectType(baseObjClass):
+		#takes the base object class (ie. Editable_Poly) and ruturns the type as a string
+		baseObjDict = {rt.Editable_Poly:"Editable_Poly", rt.Editable_mesh:"Editable_Mesh", rt.Editable_Patch:"Editble_Patch", rt.NURBSSurf:"NURBSSurf", rt.Box:"Box", rt.Sphere:"Sphere", rt.Cylinder:"Cylinder", rt.Torus:"Torus", rt.Teapot:"Teapot", rt.TextPlus:"TextPlus", rt.Cone:"Cone", rt.GeoSphere:"GeoSphere", rt.Tube:"Tube", rt.Pyramid:"Pyramid", rt.Plane:"Plane", rt.Line:"Line", rt.Circle:"Circle", rt.Arc:"Arc", rt.NGon:"NGon", rt.Text:"Text", rt.Egg:"Egg", rt.Rectangle:"Rectangle", rt.Ellipse:"Line", rt.Donut:"Donut", rt.Star:"Star", rt.Helix:"Helix", rt.Section:"Section"}
+
+		for key, value in baseObjDict.iteritems():
+			if (baseObjClass == key):
+				return value
+
+
 
 	#returns various object class information as elements in an array
 	#calls filterSelectionByBaseClass()
 	@staticmethod
 	def classInfo (obj, query=False):
-		#functions referenced:
-		#~ filterSelectionByBaseClass()
-
+		'''
+		#args:
+			obj=<object>
+			query=print results to console
+		
+		#returns:
+			dictionary:
+				object:----------------------	
+				baseObject:------------------	
+				superClass:------------------	
+				superClass:|string|----------	
+				baseObjectClass:-------------	
+				baseObjectClass:|string|-----	
+				baseObjectClass TYPE:|string|	
+				isValidNode:|bool|-----------	
+		'''
 		if (obj == "noSelection"):
 			return obj #rt.undefined
 
 		baseObj = obj.baseObject
 		baseObjClass = rt.classOf(baseObj) #get the base object class.  ie. Editable_Poly
-		classTypeString = self.filterSelectionByBaseClass(baseObjClass) #func takes the base object class and returns the type as a string
+		classTypeString = filterSelectionByBaseClass(baseObjClass) #func takes the base object class and returns the type as a string
 		superClass = rt.superClassOf(obj)
 		isValid = rt.isValidNode(obj)
-		subObjectLevel = rt.getSelectionLevel(obj)
-		
-		# selectedVerts = rt.selectedVerts(obj)
-		# selectedEdges = rt.selectedEdges(obj)
-		# selectedFaces = rt.selectedFaces(obj)
-		
-		# numOfVerts = objMesh.GetNumVertices()
-		# numOfFaces = objMesh.GetNumFaces()
-		
-		# faceBitArray = MaxPlus.BitArray(numFaces)
-		# vertBitArray = MaxPlus.BitArray(numVerts)
-		
-		superClassString = "superClass: Unknown"
-		if (superClass == rt.GeometryClass):
-			superClassString = "GeometryClass"
-		if (superClass == rt.shape):
-			superClassString = "shape"
-		if (superClass == rt.light):
-			superClassString = "light"
-		if (superClass == rt.camera):
-			superClassString = "camera"
-		if (superClass == rt.SpacewarpObject):
-			superClassString = "SpacewarpObject"
-		if (superClass == rt.helper):
-			superClassString = "helper"
-		if (superClass == rt.system):
-			superClassString = "system"
-		#rt.default: "default" #aka unknown type
-
-
-		baseObjClassString = "objectClass: Unknown"
-		if (baseObjClass == rt.Editable_Poly):
-			baseObjClassString = "Editable_Poly"
-		if (baseObjClass == rt.Editable_mesh):
-			baseObjClassString = "Editable_Mesh"
-		if (baseObjClass == rt.Editable_Patch):
-			baseObjClassString = "Editble_Patch"
-		if (baseObjClass == rt.NURBSSurf):
-			baseObjClassString = "NURBSSurf"
-		if (baseObjClass == rt.Box):
-			baseObjClassString = "Box"
-		if (baseObjClass == rt.Sphere):
-			baseObjClassString = "Sphere"
-		if (baseObjClass == rt.Cylinder):
-			baseObjClassString = "Cylinder"
-		if (baseObjClass == rt.Torus):
-			baseObjClassString = "Torus"
-		if (baseObjClass == rt.Teapot):
-			baseObjClassString = "Teapot"
-		if (baseObjClass == rt.TextPlus):
-			baseObjClassString = "TextPlus"
-		if (baseObjClass == rt.Cone):
-			baseObjClassString = "Cone"
-		if (baseObjClass == rt.GeoSphere):
-			baseObjClassString = "GeoSphere"
-		if (baseObjClass == rt.Tube):
-			baseObjClassString = "Tube"
-		if (baseObjClass == rt.Pyramid):
-			baseObjClassString = "Pyramid"
-		if (baseObjClass == rt.Plane):
-			baseObjClassString = "Plane"
-		if (baseObjClass == rt.Line):
-			baseObjClassString = "Line"
-		if (baseObjClass == rt.Circle):
-			baseObjClassString = "Circle"
-		if (baseObjClass == rt.Arc):
-			baseObjClassString = "Arc"
-		if (baseObjClass == rt.NGon):
-			baseObjClassString = "NGon"
-		if (baseObjClass == rt.Text):
-			baseObjClassString = "Text"
-		if (baseObjClass == rt.Egg):
-			baseObjClassString = "Egg"
-		if (baseObjClass == rt.Rectangle):
-			baseObjClassString = "Rectangle"
-		if (baseObjClass == rt.Ellipse):
-			baseObjClassString = "Line"
-		if (baseObjClass == rt.Donut):
-			baseObjClassString = "Donut"
-		if (baseObjClass == rt.Star):
-			baseObjClassString = "Star"
-		if (baseObjClass == rt.Helix):
-			baseObjClassString = "Helix"
-		if (baseObjClass == rt.Section):
-			baseObjClassString = "Section"
 
 		
-		returnedClassInfoArray = []
-		returnedClassInfoArray.append(obj)
-		returnedClassInfoArray.append(baseObj)
-		returnedClassInfoArray.append(superClass)
-		returnedClassInfoArray.append(superClassString)
-		returnedClassInfoArray.append(baseObjClass)
-		returnedClassInfoArray.append(baseObjClassString)
-		returnedClassInfoArray.append(classTypeString)
-		returnedClassInfoArray.append(isValid)
-		returnedClassInfoArray.append(subObjectLevel)
-		# returnedClassInfoArray.append(selectedVerts)
-		# returnedClassInfoArray.append(selectedEdges)
-		# returnedClassInfoArray.append(selectedFaces)
-		# returnedClassInfoArray.append(numberOfVerts)
-		# returnedClassInfoArray.append(numberOfFaces)
-		# returnedClassInfoArray.append(vertBitArray)
-		# returnedClassInfoArray.append(faceBitArray)
+		superClassString = getSuperClassType(superClass)
+		baseObjectString = getBaseObjectType(baseObjClass)
 		
 		
-		if (query == True):
-			#python index / maxscript array index starting at 1
-			print "0-1---object:----------------------", returnedClassInfoArray[0]
-			print "1-2---baseObject:------------------", returnedClassInfoArray[1]
-			print "2-3---superClass:------------------", returnedClassInfoArray[2]
-			print "3-4---superClass:|string|----------", returnedClassInfoArray[3]
-			print "4-5---baseObjectClass:-------------", returnedClassInfoArray[4]
-			print "5-6---baseObjectClass:|string|-----", returnedClassInfoArray[5]
-			print "6-7---baseObjectClass TYPE:|string|", returnedClassInfoArray[6] #eg. Editable,Shape,Geometry
-			print "7-8---isValidNode:|bool|-----------", returnedClassInfoArray[7] #True, False, 1, 0
-			print "8-9---subObjectLevel:|int|---------", returnedClassInfoArray[8] #[mesh] 0=object level,1=vertex level,2=edge level,3=face,4=polygon,5=element,[poly] 0=object level,1=vertex level,2=edge level,3=border,4=polygon,5=element
-			# print "9-10--selectedVerts:|array|--------", returnedClassInfoArray[9] #selectedVerts
-			# print "10-11-selectedEdges:|array|--------", returnedClassInfoArray[10] #selectedEdges
-			# print "11-12-selectedFaces:|array|--------", returnedClassInfoArray[11] #selectedFaces
-			# print "12-13-numberOfVerts:|int|----------", returnedClassInfoArray[12] #number of selected vertices
-			# print "13-14-numberOfFaces:|int|----------". returnedClassInfoArray[13] #number of selected faces
-			# print "14-15-vertBitArray:----------------", returnedClassInfoArray[14]
-			# print "15-16-faceBitArray:----------------", returnedClassInfoArray[15]
-			print "="*40
+		classInfoDict = {'object':obj, 'baseObject':baseObj, 'superClass':superClass, 'superClassString':superClassString, 'baseObjectClass':baseObjClass, 'baseObjectClassString':baseObjClassString, 'baseObjectClassType':classTypeString, 'isValidNode':isValid}
 
-		return returnedClassInfoArray
+		
+		if query:
+			for key, value in classInfoDict.iteritems():
+				print key+': ', value
 
+		return classInfoDict
 
 
 
 
 
 	# ------------------------------------------------
-	' Display '
+	' Macros'
 	# ------------------------------------------------
 
 
 	@staticmethod
 	def toggleSmoothPreview():
-		toggle = Slot.cycle('toggleSmoothPreview_01') #cycle 0/1
+		toggle = Slot.cycle([0,1], 'toggleSmoothPreview') #toggle 0/1
 
 		geometry = rt.selection #if there is a selection; perform operation on those object/s
 		if not len(geometry): #else: perform operation on all scene geometry.
@@ -777,8 +697,12 @@ class Init(Slot):
 		rt.redrawViews() #refresh viewport. only those parts of the view that have changed are redrawn.
 
 
+	@staticmethod
+	def setSubObjectLevel(level):
+		sel = rt.selection[0]
 
-
+		rt.modPanel.setCurrentObject (sel.baseObject)
+		rt.subobjectLevel = level
 
 
 

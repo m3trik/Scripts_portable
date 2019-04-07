@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>259</width>
+    <width>266</width>
     <height>271</height>
    </rect>
   </property>
@@ -51,7 +51,7 @@
      </rect>
     </property>
     <property name="title">
-     <string/>
+     <string>Translate</string>
     </property>
     <widget class="QPushButton" name="chk008">
      <property name="enabled">
@@ -483,282 +483,12 @@
       <x>130</x>
       <y>30</y>
       <width>111</width>
-      <height>191</height>
+      <height>231</height>
      </rect>
     </property>
     <property name="title">
      <string>Align</string>
     </property>
-    <widget class="QPushButton" name="b031">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>10</y>
-       <width>21</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string/>
-     </property>
-     <property name="text">
-      <string>Z</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>18</width>
-       <height>18</height>
-      </size>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-     <property name="default">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="b030">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>10</y>
-       <width>21</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string/>
-     </property>
-     <property name="text">
-      <string>Y</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>18</width>
-       <height>18</height>
-      </size>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-     <property name="default">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="b029">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>10</y>
-       <width>21</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string/>
-     </property>
-     <property name="text">
-      <string>X</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>18</width>
-       <height>18</height>
-      </size>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-     <property name="default">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="b004">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>60</x>
-       <y>10</y>
-       <width>51</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Align selected vertices/edges along the specified axes.</string>
-     </property>
-     <property name="text">
-      <string>Align</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>18</width>
-       <height>18</height>
-      </size>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-     <property name="default">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="chk006">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>90</x>
-       <y>30</y>
-       <width>21</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Align: align to last selected or average.</string>
-     </property>
-     <property name="text">
-      <string>Avg</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>18</width>
-       <height>18</height>
-      </size>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-     <property name="default">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="chk007">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>60</x>
-       <y>30</y>
-       <width>31</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Align: align entire edge loop from selected edge(s)</string>
-     </property>
-     <property name="text">
-      <string>Loop</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>18</width>
-       <height>18</height>
-      </size>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-     <property name="default">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-    </widget>
     <widget class="QPushButton" name="b026">
      <property name="enabled">
       <bool>true</bool>
@@ -766,7 +496,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>150</y>
+       <y>110</y>
        <width>111</width>
        <height>19</height>
       </rect>
@@ -787,15 +517,87 @@
       <string>Snap Align</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="b013">
+    <widget class="QPushButton" name="b020">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>86</x>
+       <y>10</y>
+       <width>26</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>Select 4 points: 2 from an object to move and 2 to indicate the destination</string>
+     </property>
+     <property name="text">
+      <string>2</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b019">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>10</y>
+       <width>28</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>Select any type of point object or component</string>
+     </property>
+     <property name="text">
+      <string>1</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b018">
      <property name="enabled">
       <bool>true</bool>
      </property>
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>170</y>
-       <width>76</width>
+       <y>10</y>
+       <width>61</width>
        <height>19</height>
       </rect>
      </property>
@@ -806,16 +608,19 @@
       </size>
      </property>
      <property name="toolTip">
-      <string>Move selected object to grid.</string>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
+      <string>Align the selected objects</string>
      </property>
      <property name="text">
-      <string>Drop to Grid</string>
+      <string>Objects</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
      </property>
     </widget>
-    <widget class="QPushButton" name="chk010">
+    <widget class="QPushButton" name="b022">
      <property name="enabled">
       <bool>true</bool>
      </property>
@@ -823,7 +628,7 @@
       <rect>
        <x>0</x>
        <y>30</y>
-       <width>41</width>
+       <width>61</width>
        <height>19</height>
       </rect>
      </property>
@@ -834,42 +639,135 @@
       </size>
      </property>
      <property name="toolTip">
-      <string>Align: auto align</string>
+      <string>Align the selection to the last selected object</string>
      </property>
      <property name="text">
-      <string>Auto</string>
+      <string>Align Tool</string>
      </property>
      <property name="iconSize">
       <size>
-       <width>18</width>
-       <height>18</height>
+       <width>16</width>
+       <height>16</height>
       </size>
      </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-     <property name="default">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
     </widget>
-    <widget class="QPushButton" name="chk011">
+    <widget class="QPushButton" name="b023">
      <property name="enabled">
       <bool>true</bool>
      </property>
      <property name="geometry">
       <rect>
-       <x>40</x>
+       <x>0</x>
+       <y>50</y>
+       <width>111</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>Rotate a mesh so that the selected vertex touches or points to the target vert/edge of another mesh</string>
+     </property>
+     <property name="text">
+      <string>Orient to Vert/Edge</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b021">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>60</x>
        <y>30</y>
-       <width>21</width>
+       <width>51</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>Select 6 points: 3 from an object to move and 3 to indicate the destination</string>
+     </property>
+     <property name="text">
+      <string>3 points</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b024">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>70</y>
+       <width>111</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>Snap align object(s) to component</string>
+     </property>
+     <property name="text">
+      <string>Snap to Component</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b025">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>90</y>
+       <width>111</width>
        <height>19</height>
       </rect>
      </property>
@@ -880,10 +778,13 @@
       </size>
      </property>
      <property name="toolTip">
-      <string>Align: auto align two axes</string>
+      <string>Snap together tool: Click on the surface to be moved.</string>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
      </property>
      <property name="text">
-      <string>ƒ</string>
+      <string>Snap Together</string>
      </property>
      <property name="iconSize">
       <size>
@@ -891,123 +792,524 @@
        <height>18</height>
       </size>
      </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-     <property name="default">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
     </widget>
-    <widget class="QPushButton" name="chk014">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
+    <widget class="QGroupBox" name="groupBox_3">
      <property name="geometry">
       <rect>
-       <x>75</x>
-       <y>170</y>
-       <width>14</width>
-       <height>19</height>
+       <x>0</x>
+       <y>200</y>
+       <width>106</width>
+       <height>31</height>
       </rect>
      </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
+     <property name="title">
+      <string>To Grid</string>
      </property>
-     <property name="toolTip">
-      <string>Drop to Grid: move to origin (xyz 0,0,0) </string>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="text">
-      <string>0</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
+     <widget class="QPushButton" name="chk016">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>95</x>
+        <y>10</y>
+        <width>14</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>111</width>
+        <height>19</height>
+       </size>
+      </property>
+      <property name="toolTip">
+       <string>Drop to Grid: center pivot on objects bounding box </string>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="text">
+       <string>C</string>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="b013">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>10</y>
+        <width>76</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>111</width>
+        <height>19</height>
+       </size>
+      </property>
+      <property name="toolTip">
+       <string>Move selected object to grid.</string>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="text">
+       <string>Drop to Grid</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="chk014">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>75</x>
+        <y>10</y>
+        <width>14</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>111</width>
+        <height>19</height>
+       </size>
+      </property>
+      <property name="toolTip">
+       <string>Drop to Grid: move to origin (xyz 0,0,0) </string>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="chk015">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>85</x>
+        <y>10</y>
+        <width>14</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>111</width>
+        <height>19</height>
+       </size>
+      </property>
+      <property name="toolTip">
+       <string>Drop to Grid: use Lowest bounding box point (else mid point) </string>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="text">
+       <string>L</string>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+     </widget>
     </widget>
-    <widget class="QPushButton" name="chk015">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
+    <widget class="QGroupBox" name="groupBox_2">
      <property name="geometry">
       <rect>
-       <x>85</x>
-       <y>170</y>
-       <width>14</width>
-       <height>19</height>
+       <x>0</x>
+       <y>140</y>
+       <width>111</width>
+       <height>51</height>
       </rect>
      </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
+     <property name="title">
+      <string>Align Components</string>
      </property>
-     <property name="toolTip">
-      <string>Drop to Grid: use Lowest bounding box point (else mid point) </string>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="text">
-      <string>L</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="chk016">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>95</x>
-       <y>170</y>
-       <width>14</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Drop to Grid: center pivot on objects bounding box </string>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="text">
-      <string>C</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
+     <widget class="QPushButton" name="chk010">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>30</y>
+        <width>41</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>111</width>
+        <height>19</height>
+       </size>
+      </property>
+      <property name="toolTip">
+       <string>Align: auto align</string>
+      </property>
+      <property name="text">
+       <string>Auto</string>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>18</width>
+        <height>18</height>
+       </size>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
+      <property name="default">
+       <bool>false</bool>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="b029">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>10</y>
+        <width>21</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>111</width>
+        <height>19</height>
+       </size>
+      </property>
+      <property name="toolTip">
+       <string/>
+      </property>
+      <property name="text">
+       <string>X</string>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>18</width>
+        <height>18</height>
+       </size>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
+      <property name="default">
+       <bool>false</bool>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="chk006">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>30</y>
+        <width>21</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>111</width>
+        <height>19</height>
+       </size>
+      </property>
+      <property name="toolTip">
+       <string>Align: align to last selected or average.</string>
+      </property>
+      <property name="text">
+       <string>Avg</string>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>18</width>
+        <height>18</height>
+       </size>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
+      <property name="default">
+       <bool>false</bool>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="chk011">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>30</y>
+        <width>21</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>111</width>
+        <height>19</height>
+       </size>
+      </property>
+      <property name="toolTip">
+       <string>Align: auto align two axes</string>
+      </property>
+      <property name="text">
+       <string>ƒ</string>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>18</width>
+        <height>18</height>
+       </size>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
+      <property name="default">
+       <bool>false</bool>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="b004">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>10</y>
+        <width>51</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>111</width>
+        <height>19</height>
+       </size>
+      </property>
+      <property name="toolTip">
+       <string>Align selected vertices/edges along the specified axes.</string>
+      </property>
+      <property name="text">
+       <string>Align</string>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>18</width>
+        <height>18</height>
+       </size>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
+      <property name="default">
+       <bool>false</bool>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="b030">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>10</y>
+        <width>21</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>111</width>
+        <height>19</height>
+       </size>
+      </property>
+      <property name="toolTip">
+       <string/>
+      </property>
+      <property name="text">
+       <string>Y</string>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>18</width>
+        <height>18</height>
+       </size>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
+      <property name="default">
+       <bool>false</bool>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="chk007">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>30</y>
+        <width>31</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>111</width>
+        <height>19</height>
+       </size>
+      </property>
+      <property name="toolTip">
+       <string>Align: align entire edge loop from selected edge(s)</string>
+      </property>
+      <property name="text">
+       <string>Loop</string>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>18</width>
+        <height>18</height>
+       </size>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
+      <property name="default">
+       <bool>false</bool>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="b031">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>10</y>
+        <width>21</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>111</width>
+        <height>19</height>
+       </size>
+      </property>
+      <property name="toolTip">
+       <string/>
+      </property>
+      <property name="text">
+       <string>Z</string>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>18</width>
+        <height>18</height>
+       </size>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
+      <property name="default">
+       <bool>false</bool>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QGroupBox" name="Pivot">
@@ -1371,282 +1673,6 @@
       <bool>false</bool>
      </property>
     </widget>
-   </widget>
-   <widget class="QPushButton" name="b024">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>140</y>
-      <width>111</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>111</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>8</pointsize>
-     </font>
-    </property>
-    <property name="toolTip">
-     <string>Snap align object(s) to component</string>
-    </property>
-    <property name="text">
-     <string>Snap to Component</string>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>16</width>
-      <height>16</height>
-     </size>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="b018">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>80</y>
-      <width>61</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>111</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="toolTip">
-     <string>Align the selected objects</string>
-    </property>
-    <property name="text">
-     <string>Objects</string>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>16</width>
-      <height>16</height>
-     </size>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="b021">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>190</x>
-      <y>100</y>
-      <width>51</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>111</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>8</pointsize>
-     </font>
-    </property>
-    <property name="toolTip">
-     <string>Select 6 points: 3 from an object to move and 3 to indicate the destination</string>
-    </property>
-    <property name="text">
-     <string>3 points</string>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>16</width>
-      <height>16</height>
-     </size>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="b023">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>120</y>
-      <width>111</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>111</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>8</pointsize>
-     </font>
-    </property>
-    <property name="toolTip">
-     <string>Rotate a mesh so that the selected vertex touches or points to the target vert/edge of another mesh</string>
-    </property>
-    <property name="text">
-     <string>Orient to Vert/Edge</string>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>16</width>
-      <height>16</height>
-     </size>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="b025">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>160</y>
-      <width>111</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>111</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="toolTip">
-     <string>Snap together tool: Click on the surface to be moved.</string>
-    </property>
-    <property name="autoFillBackground">
-     <bool>false</bool>
-    </property>
-    <property name="text">
-     <string>Snap Together</string>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>18</width>
-      <height>18</height>
-     </size>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="b022">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>100</y>
-      <width>61</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>111</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="toolTip">
-     <string>Align the selection to the last selected object</string>
-    </property>
-    <property name="text">
-     <string>Align Tool</string>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>16</width>
-      <height>16</height>
-     </size>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="b019">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>190</x>
-      <y>80</y>
-      <width>28</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>111</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>8</pointsize>
-     </font>
-    </property>
-    <property name="toolTip">
-     <string>Select any type of point object or component</string>
-    </property>
-    <property name="text">
-     <string>1</string>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>16</width>
-      <height>16</height>
-     </size>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="b020">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>216</x>
-      <y>80</y>
-      <width>26</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>111</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>8</pointsize>
-     </font>
-    </property>
-    <property name="toolTip">
-     <string>Select 4 points: 2 from an object to move and 2 to indicate the destination</string>
-    </property>
-    <property name="text">
-     <string>2</string>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>16</width>
-      <height>16</height>
-     </size>
-    </property>
    </widget>
    <widget class="QFrame" name="menubar">
     <property name="geometry">

@@ -142,7 +142,10 @@ class Polygons(Init):
 		Bridge
 
 		'''
-		rt.selection.EditablePoly.Bridge() #perform bridge
+		obj = rt.selection
+
+		for obj in rt.selection:
+			obj.EditablePoly.Bridge() #perform bridge
 		rt.redrawViews() #redraw changes in viewport
 
 
@@ -167,7 +170,7 @@ class Polygons(Init):
 
 	def b007(self):
 		'''
-		Bevel \Chamfer
+		Bevel [Chamfer]
 
 		'''
 		width = float(self.hotBox.ui.s000.value())
@@ -524,7 +527,7 @@ class Polygons(Init):
 		Target Weld
 
 		'''
-		mel.eval("dR_targetWeldTool;")
+		maxEval('')
 
 	def b044(self):
 		'''

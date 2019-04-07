@@ -55,7 +55,7 @@
       <rect>
        <x>4</x>
        <y>30</y>
-       <width>97</width>
+       <width>102</width>
        <height>19</height>
       </rect>
      </property>
@@ -79,7 +79,7 @@
      </property>
      <item>
       <property name="text">
-       <string>Recent Project</string>
+       <string>Recent Projects</string>
       </property>
      </item>
     </widget>
@@ -218,7 +218,7 @@
      </property>
      <item>
       <property name="text">
-       <string>Recent File</string>
+       <string>Recent Files</string>
       </property>
      </item>
     </widget>
@@ -497,26 +497,13 @@
       <x>104</x>
       <y>24</y>
       <width>89</width>
-      <height>67</height>
+      <height>103</height>
      </rect>
     </property>
     <property name="title">
      <string>Editors</string>
     </property>
-    <widget class="QPushButton" name="b002">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>30</y>
-       <width>89</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>HG In/Out</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="b001">
+    <widget class="QComboBox" name="cmb000_2">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -525,15 +512,35 @@
        <height>19</height>
       </rect>
      </property>
-     <property name="text">
-      <string>HG Hierarchy</string>
+     <property name="minimumSize">
+      <size>
+       <width>89</width>
+       <height>0</height>
+      </size>
      </property>
+     <property name="maximumSize">
+      <size>
+       <width>9999</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>Editors</string>
+      </property>
+     </item>
     </widget>
     <widget class="QPushButton" name="b003">
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>48</y>
+       <y>84</y>
        <width>89</width>
        <height>19</height>
       </rect>
@@ -544,6 +551,65 @@
      <property name="text">
       <string>Node Editor</string>
      </property>
+    </widget>
+    <widget class="QPushButton" name="b001">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>48</y>
+       <width>89</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>HG Hierarchy</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b002">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>66</y>
+       <width>89</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>HG In/Out</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="cmb000_3">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>30</y>
+       <width>89</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>89</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>9999</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>Modifiers</string>
+      </property>
+     </item>
     </widget>
    </widget>
    <widget class="QPushButton" name="b004">

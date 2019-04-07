@@ -23,7 +23,7 @@ class Normals(Init):
 		'''
 		size = float(self.hotBox.ui.s001.value())
 		# state = pm.polyOptions (query=True, displayNormal=True)
-		state = self.cycle('displayNormals_1230')
+		state = self.cycle([1,2,3,0], 'displayNormals')
 		if state ==0: #off
 			pm.polyOptions (displayNormal=0, sizeNormal=0)
 			pm.polyOptions (displayTangent=False)

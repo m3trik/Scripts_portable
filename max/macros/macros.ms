@@ -205,6 +205,7 @@ autoUndoEnabled: false
 	func.toggleSmoothPreview()
 )
 
+
 macroScript objectMode
 category: "tk_macroscript.selection"
 silentErrors: false
@@ -212,275 +213,43 @@ autoUndoEnabled: false
 --documentaion on subObjectLevel
 --http://docs.autodesk.com/3DSMAX/16/ENU/MAXScript-Help/index.html?url=files/GUID-BAC3CC23-9D1D-44CE-B4AF-C0CEBDD7099E.htm,topicNumber=d30e673804
 (
-	lvl = 0
-	if (subobjectlevel != lvl or subobjectlevel == undefined) then 
-	(
-		subobjectlevel = lvl	--set selection type to object mode
-		if ($.baseObject != undefined) then
-		(
-		max modify mode
-		modPanel.setCurrentObject $.baseObject;
-		)	
-	)
+	func.setSubObjectLevel(0)
 )
+
 
 macroScript componentVertexMode
 category: "tk_macroscript.selection"
 silentErrors: false
 autoUndoEnabled: false
 (
-	classString = func.makeSelection "Current" 1 func.classInfo
-	--	[1] --object
-	--	[2] --baseObject
-	-- 	[5] --baseObject class
-	-- 	[7] --baseObject class type string. eg. Editable,Shape,Geometry
-	if (classString[1] != "noSelection") then
-	(
-		lvl = 1
-		if (classString[7] == "Editable_Poly" and subobjectlevel != lvl) then
-		(
-			modPanel.setCurrentObject classString[2];
-			subobjectlevel = lvl;	--set selection type to vertex
-		)
-		lvl = 1
-		if (classString[7] == "Editable_Mesh" or classString[5] == Editable_mesh and subobjectlevel != lvl) then
-		(
-			modPanel.setCurrentObject classString[2];
-			subobjectlevel = lvl;	--set selection type to vertex
-		)
-		lvl = 1
-		if (classString[7] == "Editable_Patch" or classString[5] == Editable_Patch and subobjectlevel != lvl) then
-		(
-			modPanel.setCurrentObject classString[2];
-			subobjectlevel = lvl;	--set selection type to vertex
-		)
-		lvl = 1
-		if (classString[7] == "NURBSSurf" or classString[5] == NURBSSurf and subobjectlevel != lvl) then
-		(
-			modPanel.setCurrentObject classString[2];
-			subobjectlevel = lvl;	--set selection type to surface cv
-		)
-		lvl = 1
-		if (classString[7] == "Shape" and subobjectlevel != lvl) then
-		(
-			modPanel.setCurrentObject classString[2];
-			subobjectlevel = lvl;	--set selection type to vertex
-		)
-		if (classString[7] == "Geometry") then
-		(
-			print "non-deformable object: Geometry";
-		)
-		/*else if undefined*/
-		if (classString[7] == undefined) then
-		(
-			if (classString[5] != NURBSSurf and classString[5] != Editable_Patch and classString[5] != Editable_mesh) then
-			(
-				print "non-deformable object: undefined";
-			)
-		)
-	)
-	else --default
-	(
-		lvl = 1
-		if (subobjectlevel != lvl) then
-		(
-			modPanel.setCurrentObject classString[2];
-			subobjectlevel = lvl;
-		)
-	)
+	func.setSubObjectLevel(1)
 )
+
 
 macroScript componentEdgeMode
 category: "tk_macroscript.selection"
 silentErrors: false
 autoUndoEnabled: false
 (
-	classString = func.makeSelection "Current" 1 func.classInfo
-	--	[1] --object
-	--	[2] --baseObject
-	-- 	[5] --baseObject classW
-	-- 	[7] --baseObject class type string. eg. Editable,Shape,Geometry
-	if (classString[1] != "noSelection") then
-	(
-		lvl = 2
-		if (classString[7] == "Editable_Poly" and subobjectlevel != lvl) then
-		(
-			modPanel.setCurrentObject classString[2];
-			subobjectlevel = lvl;	--set selection type to border edge
-		)
-		lvl = 2
-		if (classString[7] == "Editable_Mesh" or classString[5] == Editable_mesh and subobjectlevel != lvl) then
-		(
-			modPanel.setCurrentObject classString[2];
-			subobjectlevel = lvl;	--set selection type to border edge
-		)
-		lvl = 2
-		if (classString[7] == "Editable_Patch" or classString[5] == Editable_patch and subobjectlevel != lvl) then
-		(
-			modPanel.setCurrentObject classString[2];
-			subobjectlevel = lvl;	--set selection type to handle
-		)
-		lvl = 2
-		if (classString[7] == "NURBSSurf" or classString[5] == NURBSSurf and subobjectlevel != lvl) then
-		(
-			modPanel.setCurrentObject classString[2];
-			subobjectlevel = lvl;	--set selection type to surface cv
-		)
-		lvl = 2
-		if (classString[7] == "Shape" and subobjectlevel != lvl) then
-		(
-			modPanel.setCurrentObject classString[2];
-			subobjectlevel = lvl;	--set selection type to segment
-		)
-		if (classString[7] == "Geometry") then
-		(
-			print "non-deformable object: Geometry";
-		)
-		/*else if undefined*/
-		if (classString[7] == undefined ) then
-		(
-			if (classString[5] != NURBSSurf and classString[5] != Editable_Patch and classString[5] != Editable_mesh) then
-			(
-				print "non-deformable object: undefined";
-			)
-		)
-	)
-	else --default
-	(
-		if (subobjectlevel != lvl) then
-		(
-			modPanel.setCurrentObject classString[2];
-			subobjectlevel = lvl;
-		)
-	)
+	func.setSubObjectLevel(2)
 )
 
-macroScript componentAltMode
-category: "tk_macroscript.selection"
-silentErrors: false
-autoUndoEnabled: false
-(
-	classString = func.makeSelection "Current" 1 func.classInfo
-	--	[1] --object
-	--	[2] --baseObject
-	-- 	[5] --baseObject classW
-	-- 	[7] --baseObject class type string. eg. Editable,Shape,Geometry
-	if (classString[1] != "noSelection") then
-	(
-		lvl = 3
-		if (classString[7] == "Editable_Poly" and subobjectlevel != lvl) then
-		(
-			modPanel.setCurrentObject classString[2];
-			subobjectlevel = lvl;	--set selection type to border edge
-		)
-		lvl = 3
-		if (classString[7] == "Editable_Mesh" or classString[5] == Editable_mesh and subobjectlevel != lvl) then
-		(
-			modPanel.setCurrentObject classString[2];
-			subobjectlevel = lvl;	--set selection type to face
-		)
-		lvl = 5
-		if (classString[7] == "Editable_Patch" or classString[5] == Editable_patch and subobjectlevel != lvl) then
-		(
-			modPanel.setCurrentObject classString[2];
-			subobjectlevel = lvl;	--set selection type to handle
-		)
-		if (classString[7] == "NURBSSurf" or classString[5] == NURBSSurf) then
-		(
-			print "NURBSSurf has no associated function"
-		)
-		if (classString[7] == "Shape") then
-		(
-			print "Shape object has no associated function";
-		)
-		if (classString[7] == "Geometry") then
-		(
-			print "non-deformable object: Geometry";
-		)
-		/*else if undefined*/
-		if (classString[7] == undefined ) then
-		(
-			if (classString[5] != NURBSSurf and classString[5] != Editable_Patch and classString[5] != Editable_mesh) then
-			(
-				print "non-deformable object: undefined";
-			)
-		)
-	)
-	else --default
-	(
-		lvl = 3
-		if (subobjectlevel != lvl) then
-		(
-			modPanel.setCurrentObject classString[2];
-			subobjectlevel = lvl;
-		)
-	)
-)
 
 macroScript componentFacetMode
 category: "tk_macroscript.selection"
 silentErrors: false
 autoUndoEnabled: false
 (
-	classString = func.makeSelection "Current" 1 func.classInfo
-	--	[1] --object
-	--	[2] --baseObject
-	-- 	[5] --baseObject classW
-	-- 	[7] --baseObject class type string. eg. Editable,Shape,Geometry
-	if (classString[1] != "noSelection") then
-	(
-		lvl = 4
-		if (classString[7] == "Editable_Poly") then
-		(
-			modPanel.setCurrentObject classString[2];
-			subobjectlevel = lvl;	--set selection type to polygon
-		)
-		lvl = 4
-		if (classString[7] == "Editable_Mesh" or classString[5] == Editable_mesh) then
-		(
-			modPanel.setCurrentObject classString[2];
-			subobjectlevel = lvl;	--set selection type to polygon
-		)
-		lvl = 3
-		if (classString[7] == "Editable_Patch" or classString[5] == Editable_patch) then
-		(
-			modPanel.setCurrentObject classString[2];
-			subobjectlevel = lvl;	--set selection type to patch
-		)
-		lvl = 2
-		if (classString[7] == "NURBSSurf" or classString[5] == NURBSSurf) then
-		(
-			modPanel.setCurrentObject classString[2];
-			subobjectlevel = lvl;	--set selection type to surface
-		)
-		lvl = 3
-		if (classString[7] == "Shape") then
-		(
-			modPanel.setCurrentObject classString[2];
-			subobjectlevel = lvl;	--set selection type to spline
-		)
-		if (classString[7] == "Geometry") then
-		(
-			print "non-deformable object: Geometry";
-		)
-		/*else if undefined*/
-		if (classString[7] == undefined ) then
-		(
-			if (classString[5] != NURBSSurf and classString[5] != Editable_Patch and classString[5] != Editable_mesh) then
-			(
-				print "non-deformable object: undefined";
-			)
-		)
-	)
-	else --default
-	(
-		lvl = 4
-		if (subobjectlevel != lvl) then
-		(
-			modPanel.setCurrentObject classString[2];
-			subobjectlevel = lvl;
-		)
-	)
+	func.setSubObjectLevel(4)
+)
+
+
+macroScript componentElementMode
+category: "tk_macroscript.selection"
+silentErrors: false
+autoUndoEnabled: false
+(
+	func.setSubObjectLevel(5)
 )
 
 
@@ -725,3 +494,68 @@ the MacroScript using the macros.run() method.
 
 */
 
+
+-- --  depricated: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --  --
+
+
+-- macroScript componentAltMode
+-- category: "tk_macroscript.selection"
+-- silentErrors: false
+-- autoUndoEnabled: false
+-- (
+-- 	classString = func.makeSelection "Current" 1 func.classInfo
+-- 	--	[1] --object
+-- 	--	[2] --baseObject
+-- 	-- 	[5] --baseObject classW
+-- 	-- 	[7] --baseObject class type string. eg. Editable,Shape,Geometry
+-- 	if (classString[1] != "noSelection") then
+-- 	(
+-- 		lvl = 3
+-- 		if (classString[7] == "Editable_Poly" and subobjectlevel != lvl) then
+-- 		(
+-- 			modPanel.setCurrentObject classString[2];
+-- 			subobjectlevel = lvl;	--set selection type to border edge
+-- 		)
+-- 		lvl = 3
+-- 		if (classString[7] == "Editable_Mesh" or classString[5] == Editable_mesh and subobjectlevel != lvl) then
+-- 		(
+-- 			modPanel.setCurrentObject classString[2];
+-- 			subobjectlevel = lvl;	--set selection type to face
+-- 		)
+-- 		lvl = 5
+-- 		if (classString[7] == "Editable_Patch" or classString[5] == Editable_patch and subobjectlevel != lvl) then
+-- 		(
+-- 			modPanel.setCurrentObject classString[2];
+-- 			subobjectlevel = lvl;	--set selection type to handle
+-- 		)
+-- 		if (classString[7] == "NURBSSurf" or classString[5] == NURBSSurf) then
+-- 		(
+-- 			print "NURBSSurf has no associated function"
+-- 		)
+-- 		if (classString[7] == "Shape") then
+-- 		(
+-- 			print "Shape object has no associated function";
+-- 		)
+-- 		if (classString[7] == "Geometry") then
+-- 		(
+-- 			print "non-deformable object: Geometry";
+-- 		)
+-- 		/*else if undefined*/
+-- 		if (classString[7] == undefined ) then
+-- 		(
+-- 			if (classString[5] != NURBSSurf and classString[5] != Editable_Patch and classString[5] != Editable_mesh) then
+-- 			(
+-- 				print "non-deformable object: undefined";
+-- 			)
+-- 		)
+-- 	)
+-- 	else --default
+-- 	(
+-- 		lvl = 3
+-- 		if (subobjectlevel != lvl) then
+-- 		(
+-- 			modPanel.setCurrentObject classString[2];
+-- 			subobjectlevel = lvl;
+-- 		)
+-- 	)
+-- )

@@ -23,7 +23,7 @@ class Normals(Init):
 		'''
 		size = float(self.hotBox.ui.s001.value())
 		# state = pm.polyOptions (query=True, displayNormal=True)
-		state = self.cycle('displayNormals_1230')
+		state = self.cycle([1,2,3,0], 'displayNormals')
 		if state ==0: #off
 			pm.polyOptions (displayNormal=0, sizeNormal=0)
 			pm.polyOptions (displayTangent=False)
@@ -68,8 +68,16 @@ class Normals(Init):
 
 		'''
 		normalAngle = str(self.hotBox.ui.s000.value())
-		pm.polySetToFaceNormal (setUserNormal=1) #reset to face
-		pm.polySoftEdge (angle=normalAngle) #smooth if angle is lower than specified amount. default 30
+
+		mod = rt.Smooth()
+		mod.autoSmooth = True
+		mod.threshold = normalAngle
+
+		for obj in rt.selection:
+			rt.modPanel.setCurrentObject(obj.baseObject)
+			rt.modPanel.addModToSelection (mod)
+			index = [mod for mod in obj.modifiers].index(mod)+1 #add one to convert index from python to maxscript
+			rt.maxOps.CollapseNodeTo(obj, index, False)
 
 	def b005(self):
 		'''
@@ -166,7 +174,11 @@ class Normals(Init):
 		Reverse Normals
 
 		'''
-		maxEval('ReversePolygonNormals;')
+		mod = rt.Normalmodifier()
+		mod.flip=True
+
+		for obj in rt.selection:
+			rt.addModifier (obj, mod)
 
 	def b011(self):
 		'''

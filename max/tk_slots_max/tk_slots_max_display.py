@@ -93,7 +93,7 @@ class Display(Init):
 				pass
 
 			if index==9: #toggle component ID display
-				index = self.cycle('componentID_01234')
+				index = self.cycle([0,1,2,3,4], 'componentID')
 
 				visible = pm.polyOptions (query=1, displayItemNumbers=1)
 				dinArray = [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]
@@ -128,7 +128,7 @@ class Display(Init):
 			if index==10: #wireframe non active (wireframe all but the selected item)
 				viewport = rt.viewport.activeViewport
 
-				state = self.cycle('wireframeInactive_01')
+				state = self.cycle([0,1], 'wireframeInactive')
 
 				if state:
 					if not rt.viewport.isWire():
@@ -186,7 +186,7 @@ class Display(Init):
 		Toggle Subdiv Proxy Display
 
 		'''
-		state = self.cycle('subdivProxy_110')
+		state = self.cycle([1,1,0], 'subdivProxy')
 		try:
 			mel.eval("smoothingDisplayToggle "+str(state))
 		except:
@@ -297,7 +297,7 @@ class Display(Init):
 		Toggle Component Id Display
 
 		'''
-		index = self.cycle('componentID_01234')
+		index = self.cycle([0,1,2,3,4], 'componentID')
 
 		visible = pm.polyOptions (query=1, displayItemNumbers=1)
 		dinArray = [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]
@@ -336,7 +336,7 @@ class Display(Init):
 		'''
 		viewport = rt.viewport.activeViewport
 
-		state = self.cycle('wireframeInactive_01')
+		state = self.cycle([0,1], 'wireframeInactive')
 
 		if state:
 			if not rt.viewport.isWire():

@@ -104,7 +104,7 @@ class HotBox(QtWidgets.QWidget):
 		
 
 		if not self.sb.hasKey(self.name, 'connectionDict'):
-			self.signal.buildConnectionDict() #construct the signals and slots for the ui 
+			self.signal.buildConnectionDict() #construct the signals and slots for the ui
 
 
 		if self.name=='init':
@@ -177,9 +177,7 @@ class HotBox(QtWidgets.QWidget):
 		#args: [QEvent]
 		if self.mousePressOn:
 			if any ([self.name=="main", self.name=="viewport", self.name=="init"]):
-				if event.button()==QtCore.Qt.LeftButton and event.button()==QtCore.Qt.RightButton:
-					self.layoutStack(self.sb.getUiIndex('scripting'))
-				elif event.button()==QtCore.Qt.LeftButton:
+				if event.button()==QtCore.Qt.LeftButton:
 					self.layoutStack(self.sb.getUiIndex('viewport'))
 				elif event.button()==QtCore.Qt.RightButton:
 					self.layoutStack(self.sb.getUiIndex('main'))

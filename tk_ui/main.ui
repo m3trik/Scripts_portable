@@ -50,22 +50,6 @@
    <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::ForceTabbedDocks</set>
   </property>
   <widget class="QWidget" name="mainWindow">
-   <widget class="QPushButton" name="v000">
-    <property name="geometry">
-     <rect>
-      <x>45</x>
-      <y>-5</y>
-      <width>66</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>Extrude</string>
-    </property>
-    <property name="text">
-     <string>Extrude</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="i023">
     <property name="geometry">
      <rect>
@@ -82,38 +66,6 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="v004">
-    <property name="geometry">
-     <rect>
-      <x>115</x>
-      <y>184</y>
-      <width>66</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>Delete history</string>
-    </property>
-    <property name="text">
-     <string>Delete</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="v002">
-    <property name="geometry">
-     <rect>
-      <x>185</x>
-      <y>-5</y>
-      <width>66</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>Multi-Cut</string>
-    </property>
-    <property name="text">
-     <string>Multi-Cut</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="i021">
     <property name="geometry">
      <rect>
@@ -128,54 +80,6 @@
     </property>
     <property name="text">
      <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="v001">
-    <property name="geometry">
-     <rect>
-      <x>115</x>
-      <y>-5</y>
-      <width>66</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>Bridge</string>
-    </property>
-    <property name="text">
-     <string>Bridge</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="v003">
-    <property name="geometry">
-     <rect>
-      <x>45</x>
-      <y>184</y>
-      <width>66</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>Delete</string>
-    </property>
-    <property name="text">
-     <string>Delete History</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="v005">
-    <property name="geometry">
-     <rect>
-      <x>185</x>
-      <y>184</y>
-      <width>66</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>Minimize Window</string>
-    </property>
-    <property name="text">
-     <string>Delete Loop</string>
     </property>
    </widget>
    <widget class="QPushButton" name="i022">
@@ -306,25 +210,6 @@
     <property name="geometry">
      <rect>
       <x>45</x>
-      <y>200</y>
-      <width>66</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QLabel" name="l005">
-    <property name="geometry">
-     <rect>
-      <x>185</x>
       <y>200</y>
       <width>66</width>
       <height>16</height>
@@ -672,25 +557,288 @@
      <string>Selection</string>
     </property>
    </widget>
-   <zorder>v000</zorder>
-   <zorder>v001</zorder>
-   <zorder>v002</zorder>
+   <widget class="QGroupBox" name="g001">
+    <property name="geometry">
+     <rect>
+      <x>115</x>
+      <y>0</y>
+      <width>66</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QPushButton" name="v001">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Bridge</string>
+     </property>
+     <property name="text">
+      <string>Bridge</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="v008">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>20</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="g000">
+    <property name="geometry">
+     <rect>
+      <x>45</x>
+      <y>0</y>
+      <width>66</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QPushButton" name="v000">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Extrude</string>
+     </property>
+     <property name="text">
+      <string>Extrude</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="v012">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>20</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="text">
+      <string>Chamfer</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="g002">
+    <property name="geometry">
+     <rect>
+      <x>185</x>
+      <y>0</y>
+      <width>66</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QPushButton" name="v002">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Multi-Cut</string>
+     </property>
+     <property name="text">
+      <string>Multi-Cut</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="v013">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>20</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="text">
+      <string>Target Weld</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="g003">
+    <property name="geometry">
+     <rect>
+      <x>45</x>
+      <y>180</y>
+      <width>66</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QPushButton" name="v003">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>20</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Delete</string>
+     </property>
+     <property name="text">
+      <string>Del History</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="v009">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="g004">
+    <property name="geometry">
+     <rect>
+      <x>115</x>
+      <y>180</y>
+      <width>66</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QPushButton" name="v005">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>20</y>
+       <width>66</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Minimize Window</string>
+     </property>
+     <property name="text">
+      <string>Del Loop</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="v004">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>66</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Delete history</string>
+     </property>
+     <property name="text">
+      <string>Delete</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="g005">
+    <property name="geometry">
+     <rect>
+      <x>185</x>
+      <y>180</y>
+      <width>66</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QPushButton" name="v011">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>20</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="v010">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </widget>
    <zorder>l006</zorder>
    <zorder>l020</zorder>
    <zorder>l007</zorder>
    <zorder>l004</zorder>
-   <zorder>l005</zorder>
    <zorder>l021</zorder>
    <zorder>l022</zorder>
    <zorder>l003</zorder>
    <zorder>l023</zorder>
    <zorder>v007</zorder>
    <zorder>i022</zorder>
-   <zorder>v005</zorder>
    <zorder>i020</zorder>
-   <zorder>v004</zorder>
    <zorder>i021</zorder>
-   <zorder>v003</zorder>
    <zorder>i023</zorder>
    <zorder>v006</zorder>
    <zorder>i016</zorder>
@@ -709,6 +857,12 @@
    <zorder>i010</zorder>
    <zorder>i008</zorder>
    <zorder>i009</zorder>
+   <zorder>g001</zorder>
+   <zorder>g000</zorder>
+   <zorder>g002</zorder>
+   <zorder>g003</zorder>
+   <zorder>g004</zorder>
+   <zorder>g005</zorder>
   </widget>
  </widget>
  <resources/>

@@ -76,7 +76,7 @@ class Slot(object):
 		'''
 		comboBox.blockSignals(True) #to keep clear from triggering currentIndexChanged
 		comboBox.clear()
-		# items = items+['refresh'] #refresh string is a temp work around until comboBox is called on open insead of index change.
+		
 		if title:
 			comboBox.addItem(title)
 		comboBox.addItems(items)
@@ -180,29 +180,29 @@ class Slot(object):
 	cycleDict={}
 	@staticmethod
 	#used for maintaining toggling sequences for multiple objects simultaniously
-	def cycle(id_sequence, query=False): #toggle between numbers in a given sequence
+	def cycle(sequence, name=None, query=False): #toggle between numbers in a given sequence
 		'''
-		args:	 id_sequence=string or int list - id_numberical sequence ie. 'name_123' or [1,2,3].
-							 takes the string argument and splits it at '_'
-							 converting the second numberical half to integers and putting them in a list.
-							 each time this function is called, it returns the next number in that list
-							 using the original string (ie. 'name' from name_123) as a unique id.
-		ex. cycle('componentID_01234')
+		each time this function is called, it returns the next number in the sequence
+		using the name string as an identifier key.
+		
+		args:
+			sequence=[list] - sequence to cycle through. ie. [1,2,3].
+			name='string' - identifier. used as a key to get the sequence value from the dict.
+			
+		ex. cycle([0,1,2,3,4], 'componentID')
 		'''
 		try:
 			if query: #return the value without changing it.
-				return int(cycleDict[id_sequence][-1]) #get the current value ie. 0
+				return cycleDict[name][-1] #get the current value ie. 0
 
-			value = cycleDict[id_sequence] #check if key exists. if so return the value. ie. value = [1,2,3]
+			value = cycleDict[name] #check if key exists. if so return the value. ie. value = [1,2,3]
 		
 		except KeyError: #else create sequence list for the given key
-			id_ = id_sequence.split('_')[0] #ie. name
-			sequence = id_sequence.split('_')[1] #ie. 123
-			cycleDict[id_sequence] = [i for i in list(sequence)] #ie. {name_123:[1,2,3]}
+			cycleDict[name] = [i for i in sequence] #ie. {name:[1,2,3]}
 
-		value = cycleDict[id_sequence][0] #get the next value ie. 1
-		cycleDict[id_sequence] = cycleDict[id_sequence][1:]+[value] #move the value to the end of the list ie. {name_123:[2,3,1]}
-		return int(value) #return an integer from string value
+		value = cycleDict[name][0] #get the current value. ie. 1
+		cycleDict[name] = cycleDict[name][1:]+[value] #move the current value to the end of the list. ie. [2,3,1]
+		return value #return current value. ie. 1
 
 
 
@@ -270,7 +270,7 @@ class Slot(object):
 		#specific case StyleSheet overrides:
 		if self.hotBox.name=='main':
 			#setStyleSheet for transparent buttons
-			buttons = self.getObject(self.hotBox.ui, 'v000-8, i020-23, cmb000-25', showError_=False)
+			buttons = self.getObject(self.hotBox.ui, 'v000-13, i020-23, cmb000-25', showError_=False)
 			for button in buttons:
 				button.setStyleSheet('''
 					QPushButton {border: 1px solid transparent;}

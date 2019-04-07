@@ -176,7 +176,7 @@
       <rect>
        <x>0</x>
        <y>90</y>
-       <width>76</width>
+       <width>61</width>
        <height>19</height>
       </rect>
      </property>
@@ -339,7 +339,7 @@
       <rect>
        <x>0</x>
        <y>110</y>
-       <width>76</width>
+       <width>61</width>
        <height>19</height>
       </rect>
      </property>
@@ -374,14 +374,29 @@
     <widget class="QDoubleSpinBox" name="s000">
      <property name="geometry">
       <rect>
-       <x>75</x>
+       <x>60</x>
        <y>90</y>
-       <width>46</width>
+       <width>61</width>
        <height>19</height>
       </rect>
      </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>19</height>
+      </size>
+     </property>
      <property name="toolTip">
       <string>Select similar tolerance</string>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::PlusMinus</enum>
      </property>
      <property name="decimals">
       <number>3</number>
@@ -497,11 +512,17 @@
     <widget class="QDoubleSpinBox" name="s002">
      <property name="geometry">
       <rect>
-       <x>75</x>
+       <x>60</x>
        <y>110</y>
-       <width>46</width>
+       <width>61</width>
        <height>19</height>
       </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>10</height>
+      </size>
      </property>
      <property name="maximumSize">
       <size>
@@ -513,7 +534,7 @@
       <string>Select face island: normal X range</string>
      </property>
      <property name="buttonSymbols">
-      <enum>QAbstractSpinBox::NoButtons</enum>
+      <enum>QAbstractSpinBox::PlusMinus</enum>
      </property>
      <property name="prefix">
       <string/>
@@ -757,7 +778,7 @@
       </size>
      </property>
      <property name="toolTip">
-      <string>set name (suffix 'Set' is appended automatically)  (if left blank a default name of 'set' will be given.)</string>
+      <string>set name (suffix 'Set' is appended automatically)  (if left blank a generic name will be given.)</string>
      </property>
      <property name="text">
       <string/>
@@ -1110,7 +1131,7 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>225</x>
+       <x>230</x>
        <y>0</y>
        <width>21</width>
        <height>19</height>
@@ -1234,14 +1255,14 @@
     <widget class="QSpinBox" name="s004_2">
      <property name="geometry">
       <rect>
-       <x>95</x>
+       <x>98</x>
        <y>30</y>
-       <width>26</width>
+       <width>21</width>
        <height>19</height>
       </rect>
      </property>
      <property name="toolTip">
-      <string>Select Edge Ring: Step </string>
+      <string>Nth Ring: Step</string>
      </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
@@ -1306,7 +1327,7 @@
       <string>Select shortest edge path between two selected vertices or UV's.</string>
      </property>
      <property name="text">
-      <string>Shortest Edge Path</string>
+      <string>Shortest Path</string>
      </property>
      <property name="iconSize">
       <size>
@@ -1327,14 +1348,14 @@
     <widget class="QSpinBox" name="s004_3">
      <property name="geometry">
       <rect>
-       <x>95</x>
+       <x>98</x>
        <y>10</y>
-       <width>26</width>
+       <width>21</width>
        <height>19</height>
       </rect>
      </property>
      <property name="toolTip">
-      <string>Select Edge Ring: Step </string>
+      <string>Nth Loop: Step </string>
      </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
@@ -1349,14 +1370,14 @@
     <widget class="QSpinBox" name="s004_4">
      <property name="geometry">
       <rect>
-       <x>95</x>
+       <x>98</x>
        <y>50</y>
-       <width>26</width>
+       <width>21</width>
        <height>19</height>
       </rect>
      </property>
      <property name="toolTip">
-      <string>Select Edge Ring: Step </string>
+      <string>Nth Contigious: Step</string>
      </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
@@ -1403,7 +1424,7 @@
      </property>
      <item>
       <property name="text">
-       <string>Convert Selection to</string>
+       <string>Convert to</string>
       </property>
      </item>
     </widget>

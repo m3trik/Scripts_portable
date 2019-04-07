@@ -39,10 +39,17 @@ class Init(Slot):
 		xformConstraint = pm.xformConstraint(query=True, type=True)
 		if xformConstraint=='none': xformConstraint=None; infoDict.update({"Xform Constrait: ":xformConstraint}) #transform constraits
 
-		selectedVerts = pm.polyEvaluate(vertexComponent=1); infoDict.update({"Selected Vertices: ":selectedVerts}) #selected verts
-		selectedEdges = pm.polyEvaluate(edgeComponent=1); infoDict.update({"Selected Edges: ":selectedEdges}) #selected edges
-		selectedFaces = pm.polyEvaluate(faceComponent=1); infoDict.update({"Selected Faces: ":selectedFaces}) #selected faces
-		selectedUVs = pm.polyEvaluate(uvComponent=1); infoDict.update({"Selected UV's: ":selectedUVs}) #selected uv's
+		selectedVerts = pm.polyEvaluate(vertexComponent=1); 
+		if type(selectedVerts)==int: infoDict.update({"Selected Vertices: ":selectedVerts}) #selected verts
+		
+		selectedEdges = pm.polyEvaluate(edgeComponent=1); 
+		if type(selectedEdges)==int: infoDict.update({"Selected Edges: ":selectedEdges}) #selected edges
+		
+		selectedFaces = pm.polyEvaluate(faceComponent=1); 
+		if type(selectedFaces)==int: infoDict.update({"Selected Faces: ":selectedFaces}) #selected faces
+		
+		# selectedUVs = pm.polyEvaluate(uvComponent=1); 
+		# if type(selectedUvs)==int: infoDict.update({"Selected UV's: ":selectedUVs}) #selected uv's
 
 		prevCommand = self.sb.prevCommand(docString=True); infoDict.update({"Previous Command: ":prevCommand})  #get button text from last used command
 

@@ -14,9 +14,11 @@ class Edit(Init):
 		super(Edit, self).__init__(*args, **kwargs)
 
 
+		try:
+			self.hotBox.ui.s000.valueChanged.connect(self.chk011) #update radial array
+			self.hotBox.ui.s001.valueChanged.connect(self.chk011) 
+		except:pass
 		
-		self.hotBox.ui.s000.valueChanged.connect(self.chk011) #update radial array
-		self.hotBox.ui.s001.valueChanged.connect(self.chk011) 
 
 	def chk001(self):
 		'''

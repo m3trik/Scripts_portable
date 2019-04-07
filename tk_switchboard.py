@@ -202,7 +202,7 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 			class object from key class_.
 		'''
 		if type(class_)==str or type(class_)==unicode:
-			name = class_.split('_')[-1].split('.')[-1].lower(); #get key from class_ string ie. 'someclass' from 'tk_slots_max_polygons.SomeClass'
+			name = class_.split('_')[-1].split('.')[-1].lower(); #get key from class_ string ie. 'class' from 'tk_slots_max_polygons.Class'
 			if not name in sbDict: sbDict[name] = {}
 
 			sbDict[name]['class'] = locate(class_)

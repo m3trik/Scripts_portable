@@ -161,7 +161,7 @@ class Selection(Init):
 		self.comboBox (cmb, list_, 'Select by Type')
 
 		if index!=0:
-			if index==list_.index('Geometry') #Select all Geometry
+			if index==list_.index('Geometry'): #Select all Geometry
 				rt.select(rt.geometry)
 			cmb.setCurrentIndex(0)
 
@@ -174,10 +174,10 @@ class Selection(Init):
 		cmb = self.ui.cmb003
 
 		list_ = ['Verts', 'Edge', 'Face', 'Border']
-		files = self.comboBox (cmb, list_, 'Convert Selection to')
-
+		files = self.comboBox (cmb, list_, 'Convert to')
+		
 		sel= rt.selection
-
+		
 		if index!=0:
 			if index==files.index('Verts'): #Convert Selection To Vertices
 				if rt.subObjectLevel==2:
@@ -186,21 +186,21 @@ class Selection(Init):
 					sel.convertselection ('Face', 'Vertices')
 				if rt.subObjectLevel==3:
 					sel.convertselection ('Border', 'Vertices')
-			if index==files.index('Edges'): #Convert Selection To Edges
+			elif index==files.index('Edges'): #Convert Selection To Edges
 				if rt.subObjectLevel==1:
 					sel.convertselection ('Vertex', 'Edge')
 				if rt.subObjectLevel==4:
 					sel.convertselection ('Face', 'Edge')
 				if rt.subObjectLevel==3:
 					sel.convertselection ('Border', 'Edge')
-			if index==files.index('Faces'): #Convert Selection To Faces
+			elif index==files.index('Faces'): #Convert Selection To Faces
 				if rt.subObjectLevel==2:
 					sel.convertselection ('Edge', 'Faces')
 				if rt.subObjectLevel==1:	
 					sel.convertselection ('Vertex', 'Faces')
 				if rt.subObjectLevel==3:	
 					sel.convertselection ('Border', 'Faces')
-			if index==files.index('Border'): #Convert Selection To Border
+			elif index==files.index('Border'): #Convert Selection To Border
 				if rt.subObjectLevel==2:	
 					sel.convertselection ('Edge', 'Border')
 				if rt.subObjectLevel==4:	
@@ -216,13 +216,20 @@ class Selection(Init):
 
 		'''
 		name = str(self.hotBox.ui.t000.text())+"Set"
-		if pm.objExists (name):
-			pm.sets (name, clear=1)
-			pm.sets (name, add=1) #if set exists; clear set and add current selection 
-		else: #create set
-			pm.sets (name=name, text="gCharacterSet")
-			self.hotBox.ui.t000.clear()
-			
+
+		sel = rt.selection
+
+		if sel:
+			if name=='set#Set': #generate a generic name based on obj.name
+				num = self.cycle(list(range(99)), 'selectionSetNum')
+				name=sel[0].name+'Set'+str(num)
+				rt.selectionSets[name]
+			else:
+				rt.selectionSets[name] #if set exists, overwrite set; else create set
+		else:
+			print '# Warning: No valid objects selected. #'
+
+
 	def b001(self):
 		'''
 		Paint Select

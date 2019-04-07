@@ -1,5 +1,10 @@
 
 
+
+
+
+
+
 -- convert component selection type
 
 -- obj = selection[1] --get selected object

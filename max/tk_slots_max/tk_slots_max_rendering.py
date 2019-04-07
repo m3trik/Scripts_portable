@@ -43,8 +43,6 @@ class Rendering(Init):
 		if self.cams:
 			list_ = [str(cam.name) for cam in self.cams] #camera names
 			self.comboBox (cmb, list_)
-		else:
-			cmb.addItem('Render Camera') #if list is empty, add title
 
 		# index = cmb.findText(text)
 		# cmb.setCurrentIndex(index)

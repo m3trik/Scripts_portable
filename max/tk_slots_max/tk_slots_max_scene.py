@@ -20,13 +20,15 @@ class Scene(Init):
 		# maya get project #pm.workspace (query=1, rd=1).split('/')[-2]
 
 
+
+
+
 	def cmb000(self):
 		'''
 		Recent Files
 
 		'''
-	
-		#convert to pymxs
+		#convert to python
 		maxEval('''
 		Fn getRecentFiles =
 		(
@@ -53,14 +55,15 @@ class Scene(Init):
 
 		cmb = self.ui.cmb000
 		index = cmb.currentIndex() #get current index before refreshing list
-		files = rt.getRecentfiles(); print files
-		files = self.comboBox (cmb, files, "Recent Files")
+		list_ = rt.getRecentfiles()
+		files = self.comboBox (cmb, list_, "Recent Files")
 
 		if index!=0:
 			# force=True; force if maxEval("maxFileName;") else not force #if sceneName prompt user to save; else force open.  also: checkForSave(); If the scene has been modified since the last file save (if any), calling this function displays the message box prompting the user that the scene has been modified and requests to save.
 			rt.loadMaxFile(str(files[index]))
 			self.hotBox.hide_()
 			cmb.setCurrentIndex(0)
+
 
 	def cmb001(self):
 		'''
@@ -76,6 +79,7 @@ class Scene(Init):
 			maxEval('setProject "'+files[index]+'"')
 			cmb.setCurrentIndex(0)
 
+
 	def cmb002(self):
 		'''
 		Recent Autosave
@@ -90,7 +94,8 @@ class Scene(Init):
 			force=True; force if str(mel.eval("file -query -sceneName -shortName;")) else not force #if sceneName prompt user to save; else force open
 			pm.openFile (files[index], open=1, force=force)
 			cmb.setCurrentIndex(0)
-			
+
+
 	def cmb003(self):
 		'''
 		Import

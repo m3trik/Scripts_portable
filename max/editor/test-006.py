@@ -1,5 +1,34 @@
-try: from pymxs import runtime as rt; import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript;
+try: from pymxs import runtime as rt; import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript;from tk_switchboard import Switchboard; sb = Switchboard()
 except: pass
+
+from tk_slots_max_init import Init as func
+
+func.toggleSmoothPreview()
+
+
+
+
+#~ # attach objects
+
+#~ #copy selection into a proper array
+#~ objs = #()
+#~ for o in selection do
+	#~ append objs o
+
+#~ #grab first object from array and store
+#~ fobj = objs[1]
+
+#~ #pop  first object out of array
+#~ deleteitem objs 1
+#~ converttopoly fobj
+
+#~ #attach to fobj
+#~ for o in objs do
+	#~ polyop.attach fobj o
+
+
+
+
 
 
 

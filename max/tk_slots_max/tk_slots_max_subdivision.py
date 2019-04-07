@@ -14,7 +14,7 @@ class Subdivision(Init):
 		super(Subdivision, self).__init__(*args, **kwargs)
 
 		#initialize the smooth preview groupbox
-		self.ui.gb000.setText('TurboSmooth')
+		self.ui.gb000.setTitle('TurboSmooth')
 		self.ui.txt000.setText('Iterations:')
 		self.ui.txt001.setText('RenderIters:')
 		self.ui.s000.setValue(0)
@@ -57,7 +57,7 @@ class Subdivision(Init):
 		Toggle Subdiv Proxy Display
 
 		'''
-		state = self.cycle('subdivProxy_110')
+		state = self.cycle([1,1,0], 'subdivProxy')
 		try:
 			mel.eval("smoothingDisplayToggle "+str(state))
 		except:
@@ -177,8 +177,8 @@ class Subdivision(Init):
 		Convert Smooth Preview
 
 		'''
-		 #convert smooth mesh preview to polygons
-		 geometry = rt.selection
+		#convert smooth mesh preview to polygons
+		geometry = rt.selection
 
 		if not len(geometry):
 			geometry = rt.geometry
@@ -187,6 +187,11 @@ class Subdivision(Init):
 			try:
 				renderIters = obj.modifiers['TurboSmooth'].renderIterations
 				obj.modifiers['TurboSmooth'].iterations = renderIters
+
+				modifiers = [mod.name for mod in obj.modifiers]
+				if modifiers:
+					index = modifiers.index('TurboSmooth') +1
+				rt.maxOps.CollapseNodeTo(obj, index, False)
 			except: pass
 
 

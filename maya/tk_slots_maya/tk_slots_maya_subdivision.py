@@ -54,7 +54,7 @@ class Subdivision(Init):
 		Toggle Subdiv Proxy Display
 
 		'''
-		state = self.cycle('subdivProxy_110')
+		state = self.cycle([1,1,0], 'subdivProxy')
 		try:
 			mel.eval("smoothingDisplayToggle "+str(state))
 		except:
