@@ -21,16 +21,17 @@ class Texturing(Init):
 		Existing Materials
 
 		'''
-		index = self.hotBox.ui.cmb000.currentIndex() #get current index before refreshing list
+		cmb = self.ui.cmb000
+		index = cmb.currentIndex() #get current index before refreshing list
 		materials = [mat for mat in rt.sceneMaterials]
 		materialNames = [mat.name for mat in materials]
-		self.comboBox (self.hotBox.ui.cmb000, materialNames, "Scene Materials")
+		self.comboBox (cmb, materialNames, "Scene Materials")
 
 		if index!=0:
 			print materials[index]
 			for obj in rt.selection:
 				obj.material = materials[index]
-			self.hotBox.ui.cmb000.setCurrentIndex(0)
+			cmb.setCurrentIndex(0)
 
 
 	def cmb001(self):
@@ -50,10 +51,10 @@ class Texturing(Init):
 
 
 	def chk000(self):
-		self.hotBox.ui.chk001.setChecked(False)
+		self.ui.chk001.setChecked(False)
 
 	def chk001(self):
-		self.hotBox.ui.chk000.setChecked(False)
+		self.ui.chk000.setChecked(False)
 
 
 	def b000(self):
@@ -61,8 +62,8 @@ class Texturing(Init):
 		Select By Material Id
 
 		'''
-		shell = self.hotBox.ui.chk000.isChecked()
-		invert = self.hotBox.ui.chk001.isChecked()
+		shell = self.ui.chk000.isChecked()
+		invert = self.ui.chk001.isChecked()
 
 		maxEval('''
 		if subobjectlevel == undefined then
@@ -107,7 +108,7 @@ class Texturing(Init):
 
 		'''
 		matName = rt.selection[0].material.name
-		self.hotBox.ui.lbl000.setText(str(matName)) #store material name in text label
+		self.ui.lbl000.setText(str(matName)) #store material name in text label
 
 		
 	def b003(self):
@@ -115,7 +116,7 @@ class Texturing(Init):
 		Assign Material Id
 
 		'''
-		matName = str(self.hotBox.ui.lbl000.text())
+		matName = str(self.ui.lbl000.text())
 		mat = [mat for mat in rt.sceneMaterials if matName in mat.name][0] #use string to get material
 
 		for obj in rt.selection:

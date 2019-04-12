@@ -133,7 +133,13 @@ class Scene(Init):
 		if index == 4: #Unity 
 			maxEval('SendToUnitySelection;')
 		if index == 5: #GoZ
-			maxEval('print("GoZ"); source"C:/Users/Public/Pixologic/GoZApps/Maya/GoZBrushFromMaya.mel"; source "C:/Users/Public/Pixologic/GoZApps/Maya/GoZScript.mel";')
+			print 'GoZ'
+			maxEval(''' 
+				try (
+					if (s_verbose) then print "\n === 3DS -> ZBrush === "
+					local result = s_gozServer.GoToZBrush()
+					) catch ();
+				''')
 		cmb.setCurrentIndex(0)
 
 	def b000(self):

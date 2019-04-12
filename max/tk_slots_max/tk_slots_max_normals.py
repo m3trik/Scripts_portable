@@ -46,14 +46,14 @@ class Normals(Init):
 		Soften Edge Normal
 
 		'''
-		pm.polySoftEdge (angle=180, constructionHistory=0)
+		maxEval('$.EditablePoly.makeSmoothEdges 1')
 
 	def b002(self):
 		'''
 		Harden Edge Normal
 
 		'''
-		pm.polySoftEdge (angle=0, constructionHistory=0)
+		maxEval('$.EditablePoly.makeHardEdges 1')
 
 	def b003(self):
 		'''
@@ -68,20 +68,32 @@ class Normals(Init):
 
 		'''
 		normalAngle = str(self.hotBox.ui.s000.value())
+		subObjectLevel = rt.subObjectLevel
 
-		mod = rt.Smooth()
-		mod.autoSmooth = True
-		mod.threshold = normalAngle
 
-		for obj in rt.selection:
-			rt.modPanel.setCurrentObject(obj.baseObject)
-			rt.modPanel.addModToSelection (mod)
-			index = [mod for mod in obj.modifiers].index(mod)+1 #add one to convert index from python to maxscript
-			rt.maxOps.CollapseNodeTo(obj, index, False)
+		if subObjectLevel==4: #smooth selected faces
+			for obj in rt.selection:
+				obj.autoSmoothThreshold = normalAngle
+				# faceSelection = rt.polyop.getFaceSelection(obj)
+				rt.polyop.autoSmooth(obj)
+				rt.update(obj)
+
+		else: #smooth entire mesh
+			mod = rt.Smooth()
+			mod.autoSmooth = True
+			mod.threshold = normalAngle
+
+			for obj in rt.selection:
+				rt.modPanel.setCurrentObject(obj.baseObject)
+				rt.modPanel.addModToSelection (mod)
+				index = [mod for mod in obj.modifiers].index(mod)+1 #add one to convert index from python to maxscript
+				rt.maxOps.CollapseNodeTo(obj, index, False)
+
+		self.hotBox.hide_()
 
 	def b005(self):
 		'''
-		Maya Bonus Tools: Adjust Vertex Normals
+		Adjust Vertex Normals
 
 		'''
 		maxEval('bgAdjustVertexNormalsWin;')
@@ -91,14 +103,14 @@ class Normals(Init):
 		Set To Face
 
 		'''
-		maxEval('polySetToFaceNormal;')
+		maxEval('macros.run "PolyTools" "HardSelection"')
 
 	def b007(self):
 		'''
 		Average Normals
 
 		'''
-		maxEval('polySetToFaceNormal;polyAverageNormal;')
+		maxEval('macros.run "PolyTools" "SmoothSelection"')
 
 	def b008(self):
 		'''

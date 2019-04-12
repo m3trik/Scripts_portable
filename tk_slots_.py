@@ -22,12 +22,12 @@ class Slot(object):
 		#init widgets
 		self.initWidgets()
 
-		
+
+
 
 
 	#returns a list of objects from a string list.
-	@staticmethod
-	def getObject(class_, objectNames, showError_=False, print_=False):
+	def getObject(self, class_, objectNames, showError_=False, print_=False):
 		'''
 		args:	 class_=class object
 				 objectNames='string' - names separated by ','. ie. 's000,b004-7'. b004-7 specifies buttons b004-b007.  
@@ -62,9 +62,6 @@ class Slot(object):
 
 
 
-
-
-
 	@staticmethod
 	def comboBox(comboBox, items, title=None):
 		'''
@@ -85,21 +82,6 @@ class Slot(object):
 			return [title]+items
 		else:
 			return items
-
-
-
-	class CheckableComboBox(QtWidgets.QComboBox):
-		# once there is a checkState set, it is rendered
-		# here we assume default Unchecked
-		def addItem(self, item):
-			super(CheckableComboBox, self).addItem(item)
-			item = self.model().item(self.count()-1,0)
-			item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-			item.setCheckState(QtCore.Qt.Unchecked)
-
-		def checkIndex(self, index):
-			item = self.model().item(index,0)
-			return item.checkState() == QtCore.Qt.Checked
 
 
 
@@ -134,6 +116,7 @@ class Slot(object):
 			invisible = self.getObject(ui,invisible)
 			[button.setVisible(False) for button in invisible]
 			
+
 
 
 	#set spinbox values explicitly or for each in range
@@ -203,6 +186,7 @@ class Slot(object):
 		value = cycleDict[name][0] #get the current value. ie. 1
 		cycleDict[name] = cycleDict[name][1:]+[value] #move the current value to the end of the list. ie. [2,3,1]
 		return value #return current value. ie. 1
+
 
 
 

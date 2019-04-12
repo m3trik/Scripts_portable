@@ -44,33 +44,26 @@
       <x>5</x>
       <y>30</y>
       <width>97</width>
-      <height>221</height>
+      <height>211</height>
      </rect>
     </property>
     <property name="title">
      <string>Display</string>
     </property>
-    <widget class="QPushButton" name="b008">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>180</y>
-       <width>97</width>
-       <height>18</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Filter Objects</string>
-     </property>
-    </widget>
     <widget class="QPushButton" name="b004">
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>60</y>
+       <y>70</y>
        <width>97</width>
-       <height>18</height>
+       <height>19</height>
       </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>19</height>
+      </size>
      </property>
      <property name="text">
       <string>Show Geometry</string>
@@ -80,10 +73,16 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>120</y>
+       <y>150</y>
        <width>97</width>
-       <height>18</height>
+       <height>19</height>
       </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>19</height>
+      </size>
      </property>
      <property name="text">
       <string>Xray Selected</string>
@@ -93,10 +92,16 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>150</y>
+       <y>190</y>
        <width>97</width>
-       <height>18</height>
+       <height>19</height>
       </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>19</height>
+      </size>
      </property>
      <property name="text">
       <string>Xray Other</string>
@@ -106,10 +111,16 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>45</y>
+       <y>50</y>
        <width>97</width>
-       <height>18</height>
+       <height>19</height>
       </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>19</height>
+      </size>
      </property>
      <property name="text">
       <string>Show Selected</string>
@@ -119,10 +130,16 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>15</y>
+       <y>10</y>
        <width>97</width>
-       <height>18</height>
+       <height>19</height>
       </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>19</height>
+      </size>
      </property>
      <property name="text">
       <string>Toggle Visibility</string>
@@ -132,10 +149,16 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>135</y>
+       <y>170</y>
        <width>97</width>
-       <height>18</height>
+       <height>19</height>
       </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>19</height>
+      </size>
      </property>
      <property name="text">
       <string>Un-Xray All</string>
@@ -147,47 +170,33 @@
        <x>0</x>
        <y>30</y>
        <width>97</width>
-       <height>18</height>
+       <height>19</height>
       </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>19</height>
+      </size>
      </property>
      <property name="text">
       <string>Hide Selected</string>
-     </property>
-    </widget>
-    <widget class="Line" name="line_2">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>170</y>
-       <width>96</width>
-       <height>11</height>
-      </rect>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="b011">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>195</y>
-       <width>97</width>
-       <height>18</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Component ID</string>
      </property>
     </widget>
     <widget class="QPushButton" name="b012">
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>75</y>
+       <y>100</y>
        <width>97</width>
-       <height>18</height>
+       <height>19</height>
       </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>19</height>
+      </size>
      </property>
      <property name="toolTip">
       <string>Shaded on active (selected) obhects only</string>
@@ -196,11 +205,30 @@
       <string>Wireframe Inactive</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="b021">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>120</y>
+       <width>97</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Template Selected</string>
+     </property>
+    </widget>
     <widget class="Line" name="line_3">
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>110</y>
+       <y>140</y>
        <width>96</width>
        <height>11</height>
       </rect>
@@ -209,17 +237,17 @@
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
-    <widget class="QPushButton" name="b021">
+    <widget class="Line" name="line_2">
      <property name="geometry">
       <rect>
        <x>0</x>
        <y>90</y>
-       <width>97</width>
-       <height>18</height>
+       <width>96</width>
+       <height>11</height>
       </rect>
      </property>
-     <property name="text">
-      <string>Template Selected</string>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </widget>
@@ -228,7 +256,7 @@
      <rect>
       <x>5</x>
       <y>0</y>
-      <width>201</width>
+      <width>206</width>
       <height>20</height>
      </rect>
     </property>
@@ -241,7 +269,7 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>180</x>
+       <x>185</x>
        <y>0</y>
        <width>21</width>
        <height>19</height>
@@ -273,16 +301,16 @@
    <widget class="QComboBox" name="cmb001">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>70</y>
-      <width>96</width>
-      <height>20</height>
+      <x>115</x>
+      <y>220</y>
+      <width>97</width>
+      <height>19</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>96</width>
-      <height>20</height>
+      <width>97</width>
+      <height>19</height>
      </size>
     </property>
     <property name="maximumSize">
@@ -292,7 +320,7 @@
      </size>
     </property>
     <property name="statusTip">
-     <string>Recent hotbox commands</string>
+     <string>Recent Commands</string>
     </property>
     <property name="maxVisibleItems">
      <number>50</number>
@@ -309,44 +337,140 @@
      </property>
     </item>
    </widget>
-   <widget class="QComboBox" name="cmb000">
+   <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>40</y>
+      <x>115</x>
+      <y>80</y>
       <width>96</width>
-      <height>20</height>
+      <height>41</height>
      </rect>
     </property>
-    <property name="minimumSize">
-     <size>
-      <width>96</width>
-      <height>20</height>
-     </size>
+    <property name="title">
+     <string/>
     </property>
-    <property name="maximumSize">
-     <size>
-      <width>9999</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="statusTip">
-     <string>Viewport display options</string>
-    </property>
-    <property name="maxVisibleItems">
-     <number>50</number>
-    </property>
-    <property name="sizeAdjustPolicy">
-     <enum>QComboBox::AdjustToContents</enum>
-    </property>
-    <property name="frame">
-     <bool>false</bool>
-    </property>
-    <item>
-     <property name="text">
-      <string>Display</string>
+    <widget class="QPushButton" name="b008">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>97</width>
+       <height>19</height>
+      </rect>
      </property>
-    </item>
+     <property name="minimumSize">
+      <size>
+       <width>97</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Filter Objects</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b011">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>20</y>
+       <width>97</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>97</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Component ID</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_2">
+    <property name="geometry">
+     <rect>
+      <x>115</x>
+      <y>30</y>
+      <width>96</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Editors</string>
+    </property>
+    <widget class="QComboBox" name="cmb000">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>97</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>97</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>9999</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="statusTip">
+      <string>Viewport Editors</string>
+     </property>
+     <property name="maxVisibleItems">
+      <number>50</number>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>Editors</string>
+      </property>
+     </item>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_3">
+    <property name="geometry">
+     <rect>
+      <x>115</x>
+      <y>130</y>
+      <width>96</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QPushButton" name="b011_2">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>97</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>97</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Material Override</string>
+     </property>
+    </widget>
    </widget>
   </widget>
  </widget>

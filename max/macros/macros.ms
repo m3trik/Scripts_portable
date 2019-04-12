@@ -3,10 +3,12 @@
 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
+-- fn func=
+-- (
+-- 	return (python.Import "tk_slots_max_init").Init()
+-- )
+
 func = (python.Import "tk_slots_max_init").Init
-
-
-
 
 --macro syntax:
 --	macroScript scriptName
@@ -213,6 +215,7 @@ autoUndoEnabled: false
 --documentaion on subObjectLevel
 --http://docs.autodesk.com/3DSMAX/16/ENU/MAXScript-Help/index.html?url=files/GUID-BAC3CC23-9D1D-44CE-B4AF-C0CEBDD7099E.htm,topicNumber=d30e673804
 (
+
 	func.setSubObjectLevel(0)
 )
 
@@ -496,66 +499,3 @@ the MacroScript using the macros.run() method.
 
 
 -- --  depricated: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --  --
-
-
--- macroScript componentAltMode
--- category: "tk_macroscript.selection"
--- silentErrors: false
--- autoUndoEnabled: false
--- (
--- 	classString = func.makeSelection "Current" 1 func.classInfo
--- 	--	[1] --object
--- 	--	[2] --baseObject
--- 	-- 	[5] --baseObject classW
--- 	-- 	[7] --baseObject class type string. eg. Editable,Shape,Geometry
--- 	if (classString[1] != "noSelection") then
--- 	(
--- 		lvl = 3
--- 		if (classString[7] == "Editable_Poly" and subobjectlevel != lvl) then
--- 		(
--- 			modPanel.setCurrentObject classString[2];
--- 			subobjectlevel = lvl;	--set selection type to border edge
--- 		)
--- 		lvl = 3
--- 		if (classString[7] == "Editable_Mesh" or classString[5] == Editable_mesh and subobjectlevel != lvl) then
--- 		(
--- 			modPanel.setCurrentObject classString[2];
--- 			subobjectlevel = lvl;	--set selection type to face
--- 		)
--- 		lvl = 5
--- 		if (classString[7] == "Editable_Patch" or classString[5] == Editable_patch and subobjectlevel != lvl) then
--- 		(
--- 			modPanel.setCurrentObject classString[2];
--- 			subobjectlevel = lvl;	--set selection type to handle
--- 		)
--- 		if (classString[7] == "NURBSSurf" or classString[5] == NURBSSurf) then
--- 		(
--- 			print "NURBSSurf has no associated function"
--- 		)
--- 		if (classString[7] == "Shape") then
--- 		(
--- 			print "Shape object has no associated function";
--- 		)
--- 		if (classString[7] == "Geometry") then
--- 		(
--- 			print "non-deformable object: Geometry";
--- 		)
--- 		/*else if undefined*/
--- 		if (classString[7] == undefined ) then
--- 		(
--- 			if (classString[5] != NURBSSurf and classString[5] != Editable_Patch and classString[5] != Editable_mesh) then
--- 			(
--- 				print "non-deformable object: undefined";
--- 			)
--- 		)
--- 	)
--- 	else --default
--- 	(
--- 		lvl = 3
--- 		if (subobjectlevel != lvl) then
--- 		(
--- 			modPanel.setCurrentObject classString[2];
--- 			subobjectlevel = lvl;
--- 		)
--- 	)
--- )

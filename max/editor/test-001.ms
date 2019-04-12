@@ -25,3 +25,21 @@ case classof (modPanel.getCurrentObject()) of
 	Edit_Poly: (modPanel.getCurrentObject()).SetSelection #Edge &selEdges 
 )	
 redrawViews()
+
+
+
+
+-- -- Chamfer
+
+-- modPanel.setCurrentObject $.modifiers[#Chamfer]
+-- $.modifiers[#Chamfer].selectionoption = 1 --from selected edges
+-- $.modifiers[#Chamfer].smoothingoption = 2
+-- $.modifiers[#Chamfer].materialoption = 0
+-- $.modifiers[#Chamfer].minangle = 30
+-- $.modifiers[#Chamfer].useminangle = off
+-- $.modifiers[#Chamfer].setmaterial = on
+-- $.modifiers[#Chamfer].smoothtoadjacent = off
+-- $.modifiers[#Chamfer].SmoothType = 1
+-- $.modifiers[#Chamfer].smoothtoadjacent = off
+-- $.modifiers[#Chamfer].smooththreshold = 45
+

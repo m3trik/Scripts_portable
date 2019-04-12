@@ -24,26 +24,6 @@ class Selection(Init):
 		#on click event
 		self.hotBox.ui.chk003.clicked.connect(self.b001) #un-paint
 
-		#symmetry: set initial checked state
-		state = pm.symmetricModelling(query=True, symmetry=True) #application symmetry state
-		axis = pm.symmetricModelling(query=True, axis=True)
-		if axis == "x":
-			self.hotBox.ui.chk000.setChecked(state)
-		if axis == "y":
-			self.hotBox.ui.chk001.setChecked(state)
-		if axis == "z":
-			self.hotBox.ui.chk002.setChecked(state)
-
-	def setSymmetry(self, axis, symmetry):
-		if self.hotBox.ui.chk005.isChecked():
-			space = "object"
-		if self.hotBox.ui.chk006.isChecked():
-			space = "topo"
-		else:
-			space = "world"
-
-		tolerance = float(self.hotBox.ui.s005.value())
-		pm.symmetricModelling(edit=True, symmetry=symmetry, axis=axis, about=space, tolerance=tolerance)
 
 	def t000(self):
 		'''
@@ -64,30 +44,24 @@ class Selection(Init):
 
 	def chk000(self):
 		'''
-		Symmetry X
+		
 
 		'''
-		self.setButtons(self.hotBox.ui, unchecked='chk001,chk002')
-		state = self.hotBox.ui.chk000.isChecked() #symmetry button state
-		self.setSymmetry("x", symmetry=state)
+		pass
 
 	def chk001(self):
 		'''
-		Symmetry Y
+		
 
 		'''
-		self.setButtons(self.hotBox.ui, unchecked='chk000,chk002')
-		state = self.hotBox.ui.chk001.isChecked() #symmetry button state
-		self.setSymmetry("y", symmetry=state)
+		pass
 
 	def chk002(self):
 		'''
-		Symmetry Z
+		
 
 		'''
-		self.setButtons(self.hotBox.ui, unchecked='chk000,chk001')
-		state = self.hotBox.ui.chk002.isChecked() #symmetry button state
-		self.setSymmetry("z", symmetry=state)
+		pass
 
 	def chk004(self):
 		'''
@@ -103,21 +77,17 @@ class Selection(Init):
 
 	def chk005(self):
 		'''
-		Symmetry: Object
+		
 
 		'''
-		self.hotBox.ui.chk006.setChecked(False) #uncheck symmetry:topological
+		pass
 	
 	def chk006(self):
 		'''
-		Symmetry: Topo
+		
 
 		'''
-		self.hotBox.ui.chk005.setChecked(False) #uncheck symmetry:object space
-		if any ([self.hotBox.ui.chk000.isChecked(), self.hotBox.ui.chk001.isChecked(), self.hotBox.ui.chk002.isChecked()]): #(symmetry)
-			pm.symmetricModelling(edit=True, symmetry=False)
-			self.setButtons(self.hotBox.ui, unchecked='chk000,chk001,chk002')
-			print "# Warning: First select a seam edge and then check the symmetry button to enable topographic symmetry #"
+		pass
 
 	def cmb000(self):
 		'''

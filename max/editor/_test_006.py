@@ -1,9 +1,82 @@
-try: from pymxs import runtime as rt; import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript;from tk_switchboard import Switchboard; sb = Switchboard()
+try: from pymxs import runtime as rt; import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript;from tk_switchboard import Switchboard; sb = Switchboard();from tk_slots_max_init import Init as func;
 except: pass
 
-from tk_slots_max_init import Init as func
 
-func.toggleSmoothPreview()
+
+# def flattenComponentNames(list_):
+# 	for l in list_:
+# 		print type(l)
+
+
+def getClosestVert(vertices0, vertices1):
+	dict_={}
+	for vertex0 in vertices0:
+		v0 = rt.polyOp.getVert(obj, vertex0)
+		for vertex1 in vertices1:
+			v1 = rt.polyOp.getVert(obj, vertex1)
+			distance = rt.distance(v0, v1)
+			
+			dict_[distance] = [vertex0, vertex1]
+
+	s = sorted(dict_)
+	length = len([item for sublist in vertices for item in sublist])
+	list_ = [dict_[s[i]] for i, _ in enumerate(s) if i<length/2] #instead of 4; length of vertices/2 for edge compatibility
+	return list({item for sublist in list_ for item in sublist})
+
+
+
+sel = rt.selection
+#919, 931
+#188, 132
+
+for obj in sel:
+
+	faces = [f.index for f in obj.selectedFaces]
+	# print faceNums
+	vertices = [rt.polyop.getFaceVerts(obj, face) for face in faces]
+	print vertices
+	
+	list_ = getClosestVert(vertices[0], vertices[1])
+
+
+	edges = rt.polyop.getEdgesUsingVert(obj, list_)
+	# edges = [rt.polyop.getEdgesUsingVert(obj, vert) for vert in list_]
+	print edges
+
+	# flattenComponentNames(edges)
+
+	edges = [item for sublist in edges for item in sublist]
+	# # edges = rt.polyop.getEdgesUsingVert(obj, list_)
+	print edges
+	vertices = [rt.polyop.getEdgeVerts(obj, edge) for edge in edges]
+	# vertices = rt.polyop.getVertsUsingEdge(obj, edges)
+	print vertices
+
+	list_ = getClosestVert(vertices)
+
+	rt.polyop.setEdgeSelection(obj, edges)
+
+
+
+
+
+
+
+# edgeCount = rt.polyOp.getNumEdges(sel)
+
+# for edge to edgeCount do
+# 	faces = rt.polyOp.getEdgeFaces(obj)
+# 	if len(faces)==2:
+# 		angle = acos(dot (polyOp.getFaceNormal obj faces[1]) (polyOp.getFaceNormal obj faces[2])) 
+# 		if angle >= tolerance do selEdges[e] = true
+# 	else 
+# 		if includeOpenEdges do selEdges[e] = true
+
+# 	polyOp.setEdgeSelection obj selEdges 
+# 	# Edit_Poly: (modPanel.getCurrentObject()).SetSelection #Edge &selEdges
+# rt.redrawViews()
+
+
 
 
 

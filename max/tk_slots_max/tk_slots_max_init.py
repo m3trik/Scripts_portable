@@ -61,9 +61,6 @@ class Init(Slot):
 
 
 
-
-
-
 	# ------------------------------------------------
 	' Geometry'
 	# ------------------------------------------------
@@ -304,7 +301,7 @@ class Init(Slot):
 	#basically working except for final 'obj.scale([s, s, s])' command in python. variable definitions included for debugging. to get working an option is to use the maxEval method in the alignVertices function.
 	@staticmethod
 	def scaleObject (size, x, y ,z):
-		# global tk_textField__000
+
 		tk_textField_000 = 1.50
 		tk_isChecked_002 = True
 		tk_isChecked_003 = True
@@ -316,7 +313,7 @@ class Init(Slot):
 		z = tk_isChecked_004
 		#-------------------------
 		s = size
-		sel = makeSelection ("Current", 0)
+		sel = self.getObjects ("Current", 0)
 
 		for obj in sel:
 			if (tk_isChecked_002 and tk_isChecked_003 and tk_isChecked_004):
@@ -335,7 +332,6 @@ class Init(Slot):
 				obj.scale([1, s, 1])
 			if (not tk_isChecked_002 (not tk_isChecked_003) (not tk_isChecked_004)):
 				obj.scale([1, 1, 1])
-
 
 
 
@@ -393,6 +389,7 @@ class Init(Slot):
 			rt.clearSelection()
 			for obj in objects:
 				rt.selectMore(obj)
+
 
 
 	#--centerPivotOnSelection----------------------------------------------------------------
@@ -503,58 +500,40 @@ class Init(Slot):
 
 
 
-
-
-
-#--makeSelection-------------------------------------------------------------------------
-
-	# class Selection:
+	#--getObjects-------------------------------------------------------------------------
 
 	#builds a selection array, according to arguments.
-	#arg = selection type. "Current", "Geometry", "All"
-	#index = index of array element to return. 0 = all
-	#functionCall; if specified will call the specified fuction with selection as argument
 	@staticmethod
-	def makeSelection (selectionType, arrayIndex, functionCall=None):
+	def getObjects(selectionType='current'):
+		'''
+		#args:
+			selectionType='string' 
+			'Current'	currently selected object/s
+			'Geometry'	all geometry objects in scene
+			'All'		all scene objects
+		#returns:
+			selection object as list
+		'''
+
+		selectionType = selectionType.title()
 
 		if (selectionType == "Current"):
-			maxEval("sel = $") #store FPValue
-			sel = rt.sel	#get FPValue
+			sel = rt.selection
 
 		if (selectionType == "Geometry"):
-			maxEval("sel = Geometry")
-			sel = rt.sel
+			sel = rt.geometry
 
 		if (selectionType == "All"):
 			sel = maxEval("sel = $*")
 			sel = rt.sel
 
-		selectionArray = []
 		
-		if (sel < 1): # check if sel is empty
-			print "-< Nothing selected >-"
-			return "noSelection" #or rt.undefined
+		if not sel:
+			print "# Warning: Nothing selected. #"
+			return None
 
-		if (len(sel) == 0): #check if selection is not an array
-			selectionArray.append(sel)
-			
-		else: #else if array, build python array
-			for obj in sel:
-				selectionArray.append(obj)
-
-		if (arrayIndex == 0):
-			#~ print selectionArray
-			if (functionCall != None):
-				return functionCall(selectionArray);
-			else:
-				return selectionArray
-
-		if (arrayIndex >= 1): #subtract one index position to match maxscript convention
-			#~ print selectionArray[arrayIndex]
-			if (functionCall != None):
-				return functionCall(selectionArray[arrayIndex-1]); 
-			else:
-				return selectionArray[arrayIndex-1];
+		else:
+			return [obj for obj in sel]
 
 
 
@@ -562,7 +541,7 @@ class Init(Slot):
 
 	# returns the base class type as a string
 	@staticmethod
-	def filterSelectionByBaseClass (baseObjClass):
+	def filterSelectionByBaseClass(baseObjClass):
 		'''
 		#args:
 			baseObjClass = <base class object>
@@ -597,6 +576,7 @@ class Init(Slot):
 				return "Geometry"
 
 
+
 	@staticmethod
 	def getSuperClassType(superClass):
 		'''
@@ -612,6 +592,7 @@ class Init(Slot):
 		for key, value in superClassDict.iteritems():
 				if (superClass == key):
 					return value
+
 
 
 	@staticmethod
@@ -670,41 +651,86 @@ class Init(Slot):
 
 
 
+	@staticmethod
+	def displayWireframeOnMesh(state=None, query=False):
+		'''
+		args:
+			state=bool - display wireframe on mesh in viewport True/False
+			query=bool - return current state
+		returns:
+			bool (current state) if query
+		'''
+		currentState = MaxPlus.ViewportManager.GetActiveViewportShowEdgeFaces()
+		if query:
+			return currentState
+		if state:
+			MaxPlus.ViewportManager.SetActiveViewportShowEdgeFaces(state)
+		else:
+			MaxPlus.ViewportManager.SetActiveViewportShowEdgeFaces(not currentState)
 
 
-	# ------------------------------------------------
-	' Macros'
-	# ------------------------------------------------
 
-
+	previousSmoothPreviewLevel=int
 	@staticmethod
 	def toggleSmoothPreview():
+		global previousSmoothPreviewLevel
 		toggle = Slot.cycle([0,1], 'toggleSmoothPreview') #toggle 0/1
 
 		geometry = rt.selection #if there is a selection; perform operation on those object/s
 		if not len(geometry): #else: perform operation on all scene geometry.
 			geometry = rt.geometry
 
-		for obj in geometry:
-			try:
-				if toggle==0:
-					obj.modifiers['TurboSmooth'].iterations = 0 #set iterations on objects to 0.
-				else:
+
+		if toggle==0: #preview off
+			# try: Init.setSubObjectLevel(previousSmoothPreviewLevel) #restore previous subObjectLevel
+			# except: pass
+			rt.showEndResult = False
+			Init.displayWireframeOnMesh(True)
+
+			for obj in geometry:
+				try:
+					obj.modifiers['TurboSmooth'].iterations = 0 #set subdivision levels to 0.
+				except: pass
+
+		else: #preview on
+			# previousSmoothPreviewLevel = rt.subObjectLevel #store previous subObjectLevel
+			# Init.setSubObjectLevel(0)
+			rt.showEndResult = True
+			Init.displayWireframeOnMesh(False)
+
+			for obj in geometry:
+				try:
 					renderIters = obj.modifiers['TurboSmooth'].renderIterations #get renderIter value.
 					obj.modifiers['TurboSmooth'].iterations = renderIters #apply to iterations value.
-			except: pass
+				except: pass
 
 		rt.redrawViews() #refresh viewport. only those parts of the view that have changed are redrawn.
 
 
+
 	@staticmethod
 	def setSubObjectLevel(level):
-		sel = rt.selection[0]
+		'''
+		args:
+			level=int  - set component mode
+						0 - object mode
+						1 - vertex
+						2 - edge
+						3 - border
+						4 - face
+						5 - element
+		'''
+		maxEval ('max modify mode')#set focus: modifier panel.
 
-		rt.modPanel.setCurrentObject (sel.baseObject)
-		rt.subobjectLevel = level
+		sel = rt.selection
 
+		for obj in sel:
 
+			rt.modPanel.setCurrentObject (obj.baseObject)
+			rt.subObjectLevel = level
+
+			if level==0: #reset the modifier selection to the top of the stack.
+				rt.modPanel.setCurrentObject(obj.modifiers[0])
 
 
 

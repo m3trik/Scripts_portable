@@ -20,31 +20,12 @@ class Selection(Init):
 		#chk004 ignore backfacing (camera based selection)
 		# sel = rt.Filters.GetModOrObj()
 		# state = sel.ignoreBackfacing
-		# self.hotBox.ui.chk004.setChecked(state)
+		# self.ui.chk004.setChecked(state)
 
 		#on click event
-		self.hotBox.ui.chk003.clicked.connect(self.b001) #un-paint
+		self.ui.chk003.clicked.connect(self.b001) #un-paint
 
-		#symmetry: set initial checked state
-		# state = pm.symmetricModelling(query=True, symmetry=True) #application symmetry state
-		# axis = pm.symmetricModelling(query=True, axis=True)
-		# if axis == "x":
-		# 	self.hotBox.ui.chk000.setChecked(state)
-		# if axis == "y":
-		# 	self.hotBox.ui.chk001.setChecked(state)
-		# if axis == "z":
-		# 	self.hotBox.ui.chk002.setChecked(state)
 
-	def setSymmetry(self, axis, symmetry):
-		if self.hotBox.ui.chk005.isChecked():
-			space = "object"
-		if self.hotBox.ui.chk006.isChecked():
-			space = "topo"
-		else:
-			space = "world"
-
-		tolerance = float(self.hotBox.ui.s005.value())
-		pm.symmetricModelling(edit=True, symmetry=symmetry, axis=axis, about=space, tolerance=tolerance)
 
 
 	def t000(self):
@@ -52,7 +33,7 @@ class Selection(Init):
 		Select The Selection Set Itself (Not Members Of)
 
 		'''
-		name = str(self.hotBox.ui.t000.text())+"Set"
+		name = str(self.ui.t000.text())+"Set"
 		pm.select (name, noExpand=1) #noExpand=select set itself
 
 	def t001(self):
@@ -60,36 +41,30 @@ class Selection(Init):
 		Select By Name
 
 		'''
-		searchStr = str(self.hotBox.ui.t001.text()) #asterisk denotes startswith*, *endswith, *contains* 
+		searchStr = str(self.ui.t001.text()) #asterisk denotes startswith*, *endswith, *contains* 
 		if searchStr:
 			selection = pm.select (pm.ls (searchStr))
 
 	def chk000(self):
 		'''
-		Symmetry X
+		
 
 		'''
-		self.setButtons(self.hotBox.ui, unchecked='chk001,chk002')
-		state = self.hotBox.ui.chk000.isChecked() #symmetry button state
-		self.setSymmetry("x", symmetry=state)
+		pass
 
 	def chk001(self):
 		'''
-		Symmetry Y
+		
 
 		'''
-		self.setButtons(self.hotBox.ui, unchecked='chk000,chk002')
-		state = self.hotBox.ui.chk001.isChecked() #symmetry button state
-		self.setSymmetry("y", symmetry=state)
+		pass
 
 	def chk002(self):
 		'''
-		Symmetry Z
+		
 
 		'''
-		self.setButtons(self.hotBox.ui, unchecked='chk000,chk001')
-		state = self.hotBox.ui.chk002.isChecked() #symmetry button state
-		self.setSymmetry("z", symmetry=state)
+		pass
 
 	def chk004(self):
 		'''
@@ -98,7 +73,7 @@ class Selection(Init):
 		'''
 		sel = rt.Filters.GetModOrObj()
 
-		if self.hotBox.ui.chk004.isChecked():
+		if self.ui.chk004.isChecked():
 			sel.ignoreBackfacing = True
 			# self.viewPortMessage("Camera-based selection <hl>On</hl>.")
 		else:
@@ -107,29 +82,24 @@ class Selection(Init):
 
 	def chk005(self):
 		'''
-		Symmetry: Object
+		
 
 		'''
-		self.hotBox.ui.chk006.setChecked(False) #uncheck symmetry:topological
+		pass
 	
 	def chk006(self):
 		'''
-		Symmetry: Topo
+		
 
 		'''
-		self.hotBox.ui.chk005.setChecked(False) #uncheck symmetry:object space
-		if any ([self.hotBox.ui.chk000.isChecked(), self.hotBox.ui.chk001.isChecked(), self.hotBox.ui.chk002.isChecked()]): #(symmetry)
-			pm.symmetricModelling(edit=True, symmetry=False)
-			self.setButtons(self.hotBox.ui, unchecked='chk000,chk001,chk002')
-			print "# Warning: First select a seam edge and then check the symmetry button to enable topographic symmetry #"
-
+		pass
 
 	def cmb000(self):
 		'''
 		List Selection Sets
 
 		'''
-		cmb = self.hotBox.ui.cmb000
+		cmb = self.ui.cmb000
 		index = cmb.currentIndex() #get current index before refreshing list
 		
 		selectionSets = [set for set in rt.selectionSets]
@@ -154,7 +124,7 @@ class Selection(Init):
 		Select All Of Type
 
 		'''
-		cmb = self.hotBox.ui.cmb001
+		cmb = self.ui.cmb001
 		index = cmb.currentIndex() #get current index before refreshing list
 		
 		list_ = ['Geometry']
@@ -215,7 +185,7 @@ class Selection(Init):
 		Create Selection Set
 
 		'''
-		name = str(self.hotBox.ui.t000.text())+"Set"
+		name = str(self.ui.t000.text())+"Set"
 
 		sel = rt.selection
 
@@ -238,10 +208,10 @@ class Selection(Init):
 		if pm.contextInfo ("paintSelect", exists=True):
 			pm.deleteUI ("paintSelect")
 
-		radius = float(self.hotBox.ui.s001.value()) #Sets the size of the brush. C: Default is 1.0 cm. Q: When queried, it returns a float.
+		radius = float(self.ui.s001.value()) #Sets the size of the brush. C: Default is 1.0 cm. Q: When queried, it returns a float.
 		lowerradius = 2.5 #Sets the lower size of the brush (only apply on tablet).
 		selectop = "select"
-		if self.hotBox.ui.chk003.isChecked():
+		if self.ui.chk003.isChecked():
 			selectop = "unselect"
 
 		pm.artSelectCtx ("paintSelect", selectop=selectop, radius=radius, lowerradius=lowerradius)#, beforeStrokeCmd=beforeStrokeCmd())
@@ -279,7 +249,7 @@ class Selection(Init):
 		'''
 		Select Similar
 		'''
-		tolerance = str(self.hotBox.ui.s000.value()) #string value because mel.eval is sending a command string
+		tolerance = str(self.ui.s000.value()) #string value because mel.eval is sending a command string
 		mel.eval("doSelectSimilar 1 {\""+ tolerance +"\"}")
 
 	def b007(self):
@@ -287,7 +257,7 @@ class Selection(Init):
 		Select Polygon Face Island
 
 		'''
-		rangeX=rangeY=rangeZ = float(self.hotBox.ui.s002.value())
+		rangeX=rangeY=rangeZ = float(self.ui.s002.value())
 
 		curmod = rt.Modpanel.getcurrentObject()
 		curmod.selectAngle=rangeX

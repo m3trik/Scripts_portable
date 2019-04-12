@@ -21,57 +21,57 @@ class Polygons(Init):
 		Un-Crease
 
 		'''
-		if self.hotBox.ui.chk002.isChecked():
-			self.hotBox.ui.s003.setValue(0) #crease value
-			self.hotBox.ui.s004.setValue(180) #normal angle
-			self.setButtons(self.hotBox.ui, unchecked='chk003')
+		if self.ui.chk002.isChecked():
+			self.ui.s003.setValue(0) #crease value
+			self.ui.s004.setValue(180) #normal angle
+			self.setButtons(self.ui, unchecked='chk003')
 		else:
-			self.hotBox.ui.s003.setValue(7.5) #crease value
-			self.hotBox.ui.s004.setValue(30) #normal angle
+			self.ui.s003.setValue(5) #crease value
+			self.ui.s004.setValue(60) #normal angle
 
 	def chk008(self):
 		'''
 		Split U
 
 		'''
-		self.setButtons(self.hotBox.ui, unchecked='chk010')
+		self.setButtons(self.ui, unchecked='chk010')
 
 	def chk009(self):
 		'''
 		Split V
 
 		'''
-		self.setButtons(self.hotBox.ui, unchecked='chk010')
+		self.setButtons(self.ui, unchecked='chk010')
 
 	def chk010(self):
 		'''
 		Tris
 
 		'''
-		self.setButtons(self.hotBox.ui, unchecked='chk008,chk009')
+		self.setButtons(self.ui, unchecked='chk008,chk009')
 
 	def chk003(self):
 		'''
 		Crease: Max
 
 		'''
-		if self.hotBox.ui.chk003.isChecked():
-			self.hotBox.ui.s003.setValue(10) #crease value
-			self.hotBox.ui.s004.setValue(30) #normal angle
-			self.setButtons(self.hotBox.ui, unchecked='chk002')
+		if self.ui.chk003.isChecked():
+			self.ui.s003.setValue(10) #crease value
+			self.ui.s004.setValue(30) #normal angle
+			self.setButtons(self.ui, unchecked='chk002')
 		else:
-			self.hotBox.ui.s003.setValue(7.5) #crease value
-			self.hotBox.ui.s004.setValue(60) #normal angle
+			self.ui.s003.setValue(5) #crease value
+			self.ui.s004.setValue(60) #normal angle
 
 	def chk006(self):
 		'''
 		
 
 		'''
-		if self.hotBox.ui.chk006.isChecked():
-			self.hotBox.ui.s001.setSingleStep(.01)
+		if self.ui.chk006.isChecked():
+			self.ui.s001.setSingleStep(.01)
 		else:
-			self.hotBox.ui.s001.setSingleStep(.5)
+			self.ui.s001.setSingleStep(.5)
 
 	def b000(self):
 		'''
@@ -92,21 +92,21 @@ class Polygons(Init):
 		Separate
 
 		'''
-		sel = makeSelection ("Current", 1, classInfo)
-		detachElement(sel)
+		for obj in rt.selection:
+			rt.detachElement(obj)
 
 	def b003(self):
 		'''
 		Combine
 
 		'''
-		if self.hotBox.ui.chk000.isChecked():
+		if self.ui.chk000.isChecked():
 			pass
 			#from maya:
 		# 	maxEval('bt_mergeCombineMeshes;')
 		# else:
 		# 	maxEval('CombinePolygons;')
-		sel = makeSelection ("Current", 0)
+		sel = rt.selection
 		maxEval('''
 		j = 1;
 		count = sel.count;
@@ -142,8 +142,6 @@ class Polygons(Init):
 		Bridge
 
 		'''
-		obj = rt.selection
-
 		for obj in rt.selection:
 			obj.EditablePoly.Bridge() #perform bridge
 		rt.redrawViews() #redraw changes in viewport
@@ -154,27 +152,17 @@ class Polygons(Init):
 		Extrude
 
 		'''
-		sel = makeSelection("Current", 0)
-    	
-		if (sel != "noSelection"):
-			for obj in sel:
-				extrudeObject(obj)
-				# classInfo = classInfo(obj)
-				# componentArray = []
-
-				# if classInfo[9] == 4
-				#		subObject = ""
-				#		componentArray.append(subObject)
-				#		extrudeObject(obj)
-				#	option #maxEval('maxOps.CollapseNode $ off; --collapse modifier stack')
+		for obj in rt.selection:
+			self.extrudeObject(obj)
 
 	def b007(self):
 		'''
-		Bevel [Chamfer]
+		Bevel (Chamfer)
 
 		'''
-		width = float(self.hotBox.ui.s000.value())
+		width = float(self.ui.s000.value())
 		chamfer = True
+
 		if chamfer:
 			maxEval('macros.run \"Modifiers\" \"ChamferMod\"')
 		else: #bevel
@@ -195,18 +183,17 @@ class Polygons(Init):
 		#--[mesh] 0=object level,1=vertex level,2=edge level,3=face,4=polygon,5=element,
 		#--[poly] 0=object level,1=vertex level,2=edge level,3=border,4=polygon,5=element
 		
-		if (rt.subObjectLevel == 1): #--vertex level
-			maxEval('''
-			$.EditablePoly.collapse #Vertex
-			''')
-		if (rt.subObjectLevel == 2): #--edge level
-			maxEval('''
-			$.EditablePoly.collapse #Edge
-			''')
-		if (rt.subObjectLevel == 3): #--face level
-			maxEval('''
-			$.EditablePoly.collapse #Face
-			''')
+		subObjectLevel = rt.subObjectLevel
+
+		for obj in rt. selection:
+			if subObjectLevel == 1: #--vertex level
+				obj.EditablePoly.collapse('Vertex')
+
+			if subObjectLevel == 2: #--edge level
+				obj.EditablePoly.collapse('Edge')
+
+			if subObjectLevel == 4: #--face level
+				obj.EditablePoly.collapse('Face')
 
 	def b010(self):
 		'''
@@ -227,16 +214,11 @@ class Polygons(Init):
 		Multi-Cut Tool
 
 		'''
-		maxEval('''
-		Try
-		(
-			If SubObjectLevel == undefined then Max Modify Mode
-			local A = Filters.GetModOrObj()
-			if (Filters.Is_This_EditPolyMod A) then (A.ToggleCommandMode #Cut)
-			else (A.toggleCommandMode #CutVertex)   -- (Really a general Cut mode.)
-		)
-		Catch (print "# Error: invalid multi-cut Selection Type. #")
-		''')
+		obj = rt.Filters.GetModOrObj()
+		if obj:
+			self.setSubObjectLevel(4) #set component mode to face.
+			obj.ToggleCommandMode('CutVertex') #cut vertex tool
+		
 
 	def b013(self):
 		'''
@@ -264,11 +246,11 @@ class Polygons(Init):
 		Inset Face Region
 
 		'''
-		offset = float(self.hotBox.ui.s001.value())
+		offset = float(self.ui.s001.value())
 		maxEval('''
 		Try 
 		(
-			If SubObjectLevel == undefined then Max Modify Mode
+			If subObjectLevel == undefined then Max Modify Mode
 			local A = modPanel.getCurrentObject()
 			if keyboard.shiftpressed then A.popupDialog #Inset
 			else A.toggleCommandMode #InsetFace
@@ -282,10 +264,10 @@ class Polygons(Init):
 
 		'''
 		maxEval('''
-		if Ribbon_Modeling.ValidSOMode() and (subobjectlevel == 2 or subobjectlevel == 3) then
+		if Ribbon_Modeling.ValidSOMode() and (subObjectLevel == 2 or subObjectLevel == 3) then
 		(
 			curmod = Modpanel.getcurrentObject()
-			if subobjectlevel == 2 then
+			if subObjectLevel == 2 then
 			(   
 			    curmod.popupDialog #BridgeEdge
 			)
@@ -302,9 +284,9 @@ class Polygons(Init):
 
 		'''
 		maxEval('''
-		If SubObjectLevel == undefined then Max Modify Mode
+		If subObjectLevel == undefined then Max Modify Mode
 		-- default to Face level:
-		if subobjectLevel == 0 then subobjectLevel = 4
+		if subObjectLevel == 0 then subObjectLevel = 4
 		local A = modPanel.getCurrentObject()
 		if (Filters.Is_This_EditPolyMod A) then
 		(
@@ -339,7 +321,7 @@ class Polygons(Init):
 
 	def b022(self):
 		'''
-		Connect
+		Attach
 
 		'''
 		mel.eval("dR_connectTool;")
@@ -392,17 +374,17 @@ class Polygons(Init):
 
 		'''
 		dv=u=v=0
-		if self.hotBox.ui.chk008.isChecked(): #Split U
+		if self.ui.chk008.isChecked(): #Split U
 			u=2
-		if self.hotBox.ui.chk009.isChecked(): #Split V
+		if self.ui.chk009.isChecked(): #Split V
 			v=2
 
 		mode = 0 #The subdivision mode. 0=quads, 1=triangles
 		subdMethod = 1 #subdivision type: 0=exponential(traditional subdivision) 1=linear(number of faces per edge grows linearly)
-		if self.hotBox.ui.chk010.isChecked(): #tris
+		if self.ui.chk010.isChecked(): #tris
 			mode=dv=1
 			subdMethod=0
-		if all([self.hotBox.ui.chk008.isChecked(), self.hotBox.ui.chk009.isChecked()]): #subdivide once into quads
+		if all([self.ui.chk008.isChecked(), self.ui.chk009.isChecked()]): #subdivide once into quads
 			dv=1
 			subdMethod=0
 			u=v=0
@@ -485,8 +467,8 @@ class Polygons(Init):
 		Merge All Vertices
 
 		'''
-		floatXYZ = float(self.hotBox.ui.s002.value())
-		mergeAll = self.hotBox.ui.chk006.isChecked()
+		floatXYZ = float(self.ui.s002.value())
+		mergeAll = self.ui.chk006.isChecked()
 
 		selection = pm.ls(selection=1, objectsOnly=1)
 
@@ -527,21 +509,35 @@ class Polygons(Init):
 		Target Weld
 
 		'''
-		maxEval('')
+		maxEval('macros.run "Editable Polygon Object" "EPoly_TargetWeld"')
+		# #needs selection order, as is welds to the last index which is the highest component number
+		# for obj in rt.selection:
+		# 	vertices = [i.index for i in obj.selectedVerts]
+
+		# 	target = rt.polyOp.getVert(obj, vertices[-1])
+		# 	for v in vertices[1:]:
+		# 		rt.polyop.weldVerts (obj, vertices[0], v, target)
 
 	def b044(self):
 		'''
 		Detach
 
 		'''
-		maxEval('''
-		if subObjectLevel == 4 then
-			$.EditablePoly.detachToElement #Face keepOriginal:off --element
-			--$.EditablePoly.detachToElement #Face keepOriginal:on --clone
-		if subObjectLevel == 2 then
-			$.EditablePoly.detachToElement #Edge keepOriginal:off --element
-			--$.EditablePoly.detachToElement #Face keepOriginal:on --clone
-		''')
+		subObjectLevel = rt.subObjectLevel
+
+		element = False #else clone
+
+		for obj in rt.selection:
+			if subObjectLevel==1:
+				vertices = rt.getVertSelection(obj)
+				for v in vertices:
+					obj.EditablePoly.breakVerts(v)
+
+			if subObjectLevel==4:
+				obj.EditablePoly.detachToElement #Face keepOriginal:element
+			
+			if subObjectLevel==2:
+				obj.EditablePoly.detachToElement #Edge keepOriginal:element
 
 	def b045(self):
 		'''
@@ -549,6 +545,7 @@ class Polygons(Init):
 
 		'''
 		symmetryOn = pm.symmetricModelling(query=True, symmetry=True) #query symmetry state
+		
 		if symmetryOn:
 			pm.symmetricModelling(symmetry=False)
 		mel.eval("setPolygonDisplaySettings(\"vertIDs\");") #set vertex id on
@@ -560,17 +557,15 @@ class Polygons(Init):
 		Split
 
 		'''
-		vertexMask = pm.selectType (query=True, vertex=True)
-		edgeMask = pm.selectType (query=True, edge=True)
-		facetMask = pm.selectType (query=True, facet=True)
+		subObjectLevel = rt.subObjectLevel
 
-		if facetMask:
+		if subObjectLevel==1:
 			mel.eval("performPolyPoke 1;")
 
-		if edgeMask:
+		if subObjectLevel==2:
 			mel.eval("polySubdivideEdge -ws 0 -s 0 -dv 1 -ch 0;")
 
-		if vertexMask:
+		if subObjectLevel==4:
 			mel.eval("polyChamferVtx 0 0.25 0;")
 
 	def b047(self):
@@ -634,37 +629,40 @@ class Polygons(Init):
 		Crease
 
 		'''
-		creaseAmount = float(self.hotBox.ui.s003.value())
-		normalAngle = int(self.hotBox.ui.s004.value()) 
+		creaseAmount = int(self.ui.s003.value())
+		normalAngle = int(self.ui.s004.value())
 
-		operation = 0 #Crease selected components
-		pm.polySoftEdge (angle=0, constructionHistory=0) #Harden edge normal
-		if self.hotBox.ui.chk002.isChecked():
-			objectMode = pm.selectMode (query=True, object=True)
-			if objectMode: #if in object mode,
-				operation = 2 #2-Remove all crease values from mesh
-			else:
-				operation = 1 #1-Remove crease from sel components
-				pm.polySoftEdge (angle=180, constructionHistory=0) #soften edge normal
+		creaseAmount = creaseAmount*0.1 #convert to max 0-1 range
 
-		if self.hotBox.ui.chk004.isChecked(): #crease vertex point
-			pm.polyCrease (value=creaseAmount, vertexValue=creaseAmount, createHistory=True, operation=operation)
-		else:
-			pm.polyCrease (value=creaseAmount, createHistory=True, operation=operation) #PolyCreaseTool;
+		for obj in rt.selection:
+			# pm.polySoftEdge (angle=0, constructionHistory=0) #Harden edge normal
+			if self.ui.chk002.isChecked(): #uncrease
+				subObjectLevel = rt.subObjectLevel
+				if subObjectLevel==0: #if in object mode; remove all crease values from mesh
+					pass
+				else: #remove crease from sel components
+					obj.EditablePoly.setEdgeData(1, creaseAmount)
 
-		if self.hotBox.ui.chk005.isChecked(): #adjust normal angle
-			pm.polySoftEdge (angle=normalAngle)
+			if self.ui.chk004.isChecked(): #crease vertex point
+				pass
+			else: #crease edge
+				obj.EditablePoly.setEdgeData(1, creaseAmount)
+
+			if self.ui.chk005.isChecked(): #adjust normal angle
+				edges = rt.polyop.getEdgeSelection(obj)
+				for edge in edges:
+					edgeVerts = rt.polyop.getEdgeVerts(obj, edge)
+					normal = rt.averageSelVertNormal(obj)
+					for vertex in edgeVerts:
+						rt.setNormal(obj, vertex, normal)
+
 
 	def b056(self):
 		'''
-		Split Vertices
+		
 
 		'''
-		obj = rt.selection[0]
-		verts = rt.polyop.getVertSelection(obj)
-
-		rt.polyop.breakVerts (obj, verts)
-		print 'breakVerts: ', verts
+		pass
 
 	def b057(self):
 		'''
@@ -712,7 +710,7 @@ class Polygons(Init):
 			tempTriangle = "___fillTemp___" #create a polygon face using the list of vertex points and give it a temp name
 			pm.polyCreateFacet (point=vertices, texture=1, name=tempTriangle) #0-None; 1-Normalize; 2-Unitize
 
-			if (self.hotBox.ui.chk001.isChecked()):
+			if (self.ui.chk001.isChecked()):
 				pm.polyNormal(tempTriangle, normalMode=4) #3-reverse and cut, 4-reverse and propagate
 
 			pm.select(tempTriangle, add=True) #select and assign material from main object

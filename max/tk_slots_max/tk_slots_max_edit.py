@@ -22,56 +22,31 @@ class Edit(Init):
 
 	def chk001(self):
 		'''
-		Delete: Negative Axis. Set Text Mirror Axis
+		
 
 		'''
-		if self.hotBox.ui.chk002.isChecked():
-			axis = "X"
-			if self.hotBox.ui.chk001.isChecked():
-				axis = "-X"
-		if self.hotBox.ui.chk003.isChecked():
-			axis = "Y"
-			if self.hotBox.ui.chk001.isChecked():
-				axis = "-Y"
-		if self.hotBox.ui.chk004.isChecked():
-			axis = "Z"
-			if self.hotBox.ui.chk001.isChecked():
-				axis = "-Z"
-		self.hotBox.ui.b000.setText("Mirror "+axis)
+		pass
 
-	#set check states
 	def chk002(self):
 		'''
-		Delete: X Axis
+		
 
 		'''
-		self.setButtons(self.hotBox.ui, unchecked='chk003,chk004')
-		axis = "X"
-		if self.hotBox.ui.chk001.isChecked():
-			axis = "-X"
-		self.hotBox.ui.b000.setText("Mirror "+axis)
+		pass
 
 	def chk003(self):
 		'''
-		Delete: Y Axis
+		
 
 		'''
-		self.setButtons(self.hotBox.ui, unchecked='chk002,chk004')
-		axis = "Y"
-		if self.hotBox.ui.chk001.isChecked():
-			axis = "-Y"
-		self.hotBox.ui.b000.setText("Mirror "+axis)
+		pass
 
 	def chk004(self):
 		'''
-		Delete: Z Axis
+		
 
 		'''
-		self.setButtons(self.hotBox.ui, unchecked='chk003,chk002')
-		axis = "Z"
-		if self.hotBox.ui.chk001.isChecked():
-			axis = "-Z"
-		self.hotBox.ui.b000.setText("Mirror "+axis)
+		pass
 
 	def chk007(self):
 		'''
@@ -212,35 +187,24 @@ class Edit(Init):
 
 	def b000(self):
 		'''
-		Mirror Geometry
+		
 
 		'''
-		mergeThreshold=0.005
-		axis = 0 #0=x 1=y, 2=z
-		y=z= 1; x=-1 #used to negaively scale instanced object
-		cutMesh = self.hotBox.ui.chk005.isChecked() #cut
-		axisStr = self.hotBox.ui.b000.text()
-		instance = self.hotBox.ui.chk021.isChecked()
-		if axisStr == "Mirror Y" or axisStr == "Mirror -Y":
-			axis=1; y=-1; x=1
-		if axisStr == "Mirror Z" or axisStr == "Mirror -Z":
-			axis=2; z=-1; x=1
-		if not instance:
-			pm.polyMirrorFace (cutMesh=cutMesh, axis=axis, axisDirection=1, mergeMode=1, mergeThresholdType=1, mergeThreshold=mergeThreshold, mirrorAxis=1, mirrorPosition=0, smoothingAngle=30, flipUVs=0, ch=0)
-		else:
-			pm.undoInfo(openChunk=1)
-			if cutMesh:
-				self.b032()
-			instance = pm.instance() # bt_convertToMirrorInstanceMesh(0); #x=0, y=1, z=2, -x=3, -y=4, -z=5
-			pm.scale (z,x,y, pivot=(0,0,0), relative=1) #zxy
-			pm.undoInfo(closeChunk=1)
+		pass
+
+	def b001(self):
+		'''
+		
+
+		'''
+		pass
 		
 	def b002(self):
 		'''
-		Mirror Options
+		
 
 		'''
-		maxEval('MirrorPolygonGeometryOptions;')
+		pass
 
 	def b003(self):
 		'''
@@ -265,10 +229,10 @@ class Edit(Init):
 
 	def b006(self):
 		'''
-		Maya Bonus Tools: Symmetrize
+		
 
 		'''
-		maxEval('dR_symmetrize;')
+		pass
 
 	def b007(self):
 		'''
@@ -513,7 +477,7 @@ class Edit(Init):
 
 	def b032(self):
 		'''
-		Delete Component Or If Object Selected, Along Axis   
+		Delete Components  
 		'''
 		selectionMask = pm.selectMode (query=True, component=True)
 		maskVertex = pm.selectType (query=True, vertex=True)
@@ -527,25 +491,6 @@ class Edit(Init):
 		if all([selectionMask==1, maskVertex==1]): #delete vertices
 			pm.polyDelVertex()
 			self.viewPortMessage("delete <hl>vertice(s)</hl>.")
-
-		if selectionMask==0: #object mode /delete faces along axis
-			if self.hotBox.ui.chk002.isChecked():
-				axis = "x"
-				if self.hotBox.ui.chk001.isChecked():
-					axis = "-x"
-			if self.hotBox.ui.chk003.isChecked():
-				axis = "y"
-				if self.hotBox.ui.chk001.isChecked():
-					axis = "-y"
-			if self.hotBox.ui.chk004.isChecked():
-				axis = "z"
-				if self.hotBox.ui.chk001.isChecked():
-					axis = "-z"
-
-			faces = self.getAllFacesOnAxis (axis)
-			pm.delete(faces)
-			self.viewPortMessage("delete faces on <hl>"+axis+"</hl>.")
-			return axis
 
 		else:
 			pm.delete()

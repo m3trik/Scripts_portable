@@ -1,54 +1,74 @@
+try: from pymxs import runtime as rt; import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript;from tk_switchboard import Switchboard; sb = Switchboard();from tk_slots_max_init import Init as func;
+except: pass
 
 
-from PySide2 import QtCore, QtGui, QtWidgets
+#~ creaseAmount = 1
 
 
-class Window(QtWidgets.QMainWindow):
-	def __init__(self):
-		QtWidgets.QMainWindow.__init__(self)
-		# add a few widgets for testing
-		widget = QtWidgets.QWidget(self)
-		edit = QtWidgets.QTextEdit(widget)
-		button = QtWidgets.QPushButton('Button', widget)
-		layout = QtWidgets.QVBoxLayout(widget)
-		layout.addWidget(edit)
-		layout.addWidget(button)
-		self.setCentralWidget(widget)
-		menu = self.menuBar().addMenu('&File')
-		menu.addAction('&Quit', self.close)
-		menu = self.menuBar().addMenu('&Edit')
-		menu.addAction('&Clear', edit.clear)
-#------------------------------------------------
-		QtGui.qApp.installEventFilter(self)
-		# make sure initial window size includes menubar
-		QtCore.QTimer.singleShot(0, self.menuBar().hide)
+
+#~ obj = rt.selection[0]
+
+#~ obj.EditablePoly.makeHardEdges(1) #1=flag bit 1 : 'is selected'
+#~ obj.EditablePoly.setEdgeData(1, creaseAmount)
+
+def bitArrayIndex(bitArray):
+	return [i for i, bit in enumerate(bitArray) if bit==1]
 
 
-def eventFilter(self, source, event):
-	# do not hide menubar when menu shown
-	if QtGui.qApp.activePopupWidget() is None:
-		if event.type() == QtCore.QEvent.MouseMove:
-			if self.menuBar().isHidden():
-				rect = self.geometry()
-				# set mouse-sensitive zone
-				rect.setHeight(25)
-				if rect.contains(event.globalPos()):
-					self.menuBar().show()
-			else:
-				rect = QtCore.QRect(
-				self.menuBar().mapToGlobal(QtCore.QPoint(0, 0)),
-				self.menuBar().size())
-				if not rect.contains(event.globalPos()):
-					self.menuBar().hide()
-		elif event.type() == QtCore.QEvent.Leave and source is self:
-			self.menuBar().hide()
-	return QtGui.QMainWindow.eventFilter(self, source, event)
+creaseAmount = 5*0.1
+
+for obj in rt.selection:
+	obj.EditablePoly.setEdgeData(1, creaseAmount)
+	
+	edges = bitArrayIndex(rt.polyop.getEdgeSelection(obj))
+	print edges
+	for edge in edges:
+		print edge
+		edgeVerts = rt.polyop.getEdgeVerts(obj, edge)
+		normal = rt.averageSelVertNormal(obj)
+		for vertex in edgeVerts:
+			rt.setNormal(obj, vertex, normal)
+
+#~ print bitIndex([0,0,1,1])
 
 
-if __name__ == '__main__':
-	import sys
-	app = QtWidgets.QApplication(sys.argv)
-	window = Window()
-	window.setGeometry(500, 300, 300, 100)
-	window.show()
-	sys.exit(app.exec_())
+
+
+#~ for obj in rt.selection:
+	#~ vertices = [i.index for i in obj.selectedVerts]
+
+	#~ target = rt.polyOp.getVert(obj, vertices[-1])
+	#~ for v in vertices[1:]:
+		#~ rt.polyop.weldVerts (obj, vertices[0], v, target)
+
+
+
+# print func.tk('classInfo')
+
+
+
+# @staticmethod
+# def toggleSmoothPreview():
+# 	toggle = func.cycle([0,1], 'toggleSmoothPreview') #toggle 0/1
+
+# 	geometry = rt.selection #if there is a selection; perform operation on those object/s
+# 	if not len(geometry): #else: perform operation on all scene geometry.
+# 		geometry = rt.geometry
+
+
+
+# 	for obj in geometry:
+# 		if toggle==0: #preview off
+# 			level = tkDict['previousSmoothPreviewLevel']
+# 			func.setSubObjectLevel(level) #restore previous subObjectLevel
+# 			obj.modifiers['TurboSmooth'].iterations = 0 #set subdivision levels to 0.
+# 			func.displayWireframeOnMesh(True)
+
+# 		else: #preview on
+# 			tkDict['previousSmoothPreviewLevel'] = rt.subObjectLevel #store previous subObjectLevel
+# 			func.setSubObjectLevel(0)
+# 			renderIters = obj.modifiers['TurboSmooth'].renderIterations #get renderIter value.
+# 			obj.modifiers['TurboSmooth'].iterations = renderIters #apply to iterations value.
+# 			func.displayWireframeOnMesh(False)
+
+# toggleSmoothPreview()

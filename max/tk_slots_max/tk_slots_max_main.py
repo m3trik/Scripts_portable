@@ -38,11 +38,12 @@ class Main(Init):
 		Extrude
 
 		'''
-		text = 'Extrude'
-		self.hotBox.ui.v000.setText(text)
+		maxEval('macros.run "Ribbon - Modeling" "EPoly_Extrude"')
+		# text = 'Extrude'
+		# self.hotBox.ui.v000.setText(text)
 
-		self.method('polygons', 'b006')()
-		print '# Result: '+text+' #'
+		# self.method('polygons', 'b006')()
+		# print '# Result: '+text+' #'
 
 	def v001(self):
 		'''
@@ -60,22 +61,24 @@ class Main(Init):
 		Multi-Cut Tool
 
 		'''
-		text = 'Multi-Cut'
+		text = 'Cut'
 		self.hotBox.ui.v002.setText(text)
 
 		self.method('polygons','b012')()
 		print '# Result: '+text+' #'
+		self.hotBox.hide_()
 
 	def v003(self):
 		'''
-		Delete History
+		Slice
 
 		'''
-		text = 'Delete History'
-		self.hotBox.ui.v003.setText(text)
+		maxEval('macros.run "Ribbon - Modeling" "CutsQuickSlice"')
+		# text = ''
+		# self.hotBox.ui.v003.setText(text)
 
-		self.method('edit','b016')()
-		print '# Result: '+text+' #'
+		# self.method('','')()
+		# print '# Result: '+text+' #'
 
 	def v004(self):
 		'''
@@ -92,12 +95,9 @@ class Main(Init):
 
 	def v005(self):
 		'''
-		Delete Loop
-
+		Collapse
 		'''
-		for edge in rt.selection:
-			edge.SelectEdgeLoop()
-			edge.EditablePoly.Remove()
+		maxEval('macros.run "Ribbon - Modeling" "GeometryCollapse"')
 
 	def v006(self):
 		'''
@@ -119,49 +119,50 @@ class Main(Init):
 
 	def v008(self):
 		'''
-		
+		Insert Edgeloop
 
 		'''
-		pass
+		maxEval('macros.run "PolyTools" "SwiftLoop"')
 
 	def v009(self):
 		'''
-		
+		Select Loop
 
 		'''
-		pass
+		maxEval('macros.run "PolyTools" "Loop"')
 
 	def v010(self):
 		'''
-		
+		Detach
 
 		'''
-		pass
+		maxEval('macros.run "Ribbon - Modeling" "GeometryDetach"')
 
 	def v011(self):
 		'''
-		
+		Attach
 
 		'''
-		pass
+		maxEval('macros.run "Ribbon - Modeling" "AttachMode"')
 
 	def v012(self):
 		'''
 		Chamfer
 
 		'''
-		text = 'Chamfer'
-		self.hotBox.ui.v003.setText(text)
+		maxEval('macros.run "Ribbon - Modeling" "EPoly_Chamfer"')
+		# text = 'Chamfer'
+		# self.hotBox.ui.v003.setText(text)
 
-		self.method('polygons','b007')()
-		print '# Result: '+text+' #'
+		# self.method('polygons','b007')()
+		# print '# Result: '+text+' #'
 
 	def v013(self):
 		'''
-		Target Weld
+		Target Merge
 
 		'''
-		text = 'Target Weld'
+		text = 'Merge'
 		self.hotBox.ui.v003.setText(text)
 
 		self.method('polygons','b043')()

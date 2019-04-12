@@ -250,7 +250,7 @@ class Polygons(Init):
 
 	def b022(self):
 		'''
-		Connect
+		Attach
 
 		'''
 		mel.eval("dR_connectTool;")
@@ -447,52 +447,68 @@ class Polygons(Init):
 		'''
 		mel.eval("dR_targetWeldTool;")
 
+		#max method:
+		# for obj in rt.selection:
+		# 	vertexNum = [i.index for i in obj.selectedVerts]
+		# 	target = rt.polyOp.getVert(obj, index[-1])
+			
+		# 	for vNum in vertexNum:
+		# 		rt.polyop.weldVerts (obj, vertexNum[0], vNum, target)
+
 	def b044(self):
 		'''
 		Detach
 
 		'''
-		maskVertex = pm.selectType (query=True, vertex=True)
-		if maskVertex:
-			mel.eval("DetachComponent;")
-		else:
-			selFace = pm.ls (ni=1, sl=1)
-			selObj = pm.ls (objectsOnly=1, noIntermediate=1, sl=1) #to errorcheck if more than 1 obj selected
+		vertexMask = pm.selectType (query=True, vertex=True)
+		edgeMask = pm.selectType (query=True, edge=True)
+		facetMask = pm.selectType (query=True, facet=True)
 
-			if len(selFace) < 1:
-				print "// Warning: Nothing selected. //"
-				return
-			if len(selObj) > 1:
-				print "// Warning: Only components from a single object can be extracted. //"
-				return
+		if vertexMask:
+			mel.eval("polySplitVertex()")
+
+		if facetMask:
+			maskVertex = pm.selectType (query=True, vertex=True)
+			if maskVertex:
+				mel.eval("DetachComponent;")
 			else:
-				pm.undoInfo (openChunk=1)
-				sel = str(selFace[0]).split(".") #creates ex. ['polyShape', 'f[553]']
-				print sel
-				extractedObject = "extracted_"+sel[0]
-				pm.duplicate (sel[0], name=extractedObject)
-				if self.hotBox.ui.chk007.isChecked(): #delete original
-					pm.delete (selFace)
+				selFace = pm.ls (ni=1, sl=1)
+				selObj = pm.ls (objectsOnly=1, noIntermediate=1, sl=1) #to errorcheck if more than 1 obj selected
 
-				allFace = [] #populate a list of all faces in the duplicated object
-				numFaces = pm.polyEvaluate(extractedObject, face=1)
-				num=0
-				for _ in range(numFaces):
-					allFace.append(extractedObject+".f["+str(num)+"]")
-					num+=1
+				if len(selFace) < 1:
+					print "// Warning: Nothing selected. //"
+					return
+				if len(selObj) > 1:
+					print "// Warning: Only components from a single object can be extracted. //"
+					return
+				else:
+					pm.undoInfo (openChunk=1)
+					sel = str(selFace[0]).split(".") #creates ex. ['polyShape', 'f[553]']
+					print sel
+					extractedObject = "extracted_"+sel[0]
+					pm.duplicate (sel[0], name=extractedObject)
+					if self.hotBox.ui.chk007.isChecked(): #delete original
+						pm.delete (selFace)
 
-				extFace = [] #faces to keep
-				for face in selFace:
-					fNum = str(face.split(".")[0]) #ex. f[4]
-					extFace.append(extractedObject+"."+fNum)
+					allFace = [] #populate a list of all faces in the duplicated object
+					numFaces = pm.polyEvaluate(extractedObject, face=1)
+					num=0
+					for _ in range(numFaces):
+						allFace.append(extractedObject+".f["+str(num)+"]")
+						num+=1
 
-				delFace = [x for x in allFace if x not in extFace] #all faces not in extFace
-				pm.delete (delFace)
+					extFace = [] #faces to keep
+					for face in selFace:
+						fNum = str(face.split(".")[0]) #ex. f[4]
+						extFace.append(extractedObject+"."+fNum)
 
-				pm.select (extractedObject)
-				pm.xform (cpc=1) #center pivot
-				pm.undoInfo (closeChunk=1)
-				return extractedObject
+					delFace = [x for x in allFace if x not in extFace] #all faces not in extFace
+					pm.delete (delFace)
+
+					pm.select (extractedObject)
+					pm.xform (cpc=1) #center pivot
+					pm.undoInfo (closeChunk=1)
+					return extractedObject
 
 	def b045(self):
 		'''
@@ -618,10 +634,10 @@ class Polygons(Init):
 
 	def b056(self):
 		'''
-		Split Vertices
+		
 
 		'''
-		mel.eval("polySplitVertex()")
+		pass
 
 	def b057(self):
 		'''
