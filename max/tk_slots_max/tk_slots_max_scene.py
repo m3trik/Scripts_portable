@@ -54,13 +54,14 @@ class Scene(Init):
 		''')
 
 		cmb = self.ui.cmb000
-		index = cmb.currentIndex() #get current index before refreshing list
+		
 		list_ = rt.getRecentfiles()
-		files = self.comboBox (cmb, list_, "Recent Files")
+		contents = self.comboBox (cmb, list_, "Recent Files")
 
+		index = cmb.currentIndex()
 		if index!=0:
 			# force=True; force if maxEval("maxFileName;") else not force #if sceneName prompt user to save; else force open.  also: checkForSave(); If the scene has been modified since the last file save (if any), calling this function displays the message box prompting the user that the scene has been modified and requests to save.
-			rt.loadMaxFile(str(files[index]))
+			rt.loadMaxFile(str(contents[index]))
 			self.hotBox.hide_()
 			cmb.setCurrentIndex(0)
 
@@ -71,12 +72,13 @@ class Scene(Init):
 
 		'''
 		cmb = self.ui.cmb001
-		index = cmb.currentIndex() #get current index before refreshing list
-		files = []
-		self.comboBox (cmb, files, "Recent Projects")
+		
+		list_ = []
+		contents = self.comboBox (cmb, list_, "Recent Projects")
 
+		index = cmb.currentIndex()
 		if index!=0:
-			maxEval('setProject "'+files[index]+'"')
+			maxEval('setProject "'+contents[index]+'"')
 			cmb.setCurrentIndex(0)
 
 
@@ -86,13 +88,14 @@ class Scene(Init):
 
 		'''
 		cmb = self.ui.cmb002
-		index = cmb.currentIndex() #get current index before refreshing list
+		
 		files = []
-		self.comboBox (cmb, files, "Recent Autosave")
+		contents = self.comboBox (cmb, files, "Recent Autosave")
 
+		index = cmb.currentIndex()
 		if index!=0:
 			force=True; force if str(mel.eval("file -query -sceneName -shortName;")) else not force #if sceneName prompt user to save; else force open
-			pm.openFile (files[index], open=1, force=force)
+			pm.openFile (contents[index], open=1, force=force)
 			cmb.setCurrentIndex(0)
 
 
@@ -102,16 +105,17 @@ class Scene(Init):
 
 		'''
 		cmb = self.ui.cmb003
-		index = cmb.currentIndex() #get current index before refreshing list
-		self.comboBox (cmb, ["Import file", "Import Options"], "Import")
 		
+		contents = self.comboBox (cmb, ["Import file", "Import Options"], "Import")
+		
+		index = cmb.currentIndex()
 		if index!=0: #hide hotBox then perform operation
 			self.hotBox.hide_()
-		if index == 1: #Import
-			maxEval('Import;')
-		if index == 2: #Import options
-			maxEval('ImportOptions;')
-		cmb.setCurrentIndex(0)
+			if index == 1: #Import
+				maxEval('Import;')
+			if index == 2: #Import options
+				maxEval('ImportOptions;')
+			cmb.setCurrentIndex(0)
 
 	def cmb004(self):
 		'''
@@ -119,28 +123,29 @@ class Scene(Init):
 
 		'''
 		cmb = self.ui.cmb004
-		index = cmb.currentIndex() #get current index before refreshing list
+		
 		self.comboBox (cmb, ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ"], "Export")
 
+		index = cmb.currentIndex()
 		if index !=0: #hide hotBox then perform operation
 			self.hotBox.hide_()
-		if index == 1: #Export selection
-			maxEval('ExportSelection;')
-		if index == 2: #Export options
-			maxEval('ExportSelectionOptions;')
-		if index == 3: #Unreal
-			maxEval('SendToUnrealSelection;')
-		if index == 4: #Unity 
-			maxEval('SendToUnitySelection;')
-		if index == 5: #GoZ
-			print 'GoZ'
-			maxEval(''' 
-				try (
-					if (s_verbose) then print "\n === 3DS -> ZBrush === "
-					local result = s_gozServer.GoToZBrush()
-					) catch ();
-				''')
-		cmb.setCurrentIndex(0)
+			if index == 1: #Export selection
+				maxEval('ExportSelection;')
+			if index == 2: #Export options
+				maxEval('ExportSelectionOptions;')
+			if index == 3: #Unreal
+				maxEval('SendToUnrealSelection;')
+			if index == 4: #Unity 
+				maxEval('SendToUnitySelection;')
+			if index == 5: #GoZ
+				print 'GoZ'
+				maxEval(''' 
+					try (
+						if (s_verbose) then print "\n === 3DS -> ZBrush === "
+						local result = s_gozServer.GoToZBrush()
+						) catch ();
+					''')
+			cmb.setCurrentIndex(0)
 
 	def b000(self):
 		'''
@@ -240,14 +245,18 @@ class Scene(Init):
 
 	def b005(self):
 		'''
-		
+		Minimize Main Application
 
 		'''
-		pass
+		obj = rt.createOLEObject('Shell.Application')
+		obj.minimizeAll()
+		#obj.undoMinimizeAll()
+		rt.releaseOLEObject(obj)
+		self.hotBox.hbHide()
 
 	def b006(self):
 		'''
-		
+		Restore Main Application
 
 		'''
 		pass

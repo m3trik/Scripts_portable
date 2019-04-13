@@ -35,7 +35,7 @@ class Slot(object):
 				 print_=bool - print unpacked objectNames to console.
 		
 		returns: list of corresponding objects
-		#ex. getObject(self.hotBox.ui, 's000,b002,cmb011-15') #get objects for s000,b002, and cmb011-cmb015
+		#ex. getObject(self.ui, 's000,b002,cmb011-15') #get objects for s000,b002, and cmb011-cmb015
 		'''
 		packed_names = [n.strip() for n in objectNames.split(',') if '-' in n] #build list of all objectNames passed in containing '-'
 
@@ -53,7 +53,7 @@ class Slot(object):
 		objects=[]
 		for name in names+unpacked_names:
 			try:
-				objects.append(getattr(class_, name)) #equivilent to:(self.hotBox.ui.m000)
+				objects.append(getattr(class_, name)) #equivilent to:(self.ui.m000)
 			except: 
 				if showError_:
 					print "# Error in getObject():"+str(class_)+" has no attribute "+str(name)+" #"
@@ -69,15 +69,19 @@ class Slot(object):
 				 title='string' - optional value for the first index of the comboboxs list
 		
 		returns: combobox's current item list
-		ex. comboBox (self.hotBox.ui.cmb003, ["Import file", "Import Options"], "Import")
+		ex. comboBox (self.ui.cmb003, ["Import file", "Import Options"], "Import")
 		'''
 		comboBox.blockSignals(True) #to keep clear from triggering currentIndexChanged
+		index = comboBox.currentIndex() #get current index before refreshing list
 		comboBox.clear()
 		
 		if title:
 			comboBox.addItem(title)
 		comboBox.addItems(items)
+
+		comboBox.setCurrentIndex(index)
 		comboBox.blockSignals(False)
+
 		if title:
 			return [title]+items
 		else:
@@ -90,7 +94,7 @@ class Slot(object):
 		'''
 		args:	 setButtons=dynamic ui object
 				 checked/unchecked/enable/disable/visible/invisible=string - the names of buttons to modify separated by ','. ie. 'b000,b001,b022'
-		ex.	setButtons(self.hotBox.ui, disable='b000', unchecked='b009-12', invisible='b015')
+		ex.	setButtons(self.ui, disable='b000', unchecked='b009-12', invisible='b015')
 		'''
 		if checked:
 			checked = self.getObject(ui,checked)
@@ -128,8 +132,8 @@ class Slot(object):
 				 values=int or [(tuple) list] - tuple representing a string prefix label and value, and/or just a value. [(string prefix,int value)] ie. [("size",5), 20, ("width",8)]
 		
 		returns: list of values without prefix
-		ex. self.setSpinboxes (self.hotBox.ui, values=[("width",1),("length ratio",1),("patches U",1),("patches V",1)]) #range. dict 'value's will be added to corresponding spinbox starting at s000 through s003.
-		ex. self.setSpinboxes (self.hotBox.ui, spinboxNames='s000', values=[('size',5)]) #explicit;  set single s000 with a label 'size' and value of 5. multiple spinboxes can be set this way. specify a range of spinboxes using 's010-18'.
+		ex. self.setSpinboxes (self.ui, values=[("width",1),("length ratio",1),("patches U",1),("patches V",1)]) #range. dict 'value's will be added to corresponding spinbox starting at s000 through s003.
+		ex. self.setSpinboxes (self.ui, spinboxNames='s000', values=[('size',5)]) #explicit;  set single s000 with a label 'size' and value of 5. multiple spinboxes can be set this way. specify a range of spinboxes using 's010-18'.
 		'''
 		spinboxes = self.getObject(ui, spinboxNames) #get spinbox objects
 
@@ -246,15 +250,15 @@ class Slot(object):
 
 	def initStyleSheet(self):
 		#general case style sheet
-		buttons = self.getObject(self.hotBox.ui, 'i000-50, v000-50, b000-100, t000-50, s000-50, chk000-50, cmb000-50', showError_=False)
-		# buttons.append (self.getObject(self.hotBox.ui, 'chkpin'))
+		buttons = self.getObject(self.ui, 'i000-50, v000-50, b000-100, t000-50, s000-50, chk000-50, cmb000-50', showError_=False)
+		# buttons.append (self.getObject(self.ui, 'chkpin'))
 		for button in buttons:
 			button.setStyleSheet(styleSheet.css)
 
 		#specific case StyleSheet overrides:
 		if self.hotBox.name=='main':
 			#setStyleSheet for transparent buttons
-			buttons = self.getObject(self.hotBox.ui, 'v000-13, i020-23, cmb000-25', showError_=False)
+			buttons = self.getObject(self.ui, 'v000-13, i020-23, cmb000-25', showError_=False)
 			for button in buttons:
 				button.setStyleSheet('''
 					QPushButton {border: 1px solid transparent;}
@@ -265,7 +269,7 @@ class Slot(object):
 
 		if self.hotBox.name=='viewport':
 			#setStyleSheet for transparent buttons
-			buttons = self.getObject(self.hotBox.ui, 'v008-15, cmb000-25', showError_=False)
+			buttons = self.getObject(self.ui, 'v008-15, cmb000-25', showError_=False)
 			for button in buttons:
 				button.setStyleSheet('''
 					QPushButton {border: 1px solid transparent;}
@@ -276,12 +280,12 @@ class Slot(object):
 				
 
 		if self.hotBox.name=='create':
-			self.setButtons(self.hotBox.ui, invisible='s000-11, t000')
+			self.setButtons(self.ui, invisible='s000-11, t000')
 
 
 		if self.hotBox.name=='init':
-			self.hotBox.ui.t000.viewport().setAutoFillBackground(False)
-			self.hotBox.ui.t000.setTextBackgroundColor(QtGui.QColor(50, 50, 50))
+			self.ui.t000.viewport().setAutoFillBackground(False)
+			self.ui.t000.setTextBackgroundColor(QtGui.QColor(50, 50, 50))
 
 
 

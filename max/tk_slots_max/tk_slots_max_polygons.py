@@ -132,10 +132,10 @@ class Polygons(Init):
 
 	def b004(self):
 		'''
-		
+		Slice
 
 		'''
-		pass
+		maxEval('macros.run "Ribbon - Modeling" "CutsQuickSlice"')
 		
 	def b005(self):
 		'''
@@ -146,27 +146,28 @@ class Polygons(Init):
 			obj.EditablePoly.Bridge() #perform bridge
 		rt.redrawViews() #redraw changes in viewport
 
-
 	def b006(self):
 		'''
 		Extrude
 
 		'''
-		for obj in rt.selection:
-			self.extrudeObject(obj)
+		maxEval('macros.run "Ribbon - Modeling" "EPoly_Extrude"')
+		# for obj in rt.selection:
+		# 	self.extrudeObject(obj)
 
 	def b007(self):
 		'''
 		Bevel (Chamfer)
 
 		'''
-		width = float(self.ui.s000.value())
-		chamfer = True
+		maxEval('macros.run "Ribbon - Modeling" "EPoly_Chamfer"')
+		# width = float(self.ui.s000.value())
+		# chamfer = True
 
-		if chamfer:
-			maxEval('macros.run \"Modifiers\" \"ChamferMod\"')
-		else: #bevel
-			maxEval('modPanel.addModToSelection (Bevel ()) ui:on')
+		# if chamfer:
+		# 	maxEval('macros.run \"Modifiers\" \"ChamferMod\"')
+		# else: #bevel
+		# 	maxEval('modPanel.addModToSelection (Bevel ()) ui:on')
 
 	def b008(self):
 		'''
@@ -194,6 +195,8 @@ class Polygons(Init):
 
 			if subObjectLevel == 4: #--face level
 				obj.EditablePoly.collapse('Face')
+
+		# maxEval('macros.run "Ribbon - Modeling" "GeometryCollapse"')
 
 	def b010(self):
 		'''
@@ -324,7 +327,7 @@ class Polygons(Init):
 		Attach
 
 		'''
-		mel.eval("dR_connectTool;")
+		maxEval('macros.run "Ribbon - Modeling" "AttachMode"')
 
 	def b023(self):
 		'''
@@ -538,6 +541,7 @@ class Polygons(Init):
 			
 			if subObjectLevel==2:
 				obj.EditablePoly.detachToElement #Edge keepOriginal:element
+		# maxEval('macros.run "Ribbon - Modeling" "GeometryDetach"')
 
 	def b045(self):
 		'''
@@ -573,7 +577,7 @@ class Polygons(Init):
 		Insert Edgeloop
 
 		'''
-		mel.eval("SplitEdgeRingTool;")
+		maxEval('macros.run "PolyTools" "SwiftLoop"')
 
 	def b048(self):
 		'''
@@ -777,32 +781,3 @@ print os.path.splitext(os.path.basename(__file__))[0]
 # Notes
 # -----------------------------------------------
 
-# #slice plane
-# maxEval('''
-# 		local retValue = false
-# 		if( Ribbon_Modeling.ValidSOMode() ) then
-# 		(
-# 			curmod = Modpanel.getcurrentObject()
-# 			retValue = (curmod.getCommandMode() == #SlicePlane)
-# 		)
-# 		retValue
-# 		''')
-
-# #quick slice
-# 		maxEval('''
-# 		if( Ribbon_Modeling.ValidSelection() ) then
-# 		(
-# 			curmod = Modpanel.getcurrentObject()
-# 			(curmod.getCommandMode() == #QuickSlice)
-# 		)
-# 		else
-# 		(
-# 			false
-# 		)
-# 		''')
-
-# #inset options
-# maxEval('''
-#  		local A = modPanel.getCurrentObject()
-# 		A.popupDialog #Inset
-# 		''')

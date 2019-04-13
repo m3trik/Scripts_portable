@@ -20,26 +20,28 @@ class Uv(Init):
 		Uv Editors Combobox
 
 		'''
-		index = self.hotBox.ui.cmb000.currentIndex() #get current index before refreshing list
-		self.comboBox (self.hotBox.ui.cmb000, ["UV Editor", "UV Set Editor", "UV Tool Kit", "UV Linking: Texture-Centric", "UV Linking: UV-Centric", "UV Linking: Paint Effects/UV", "UV Linking: Hair/UV"], "Editors")
+		cmb = self.ui.cmb000
 
+		contents = self.comboBox (cmb, ["UV Editor", "UV Set Editor", "UV Tool Kit", "UV Linking: Texture-Centric", "UV Linking: UV-Centric", "UV Linking: Paint Effects/UV", "UV Linking: Hair/UV"], "Editors")
+
+		index = cmb.currentIndex()
 		if index !=0: #hide hotbox then perform operation
 			self.hotBox.hbHide()
-		if index == 1: #UV Editor
-			maxEval('TextureViewWindow;') 
-		if index == 2: #UV Set Editor
-			maxEval('uvSetEditor;')
-		if index == 3: #UV Tool Kit
-			maxEval('toggleUVToolkit;')
-		if index == 4: #UV Linking: Texture-Centric
-			maxEval('textureCentricUvLinkingEditor;')
-		if index == 5: #UV Linking: UV-Centric
-			maxEval('uvCentricUvLinkingEditor;')
-		if index == 6: #UV Linking: Paint Effects/UV
-			maxEval('pfxUVLinkingEditor;')
-		if index == 7: #UV Linking: Hair/UV
-			mel.evel('hairUVLinkingEditor;')
-		self.hotBox.ui.cmb000.setCurrentIndex(0)
+			if index == 1: #UV Editor
+				maxEval('TextureViewWindow;') 
+			if index == 2: #UV Set Editor
+				maxEval('uvSetEditor;')
+			if index == 3: #UV Tool Kit
+				maxEval('toggleUVToolkit;')
+			if index == 4: #UV Linking: Texture-Centric
+				maxEval('textureCentricUvLinkingEditor;')
+			if index == 5: #UV Linking: UV-Centric
+				maxEval('uvCentricUvLinkingEditor;')
+			if index == 6: #UV Linking: Paint Effects/UV
+				maxEval('pfxUVLinkingEditor;')
+			if index == 7: #UV Linking: Hair/UV
+				mel.evel('hairUVLinkingEditor;')
+			self.ui.cmb000.setCurrentIndex(0)
 
 	def b000(self):
 		'''
@@ -145,8 +147,8 @@ class Uv(Init):
 		Auto Unwrap
 
 		'''
-		scaleMode = self.hotBox.ui.chk000.isChecked() #0 No scale is applied. 1 Uniform scale to fit in unit square. 2 Non proportional scale to fit in unit square.
-		createNewMap = self.hotBox.ui.chk001.isChecked() #Create a new UV set, as opposed to editing the current one, or the one given by the -uvSetName flag.
+		scaleMode = self.ui.chk000.isChecked() #0 No scale is applied. 1 Uniform scale to fit in unit square. 2 Non proportional scale to fit in unit square.
+		createNewMap = self.ui.chk001.isChecked() #Create a new UV set, as opposed to editing the current one, or the one given by the -uvSetName flag.
 		objects = pm.ls(selection=1, objectsOnly=1, flatten=1) #get shape nodes
 
 		for obj in objects:
@@ -214,8 +216,8 @@ class Uv(Init):
 		Move To Uv Space
 
 		'''
-		u = str(self.hotBox.ui.s000.value())
-		v = str(self.hotBox.ui.s001.value())
+		u = str(self.ui.s000.value())
+		v = str(self.ui.s001.value())
 
 		pm.polyEditUV (u=u, v=v)
 

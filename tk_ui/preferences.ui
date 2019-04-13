@@ -121,21 +121,38 @@
     <property name="title">
      <string>HotBox</string>
     </property>
-    <widget class="QPushButton" name="b000">
+    <widget class="QComboBox" name="cmb000">
      <property name="geometry">
       <rect>
        <x>0</x>
        <y>12</y>
-       <width>97</width>
+       <width>96</width>
        <height>19</height>
       </rect>
      </property>
-     <property name="toolTip">
-      <string>Re-Initialize instance</string>
+     <property name="minimumSize">
+      <size>
+       <width>96</width>
+       <height>0</height>
+      </size>
      </property>
-     <property name="text">
-      <string>Init</string>
+     <property name="maximumSize">
+      <size>
+       <width>9999</width>
+       <height>19</height>
+      </size>
      </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>Menu Sets:</string>
+      </property>
+     </item>
     </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_5">
@@ -227,6 +244,22 @@
      </property>
      <property name="checkable">
       <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b000">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>29</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Re-Initialize instance</string>
+     </property>
+     <property name="text">
+      <string>Init</string>
      </property>
     </widget>
    </widget>

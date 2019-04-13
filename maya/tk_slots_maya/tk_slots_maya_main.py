@@ -26,144 +26,168 @@ class Main(Init):
 		 	method object
 		'''
 		if not self.sb.hasKey(name, 'connectionDict'):
-			self.hotBox.signal.buildConnectionDict() #construct the signals and slots for the ui 
+			self.hotBox.signal.buildConnectionDict(name) #construct the signals and slots for the ui 
 
+			print self.sb.getDocString(name, method)
 		return self.sb.getMethod(name, method)
+
+
+
 
 
 
 
 	def v000(self):
 		'''
-		Extrude
+		
 
 		'''
-		text = 'Extrude'
-		self.hotBox.ui.v000.setText(text)
-
-		self.method('polygons', 'b006')()
+		text = self.menuSet.currentText()
+		
+		if text=='Modeling':
+			self.method('polygons', 'b006')()
 
 		
-		print '# Result: '+text+' #'
 
 	def v001(self):
 		'''
-		Bridge
+		
 
 		'''
-		text = 'Bridge'
-		self.hotBox.ui.v001.setText(text)
+		text = self.menuSet.currentText()
+		
+		if text=='Modeling':
+			self.method('polygons','b005')()
 
-		self.method('polygons','b005')()
-
-
-		print '# Result: '+text+' #'
 
 	def v002(self):
 		'''
-		Multi-Cut Tool
+		
 
 		'''
-		text = 'Multi-Cut'
-		self.hotBox.ui.v002.setText(text)
+		text = self.menuSet.currentText()
+		
+		if text=='Modeling':
+			self.method('polygons','b012')()
+			self.hotBox.hide_()
 
-		self.method('polygons','b012')()
-		print '# Result: '+text+' #'
 
 	def v003(self):
 		'''
-		Delete History
+		
 
 		'''
-		text = 'Delete History'
-		self.hotBox.ui.v003.setText(text)
+		text = self.menuSet.currentText()
+		
+		if text=='Modeling':
+			self.method('polygons','b004')()
 
-		self.method('edit','b016')()
-		print '# Result: '+text+' #'
 
 	def v004(self):
 		'''
-		Delete
+		
 
 		'''
-		text = 'Delete'
-		self.hotBox.ui.v004.setText(text)
+		text = self.menuSet.currentText()
 		
-		pm.delete()
-		# self.hotBox.sb.getMethod('edit','b032')
-		print "# Result: delete #"
+		if text=='Modeling':
+			self.hotBox.sb.method('edit','b032')
+
 
 	def v005(self):
 		'''
 		
-
 		'''
-		pass
+		text = self.menuSet.currentText()
+		
+		if text=='Modeling':
+			self.method('polygons','b009')()
+
 
 	def v006(self):
 		'''
-		Toggle Mode
+		
 
 		'''
-		self.cycle([0,1,2,3,4], 'shortCutMode')
+		text = self.menuSet.currentText()
+		
+		if text=='Modeling':
+			self.method('polygons','b047')()
+
 
 	def v007(self):
 		'''
-		Minimize Main Application
+		
 
 		'''
-		mel.eval("minimizeApp;")
-		self.hotBox.hbHide()
+		text = self.menuSet.currentText()
+		
+		if text=='Modeling':
+			self.method('selection','b008')()
+
 
 	def v008(self):
 		'''
 		
 
 		'''
-		pass
+		text = self.menuSet.currentText()
+		
+		if text=='Modeling':
+			self.method('polygons','b044')()
+
 
 	def v009(self):
 		'''
 		
 
 		'''
-		pass
+		text = self.menuSet.currentText()
+		
+		if text=='Modeling':
+			self.method('polygons','b022')()
+
 
 	def v010(self):
 		'''
 		
 
 		'''
-		pass
+		text = self.menuSet.currentText()
+		
+		if text=='Modeling':
+			self.method('polygons','b007')()
+
 
 	def v011(self):
 		'''
 		
 
 		'''
-		pass
+		text = self.menuSet.currentText()
+		
+		if text=='Modeling':
+			self.method('polygons','b043')()
+
 
 	def v012(self):
 		'''
-		Chamfer
+		
 
 		'''
-		text = 'Chamfer'
-		self.hotBox.ui.v003.setText(text)
-
-		self.method('polygons','b007')()
-		print '# Result: '+text+' #'
+		pass
 
 	def v013(self):
 		'''
-		Target Weld
+		Minimize Main Application
 
 		'''
-		text = 'Target Weld'
-		self.hotBox.ui.v003.setText(text)
+		# text = 'Minimize'
+		# self.ui.v008.setText(text)
 
-		self.method('polygons','b043')()
-		print '# Result: '+text+' #'
+		self.method('scene','b005')()
+
+
 
 
 

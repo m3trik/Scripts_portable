@@ -120,7 +120,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="v007">
+   <widget class="QPushButton" name="v013">
     <property name="geometry">
      <rect>
       <x>280</x>
@@ -136,7 +136,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="v006">
+   <widget class="QPushButton" name="v012">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -582,7 +582,7 @@
       <string>Bridge</string>
      </property>
      <property name="text">
-      <string>Bridge</string>
+      <string/>
      </property>
     </widget>
     <widget class="QPushButton" name="v000">
@@ -598,7 +598,7 @@
       <string>Extrude</string>
      </property>
      <property name="text">
-      <string>Extrude</string>
+      <string/>
      </property>
     </widget>
    </widget>
@@ -614,7 +614,7 @@
     <property name="title">
      <string/>
     </property>
-    <widget class="QPushButton" name="v012">
+    <widget class="QPushButton" name="v010">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -627,7 +627,7 @@
       <string/>
      </property>
      <property name="text">
-      <string>Chamfer</string>
+      <string/>
      </property>
     </widget>
     <widget class="QPushButton" name="v003">
@@ -643,7 +643,7 @@
       <string>Delete</string>
      </property>
      <property name="text">
-      <string>Slice</string>
+      <string/>
      </property>
     </widget>
    </widget>
@@ -672,10 +672,10 @@
       <string>Multi-Cut</string>
      </property>
      <property name="text">
-      <string>Cut</string>
+      <string/>
      </property>
     </widget>
-    <widget class="QPushButton" name="v013">
+    <widget class="QPushButton" name="v011">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -688,7 +688,7 @@
       <string/>
      </property>
      <property name="text">
-      <string>Merge</string>
+      <string/>
      </property>
     </widget>
    </widget>
@@ -704,7 +704,7 @@
     <property name="title">
      <string/>
     </property>
-    <widget class="QPushButton" name="v009">
+    <widget class="QPushButton" name="v007">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -717,10 +717,10 @@
       <string/>
      </property>
      <property name="text">
-      <string>Select Loop</string>
+      <string/>
      </property>
     </widget>
-    <widget class="QPushButton" name="v008">
+    <widget class="QPushButton" name="v006">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -733,7 +733,7 @@
       <string/>
      </property>
      <property name="text">
-      <string>Insert Loop</string>
+      <string/>
      </property>
     </widget>
    </widget>
@@ -762,7 +762,7 @@
       <string>Delete history</string>
      </property>
      <property name="text">
-      <string>Delete</string>
+      <string/>
      </property>
     </widget>
     <widget class="QPushButton" name="v005">
@@ -778,7 +778,7 @@
       <string>Minimize Window</string>
      </property>
      <property name="text">
-      <string>Collapse</string>
+      <string/>
      </property>
     </widget>
    </widget>
@@ -794,7 +794,7 @@
     <property name="title">
      <string/>
     </property>
-    <widget class="QPushButton" name="v010">
+    <widget class="QPushButton" name="v008">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -807,10 +807,10 @@
       <string/>
      </property>
      <property name="text">
-      <string>Detach</string>
+      <string/>
      </property>
     </widget>
-    <widget class="QPushButton" name="v011">
+    <widget class="QPushButton" name="v009">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -823,7 +823,7 @@
       <string/>
      </property>
      <property name="text">
-      <string>Attach</string>
+      <string/>
      </property>
     </widget>
    </widget>
@@ -835,12 +835,12 @@
    <zorder>l022</zorder>
    <zorder>l003</zorder>
    <zorder>l023</zorder>
-   <zorder>v007</zorder>
+   <zorder>v013</zorder>
    <zorder>i022</zorder>
    <zorder>i020</zorder>
    <zorder>i021</zorder>
    <zorder>i023</zorder>
-   <zorder>v006</zorder>
+   <zorder>v012</zorder>
    <zorder>i016</zorder>
    <zorder>i017</zorder>
    <zorder>i013</zorder>

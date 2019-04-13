@@ -19,11 +19,12 @@ class Viewport(Init):
 		Camera Editors
 
 		'''
-		cmb = self.hotBox.ui.cmb000
-		index = cmb.currentIndex() #get current index before refreshing list
+		cmb = self.ui.cmb000
+		
 		list_ = ['Camera Sequencer', 'Camera Set Editor']
-		self.comboBox (cmb, list_, "Editors")
+		contents = self.comboBox (cmb, list_, "Editors")
 
+		index = cmb.currentIndex()
 		if index!=0:
 			if index==1:
 				mel.eval('SequenceEditor;')
@@ -49,12 +50,13 @@ class Viewport(Init):
 		non_startup_cameras = map(str, non_startup_cameras_pynodes)
 		non_startup_cameras_transforms = map(str, non_startup_cameras_transform_pynodes)
 
-		cmb = self.hotBox.ui.cmb001
-		index = cmb.currentIndex() #get current index before refreshing list
-		self.comboBox (cmb, non_startup_cameras, "Cameras")
+		cmb = self.ui.cmb001
+		
+		contents = self.comboBox (cmb, non_startup_cameras, "Cameras")
 
+		index = cmb.currentIndex()
 		if index!=0:
-			pm.select (non_startup_cameras[index])
+			pm.select (contents[index])
 			cmb.setCurrentIndex(0)
 
 
@@ -63,11 +65,12 @@ class Viewport(Init):
 		Camera Options
 
 		'''
-		cmb = self.hotBox.ui.cmb002
-		index = cmb.currentIndex() #get current index before refreshing list
+		cmb = self.ui.cmb002
+		
 		list_ = ['Create: Custom Camera','Create: Set Custom Camera','Create: Camera From View','Group Cameras']
-		self.comboBox (cmb, list_, "Options")
+		contents = self.comboBox (cmb, list_, "Options")
 
+		index = cmb.currentIndex()
 		if index!=0:
 			if index==1:
 				mel.eval('cameraView -edit -camera persp -setCamera $homeName;')

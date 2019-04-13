@@ -20,11 +20,12 @@ class Viewport(Init):
 		Editors
 
 		'''
-		cmb = self.hotBox.ui.cmb000
-		index = cmb.currentIndex() #get current index before refreshing list
+		cmb = self.ui.cmb000
+		
 		list_ = ['Camera Sequencer', 'Camera Set Editor']
-		self.comboBox (cmb, list_, "Editors")
+		contents = self.comboBox (cmb, list_, "Editors")
 
+		index = cmb.currentIndex()
 		if index!=0:
 			if index==1:
 				mel.eval('SequenceEditor;')
@@ -38,13 +39,14 @@ class Viewport(Init):
 		Cameras
 
 		'''
-		cmb = self.hotBox.ui.cmb001
-		index = cmb.currentIndex() #get current index before refreshing list
-		cameras = [cam.name for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
-		items = self.comboBox (cmb, cameras, "Cameras:")
+		cmb = self.ui.cmb001
 		
+		cameras = [cam.name for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
+		contents = self.comboBox (cmb, cameras, "Cameras:")
+		
+		index = cmb.currentIndex()
 		if index!=0:
-			cam = rt.getNodeByName(items[index])
+			cam = rt.getNodeByName(contents[index])
 			rt.select (cam) #select the camera
 			rt.viewport.setCamera (cam) #set viewport to camera
 			cmb.setCurrentIndex(0)
@@ -55,11 +57,12 @@ class Viewport(Init):
 		Options
 
 		'''
-		cmb = self.hotBox.ui.cmb002
-		index = cmb.currentIndex() #get current index before refreshing list
+		cmb = self.ui.cmb002
+		
 		list_ = ['Create: Custom Camera','Create: Set Custom Camera','Create: Camera From View','Group Cameras']
-		self.comboBox (cmb, list_, "Options")
+		contents = self.comboBox (cmb, list_, "Options")
 
+		index = cmb.currentIndex()
 		if index!=0:
 			if index==1:
 				rt.StartObjectCreation(rt.Physical_Camera)

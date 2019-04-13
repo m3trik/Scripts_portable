@@ -15,8 +15,8 @@ class Subdivision(Init):
 
 		#initialize the smooth preview groupbox
 		self.ui.gb000.setTitle('TurboSmooth')
-		self.ui.txt000.setText('Iterations:')
-		self.ui.txt001.setText('RenderIters:')
+		self.ui.lbl000.setText('Iterations:')
+		self.ui.lbl001.setText('RenderIters:')
 		self.ui.s000.setValue(0)
 		self.ui.s001.setValue(0)
 

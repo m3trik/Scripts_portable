@@ -30,12 +30,14 @@ class Rendering(Init):
 
 		'''
 		cmb = self.ui.cmb000
+		
 
 		self.cams = [cam for cam in rt.cameras if 'Target' not in str(cam)]
-		
 		if self.cams:
-			list_ = [cam.name for cam in self.cams] #camera names
-			self.comboBox (cmb, list_, '')
+			list_ = [str(cam.name) for cam in self.cams] #camera names
+			contents = self.comboBox (cmb, list_)
+
+
 
 
 	def b000(self):

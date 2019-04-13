@@ -118,10 +118,10 @@ class Polygons(Init):
 
 	def b004(self):
 		'''
-		
+		Slice
 
 		'''
-		pass
+		maxEval('macros.run "Ribbon - Modeling" "CutsQuickSlice"')
 		
 	def b005(self):
 		'''

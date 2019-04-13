@@ -26,13 +26,14 @@ class Scene(Init):
 
 		'''
 		cmb = self.ui.cmb000
-		index = cmb.currentIndex() #get current index before refreshing list
+		
 		files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in file_]
-		files = self.comboBox (cmb, files, "Recent Files")
+		contents = self.comboBox (cmb, files, "Recent Files")
 
+		index = cmb.currentIndex()
 		if index!=0:
 			force=True; force if str(mel.eval("file -query -sceneName -shortName;")) else not force #if sceneName prompt user to save; else force open
-			pm.openFile (files[index], open=1, force=force)
+			pm.openFile (contents[index], open=1, force=force)
 			cmb.setCurrentIndex(0)
 
 	def cmb001(self):
@@ -41,12 +42,13 @@ class Scene(Init):
 
 		'''
 		cmb = self.ui.cmb001
-		index = cmb.currentIndex() #get current index before refreshing list
+		
 		files = (list(reversed(mel.eval("optionVar -query RecentProjectsList;"))))
-		self.comboBox (cmb, files, "Recent Projects")
+		contents = self.comboBox (cmb, files, "Recent Projects")
 
+		index = cmb.currentIndex()
 		if index!=0:
-			mel.eval('setProject "'+files[index]+'"')
+			mel.eval('setProject "'+contents[index]+'"')
 			cmb.setCurrentIndex(0)
 
 	def cmb002(self):
@@ -55,13 +57,14 @@ class Scene(Init):
 
 		'''
 		cmb = self.ui.cmb002
-		index = cmb.currentIndex() #get current index before refreshing list
+		
 		files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" in file_]
-		self.comboBox (cmb, files, "Recent Autosave")
+		contents = self.comboBox (cmb, files, "Recent Autosave")
 
+		index = cmb.currentIndex()
 		if index!=0:
 			force=True; force if str(mel.eval("file -query -sceneName -shortName;")) else not force #if sceneName prompt user to save; else force open
-			pm.openFile (files[index], open=1, force=force)
+			pm.openFile (contents[index], open=1, force=force)
 			cmb.setCurrentIndex(0)
 			
 	def cmb003(self):
@@ -70,16 +73,17 @@ class Scene(Init):
 
 		'''
 		cmb = self.ui.cmb003
-		index = cmb.currentIndex() #get current index before refreshing list
-		self.comboBox (cmb,["Import file", "Import Options"], "Import")
 		
+		contents = self.comboBox (cmb,["Import file", "Import Options"], "Import")
+		
+		index = cmb.currentIndex()
 		if index!=0: #hide hotBox then perform operation
 			self.hotBox.hide_()
-		if index == 1: #Import
-			mel.eval('Import;')
-		if index == 2: #Import options
-			mel.eval('ImportOptions;')
-		cmb.setCurrentIndex(0)
+			if index == 1: #Import
+				mel.eval('Import;')
+			if index == 2: #Import options
+				mel.eval('ImportOptions;')
+			cmb.setCurrentIndex(0)
 
 	def cmb004(self):
 		'''
@@ -87,22 +91,23 @@ class Scene(Init):
 
 		'''
 		cmb = self.ui.cmb004
-		index = cmb.currentIndex() #get current index before refreshing list
-		self.comboBox (cmb, ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ"], "Export")
+		
+		contents = self.comboBox (cmb, ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ"], "Export")
 
+		index = cmb.currentIndex()
 		if index !=0: #hide hotBox then perform operation
 			self.hotBox.hide_()
-		if index == 1: #Export selection
-			mel.eval('ExportSelection;')
-		if index == 2: #Export options
-			mel.eval('ExportSelectionOptions;')
-		if index == 3: #Unreal
-			mel.eval('SendToUnrealSelection;')
-		if index == 4: #Unity 
-			mel.eval('SendToUnitySelection;')
-		if index == 5: #GoZ
-			mel.eval('print("GoZ"); source"C:/Users/Public/Pixologic/GoZApps/Maya/GoZBrushFromMaya.mel"; source "C:/Users/Public/Pixologic/GoZApps/Maya/GoZScript.mel";')
-		cmb.setCurrentIndex(0)
+			if index == 1: #Export selection
+				mel.eval('ExportSelection;')
+			if index == 2: #Export options
+				mel.eval('ExportSelectionOptions;')
+			if index == 3: #Unreal
+				mel.eval('SendToUnrealSelection;')
+			if index == 4: #Unity 
+				mel.eval('SendToUnitySelection;')
+			if index == 5: #GoZ
+				mel.eval('print("GoZ"); source"C:/Users/Public/Pixologic/GoZApps/Maya/GoZBrushFromMaya.mel"; source "C:/Users/Public/Pixologic/GoZApps/Maya/GoZScript.mel";')
+			cmb.setCurrentIndex(0)
 
 	def b000(self):
 		'''
@@ -202,14 +207,15 @@ class Scene(Init):
 
 	def b005(self):
 		'''
-		
+		Minimize Main Application
 
 		'''
-		pass
+		mel.eval("minimizeApp;")
+		self.hotBox.hbHide()
 
 	def b006(self):
 		'''
-		
+		Restore Main Application
 
 		'''
 		pass

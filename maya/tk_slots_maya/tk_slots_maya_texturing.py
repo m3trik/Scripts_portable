@@ -20,14 +20,16 @@ class Texturing(Init):
 		Existing Materials
 
 		'''
-		index = self.hotBox.ui.cmb000.currentIndex() #get current index before refreshing list
-		materials = self.comboBox (self.hotBox.ui.cmb000, [str(mat) for mat in pm.ls(materials=1)], "Scene Materials")
+		cmb = self.ui.cmb000
 
+		contents = self.comboBox (cmb, [str(mat) for mat in pm.ls(materials=1)], "Scene Materials")
+
+		index = cmb.currentIndex()
 		if index!=0:
-			print materials[index]
+			print contents[index]
 			# shader = pm.shadingNode (mat, asShader=1) #asShader, asTexture, asLight
-			pm.hyperShade (assign=materials[index])
-			self.hotBox.ui.cmb000.setCurrentIndex(0)
+			pm.hyperShade (assign=contents[index])
+			cmb.setCurrentIndex(0)
 
 
 	def cmb001(self):
@@ -36,12 +38,13 @@ class Texturing(Init):
 
 		'''
 		cmb = self.ui.cmb001
-		index = cmb.currentIndex() #get current index before refreshing list
+		
 		files = ['Hypershade']
-		self.comboBox (cmb, files, "Editors")
+		contents = self.comboBox (cmb, files, "Editors")
 
+		index = cmb.currentIndex()
 		if index!=0:
-			if index==files.index('Hypershade'):
+			if index==contents.index('Hypershade'):
 				mel.eval("HypershadeWindow;")
 			cmb.setCurrentIndex(0)
 

@@ -15,8 +15,8 @@ class Edit(Init):
 
 
 		try:
-			self.hotBox.ui.s000.valueChanged.connect(self.chk011) #update radial array
-			self.hotBox.ui.s001.valueChanged.connect(self.chk011) 
+			self.ui.s000.valueChanged.connect(self.chk011) #update radial array
+			self.ui.s001.valueChanged.connect(self.chk011) 
 		except:pass
 		
 
@@ -53,11 +53,11 @@ class Edit(Init):
 		Delete: Translate To Components
 
 		'''
-		if self.hotBox.ui.chk007.isChecked():
-			self.setButtons(self.hotBox.ui, enable='chk008,b034,cmb000',disable='chk000,chk009,s005')
+		if self.ui.chk007.isChecked():
+			self.setButtons(self.ui, enable='chk008,b034,cmb000',disable='chk000,chk009,s005')
 			self.b034()
 		else:
-			self.setButtons(self.hotBox.ui, disable='chk008,b034,cmb000',enable='chk000,chk009,s005')
+			self.setButtons(self.ui, disable='chk008,b034,cmb000',enable='chk000,chk009,s005')
 
 	def chk010(self):
 		'''
@@ -67,21 +67,21 @@ class Edit(Init):
 		global radialPivot
 		radialPivot=[]
 		#add support for averaging multiple components.
-		if self.hotBox.ui.chk010.isChecked():
+		if self.ui.chk010.isChecked():
 			selection = pm.ls (selection=1, flatten=1)
 			try:
 				pivot = pm.xform (selection, query=1, translation=1, relative=1)
 			except:
 				print "# Warning: Nothing selected. #"
-				self.setButtons(self.hotBox.ui, unchecked='chk010')
+				self.setButtons(self.ui, unchecked='chk010')
 				return
 			# radialPivot.extend ([pivot[0],pivot[1],pivot[2]])
 			radialPivot.extend (pivot) #extend the list contents
 			text = str(int(pivot[0]))+","+str(int(pivot[1]))+","+str(int(pivot[2])) #convert to int to
-			self.hotBox.ui.chk010.setText(text)
+			self.ui.chk010.setText(text)
 		else:
 			del radialPivot[:]
-			self.hotBox.ui.chk010.setText("Set Pivot")
+			self.ui.chk010.setText("Set Pivot")
 
 	def chk011(self):
 		'''
@@ -95,7 +95,7 @@ class Edit(Init):
 		Radial Array: X Axis
 
 		'''
-		self.setButtons(self.hotBox.ui, checked='chk012', unchecked='chk013,chk014')
+		self.setButtons(self.ui, checked='chk012', unchecked='chk013,chk014')
 		self.chk015()
 
 	def chk013(self):
@@ -103,7 +103,7 @@ class Edit(Init):
 		Radial Array: Y Axis
 
 		'''
-		self.setButtons(self.hotBox.ui, checked='chk013', unchecked='chk012,chk014')
+		self.setButtons(self.ui, checked='chk013', unchecked='chk012,chk014')
 		self.chk015()
 
 	def chk014(self):
@@ -111,7 +111,7 @@ class Edit(Init):
 		Radial Array: Z Axis
 
 		'''
-		self.setButtons(self.hotBox.ui, checked='chk014', unchecked='chk012,chk013')
+		self.setButtons(self.ui, checked='chk014', unchecked='chk012,chk013')
 		self.chk015()
 
 	def chk015(self, create=False):
@@ -121,11 +121,11 @@ class Edit(Init):
 		'''
 		global radialArrayObjList
 		radialArrayObjList=[]
-		setPivot = self.hotBox.ui.chk010.isChecked() #set pivot point
-		instance = self.hotBox.ui.chk011.isChecked() #instance object
+		setPivot = self.ui.chk010.isChecked() #set pivot point
+		instance = self.ui.chk011.isChecked() #instance object
 
-		if self.hotBox.ui.chk015.isChecked():
-			self.setButtons(self.hotBox.ui, enable='b008')
+		if self.ui.chk015.isChecked():
+			self.setButtons(self.ui, enable='b008')
 
 			selection = pm.ls (selection=1, type="transform", flatten=1)
 			if len(selection):				
@@ -134,15 +134,15 @@ class Edit(Init):
 					self.try_ ('pm.delete (radialArrayObjList)')
 					del radialArrayObjList[:]
 
-				numDuplicates = int(self.hotBox.ui.s000.value())
-				angle = float(self.hotBox.ui.s001.value())
+				numDuplicates = int(self.ui.s000.value())
+				angle = float(self.ui.s001.value())
 
 				x=y=z = 0
-				if self.hotBox.ui.chk012.isChecked():
+				if self.ui.chk012.isChecked():
 					x = angle
-				if self.hotBox.ui.chk013.isChecked():
+				if self.ui.chk013.isChecked():
 					y = angle
-				if self.hotBox.ui.chk014.isChecked():
+				if self.ui.chk014.isChecked():
 					z = angle
 
 				pm.undoInfo (openChunk=1)
@@ -171,7 +171,7 @@ class Edit(Init):
 				pm.undoInfo (closeChunk=1)
 			else: #if both lists objects are empty:
 				print "# Warning: Nothing selected. #"
-				self.setButtons(self.hotBox.ui, disable='b008',unchecked='chk015')
+				self.setButtons(self.ui, disable='b008',unchecked='chk015')
 				return
 		else: #if chk015 is unchecked by user or by create button
 			if create:
@@ -182,7 +182,7 @@ class Edit(Init):
 				pm.delete (radialArrayObjList); del radialArrayObjList[:]
 				return
 			self.try_('pm.delete (radialArrayObjList)'); del radialArrayObjList[:]
-			self.setButtons(self.hotBox.ui, disable='b008')
+			self.setButtons(self.ui, disable='b008')
 			
 
 	def b000(self):
@@ -246,7 +246,7 @@ class Edit(Init):
 		Create Radial Array
 
 		'''
-		self.hotBox.ui.chk015.setChecked(False) #must be in the false unchecked state to catch the create flag in chk015
+		self.ui.chk015.setChecked(False) #must be in the false unchecked state to catch the create flag in chk015
 		self.chk015(create=True)
 		
 	def b009(self):
@@ -254,7 +254,7 @@ class Edit(Init):
 		Select Instanced Objects
 
 		'''
-		if self.hotBox.ui.chk016.isChecked(): #select all instances
+		if self.ui.chk016.isChecked(): #select all instances
 			import maya.OpenMaya as om
 			#get all Instanced objects
 			instances = []
@@ -340,9 +340,9 @@ class Edit(Init):
 		Delete History
 
 		'''
-		all_ = self.hotBox.ui.chk018.isChecked()
-		unusedNodes = self.hotBox.ui.chk019.isChecked()
-		deformers = self.hotBox.ui.chk020.isChecked()
+		all_ = self.ui.chk018.isChecked()
+		unusedNodes = self.ui.chk019.isChecked()
+		deformers = self.ui.chk020.isChecked()
 		objects = pm.ls (selection=1)
 		if all_:
 			objects = pm.ls (typ="mesh")
@@ -479,36 +479,22 @@ class Edit(Init):
 		'''
 		Delete Components  
 		'''
-		selectionMask = pm.selectMode (query=True, component=True)
-		maskVertex = pm.selectType (query=True, vertex=True)
-		maskEdge = pm.selectType (query=True, edge=True)
-		# maskFacet = pm.selectType (query=True, facet=True)
-
-		if all([selectionMask==1, maskEdge==1]): #delete edges
-			pm.polyDelEdge (cleanVertices=True)
-			self.viewPortMessage("delete <hl>edge(s)</hl>.")
-
-		if all([selectionMask==1, maskVertex==1]): #delete vertices
-			pm.polyDelVertex()
-			self.viewPortMessage("delete <hl>vertice(s)</hl>.")
-
-		else:
-			pm.delete()
-			self.viewPortMessage("delete.")
+		for obj in rt.selection:
+			obj.EditablePoly.Remove()
 
 	def b033(self):
 		'''
 		Duplicate
 
 		'''
-		instance = self.hotBox.ui.chk000.isChecked()
-		amount = int(self.hotBox.ui.s005.value())
-		keepFacesTogether = self.hotBox.ui.chk009.isChecked()
-		transXYZ = [float(self.hotBox.ui.s002.value()),float(self.hotBox.ui.s003.value()),float(self.hotBox.ui.s004.value())]
-		transRelative = self.hotBox.ui.chk017.isChecked() #xform translate relative or absolute
-		translateToComponent = self.hotBox.ui.chk007.isChecked()
-		alignToNormal = self.hotBox.ui.chk008.isChecked()
-		componentList = [self.hotBox.ui.cmb000.itemText(i) for i in range(self.hotBox.ui.cmb000.count())]
+		instance = self.ui.chk000.isChecked()
+		amount = int(self.ui.s005.value())
+		keepFacesTogether = self.ui.chk009.isChecked()
+		transXYZ = [float(self.ui.s002.value()),float(self.ui.s003.value()),float(self.ui.s004.value())]
+		transRelative = self.ui.chk017.isChecked() #xform translate relative or absolute
+		translateToComponent = self.ui.chk007.isChecked()
+		alignToNormal = self.ui.chk008.isChecked()
+		componentList = [self.ui.cmb000.itemText(i) for i in range(self.ui.cmb000.count())]
 
 		selection = pm.ls (selection=1, flatten=1)
 
@@ -599,7 +585,7 @@ class Edit(Init):
 		Add Selected Components To Cmb000
 
 		'''
-		self.comboBox (self.hotBox.ui.cmb000, pm.ls (selection=1, flatten=1))
+		self.comboBox (self.ui.cmb000, pm.ls (selection=1, flatten=1))
 
 	def b035(self):
 		'''
@@ -655,7 +641,7 @@ class Edit(Init):
 		Hold Crease Set Name For Crease Set Transfer
 
 		'''
-		if self.hotBox.ui.b042.isChecked():
+		if self.ui.b042.isChecked():
 			creaseSet = str(pm.ls(selection=1)) #ex. [nt.CreaseSet(u'creaseSet1')]
 
 			index1 = creaseSet.find("u")
@@ -663,21 +649,21 @@ class Edit(Init):
 			creaseSet = creaseSet[index1+1:index2].strip("'") #ex. creaseSet1
 
 			if creaseSet != "[":
-				self.hotBox.ui.b042.setText(creaseSet)
+				self.ui.b042.setText(creaseSet)
 			else:
-				self.hotBox.ui.b042.setText("must select set first")
-				self.setButtons(self.hotBox.ui, unchecked='b042')
-			if self.hotBox.ui.b043.isChecked():
-				self.setButtons(self.hotBox.ui, enable='b052')
+				self.ui.b042.setText("must select set first")
+				self.setButtons(self.ui, unchecked='b042')
+			if self.ui.b043.isChecked():
+				self.setButtons(self.ui, enable='b052')
 		else:
-			self.hotBox.ui.b042.setText("Crease Set")
+			self.ui.b042.setText("Crease Set")
 
 	def b043(self):
 		'''
 		Hold Transform Node Name For Crease Set Transfer
 
 		'''
-		if self.hotBox.ui.b043.isChecked():
+		if self.ui.b043.isChecked():
 			newObject = str(pm.ls(selection=1)) #ex. [nt.Transform(u'pSphere1')]
 
 			index1 = newObject.find("u")
@@ -685,14 +671,14 @@ class Edit(Init):
 			newObject = newObject[index1+1:index2].strip("'") #ex. pSphere1
 
 			if newObject != "[":
-				self.hotBox.ui.b043.setText(newObject)
+				self.ui.b043.setText(newObject)
 			else:
-				self.hotBox.ui.b043.setText("must select obj first")
-				self.setButtons(self.hotBox.ui, unchecked='b043')
-			if self.hotBox.ui.b042.isChecked():
-				self.setButtons(self.hotBox.ui, enable='b052')
+				self.ui.b043.setText("must select obj first")
+				self.setButtons(self.ui, unchecked='b043')
+			if self.ui.b042.isChecked():
+				self.setButtons(self.ui, enable='b052')
 		else:
-			self.hotBox.ui.b043.setText("Object")
+			self.ui.b043.setText("Object")
 
 	def b044(self):
 		'''
@@ -760,8 +746,8 @@ class Edit(Init):
 		the use of separate buttons for donar and target mesh are obsolete
 		add pm.polySoftEdge (angle=0, constructionHistory=0); #harden edge, when applying crease 
 		'''
-		creaseSet = str(self.hotBox.ui.b042.text())
-		newObject = str(self.hotBox.ui.b043.text())
+		creaseSet = str(self.ui.b042.text())
+		newObject = str(self.ui.b043.text())
 
 		sets = pm.sets (creaseSet, query=1)
 
@@ -782,9 +768,9 @@ class Edit(Init):
 			# print "crease:", name
 		pm.undoInfo (closeChunk=1)
 
-		self.setButtons(self.hotBox.ui, disable='b052', unchecked='b042')#,self.hotBox.ui.b043])
-		self.hotBox.ui.b042.setText("Crease Set")
-		# self.hotBox.ui.b043.setText("Object")
+		self.setButtons(self.ui, disable='b052', unchecked='b042')#,self.ui.b043])
+		self.ui.b042.setText("Crease Set")
+		# self.ui.b043.setText("Object")
 
 
 

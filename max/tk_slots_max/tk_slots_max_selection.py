@@ -100,15 +100,13 @@ class Selection(Init):
 
 		'''
 		cmb = self.ui.cmb000
-		index = cmb.currentIndex() #get current index before refreshing list
 		
 		selectionSets = [set for set in rt.selectionSets]
-		
-		sets = self.comboBox (cmb, [set.name for set in selectionSets], "Sets")
+		contents = self.comboBox (cmb, [set.name for set in selectionSets], "Sets")
 
-		
+		index = cmb.currentIndex()
 		if index!=0:
-			rt.select(sets[index])
+			rt.select(contents[index])
 			cmb.setCurrentIndex(0)
 
 
@@ -273,12 +271,14 @@ class Selection(Init):
 
 	def b008(self):
 		'''
-		Select N-th in Loop
+		Select Loop
 		'''
-		if rt.subObjectLevel==2: #Edge
-			mel.eval("selectEveryNEdge;")
-		elif rt.subObjectLevel==4: #Face
-			self.selectFaceLoop(tolerance=50)
+		maxEval('macros.run "PolyTools" "Loop"')
+		
+		# if rt.subObjectLevel==2: #Edge
+		# 	mel.eval("selectEveryNEdge;")
+		# elif rt.subObjectLevel==4: #Face
+		# 	self.selectFaceLoop(tolerance=50)
 
 	def b009(self):
 		'''

@@ -19,13 +19,14 @@ class Subdivision(Init):
 		Modifiers
 
 		'''
-		cmb = self.ui.cmb001
-		index = cmb.currentIndex() #get current index before refreshing list
+		cmb = self.ui.cmb000
+		
 		files = ['']
-		self.comboBox (cmb, files, "Editors")
+		contents = self.comboBox (cmb, files, "Editors")
 
+		index = cmb.currentIndex()
 		if index!=0:
-			if index==files.index(''):
+			if index==contents.index(''):
 				mel.eval('')
 			cmb.setCurrentIndex(0)
 

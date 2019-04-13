@@ -22,11 +22,12 @@ class Texturing(Init):
 
 		'''
 		cmb = self.ui.cmb000
-		index = cmb.currentIndex() #get current index before refreshing list
+		
 		materials = [mat for mat in rt.sceneMaterials]
 		materialNames = [mat.name for mat in materials]
-		self.comboBox (cmb, materialNames, "Scene Materials")
+		contents = self.comboBox (cmb, materialNames, "Scene Materials")
 
+		index = cmb.currentIndex()
 		if index!=0:
 			print materials[index]
 			for obj in rt.selection:
@@ -40,12 +41,12 @@ class Texturing(Init):
 
 		'''
 		cmb = self.ui.cmb001
-		index = cmb.currentIndex() #get current index before refreshing list
+		
 		files = ['Hypershade']
-		self.comboBox (cmb, files, "Editors")
+		contents = self.comboBox (cmb, files, "Editors")
 
 		if index!=0:
-			if index==files.index('Hypershade'):
+			if index==contents.index('Hypershade'):
 				mel.eval("HypershadeWindow;")
 			cmb.setCurrentIndex(0)
 

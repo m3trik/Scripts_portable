@@ -19,10 +19,10 @@ class Selection(Init):
 		#set checked button states
 		#chk004 ignore backfacing (camera based selection)
 		state = pm.selectPref(query=True, useDepth=True)
-		self.hotBox.ui.chk004.setChecked(state)
+		self.ui.chk004.setChecked(state)
 
 		#on click event
-		self.hotBox.ui.chk003.clicked.connect(self.b001) #un-paint
+		self.ui.chk003.clicked.connect(self.b001) #un-paint
 
 
 	def t000(self):
@@ -30,7 +30,7 @@ class Selection(Init):
 		Select The Selection Set Itself (Not Members Of)
 
 		'''
-		name = str(self.hotBox.ui.t000.text())+"Set"
+		name = str(self.ui.t000.text())+"Set"
 		pm.select (name, noExpand=1) #noExpand=select set itself
 
 	def t001(self):
@@ -38,7 +38,7 @@ class Selection(Init):
 		Select By Name
 
 		'''
-		searchStr = str(self.hotBox.ui.t001.text()) #asterisk denotes startswith*, *endswith, *contains* 
+		searchStr = str(self.ui.t001.text()) #asterisk denotes startswith*, *endswith, *contains* 
 		if searchStr:
 			selection = pm.select (pm.ls (searchStr))
 
@@ -68,7 +68,7 @@ class Selection(Init):
 		Ignore Backfacing (Camera Based Selection)
 
 		'''
-		if self.hotBox.ui.chk004.isChecked():
+		if self.ui.chk004.isChecked():
 			pm.selectPref(useDepth=True)
 			self.viewPortMessage("Camera-based selection <hl>On</hl>.")
 		else:
@@ -94,12 +94,14 @@ class Selection(Init):
 		List Selection Sets
 
 		'''
-		index = self.hotBox.ui.cmb000.currentIndex() #get current index before refreshing list
-		sets = self.comboBox (self.hotBox.ui.cmb000, [str(set_) for set_ in pm.ls (et="objectSet", flatten=1)], "Sets")
+		cmb = self.ui.cmb000
 
+		contents = self.comboBox (cmb, [str(set_) for set_ in pm.ls (et="objectSet", flatten=1)], "Sets")
+
+		index = cmb.currentIndex()
 		if index!=0:
-			pm.select (sets[index])
-			self.hotBox.ui.cmb000.setCurrentIndex(0)
+			pm.select (contents[index])
+			cmb.setCurrentIndex(0)
 
 	def cmb001(self):
 		'''
@@ -113,12 +115,14 @@ class Selection(Init):
 		Select All Of Type
 
 		'''
-		index = self.hotBox.ui.cmb001.currentIndex() #get current index before refreshing list
-		list_ = []
-		self.comboBox (self.hotBox.ui.cmb001, list_, "")
+		cmb = self.ui.cmb002	
 
+		list_ = []
+		contents = self.comboBox (cmb, list_, "")
+
+		index = cmb.currentIndex()
 		if index!=0:
-			self.hotBox.ui.cmb001.setCurrentIndex(0)
+			cmb.setCurrentIndex(0)
 		
 		#Select all Geometry
 		geometry = rt.geometry
@@ -132,8 +136,9 @@ class Selection(Init):
 		cmb = self.ui.cmb003
 
 		list_ = ['Verts', 'Edge', 'Face', 'Ring']
-		files = self.comboBox (cmb, list_, 'Convert Selection to')
+		contents = self.comboBox (cmb, list_, 'Convert Selection to')
 
+		index = cmb.currentIndex()
 		if index!=0:
 			if index==files.index('Verts'): #Convert Selection To Vertices
 				mel.eval('PolySelectConvert 3;')
@@ -151,13 +156,13 @@ class Selection(Init):
 		Create Selection Set
 
 		'''
-		name = str(self.hotBox.ui.t000.text())+"Set"
+		name = str(self.ui.t000.text())+"Set"
 		if pm.objExists (name):
 			pm.sets (name, clear=1)
 			pm.sets (name, add=1) #if set exists; clear set and add current selection 
 		else: #create set
 			pm.sets (name=name, text="gCharacterSet")
-			self.hotBox.ui.t000.clear()
+			self.ui.t000.clear()
 			
 	def b001(self):
 		'''
@@ -167,10 +172,10 @@ class Selection(Init):
 		if pm.contextInfo ("paintSelect", exists=True):
 			pm.deleteUI ("paintSelect")
 
-		radius = float(self.hotBox.ui.s001.value()) #Sets the size of the brush. C: Default is 1.0 cm. Q: When queried, it returns a float.
+		radius = float(self.ui.s001.value()) #Sets the size of the brush. C: Default is 1.0 cm. Q: When queried, it returns a float.
 		lowerradius = 2.5 #Sets the lower size of the brush (only apply on tablet).
 		selectop = "select"
-		if self.hotBox.ui.chk003.isChecked():
+		if self.ui.chk003.isChecked():
 			selectop = "unselect"
 
 		pm.artSelectCtx ("paintSelect", selectop=selectop, radius=radius, lowerradius=lowerradius)#, beforeStrokeCmd=beforeStrokeCmd())
@@ -209,7 +214,7 @@ class Selection(Init):
 		Select Similar
 
 		'''
-		tolerance = str(self.hotBox.ui.s000.value()) #string value because mel.eval is sending a command string
+		tolerance = str(self.ui.s000.value()) #string value because mel.eval is sending a command string
 		mel.eval("doSelectSimilar 1 {\""+ tolerance +"\"}")
 
 	def b007(self):
@@ -217,7 +222,7 @@ class Selection(Init):
 		Select Polygon Face Island
 
 		'''
-		rangeX=rangeY=rangeZ = float(self.hotBox.ui.s002.value())
+		rangeX=rangeY=rangeZ = float(self.ui.s002.value())
 
 		mel.eval("tk_selectPolyFaceIsland("+str(rangeX)+","+str(rangeY)+","+str(rangeZ)+")")
 
