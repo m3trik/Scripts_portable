@@ -14,6 +14,9 @@ class Normals(Init):
 		super(Normals, self).__init__(*args, **kwargs)
 
 
+		self.ui = self.sb.getUi('normals')
+
+
 
 
 	def b000(self):

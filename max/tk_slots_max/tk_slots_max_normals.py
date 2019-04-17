@@ -14,6 +14,9 @@ class Normals(Init):
 		super(Normals, self).__init__(*args, **kwargs)
 
 
+		self.ui = self.sb.getUi('normals')
+
+		self.ui.b003.setText('Hard Edge Display')
 
 
 	def b000(self):
@@ -21,7 +24,7 @@ class Normals(Init):
 		Display Face Normals
 
 		'''
-		size = float(self.hotBox.ui.s001.value())
+		size = float(self.ui.s001.value())
 		# state = pm.polyOptions (query=True, displayNormal=True)
 		state = self.cycle([1,2,3,0], 'displayNormals')
 		if state ==0: #off
@@ -60,14 +63,16 @@ class Normals(Init):
 		Soft Edge Display
 
 		'''
-		maxEval('int $g_cond[1]=`polyOptions -q -ae`; if ($g_cond[0]) polyOptions -se; else polyOptions -ae;')
+		for obj in rt.selection:
+			state = obj.hardedgedisplay
+			obj.hardedgedisplay = not state
 
 	def b004(self):
 		'''
 		Set Normal Angle
 
 		'''
-		normalAngle = str(self.hotBox.ui.s000.value())
+		normalAngle = str(self.ui.s000.value())
 		subObjectLevel = rt.subObjectLevel
 
 
@@ -124,7 +129,7 @@ class Normals(Init):
 		pm.undoInfo (openChunk=1)
 		self.mainProgressBar (len(edges))
 
-		soften = self.hotBox.ui.chk000.isChecked()
+		soften = self.ui.chk000.isChecked()
 
 		for edge in edges:
 			pm.progressBar ("tk_progressBar", edit=1, step=1)
@@ -186,19 +191,24 @@ class Normals(Init):
 		Reverse Normals
 
 		'''
-		mod = rt.Normalmodifier()
-		mod.flip=True
-
-		for obj in rt.selection:
-			rt.addModifier (obj, mod)
+		for obj in rt.selection:		
+			rt.modPanel.setCurrentObject (obj.baseObject)
+			
+			mod = rt.Normalmodifier()
+			mod.flip = True
+			
+			rt.modpanel.addModToSelection(mod)
+			
+			index = rt.modPanel.getModifierIndex(obj, mod)
+			rt.maxOps.CollapseNodeTo(obj, index, False)
 
 	def b011(self):
 		'''
 		Lock/Unlock Vertex Normals
 
 		'''
-		all_ = self.hotBox.ui.chk001.isChecked()
-		state = self.hotBox.ui.chk002.isChecked()#pm.polyNormalPerVertex(vertex, query=1, freezeNormal=1)
+		all_ = self.ui.chk001.isChecked()
+		state = self.ui.chk002.isChecked()#pm.polyNormalPerVertex(vertex, query=1, freezeNormal=1)
 		selection = pm.ls (selection=1, objectsOnly=1)
 		maskObject = pm.selectMode (query=1, object=1)
 		maskVertex = pm.selectType (query=1, vertex=1)

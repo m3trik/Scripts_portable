@@ -14,10 +14,11 @@ class Edit(Init):
 		super(Edit, self).__init__(*args, **kwargs)
 
 
-		try:
-			self.ui.s000.valueChanged.connect(self.chk011) #update radial array
-			self.ui.s001.valueChanged.connect(self.chk011) 
-		except:pass
+		self.ui = self.sb.getUi('edit')
+
+		self.ui.s000.valueChanged.connect(self.chk011) #update radial array
+		self.ui.s001.valueChanged.connect(self.chk011) 
+		
 		
 
 	def chk001(self):

@@ -14,7 +14,7 @@ class Selection(Init):
 		super(Selection, self).__init__(*args, **kwargs)
 		
 		
-		
+		self.ui = self.sb.getUi('selection')
 		
 		#set checked button states
 		#chk004 ignore backfacing (camera based selection)
@@ -115,21 +115,28 @@ class Selection(Init):
 		
 
 		'''
-		pass
+		cmb = self.ui.cmb001
+		
+		contents = self.comboBox (cmb, [], "Sets")
+
+		index = cmb.currentIndex()
+		if index!=0:
+
+			cmb.setCurrentIndex(0)
 
 	def cmb002(self):
 		'''
 		Select All Of Type
 
 		'''
-		cmb = self.ui.cmb001
-		index = cmb.currentIndex() #get current index before refreshing list
+		cmb = self.ui.cmb002
 		
 		list_ = ['Geometry']
-		self.comboBox (cmb, list_, 'Select by Type')
+		contents = self.comboBox (cmb, list_, 'Select by Type')
 
+		index = cmb.currentIndex()
 		if index!=0:
-			if index==list_.index('Geometry'): #Select all Geometry
+			if index==contents.index('Geometry'): #Select all Geometry
 				rt.select(rt.geometry)
 			cmb.setCurrentIndex(0)
 
@@ -142,33 +149,34 @@ class Selection(Init):
 		cmb = self.ui.cmb003
 
 		list_ = ['Verts', 'Edge', 'Face', 'Border']
-		files = self.comboBox (cmb, list_, 'Convert to')
+		contents = self.comboBox (cmb, list_, 'Convert to')
 		
 		sel= rt.selection
 		
+		index = cmb.currentIndex()
 		if index!=0:
-			if index==files.index('Verts'): #Convert Selection To Vertices
+			if index==contents.index('Verts'): #Convert Selection To Vertices
 				if rt.subObjectLevel==2:
 					sel.convertselection ('Edge', 'Vertices')
 				if rt.subObjectLevel==4:
 					sel.convertselection ('Face', 'Vertices')
 				if rt.subObjectLevel==3:
 					sel.convertselection ('Border', 'Vertices')
-			elif index==files.index('Edges'): #Convert Selection To Edges
+			elif index==contents.index('Edges'): #Convert Selection To Edges
 				if rt.subObjectLevel==1:
 					sel.convertselection ('Vertex', 'Edge')
 				if rt.subObjectLevel==4:
 					sel.convertselection ('Face', 'Edge')
 				if rt.subObjectLevel==3:
 					sel.convertselection ('Border', 'Edge')
-			elif index==files.index('Faces'): #Convert Selection To Faces
+			elif index==contents.index('Faces'): #Convert Selection To Faces
 				if rt.subObjectLevel==2:
 					sel.convertselection ('Edge', 'Faces')
 				if rt.subObjectLevel==1:	
 					sel.convertselection ('Vertex', 'Faces')
 				if rt.subObjectLevel==3:	
 					sel.convertselection ('Border', 'Faces')
-			elif index==files.index('Border'): #Convert Selection To Border
+			elif index==contents.index('Border'): #Convert Selection To Border
 				if rt.subObjectLevel==2:	
 					sel.convertselection ('Edge', 'Border')
 				if rt.subObjectLevel==4:	

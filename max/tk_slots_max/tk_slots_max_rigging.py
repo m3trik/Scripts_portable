@@ -14,6 +14,9 @@ class Rigging(Init):
 		super(Rigging, self).__init__(*args, **kwargs)
 
 
+		self.ui = self.sb.getUi('rigging')
+
+
 
 
 	def b000(self):

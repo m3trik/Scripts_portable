@@ -14,6 +14,8 @@ class Symmetry(Init):
 		super(Symmetry, self).__init__(*args, **kwargs)
 
 
+		self.ui = self.sb.getUi('symmetry')
+
 		#symmetry: set initial checked state
 		state = pm.symmetricModelling(query=True, symmetry=True) #application symmetry state
 		axis = pm.symmetricModelling(query=True, axis=True)

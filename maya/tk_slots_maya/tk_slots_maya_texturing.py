@@ -14,6 +14,10 @@ class Texturing(Init):
 		super(Texturing, self).__init__(*args, **kwargs)
 
 		
+		self.ui = self.sb.getUi('texturing')
+
+
+
 
 	def cmb000(self):
 		'''

@@ -14,6 +14,9 @@ class Uv(Init):
 		super(Uv, self).__init__(*args, **kwargs)
 
 
+		self.ui = self.sb.getUi('uv')
+
+
 
 
 	def cmb000(self):

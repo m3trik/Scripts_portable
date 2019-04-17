@@ -14,6 +14,9 @@ class Utilities(Init):
 		super(Utilities, self).__init__(*args, **kwargs)
 
 
+		self.ui = self.sb.getUi('utilities')
+
+
 
 
 	def b000(self):

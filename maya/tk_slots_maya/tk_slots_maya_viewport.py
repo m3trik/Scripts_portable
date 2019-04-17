@@ -14,6 +14,11 @@ class Viewport(Init):
 		super(Viewport, self).__init__(*args, **kwargs)
 
 
+		self.ui = self.sb.getUi('viewport')
+
+
+
+		
 	def cmb000(self):
 		'''
 		Camera Editors

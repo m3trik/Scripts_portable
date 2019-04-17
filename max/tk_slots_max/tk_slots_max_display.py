@@ -14,6 +14,10 @@ class Display(Init):
 		super(Display, self).__init__(*args, **kwargs)
 
 
+		self.ui = self.sb.getUi('display')
+
+
+
 
 	def cmb000(self):
 		'''

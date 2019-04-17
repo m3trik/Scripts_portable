@@ -17,7 +17,6 @@ except: pass
 
 
 
-
 # ------------------------------------------------
 #	Mouse Tracking
 # ------------------------------------------------
@@ -55,8 +54,10 @@ class HotBox(QtWidgets.QWidget):
 		self.setStyle(QtWidgets.QStyleFactory.create("plastique"))
 		self.setStyleSheet(styleSheet.css)
 		
+		# self.setMouseTracking(True)
 		self.mousePosition = None
-		self.mousePressOn = True
+		self.mousePressEventOn = True
+		self.mouseDoubleClickEventOn = True
 
 		self.sb = Switchboard()
 		
@@ -82,6 +83,7 @@ class HotBox(QtWidgets.QWidget):
 			for name, ui in self.sb.uiList():
 				# store size info for each ui
 				self.sb.setUiSize(name, [ui.frameGeometry().width(), ui.frameGeometry().height()])
+				# ui.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
 				# add ui to layoutStack
 				self.stackedLayout.addWidget(ui) #add each ui
 			self.setLayout(self.stackedLayout)
@@ -98,6 +100,7 @@ class HotBox(QtWidgets.QWidget):
 		#get ui size for current ui and resize window
 		self.width = self.sb.getUiSize(width=1)
 		self.height = self.sb.getUiSize(height=1)
+		# self.ui.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 		self.resize(self.width, self.height) #window size
 		
 		self.point = QtCore.QPoint(self.sb.getUiSize(percentWidth=50), self.sb.getUiSize(percentHeight=50)) #set point to the middle of the layout
@@ -113,6 +116,8 @@ class HotBox(QtWidgets.QWidget):
 			#remove old and add new signals for current ui from connectionDict
 			if self.name!=self.sb.previousName(allowDuplicates=1):
 				if self.sb.previousName():
+					# prevUi = self.sb.getUi(self.sb.previousName())
+					# prevUi.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
 					self.signal.removeSignal(self.sb.previousName())
 					self.signal.addSignal(self.name)
 				else: #if no previous ui exists
@@ -129,18 +134,7 @@ class HotBox(QtWidgets.QWidget):
 		# print 'time:',t1-t0
 
 
-		# self.mousePressOn = False
-		# # import time
-		# if self.name=='main':
-		# 	windll.user32.mouse_event(0x10, 0, 0, 0,0) #right up
-		# 	# time.sleep(.5)
-		# 	# windll.user32.mouse_event(0x8, 0, 0, 0,0) #right down
-			
-		# if self.name=='viewport':
-		# 	windll.user32.mouse_event(0x4, 0, 0, 0,0) #left up
-		# 	# time.sleep(.5)
-		# 	# windll.user32.mouse_event(0x2, 0, 0, 0,0) #left down
-		# self.mousePressOn = True
+		self.mousePressEventOn = True
 
 
 
@@ -175,12 +169,20 @@ class HotBox(QtWidgets.QWidget):
 
 	def mousePressEvent(self, event):
 		#args: [QEvent]
-		if self.mousePressOn:
-			if any ([self.name=="main", self.name=="viewport", self.name=="init"]):
+		if self.mousePressEventOn:
+			if any ([self.name=="main", self.name=="viewport", self.name=="init", self.name=="display"]):
 				if event.button()==QtCore.Qt.LeftButton:
 					self.layoutStack(self.sb.getUiIndex('viewport'))
 				elif event.button()==QtCore.Qt.RightButton:
 					self.layoutStack(self.sb.getUiIndex('main'))
+
+					# self.mousePressEventOn = False
+					# # self.mouseDoubleClickEventOn = False
+					# windll.user32.mouse_event(0x10, 0, 0, 0,0) #right up
+					# # windll.user32.mouse_event(0x8, 0, 0, 0,0) #right down
+					# self.mousePressEventOn = True
+					# # self.mouseDoubleClickEventOn = True
+				
 				elif event.button()==QtCore.Qt.MiddleButton:
 					self.layoutStack(self.sb.getUiIndex('display'))
 
@@ -188,30 +190,30 @@ class HotBox(QtWidgets.QWidget):
 	def mouseDoubleClickEvent(self, event):
 		#args: [QEvent]
 		#show last used submenu on double mouseclick 
-		if event.button()==QtCore.Qt.RightButton:
-			try: self.layoutStack(self.sb.previousName(previousIndex=True))
-			except: pass
+		if self.mouseDoubleClickEventOn:
+			if event.button()==QtCore.Qt.RightButton:
+				try: self.layoutStack(self.sb.previousName(previousIndex=True))
+				except: pass
 
-		if event.button()==QtCore.Qt.LeftButton:
-			try:
-				self.repeatLastCommand()
-			except Exception as error: 
-				if not self.sb.prevCommand():
-					print "# Warning: No recent commands in history. #"
-				else:
-					print error
+			if event.button()==QtCore.Qt.LeftButton:
+				try:
+					self.repeatLastCommand()
+				except Exception as error: 
+					if not self.sb.prevCommand():
+						print "# Warning: No recent commands in history. #"
+					else:
+						print error
 
 
 	def mouseMoveEvent(self, event):
 		#args: [QEvent]
-		if (event.buttons()==QtCore.Qt.LeftButton) or (event.buttons()==QtCore.Qt.RightButton):
-			if (self.name=="main") or (self.name=="viewport"):
-				self.mousePosition = event.pos()
-				self.update()
-			elif (self.name!="init"):
-				if (event.buttons() & QtCore.Qt.LeftButton): #drag window and pin
-					moveWindow(self, -self.point.x(), -self.point.y()*.1) #set mouse position and move window with mouse down
-					self.ui.chkpin.setChecked(True)
+		if (self.name=="main") or (self.name=="viewport"):
+			self.mousePosition = event.pos()
+			self.update()
+		elif self.name!="init" and event.buttons()==QtCore.Qt.LeftButton:
+			if (event.buttons() & QtCore.Qt.LeftButton): #drag window and pin
+				moveWindow(self, -self.point.x(), -self.point.y()*.1) #set mouse position and move window with mouse down
+				self.ui.chkpin.setChecked(True)
 
 
 	def showEvent(self, event):

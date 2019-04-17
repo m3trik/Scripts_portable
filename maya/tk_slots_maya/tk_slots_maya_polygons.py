@@ -14,74 +14,77 @@ class Polygons(Init):
 		super(Polygons, self).__init__(*args, **kwargs)
 
 
+		self.ui = self.sb.getUi('polygons')
 
+
+		
 
 	def chk002(self):
 		'''
 		Un-Crease
 
 		'''
-		if self.hotBox.ui.chk002.isChecked():
-			self.hotBox.ui.s003.setValue(0) #crease value
-			self.hotBox.ui.s004.setValue(180) #normal angle
-			self.setButtons(self.hotBox.ui, unchecked='chk003')
+		if self.ui.chk002.isChecked():
+			self.ui.s003.setValue(0) #crease value
+			self.ui.s004.setValue(180) #normal angle
+			self.setButtons(self.ui, unchecked='chk003')
 		else:
-			self.hotBox.ui.s003.setValue(7.5) #crease value
-			self.hotBox.ui.s004.setValue(30) #normal angle
+			self.ui.s003.setValue(7.5) #crease value
+			self.ui.s004.setValue(30) #normal angle
 
 	def chk003(self):
 		'''
 		Crease: Max
 
 		'''
-		if self.hotBox.ui.chk003.isChecked():
-			self.hotBox.ui.s003.setValue(10) #crease value
-			self.hotBox.ui.s004.setValue(30) #normal angle
-			self.setButtons(self.hotBox.ui, unchecked='chk002')
+		if self.ui.chk003.isChecked():
+			self.ui.s003.setValue(10) #crease value
+			self.ui.s004.setValue(30) #normal angle
+			self.setButtons(self.ui, unchecked='chk002')
 		else:
-			self.hotBox.ui.s003.setValue(7.5) #crease value
-			self.hotBox.ui.s004.setValue(60) #normal angle
+			self.ui.s003.setValue(7.5) #crease value
+			self.ui.s004.setValue(60) #normal angle
 
 	def chk006(self):
 		'''
 		Merge: All
 
 		'''
-		if self.hotBox.ui.chk006.isChecked():
-			self.hotBox.ui.s002.setSingleStep(.01)
+		if self.ui.chk006.isChecked():
+			self.ui.s002.setSingleStep(.01)
 		else:
-			self.hotBox.ui.s002.setSingleStep(.5)
+			self.ui.s002.setSingleStep(.5)
 
 	def chk008(self):
 		'''
 		Split U
 
 		'''
-		self.setButtons(self.hotBox.ui, unchecked='chk010')
+		self.setButtons(self.ui, unchecked='chk010')
 
 	def chk009(self):
 		'''
 		Split V
 
 		'''
-		self.setButtons(self.hotBox.ui, unchecked='chk010')
+		self.setButtons(self.ui, unchecked='chk010')
 
 	def chk010(self):
 		'''
 		Tris
 
 		'''
-		self.setButtons(self.hotBox.ui, unchecked='chk008,chk009')
+		self.setButtons(self.ui, unchecked='chk008,chk009')
 
 	def chk011(self):
 		'''
 		Crease: Auto
 
 		'''
-		if self.hotBox.ui.chk011.isChecked():
-			self.setButtons(self.hotBox.ui, enabled='s005,s006')
+		if self.ui.chk011.isChecked():
+			self.setButtons(self.ui, enabled='s005,s006')
 		else:
-			self.setButtons(self.hotBox.ui, disabled='s005,s006')
+			self.setButtons(self.ui, disabled='s005,s006')
 
 
 	def b000(self):
@@ -111,7 +114,7 @@ class Polygons(Init):
 
 		'''
 		# pm.polyUnite( 'plg1', 'plg2', 'plg3', name='result' ) #for future reference. if more functionality is needed use polyUnite
-		if self.hotBox.ui.chk000.isChecked():
+		if self.ui.chk000.isChecked():
 			mel.eval('bt_mergeCombineMeshes;')
 		else:
 			mel.eval('CombinePolygons;')
@@ -142,7 +145,7 @@ class Polygons(Init):
 		Bevel Chamfer
 
 		'''
-		width = float(self.hotBox.ui.s000.value())
+		width = float(self.ui.s000.value())
 		chamfer = True
 		pm.polyBevel3 (fraction=width, offsetAsFraction=1, autoFit=1, depth=1, mitering=0, 
 			miterAlong=0, chamfer=chamfer, segments=1, worldSpace=1, smoothingAngle=30, subdivideNgons=1,
@@ -160,6 +163,7 @@ class Polygons(Init):
 		Collapse Component
 
 		'''
+		# mel.eval("MergeToCenter;") #collapse vertices
 		mel.eval('PolygonCollapse;')
 
 	def b010(self):
@@ -210,7 +214,7 @@ class Polygons(Init):
 		Inset Face Region
 
 		'''
-		offset = float(self.hotBox.ui.s001.value())
+		offset = float(self.ui.s001.value())
 		pm.polyExtrudeFacet (keepFacesTogether=1, pvx=0, pvy=40.55638003, pvz=33.53797107, divisions=1, twist=0, taper=1, offset=offset, thickness=0, smoothingAngle=30)
 
 	def b017(self):
@@ -303,17 +307,17 @@ class Polygons(Init):
 
 		'''
 		dv=u=v=0
-		if self.hotBox.ui.chk008.isChecked(): #Split U
+		if self.ui.chk008.isChecked(): #Split U
 			u=2
-		if self.hotBox.ui.chk009.isChecked(): #Split V
+		if self.ui.chk009.isChecked(): #Split V
 			v=2
 
 		mode = 0 #The subdivision mode. 0=quads, 1=triangles
 		subdMethod = 1 #subdivision type: 0=exponential(traditional subdivision) 1=linear(number of faces per edge grows linearly)
-		if self.hotBox.ui.chk010.isChecked(): #tris
+		if self.ui.chk010.isChecked(): #tris
 			mode=dv=1
 			subdMethod=0
-		if all([self.hotBox.ui.chk008.isChecked(), self.hotBox.ui.chk009.isChecked()]): #subdivide once into quads
+		if all([self.ui.chk008.isChecked(), self.ui.chk009.isChecked()]): #subdivide once into quads
 			dv=1
 			subdMethod=0
 			u=v=0
@@ -400,8 +404,8 @@ class Polygons(Init):
 		Merge All
 
 		'''
-		floatXYZ = float(self.hotBox.ui.s002.value())
-		mergeAll = self.hotBox.ui.chk006.isChecked()
+		floatXYZ = float(self.ui.s002.value())
+		mergeAll = self.ui.chk006.isChecked()
 
 		selection = pm.ls(selection=1, objectsOnly=1)
 
@@ -487,7 +491,7 @@ class Polygons(Init):
 					print sel
 					extractedObject = "extracted_"+sel[0]
 					pm.duplicate (sel[0], name=extractedObject)
-					if self.hotBox.ui.chk007.isChecked(): #delete original
+					if self.ui.chk007.isChecked(): #delete original
 						pm.delete (selFace)
 
 					allFace = [] #populate a list of all faces in the duplicated object
@@ -601,19 +605,19 @@ class Polygons(Init):
 		Crease
 
 		'''
-		creaseAmount = float(self.hotBox.ui.s003.value())
-		normalAngle = int(self.hotBox.ui.s004.value()) 
+		creaseAmount = float(self.ui.s003.value())
+		normalAngle = int(self.ui.s004.value()) 
 
-		if self.hotBox.ui.chk011.isChecked(): #crease: Auto
-			angleLow = int(self.hotBox.ui.s005.value()) 
-			angleHigh = int(self.hotBox.ui.s006.value()) 
+		if self.ui.chk011.isChecked(): #crease: Auto
+			angleLow = int(self.ui.s005.value()) 
+			angleHigh = int(self.ui.s006.value()) 
 
 			mel.eval("PolySelectConvert 2;") #convert selection to edges
 			contraint = pm.polySelectConstraint( mode=3, type=0x8000, angle=True, anglebound=(angleLow, angleHigh) ) # to get edges with angle between two degrees. mode=3 (All and Next) type=0x8000 (edge). 
 
 		operation = 0 #Crease selected components
 		pm.polySoftEdge (angle=0, constructionHistory=0) #Harden edge normal
-		if self.hotBox.ui.chk002.isChecked():
+		if self.ui.chk002.isChecked():
 			objectMode = pm.selectMode (query=True, object=True)
 			if objectMode: #if in object mode,
 				operation = 2 #2-Remove all crease values from mesh
@@ -621,15 +625,15 @@ class Polygons(Init):
 				operation = 1 #1-Remove crease from sel components
 				pm.polySoftEdge (angle=180, constructionHistory=0) #soften edge normal
 
-		if self.hotBox.ui.chk004.isChecked(): #crease vertex point
+		if self.ui.chk004.isChecked(): #crease vertex point
 			pm.polyCrease (value=creaseAmount, vertexValue=creaseAmount, createHistory=True, operation=operation)
 		else:
 			pm.polyCrease (value=creaseAmount, createHistory=True, operation=operation) #PolyCreaseTool;
 
-		if self.hotBox.ui.chk005.isChecked(): #adjust normal angle
+		if self.ui.chk005.isChecked(): #adjust normal angle
 			pm.polySoftEdge (angle=normalAngle)
 
-		if self.hotBox.ui.chk011.isChecked(): #crease: Auto
+		if self.ui.chk011.isChecked(): #crease: Auto
 			pm.polySelectConstraint( angle=False ) # turn off angle constraint
 
 	def b056(self):
@@ -685,7 +689,7 @@ class Polygons(Init):
 			tempTriangle = "___fillTemp___" #create a polygon face using the list of vertex points and give it a temp name
 			pm.polyCreateFacet (point=vertices, texture=1, name=tempTriangle) #0-None; 1-Normalize; 2-Unitize
 
-			if (self.hotBox.ui.chk001.isChecked()):
+			if (self.ui.chk001.isChecked()):
 				pm.polyNormal(tempTriangle, normalMode=4) #3-reverse and cut, 4-reverse and propagate
 
 			pm.select(tempTriangle, add=True) #select and assign material from main object

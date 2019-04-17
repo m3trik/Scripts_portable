@@ -14,6 +14,9 @@ class Lighting(Init):
 		super(Lighting, self).__init__(*args, **kwargs)
 
 
+		self.ui = self.sb.getUi('lighting')
+
+
 
 
 	def b000(self):

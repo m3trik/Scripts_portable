@@ -21,8 +21,8 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>320</width>
-    <height>1050</height>
+    <width>999</width>
+    <height>999</height>
    </size>
   </property>
   <property name="palette">

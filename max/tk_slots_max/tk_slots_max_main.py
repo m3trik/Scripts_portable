@@ -14,8 +14,8 @@ class Main(Init):
 		super(Main, self).__init__(*args, **kwargs)
 
 
+		self.ui = self.sb.getUi('main')
 		self.menuSet = self.sb.getUi('preferences').cmb000
-
 
 
 
@@ -91,7 +91,7 @@ class Main(Init):
 		text = self.menuSet.currentText()
 		
 		if text=='Modeling':
-			self.hotBox.sb.method('edit','b032')
+			self.method('edit','b032')()
 
 
 	def v005(self):

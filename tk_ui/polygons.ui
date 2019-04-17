@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>266</width>
-    <height>418</height>
+    <width>257</width>
+    <height>393</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -21,8 +21,8 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>1050</width>
-    <height>1050</height>
+    <width>999</width>
+    <height>999</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -3134,10 +3134,10 @@
       <double>0.001000000000000</double>
      </property>
      <property name="singleStep">
-      <double>0.005000000000000</double>
+      <double>0.001000000000000</double>
      </property>
      <property name="value">
-      <double>0.005000000000000</double>
+      <double>0.001000000000000</double>
      </property>
     </widget>
     <widget class="QPushButton" name="b000">

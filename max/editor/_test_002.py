@@ -1,6 +1,50 @@
-from PySide2 import QtGui, QtCore, QtWidgets
+try: from pymxs import runtime as rt; import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript;from tk_switchboard import Switchboard; sb = Switchboard();from tk_slots_max_init import Init as func;
+except: pass
 
 import os.path, sys
+
+
+for obj in rt.selection:
+	pass
+	
+
+// make the stacked widget size to the current page only
+for (int i = 0; i < m_ui->stackedWidget->count (); ++i)
+{
+    // determine the vertical size policy
+    QSizePolicy::Policy policy = QSizePolicy::Ignored;
+    if (i == m_ui->stackedWidget->currentIndex ())
+        policy = QSizePolicy::Expanding;
+
+    // update the size policy
+    QWidget* pPage = m_ui->stackedWidget->widget (i);
+    pPage->setSizePolicy (policy, policy);
+}
+	
+
+for ui in uiList:
+	QSizePolicy.Policy = QSizePolicy.Ignored
+
+	QSizePolicy.Expanding
+
+	setSizePolicy (policy, policy)
+
+	
+	
+	#~ index = rt.modPanel.getModifierIndex(obj, mod)
+	#~ rt.maxOps.CollapseNodeTo(obj, index, False)
+
+
+
+	#~ distance = 0.001
+
+	#~ vertices = rt.getVertSelection(obj)
+	#~ print vertices
+
+	#~ obj.weldThreshold = 0.001
+	#~ rt.polyop.weldVertsByThreshold(obj, vertices)
+	##~ rt.polyop.weldVertsByThreshold(obj, obj.verts)
+
 
 
 # class PopupDialogMixin(object):  # will not work (with PySide at least) unless implemented as 'new style' class. I.e inherit from object
@@ -25,47 +69,47 @@ import os.path, sys
 # dlg = MyDialog(self)
 # dlg.makePopup(self.myButton)
 
-class popup(QtWidgets.QWidget):
-	def __init__(self, parent = None, widget=None):    
-		QtWidgets.QWidget.__init__(self, parent)
-		layout = QtWidgets.QGridLayout(self)
-		button = QtWidgets.QPushButton("Popup")
-		layout.addWidget(button)
+#~ class popup(QtWidgets.QWidget):
+	#~ def __init__(self, parent = None, widget=None):    
+		#~ QtWidgets.QWidget.__init__(self, parent)
+		#~ layout = QtWidgets.QGridLayout(self)
+		#~ button = QtWidgets.QPushButton("Popup")
+		#~ layout.addWidget(button)
 
-		# adjust the margins or you will get an invisible, unintended border
-		layout.setContentsMargins(0, 0, 0, 0)
+		#~ # adjust the margins or you will get an invisible, unintended border
+		#~ layout.setContentsMargins(0, 0, 0, 0)
 
-		# need to set the layout
-		self.setLayout(layout)
-		self.adjustSize()
+		#~ # need to set the layout
+		#~ self.setLayout(layout)
+		#~ self.adjustSize()
 
-		# tag this widget as a popup
-		self.setWindowFlags(QtCore.Qt.Popup | QtCore.Qt.Tool | QtCore.Qt.FramelessWindowHint)
+		#~ # tag this widget as a popup
+		#~ self.setWindowFlags(QtCore.Qt.Popup | QtCore.Qt.Tool | QtCore.Qt.FramelessWindowHint)
 
-		# calculate the botoom right point from the parents rectangle
-		point = widget.rect().bottomRight()
+		#~ # calculate the botoom right point from the parents rectangle
+		#~ point = widget.rect().bottomRight()
 
-		# map that point as a global position
-		global_point = widget.mapToGlobal(point)
+		#~ # map that point as a global position
+		#~ global_point = widget.mapToGlobal(point)
 
-		# by default, a widget will be placed from its top-left corner, so
-		# we need to move it to the left based on the widgets width
-		self.move(global_point - QtCore.QPoint(self.width(), 0))
+		#~ # by default, a widget will be placed from its top-left corner, so
+		#~ # we need to move it to the left based on the widgets width
+		#~ self.move(global_point - QtCore.QPoint(self.width(), 0))
 
-class Window(QtWidgets.QWidget):
-	def __init__(self):
-		QtWidgets.QWidget.__init__(self)
-		self.button = QtWidgets.QPushButton('Show', self)
-		self.button.clicked.connect(self.handleOpenDialog)
-		self.button.move(75, 50)
-		self.resize(220, 150)
+#~ class Window(QtWidgets.QWidget):
+	#~ def __init__(self):
+		#~ QtWidgets.QWidget.__init__(self)
+		#~ self.button = QtWidgets.QPushButton('Show', self)
+		#~ self.button.clicked.connect(self.handleOpenDialog)
+		#~ self.button.move(75, 50)
+		#~ self.resize(220, 150)
 
-	def handleOpenDialog(self):
-		self.popup = popup(self, self.button)
-		self.popup.show()
+	#~ def handleOpenDialog(self):
+		#~ self.popup = popup(self, self.button)
+		#~ self.popup.show()
 
-if __name__ == '__main__':
-	app = QtWidgets.QApplication(sys.argv)
-	win = Window()
-	win.show()
-	sys.exit(app.exec_())
+#~ if __name__ == '__main__':
+	#~ app = QtWidgets.QApplication(sys.argv)
+	#~ win = Window()
+	#~ win.show()
+	#~ sys.exit(app.exec_())

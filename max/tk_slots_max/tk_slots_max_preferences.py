@@ -14,6 +14,8 @@ class Preferences(Init):
 		super(Preferences, self).__init__(*args, **kwargs)
 
 
+		self.ui = self.sb.getUi('preferences')
+
 
 
 

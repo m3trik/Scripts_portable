@@ -14,6 +14,9 @@ class Animation(Init):
 		super(Animation, self).__init__(*args, **kwargs)
 
 
+		self.ui = self.sb.getUi('animation')
+
+
 
 
 	def chk000(self):
@@ -21,7 +24,7 @@ class Animation(Init):
 		Pin Open A Separate Instance Of The Ui In A New Window
 
 		'''
-		if self.hotBox.ui.chk000.isChecked():
+		if self.ui.chk000.isChecked():
 			self.hotBox.pin()
 		else:
 			self.hotBox.pin.hide()

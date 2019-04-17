@@ -14,6 +14,9 @@ class Fx(Init):
 		super(Fx, self).__init__(*args, **kwargs)
 
 
+		self.ui = self.sb.getUi('fx')
+
+
 
 
 	def b000(self):

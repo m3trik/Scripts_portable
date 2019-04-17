@@ -14,7 +14,6 @@ class Init(Slot):
 		super(Init, self).__init__(*args, **kwargs)
 
 		
-
 		# live surface #state and obj might need to be saved in external file
 		# 'main' shorcut mode: ie. polygons, uv's, etc
 		# pm.helpLine(width=20, height=8)
@@ -650,6 +649,25 @@ class Init(Slot):
 		return classInfoDict
 
 
+	@staticmethod
+	def convertToEditPoly(prompt=False):
+		'''
+		args:
+			prompt=bool - prompt user before execution
+		'''
+		for obj in rt.selection:
+			if prompt:
+				if not rt.queryBox('Convert Object to Editable Poly?'):
+					return
+			
+			rt.modPanel.setCurrentObject (obj.baseObject)
+			
+			mod = rt.Edit_Poly()
+			rt.modpanel.addModToSelection(mod)
+
+			index = rt.modPanel.getModifierIndex(obj, mod)
+			rt.maxOps.CollapseNodeTo(obj, index, False)
+
 
 	@staticmethod
 	def displayWireframeOnMesh(state=None, query=False):
@@ -689,7 +707,8 @@ class Init(Slot):
 
 			for obj in geometry:
 				try:
-					obj.modifiers['TurboSmooth'].iterations = 0 #set subdivision levels to 0.
+					mod = obj.modifiers['TurboSmooth'] or obj.modifiers['TurboSmooth_Pro'] or obj.modifiers['OpenSubDiv']
+					mod.iterations = 0 #set subdivision levels to 0.
 				except: pass
 
 		else: #preview on
@@ -700,8 +719,9 @@ class Init(Slot):
 
 			for obj in geometry:
 				try:
-					renderIters = obj.modifiers['TurboSmooth'].renderIterations #get renderIter value.
-					obj.modifiers['TurboSmooth'].iterations = renderIters #apply to iterations value.
+					mod = obj.modifiers['TurboSmooth'] or obj.modifiers['TurboSmooth_Pro'] or obj.modifiers['OpenSubDiv']
+					renderIters = mod.renderIterations #get renderIter value.
+					mod.iterations = renderIters #apply to iterations value.
 				except: pass
 
 		rt.redrawViews() #refresh viewport. only those parts of the view that have changed are redrawn.
@@ -725,13 +745,16 @@ class Init(Slot):
 		sel = rt.selection
 
 		for obj in sel:
-
 			rt.modPanel.setCurrentObject (obj.baseObject)
 			rt.subObjectLevel = level
 
 			if level==0: #reset the modifier selection to the top of the stack.
-				rt.modPanel.setCurrentObject(obj.modifiers[0])
-
+				toggle = Slot.cycle([0,1], 'toggle_baseObjectLevel')
+				if toggle:
+					rt.modPanel.setCurrentObject(obj.baseObject)
+				else:
+					try: rt.modPanel.setCurrentObject(obj.modifiers[0])
+					except: rt.modPanel.setCurrentObject(obj.baseObject) #if index error
 
 
 

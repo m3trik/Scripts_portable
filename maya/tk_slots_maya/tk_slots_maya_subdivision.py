@@ -14,6 +14,11 @@ class Subdivision(Init):
 		super(Subdivsion, self).__init__(*args, **kwargs)
 
 
+		self.ui = self.sb.getUi('subdivision')
+
+
+
+
 	def cmb000(self):
 		'''
 		Modifiers

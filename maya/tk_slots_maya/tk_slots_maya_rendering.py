@@ -14,7 +14,7 @@ class Rendering(Init):
 		super(Rendering, self).__init__(*args, **kwargs)
 
 
-		
+		self.ui = self.sb.getUi('rendering')
 
 		# #checkable comboBox not working
 		# comboBox = self.CheckableComboBox(self.ui.cmb000)

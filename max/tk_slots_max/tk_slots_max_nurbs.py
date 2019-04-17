@@ -14,7 +14,10 @@ class Nurbs(Init):
 		super(Nurbs, self).__init__(*args, **kwargs)
 
 
-		
+		self.ui = self.sb.getUi('nurbs')
+
+
+
 
 	def b000(self):
 		'''

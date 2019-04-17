@@ -14,7 +14,7 @@ class Create(Init):
 		super(Create, self).__init__(*args, **kwargs)
 
 
-		
+		self.ui = self.sb.getUi('create')
 
 		self.rotation = {'x':[90,0,0], 'y':[0,90,0], 'z':[0,0,90], '-x':[-90,0,0], '-y':[0,-90,0], '-z':[0,0,-90], 'last':[]}
 		self.lastValue=0

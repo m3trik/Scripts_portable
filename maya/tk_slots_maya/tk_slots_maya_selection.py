@@ -14,7 +14,7 @@ class Selection(Init):
 		super(Selection, self).__init__(*args, **kwargs)
 
 
-		
+		self.ui = self.sb.getUi('selection')
 
 		#set checked button states
 		#chk004 ignore backfacing (camera based selection)

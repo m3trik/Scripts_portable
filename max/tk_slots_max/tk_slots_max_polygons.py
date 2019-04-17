@@ -14,6 +14,9 @@ class Polygons(Init):
 		super(Polygons, self).__init__(*args, **kwargs)
 
 
+		self.ui = self.sb.getUi('polygons')
+
+
 
 
 	def chk002(self):
@@ -470,28 +473,23 @@ class Polygons(Init):
 		Merge All Vertices
 
 		'''
-		floatXYZ = float(self.ui.s002.value())
+		tolerance = float(self.ui.s002.value())
 		mergeAll = self.ui.chk006.isChecked()
 
-		selection = pm.ls(selection=1, objectsOnly=1)
+		sel = rt.selection
 
-		if len(selection)<1:
+		if not sel:
 			print "// Warning: No object selected. Must select an object or component"
 			return
 
-		if mergeAll:
-			for obj in selection:
-				# get number of vertices
-				count = pm.polyEvaluate(obj, vertex=1)
-				vertices = str(obj) + ".vtx [0:" + str(count) + "]" # mel expression: select -r geometry.vtx[0:1135];
-				pm.polyMergeVertex(vertices, distance=floatXYZ, alwaysMergeTwoVertices=False, constructionHistory=False)
-
-			#return to original state
-			pm.select(clear=1)
-			for obj in selection:
-				pm.select(obj, add=1)
-		else:
-			pm.polyMergeVertex(distance=floatXYZ, alwaysMergeTwoVertices=True, constructionHistory=True)
+		for obj in sel:
+			if mergeAll:
+				rt.polyop.weldVertsByThreshold(obj, obj.verts)
+				
+			else:
+				vertices = rt.getVertSelection(obj)
+				obj.weldThreshold = tolerance
+				rt.polyop.weldVertsByThreshold(obj, vertices)
 
 	def b041(self):
 		'''
@@ -502,10 +500,10 @@ class Polygons(Init):
 
 	def b042(self):
 		'''
-		Merge Vertices Center
+		
 
 		'''
-		mel.eval("MergeToCenter;")
+		pass
 
 	def b043(self):
 		'''
@@ -536,11 +534,10 @@ class Polygons(Init):
 				for v in vertices:
 					obj.EditablePoly.breakVerts(v)
 
-			if subObjectLevel==4:
-				obj.EditablePoly.detachToElement #Face keepOriginal:element
-			
-			if subObjectLevel==2:
-				obj.EditablePoly.detachToElement #Edge keepOriginal:element
+			for level in [2, 4, 5]: #edge, face, or element
+				if subObjectLevel==level:
+					element=rt.polyop.getElementsUsingFace(obj, 1)
+					rt.polyop.detachFaces(obj, element, delete=True, asNode=True)
 		# maxEval('macros.run "Ribbon - Modeling" "GeometryDetach"')
 
 	def b045(self):

@@ -13,7 +13,10 @@ class Subdivision(Init):
 	def __init__(self, *args, **kwargs):
 		super(Subdivision, self).__init__(*args, **kwargs)
 
-		#initialize the smooth preview groupbox
+
+		self.ui = self.sb.getUi('subdivision')
+
+		#Set 3ds Max specific naming
 		self.ui.gb000.setTitle('TurboSmooth')
 		self.ui.lbl000.setText('Iterations:')
 		self.ui.lbl001.setText('RenderIters:')
@@ -22,6 +25,74 @@ class Subdivision(Init):
 
 
 
+
+	def cmb000(self):
+		'''
+		Modifiers
+
+		'''
+		cmb = self.ui.cmb000
+		
+		selectionSets = [set for set in rt.selectionSets]
+		contents = self.comboBox (cmb, ['TurboSmooth', 'TurboSmooth Pro', 'OpenSubDiv', 'Subdivide', 'Subdivide (WSM)', 'MeshSmooth', 'Optimize', 'Pro Optimizer'], "Modifiers")
+
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==1: #TurboSmooth
+				mod = rt.TurboSmooth()
+				mod.iterations = 0
+				mod.renderIterations = 1
+				mod.useRenderIterations = True
+				mod.explicitNormals = True
+				mod.sepByMats = True
+				rt.modpanel.addModToSelection(mod)
+
+			if index==2: #TurboSmooth Pro
+				mod = TurboSmooth_Pro()
+				mod.iterations = 0
+				mod.renderIterations = 1
+				mod.useRenderIterations = True
+				mod.explicitNormals = True
+				mod.visualizeCreases = True
+				mod.smmoothCorners = False
+				mod.creaseSmoothingGroups = True
+				mod.creaseMaterials = True
+				rt.modpanel.addModToSelection(mod)
+
+			if index==3: #OpenSubDiv
+				mod = OpenSubdiv()
+				mod.iterations = 0
+				mod.renderIterations = 1
+				mod.useRenderIterations = True
+				rt.modpanel.addModToSelection(mod)
+
+			if index==4: #Subdivide
+				mod = subdivide()
+				mod.size = 0.075
+				rt.modpanel.addModToSelection(mod)
+
+			if index==5: #Subdivide (WSM)
+				mod = subdivideSpacewarpModifier()
+				mod.size = 40
+				rt.modpanel.addModToSelection(mod)
+
+			if index==6: #MeshSmooth
+				mod = meshsmooth()
+				mod.iterations = 0
+				mod.renderIterations = 1
+				mod.useRenderIterations = True
+				mod.useRenderSmoothness = True
+				rt.modpanel.addModToSelection(mod)
+
+			if index==7: #Optimize
+				mod = optimize()
+				rt.modpanel.addModToSelection(mod)
+
+			if index==8: #Pro optimizer
+				mod = ProOptimizer()
+				rt.modpanel.addModToSelection(mod)
+
+			cmb.setCurrentIndex(0)
 
 	def s000(self):
 		'''
@@ -93,9 +164,9 @@ class Subdivision(Init):
 		#check shape for an existing output to a smoothProxy
 		attachedSmoothProxies = pm.listConnections (shape[0], type="polySmoothProxy", s=0, d=1)
 		if len(attachedSmoothProxies) == 0: #subdiv on
-			self.setButtons(self.hotBox.ui, enable='b000', checked='b009')
+			self.setButtons(self.ui, enable='b000', checked='b009')
 		else:
-			self.setButtons(self.hotBox.ui, disable='b000', unchecked='b009')
+			self.setButtons(self.ui, disable='b000', unchecked='b009')
 			mel.eval("smoothingDisplayToggle 0;")
 
 		#toggle performSmoothProxy
