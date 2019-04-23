@@ -112,16 +112,17 @@ class Selection(Init):
 
 	def cmb001(self):
 		'''
-		
+		List current selection
 
 		'''
 		cmb = self.ui.cmb001
 		
-		contents = self.comboBox (cmb, [], "Sets")
+		list_ = [obj for obj in rt.selection]
+		contents = self.comboBox (cmb, list_, 'Currently Selected:')
 
 		index = cmb.currentIndex()
 		if index!=0:
-
+			rt.select(contents[index])
 			cmb.setCurrentIndex(0)
 
 	def cmb002(self):
@@ -131,13 +132,28 @@ class Selection(Init):
 		'''
 		cmb = self.ui.cmb002
 		
-		list_ = ['Geometry']
-		contents = self.comboBox (cmb, list_, 'Select by Type')
+		list_ = ['Geometry', 'Shapes', 'Lights', 'Cameras', 'Helpers', 'Space Warps', 'Particle Systems', 'Bone Objects']
+		contents = self.comboBox (cmb, list_, 'Select by Type:')
 
 		index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index('Geometry'): #Select all Geometry
 				rt.select(rt.geometry)
+			if index==contents.index('Shapes'): #Select all Geometry
+				rt.select(rt.shapes)
+			if index==contents.index('Lights'): #Select all Geometry
+				rt.select(rt.lights)
+			if index==contents.index('Cameras'): #Select all Geometry
+				rt.select(rt.cameras)
+			if index==contents.index('Helpers'): #Select all Geometry
+				rt.select(rt.helpers)
+			if index==contents.index('Space Warps'): #Select all Geometry
+				rt.select(rt.spacewarps)
+			if index==contents.index('Particle Systems'): #Select all Geometry
+				rt.select(rt.particelsystems)
+			if index==contents.index('Bone Objects'): #Select all Geometry
+				rt.select(rt.boneobjects)
+
 			cmb.setCurrentIndex(0)
 
 

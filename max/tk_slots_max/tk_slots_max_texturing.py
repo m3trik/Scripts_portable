@@ -16,7 +16,15 @@ class Texturing(Init):
 
 		self.ui = self.sb.getUi('texturing')
 
+		self.selectedMaterial = None #currently stored material
 
+
+	def t000(self):
+		'''
+		Material Name
+		'''
+		print self.selectedMaterial.name+' renamed to '+self.ui.t000.text()
+		self.selectedMaterial.name = self.ui.t000.text()
 
 
 	def cmb000(self):
@@ -26,15 +34,21 @@ class Texturing(Init):
 		'''
 		cmb = self.ui.cmb000
 		
-		materials = [mat for mat in rt.sceneMaterials]
-		materialNames = [mat.name for mat in materials]
-		contents = self.comboBox (cmb, materialNames, "Scene Materials")
+		materials = [mat for mat in rt.sceneMaterials if 'Multimaterial' not in mat.name and 'BlendMtl' not in mat.name and not mat.name.startswith('Material')]
+		materialNames = sorted([mat.name for mat in materials])
+		
+		contents = self.comboBox (cmb, materialNames, "Scene Materials:")
 
 		index = cmb.currentIndex()
 		if index!=0:
-			print materials[index]
-			for obj in rt.selection:
-				obj.material = materials[index]
+			self.selectedMaterial = [m for m in materials if m.name==contents[index]][0]
+			print self.selectedMaterial
+
+			for obj in rt.selection: #if an object is selected; assign material
+				obj.material = self.selectedMaterial #assign material to any selected object
+
+			self.ui.t000.setText(cmb.currentText()) #str(self.selectedMaterial.name)) #store material name in text label
+			rt.redrawViews()
 			cmb.setCurrentIndex(0)
 
 
@@ -45,12 +59,12 @@ class Texturing(Init):
 		'''
 		cmb = self.ui.cmb001
 		
-		files = ['Hypershade']
+		files = ['Material Editor']
 		contents = self.comboBox (cmb, files, "Editors")
 
 		if index!=0:
-			if index==contents.index('Hypershade'):
-				mel.eval("HypershadeWindow;")
+			if index==contents.index('Material Editor'):
+				maxEval('max mtledit')
 			cmb.setCurrentIndex(0)
 
 
@@ -77,33 +91,16 @@ class Texturing(Init):
 		Try(ApplyOperation Edit_Patch PatchOps.SelectByMatID)Catch();
 		''')
 
-		# if self.try_('pm.ls(selection=1, objectsOnly=1)[0]', 'print "# Warning: Nothing selected #"'):
-		# 	pm.hyperShade (pm.ls(sl=1, objectsOnly=1, visible=1)[0], shaderNetworksSelectMaterialNodes=1) #get material node from selection
-		# 	pm.hyperShade (objects="") #select all with material. "" defaults to currently selected materials.
-
-		# 	faces = pm.filterExpand (selectionMask=34, expand=1)
-		# 	transforms = [node.replace('Shape','') for node in pm.ls(sl=1, objectsOnly=1, visible=1)] #get transform node name from shape node
-		# 	pm.select (faces, deselect=1)
-
-		# 	if shell or invert: #deselect so that the selection can be modified.
-		# 		pm.select (faces, deselect=1)
-
-		# 	if shell:
-		# 		for shell in transforms:
-		# 			pm.select (shell, add=1)
-			
-		# 	if invert:
-		# 		for shell in transforms:
-		# 			allFaces = [shell+".f["+str(num)+"]" for num in range(pm.polyEvaluate (shell, face=1))] #create a list of all faces per shell
-		# 			pm.select (list(set(allFaces)-set(faces)), add=1) #get inverse of previously selected faces from allFaces
-
 
 	def b001(self):
 		'''
-		
+		Delete Material
 
 		'''
-		pass
+		# self.selectedMaterial = rt.Standard(name="Default Material") #replace with standard material
+		self.selectedMaterial = None
+
+		self.ui.t000.clear()
 
 
 	def b002(self):
@@ -111,8 +108,8 @@ class Texturing(Init):
 		Store Material Id
 
 		'''
-		matName = rt.selection[0].material.name
-		self.ui.lbl000.setText(str(matName)) #store material name in text label
+		self.selectedMaterial = rt.selection[0].material #get material from selection
+		self.ui.t000.setText(str(self.selectedMaterial.name)) #store material name in text label
 
 		
 	def b003(self):
@@ -120,11 +117,8 @@ class Texturing(Init):
 		Assign Material Id
 
 		'''
-		matName = str(self.ui.lbl000.text())
-		mat = [mat for mat in rt.sceneMaterials if matName in mat.name][0] #use string to get material
-
 		for obj in rt.selection:
-			obj.material=mat #select and assign material per object in selection
+			obj.material = self.selectedMaterial #assign material per object in selection
 
 
 	def b004(self):
@@ -211,10 +205,25 @@ class Texturing(Init):
 
 	def b006(self):
 		'''
-		
+		Delete Unused Materials
 
 		'''
-		pass
+		maxEval('''
+			def_material = Standard name:"Default Material"
+			count = 0
+			for mat in scenematerials do undo off
+			(
+				nodes = refs.dependentnodes mat 
+				if nodes.count == 0 do 
+				(
+					replaceinstances mat def_material
+					count += 1
+				)
+			)
+			gc()
+			freeSceneBitmaps()
+			count
+			''')
 
 	def b007(self):
 		'''

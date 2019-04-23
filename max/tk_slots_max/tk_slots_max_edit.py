@@ -300,16 +300,14 @@ class Edit(Init):
 		Find And Select N-Gons
 
 		'''
-		#Change to Component mode to retain object highlighting for better visibility
-		pm.changeSelectMode (component=1)
-		#Change to Face Component Mode
-		pm.selectType (smp=0, sme=1, smf=0, smu=0, pv=0, pe=1, pf=0, puv=0)
-		#Select Object/s and Run Script to highlight N-Gons
-		pm.polySelectConstraint (mode=3, type=0x0008, size=3)
-		pm.polySelectConstraint (disable=1)
-		#Populate an in-view message
-		nGons = pm.polyEvaluate (faceComponent=1)
-		self.viewPortMessage("<hl>"+str(nGons[0])+"</hl> N-Gon(s) found.")
+		self.setSubObjectLevel(4)
+
+		for obj in rt.selection:
+			
+			faces = list(range(1, obj.faces.count))
+			nGons = [f for f in faces if rt.polyop.getFaceDeg(obj, f)>4]
+			
+			rt.setFaceSelection(obj, nGons)
 
 	def b013(self):
 		'''

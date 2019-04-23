@@ -4,32 +4,22 @@ except: pass
 import os.path, sys
 
 
-for obj in rt.selection:
-	pass
-	
 
-// make the stacked widget size to the current page only
-for (int i = 0; i < m_ui->stackedWidget->count (); ++i)
-{
-    // determine the vertical size policy
-    QSizePolicy::Policy policy = QSizePolicy::Ignored;
-    if (i == m_ui->stackedWidget->currentIndex ())
-        policy = QSizePolicy::Expanding;
+materials = sorted([mat for mat in rt.sceneMaterials if 'Multimaterial' not in mat.name and 'BlendMtl' not in mat.name])
+materialNames =  sorted([mat.name for mat in materials])
 
-    // update the size policy
-    QWidget* pPage = m_ui->stackedWidget->widget (i);
-    pPage->setSizePolicy (policy, policy);
-}
-	
+print materials, '\n', materialNames
 
-for ui in uiList:
-	QSizePolicy.Policy = QSizePolicy.Ignored
+mat = materialNames[0]
+selectedMaterial = [m for m in materials if m.name==materialNames[0]][0]
 
-	QSizePolicy.Expanding
+print selectedMaterial, selectedMaterial.name
 
-	setSizePolicy (policy, policy)
+selectedMaterial.name = selectedMaterial.name+'_'
+print selectedMaterial.name
 
-	
+#~ for obj in rt.selection:
+	#~ obj.material = materials[]
 	
 	#~ index = rt.modPanel.getModifierIndex(obj, mod)
 	#~ rt.maxOps.CollapseNodeTo(obj, index, False)

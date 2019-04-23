@@ -36,6 +36,7 @@ autoUndoEnabled: false
 -- 	python.Execute "if not tk.isVisible(): tk.show()"
 )
 
+
 macroScript toggleGrid
 Category: "tk_macroScript.ui"
 silentErrors: true
@@ -44,6 +45,7 @@ autoUndoEnabled: false
 	max grid toggle --toggle viewport grid
 	actionMan.executeAction 0 "370"  -- Tools: Viewport Selection Show Selection Bracket Toggle
 )
+
 
 macroScript toggleUi -- hide menuBar not working
 category: "tk_macroScript.ui"
@@ -71,6 +73,7 @@ autoUndoEnabled: false
 		actionMan.executeAction 0 "411" --toggle toolBar
 		)
 )
+
 
 macroScript snapToGrid
 category: "tk_macroScript.translate"
@@ -101,6 +104,7 @@ autoUndoEnabled: false
 	)
 )
 
+
 macroScript snapToVert
 category: "tk_macroScript.translate"
 silentErrors: false
@@ -120,6 +124,7 @@ autoUndoEnabled: false
 
 )
 
+
 macroScript snapToEdge
 category: "tk_macroScript.translate"
 silentErrors: false
@@ -137,6 +142,7 @@ autoUndoEnabled: false
 		snapMode.active = false;
 	)
 )
+
 
 macroScript snapToMiddleEdge
 category: "tk_macroScript.translate"
@@ -156,48 +162,33 @@ autoUndoEnabled: false
 	)
 )
 
+
 macroScript toggleXraySelected --toggle xray for the selected object
 category: "tk_macroScript.viewport"
 silentErrors: false
 autoUndoEnabled: false
 (
-	if ($ != undefined) then
-	(
-		toggle = not $.xray;
-		$.xray = toggle;
-	)
+	func.toggleXraySelected()
 )
+
 
 macroScript toggleBackfaceCull --toggle backface culling for all geometry
 category: "tk_macroScript.viewport"
 silentErrors: false
 autoUndoEnabled: false
 (
-	toggle = not $.backfacecull;
-	
-	for obj in Geometry do
-	(
-		obj.backfacecull = toggle;
-	)
+	func.toggleBackfaceCull()
 )
+
 
 macroScript convertToPolygon
 category: "tk_macroScript.edit"
 silentErrors: false
 autoUndoEnabled: true
 (
--- 	sel = func.makeSelection "Current" 0
-
-	macros.run "Modifier Stack" "Convert_to_Poly"
-	maxOps.CollapseNode obj off --collapse modifier stack
---python wrapper error
--- 	for obj in sel do
--- 	(
--- 	-- 	$.convertToPoly
--- 	macros.run "Modifier Stack" "Convert_to_Poly"
--- 	maxOps.CollapseNode obj off --collapse modifier stack
--- 	)
+	func.convertToEditPoly()
 )
+
 
 macroScript toggleSmoothPreview
 category: "tk_macroScript.viewport"
@@ -212,8 +203,6 @@ macroScript objectMode
 category: "tk_macroscript.selection"
 silentErrors: false
 autoUndoEnabled: false
---documentaion on subObjectLevel
---http://docs.autodesk.com/3DSMAX/16/ENU/MAXScript-Help/index.html?url=files/GUID-BAC3CC23-9D1D-44CE-B4AF-C0CEBDD7099E.htm,topicNumber=d30e673804
 (
 
 	func.setSubObjectLevel(0)

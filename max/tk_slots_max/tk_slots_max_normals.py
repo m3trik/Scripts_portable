@@ -49,6 +49,7 @@ class Normals(Init):
 		Soften Edge Normal
 
 		'''
+		self.hotBox.hide_()
 		maxEval('$.EditablePoly.makeSmoothEdges 1')
 
 	def b002(self):
@@ -56,6 +57,7 @@ class Normals(Init):
 		Harden Edge Normal
 
 		'''
+		self.hotBox.hide_()
 		maxEval('$.EditablePoly.makeHardEdges 1')
 
 	def b003(self):

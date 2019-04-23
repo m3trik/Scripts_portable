@@ -49,6 +49,7 @@ class Symmetry(Init):
 			obj = rt.selection[0]
 			mod = obj.modifiers[rt.Symmetry]
 			mod.enabled = state
+			mod.threshold = 0.01
 		except: #else create
 			mod = rt.symmetry()
 			for obj in rt.selection:

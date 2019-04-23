@@ -81,6 +81,7 @@ class Polygons(Init):
 		Merge Vertex Options
 
 		'''
+		rt.modPanel.setCurrentObject (rt.selection[0].baseObject)
 		maxEval('macros.run \"Modifiers\" \"VertexWeld\"')
 
 	def b001(self):
@@ -88,6 +89,7 @@ class Polygons(Init):
 		Fill Holes
 
 		'''
+		rt.modPanel.setCurrentObject (rt.selection[0].baseObject)
 		maxEval('macros.run \"Modifiers\" \"Cap_Holes\"')
 
 	def b002(self):
@@ -105,10 +107,7 @@ class Polygons(Init):
 		'''
 		if self.ui.chk000.isChecked():
 			pass
-			#from maya:
-		# 	maxEval('bt_mergeCombineMeshes;')
-		# else:
-		# 	maxEval('CombinePolygons;')
+
 		sel = rt.selection
 		maxEval('''
 		j = 1;
@@ -138,6 +137,7 @@ class Polygons(Init):
 		Slice
 
 		'''
+		rt.modPanel.setCurrentObject (rt.selection[0].baseObject)
 		maxEval('macros.run "Ribbon - Modeling" "CutsQuickSlice"')
 		
 	def b005(self):
@@ -154,6 +154,7 @@ class Polygons(Init):
 		Extrude
 
 		'''
+		rt.modPanel.setCurrentObject (rt.selection[0].baseObject)
 		maxEval('macros.run "Ribbon - Modeling" "EPoly_Extrude"')
 		# for obj in rt.selection:
 		# 	self.extrudeObject(obj)
@@ -163,6 +164,7 @@ class Polygons(Init):
 		Bevel (Chamfer)
 
 		'''
+		rt.modPanel.setCurrentObject (rt.selection[0].baseObject)
 		maxEval('macros.run "Ribbon - Modeling" "EPoly_Chamfer"')
 		# width = float(self.ui.s000.value())
 		# chamfer = True
@@ -330,6 +332,7 @@ class Polygons(Init):
 		Attach
 
 		'''
+		rt.modPanel.setCurrentObject (rt.selection[0].baseObject)
 		maxEval('macros.run "Ribbon - Modeling" "AttachMode"')
 
 	def b023(self):
@@ -510,6 +513,7 @@ class Polygons(Init):
 		Target Weld
 
 		'''
+		rt.modPanel.setCurrentObject (rt.selection[0].baseObject)
 		maxEval('macros.run "Editable Polygon Object" "EPoly_TargetWeld"')
 		# #needs selection order, as is welds to the last index which is the highest component number
 		# for obj in rt.selection:
@@ -574,6 +578,7 @@ class Polygons(Init):
 		Insert Edgeloop
 
 		'''
+		rt.modPanel.setCurrentObject (rt.selection[0].baseObject)
 		maxEval('macros.run "PolyTools" "SwiftLoop"')
 
 	def b048(self):

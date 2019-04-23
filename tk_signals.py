@@ -55,7 +55,7 @@ class Signal(QtCore.QObject):
 
 					#set the corresponding method
 					if prefix=='i': #connect to layoutStack and pass in an index.
-						index = self.sb.getUiIndex(buttonObject.text().lower())
+						index = self.sb.getUiIndex(buttonObject.whatsThis().lower())#self.sb.getUiIndex(buttonObject.text().lower())
 						method = lambda i=index: self.hotBox.layoutStack(i) #lambda function to call index. ie. hotBox.layoutStack(6)
 					else:
 						method = getattr(class_, buttonString) #use signal 'buttonString' (ie. b006) to get method/slot of the same name in current class.

@@ -670,6 +670,22 @@ class Init(Slot):
 
 
 	@staticmethod
+	def toggleXraySelected():
+		toggle = Slot.cycle([0,1], 'toggleXraySelected') #toggle 0/1
+
+		for obj in rt.selection:
+			obj.xray = toggle
+
+
+	@staticmethod
+	def toggleBackfaceCull():
+		toggle = Slot.cycle([0,1], 'toggleBackfaceCull') #toggle 0/1
+
+		for obj in rt.Geometry:
+			obj.backfacecull = toggle
+
+
+	@staticmethod
 	def displayWireframeOnMesh(state=None, query=False):
 		'''
 		args:
