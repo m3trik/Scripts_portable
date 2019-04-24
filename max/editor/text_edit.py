@@ -17,7 +17,7 @@ path = os.path.join(os.path.dirname(__file__), 'batch') #get absolute path from 
 
 
 def files():
-	return [path+'\\'+f for f in os.listdir(path)]
+	return [path+'\\'+f for f in os.listdir(path) if f.endswith('.py')]
 
 def fileContents(file):
 	with open(file) as f:
@@ -28,10 +28,13 @@ for file in files():
 
 	list_ = fileContents(file)
 	for element in list_:
-		if list_.count(element)>1:
-			list_.remove(element)
+		if not element.isspace():
+			if list_.count(element)>1:
+				list_.remove(element)
 	
-	print list_
+	for e in list_:
+		print e
+
 	with open(file+'.out', 'w') as output:
 		output.writelines(list_)
 
