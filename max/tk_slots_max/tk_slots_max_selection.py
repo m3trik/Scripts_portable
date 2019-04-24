@@ -117,24 +117,31 @@ class Selection(Init):
 		'''
 		cmb = self.ui.cmb001
 		
-		if rt.subObjectLevel==1:
-			type_ = 'Vertices'
-			sel = self.bitArrayIndex(rt.polyop.getVertSelection(obj))
-		elif rt.subObjectLevel==2:
-			type_ = 'Edges'
-			sel = self.bitArrayIndex(rt.polyop.getEdgeSelection(obj))
-		elif rt.subObjectLevel==4:
-			type_ = 'Faces'
-			sel = self.bitArrayIndex(rt.polyop.getFaceSelection(obj))
+		level = rt.subObjectLevel
+		obj = rt.selection[0]
+
+		if level==1:
+			type_ = 'Vertex' #do not change. used for arg in SetSelection (and to change text in ui)
+			sel = self.convertBitArrayToList(rt.polyop.getVertSelection(obj))
+		elif level==2:
+			type_ = 'Edge'
+			sel = self.convertBitArrayToList(rt.polyop.getEdgeSelection(obj))
+		elif level==4:
+			type_ = 'Face'
+			sel = self.convertBitArrayToList(rt.polyop.getFaceSelection(obj))
 		else:
-			type_ = 'Objects'
+			type_ = 'Object'
 			sel = [obj for obj in rt.selection]
 
-		contents = self.comboBox (cmb, sel, 'Selected '+type_+':')
+		contents = self.comboBox (cmb, [str(s) for s in sel], 'Selected '+type_+':')
 
 		index = cmb.currentIndex()
-		if index!=0:
-			rt.select(contents[index])
+		if index!=0: #if object
+			if level==0:
+				rt.select(sel[index]-1)
+			else: #if component
+				bitArray = rt.BitArray(sel[index])
+				obj.EditablePoly.SetSelection(type_, bitArray)
 			cmb.setCurrentIndex(0)
 
 
@@ -181,36 +188,37 @@ class Selection(Init):
 		contents = self.comboBox (cmb, list_, 'Convert to')
 		
 		sel= rt.selection
+		level = rt.subObjectLevel
 		
 		index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index('Verts'): #Convert Selection To Vertices
-				if rt.subObjectLevel==2:
+				if level==2:
 					sel.convertselection ('Edge', 'Vertices')
-				if rt.subObjectLevel==4:
+				if level==4:
 					sel.convertselection ('Face', 'Vertices')
-				if rt.subObjectLevel==3:
+				if level==3:
 					sel.convertselection ('Border', 'Vertices')
 			elif index==contents.index('Edges'): #Convert Selection To Edges
-				if rt.subObjectLevel==1:
+				if level==1:
 					sel.convertselection ('Vertex', 'Edge')
-				if rt.subObjectLevel==4:
+				if level==4:
 					sel.convertselection ('Face', 'Edge')
-				if rt.subObjectLevel==3:
+				if level==3:
 					sel.convertselection ('Border', 'Edge')
 			elif index==contents.index('Faces'): #Convert Selection To Faces
-				if rt.subObjectLevel==2:
+				if level==2:
 					sel.convertselection ('Edge', 'Faces')
-				if rt.subObjectLevel==1:	
+				if level==1:	
 					sel.convertselection ('Vertex', 'Faces')
-				if rt.subObjectLevel==3:	
+				if level==3:	
 					sel.convertselection ('Border', 'Faces')
 			elif index==contents.index('Border'): #Convert Selection To Border
-				if rt.subObjectLevel==2:	
+				if level==2:	
 					sel.convertselection ('Edge', 'Border')
-				if rt.subObjectLevel==4:	
+				if level==4:	
 					sel.convertselection ('Face', 'Border')
-				if rt.subObjectLevel==1:	
+				if level==1:	
 					sel.convertselection ('Vertex', 'Border')
 			cmb.setCurrentIndex(0)
 

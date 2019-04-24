@@ -42,17 +42,17 @@ class Init(Slot):
 			
 			try: #if editable poly:
 				if rt.subObjectLevel==1: #get vertex info
-					selectedVerts = Init.bitArrayIndex(rt.polyop.getVertSelection(obj))
+					selectedVerts = Init.convertBitArrayToList(rt.polyop.getVertSelection(obj))
 					numVerts = rt.polyop.getNumVerts(obj)
 					infoDict.update({'Selected '+str(len(selectedVerts))+'/'+str(numVerts)+" Vertices: ":selectedVerts}) #selected verts
 
 				if rt.subObjectLevel==2: #get edge info
-					selectedEdges = Init.bitArrayIndex(rt.polyop.getEdgeSelection(obj))
+					selectedEdges = Init.convertBitArrayToList(rt.polyop.getEdgeSelection(obj))
 					numEdges = rt.polyop.getNumEdges(obj)
 					infoDict.update({'Selected '+str(len(selectedEdges))+'/'+str(numEdges)+" Edges:    ":selectedEdges}) #selected edges
 					
 				if rt.subObjectLevel==4: #get face info
-					selectedFaces = Init.bitArrayIndex(rt.polyop.getFaceSelection(obj))
+					selectedFaces = Init.convertBitArrayToList(rt.polyop.getFaceSelection(obj))
 					numFaces = rt.polyop.getNumFaces(obj)
 					infoDict.update({'Selected '+str(len(selectedFaces))+'/'+str(numFaces)+" Faces:    ":selectedFaces}) #selected faces
 			except: pass
@@ -661,7 +661,7 @@ class Init(Slot):
 
 
 	@staticmethod
-	def bitArrayIndex(bitArray):
+	def convertBitArrayToList(bitArray):
 		return [i for i, bit in enumerate(bitArray) if bit==1]
 
 

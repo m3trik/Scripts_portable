@@ -1751,6 +1751,19 @@ class X:
 
 
 
+# unpack an iterables contents to arguments in a function call
+#using * to get list or set as *args
+eg. func(*list_)
+eg. func(*range(10, 20)) #equivent to: func(10, 11, 12, 13, 14, 15, 16, 17, 18, 19)
+#using ** to get dictionary keys/values as **kwargs
+eg. func(**dict_)
+
+
+
+
+
+
+
 
 
 'Lambda_Expressions_(anonymous_function)____________________________________________________'

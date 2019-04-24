@@ -3,32 +3,10 @@ except: pass
 
 import os.path, sys
 
-
-
-def bitArrayIndex(bitArray):
-	return [i for i, bit in enumerate(bitArray) if bit==1]
-
-
-
-
-infoDict={}
-
 obj = rt.selection[0]
 
-if rt.subObjectLevel==1: #get vertex info
-	selectedVerts = Slot.bitArrayIndex(rt.polyop.getVertSelection(obj))
-	numVerts = rt.polyop.getNumVerts(obj)
-	infoDict.update({'Selected '+str(len(selectedVerts))+'/'+str(numVerts)+" Vertices: ":selectedVerts}) #selected verts
-if rt.subObjectLevel==2: #get edge info
-	selectedEdges = Slot.bitArrayIndex(rt.polyop.getEdgeSelection(obj))
-	numEdges = rt.polyop.getNumEdges(obj)
-	infoDict.update({'Selected '+str(len(selectedEdges))+'/'+str(numEdges)+" Edges:    ":selectedEdges}) #selected edges
-if rt.subObjectLevel==4: #get face info
-	selectedFaces = Slot.bitArrayIndex(rt.polyop.getFaceSelection(obj))
-	numFaces = rt.polyop.getNumFaces(obj)
-	infoDict.update({'Selected '+str(len(selectedFaces))+'/'+str(numFaces)+" Faces:    ":selectedFaces}) #selected faces
+obj.EditablePoly.SetSelection('Edge', rt.BitArray(10))
 
-print infoDict
 
 
 
