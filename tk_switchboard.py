@@ -38,7 +38,7 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 			'string name of class'{
 				'class' : class object
 				'size' : list containing width int, height int. ie. [295, 234]
-				'connectionDict' : {'b001':{'buttonObject':b001, 'buttonObjectWithSignal':b001.connect, 'methodObject':main.b001, 'docString':'Multi-Cut Tool'}},
+				'connectionDict' : {'b001':{'buttonObject':b001, 'buttonObjectWithSignal':b001.connect, 'methodObject':main.b001, 'docString':'Multi-Cut Tool', 'widgetClass':QPushButton, widgetClassName':'QPushButton'}},
 				}
 			'uiList' : list of two element lists containing all ui filenames in the ui folder and their corresponding dynamic ui object. ie. [['polygons', <polygons dynamic ui object>]]
 			'app' : string name of parent application. ie. 'maya' or 'max'
@@ -49,7 +49,7 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 		'polygons':{ 
 		'class':Polygons, 
 		'size':[295, 234], 
-		'connectionDict':{'b001':{'buttonObject':b001, 'buttonObjectWithSignal':b001.connect, 'methodObject':main.b001, 'docString':'Multi-Cut Tool'}},
+		'connectionDict':{'b001':{'buttonObject':b001, 'buttonObjectWithSignal':b001.connect, 'methodObject':main.b001, 'docString':'Multi-Cut Tool', 'widgetClass':QPushButton, widgetClassName':'QPushButton'}},
 		}
 		'uiList':[['animation', <animation dynamic ui object>], ['cameras', <cameras dynamic ui object>], ['create', <create dynamic ui object>], ['display', <display dynamic ui object>]],
 		'app':'maya'
@@ -291,6 +291,41 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 			return sbDict[name]['connectionDict'][methodString]['docString'].strip('\n\t')
 
 
+	def getWidgetClass(self, button, name=None):
+		'''
+		#args:
+			button='string'  - name of button/widget
+				*or <object> -widget
+			name='string' - name of dynamic ui (else use current ui)
+		#returns:
+			<class object> - the corresponding widget class
+		'''
+		if not type(button)==str:
+			button = button.objectName()
+
+		if name:
+			return sbDict[name]['connectionDict'][button]['widgetClass']
+		else: #use current ui name
+			return sbDict[self.getUiName()]['connectionDict'][button]['widgetClass']
+
+
+	def getWidgetType(self, button, name=None):
+		'''
+		#args:
+			button='string'  - name of button/widget
+				*or <object> -widget
+			name='string' - name of dynamic ui (else use current ui)
+		#returns:
+			'string' - the corresponding widget class name
+		'''
+		if not type(button)==str:
+			button = button.objectName()
+
+		if name:
+			return sbDict[name]['connectionDict'][button]['widgetClassName']
+		else: #use current ui name
+			return sbDict[self.getUiName()]['connectionDict'][button]['widgetClassName']
+
 
 	def previousName(self, previousIndex=False, allowDuplicates=False, as_list=False):
 		'''
@@ -376,6 +411,7 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 		if not 'connectionDict' in sbDict[name]: sbDict[name]['connectionDict'] = {}
 
 		return sbDict[name]['connectionDict']
+
 
 
 

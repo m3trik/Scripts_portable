@@ -41,7 +41,7 @@ class Signal(QtCore.QObject):
 			for num in xrange(size):
 				numString = '000'[:-len(str(num))]+str(num) #remove zeros from the prefix string corresponding to the length of num
 				buttonString = prefix+numString
-				docString = ''
+				# docString = ''
 				# if hasattr(self.ui, buttonString):
 				try: #get the button from the dynamic ui
 					buttonObject = getattr(self.ui, buttonString)  #equivilent to: self.ui.b000
@@ -59,11 +59,19 @@ class Signal(QtCore.QObject):
 						method = lambda i=index: self.hotBox.layoutStack(i) #lambda function to call index. ie. hotBox.layoutStack(6)
 					else:
 						method = getattr(class_, buttonString) #use signal 'buttonString' (ie. b006) to get method/slot of the same name in current class.
-						docString = method.__doc__
+						# docString = method.__doc__
 						if prefix!='v':
 							method = [method, lambda m=method: self.onPressedEvent(m)] #add onPressedEvent. pass multiple slots as list.
 						#add values to connectionDict
-					self.sb.connectionDict(self.name).update({buttonString:{'buttonObject':buttonObject, 'buttonObjectWithSignal':buttonObjectWithSignal, 'methodObject':method, 'docString':docString}})
+					self.sb.connectionDict(self.name).update(
+						{buttonString:{
+							'buttonObject':buttonObject, 
+							'buttonObjectWithSignal':buttonObjectWithSignal, 
+							'methodObject':method, 
+							'docString':method.__doc__,
+							'widgetClass':buttonObject.__class__,
+							'widgetClassName':buttonObject.__class__.__name__,
+							}})
 				except Exception as error:
 					if error==AttributeError:
 						print 'Exception:',error
@@ -98,17 +106,17 @@ class Signal(QtCore.QObject):
 	def eventFilter(self, button, event):
 		#args:	[source object]
 		#		[QEvent]
-		if self.hotBox.name=='main' or self.hotBox.name=='viewport': #layoutStack index and viewport signals
-			if event.type()==QtCore.QEvent.Type.Enter: #enter event
+		if event.type()==QtCore.QEvent.Type.Enter: #enter event
+			if self.sb.getWidgetType(button)=='QComboBox':
+				#switch the index before opening to initialize the contents of the combobox
+				index = button.currentIndex()
+				button.blockSignals(True); button.setCurrentIndex(99); button.blockSignals(False)
+				button.setCurrentIndex(index) #change index back to refresh contents
+				
+			if self.hotBox.name=='main' or self.hotBox.name=='viewport': #layoutStack index and viewport signals
 				self.mouseHover.emit(True)
 				# print button.__class__.__name__
-				if button.__class__.__name__ == 'QComboBox':
-					#switch the index before opening to initialize the contents of the combobox
-					index = button.currentIndex()
-					button.blockSignals(True) #block signals
-					button.setCurrentIndex(99)
-					button.blockSignals(False)
-					button.setCurrentIndex(index) #change index back to refresh contents
+				if self.sb.getWidgetType(button)=='QComboBox':
 					button.showPopup()
 				else:
 					button.click()
@@ -125,6 +133,9 @@ class Signal(QtCore.QObject):
 			docString = self.sb.getDocString(self.name, method.__name__) #get the 'docString'. ie. 'Multi-Cut Tool'
 			# print docString, method.__name__, self.sb.prevCommand(as_list=1)
 			self.sb.prevCommand(as_list=1).append([method, docString]) #build array that stores the command method object and the corresponding docString (ie. 'Multi-cut tool')
+
+
+
 
 
 
