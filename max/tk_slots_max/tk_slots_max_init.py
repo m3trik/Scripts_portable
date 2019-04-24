@@ -24,30 +24,41 @@ class Init(Slot):
 
 		infoDict={}
 		sel = rt.selection
-		
 
-		selectionCount = sel.count; infoDict.update({"Selection Count: ":selectionCount}) #number of selected objects
-		currentSelection = [str(s.name) for s in sel]; infoDict.update({"Current Selection: ":currentSelection}) #currently selected objects
-		
-		# if sel: numQuads = pm.polyEvaluate (selection[0], face=1); infoDict.update({"#Quads: ":numQuads}) #number of faces
+		selCount = len(sel) #number of selected objects
+		currentSelection = [str(s.name) for s in sel]; infoDict.update({str(selCount)+" Selected Objects: ":currentSelection}) #currently selected objects
 
-		# symmetry = pm.symmetricModelling(query=1, symmetry=1);
-		# if symmetry==1: symmetry=True; infoDict.update({"Symmetry State: ":symmetry}) #symmetry state
-		# if symmetry: axis = pm.symmetricModelling(query=1, axis=1); infoDict.update({"Symmetry Axis: ":axis}) #symmetry axis
 
-		# xformConstraint = pm.xformConstraint(query=True, type=True)
-		# if xformConstraint=='none': xformConstraint=None; infoDict.update({"Xform Constrait: ":xformConstraint}) #transform constraits
+		for obj in rt.selection:
+			
+			# if sel: numQuads = pm.polyEvaluate (selection[0], face=1); infoDict.update({"#Quads: ":numQuads}) #number of faces
 
-		selectedVerts = rt.polyop.getVertSelection;
-		if type(selectedVerts)==int: infoDict.update({"Selected Vertices: ":selectedVerts}) #selected verts
-		
-		selectedEdges = rt.polyop.getEdgeSelection; 
-		if type(selectedEdges)==int: infoDict.update({"Selected Edges: ":selectedEdges}) #selected edges
-		
-		selectedFaces = rt.polyop.getFaceSelection;
-		if type(selectedFaces)==int: infoDict.update({"Selected Faces: ":selectedFaces}) #selected faces
-		
-		# selectedUVs = ; infoDict.update({"Selected UV's: ":selectedUVs}) #selected uv's
+			# symmetry = pm.symmetricModelling(query=1, symmetry=1);
+			# if symmetry==1: symmetry=True; infoDict.update({"Symmetry State: ":symmetry}) #symmetry state
+			# if symmetry: axis = pm.symmetricModelling(query=1, axis=1); infoDict.update({"Symmetry Axis: ":axis}) #symmetry axis
+
+			# xformConstraint = pm.xformConstraint(query=True, type=True)
+			# if xformConstraint=='none': xformConstraint=None; infoDict.update({"Xform Constrait: ":xformConstraint}) #transform constraits
+			
+			try: #if editable poly:
+				if rt.subObjectLevel==1: #get vertex info
+					selectedVerts = Init.bitArrayIndex(rt.polyop.getVertSelection(obj))
+					numVerts = rt.polyop.getNumVerts(obj)
+					infoDict.update({'Selected '+str(len(selectedVerts))+'/'+str(numVerts)+" Vertices: ":selectedVerts}) #selected verts
+
+				if rt.subObjectLevel==2: #get edge info
+					selectedEdges = Init.bitArrayIndex(rt.polyop.getEdgeSelection(obj))
+					numEdges = rt.polyop.getNumEdges(obj)
+					infoDict.update({'Selected '+str(len(selectedEdges))+'/'+str(numEdges)+" Edges:    ":selectedEdges}) #selected edges
+					
+				if rt.subObjectLevel==4: #get face info
+					selectedFaces = Init.bitArrayIndex(rt.polyop.getFaceSelection(obj))
+					numFaces = rt.polyop.getNumFaces(obj)
+					infoDict.update({'Selected '+str(len(selectedFaces))+'/'+str(numFaces)+" Faces:    ":selectedFaces}) #selected faces
+			except: pass
+
+
+			# selectedUVs = ; infoDict.update({"Selected UV's: ":selectedUVs}) #selected uv's
 
 		prevCommand = self.sb.prevCommand(docString=True); infoDict.update({"Previous Command: ":prevCommand})  #get button text from last used command
 
@@ -647,6 +658,11 @@ class Init(Slot):
 				print key+': ', value
 
 		return classInfoDict
+
+
+	@staticmethod
+	def bitArrayIndex(bitArray):
+		return [i for i, bit in enumerate(bitArray) if bit==1]
 
 
 	@staticmethod

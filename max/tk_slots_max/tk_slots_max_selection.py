@@ -117,13 +117,26 @@ class Selection(Init):
 		'''
 		cmb = self.ui.cmb001
 		
-		list_ = [obj for obj in rt.selection]
-		contents = self.comboBox (cmb, list_, 'Currently Selected:')
+		if rt.subObjectLevel==1:
+			type_ = 'Vertices'
+			sel = self.bitArrayIndex(rt.polyop.getVertSelection(obj))
+		elif rt.subObjectLevel==2:
+			type_ = 'Edges'
+			sel = self.bitArrayIndex(rt.polyop.getEdgeSelection(obj))
+		elif rt.subObjectLevel==4:
+			type_ = 'Faces'
+			sel = self.bitArrayIndex(rt.polyop.getFaceSelection(obj))
+		else:
+			type_ = 'Objects'
+			sel = [obj for obj in rt.selection]
+
+		contents = self.comboBox (cmb, sel, 'Selected '+type_+':')
 
 		index = cmb.currentIndex()
 		if index!=0:
 			rt.select(contents[index])
 			cmb.setCurrentIndex(0)
+
 
 	def cmb002(self):
 		'''

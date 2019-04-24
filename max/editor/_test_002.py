@@ -5,18 +5,32 @@ import os.path, sys
 
 
 
-materials = sorted([mat for mat in rt.sceneMaterials if 'Multimaterial' not in mat.name and 'BlendMtl' not in mat.name])
-materialNames =  sorted([mat.name for mat in materials])
+def bitArrayIndex(bitArray):
+	return [i for i, bit in enumerate(bitArray) if bit==1]
 
-print materials, '\n', materialNames
 
-mat = materialNames[0]
-selectedMaterial = [m for m in materials if m.name==materialNames[0]][0]
 
-print selectedMaterial, selectedMaterial.name
 
-selectedMaterial.name = selectedMaterial.name+'_'
-print selectedMaterial.name
+infoDict={}
+
+obj = rt.selection[0]
+
+if rt.subObjectLevel==1: #get vertex info
+	selectedVerts = Slot.bitArrayIndex(rt.polyop.getVertSelection(obj))
+	numVerts = rt.polyop.getNumVerts(obj)
+	infoDict.update({'Selected '+str(len(selectedVerts))+'/'+str(numVerts)+" Vertices: ":selectedVerts}) #selected verts
+if rt.subObjectLevel==2: #get edge info
+	selectedEdges = Slot.bitArrayIndex(rt.polyop.getEdgeSelection(obj))
+	numEdges = rt.polyop.getNumEdges(obj)
+	infoDict.update({'Selected '+str(len(selectedEdges))+'/'+str(numEdges)+" Edges:    ":selectedEdges}) #selected edges
+if rt.subObjectLevel==4: #get face info
+	selectedFaces = Slot.bitArrayIndex(rt.polyop.getFaceSelection(obj))
+	numFaces = rt.polyop.getNumFaces(obj)
+	infoDict.update({'Selected '+str(len(selectedFaces))+'/'+str(numFaces)+" Faces:    ":selectedFaces}) #selected faces
+
+print infoDict
+
+
 
 #~ for obj in rt.selection:
 	#~ obj.material = materials[]

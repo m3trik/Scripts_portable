@@ -45,19 +45,18 @@ class Symmetry(Init):
 		if axis=='z':
 			axis=2
 
-		try: #check if exists
-			obj = rt.selection[0]
-			mod = obj.modifiers[rt.Symmetry]
-			mod.enabled = state
-			mod.threshold = 0.01
-		except: #else create
-			mod = rt.symmetry()
-			for obj in rt.selection:
+		for obj in rt.selection:
+			try: #check if exists
+				mod = obj.modifiers[rt.Symmetry]
+			except: #else create
+				mod = rt.symmetry()
 				rt.addModifier (obj, mod)
 		
-		#set attributes
-		mod.axis = axis
-		mod.flip = negative
+			#set attributes
+			mod.enabled = state
+			mod.threshold = 0.01
+			mod.axis = axis
+			mod.flip = negative
 
 		rt.redrawViews()
 
