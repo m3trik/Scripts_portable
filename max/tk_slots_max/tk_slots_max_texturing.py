@@ -62,6 +62,7 @@ class Texturing(Init):
 		files = ['Material Editor']
 		contents = self.comboBox (cmb, files, "Editors")
 
+		index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index('Material Editor'):
 				maxEval('max mtledit')

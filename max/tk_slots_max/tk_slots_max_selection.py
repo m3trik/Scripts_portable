@@ -133,7 +133,7 @@ class Selection(Init):
 			type_ = 'Object'
 			sel = [obj for obj in rt.selection]
 
-		contents = self.comboBox (cmb, [str(s) for s in sel], 'Selected '+type_+':')
+		contents = self.comboBox (cmb, [str(s) for s in sel], 'Currently Selected '+type_+':')
 
 		index = cmb.currentIndex()
 		if index!=0: #if object

@@ -1,7 +1,7 @@
 import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
 from pymxs import runtime as rt
 
-import os.path
+import os
 
 from tk_slots_max_init import Init
 
@@ -16,8 +16,8 @@ class Scene(Init):
 
 		self.ui = self.sb.getUi('scene')
 
-		self.ui.lbl000.setText("") #add current project path string to label. strip path and trailing '/'
-		# maya get project #pm.workspace (query=1, rd=1).split('/')[-2]
+		self.ui.t002.setText(MaxPlus.PathManager.GetProjectFolderDir().split('\\')[-1]) #add current project path string to label. strip path and trailing '/'
+		
 
 
 
@@ -71,7 +71,9 @@ class Scene(Init):
 		'''
 		cmb = self.ui.cmb001
 		
-		list_ = []
+		path = ''
+		list_ = []#[f for f in os.listdir(path)]
+
 		contents = self.comboBox (cmb, list_, "Recent Projects")
 
 		index = cmb.currentIndex()
@@ -87,13 +89,15 @@ class Scene(Init):
 		'''
 		cmb = self.ui.cmb002
 		
-		files = []
+		path = MaxPlus.PathManager.GetAutobackDir()
+		files = [f for f in os.listdir(path) if f.endswith('.max') or f.endswith('.bak')]
+
 		contents = self.comboBox (cmb, files, "Recent Autosave")
 
 		index = cmb.currentIndex()
 		if index!=0:
-			force=True; force if str(mel.eval("file -query -sceneName -shortName;")) else not force #if sceneName prompt user to save; else force open
-			pm.openFile (contents[index], open=1, force=force)
+			rt.loadMaxFile(str(contents[index]))
+			self.hotBox.hide_()
 			cmb.setCurrentIndex(0)
 
 
@@ -115,6 +119,7 @@ class Scene(Init):
 				maxEval('ImportOptions;')
 			cmb.setCurrentIndex(0)
 
+
 	def cmb004(self):
 		'''
 		Export
@@ -122,20 +127,22 @@ class Scene(Init):
 		'''
 		cmb = self.ui.cmb004
 		
-		self.comboBox (cmb, ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ"], "Export")
+		list_ = ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ", "Send to Maya: New Scene", "Send to Maya: Update Scene", "Send to Maya: Add to Scene"]
+
+		self.comboBox (cmb, list_, "Export")
 
 		index = cmb.currentIndex()
 		if index !=0: #hide hotBox then perform operation
 			self.hotBox.hide_()
-			if index == 1: #Export selection
+			if index==1: #Export selection
 				maxEval('ExportSelection;')
-			if index == 2: #Export options
+			if index==2: #Export options
 				maxEval('ExportSelectionOptions;')
-			if index == 3: #Unreal
+			if index==3: #Unreal
 				maxEval('SendToUnrealSelection;')
-			if index == 4: #Unity 
+			if index==4: #Unity 
 				maxEval('SendToUnitySelection;')
-			if index == 5: #GoZ
+			if index==5: #GoZ
 				print 'GoZ'
 				maxEval(''' 
 					try (
@@ -143,7 +150,51 @@ class Scene(Init):
 						local result = s_gozServer.GoToZBrush()
 						) catch ();
 					''')
+			if index==6: #sent to maya: new scene
+				maxEval('actionMan.executeAction 924213374 "0"  -- One Click Maya: Send as New Scene to Maya')
+			if index==7: #sent to maya: update scene
+				maxEval('actionMan.executeAction 924213374 "1"  -- One Click Maya: Update Current Scene in Maya')
+			if index==8: #sent to maya: add to scene
+				maxEval('actionMan.executeAction 924213374 "2"  -- One Click Maya: Add to Current Scene in Maya')
+			
 			cmb.setCurrentIndex(0)
+
+
+	def cmb005(self):
+		'''
+		Editors
+
+		'''
+		cmb = self.ui.cmb005
+		
+		files = ['Schematic View']
+		contents = self.comboBox (cmb, files, "Editors")
+
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index('Schematic View'):
+				maxEval('schematicView.Open "Schematic View 1"')
+			cmb.setCurrentIndex(0)
+
+
+	def cmb006(self):
+		'''
+		Project Folder
+
+		'''
+		cmb = self.ui.cmb006
+		
+		path = MaxPlus.PathManager.GetProjectFolderDir() #replace with correct file or path
+		list_ = [f for f in os.listdir(path)]
+
+		contents = self.comboBox (cmb, list_, "Project Folder")
+
+		index = cmb.currentIndex()
+		if index!=0:
+			path=os.path.realpath(list_[index-1])
+			os.startfile(path)
+			cmb.setCurrentIndex(0)
+
 
 	def b000(self):
 		'''
@@ -211,24 +262,24 @@ class Scene(Init):
 
 	def b001(self):
 		'''
-		Hypergraph: Hierarchy
+		
 
 		'''
-		mel.eval("hyperGraphWindow \"\" \"DAG\";")
+		pass
 
 	def b002(self):
 		'''
-		Hypergraph: Input/Output
+		
 
 		'''
-		maxEval('hyperGraphWindow \"\" \"DG\";')
+		
 
 	def b003(self):
 		'''
-		Node Editor
+		
 
 		'''
-		mel.eval("nodeEditorWindow;")
+		
 
 	def b004(self):
 		'''
@@ -246,10 +297,10 @@ class Scene(Init):
 		Minimize Main Application
 
 		'''
-		obj = rt.createOLEObject('Shell.Application')
-		obj.minimizeAll()
-		#obj.undoMinimizeAll()
-		rt.releaseOLEObject(obj)
+		app = rt.createOLEObject('Shell.Application')
+		maxEval('minimizeAll app')
+		maxEval('undoMinimizeAll app')
+		rt.releaseOLEObject(app)
 		self.hotBox.hbHide()
 
 	def b006(self):
@@ -303,7 +354,10 @@ class Scene(Init):
 		Set Project
 
 		'''
-		maxEval('macros.run "Tools" "SetProjectFolder"')
+		try:
+			MaxPlus.PathManager.SetProjectFolderDir()
+		except:
+			maxEval('macros.run "Tools" "SetProjectFolder"')
 
 
 #module name

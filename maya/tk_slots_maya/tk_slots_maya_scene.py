@@ -16,7 +16,7 @@ class Scene(Init):
 
 		self.ui = self.sb.getUi('scene')
 
-		self.ui.lbl000.setText(pm.workspace (query=1, rd=1).split('/')[-2]) #add current project path string to label. strip path and trailing '/'
+		self.ui.t002.setText(pm.workspace (query=1, rd=1).split('/')[-2]) #add current project path string to label. strip path and trailing '/'
 		
 
 
@@ -109,6 +109,27 @@ class Scene(Init):
 				mel.eval('print("GoZ"); source"C:/Users/Public/Pixologic/GoZApps/Maya/GoZBrushFromMaya.mel"; source "C:/Users/Public/Pixologic/GoZApps/Maya/GoZScript.mel";')
 			cmb.setCurrentIndex(0)
 
+	def cmb005(self):
+		'''
+		Editors
+
+		'''
+		cmb = self.ui.cmb005
+		
+		files = ['Hypergraph: Hierarchy', 'Hypergraph: Input/Output', 'Node Editor']
+		contents = self.comboBox (cmb, files, "Editors")
+
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index('Hypergraph: Hierarchy'):
+				mel.eval("hyperGraphWindow \"\" \"DAG\";") #Hypergraph: Hierarchy
+			if index==contents.index('Hypergraph: Input/Output'):
+				mel.eval('hyperGraphWindow \"\" \"DG\";') #Hypergraph: Input/Output
+			if index==contents.index('Node Editor'):
+				mel.eval("nodeEditorWindow;") #Node Editor
+			cmb.setCurrentIndex(0)
+
+
 	def b000(self):
 		'''
 		Save
@@ -175,24 +196,24 @@ class Scene(Init):
 
 	def b001(self):
 		'''
-		Hypergraph: Hierarchy
+		
 
 		'''
-		mel.eval("hyperGraphWindow \"\" \"DAG\";")
+		pass
 
 	def b002(self):
 		'''
-		Hypergraph: Input/Output
+		
 
 		'''
-		mel.eval('hyperGraphWindow \"\" \"DG\";')
+		pass
 
 	def b003(self):
 		'''
-		Node Editor
+		
 
 		'''
-		mel.eval("nodeEditorWindow;")
+		pass
 
 	def b004(self):
 		'''

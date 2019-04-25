@@ -301,12 +301,15 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 			<class object> - the corresponding widget class
 		'''
 		if not type(button)==str:
-			button = button.objectName()
+			try:
+				return button.__class__
+			except:
+				button = button.objectName()
 
-		if name:
-			return sbDict[name]['connectionDict'][button]['widgetClass']
-		else: #use current ui name
-			return sbDict[self.getUiName()]['connectionDict'][button]['widgetClass']
+		if not name:
+			name = self.getUiName()
+
+		return sbDict[name]['connectionDict'][button]['widgetClass']
 
 
 	def getWidgetType(self, button, name=None):
@@ -319,12 +322,15 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 			'string' - the corresponding widget class name
 		'''
 		if not type(button)==str:
-			button = button.objectName()
+			try:
+				return button.__class__.__name__
+			except:
+				button = button.objectName()
 
-		if name:
-			return sbDict[name]['connectionDict'][button]['widgetClassName']
-		else: #use current ui name
-			return sbDict[self.getUiName()]['connectionDict'][button]['widgetClassName']
+		if not name:
+			name = self.getUiName()
+
+		return sbDict[name]['connectionDict'][button]['widgetClassName']
 
 
 	def previousName(self, previousIndex=False, allowDuplicates=False, as_list=False):
