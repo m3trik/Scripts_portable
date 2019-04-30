@@ -151,121 +151,121 @@ class Create(Init):
 			return
 		else:
 			self.setButtons(self.ui, enable='b000', visible='s009,s010,s011,t000')
+		
+		# #nurbs
+		# if self.ui.cmb000.currentIndex() == 1:
+		# 	#Sphere
+		# 	if self.ui.cmb001.currentIndex() == 1:
+		# 		v = self.setSpinboxes (self.ui, values=[("radius",5),("start sweep",0),("end sweep",360),("sections",8),("spans",1),("height ratio",2)])
+		# 		node = pm.sphere (esw=360, ch=1, d=3, ut=0, ssw=0, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=4, ax=(0, 1, 0))
 
-		#nurbs
-		if self.ui.cmb000.currentIndex() == 1:
-			#Sphere
-			if self.ui.cmb001.currentIndex() == 1:
-				v = self.setSpinboxes (self.ui, values=[("radius",5),("start sweep",0),("end sweep",360),("sections",8),("spans",1),("height ratio",2)])
-				node = pm.sphere (esw=360, ch=1, d=3, ut=0, ssw=0, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=4, ax=(0, 1, 0))
+		# 	#Cube
+		# 	if self.ui.cmb001.currentIndex() == 2:
+		# 		v = self.setSpinboxes (self.ui, values=[("width",1),("length ratio",1),("height ratio",1),("patches U",1),("patches V",1)])
+		# 		node = pm.nurbsCube (ch=1, d=3, hr=1, p=(0, 0, 0), lr=1, w=1, v=1, ax=(0, 1, 0), u=1)
 
-			#Cube
-			if self.ui.cmb001.currentIndex() == 2:
-				v = self.setSpinboxes (self.ui, values=[("width",1),("length ratio",1),("height ratio",1),("patches U",1),("patches V",1)])
-				node = pm.nurbsCube (ch=1, d=3, hr=1, p=(0, 0, 0), lr=1, w=1, v=1, ax=(0, 1, 0), u=1)
+		# 	#Cylinder
+		# 	if self.ui.cmb001.currentIndex() == 3:
+		# 		v = self.setSpinboxes (self.ui, values=[("radius",5),("start sweep",0),("end sweep",360),("sections",8),("spans",1),("height ratio",2)])
+		# 		node = pm.cylinder (esw=360, ch=1, d=3, hr=2, ut=0, ssw=0, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=1, ax=(0, 1, 0))
 
-			#Cylinder
-			if self.ui.cmb001.currentIndex() == 3:
-				v = self.setSpinboxes (self.ui, values=[("radius",5),("start sweep",0),("end sweep",360),("sections",8),("spans",1),("height ratio",2)])
-				node = pm.cylinder (esw=360, ch=1, d=3, hr=2, ut=0, ssw=0, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=1, ax=(0, 1, 0))
+		# 	#Cone
+		# 	if self.ui.cmb001.currentIndex() == 4:
+		# 		v = self.setSpinboxes (self.ui, values=[("radius",5),("start sweep",0),("end sweep",360),("sections",8),("spans",1),("height ratio",2)])
+		# 		node = pm.cone (esw=360, ch=1, d=3, hr=2, ut=0, ssw=0, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=1, ax=(0, 1, 0))
 
-			#Cone
-			if self.ui.cmb001.currentIndex() == 4:
-				v = self.setSpinboxes (self.ui, values=[("radius",5),("start sweep",0),("end sweep",360),("sections",8),("spans",1),("height ratio",2)])
-				node = pm.cone (esw=360, ch=1, d=3, hr=2, ut=0, ssw=0, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=1, ax=(0, 1, 0))
+		# 	#Plane
+		# 	if self.ui.cmb001.currentIndex() == 5:
+		# 		v = self.setSpinboxes (self.ui, values=[("width",1),("length ratio",1),("patches U",1),("patches V",1)])
+		# 		node = pm.nurbsPlane (ch=1, d=3, v=1, p=(0, 0, 0), u=1, w=1, ax=(0, 1, 0), lr=1)
 
-			#Plane
-			if self.ui.cmb001.currentIndex() == 5:
-				v = self.setSpinboxes (self.ui, values=[("width",1),("length ratio",1),("patches U",1),("patches V",1)])
-				node = pm.nurbsPlane (ch=1, d=3, v=1, p=(0, 0, 0), u=1, w=1, ax=(0, 1, 0), lr=1)
+		# 	#Torus
+		# 	if self.ui.cmb001.currentIndex() == 6:
+		# 		v = self.setSpinboxes (self.ui, values=[("radius",5),("start sweep",0),("end sweep",360),("sections",8),("spans",4),("height ratio",1),("minor sweep",360)])
+		# 		node = pm.torus (esw=360, ch=1, d=3, msw=360, ut=0, ssw=0, hr=0.5, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=4, ax=(0, 1, 0))
 
-			#Torus
-			if self.ui.cmb001.currentIndex() == 6:
-				v = self.setSpinboxes (self.ui, values=[("radius",5),("start sweep",0),("end sweep",360),("sections",8),("spans",4),("height ratio",1),("minor sweep",360)])
-				node = pm.torus (esw=360, ch=1, d=3, msw=360, ut=0, ssw=0, hr=0.5, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=4, ax=(0, 1, 0))
+		# 	#Circle
+		# 	if self.ui.cmb001.currentIndex() == 7:
+		# 		v = self.setSpinboxes (self.ui, values=[("normal X",0),("normal Y",1),("normal Z",0),("center X",0),("center Y",0),("center Z",0),("radius",1),("sections",8)])
+		# 		node = pm.circle (c=(0, 0, 0), ch=1, d=3, ut=0, sw=360, s=8, r=1, tol=0.01, nr=(0, 1, 0))
 
-			#Circle
-			if self.ui.cmb001.currentIndex() == 7:
-				v = self.setSpinboxes (self.ui, values=[("normal X",0),("normal Y",1),("normal Z",0),("center X",0),("center Y",0),("center Z",0),("radius",1),("sections",8)])
-				node = pm.circle (c=(0, 0, 0), ch=1, d=3, ut=0, sw=360, s=8, r=1, tol=0.01, nr=(0, 1, 0))
+		# 	#Square
+		# 	if self.ui.cmb001.currentIndex() == 8:
+		# 		v = self.setSpinboxes (self.ui, values=[("normal X",0),("normal Y",1),("normal Z",0),("center X",0),("center Y",0),("center Z",0),("side length 1",1),("side length 2",1),("spans per side",1)])
+		# 		node = pm.nurbsSquare (c=(0, 0, 0), ch=1, d=3, sps=1, sl1=1, sl2=1, nr=(0, 1, 0))
 
-			#Square
-			if self.ui.cmb001.currentIndex() == 8:
-				v = self.setSpinboxes (self.ui, values=[("normal X",0),("normal Y",1),("normal Z",0),("center X",0),("center Y",0),("center Z",0),("side length 1",1),("side length 2",1),("spans per side",1)])
-				node = pm.nurbsSquare (c=(0, 0, 0), ch=1, d=3, sps=1, sl1=1, sl2=1, nr=(0, 1, 0))
+		# #lights
+		# if self.ui.cmb000.currentIndex() == 2:
+		# 	pass
 
-		#lights
-		if self.ui.cmb000.currentIndex() == 2:
-			pass
+		# #polygons
+		# if self.ui.cmb000.currentIndex() == 0:
+		# 	#cube:
+		# 	if self.ui.cmb001.currentIndex() == 1:
+		# 		v = self.setSpinboxes (self.ui, values=[("size",15),("width",5),("depth",5),("height",5),("divisions X",1),("divisions Y",1),("divisions Z",1)])
+		# 		node = pm.polyCube (axis=axis, width=v[1], height=v[2], depth=v[3], subdivisionsX=v[4], subdivisionsY=v[5], subdivisionsZ=v[6])
 
-		#polygons
-		if self.ui.cmb000.currentIndex() == 0:
-			#cube:
-			if self.ui.cmb001.currentIndex() == 1:
-				v = self.setSpinboxes (self.ui, values=[("size",15),("width",5),("depth",5),("height",5),("divisions X",1),("divisions Y",1),("divisions Z",1)])
-				node = pm.polyCube (axis=axis, width=v[1], height=v[2], depth=v[3], subdivisionsX=v[4], subdivisionsY=v[5], subdivisionsZ=v[6])
+		# 	#sphere:
+		# 	if self.ui.cmb001.currentIndex() == 2:
+		# 		v = self.setSpinboxes (self.ui, values=[("size",5),("divisions X",1),("divisions Y",1)])
+		# 		node = pm.polySphere (axis=axis, radius=v[0], subdivisionsX=v[1], subdivisionsY=v[2])
 
-			#sphere:
-			if self.ui.cmb001.currentIndex() == 2:
-				v = self.setSpinboxes (self.ui, values=[("size",5),("divisions X",1),("divisions Y",1)])
-				node = pm.polySphere (axis=axis, radius=v[0], subdivisionsX=v[1], subdivisionsY=v[2])
+		# 	#cylinder:
+		# 	if self.ui.cmb001.currentIndex() == 3:
+		# 		v = self.setSpinboxes (self.ui, values=[("size",15),("radius",5),("height",10),("sides",5),("divisions height",1),("divisions caps",1),("round cap",0)])
+		# 		node = pm.polyCylinder (axis=axis, radius=v[1], height=(v[2]), subdivisionsX=v[3], subdivisionsY=v[4], subdivisionsZ=v[5])
 
-			#cylinder:
-			if self.ui.cmb001.currentIndex() == 3:
-				v = self.setSpinboxes (self.ui, values=[("size",15),("radius",5),("height",10),("sides",5),("divisions height",1),("divisions caps",1),("round cap",0)])
-				node = pm.polyCylinder (axis=axis, radius=v[1], height=(v[2]), subdivisionsX=v[3], subdivisionsY=v[4], subdivisionsZ=v[5])
+		# 	#plane:
+		# 	if self.ui.cmb001.currentIndex() == 4:
+		# 		v = self.setSpinboxes (self.ui, values=[("size",10),("width",5),("height",5),("divisions X",1),("divisions Y",1)])
+		# 		node = pm.polyPlane (axis=axis, width=v[1], height=v[2], subdivisionsX=v[3], subdivisionsY=v[4])
 
-			#plane:
-			if self.ui.cmb001.currentIndex() == 4:
-				v = self.setSpinboxes (self.ui, values=[("size",10),("width",5),("height",5),("divisions X",1),("divisions Y",1)])
-				node = pm.polyPlane (axis=axis, width=v[1], height=v[2], subdivisionsX=v[3], subdivisionsY=v[4])
+		# 	#circle:
+		# 	if self.ui.cmb001.currentIndex() == 5:
+		# 		mode = None
 
-			#circle:
-			if self.ui.cmb001.currentIndex() == 5:
-				mode = None
+		# 		axis = next(key for key, value in self.rotation.items() if value==axis and key!='last') #get key from value as createCircle takes the key argument
 
-				axis = next(key for key, value in self.rotation.items() if value==axis and key!='last') #get key from value as createCircle takes the key argument
-
-				v = self.setSpinboxes (self.ui, values=[("size",5), ("sides",5)])
-				node = self.createCircle(axis=axis, numPoints=v[0], radius=v[1], mode=mode)
+		# 		v = self.setSpinboxes (self.ui, values=[("size",5), ("sides",5)])
+		# 		node = self.createCircle(axis=axis, numPoints=v[0], radius=v[1], mode=mode)
 
 
-			#Cone:
-			if self.ui.cmb001.currentIndex() == 6:
-				v = self.setSpinboxes (self.ui, values=[("size",10),("radius",5),("height",5),("divisions X",1),("divisions Y",1),("divisions Z",1),("round cap",0)])
-				node = pm.polyCone (axis=axis, radius=v[1], height=v[2], subdivisionsX=v[3], subdivisionsY=v[4], subdivisionsZ=v[5])
+		# 	#Cone:
+		# 	if self.ui.cmb001.currentIndex() == 6:
+		# 		v = self.setSpinboxes (self.ui, values=[("size",10),("radius",5),("height",5),("divisions X",1),("divisions Y",1),("divisions Z",1),("round cap",0)])
+		# 		node = pm.polyCone (axis=axis, radius=v[1], height=v[2], subdivisionsX=v[3], subdivisionsY=v[4], subdivisionsZ=v[5])
 
-			#Pyramid
-			if self.ui.cmb001.currentIndex() == 7:
-				v = self.setSpinboxes (self.ui, values=[("size",10),("side length",5),("sides",3),("divisions height",1),("divisions caps",1)])
-				node = pm.polyPyramid (axis=axis, sideLength=5, numberOfSides=5, subdivisionsHeight=1, subdivisionsCaps=1)
+		# 	#Pyramid
+		# 	if self.ui.cmb001.currentIndex() == 7:
+		# 		v = self.setSpinboxes (self.ui, values=[("size",10),("side length",5),("sides",3),("divisions height",1),("divisions caps",1)])
+		# 		node = pm.polyPyramid (axis=axis, sideLength=5, numberOfSides=5, subdivisionsHeight=1, subdivisionsCaps=1)
 
-			#Torus:
-			if self.ui.cmb001.currentIndex() == 8:
-				v = self.setSpinboxes (self.ui, values=[("size",20),("radius",10),("section radius",5),("twist",0),("divisions X",5),("divisions Y",5)])
-				node = pm.polyTorus (axis=axis, radius=v[1], sectionRadius=v[2], twist=v[3], subdivisionsX=v[4], subdivisionsY=v[5])
+		# 	#Torus:
+		# 	if self.ui.cmb001.currentIndex() == 8:
+		# 		v = self.setSpinboxes (self.ui, values=[("size",20),("radius",10),("section radius",5),("twist",0),("divisions X",5),("divisions Y",5)])
+		# 		node = pm.polyTorus (axis=axis, radius=v[1], sectionRadius=v[2], twist=v[3], subdivisionsX=v[4], subdivisionsY=v[5])
 
-			#Pipe
-			if self.ui.cmb001.currentIndex() == 9:
-				v = self.setSpinboxes (self.ui, values=[("size",10),("radius",5),("thickness",5),("divisions height",1),("divisions caps",1)])
-				node = pm.polyPipe (axis=axis, radius=v[1], height=v[2], thickness=v[3], subdivisionsHeight=v[4], subdivisionsCaps=v[5])
+		# 	#Pipe
+		# 	if self.ui.cmb001.currentIndex() == 9:
+		# 		v = self.setSpinboxes (self.ui, values=[("size",10),("radius",5),("thickness",5),("divisions height",1),("divisions caps",1)])
+		# 		node = pm.polyPipe (axis=axis, radius=v[1], height=v[2], thickness=v[3], subdivisionsHeight=v[4], subdivisionsCaps=v[5])
 
-			#Soccer ball
-			if self.ui.cmb001.currentIndex() == 10:
-				v = self.setSpinboxes (self.ui, values=[("size",10),("radius",5),("side length",5)])
-				node = pm.polyPrimitive(axis=axis, radius=v[1], sideLength=v[2], polyType=0)
+		# 	#Soccer ball
+		# 	if self.ui.cmb001.currentIndex() == 10:
+		# 		v = self.setSpinboxes (self.ui, values=[("size",10),("radius",5),("side length",5)])
+		# 		node = pm.polyPrimitive(axis=axis, radius=v[1], sideLength=v[2], polyType=0)
 
-			#Platonic solids
-			if self.ui.cmb001.currentIndex() == 11:
-				mel.eval("performPolyPrimitive PlatonicSolid 0;")
+		# 	#Platonic solids
+		# 	if self.ui.cmb001.currentIndex() == 11:
+		# 		mel.eval("performPolyPrimitive PlatonicSolid 0;")
 
-		#translate the newly created node
-		pm.xform (node, translation=self.point, worldSpace=1, absolute=1)
-		#show text field and set name
-		self.ui.t000.setText(str(node[0]))
-		#set as current node for setting history
-		self.history.extend(node)
-		print self.history[0], self.history[1]
+		# #translate the newly created node
+		# pm.xform (node, translation=self.point, worldSpace=1, absolute=1)
+		# #show text field and set name
+		# self.ui.t000.setText(str(node[0]))
+		# #set as current node for setting history
+		# self.history.extend(node)
+		# print self.history[0], self.history[1]
 
 
 	def setAttributes(self, index): #set history attributes

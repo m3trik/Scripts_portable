@@ -119,31 +119,32 @@ class Selection(Init):
 		cmb = self.ui.cmb001
 		
 		level = rt.subObjectLevel
-		obj = rt.selection[0]
 
-		if level==1:
-			type_ = 'Vertex' #do not change. used for arg in SetSelection (and to change text in ui)
-			sel = self.bitArrayToArray(rt.polyop.getVertSelection(obj))
-		elif level==2:
-			type_ = 'Edge'
-			sel = self.bitArrayToArray(rt.polyop.getEdgeSelection(obj))
-		elif level==4:
-			type_ = 'Face'
-			sel = self.bitArrayToArray(rt.polyop.getFaceSelection(obj))
-		else:
-			type_ = 'Object'
-			sel = [obj for obj in rt.selection]
+		if len(rt.selection):
+			obj = rt.selection[0]
+			if level==1:
+				type_ = 'Vertex' #do not change. used for arg in SetSelection (and to change text in ui)
+				list_ = self.bitArrayToArray(rt.polyop.getVertSelection(obj))
+			elif level==2:
+				type_ = 'Edge'
+				list_ = self.bitArrayToArray(rt.polyop.getEdgeSelection(obj))
+			elif level==4:
+				type_ = 'Face'
+				list_ = self.bitArrayToArray(rt.polyop.getFaceSelection(obj))
+			else:
+				type_ = 'Object'
+				list_ = [obj for obj in rt.selection]
 
-		contents = self.comboBox (cmb, [str(s) for s in sel], 'Currently Selected '+type_+':')
+			contents = self.comboBox (cmb, [str(i) for i in list_], 'Currently Selected '+type_+':')
 
-		index = cmb.currentIndex()
-		if index!=0: #if object
-			if level==0:
-				rt.select(sel[index]-1)
-			else: #if component
-				bitArray = rt.BitArray(sel[index])
-				obj.EditablePoly.SetSelection(type_, bitArray)
-			cmb.setCurrentIndex(0)
+			index = cmb.currentIndex()
+			if index!=0: #if object
+				if level==0:
+					rt.select(sel[index]-1)
+				else: #if component
+					bitArray = rt.BitArray(sel[index])
+					obj.EditablePoly.SetSelection(type_, bitArray)
+				cmb.setCurrentIndex(0)
 
 
 	def cmb002(self):

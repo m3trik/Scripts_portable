@@ -26,8 +26,10 @@ class Signal(QtCore.QObject):
 
 	def buildConnectionDict(self, name=None):
 
-		if name: self.name = name #build connections for the specified name
-		else: self.name = self.sb.getUiName() #else get current name
+		if name:
+			self.name = name #build connections for the specified name
+		else:
+			self.name = self.sb.getUiName() #else get current name
 		self.ui = self.sb.getUi(self.name)
 
 		class_ = self.sb.setClass('tk_slots_'+self.app+'_'+self.name+'.'+self.name.capitalize())() #append class object to switchboardDict

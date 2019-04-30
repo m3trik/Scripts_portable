@@ -650,13 +650,6 @@ class Polygons(Init):
 					edgelist = self.getEdgesByAngle(minAngle, maxAngle)
 					rt.polyOp.setEdgeSelection(obj, edgelist)
 
-				# pm.polySoftEdge (angle=0, constructionHistory=0) #Harden edge normal
-				if self.ui.chk002.isChecked(): #uncrease
-					if rt.subObjectLevel==0: #if in object mode; remove all crease values from mesh
-						pass
-					else: #remove crease from sel components
-						obj.EditablePoly.setEdgeData(1, creaseAmount)
-
 				if self.ui.chk004.isChecked(): #crease vertex point
 					pass
 				else: #crease edge

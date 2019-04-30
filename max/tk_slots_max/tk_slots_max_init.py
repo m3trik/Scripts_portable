@@ -32,7 +32,7 @@ class Init(Slot):
 
 
 		for obj in rt.selection:
-			type_ = rt.classOf(obj)
+			type_ = str(rt.classOf(obj))
 			
 			# if sel: numQuads = pm.polyEvaluate (selection[0], face=1); infoDict.update({"#Quads: ":numQuads}) #number of faces
 
@@ -46,9 +46,7 @@ class Init(Slot):
 			if type_=='Editable_Poly' or type_=='Edit_Poly':
 				if level==1: #get vertex info
 					selectedVerts = Init.bitArrayToArray(rt.polyop.getVertSelection(obj))
-					print selectedVerts
 					collapsedList = Init.collapseList(selectedVerts)
-					print collapsedList
 					numVerts = rt.polyop.getNumVerts(obj)
 					infoDict.update({'Selected '+str(len(selectedVerts))+'/'+str(numVerts)+" Vertices: ":collapsedList}) #selected verts
 
@@ -89,14 +87,7 @@ class Init(Slot):
 	#state = string: "true", "false"
 	@staticmethod
 	def setSnapState (state):
-
-		maxEval('''
-		state = false
-		if (state == "true") then
-		(
-			state = true
-		)
-
+		'''
 		/*grid and snap settings*/
 
 		/*body shapes*/
@@ -134,7 +125,8 @@ class Init(Slot):
 		snapmode.setOSnapItemActive 7 4 (state);
 		snapmode.setOSnapItemActive 7 5 (state);
 		snapmode.setOSnapItemActive 7 6 (state);
-		''')
+		'''
+		pass
 
 
 

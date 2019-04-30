@@ -187,11 +187,7 @@ QAbstractSpinBox {
 	padding-right: 0px;
 }
 
-QAbstractSpinBox::up-button, QAbstractSpinBox::down-button {
-	border: 1px solid #5A5A5A;
-	background: #353535;
-	subcontrol-origin: border;
-}
+
 
 QSlider {
 	border: none;
@@ -246,12 +242,6 @@ QProgressBar::chunk {
 QMenu::separator {
 	background: #353535;
 }
-
-
-
-
-
-
 
 
 QMainWindow {
@@ -317,6 +307,12 @@ QComboBox {
 # 	width: 3px;
 # 	height: 3px;
 # 	border: 1px solid #5A5A5A;
+# }
+
+# QAbstractSpinBox::up-button, QAbstractSpinBox::down-button {
+# 	border: 1px solid #5A5A5A;
+# 	background: #353535;
+# 	subcontrol-origin: border;
 # }
 
 # QGroupBox {

@@ -57,19 +57,15 @@ class HotBox(QtWidgets.QWidget):
 		# self.setMouseTracking(True)
 		self.mousePosition = None
 		self.mousePressEventOn = True
-		self.mouseDoubleClickEventOn = True
 
 		self.sb = Switchboard()
 		
 		self.app = self.sb.setApp(parent)
 
-		self.sb.setClass(self) #add hotbox instance to switchboard dict
+		self.sb.setClass(self) #add hotBox instance to switchboard dict
 		self.signal = self.sb.setClass('tk_signals.Signal')()
 
-		self.layoutStack('init') #initialize layout
-		# self.overlay = Overlay(self)
-		self.overlay = OverlayFactoryFilter(self)
-		self.overlay.setWidget(self)
+
 
 	def layoutStack(self, index):
 		'''
@@ -80,7 +76,7 @@ class HotBox(QtWidgets.QWidget):
 		# import timeit
 		# t0=timeit.default_timer()
 
-		if type(index)==str:
+		if type(index)!=int: #get index from name
 			index = self.sb.getUiIndex(index)
 
 		if not self.layout(): #if layout doesnt exist; initialize stackedLayout.
@@ -139,22 +135,13 @@ class HotBox(QtWidgets.QWidget):
 		# t1=timeit.default_timer()
 		# print 'time:',t1-t0
 
-
-		self.mousePressEventOn = True
-
-
-
-# ------------------------------------------------
-# overrides
-# ------------------------------------------------
-
-
+		
 
 
 
 # ------------------------------------------------
-
-
+# Event overrides
+# ------------------------------------------------
 	def hoverEvent(self, event):
 		#args: [QEvent]
 		print "hover"
@@ -183,32 +170,29 @@ class HotBox(QtWidgets.QWidget):
 					self.layoutStack('main')
 
 					# self.mousePressEventOn = False
-					# # self.mouseDoubleClickEventOn = False
 					# windll.user32.mouse_event(0x10, 0, 0, 0,0) #right up
 					# # windll.user32.mouse_event(0x8, 0, 0, 0,0) #right down
 					# self.mousePressEventOn = True
-					# # self.mouseDoubleClickEventOn = True
-				
+
 				elif event.button()==QtCore.Qt.MiddleButton:
 					self.layoutStack('display')
 
 
 	def mouseDoubleClickEvent(self, event):
 		#args: [QEvent]
-		#show last used submenu on double mouseclick 
-		if self.mouseDoubleClickEventOn:
-			if event.button()==QtCore.Qt.RightButton:
-				try: self.layoutStack(self.sb.previousName(previousIndex=True))
-				except: pass
+		#show last used submenu on double mouseclick
+		if event.button()==QtCore.Qt.RightButton:
+			try: self.layoutStack(self.sb.previousName(previousIndex=True))
+			except: pass
 
-			if event.button()==QtCore.Qt.LeftButton:
-				try:
-					self.repeatLastCommand()
-				except Exception as error: 
-					if not self.sb.prevCommand():
-						print "# Warning: No recent commands in history. #"
-					else:
-						print error
+		if event.button()==QtCore.Qt.LeftButton:
+			try:
+				self.repeatLastCommand()
+			except Exception as error: 
+				if not self.sb.prevCommand():
+					print "# Warning: No recent commands in history. #"
+				else:
+					print error
 
 
 	def mouseMoveEvent(self, event):
@@ -232,7 +216,6 @@ class HotBox(QtWidgets.QWidget):
 			moveWindow(self, -self.point.x(), -self.point.y()/2)
 
 
-
 	def hide_(self):
 		try:
 			if hasattr (self.ui, 'chkpin') and self.ui.chkpin.isChecked(): 
@@ -241,6 +224,7 @@ class HotBox(QtWidgets.QWidget):
 				self.hide()
 		except Exception as error:
 			if error!=RuntimeWarning: print error
+
 
 	def hideEvent(self, event):
 		try: MaxPlus.CUI.EnableAccelerators()
@@ -264,25 +248,29 @@ class HotBox(QtWidgets.QWidget):
 class Overlay(QtWidgets.QWidget):
 	def __init__(self, parent=None):
 		super(Overlay, self).__init__(parent)
+
 		self.setAttribute(QtCore.Qt.WA_NoSystemBackground)
 		self.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
 
 		self.sb = Switchboard()
+
 		self.point = QtCore.QPoint(self.sb.getUiSize(percentWidth=50), self.sb.getUiSize(percentHeight=50)) #set point to the middle of the layout
 		self.start_line, self.end_line = self.point, QtCore.QPoint()
 
 
+
 	def paintEvent(self, event):
-		painter = QtGui.QPainter(self) #Initialize painter
-		painter.fillRect(self.rect(), QtGui.QColor(127, 127, 127, 0))
-		pen = QtGui.QPen(QtGui.QColor(115, 115, 115), 3, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
-		painter.setPen(pen)
-		painter.setRenderHint(QtGui.QPainter.Antialiasing, True)
-		painter.setBrush(QtGui.QColor(115, 115, 115))
-		painter.drawEllipse(self.point, 5, 5)
-		if not self.end_line.isNull():
-			painter.drawLine(self.start_line, self.end_line)
-			painter.drawEllipse(self.end_line, 5, 5)
+		if any([self.sb.getUiName()=="main", self.sb.getUiName()=="viewport"]):
+			painter = QtGui.QPainter(self) #Initialize painter
+			painter.fillRect(self.rect(), QtGui.QColor(127, 127, 127, 0))
+			pen = QtGui.QPen(QtGui.QColor(115, 115, 115), 3, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
+			painter.setPen(pen)
+			painter.setRenderHint(QtGui.QPainter.Antialiasing, True)
+			painter.setBrush(QtGui.QColor(115, 115, 115))
+			painter.drawEllipse(self.point, 5, 5)
+			if not self.end_line.isNull():
+				painter.drawLine(self.start_line, self.end_line)
+				painter.drawEllipse(self.end_line, 5, 5)
 
 	def mousePressEvent(self, event):
 		self.start_line = self.point
@@ -299,11 +287,13 @@ class Overlay(QtWidgets.QWidget):
 
 
 
-
 class OverlayFactoryFilter(QtCore.QObject):
 	def __init__(self, parent=None):
 		super(OverlayFactoryFilter, self).__init__(parent)
+		
 		self.m_overlay = None
+
+
 
 	def setWidget(self, w):
 		w.installEventFilter(self)
@@ -371,7 +361,7 @@ class Popup(QtWidgets.QWidget):
 # Garbage-collection-management
 # ------------------------------------------------
 class _GCProtector(object):
-	widgets = []
+	widgets=[]
 
 
 # ------------------------------------------------
@@ -387,6 +377,10 @@ def createInstance():
 	except: mainWindow = [x for x in app.topLevelWidgets() if x.objectName() == 'MayaWindow'][0]
 	
 	hotBox = HotBox(parent=mainWindow)
+	hotBox.layoutStack('init') #initialize layout
+	hotBox.overlay = OverlayFactoryFilter()
+	hotBox.overlay.setWidget(hotBox)
+
 	_GCProtector.widgets.append(hotBox)
 
 	return hotBox
