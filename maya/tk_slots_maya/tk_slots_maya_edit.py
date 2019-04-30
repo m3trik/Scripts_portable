@@ -14,7 +14,7 @@ class Edit(Init):
 		super(Edit, self).__init__(*args, **kwargs)
 
 
-		self.ui = self.sb.getUi('selection')
+		self.ui = self.sb.getUi('edit')
 		
 		self.ui.s000.valueChanged.connect(self.chk011) #update radial array
 		self.ui.s001.valueChanged.connect(self.chk011) 
@@ -187,17 +187,84 @@ class Edit(Init):
 
 	def b000(self):
 		'''
-		
+		Mesh Cleanup
 
 		'''
-		pass
-		
+		repair = self.ui.chk004.isChecked() #auto repair errors
+
+
+		#Select components for cleanup from all visible geometry in the scene
+		scene = pm.ls (visible=1, geometry=1)
+		[pm.select (geometry, add=1) for geometry in scene]
+		if repair: #auto repair errors
+			mel.eval(r'polyCleanupArgList 4 { "0","1","1","0","1","0","1","0","0","1e-005","1","0.0001","0","1e-005","0","1","1","0" };')
+		else:
+			mel.eval(r'polyCleanupArgList 3 { "0","2","1","0","1","0","0","0","0","1e-005","1","1e-005","0","1e-005","0","1","1" };')
+
+		if self.ui.chk002.isChecked(): #N-Sided Faces
+			if repair: #Maya Bonus Tools: Convert N-Sided Faces To Quads
+				mel.eval('bt_polyNSidedToQuad;')
+			else: #Find And Select N-Gons
+				#Change to Component mode to retain object highlighting for better visibility
+				pm.changeSelectMode (component=1)
+				#Change to Face Component Mode
+				pm.selectType (smp=0, sme=1, smf=0, smu=0, pv=0, pe=1, pf=0, puv=0)
+				#Select Object/s and Run Script to highlight N-Gons
+				pm.polySelectConstraint (mode=3, type=0x0008, size=3)
+				pm.polySelectConstraint (disable=1)
+				#Populate an in-view message
+				nGons = pm.polyEvaluate (faceComponent=1)
+				self.viewPortMessage("<hl>"+str(nGons[0])+"</hl> N-Gon(s) found.")
+
+		# if self.ui.chk003.isChecked(): #delete loose vertices
+		# 	threshold = self.ui.s006.value()
+		# 	dict_={}
+
+		# 	for obj in rt.selection:
+		# 		if rt.classof(obj) == rt.Editable_poly:
+
+		# 			vertices = bitArrayToArray(rt.polyop.getVertSelection(obj)) #get the selected vertices
+		# 			if not vertices: #else get all vertices for the selected object
+		# 				vertices = list(range(1, rt.polyop.getNumVerts(obj)))
+
+		# 			for vertex in vertices:
+		# 				edges = bitArrayToArray(rt.polyop.getEdgesUsingVert(obj, vertex)) #get the edges that use the vertice
+
+		# 				if len(edges)==2:
+		# 					vertexPosition = rt.polyop.getVert(obj, vertex)
+
+		# 					edgeVerts = bitArrayToArray([rt.polyop.getVertsUsingEdge(obj, e) for e in edges])
+
+		# 					edgeVerts = [v for v in edgeVerts if not v==vertex]
+
+		# 					vector1 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[0]) - vertexPosition)
+		# 					vector2 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[1]) - vertexPosition)
+
+		# 					vector = rt.length(vector1 + vector2)
+
+		# 					dict_[vertex] = vector
+							
+
+		# 			selection = [vertex for vertex, vector in dict_.iteritems() if vector <= float(threshold) / 50]	
+
+		# 			self.undo(True)
+		# 			rt.polyop.setvertselection(obj, selection)
+		# 			rt.messagebox('Found '+str(len(selection))+' vertices.', title='Result')
+		# 			if repair:
+		# 				obj.EditablePoly.Remove()
+		# 			rt.redrawViews()
+		# 			self.undo(False)
+					
+		# 		else: rt.messagebox("The object selected isn't a editable poly or nothing is selected.", title="Vertex Cleaner")
+
+
 	def b001(self):
 		'''
-		
+		Cleanup options
 
 		'''
-		pass
+		mel.eval('CleanupPolygonOptions;')
+
 
 	def b002(self):
 		'''
@@ -208,10 +275,9 @@ class Edit(Init):
 
 	def b003(self):
 		'''
-		Maya Bonus Tools: Convert N-Sided Faces To Quads
-
+		
 		'''
-		mel.eval('bt_polyNSidedToQuad;')
+		pass
 
 	def b004(self):
 		'''
@@ -296,44 +362,29 @@ class Edit(Init):
 
 	def b012(self):
 		'''
-		Find And Select N-Gons
-
+		
 		'''
-		#Change to Component mode to retain object highlighting for better visibility
-		pm.changeSelectMode (component=1)
-		#Change to Face Component Mode
-		pm.selectType (smp=0, sme=1, smf=0, smu=0, pv=0, pe=1, pf=0, puv=0)
-		#Select Object/s and Run Script to highlight N-Gons
-		pm.polySelectConstraint (mode=3, type=0x0008, size=3)
-		pm.polySelectConstraint (disable=1)
-		#Populate an in-view message
-		nGons = pm.polyEvaluate (faceComponent=1)
-		self.viewPortMessage("<hl>"+str(nGons[0])+"</hl> N-Gon(s) found.")
+		pass
 
 	def b013(self):
 		'''
-		Select Components For Cleanup From All Visible Geometry In The Scene
-
+		
 		'''
-		scene = pm.ls (visible=1, geometry=1)
-		[pm.select (geometry, add=1) for geometry in scene]
-		mel.eval(r'polyCleanupArgList 3 { "0","2","1","0","1","0","0","0","0","1e-005","1","1e-005","0","1e-005","0","1","1" };')
+		pass
 
 	def b014(self):
 		'''
-		Cleanup
+		
 
 		'''
-		scene = pm.ls (visible=1, geometry=1)
-		[pm.select (geometry, add=1) for geometry in scene]
-		mel.eval(r'polyCleanupArgList 4 { "0","1","1","0","1","0","1","0","0","1e-005","1","0.0001","0","1e-005","0","1","1","0" };')
+		pass
 
 	def b015(self):
 		'''
-		Cleanup Options
+		
 
 		'''
-		mel.eval('CleanupPolygonOptions;')
+		pass
 
 	def b016(self):
 		'''

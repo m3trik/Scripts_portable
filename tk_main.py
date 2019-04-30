@@ -43,7 +43,7 @@ def moveWindow(window, x, y):
 # ------------------------------------------------
 class HotBox(QtWidgets.QWidget):
 
-	def __init__(self, parent):
+	def __init__(self, parent=None):
 		QtWidgets.QWidget.__init__(self)
 
 		self.setObjectName(self.__class__.__name__) #set object name to: 'HotBox'
@@ -66,16 +66,22 @@ class HotBox(QtWidgets.QWidget):
 		self.sb.setClass(self) #add hotbox instance to switchboard dict
 		self.signal = self.sb.setClass('tk_signals.Signal')()
 
-		self.layoutStack(self.sb.getUiIndex('init')) #initialize layout
-		self.overlay = Overlay(self)
-
-
+		self.layoutStack('init') #initialize layout
+		# self.overlay = Overlay(self)
+		self.overlay = OverlayFactoryFilter(self)
+		self.overlay.setWidget(self)
 
 	def layoutStack(self, index):
-		#args:	[int] #layout index
+		'''
+		#args:
+			index=int - index for ui in stacked layout
+				*or string - name of ui in stacked layout
+		'''
 		# import timeit
 		# t0=timeit.default_timer()
 
+		if type(index)==str:
+			index = self.sb.getUiIndex(index)
 
 		if not self.layout(): #if layout doesnt exist; initialize stackedLayout.
 			self.stackedLayout = QtWidgets.QStackedLayout()
@@ -158,7 +164,7 @@ class HotBox(QtWidgets.QWidget):
 		#args: [QEvent]
 		if event.key()==QtCore.Qt.Key_F12 and not event.isAutoRepeat(): #Key_Meta or Key_Menu =windows key
 			if all ([self.name!="init", self.name!="main", self.name!="viewport"]):
-				self.layoutStack(self.sb.getUiIndex('init')) #reset layout back to init on keyPressEvent
+				self.layoutStack('init') #reset layout back to init on keyPressEvent
 			
 			
 	def keyReleaseEvent(self, event):
@@ -172,9 +178,9 @@ class HotBox(QtWidgets.QWidget):
 		if self.mousePressEventOn:
 			if any ([self.name=="main", self.name=="viewport", self.name=="init", self.name=="display"]):
 				if event.button()==QtCore.Qt.LeftButton:
-					self.layoutStack(self.sb.getUiIndex('viewport'))
+					self.layoutStack('viewport')
 				elif event.button()==QtCore.Qt.RightButton:
-					self.layoutStack(self.sb.getUiIndex('main'))
+					self.layoutStack('main')
 
 					# self.mousePressEventOn = False
 					# # self.mouseDoubleClickEventOn = False
@@ -184,7 +190,7 @@ class HotBox(QtWidgets.QWidget):
 					# # self.mouseDoubleClickEventOn = True
 				
 				elif event.button()==QtCore.Qt.MiddleButton:
-					self.layoutStack(self.sb.getUiIndex('display'))
+					self.layoutStack('display')
 
 
 	def mouseDoubleClickEvent(self, event):
@@ -224,9 +230,7 @@ class HotBox(QtWidgets.QWidget):
 			moveWindow(self, -self.point.x(), -self.point.y())
 		else:
 			moveWindow(self, -self.point.x(), -self.point.y()/2)
-		self.activateWindow()
-		self.raise_()
-		self.setFocus()
+
 
 
 	def hide_(self):
@@ -241,7 +245,7 @@ class HotBox(QtWidgets.QWidget):
 	def hideEvent(self, event):
 		try: MaxPlus.CUI.EnableAccelerators()
 		except: pass
-		self.layoutStack(self.sb.getUiIndex('init'))
+		self.layoutStack('init')
 
 
 	def repeatLastCommand(self):
@@ -257,124 +261,86 @@ class HotBox(QtWidgets.QWidget):
 # ------------------------------------------------
 # PaintEvent Overlay
 # ------------------------------------------------
-# class Overlay(QtWidgets.QWidget):
-# 	def __init__(self, parent=None):
-# 		super(Overlay, self).__init__(parent)
-# 		self.setAttribute(QtCore.Qt.WA_NoSystemBackground)
-# 		self.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
-
-# 		self.hotBox = parent
-# 		self.resize(self.hotBox.width, self.hotBox.height)
-# 		self.start_line, self.end_line = self.hotBox.point, QtCore.QPoint()
-
-
-# 	def paintEvent(self, event):
-# 		# Initialize painter
-# 		painter = QtGui.QPainter(self)
-# 		pen = QtGui.QPen(QtGui.QColor(115, 115, 115), 3, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
-# 		painter.setPen(pen)
-# 		painter.setRenderHint(QtGui.QPainter.Antialiasing, True)
-# 		painter.setBrush(QtGui.QColor(115, 115, 115))
-# 		painter.drawEllipse(self.hotBox.point, 5, 5)
-# 		if not self.end_line.isNull():
-# 			painter.drawLine(self.start_line, self.end_line)
-
-# 	def mousePressEvent(self, event):
-# 		self.end_line = event.pos()
-# 		self.update()
-
-# 	def mouseMoveEvent(self, event):
-# 		self.end_line = event.pos()
-# 		self.update()
-
-# 	def mouseReleaseEvent(self, event):
-# 		self.end_line = QtCore.QPoint()
-
-
-
-# class OverlayFactoryFilter(QtCore.QObject):
-# 	def __init__(self, parent=None):
-# 		super(OverlayFactoryFilter, self).__init__(parent)
-# 		self.m_overlay = None
-
-# 	def setWidget(self, w):
-# 		w.installEventFilter(self)
-# 		if self.m_overlay is None:
-# 			self.m_overlay = Overlay()
-# 		self.m_overlay.setParent(w)
-
-# 	def eventFilter(self, obj, event):
-# 		if not obj.isWidgetType():
-# 			return False
-
-# 		if event.type() == QtCore.QEvent.MouseButtonPress:
-# 			self.m_overlay.mousePressEvent(event)
-# 		elif event.type() == QtCore.QEvent.MouseButtonRelease:
-# 			self.m_overlay.mouseReleaseEvent(event)
-# 		elif event.type() == QtCore.QEvent.MouseMove:
-# 			self.m_overlay.mouseMoveEvent(event)
-# 		elif event.type() == QtCore.QEvent.MouseButtonDblClick:
-# 			self.m_overlay.mouseDoubleClickEvent(event)
-
-# 		elif event.type() == QtCore.QEvent.Resize:
-# 			if self.m_overlay and self.m_overlay.parentWidget() == obj:
-# 				self.m_overlay.resize(obj.size())
-# 		elif event.type() == QtCore.QEvent.Show:
-# 			self.m_overlay.raise_()
-# 		return super(OverlayFactoryFilter, self).eventFilter(obj, event)
-
-
 class Overlay(QtWidgets.QWidget):
 	def __init__(self, parent=None):
 		super(Overlay, self).__init__(parent)
-		
-		self.hotBox = parent
-		self.resize(self.hotBox.width, self.hotBox.height)
-		
+		self.setAttribute(QtCore.Qt.WA_NoSystemBackground)
+		self.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
+
+		self.sb = Switchboard()
+		self.point = QtCore.QPoint(self.sb.getUiSize(percentWidth=50), self.sb.getUiSize(percentHeight=50)) #set point to the middle of the layout
+		self.start_line, self.end_line = self.point, QtCore.QPoint()
+
 
 	def paintEvent(self, event):
-		#args: [QEvent]
-		if any ([self.hotBox.name=="main", self.hotBox.name=="viewport"]):
-			# self.raise_()
-			# self.setWindowFlags(QtCore.Qt.WA_TransparentForMouseEvents)
+		painter = QtGui.QPainter(self) #Initialize painter
+		painter.fillRect(self.rect(), QtGui.QColor(127, 127, 127, 0))
+		pen = QtGui.QPen(QtGui.QColor(115, 115, 115), 3, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
+		painter.setPen(pen)
+		painter.setRenderHint(QtGui.QPainter.Antialiasing, True)
+		painter.setBrush(QtGui.QColor(115, 115, 115))
+		painter.drawEllipse(self.point, 5, 5)
+		if not self.end_line.isNull():
+			painter.drawLine(self.start_line, self.end_line)
+			painter.drawEllipse(self.end_line, 5, 5)
 
-			#Initialize painter
-			painter = QtGui.QPainter(self)
-			pen = QtGui.QPen(QtGui.QColor(115, 115, 115), 3, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
-			painter.setPen(pen)
-			painter.setRenderHint(QtGui.QPainter.Antialiasing, True)
-			painter.setBrush(QtGui.QColor(115, 115, 115))
-			painter.drawEllipse(self.hotBox.point, 5, 5)
+	def mousePressEvent(self, event):
+		self.start_line = self.point
+		self.end_line = event.pos()
+		self.update()
 
-			#perform paint
-			if self.hotBox.mousePosition:
-				mouseX = self.hotBox.mousePosition.x()
-				mouseY = self.hotBox.mousePosition.y()
-				line = QtCore.QLine(mouseX, mouseY, self.hotBox.point.x(), self.hotBox.point.y())
-				painter.drawLine(line)
-				painter.drawEllipse(mouseX-5, mouseY-5, 10, 10)
+	def mouseMoveEvent(self, event):
+		self.end_line = event.pos()
+		self.update()
+
+	def mouseReleaseEvent(self, event):
+		self.start_line = self.point
+		self.end_line = QtCore.QPoint()
+
+
+
+
+class OverlayFactoryFilter(QtCore.QObject):
+	def __init__(self, parent=None):
+		super(OverlayFactoryFilter, self).__init__(parent)
+		self.m_overlay = None
+
+	def setWidget(self, w):
+		w.installEventFilter(self)
+		if self.m_overlay is None:
+			self.m_overlay = Overlay()
+		self.m_overlay.setParent(w)
+
+	def eventFilter(self, obj, event):
+		if not obj.isWidgetType():
+			return False
+
+		if event.type() == QtCore.QEvent.MouseButtonPress:
+			self.m_overlay.mousePressEvent(event)
+		elif event.type() == QtCore.QEvent.MouseButtonRelease:
+			self.m_overlay.mouseReleaseEvent(event)
+		elif event.type() == QtCore.QEvent.MouseMove:
+			self.m_overlay.mouseMoveEvent(event)
+		elif event.type() == QtCore.QEvent.MouseButtonDblClick:
+			self.m_overlay.mouseDoubleClickEvent(event)
+
+		elif event.type() == QtCore.QEvent.Resize:
+			if self.m_overlay and self.m_overlay.parentWidget() == obj:
+				self.m_overlay.resize(obj.size())
+		elif event.type() == QtCore.QEvent.Show:
+			self.m_overlay.raise_()
+			# self.m_overlay.activateWindow()
+		return super(OverlayFactoryFilter, self).eventFilter(obj, event)
+
+
+
+
+
 
 
 # ------------------------------------------------
 # Popup Window
 # ------------------------------------------------
-		# self.stackedLayout = QtWidgets.QStackedLayout()
-
-		# 	for name in self.sb.uiList():
-		# 		ui = getQtui(name) #get the dynamic ui
-		# 		# build dictionary to store size info for each ui
-		# 		self.uiSizeDict [name] = [ui.frameGeometry().width(), ui.frameGeometry().height()]
-		# 		# add ui to layoutStack
-		# 		self.stackedLayout.addWidget(ui) #add each ui
-		# 	self.setLayout(self.stackedLayout)
-		# 	index = self.sb.getUiIndex('init') #Initialize layout index to 'init'
-
-		# #set ui from stackedLayout
-		# self.stackedLayout.setCurrentIndex(index)
-		# #get ui from stackedLayout
-		# self.ui = self.stackedLayout.widget(index)
-
-
 class Popup(QtWidgets.QWidget):
 	def __init__(self, parent = None, ui=None):
 		QtWidgets.QWidget.__init__(self, parent)
@@ -393,6 +359,10 @@ class Popup(QtWidgets.QWidget):
 		# global_point = ui.mapToGlobal(point) #map that point as a global position
 
 		# self.move(global_point - QtCore.QPoint(self.width(), 0)) #widget will be placed from its top-left corner, move it to the left based on the widgets width
+
+
+
+
 
 
 
@@ -447,3 +417,5 @@ print os.path.splitext(os.path.basename(__file__))[0]
 	# 	pass
 
 # ------------------------------------------------
+
+

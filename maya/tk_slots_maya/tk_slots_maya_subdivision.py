@@ -11,7 +11,7 @@ from tk_slots_maya_init import Init
 
 class Subdivision(Init):
 	def __init__(self, *args, **kwargs):
-		super(Subdivsion, self).__init__(*args, **kwargs)
+		super(Subdivision, self).__init__(*args, **kwargs)
 
 
 		self.ui = self.sb.getUi('subdivision')
@@ -40,7 +40,7 @@ class Subdivision(Init):
 		Division Level
 
 		'''
-		value = self.ui.s000.getValue()
+		value = self.ui.s000.value()
 
 		self.setAttributesOnSelected (attribute=".smoothLevel", value=value)
 		pm.optionVar (intValue=["proxyDivisions",1]) #subDiv proxy options: 'divisions'
@@ -50,7 +50,7 @@ class Subdivision(Init):
 		Tesselation Level
 
 		'''
-		value = self.ui.s001.getValue()
+		value = self.ui.s001.value()
 
 		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=value)
 

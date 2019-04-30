@@ -1,13 +1,10 @@
 try: from pymxs import runtime as rt; import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript;from tk_switchboard import Switchboard; sb = Switchboard();from tk_slots_max_init import Init as func;
 except: pass
 
-import os.path, sys
-
-obj = rt.selection[0]
-
-obj.EditablePoly.SetSelection('Edge', rt.BitArray(10))
-
-
+for obj in rt.selection:
+	type_ = rt.classOf(obj)
+	if type_=='Editable_Poly' or type_=='Edit_Poly':
+		print rt.classOf(obj)
 
 
 #~ for obj in rt.selection:

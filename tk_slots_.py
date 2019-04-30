@@ -94,7 +94,7 @@ class Slot(object):
 		'''
 		args:	 setButtons=dynamic ui object
 				 checked/unchecked/enable/disable/visible/invisible=string - the names of buttons to modify separated by ','. ie. 'b000,b001,b022'
-		ex.	setButtons(self.ui, disable='b000', unchecked='b009-12', invisible='b015')
+		ex.	setButtons(self.ui, disable='b000', unchecked='chk009-12', invisible='b015')
 		'''
 		if checked:
 			checked = self.getObject(ui,checked)

@@ -43,28 +43,29 @@ class Selection(Init):
 		'''
 		searchStr = str(self.ui.t001.text()) #asterisk denotes startswith*, *endswith, *contains* 
 		if searchStr:
-			selection = pm.select (pm.ls (searchStr))
+			selection = rt.select(searchStr)
 
 	def chk000(self):
 		'''
-		
+		Select Nth: uncheck other checkboxes
 
 		'''
-		pass
+		self.setButtons(self.ui, unchecked='chk001-2')
+
 
 	def chk001(self):
 		'''
-		
+		Select Nth: uncheck other checkboxes
 
 		'''
-		pass
+		self.setButtons(self.ui, unchecked='chk000,chk002')
 
 	def chk002(self):
 		'''
-		
+		Select Nth: uncheck other checkboxes
 
 		'''
-		pass
+		self.setButtons(self.ui, unchecked='chk000-1')
 
 	def chk004(self):
 		'''
@@ -122,13 +123,13 @@ class Selection(Init):
 
 		if level==1:
 			type_ = 'Vertex' #do not change. used for arg in SetSelection (and to change text in ui)
-			sel = self.convertBitArrayToList(rt.polyop.getVertSelection(obj))
+			sel = self.bitArrayToArray(rt.polyop.getVertSelection(obj))
 		elif level==2:
 			type_ = 'Edge'
-			sel = self.convertBitArrayToList(rt.polyop.getEdgeSelection(obj))
+			sel = self.bitArrayToArray(rt.polyop.getEdgeSelection(obj))
 		elif level==4:
 			type_ = 'Face'
-			sel = self.convertBitArrayToList(rt.polyop.getFaceSelection(obj))
+			sel = self.bitArrayToArray(rt.polyop.getFaceSelection(obj))
 		else:
 			type_ = 'Object'
 			sel = [obj for obj in rt.selection]
@@ -187,39 +188,39 @@ class Selection(Init):
 		list_ = ['Verts', 'Edge', 'Face', 'Border']
 		contents = self.comboBox (cmb, list_, 'Convert to')
 		
-		sel= rt.selection
 		level = rt.subObjectLevel
 		
 		index = cmb.currentIndex()
 		if index!=0:
-			if index==contents.index('Verts'): #Convert Selection To Vertices
-				if level==2:
-					sel.convertselection ('Edge', 'Vertices')
-				if level==4:
-					sel.convertselection ('Face', 'Vertices')
-				if level==3:
-					sel.convertselection ('Border', 'Vertices')
-			elif index==contents.index('Edges'): #Convert Selection To Edges
-				if level==1:
-					sel.convertselection ('Vertex', 'Edge')
-				if level==4:
-					sel.convertselection ('Face', 'Edge')
-				if level==3:
-					sel.convertselection ('Border', 'Edge')
-			elif index==contents.index('Faces'): #Convert Selection To Faces
-				if level==2:
-					sel.convertselection ('Edge', 'Faces')
-				if level==1:	
-					sel.convertselection ('Vertex', 'Faces')
-				if level==3:	
-					sel.convertselection ('Border', 'Faces')
-			elif index==contents.index('Border'): #Convert Selection To Border
-				if level==2:	
-					sel.convertselection ('Edge', 'Border')
-				if level==4:	
-					sel.convertselection ('Face', 'Border')
-				if level==1:	
-					sel.convertselection ('Vertex', 'Border')
+			for obj in rt.selection:
+				if index==contents.index('Verts'): #Convert Selection To Vertices
+					if level==2:
+						obj.convertselection ('Edge', 'Vertex')
+					if level==4:
+						obj.convertselection ('Face', 'Vertex')
+					if level==3:
+						obj.convertselection ('Border', 'Vertex')
+				elif index==contents.index('Edges'): #Convert Selection To Edges
+					if level==1:
+						obj.convertselection ('Vertex', 'Edge')
+					if level==4:
+						obj.convertselection ('Face', 'Edge')
+					if level==3:
+						obj.convertselection ('Border', 'Edge')
+				elif index==contents.index('Faces'): #Convert Selection To Faces
+					if level==2:
+						obj.convertselection ('Edge', 'Faces')
+					if level==1:	
+						obj.convertselection ('Vertex', 'Faces')
+					if level==3:	
+						obj.convertselection ('Border', 'Faces')
+				elif index==contents.index('Border'): #Convert Selection To Border
+					if level==2:	
+						obj.convertselection ('Edge', 'Border')
+					if level==4:	
+						obj.convertselection ('Face', 'Border')
+					if level==1:	
+						obj.convertselection ('Vertex', 'Border')
 			cmb.setCurrentIndex(0)
 
 
@@ -316,53 +317,64 @@ class Selection(Init):
 
 	def b008(self):
 		'''
-		Select Loop
+		Select Nth
 		'''
-		maxEval('macros.run "PolyTools" "Loop"')
+		step = self.ui.s003.value()
+
+
+		if self.ui.chk000.isChecked(): #Select Ring
+			if rt.subObjectLevel==2: #Edge
+				print "# Warning: add correct arguments for this tool #" 
+				self.shortestEdgePath()
+			elif rt.subObjectLevel==4: #Face
+				pass
+
+		if self.ui.chk001.isChecked(): #Select contigious
+			if rt.subObjectLevel==2: #Edge
+				maxEval('''
+				curmod = Modpanel.getcurrentObject()
+				if ( Ribbon_Modeling.IsEditablePoly() ) then
+				(
+					curmod.SelectEdgeRing();
+				)
+				else
+				(
+					curmod.ButtonOp #SelectEdgeRing;
+				)
+				''')
+			elif rt.subObjectLevel==4: #Face
+				pass
 		
-		# if rt.subObjectLevel==2: #Edge
-		# 	mel.eval("selectEveryNEdge;")
-		# elif rt.subObjectLevel==4: #Face
-		# 	self.selectFaceLoop(tolerance=50)
+		if self.ui.chk002.isChecked(): #Shortest Edge Path
+			self.shortestEdgePath()
+			# maxEval('SelectShortestEdgePathTool;')
+
+		else: #Select Loop
+			maxEval('macros.run "PolyTools" "Loop"')
+			
+			# if rt.subObjectLevel==2: #Edge
+			# 	mel.eval("selectEveryNEdge;")
+			# elif rt.subObjectLevel==4: #Face
+			# 	self.selectFaceLoop(tolerance=50)
 
 	def b009(self):
 		'''
-		Select Edge Ring
 
 		'''
-		if rt.subObjectLevel==2: #Edge
-			print "# Warning: add correct arguments for this tool #" 
-			self.shortestEdgePath()
-		elif rt.subObjectLevel==4: #Face
-			pass
+		pass
 
 	def b10(self):
 		'''
-		Select Contigious Loop
+		
 
 		'''
-		if rt.subObjectLevel==2: #Edge
-			maxEval('''
-			curmod = Modpanel.getcurrentObject()
-			if ( Ribbon_Modeling.IsEditablePoly() ) then
-			(
-				curmod.SelectEdgeRing();
-			)
-			else
-			(
-				curmod.ButtonOp #SelectEdgeRing;
-			)
-			''')
-		elif rt.subObjectLevel==4: #Face
-			pass
+		pass
 
 	def b011(self):
 		'''
-		Shortest Edge Path
-
+		
 		'''
-		self.shortestEdgePath()
-		# maxEval('SelectShortestEdgePathTool;')
+		pass
 
 	def b012(self):
 		'''

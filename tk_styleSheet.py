@@ -158,7 +158,7 @@ QHeaderView {
 QHeaderView::section {
 	background: #191919;
 	border: 1px solid #5A5A5A;
-	padding: 4px;
+	padding: 1px;
 }
 
 QHeaderView::section:selected, QHeaderView::section::checked {
@@ -175,8 +175,8 @@ QTabBar {
 
 QTabBar::tab {
 	border-radius: 0px;
-	padding: 4px;
-	margin: 4px;
+	padding: 1px;
+	margin: 1px;
 }
 
 QTabBar::tab:selected {
@@ -184,7 +184,7 @@ QTabBar::tab:selected {
 }
 
 QAbstractSpinBox {
-	padding-right: 15px;
+	padding-right: 0px;
 }
 
 QAbstractSpinBox::up-button, QAbstractSpinBox::down-button {

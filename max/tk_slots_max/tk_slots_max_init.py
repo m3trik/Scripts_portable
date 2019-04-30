@@ -25,11 +25,14 @@ class Init(Slot):
 		infoDict={}
 		sel = rt.selection
 
+		level = rt.subObjectLevel
+
 		selCount = len(sel) #number of selected objects
 		currentSelection = [str(s.name) for s in sel]; infoDict.update({str(selCount)+" Selected Objects: ":currentSelection}) #currently selected objects
 
 
 		for obj in rt.selection:
+			type_ = rt.classOf(obj)
 			
 			# if sel: numQuads = pm.polyEvaluate (selection[0], face=1); infoDict.update({"#Quads: ":numQuads}) #number of faces
 
@@ -40,22 +43,26 @@ class Init(Slot):
 			# xformConstraint = pm.xformConstraint(query=True, type=True)
 			# if xformConstraint=='none': xformConstraint=None; infoDict.update({"Xform Constrait: ":xformConstraint}) #transform constraits
 			
-			try: #if editable poly:
-				if rt.subObjectLevel==1: #get vertex info
-					selectedVerts = Init.convertBitArrayToList(rt.polyop.getVertSelection(obj))
+			if type_=='Editable_Poly' or type_=='Edit_Poly':
+				if level==1: #get vertex info
+					selectedVerts = Init.bitArrayToArray(rt.polyop.getVertSelection(obj))
+					print selectedVerts
+					collapsedList = Init.collapseList(selectedVerts)
+					print collapsedList
 					numVerts = rt.polyop.getNumVerts(obj)
-					infoDict.update({'Selected '+str(len(selectedVerts))+'/'+str(numVerts)+" Vertices: ":selectedVerts}) #selected verts
+					infoDict.update({'Selected '+str(len(selectedVerts))+'/'+str(numVerts)+" Vertices: ":collapsedList}) #selected verts
 
-				if rt.subObjectLevel==2: #get edge info
-					selectedEdges = Init.convertBitArrayToList(rt.polyop.getEdgeSelection(obj))
+				if level==2: #get edge info
+					selectedEdges = Init.bitArrayToArray(rt.polyop.getEdgeSelection(obj))
+					collapsedList = Init.collapseList(selectedEdges)
 					numEdges = rt.polyop.getNumEdges(obj)
-					infoDict.update({'Selected '+str(len(selectedEdges))+'/'+str(numEdges)+" Edges:    ":selectedEdges}) #selected edges
+					infoDict.update({'Selected '+str(len(selectedEdges))+'/'+str(numEdges)+" Edges: ":collapsedList}) #selected edges
 					
-				if rt.subObjectLevel==4: #get face info
-					selectedFaces = Init.convertBitArrayToList(rt.polyop.getFaceSelection(obj))
+				if level==4: #get face info
+					selectedFaces = Init.bitArrayToArray(rt.polyop.getFaceSelection(obj))
+					collapsedList = Init.collapseList(selectedFaces)
 					numFaces = rt.polyop.getNumFaces(obj)
-					infoDict.update({'Selected '+str(len(selectedFaces))+'/'+str(numFaces)+" Faces:    ":selectedFaces}) #selected faces
-			except: pass
+					infoDict.update({'Selected '+str(len(selectedFaces))+'/'+str(numFaces)+" Faces: ":collapsedList}) #selected faces
 
 
 			# selectedUVs = ; infoDict.update({"Selected UV's: ":selectedUVs}) #selected uv's
@@ -158,6 +165,25 @@ class Init(Slot):
 		redrawViews()
 		''')
 
+
+	#Get edges between min and max angle
+	@staticmethod
+	def getEdgesByAngle(minAngle, maxAngle):
+		edgelist=[]
+		for obj in rt.selection:
+
+			for edge in list(range(1, obj.edges.count)):
+				faces = rt.polyOp.getEdgeFaces(obj, edge)
+				if faces.count==2:
+
+					v1 = rt.polyop.getFaceNormal(obj, faces[0])
+					v2 = rt.polyop.getFaceNormal(obj, faces[1])
+
+					angle = rt.acos(rt.dot(rt.normalize(v1), rt.normalize(v2)))
+					if angle >= minAngle and angle <= maxAngle:
+						edgelist.append(edge)
+
+			return edgelist
 
 
 	#Detaches editable_mesh elements into new objects	
@@ -661,8 +687,44 @@ class Init(Slot):
 
 
 	@staticmethod
-	def convertBitArrayToList(bitArray):
-		return [i for i, bit in enumerate(bitArray) if bit==1]
+	def bitArrayToArray(bitArray):
+		'''
+		#args:
+				bitArray=bit array
+						*or list of bit arrays
+
+		#returns:
+				list containing indices of on (True) bits
+		'''
+		if type(bitArray[0])!=bool: #if list of bitArrays: flatten
+			list_=[]
+			for array in bitArray:
+				list_.append([i+1 for i, bit in enumerate(array) if bit==1])
+			return [bit for array in list_ for bit in array]
+
+		return [i+1 for i, bit in enumerate(bitArray) if bit==1]
+
+
+	@staticmethod
+	def collapseList(list_):
+		'''
+		#args:
+				list_=list - of integers
+		#returns:
+				list with sequencial integers collapsed in string format. ie. ['20', '22..28']
+		'''
+		ranges = []
+		for x in list_:
+			if not ranges:
+				ranges.append([x])
+			elif int(x)-prev_x == 1:
+				ranges[-1].append(x)
+			else:
+				ranges.append([x])
+			prev_x = int(x)
+
+		collapsedList = ["..".join([r[0], r[-1]] if len(r) > 1 else r) for r in ranges]
+		return collapsedList
 
 
 	@staticmethod
@@ -787,6 +849,13 @@ class Init(Slot):
 				else:
 					try: rt.modPanel.setCurrentObject(obj.modifiers[0])
 					except: rt.modPanel.setCurrentObject(obj.baseObject) #if index error
+
+
+	@staticmethod
+	def undo(state=True):
+		import pymxs
+		pymxs.undo(state)
+		return state
 
 
 

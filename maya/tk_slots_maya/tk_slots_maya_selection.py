@@ -44,19 +44,27 @@ class Selection(Init):
 
 	def chk000(self):
 		'''
-		
+		Select Nth: uncheck other checkboxes
 
 		'''
-		pass
+		self.setButtons(self.ui, unchecked='chk001-2')
+
 
 	def chk001(self):
 		'''
-		
+		Select Nth: uncheck other checkboxes
 
 		'''
-		pass
+		self.setButtons(self.ui, unchecked='chk000,chk002')
 
 	def chk002(self):
+		'''
+		Select Nth: uncheck other checkboxes
+
+		'''
+		self.setButtons(self.ui, unchecked='chk000-1')
+
+	def chk003(self):
 		'''
 		
 
@@ -228,34 +236,47 @@ class Selection(Init):
 
 	def b008(self):
 		'''
-		Select N-Th in Loop
-
+		Select Nth
 		'''
-		mel.eval("selectEveryNEdge;")
+		step = self.ui.s003.value()
+
+
+		if self.ui.chk000.isChecked(): #Select Ring
+			print "# Warning: add correct arguments for this tool #" 
+			self.shortestEdgePath()
+
+		if self.ui.chk001.isChecked(): #Select contigious
+			# mel.eval('SelectContiguousEdges;')
+			mel.eval('SelectContiguousEdgesOptions;') #Select contigious edge loop options
+		
+		if self.ui.chk002.isChecked(): #Shortest Edge Path
+			self.shortestEdgePath()
+			# maxEval('SelectShortestEdgePathTool;')
+
+		else: #Select Loop
+			mel.eval("selectEveryNEdge;")
+		
 
 	def b009(self):
 		'''
-		Select N-th in Ring
+		
 
 		'''
-		print "# Warning: add correct arguments for this tool #" 
-		self.shortestEdgePath()
+		pass
 
 	def b10(self):
 		'''
-		Select Contigious Loop
+		
 
 		'''
-		# mel.eval('SelectContiguousEdges;')
-		mel.eval('SelectContiguousEdgesOptions;') #Select contigious edge loop options
+		pass
 
 	def b011(self):
 		'''
-		Shortest Edge Path
+		
 
 		'''
-		self.shortestEdgePath()
-		# mel.eval('SelectShortestEdgePathTool;')
+		pass
 
 	def b012(self):
 		'''

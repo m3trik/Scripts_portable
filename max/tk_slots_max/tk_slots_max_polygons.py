@@ -641,26 +641,36 @@ class Polygons(Init):
 		creaseAmount = creaseAmount*0.1 #convert to max 0-1 range
 
 		for obj in rt.selection:
-			# pm.polySoftEdge (angle=0, constructionHistory=0) #Harden edge normal
-			if self.ui.chk002.isChecked(): #uncrease
-				subObjectLevel = rt.subObjectLevel
-				if subObjectLevel==0: #if in object mode; remove all crease values from mesh
+			if rt.classOf(obj)=='Editable_Poly':
+
+				if self.ui.chk011.isChecked(): #crease: Auto
+					minAngle = int(self.ui.s005.value()) 
+					maxAngle = int(self.ui.s006.value()) 
+
+					edgelist = self.getEdgesByAngle(minAngle, maxAngle)
+					rt.polyOp.setEdgeSelection(obj, edgelist)
+
+				# pm.polySoftEdge (angle=0, constructionHistory=0) #Harden edge normal
+				if self.ui.chk002.isChecked(): #uncrease
+					if rt.subObjectLevel==0: #if in object mode; remove all crease values from mesh
+						pass
+					else: #remove crease from sel components
+						obj.EditablePoly.setEdgeData(1, creaseAmount)
+
+				if self.ui.chk004.isChecked(): #crease vertex point
 					pass
-				else: #remove crease from sel components
+				else: #crease edge
 					obj.EditablePoly.setEdgeData(1, creaseAmount)
 
-			if self.ui.chk004.isChecked(): #crease vertex point
-				pass
-			else: #crease edge
-				obj.EditablePoly.setEdgeData(1, creaseAmount)
-
-			if self.ui.chk005.isChecked(): #adjust normal angle
-				edges = rt.polyop.getEdgeSelection(obj)
-				for edge in edges:
-					edgeVerts = rt.polyop.getEdgeVerts(obj, edge)
-					normal = rt.averageSelVertNormal(obj)
-					for vertex in edgeVerts:
-						rt.setNormal(obj, vertex, normal)
+				if self.ui.chk005.isChecked(): #adjust normal angle
+					edges = rt.polyop.getEdgeSelection(obj)
+					for edge in edges:
+						edgeVerts = rt.polyop.getEdgeVerts(obj, edge)
+						normal = rt.averageSelVertNormal(obj)
+						for vertex in edgeVerts:
+							rt.setNormal(obj, vertex, normal)
+		else:
+			print '# Warning: object type '+rt.classOf(obj)+' is not supported. #'
 
 
 	def b056(self):
