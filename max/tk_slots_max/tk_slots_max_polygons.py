@@ -81,16 +81,18 @@ class Polygons(Init):
 		Merge Vertex Options
 
 		'''
-		rt.modPanel.setCurrentObject (rt.selection[0].baseObject)
-		maxEval('macros.run \"Modifiers\" \"VertexWeld\"')
+		for obj in rt.selection:
+			rt.modPanel.setCurrentObject(obj.baseObject)
+			maxEval('macros.run \"Modifiers\" \"VertexWeld\"')
 
 	def b001(self):
 		'''
 		Fill Holes
 
 		'''
-		rt.modPanel.setCurrentObject (rt.selection[0].baseObject)
-		maxEval('macros.run \"Modifiers\" \"Cap_Holes\"')
+		for obj in rt.selection:
+			rt.modPanel.setCurrentObject(obj.baseObject)
+			maxEval('macros.run \"Modifiers\" \"Cap_Holes\"')
 
 	def b002(self):
 		'''
@@ -98,7 +100,8 @@ class Polygons(Init):
 
 		'''
 		for obj in rt.selection:
-			rt.detachElement(obj)
+			maxEval('macros.run \"Ribbon - Modeling\" \"GeometryDetach\"')
+			# rt.detachElement(obj)
 
 	def b003(self):
 		'''
@@ -137,8 +140,9 @@ class Polygons(Init):
 		Slice
 
 		'''
-		rt.modPanel.setCurrentObject (rt.selection[0].baseObject)
-		maxEval('macros.run "Ribbon - Modeling" "CutsQuickSlice"')
+		for obj in rt.selection:
+			rt.modPanel.setCurrentObject(obj.baseObject)
+			maxEval('macros.run \"Ribbon - Modeling\" \"CutsQuickSlice\"')
 		
 	def b005(self):
 		'''
@@ -154,8 +158,9 @@ class Polygons(Init):
 		Extrude
 
 		'''
-		rt.modPanel.setCurrentObject (rt.selection[0].baseObject)
-		maxEval('macros.run "Ribbon - Modeling" "EPoly_Extrude"')
+		for obj in rt.selection:
+			rt.modPanel.setCurrentObject(obj.baseObject)
+			maxEval('macros.run \"Ribbon - Modeling\" \"EPoly_Extrude\"')
 		# for obj in rt.selection:
 		# 	self.extrudeObject(obj)
 
@@ -164,8 +169,9 @@ class Polygons(Init):
 		Bevel (Chamfer)
 
 		'''
-		rt.modPanel.setCurrentObject (rt.selection[0].baseObject)
-		maxEval('macros.run "Ribbon - Modeling" "EPoly_Chamfer"')
+		for obj in rt.selection:
+			rt.modPanel.setCurrentObject(obj.baseObject)
+			maxEval('macros.run \"Ribbon - Modeling\" \"EPoly_Chamfer\"')
 		# width = float(self.ui.s000.value())
 		# chamfer = True
 
@@ -189,19 +195,19 @@ class Polygons(Init):
 		#--[mesh] 0=object level,1=vertex level,2=edge level,3=face,4=polygon,5=element,
 		#--[poly] 0=object level,1=vertex level,2=edge level,3=border,4=polygon,5=element
 		
-		subObjectLevel = rt.subObjectLevel
+		level = rt.subObjectLevel
 
-		for obj in rt. selection:
-			if subObjectLevel == 1: #--vertex level
+		for obj in rt.selection:
+			if level == 1: #--vertex level
 				obj.EditablePoly.collapse('Vertex')
 
-			if subObjectLevel == 2: #--edge level
+			if level == 2: #--edge level
 				obj.EditablePoly.collapse('Edge')
 
-			if subObjectLevel == 4: #--face level
+			if level == 4: #--face level
 				obj.EditablePoly.collapse('Face')
 
-		# maxEval('macros.run "Ribbon - Modeling" "GeometryCollapse"')
+		# maxEval('macros.run \"Ribbon - Modeling\" \"GeometryCollapse\"')
 
 	def b010(self):
 		'''
@@ -332,8 +338,9 @@ class Polygons(Init):
 		Attach
 
 		'''
-		rt.modPanel.setCurrentObject (rt.selection[0].baseObject)
-		maxEval('macros.run "Ribbon - Modeling" "AttachMode"')
+		for obj in rt.selection:
+			rt.modPanel.setCurrentObject(obj.baseObject)
+			maxEval('macros.run \"Ribbon - Modeling\" \"AttachMode\"')
 
 	def b023(self):
 		'''
@@ -513,15 +520,10 @@ class Polygons(Init):
 		Target Weld
 
 		'''
-		rt.modPanel.setCurrentObject (rt.selection[0].baseObject)
-		maxEval('macros.run "Editable Polygon Object" "EPoly_TargetWeld"')
-		# #needs selection order, as is welds to the last index which is the highest component number
-		# for obj in rt.selection:
-		# 	vertices = [i.index for i in obj.selectedVerts]
-
-		# 	target = rt.polyOp.getVert(obj, vertices[-1])
-		# 	for v in vertices[1:]:
-		# 		rt.polyop.weldVerts (obj, vertices[0], v, target)
+		for obj in rt.selection:
+			rt.modPanel.setCurrentObject(obj.baseObject)
+			maxEval('macros.run \"Editable Polygon Object\" \"EPoly_TargetWeld\"')
+		
 
 	def b044(self):
 		'''
@@ -578,8 +580,9 @@ class Polygons(Init):
 		Insert Edgeloop
 
 		'''
-		rt.modPanel.setCurrentObject (rt.selection[0].baseObject)
-		maxEval('macros.run "PolyTools" "SwiftLoop"')
+		for obj in rt.selection:
+			rt.modPanel.setCurrentObject(obj.baseObject)
+			maxEval('macros.run \"PolyTools\" \"SwiftLoop\"')
 
 	def b048(self):
 		'''

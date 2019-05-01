@@ -92,21 +92,29 @@ class Scene(Init):
 		'''
 		cmb = self.ui.cmb004
 		
-		contents = self.comboBox (cmb, ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ"], "Export")
+		list_ = ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ", 'Send to 3dsMax: As New Scene', 'Send to 3dsMax: Update Current', 'Send to 3dsMax: Add to Current']
+
+		contents = self.comboBox (cmb, list_, "Export")
 
 		index = cmb.currentIndex()
 		if index !=0: #hide hotBox then perform operation
 			self.hotBox.hide_()
-			if index == 1: #Export selection
+			if index==1: #Export selection
 				mel.eval('ExportSelection;')
-			if index == 2: #Export options
+			if index==2: #Export options
 				mel.eval('ExportSelectionOptions;')
-			if index == 3: #Unreal
+			if index==3: #Unreal
 				mel.eval('SendToUnrealSelection;')
-			if index == 4: #Unity 
+			if index==4: #Unity 
 				mel.eval('SendToUnitySelection;')
-			if index == 5: #GoZ
+			if index==5: #GoZ
 				mel.eval('print("GoZ"); source"C:/Users/Public/Pixologic/GoZApps/Maya/GoZBrushFromMaya.mel"; source "C:/Users/Public/Pixologic/GoZApps/Maya/GoZScript.mel";')
+			if index==6: #Send to 3dsMax: As New Scene
+				mel.eval('SendAsNewScene3dsMax;') #OneClickMenuExecute ("3ds Max", "SendAsNewScene"); doMaxFlow { "sendNew","perspShape","1" };
+			if index==7: #Send to 3dsMax: Update Current
+				mel.eval('UpdateCurrentScene3dsMax;') #OneClickMenuExecute ("3ds Max", "UpdateCurrentScene"); doMaxFlow { "update","perspShape","1" };
+			if index==8: #Send to 3dsMax: Add to Current
+				mel.eval('AddToCurrentScene3dsMax;') #OneClickMenuExecute ("3ds Max", "AddToScene"); doMaxFlow { "add","perspShape","1" };
 			cmb.setCurrentIndex(0)
 
 	def cmb005(self):
@@ -285,7 +293,10 @@ class Scene(Init):
 		Set Project
 
 		'''
-		mel.eval ("SetProject;")
+		newProject = mel.eval("SetProject;")
+
+		if type(newProject)==str:
+			self.ui.t002.setText(newProject.split('/')[-2])
 
 
 #module name

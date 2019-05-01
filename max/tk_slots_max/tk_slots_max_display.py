@@ -147,10 +147,15 @@ class Display(Init):
 
 	def b009(self):
 		'''
-	
+		Override Material
 
 		'''
-		pass
+		state = self.cycle([0,1], 'OverrideMateridal')
+		if state:
+			rt.actionMan.executeAction(0, "63574") #Views: Override Off
+		else:
+			rt.actionMan.executeAction(0, "63572") #Views: Override with Fast Shader
+		rt.redrawViews
 
 	def b010(self):
 		'''
@@ -161,7 +166,7 @@ class Display(Init):
 
 	def b011(self):
 		'''
-		Toggle Component Id Display
+		Toggle Component ID Display
 
 		'''
 		index = self.cycle([0,1,2,3,4], 'componentID')

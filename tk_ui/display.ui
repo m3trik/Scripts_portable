@@ -452,7 +452,7 @@
     <property name="title">
      <string/>
     </property>
-    <widget class="QPushButton" name="b011_2">
+    <widget class="QPushButton" name="b009">
      <property name="geometry">
       <rect>
        <x>0</x>

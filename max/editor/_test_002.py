@@ -3,9 +3,34 @@ except: pass
 
 
 
+#~ for i in dir(sb.getUi('polygons')):
+	#~ print i
 
-if not len(rt.selection):
-	print '1'
+
+
+docString = sb.getDocString('polygons', 'b013', full=1)
+print docString
+
+#~ sb.prevCommand(as_list=1).append(['method', docString])
+
+#~ print sb.prevCommand(as_list=1)
+
+
+
+#~ def bitArrayToArray(bitArray):
+	#~ if len(bitArray):
+		#~ if type(bitArray[0])!=bool: #if list of bitArrays: flatten
+			#~ list_=[]
+			#~ for array in bitArray:
+				#~ list_.append([i+1 for i, bit in enumerate(array) if bit==1])
+			#~ return [bit for array in list_ for bit in array]
+
+		#~ return [i+1 for i, bit in enumerate(bitArray) if bit==1]
+
+#~ obj = rt.selection[0]
+#~ print bitArrayToArray(rt.polyop.getFaceSelection(obj))
+#~ collapsedList = collapseList(selectedFaces)
+
 
 
 #~ for obj in rt.selection:

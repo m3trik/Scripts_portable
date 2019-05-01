@@ -26,10 +26,10 @@ class Signal(QtCore.QObject):
 
 	def buildConnectionDict(self, name=None):
 
-		if name:
-			self.name = name #build connections for the specified name
-		else:
-			self.name = self.sb.getUiName() #else get current name
+		if name: #build connections for the specified name
+			self.name = name
+		else: #get current name
+			self.name = self.sb.getUiName()
 		self.ui = self.sb.getUi(self.name)
 
 		class_ = self.sb.setClass('tk_slots_'+self.app+'_'+self.name+'.'+self.name.capitalize())() #append class object to switchboardDict
@@ -45,7 +45,8 @@ class Signal(QtCore.QObject):
 				buttonString = prefix+numString
 				# docString = ''
 				# if hasattr(self.ui, buttonString):
-				try: #get the button from the dynamic ui
+				try: 
+					#get the button from the dynamic ui
 					buttonObject = getattr(self.ui, buttonString)  #equivilent to: self.ui.b000
 					size-=1 #decrease search length on each successful match
 
@@ -56,24 +57,30 @@ class Signal(QtCore.QObject):
 					buttonObjectWithSignal = getattr(buttonObject, signal)
 
 					#set the corresponding method
-					if prefix=='i': #connect to layoutStack and pass in an index.
+					if prefix=='i': #connect to layoutStack and pass in an index as int or string name.
 						index = buttonObject.whatsThis().lower() #buttonObject.text().lower()
-						method = lambda i=index: self.hotBox.layoutStack(i) #lambda function to call index. ie. hotBox.layoutStack(6)
+						method = lambda i=index: self.hotBox.layoutStack(i) #lambda function to call index. ie. hotBox.layoutStack(6) or hotBox.layoutStack('polygons')
 					else:
-						method = getattr(class_, buttonString) #use signal 'buttonString' (ie. b006) to get method/slot of the same name in current class.
-						# docString = method.__doc__
-						if prefix!='v':
-							method = [method, lambda m=method: self.onPressedEvent(m)] #add onPressedEvent. pass multiple slots as list.
-						#add values to connectionDict
+						m = getattr(class_, buttonString) #use signal 'buttonString' (ie. b006) to get method/slot of the same name in current class.
+						method = [m, lambda method=m: self.onPressedEvent(method)] #add onPressedEvent. pass multiple slots as list.
+					
+					#add docString info
+					try:
+						docString = m.__doc__
+					except:
+						docString = None
+
+					#add values to connectionDict
 					self.sb.connectionDict(self.name).update(
 						{buttonString:{
 							'buttonObject':buttonObject, 
 							'buttonObjectWithSignal':buttonObjectWithSignal, 
 							'methodObject':method, 
-							'docString':method.__doc__,
+							'docString':docString,
 							'widgetClass':buttonObject.__class__,
 							'widgetClassName':buttonObject.__class__.__name__,
 							}})
+
 				except Exception as error:
 					if error==AttributeError:
 						print 'Exception:',error

@@ -471,211 +471,6 @@ class Init(Slot):
 
 
 
-	#third party script to return node information
-	@staticmethod
-	def getElements(node):
-		obj = node.GetObject()
-		objTriMesh = obj.AsTriObject()
-		objMesh = objTriMesh.GetMesh()
-
-		numVerts = objMesh.GetNumVertices()
-		numFaces = objMesh.GetNumFaces()
-
-		allElements = []
-
-		faces = MaxPlus.BitArray(numFaces)
-		faces.SetAll()
-		verts = [[] for i in range(numVerts)]
-
-		for i in range(0, numFaces):
-			face = objMesh.GetFace(i)
-		for k in range(0,3):
-			verts[face.GetVert(k)].append(i)
-
-		for i in range(0, numFaces): 
-			if faces[i]:
-
-				element = []
-				element.append(i)
-				faceBits = MaxPlus.BitArray(numFaces)
-				vertBits = MaxPlus.BitArray(numVerts)
-
-				#for j in range(0, len(element)):
-				j = 0
-				while j < len(element):
-					fi = element[j]
-					j += 1
-
-				if not faceBits[fi]:
-					face = objMesh.GetFace(fi)
-
-				for k in range(0,3):
-					v = face.GetVert(k)
-
-				if vertBits[v]:
-					continue
-
-		for singleFace in range(0, len(verts[v])):
-			element.append(verts[v][singleFace])
-			vertBits.Set(v, True)
-
-			faceBits.Set(fi, True)
-			faces.Clear(fi)
-
-			allElements.append(MaxPlus.BitArray(faceBits))
-
-		return allElements
-
-
-
-	#--getObjects-------------------------------------------------------------------------
-
-	#builds a selection array, according to arguments.
-	@staticmethod
-	def getObjects(selectionType='current'):
-		'''
-		#args:
-			selectionType='string' 
-			'Current'	currently selected object/s
-			'Geometry'	all geometry objects in scene
-			'All'		all scene objects
-		#returns:
-			selection object as list
-		'''
-
-		selectionType = selectionType.title()
-
-		if (selectionType == "Current"):
-			sel = rt.selection
-
-		if (selectionType == "Geometry"):
-			sel = rt.geometry
-
-		if (selectionType == "All"):
-			sel = maxEval("sel = $*")
-			sel = rt.sel
-
-		
-		if not sel:
-			print "# Warning: Nothing selected. #"
-			return None
-
-		else:
-			return [obj for obj in sel]
-
-
-
-	#--filterSelectionByBaseClass-------------------------------------------------------------
-
-	# returns the base class type as a string
-	@staticmethod
-	def filterSelectionByBaseClass(baseObjClass):
-		'''
-		#args:
-			baseObjClass = <base class object>
-		#returns:
-			the type of base class object as a 'string'
-		'''
-		obj = baseObjClass
-
-		#Editable Mesh
-		if (obj == rt.Editable_Poly):
-			return "Editable_Poly"
-		
-		if (obj == rt.Editable_Patch): #no pymxs.runtime attribute Editable_Patch
-			return "Editable_Patch"
-		
-		if (obj == rt.Editable_mesh): #no pymxs.runtime attribute Editable_mesh
-			return "Editable_Mesh"
-			
-		if (obj == rt.NURBSSurf): #no pymxs.runtime attribute NURBSSurf
-			return "NURBSSurf"
-
-		#Shapes.  If obj matches a shape object; return 'shape'
-		shapes = [rt.Line, rt.Circle, rt.Arc, rt.NGon, rt.Text, rt.Egg, rt.Rectangle, rt.Ellipse, rt.Donut, rt.Star, rt.Helix, rt.Section]
-		for key, value in shapes.iteritems():
-			if obj == key:
-				return "Shape"
-
-		#Geometry.  If obj matches a geometry object; return 'geometry'
-		geometry = [rt.Box, rt.Sphere, rt.Cylinder, rt.Torus, rt.Teapot, rt.TextPlus, rt.Cone, rt.GeoSphere, rt.Tube, rt.Pyramid, rt.Plane]
-		for key, value in geometry.iteritems():
-			if obj == key:
-				return "Geometry"
-
-
-
-	@staticmethod
-	def getSuperClassType(superClass):
-		'''
-		#args:
-			superClass = <super class object>
-		#returns:
-			the type of super class as a 'string'
-		'''
-		# If superclass obj matches a type; return type
-		superClassDict = {rt.GeometryClass:"GeometryClass", rt.shape:"shape", rt.light:"light", rt.camera:"camera", rt.SpacewarpObject:"SpacewarpObject", rt.helper:"helper", rt.system:"system"}
-		#rt.default: "default" #aka unknown type
-		
-		for key, value in superClassDict.iteritems():
-				if (superClass == key):
-					return value
-
-
-
-	@staticmethod
-	def getBaseObjectType(baseObjClass):
-		#takes the base object class (ie. Editable_Poly) and ruturns the type as a string
-		baseObjDict = {rt.Editable_Poly:"Editable_Poly", rt.Editable_mesh:"Editable_Mesh", rt.Editable_Patch:"Editble_Patch", rt.NURBSSurf:"NURBSSurf", rt.Box:"Box", rt.Sphere:"Sphere", rt.Cylinder:"Cylinder", rt.Torus:"Torus", rt.Teapot:"Teapot", rt.TextPlus:"TextPlus", rt.Cone:"Cone", rt.GeoSphere:"GeoSphere", rt.Tube:"Tube", rt.Pyramid:"Pyramid", rt.Plane:"Plane", rt.Line:"Line", rt.Circle:"Circle", rt.Arc:"Arc", rt.NGon:"NGon", rt.Text:"Text", rt.Egg:"Egg", rt.Rectangle:"Rectangle", rt.Ellipse:"Line", rt.Donut:"Donut", rt.Star:"Star", rt.Helix:"Helix", rt.Section:"Section"}
-
-		for key, value in baseObjDict.iteritems():
-			if (baseObjClass == key):
-				return value
-
-
-
-	#returns various object class information as elements in an array
-	#calls filterSelectionByBaseClass()
-	@staticmethod
-	def classInfo (obj, query=False):
-		'''
-		#args:
-			obj=<object>
-			query=print results to console
-		
-		#returns:
-			dictionary:
-				object:----------------------	
-				baseObject:------------------	
-				superClass:------------------	
-				superClass:|string|----------	
-				baseObjectClass:-------------	
-				baseObjectClass:|string|-----	
-				baseObjectClass TYPE:|string|	
-				isValidNode:|bool|-----------	
-		'''
-		if (obj == "noSelection"):
-			return obj #rt.undefined
-
-		baseObj = obj.baseObject
-		baseObjClass = rt.classOf(baseObj) #get the base object class.  ie. Editable_Poly
-		classTypeString = filterSelectionByBaseClass(baseObjClass) #func takes the base object class and returns the type as a string
-		superClass = rt.superClassOf(obj)
-		isValid = rt.isValidNode(obj)
-
-		
-		superClassString = getSuperClassType(superClass)
-		baseObjectString = getBaseObjectType(baseObjClass)
-		
-		
-		classInfoDict = {'object':obj, 'baseObject':baseObj, 'superClass':superClass, 'superClassString':superClassString, 'baseObjectClass':baseObjClass, 'baseObjectClassString':baseObjClassString, 'baseObjectClassType':classTypeString, 'isValidNode':isValid}
-
-		
-		if query:
-			for key, value in classInfoDict.iteritems():
-				print key+': ', value
-
-		return classInfoDict
 
 
 	@staticmethod
@@ -688,13 +483,14 @@ class Init(Slot):
 		#returns:
 				list containing indices of on (True) bits
 		'''
-		if type(bitArray[0])!=bool: #if list of bitArrays: flatten
-			list_=[]
-			for array in bitArray:
-				list_.append([i+1 for i, bit in enumerate(array) if bit==1])
-			return [bit for array in list_ for bit in array]
+		if len(bitArray):
+			if type(bitArray[0])!=bool: #if list of bitArrays: flatten
+				list_=[]
+				for array in bitArray:
+					list_.append([i+1 for i, bit in enumerate(array) if bit==1])
+				return [bit for array in list_ for bit in array]
 
-		return [i+1 for i, bit in enumerate(bitArray) if bit==1]
+			return [i+1 for i, bit in enumerate(bitArray) if bit==1]
 
 
 	@staticmethod
@@ -705,7 +501,9 @@ class Init(Slot):
 		#returns:
 				list with sequencial integers collapsed in string format. ie. ['20', '22..28']
 		'''
-		ranges = []
+		list_ = [str(x) for x in list_] #make sure the list is made up of strings.
+		
+		ranges=[]
 		for x in list_:
 			if not ranges:
 				ranges.append([x])
