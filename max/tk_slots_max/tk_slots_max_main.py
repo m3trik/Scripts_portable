@@ -47,7 +47,7 @@ class Main(Init):
 		if text=='Modeling':
 			self.method('polygons', 'b006')()
 
-		self.hotBox.hide_()
+		
 		
 
 	def v001(self):
@@ -60,7 +60,7 @@ class Main(Init):
 		if text=='Modeling':
 			self.method('polygons','b005')()
 
-		self.hotBox.hide_()
+		
 
 
 	def v002(self):
@@ -72,9 +72,9 @@ class Main(Init):
 		
 		if text=='Modeling':
 			self.method('polygons','b012')()
-			self.hotBox.hide_()
+			
 
-		self.hotBox.hide_()
+		
 
 	def v003(self):
 		'''
@@ -86,7 +86,7 @@ class Main(Init):
 		if text=='Modeling':
 			self.method('polygons','b004')()
 
-		self.hotBox.hide_()
+		
 
 	def v004(self):
 		'''
@@ -98,7 +98,7 @@ class Main(Init):
 		if text=='Modeling':
 			self.method('edit','b032')()
 
-		self.hotBox.hide_()
+		
 
 	def v005(self):
 		'''
@@ -109,7 +109,7 @@ class Main(Init):
 		if text=='Modeling':
 			self.method('polygons','b009')()
 
-		self.hotBox.hide_()
+		
 
 	def v006(self):
 		'''
@@ -121,7 +121,7 @@ class Main(Init):
 		if text=='Modeling':
 			self.method('polygons','b047')()
 
-		self.hotBox.hide_()
+		
 
 	def v007(self):
 		'''
@@ -133,7 +133,7 @@ class Main(Init):
 		if text=='Modeling':
 			self.method('selection','b008')()
 
-		self.hotBox.hide_()
+		
 
 	def v008(self):
 		'''
@@ -145,7 +145,7 @@ class Main(Init):
 		if text=='Modeling':
 			self.method('polygons','b044')()
 
-		self.hotBox.hide_()
+		
 
 	def v009(self):
 		'''
@@ -157,7 +157,7 @@ class Main(Init):
 		if text=='Modeling':
 			self.method('polygons','b022')()
 
-		self.hotBox.hide_()
+		
 
 	def v010(self):
 		'''
@@ -169,7 +169,7 @@ class Main(Init):
 		if text=='Modeling':
 			self.method('polygons','b007')()
 
-		self.hotBox.hide_()
+		
 
 	def v011(self):
 		'''
@@ -181,7 +181,7 @@ class Main(Init):
 		if text=='Modeling':
 			self.method('polygons','b043')()
 
-		self.hotBox.hide_()
+		
 
 	def v012(self):
 		'''

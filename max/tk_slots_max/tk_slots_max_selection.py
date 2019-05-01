@@ -72,14 +72,13 @@ class Selection(Init):
 		Ignore Backfacing (Camera Based Selection)
 
 		'''
-		sel = rt.Filters.GetModOrObj()
-
-		if self.ui.chk004.isChecked():
-			sel.ignoreBackfacing = True
-			# self.viewPortMessage("Camera-based selection <hl>On</hl>.")
-		else:
-			sel.ignoreBackfacing = False
-			# self.viewPortMessage("Camera-based selection <hl>Off</hl>.")
+		for obj in rt.selection:
+			if self.ui.chk004.isChecked():
+				sel.ignoreBackfacing = True
+				# self.viewPortMessage("Camera-based selection <hl>On</hl>.")
+			else:
+				sel.ignoreBackfacing = False
+				# self.viewPortMessage("Camera-based selection <hl>Off</hl>.")
 
 	def chk005(self):
 		'''
@@ -186,42 +185,17 @@ class Selection(Init):
 		'''
 		cmb = self.ui.cmb003
 
-		list_ = ['Verts', 'Edge', 'Face', 'Border']
-		contents = self.comboBox (cmb, list_, 'Convert to')
-		
-		level = rt.subObjectLevel
+		list_ = ['Vertex', 'Edge', 'Border', 'Face', 'Element']
+		contents = self.comboBox (cmb, list_, 'Convert to:')
 		
 		index = cmb.currentIndex()
 		if index!=0:
 			for obj in rt.selection:
-				if index==contents.index('Verts'): #Convert Selection To Vertices
-					if level==2:
-						obj.convertselection ('Edge', 'Vertex')
-					if level==4:
-						obj.convertselection ('Face', 'Vertex')
-					if level==3:
-						obj.convertselection ('Border', 'Vertex')
-				elif index==contents.index('Edges'): #Convert Selection To Edges
-					if level==1:
-						obj.convertselection ('Vertex', 'Edge')
-					if level==4:
-						obj.convertselection ('Face', 'Edge')
-					if level==3:
-						obj.convertselection ('Border', 'Edge')
-				elif index==contents.index('Faces'): #Convert Selection To Faces
-					if level==2:
-						obj.convertselection ('Edge', 'Faces')
-					if level==1:	
-						obj.convertselection ('Vertex', 'Faces')
-					if level==3:	
-						obj.convertselection ('Border', 'Faces')
-				elif index==contents.index('Border'): #Convert Selection To Border
-					if level==2:	
-						obj.convertselection ('Edge', 'Border')
-					if level==4:	
-						obj.convertselection ('Face', 'Border')
-					if level==1:	
-						obj.convertselection ('Vertex', 'Border')
+				for i in list_:
+					if index==contents.index(i):
+						obj.convertSelection('CurrentLevel', i) #Convert current selection to index of string i
+						# rt.setSelectionLevel(obj, i) #Change component mode to i
+						rt.subObjectLevel = contents.index(i)
 			cmb.setCurrentIndex(0)
 
 
@@ -324,11 +298,7 @@ class Selection(Init):
 
 
 		if self.ui.chk000.isChecked(): #Select Ring
-			if rt.subObjectLevel==2: #Edge
-				print "# Warning: add correct arguments for this tool #" 
-				self.shortestEdgePath()
-			elif rt.subObjectLevel==4: #Face
-				pass
+			maxEval('macros.run \"PolyTools\" \"Ring\"')
 
 		if self.ui.chk001.isChecked(): #Select contigious
 			if rt.subObjectLevel==2: #Edge
@@ -351,7 +321,7 @@ class Selection(Init):
 			# maxEval('SelectShortestEdgePathTool;')
 
 		else: #Select Loop
-			maxEval('macros.run "PolyTools" "Loop"')
+			maxEval('macros.run \"PolyTools\" \"Loop\"')
 			
 			# if rt.subObjectLevel==2: #Edge
 			# 	mel.eval("selectEveryNEdge;")

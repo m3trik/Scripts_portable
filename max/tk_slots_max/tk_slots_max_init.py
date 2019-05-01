@@ -593,6 +593,7 @@ class Init(Slot):
 				try:
 					mod = obj.modifiers['TurboSmooth'] or obj.modifiers['TurboSmooth_Pro'] or obj.modifiers['OpenSubDiv']
 					mod.iterations = 0 #set subdivision levels to 0.
+					obj.showcage = True #Show cage on
 				except: pass
 
 		else: #preview on
@@ -606,6 +607,7 @@ class Init(Slot):
 					mod = obj.modifiers['TurboSmooth'] or obj.modifiers['TurboSmooth_Pro'] or obj.modifiers['OpenSubDiv']
 					renderIters = mod.renderIterations #get renderIter value.
 					mod.iterations = renderIters #apply to iterations value.
+					obj.showcage = False #Show cage off
 				except: pass
 
 		rt.redrawViews() #refresh viewport. only those parts of the view that have changed are redrawn.

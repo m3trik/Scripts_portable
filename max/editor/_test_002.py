@@ -3,17 +3,19 @@ except: pass
 
 
 
-#~ for i in dir(sb.getUi('polygons')):
-	#~ print i
+position = 0.5
 
 
 
-docString = sb.getDocString('polygons', 'b013', full=1)
-print docString
+obj = rt.selection[0]
 
-#~ sb.prevCommand(as_list=1).append(['method', docString])
 
-#~ print sb.prevCommand(as_list=1)
+edges = rt.getEdgeSelection(obj)
+for edge in func.bitArrayToArray(edges):
+	obj.EditablePoly.divideEdge(edge, position)
+
+rt.redrawViews
+
 
 
 

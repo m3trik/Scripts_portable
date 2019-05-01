@@ -82,7 +82,7 @@ class Polygons(Init):
 
 		'''
 		for obj in rt.selection:
-			rt.modPanel.setCurrentObject(obj.baseObject)
+			#rt.modPanel.setCurrentObject(obj.baseObject)
 			maxEval('macros.run \"Modifiers\" \"VertexWeld\"')
 
 	def b001(self):
@@ -91,7 +91,7 @@ class Polygons(Init):
 
 		'''
 		for obj in rt.selection:
-			rt.modPanel.setCurrentObject(obj.baseObject)
+			#rt.modPanel.setCurrentObject(obj.baseObject)
 			maxEval('macros.run \"Modifiers\" \"Cap_Holes\"')
 
 	def b002(self):
@@ -141,7 +141,7 @@ class Polygons(Init):
 
 		'''
 		for obj in rt.selection:
-			rt.modPanel.setCurrentObject(obj.baseObject)
+			#rt.modPanel.setCurrentObject(obj.baseObject)
 			maxEval('macros.run \"Ribbon - Modeling\" \"CutsQuickSlice\"')
 		
 	def b005(self):
@@ -159,7 +159,7 @@ class Polygons(Init):
 
 		'''
 		for obj in rt.selection:
-			rt.modPanel.setCurrentObject(obj.baseObject)
+			#rt.modPanel.setCurrentObject(obj.baseObject)
 			maxEval('macros.run \"Ribbon - Modeling\" \"EPoly_Extrude\"')
 		# for obj in rt.selection:
 		# 	self.extrudeObject(obj)
@@ -170,7 +170,7 @@ class Polygons(Init):
 
 		'''
 		for obj in rt.selection:
-			rt.modPanel.setCurrentObject(obj.baseObject)
+			#rt.modPanel.setCurrentObject(obj.baseObject)
 			maxEval('macros.run \"Ribbon - Modeling\" \"EPoly_Chamfer\"')
 		# width = float(self.ui.s000.value())
 		# chamfer = True
@@ -228,10 +228,12 @@ class Polygons(Init):
 		Multi-Cut Tool
 
 		'''
-		obj = rt.Filters.GetModOrObj()
-		if obj:
-			self.setSubObjectLevel(4) #set component mode to face.
-			obj.ToggleCommandMode('CutVertex') #cut vertex tool
+		rt.subObjectLevel = 4
+		for obj in rt.selection:
+			maxEval('macros.run \"Ribbon - Modeling\" \"CutsCut\"')
+		# obj = rt.Filters.GetModOrObj()
+		# if obj:
+		# 	obj.ToggleCommandMode('CutVertex') #cut vertex tool
 		
 
 	def b013(self):
@@ -339,7 +341,7 @@ class Polygons(Init):
 
 		'''
 		for obj in rt.selection:
-			rt.modPanel.setCurrentObject(obj.baseObject)
+			#rt.modPanel.setCurrentObject(obj.baseObject)
 			maxEval('macros.run \"Ribbon - Modeling\" \"AttachMode\"')
 
 	def b023(self):
@@ -521,7 +523,7 @@ class Polygons(Init):
 
 		'''
 		for obj in rt.selection:
-			rt.modPanel.setCurrentObject(obj.baseObject)
+			rt.subObjectLevel = 1 #set component mode to vertex
 			maxEval('macros.run \"Editable Polygon Object\" \"EPoly_TargetWeld\"')
 		
 
@@ -564,16 +566,24 @@ class Polygons(Init):
 		Split
 
 		'''
-		subObjectLevel = rt.subObjectLevel
+		level = rt.subObjectLevel
 
-		if subObjectLevel==1:
-			mel.eval("performPolyPoke 1;")
+		for obj in rt.selection:
+			if level==1:
+				mel.eval("performPolyPoke 1;")
 
-		if subObjectLevel==2:
-			mel.eval("polySubdivideEdge -ws 0 -s 0 -dv 1 -ch 0;")
+			if level==2:
+				position = 0.5
 
-		if subObjectLevel==4:
-			mel.eval("polyChamferVtx 0 0.25 0;")
+				edges = rt.getEdgeSelection(obj)
+				for edge in self.bitArrayToArray(edges):
+					rt.polyop.divideEdge(obj, edge, position)
+
+			if level==4:
+				mel.eval("polyChamferVtx 0 0.25 0;")
+
+		rt.redrawViews
+
 
 	def b047(self):
 		'''
@@ -581,7 +591,7 @@ class Polygons(Init):
 
 		'''
 		for obj in rt.selection:
-			rt.modPanel.setCurrentObject(obj.baseObject)
+			rt.subObjectLevel = 0
 			maxEval('macros.run \"PolyTools\" \"SwiftLoop\"')
 
 	def b048(self):

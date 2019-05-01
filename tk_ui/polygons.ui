@@ -146,9 +146,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>150</y>
+      <y>130</y>
       <width>110</width>
-      <height>91</height>
+      <height>111</height>
      </rect>
     </property>
     <property name="title">
@@ -572,6 +572,74 @@
       <double>1.000000000000000</double>
      </property>
     </widget>
+    <widget class="QPushButton" name="b012">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>90</y>
+       <width>111</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Divide faces by splitting cutting and inserting edge loops</string>
+     </property>
+     <property name="text">
+      <string>Multi-Cut</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="balette" stdset="0">
+      <palette>
+       <active>
+        <colorrole role="Highlight">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>168</red>
+           <green>152</green>
+           <blue>250</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </active>
+       <inactive>
+        <colorrole role="Highlight">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>168</red>
+           <green>152</green>
+           <blue>250</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </inactive>
+       <disabled>
+        <colorrole role="Highlight">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>0</red>
+           <green>120</green>
+           <blue>215</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </disabled>
+      </palette>
+     </property>
+    </widget>
     <zorder>b018</zorder>
     <zorder>b006</zorder>
     <zorder>b007</zorder>
@@ -582,6 +650,7 @@
     <zorder>chk007</zorder>
     <zorder>b044</zorder>
     <zorder>s000</zorder>
+    <zorder>b012</zorder>
    </widget>
    <widget class="QGroupBox" name="Mesh">
     <property name="geometry">
@@ -2023,9 +2092,9 @@
     <property name="geometry">
      <rect>
       <x>130</x>
-      <y>90</y>
+      <y>110</y>
       <width>110</width>
-      <height>171</height>
+      <height>151</height>
      </rect>
     </property>
     <property name="title">
@@ -2038,7 +2107,7 @@
      <property name="geometry">
       <rect>
        <x>90</x>
-       <y>70</y>
+       <y>50</y>
        <width>21</width>
        <height>19</height>
       </rect>
@@ -2138,7 +2207,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>90</y>
+       <y>70</y>
        <width>91</width>
        <height>19</height>
       </rect>
@@ -2209,7 +2278,7 @@
      <property name="geometry">
       <rect>
        <x>90</x>
-       <y>90</y>
+       <y>70</y>
        <width>21</width>
        <height>19</height>
       </rect>
@@ -2454,7 +2523,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>70</y>
+       <y>50</y>
        <width>91</width>
        <height>19</height>
       </rect>
@@ -2515,74 +2584,6 @@
       </palette>
      </property>
     </widget>
-    <widget class="QPushButton" name="b012">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>10</y>
-       <width>111</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Divide faces by splitting cutting and inserting edge loops</string>
-     </property>
-     <property name="text">
-      <string>Multi-Cut</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>18</width>
-       <height>18</height>
-      </size>
-     </property>
-     <property name="balette" stdset="0">
-      <palette>
-       <active>
-        <colorrole role="Highlight">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>168</red>
-           <green>152</green>
-           <blue>250</blue>
-          </color>
-         </brush>
-        </colorrole>
-       </active>
-       <inactive>
-        <colorrole role="Highlight">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>168</red>
-           <green>152</green>
-           <blue>250</blue>
-          </color>
-         </brush>
-        </colorrole>
-       </inactive>
-       <disabled>
-        <colorrole role="Highlight">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>0</red>
-           <green>120</green>
-           <blue>215</blue>
-          </color>
-         </brush>
-        </colorrole>
-       </disabled>
-      </palette>
-     </property>
-    </widget>
     <widget class="QPushButton" name="b010">
      <property name="enabled">
       <bool>true</bool>
@@ -2590,7 +2591,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>150</y>
+       <y>130</y>
        <width>91</width>
        <height>19</height>
       </rect>
@@ -2661,7 +2662,7 @@
      <property name="geometry">
       <rect>
        <x>90</x>
-       <y>150</y>
+       <y>130</y>
        <width>21</width>
        <height>19</height>
       </rect>
@@ -2761,7 +2762,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>50</y>
+       <y>10</y>
        <width>111</width>
        <height>19</height>
       </rect>
@@ -2829,7 +2830,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>130</y>
+       <y>110</y>
        <width>111</width>
        <height>19</height>
       </rect>
@@ -2906,7 +2907,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>110</y>
+       <y>90</y>
        <width>111</width>
        <height>19</height>
       </rect>
