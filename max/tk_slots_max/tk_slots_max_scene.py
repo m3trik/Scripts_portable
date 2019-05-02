@@ -96,7 +96,7 @@ class Scene(Init):
 
 		index = cmb.currentIndex()
 		if index!=0:
-			rt.loadMaxFile(str(contents[index]))
+			rt.loadMaxFile(path+'\\'+str(contents[index]))
 			self.hotBox.hide_()
 			cmb.setCurrentIndex(0)
 

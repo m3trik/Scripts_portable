@@ -3,19 +3,7 @@ except: pass
 
 
 
-position = 0.5
-
-
-
-obj = rt.selection[0]
-
-
-edges = rt.getEdgeSelection(obj)
-for edge in func.bitArrayToArray(edges):
-	obj.EditablePoly.divideEdge(edge, position)
-
-rt.redrawViews
-
+rt.macros.run('PolyTools', 'Ring')
 
 
 

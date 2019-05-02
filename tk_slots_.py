@@ -229,6 +229,29 @@ class Slot(object):
 
 
 
+		
+	@staticmethod
+	def collapseList(list_):
+		'''
+		#args:
+				list_=list - of integers
+		#returns:
+				list with sequencial integers collapsed in string format. ie. ['20', '22..28']
+		'''
+		list_ = [str(x) for x in list_] #make sure the list is made up of strings.
+		
+		ranges=[]
+		for x in list_:
+			if not ranges:
+				ranges.append([x])
+			elif int(x)-prev_x == 1:
+				ranges[-1].append(x)
+			else:
+				ranges.append([x])
+			prev_x = int(x)
+
+		collapsedList = ["..".join([r[0], r[-1]] if len(r) > 1 else r) for r in ranges]
+		return collapsedList
 	
 	
 

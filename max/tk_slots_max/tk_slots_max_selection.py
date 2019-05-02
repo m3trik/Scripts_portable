@@ -298,9 +298,9 @@ class Selection(Init):
 
 
 		if self.ui.chk000.isChecked(): #Select Ring
-			maxEval('macros.run \"PolyTools\" \"Ring\"')
+			rt.macros.run('PolyTools', 'Ring')
 
-		if self.ui.chk001.isChecked(): #Select contigious
+		elif self.ui.chk001.isChecked(): #Select contigious
 			if rt.subObjectLevel==2: #Edge
 				maxEval('''
 				curmod = Modpanel.getcurrentObject()
@@ -316,12 +316,12 @@ class Selection(Init):
 			elif rt.subObjectLevel==4: #Face
 				pass
 		
-		if self.ui.chk002.isChecked(): #Shortest Edge Path
+		elif self.ui.chk002.isChecked(): #Shortest Edge Path
 			self.shortestEdgePath()
 			# maxEval('SelectShortestEdgePathTool;')
 
 		else: #Select Loop
-			maxEval('macros.run \"PolyTools\" \"Loop\"')
+			rt.macros.run('PolyTools', 'Loop')
 			
 			# if rt.subObjectLevel==2: #Edge
 			# 	mel.eval("selectEveryNEdge;")

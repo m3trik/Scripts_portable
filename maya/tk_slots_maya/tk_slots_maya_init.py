@@ -30,7 +30,7 @@ class Init(Slot):
 		selectionCount = len(selection); infoDict.update({"Selection Count: ":selectionCount}) #number of selected objects
 		currentSelection = [str(s) for s in pm.ls (selection=1)]; infoDict.update({"Current Selection: ":currentSelection}) #currently selected objects
 		
-		if selection: numQuads = pm.polyEvaluate (selection[0], face=1); infoDict.update({"#Quads: ":numQuads}) #number of faces
+
 
 		symmetry = pm.symmetricModelling(query=1, symmetry=1);
 		if symmetry==1: symmetry=True; infoDict.update({"Symmetry State: ":symmetry}) #symmetry state
@@ -39,14 +39,25 @@ class Init(Slot):
 		xformConstraint = pm.xformConstraint(query=True, type=True)
 		if xformConstraint=='none': xformConstraint=None; infoDict.update({"Xform Constrait: ":xformConstraint}) #transform constraits
 
-		selectedVerts = pm.polyEvaluate(vertexComponent=1); 
-		if type(selectedVerts)==int: infoDict.update({"Selected Vertices: ":selectedVerts}) #selected verts
-		
-		selectedEdges = pm.polyEvaluate(edgeComponent=1); 
-		if type(selectedEdges)==int: infoDict.update({"Selected Edges: ":selectedEdges}) #selected edges
-		
-		selectedFaces = pm.polyEvaluate(faceComponent=1); 
-		if type(selectedFaces)==int: infoDict.update({"Selected Faces: ":selectedFaces}) #selected faces
+
+		if pm.selectType(query=1, vertex=1):
+			selectedVerts = [v.split('[')[-1].rstrip(']') for v in pm.filterExpand(selectionMask=31)] #pm.polyEvaluate(vertexComponent=1);
+			collapsedList = self.collapseList(selectedVerts)
+			numVerts = pm.polyEvaluate (selection[0], vertex=1)
+			infoDict.update({'Selected '+str(len(selectedVerts))+'/'+str(numVerts)+" Vertices: ":collapsedList}) #selected verts
+			
+		if pm.selectType(query=1, edge=1):
+			selectedEdges = [e.split('[')[-1].rstrip(']') for e in pm.filterExpand(selectionMask=32)] #pm.polyEvaluate(edgeComponent=1);
+			collapsedList = self.collapseList(selectedEdges)
+			numEdges = pm.polyEvaluate (selection[0], Edge=1)
+			infoDict.update({'Selected '+str(len(selectedEdges))+'/'+str(numEdges)+" Edges: ":collapsedList}) #selected edges
+			
+		if pm.selectType(query=1, facet=1):
+			selectedFaces = [f.split('[')[-1].rstrip(']') for f in pm.filterExpand(selectionMask=34)] #pm.polyEvaluate(faceComponent=1);
+			collapsedList = self.collapseList(selectedFaces)
+			numFaces = pm.polyEvaluate (selection[0], face=1)
+			infoDict.update({'Selected '+str(len(selectedFaces))+'/'+str(numFaces)+" Faces: ":collapsedList}) #selected faces
+
 		
 		# selectedUVs = pm.polyEvaluate(uvComponent=1); 
 		# if type(selectedUvs)==int: infoDict.update({"Selected UV's: ":selectedUVs}) #selected uv's

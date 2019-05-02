@@ -34,7 +34,7 @@ class Init(Slot):
 		for obj in rt.selection:
 			type_ = str(rt.classOf(obj))
 			
-			# if sel: numQuads = pm.polyEvaluate (selection[0], face=1); infoDict.update({"#Quads: ":numQuads}) #number of faces
+			
 
 			# symmetry = pm.symmetricModelling(query=1, symmetry=1);
 			# if symmetry==1: symmetry=True; infoDict.update({"Symmetry State: ":symmetry}) #symmetry state
@@ -46,19 +46,19 @@ class Init(Slot):
 			if type_=='Editable_Poly' or type_=='Edit_Poly':
 				if level==1: #get vertex info
 					selectedVerts = Init.bitArrayToArray(rt.polyop.getVertSelection(obj))
-					collapsedList = Init.collapseList(selectedVerts)
+					collapsedList = self.collapseList(selectedVerts)
 					numVerts = rt.polyop.getNumVerts(obj)
 					infoDict.update({'Selected '+str(len(selectedVerts))+'/'+str(numVerts)+" Vertices: ":collapsedList}) #selected verts
 
 				if level==2: #get edge info
 					selectedEdges = Init.bitArrayToArray(rt.polyop.getEdgeSelection(obj))
-					collapsedList = Init.collapseList(selectedEdges)
+					collapsedList = self.collapseList(selectedEdges)
 					numEdges = rt.polyop.getNumEdges(obj)
 					infoDict.update({'Selected '+str(len(selectedEdges))+'/'+str(numEdges)+" Edges: ":collapsedList}) #selected edges
 					
 				if level==4: #get face info
 					selectedFaces = Init.bitArrayToArray(rt.polyop.getFaceSelection(obj))
-					collapsedList = Init.collapseList(selectedFaces)
+					collapsedList = self.collapseList(selectedFaces)
 					numFaces = rt.polyop.getNumFaces(obj)
 					infoDict.update({'Selected '+str(len(selectedFaces))+'/'+str(numFaces)+" Faces: ":collapsedList}) #selected faces
 
@@ -494,30 +494,6 @@ class Init(Slot):
 
 
 	@staticmethod
-	def collapseList(list_):
-		'''
-		#args:
-				list_=list - of integers
-		#returns:
-				list with sequencial integers collapsed in string format. ie. ['20', '22..28']
-		'''
-		list_ = [str(x) for x in list_] #make sure the list is made up of strings.
-		
-		ranges=[]
-		for x in list_:
-			if not ranges:
-				ranges.append([x])
-			elif int(x)-prev_x == 1:
-				ranges[-1].append(x)
-			else:
-				ranges.append([x])
-			prev_x = int(x)
-
-		collapsedList = ["..".join([r[0], r[-1]] if len(r) > 1 else r) for r in ranges]
-		return collapsedList
-
-
-	@staticmethod
 	def convertToEditPoly(prompt=False):
 		'''
 		args:
@@ -641,6 +617,10 @@ class Init(Slot):
 				else:
 					try: rt.modPanel.setCurrentObject(obj.modifiers[0])
 					except: rt.modPanel.setCurrentObject(obj.baseObject) #if index error
+
+
+
+
 
 
 	@staticmethod
