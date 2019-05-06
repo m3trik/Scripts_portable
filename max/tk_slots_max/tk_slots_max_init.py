@@ -692,7 +692,7 @@ class Init(Slot):
 					rt.polyop.setVertSelection(obj, selection)
 					print 'Found '+str(len(selection))+' isolated vertices.'
 					if repair:
-						obj.EditablePoly.Remove()
+						obj.EditablePoly.remove(selLevel='Vertex', flag=1)
 						obj.selectMode = 0 #multi-component selection preview off
 					rt.redrawViews()
 					Init.undo(False)

@@ -2,15 +2,28 @@ try: from pymxs import runtime as rt; import MaxPlus; maxEval = MaxPlus.Core.Eva
 except: pass
 
 
+level = rt.subObjectLevel
+
+for obj in rt.selection:
+	if level==1: #vertices
+		vertices = rt.polyop.getVertSelection(obj)
+		obj.EditablePoly.remove(selLevel='Vertex', flag=1)
+	if level==2: #edges
+		edges = rt.polyop.getEdgeSelection(obj)
+		obj.EditablePoly.remove(selLevel='Edge', flag=1)
+		#~ rt.polyop.deleteEdges(obj, edges, delIsoVerts=1)
+	if level==4: #faces
+		faces = rt.polyop.getFaceSelection(obj)
+		rt.polyop.deleteFaces(obj, faces, delIsoVerts=1)
 
 
-percentage = 80
+#~ percentage = 80
 
-for i in rt.vrayLightsAndHelpersAsArray():
-	if rt.classOf(i)==rt.VRayLight:
-		value = i.multiplier
-		p = value*percentage /100
-		i.multiplier = p
+#~ for i in rt.vrayLightsAndHelpersAsArray():
+	#~ if rt.classOf(i)==rt.VRayLight:
+		#~ value = i.multiplier
+		#~ p = value*percentage /100
+		#~ i.multiplier = p
 
 
 

@@ -531,6 +531,7 @@ class Polygons(Init):
 				if subObjectLevel==level:
 					element=rt.polyop.getElementsUsingFace(obj, 1)
 					rt.polyop.detachFaces(obj, element, delete=True, asNode=True)
+					break
 
 	def b045(self):
 		'''

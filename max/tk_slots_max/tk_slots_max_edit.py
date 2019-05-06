@@ -471,14 +471,23 @@ class Edit(Init):
 		'''
 		Delete Components
 		'''
+		level = rt.subObjectLevel
+
 		for obj in rt.selection:
-			if rt.subObjectLevel==2: #edges
+			if level==1: #vertices
+				obj.EditablePoly.remove(selLevel='Vertex', flag=1)
+
+			if level==2: #edges
 				edges = rt.polyop.getEdgeSelection(obj)
 				verts = rt.polyop.getVertsUsingEdge(obj, edges)
 				rt.polyop.setVertSelection(obj, verts) #set vertex selection to be used by meshCleanup
-			
-			obj.EditablePoly.Remove()
-			self.meshCleanup(isolatedVerts=1, repair=1) #if any isolated verts exist: delete them
+				
+				obj.EditablePoly.remove(selLevel='Edge', flag=1)
+				self.meshCleanup(isolatedVerts=1, repair=1) #if any isolated verts exist: delete them
+
+			if level==4: #faces
+				faces = rt.polyop.getFaceSelection(obj)
+				rt.polyop.deleteFaces(obj, faces, delIsoVerts=1)
 
 
 	def b033(self):
