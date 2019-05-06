@@ -93,8 +93,8 @@ class Scene(Init):
 		path = MaxPlus.PathManager.GetAutobackDir()
 		files = [f for f in os.listdir(path) if f.endswith('.max') or f.endswith('.bak')] #get list of max autosave files
 
-		list_ = [f+'  '+datetime.fromtimestamp(os.path.getmtime(f)).strftime('%H:%M  %m-%d-%Y') for f in files] #attach modified timestamp
-
+		list_ = [f+'  '+datetime.fromtimestamp(os.path.getmtime(path+'\\'+f)).strftime('%H:%M  %m-%d-%Y') for f in files] #attach modified timestamp
+		
 		contents = self.comboBox (cmb, list_, "Recent Autosave")
 
 		index = cmb.currentIndex()
