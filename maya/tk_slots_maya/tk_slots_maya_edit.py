@@ -49,7 +49,7 @@ class Edit(Init):
 
 	def chk007(self):
 		'''
-		Delete: Translate To Components
+		Duplicate: Translate To Components
 
 		'''
 		if self.ui.chk007.isChecked():

@@ -27,8 +27,9 @@ class Init(Slot):
 
 		level = rt.subObjectLevel
 
-		selCount = len(sel) #number of selected objects
-		currentSelection = [str(s.name) for s in sel]; infoDict.update({str(selCount)+" Selected Objects: ":currentSelection}) #currently selected objects
+		if level==0: #object level
+			selCount = len(sel) #number of selected objects
+			currentSelection = [str(s.name) for s in sel]; infoDict.update({str(selCount)+" Selected Objects: ":currentSelection}) #currently selected objects
 
 
 		for obj in rt.selection:
@@ -530,6 +531,16 @@ class Init(Slot):
 
 
 	@staticmethod
+	def toggleMaterialOverride():
+		state = Slot.cycle([0,1], 'OverrideMateridal') #toggle 0/1
+		if state:
+			rt.actionMan.executeAction(0, "63574") #Views: Override Off
+		else:
+			rt.actionMan.executeAction(0, "63572") #Views: Override with Fast Shader
+		rt.redrawViews
+
+
+	@staticmethod
 	def displayWireframeOnMesh(state=None, query=False):
 		'''
 		args:
@@ -619,6 +630,74 @@ class Init(Slot):
 					except: rt.modPanel.setCurrentObject(obj.baseObject) #if index error
 
 
+
+
+	@staticmethod
+	def meshCleanup(isolatedVerts=False, edgeAngle=10, nGons=False, repair=False):
+		'''
+		find mesh artifacts
+		#args:
+			isolatedVerts=bool - find vertices with two edges which fall below a specified angle.
+			edgeAngle=int - used with isolatedVerts argument to specify the angle tolerance
+			nGons=bool - search for n sided polygon faces.
+			repair=bool - delete or auto repair any of the specified artifacts 
+		'''
+
+		for obj in rt.selection:
+			if rt.classof(obj) == rt.Editable_poly:
+				obj.selectMode = 2 #multi-component selection preview
+
+
+				if nGons: #Convert N-Sided Faces To Quads
+					if repair:
+						maxEval('macros.run \"Modifiers\" \"QuadifyMeshMod\"')
+					else: #Find and select N-gons
+						Init.setSubObjectLevel(4)
+							
+						faces = list(range(1, obj.faces.count))
+						nGons_ = [f for f in faces if rt.polyop.getFaceDeg(obj, f)>4]
+							
+						rt.setFaceSelection(obj, nGons_)
+						print 'Found '+str(len(nGons_))+' N-gons.'
+
+
+				if isolatedVerts: #delete loose vertices
+					dict_={}
+
+					vertices = Init.bitArrayToArray(rt.polyop.getVertSelection(obj)) #get the selected vertices
+					if not vertices: #else get all vertices for the selected object
+						vertices = list(range(1, rt.polyop.getNumVerts(obj)))
+
+					for vertex in vertices:
+						edges = Init.bitArrayToArray(rt.polyop.getEdgesUsingVert(obj, vertex)) #get the edges that use the vertice
+
+						if len(edges)==2:
+							vertexPosition = rt.polyop.getVert(obj, vertex)
+
+							edgeVerts = Init.bitArrayToArray([rt.polyop.getVertsUsingEdge(obj, e) for e in edges])
+
+							edgeVerts = [v for v in edgeVerts if not v==vertex]
+
+							vector1 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[0]) - vertexPosition)
+							vector2 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[1]) - vertexPosition)
+
+							vector = rt.length(vector1 + vector2)
+
+							dict_[vertex] = vector
+							
+
+					selection = [vertex for vertex, vector in dict_.iteritems() if vector <= float(edgeAngle) / 50]	
+
+					Init.undo(True)
+					rt.polyop.setVertSelection(obj, selection)
+					print 'Found '+str(len(selection))+' isolated vertices.'
+					if repair:
+						obj.EditablePoly.Remove()
+						obj.selectMode = 0 #multi-component selection preview off
+					rt.redrawViews()
+					Init.undo(False)
+					
+			else: rt.messagebox("Selection isn't an editable poly or nothing is selected.", title="Vertex Cleaner")
 
 
 

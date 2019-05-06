@@ -51,7 +51,7 @@ class Edit(Init):
 
 	def chk007(self):
 		'''
-		Delete: Translate To Components
+		Duplicate: Translate To Components
 
 		'''
 		if self.ui.chk007.isChecked():
@@ -190,62 +190,13 @@ class Edit(Init):
 		'''
 		Mesh Cleanup
 
-		'''
+		'''	
+		isolatedVerts = self.ui.chk003.isChecked() #isolated vertices
+		edgeAngle = self.ui.s006.value()
+		nGons = self.ui.chk002.isChecked() #n-sided polygons
 		repair = self.ui.chk004.isChecked() #auto repair errors
 
-		if self.ui.chk002.isChecked(): #Convert N-Sided Faces To Quads
-			if repair:
-				maxEval('macros.run \"Modifiers\" \"QuadifyMeshMod\"')
-			else: #Find and select N-gons
-				self.setSubObjectLevel(4)
-
-				for obj in rt.selection:
-					
-					faces = list(range(1, obj.faces.count))
-					nGons = [f for f in faces if rt.polyop.getFaceDeg(obj, f)>4]
-					
-					rt.setFaceSelection(obj, nGons)
-
-		if self.ui.chk003.isChecked(): #delete loose vertices
-			threshold = self.ui.s006.value()
-			dict_={}
-
-			for obj in rt.selection:
-				if rt.classof(obj) == rt.Editable_poly:
-
-					vertices = self.bitArrayToArray(rt.polyop.getVertSelection(obj)) #get the selected vertices
-					if not vertices: #else get all vertices for the selected object
-						vertices = list(range(1, rt.polyop.getNumVerts(obj)))
-
-					for vertex in vertices:
-						edges = self.bitArrayToArray(rt.polyop.getEdgesUsingVert(obj, vertex)) #get the edges that use the vertice
-
-						if len(edges)==2:
-							vertexPosition = rt.polyop.getVert(obj, vertex)
-
-							edgeVerts = self.bitArrayToArray([rt.polyop.getVertsUsingEdge(obj, e) for e in edges])
-
-							edgeVerts = [v for v in edgeVerts if not v==vertex]
-
-							vector1 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[0]) - vertexPosition)
-							vector2 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[1]) - vertexPosition)
-
-							vector = rt.length(vector1 + vector2)
-
-							dict_[vertex] = vector
-							
-
-					selection = [vertex for vertex, vector in dict_.iteritems() if vector <= float(threshold) / 50]	
-
-					self.undo(True)
-					rt.polyop.setvertselection(obj, selection)
-					print 'Found '+str(len(selection))+' isolated vertices.'
-					if repair:
-						obj.EditablePoly.Remove()
-					rt.redrawViews()
-					self.undo(False)
-					
-				else: rt.messagebox("The object selected isn't a editable poly or nothing is selected.", title="Vertex Cleaner")
+		self.meshCleanup(isolatedVerts=isolatedVerts, edgeAngle=edgeAngle, nGons=nGons, repair=repair)
 
 
 	def b001(self):
@@ -518,10 +469,17 @@ class Edit(Init):
 
 	def b032(self):
 		'''
-		Delete Components  
+		Delete Components
 		'''
 		for obj in rt.selection:
+			if rt.subObjectLevel==2: #edges
+				edges = rt.polyop.getEdgeSelection(obj)
+				verts = rt.polyop.getVertsUsingEdge(obj, edges)
+				rt.polyop.setVertSelection(obj, verts) #set vertex selection to be used by meshCleanup
+			
 			obj.EditablePoly.Remove()
+			self.meshCleanup(isolatedVerts=1, repair=1) #if any isolated verts exist: delete them
+
 
 	def b033(self):
 		'''

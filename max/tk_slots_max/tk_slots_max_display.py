@@ -150,12 +150,7 @@ class Display(Init):
 		Override Material
 
 		'''
-		state = self.cycle([0,1], 'OverrideMateridal')
-		if state:
-			rt.actionMan.executeAction(0, "63574") #Views: Override Off
-		else:
-			rt.actionMan.executeAction(0, "63572") #Views: Override with Fast Shader
-		rt.redrawViews
+		self.toggleMaterialOverride()
 
 	def b010(self):
 		'''

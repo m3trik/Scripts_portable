@@ -2,6 +2,7 @@ import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
 from pymxs import runtime as rt
 
 import os
+from datetime import datetime
 
 from tk_slots_max_init import Init
 
@@ -90,13 +91,15 @@ class Scene(Init):
 		cmb = self.ui.cmb002
 		
 		path = MaxPlus.PathManager.GetAutobackDir()
-		files = [f for f in os.listdir(path) if f.endswith('.max') or f.endswith('.bak')]
+		files = [f for f in os.listdir(path) if f.endswith('.max') or f.endswith('.bak')] #get list of max autosave files
 
-		contents = self.comboBox (cmb, files, "Recent Autosave")
+		list_ = [f+'  '+datetime.fromtimestamp(os.path.getmtime(f)).strftime('%H:%M  %m-%d-%Y') for f in files] #attach modified timestamp
+
+		contents = self.comboBox (cmb, list_, "Recent Autosave")
 
 		index = cmb.currentIndex()
 		if index!=0:
-			rt.loadMaxFile(path+'\\'+str(contents[index]))
+			rt.loadMaxFile(path+'\\'+str(files[index-1]))
 			self.hotBox.hide_()
 			cmb.setCurrentIndex(0)
 

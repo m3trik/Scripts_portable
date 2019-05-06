@@ -27,10 +27,11 @@ class Init(Slot):
 		selection = pm.ls(selection=1)
 		
 
-		selectionCount = len(selection); infoDict.update({"Selection Count: ":selectionCount}) #number of selected objects
-		currentSelection = [str(s) for s in pm.ls (selection=1)]; infoDict.update({"Current Selection: ":currentSelection}) #currently selected objects
-		
 
+		if pm.selectType(query=1, allObjects=1): #object mode
+			selectionCount = len(selection); infoDict.update({"Selection Count: ":selectionCount}) #number of selected objects
+			currentSelection = [str(s) for s in pm.ls (selection=1)]; infoDict.update({"Current Selection: ":currentSelection}) #currently selected objects
+		
 
 		symmetry = pm.symmetricModelling(query=1, symmetry=1);
 		if symmetry==1: symmetry=True; infoDict.update({"Symmetry State: ":symmetry}) #symmetry state
@@ -40,19 +41,19 @@ class Init(Slot):
 		if xformConstraint=='none': xformConstraint=None; infoDict.update({"Xform Constrait: ":xformConstraint}) #transform constraits
 
 
-		if pm.selectType(query=1, vertex=1):
+		if pm.selectType(query=1, vertex=1): #get vertex selection info
 			selectedVerts = [v.split('[')[-1].rstrip(']') for v in pm.filterExpand(selectionMask=31)] #pm.polyEvaluate(vertexComponent=1);
 			collapsedList = self.collapseList(selectedVerts)
 			numVerts = pm.polyEvaluate (selection[0], vertex=1)
 			infoDict.update({'Selected '+str(len(selectedVerts))+'/'+str(numVerts)+" Vertices: ":collapsedList}) #selected verts
 			
-		if pm.selectType(query=1, edge=1):
+		if pm.selectType(query=1, edge=1): #get edge selection info
 			selectedEdges = [e.split('[')[-1].rstrip(']') for e in pm.filterExpand(selectionMask=32)] #pm.polyEvaluate(edgeComponent=1);
 			collapsedList = self.collapseList(selectedEdges)
 			numEdges = pm.polyEvaluate (selection[0], Edge=1)
 			infoDict.update({'Selected '+str(len(selectedEdges))+'/'+str(numEdges)+" Edges: ":collapsedList}) #selected edges
 			
-		if pm.selectType(query=1, facet=1):
+		if pm.selectType(query=1, facet=1): #get face selection info
 			selectedFaces = [f.split('[')[-1].rstrip(']') for f in pm.filterExpand(selectionMask=34)] #pm.polyEvaluate(faceComponent=1);
 			collapsedList = self.collapseList(selectedFaces)
 			numFaces = pm.polyEvaluate (selection[0], face=1)

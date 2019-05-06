@@ -3,23 +3,17 @@ except: pass
 
 
 
-rt.macros.run('PolyTools', 'Ring')
+
+percentage = 80
+
+for i in rt.vrayLightsAndHelpersAsArray():
+	if rt.classOf(i)==rt.VRayLight:
+		value = i.multiplier
+		p = value*percentage /100
+		i.multiplier = p
 
 
 
-#~ def bitArrayToArray(bitArray):
-	#~ if len(bitArray):
-		#~ if type(bitArray[0])!=bool: #if list of bitArrays: flatten
-			#~ list_=[]
-			#~ for array in bitArray:
-				#~ list_.append([i+1 for i, bit in enumerate(array) if bit==1])
-			#~ return [bit for array in list_ for bit in array]
-
-		#~ return [i+1 for i, bit in enumerate(bitArray) if bit==1]
-
-#~ obj = rt.selection[0]
-#~ print bitArrayToArray(rt.polyop.getFaceSelection(obj))
-#~ collapsedList = collapseList(selectedFaces)
 
 
 

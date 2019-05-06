@@ -95,7 +95,7 @@ class Polygons(Init):
 		Separate
 
 		'''
-		rt.macros.run('Ribbon_Modeling', 'GeometryDetach')
+		rt.macros.run('Ribbon - Modeling', 'GeometryDetach')
 		# rt.detachElement(obj)
 
 	def b003(self):
@@ -135,7 +135,7 @@ class Polygons(Init):
 		Slice
 
 		'''
-		rt.macros.run('Ribbon_Modeling', 'CutsQuickSlice')
+		rt.macros.run('Ribbon - Modeling', 'CutsQuickSlice')
 		
 	def b005(self):
 		'''
@@ -151,7 +151,7 @@ class Polygons(Init):
 		Extrude
 
 		'''
-		rt.macros.run('Ribbon_Modeling', 'EPoly_Extrude')
+		rt.macros.run('Ribbon - Modeling', 'EPoly_Extrude')
 		# for obj in rt.selection:
 		# 	self.extrudeObject(obj)
 
@@ -160,7 +160,7 @@ class Polygons(Init):
 		Bevel (Chamfer)
 
 		'''
-		rt.macros.run('Ribbon_Modeling', 'EPoly_Chamfer')
+		rt.macros.run('Ribbon - Modeling', 'EPoly_Chamfer')
 		# width = float(self.ui.s000.value())
 		# chamfer = True
 
@@ -196,7 +196,7 @@ class Polygons(Init):
 			if level == 4: #--face level
 				obj.EditablePoly.collapse('Face')
 
-		# rt.macros.run('Ribbon_Modeling', 'GeometryCollapse')
+		# rt.macros.run('Ribbon - Modeling', 'GeometryCollapse')
 
 	def b010(self):
 		'''
@@ -218,7 +218,7 @@ class Polygons(Init):
 
 		'''
 		rt.subObjectLevel = 4
-		rt.macros.run('Ribbon_Modeling', 'CutsCut')
+		rt.macros.run('Ribbon - Modeling', 'CutsCut')
 		# obj = rt.Filters.GetModOrObj()
 		# if obj:
 		# 	obj.ToggleCommandMode('CutVertex') #cut vertex tool
@@ -268,7 +268,7 @@ class Polygons(Init):
 
 		'''
 		maxEval('''
-		if Ribbon_Modeling.ValidSOMode() and (subObjectLevel == 2 or subObjectLevel == 3) then
+		if Ribbon - Modeling.ValidSOMode() and (subObjectLevel == 2 or subObjectLevel == 3) then
 		(
 			curmod = Modpanel.getcurrentObject()
 			if subObjectLevel == 2 then
@@ -328,7 +328,7 @@ class Polygons(Init):
 		Attach
 
 		'''
-		rt.macros.run('Ribbon_Modeling', 'AttachMode')
+		rt.macros.run('Ribbon - Modeling', 'AttachMode')
 
 	def b023(self):
 		'''

@@ -181,6 +181,15 @@ autoUndoEnabled: false
 )
 
 
+macroScript toggleMaterialOverride --toggle material override in viewport
+category: "tk_macroScript.viewport"
+silentErrors: false
+autoUndoEnabled: false
+(
+	func.toggleMaterialOverride()
+)
+
+
 macroScript convertToPolygon
 category: "tk_macroScript.edit"
 silentErrors: false
