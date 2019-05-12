@@ -139,9 +139,9 @@ class Selection(Init):
 			index = cmb.currentIndex()
 			if index!=0: #if object
 				if level==0:
-					rt.select(sel[index]-1)
+					rt.select(list_[index]-1)
 				else: #if component
-					bitArray = rt.BitArray(sel[index])
+					bitArray = rt.BitArray(list_[index])
 					obj.EditablePoly.SetSelection(type_, bitArray)
 				cmb.setCurrentIndex(0)
 

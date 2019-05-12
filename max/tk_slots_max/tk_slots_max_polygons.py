@@ -32,12 +32,14 @@ class Polygons(Init):
 			self.ui.s003.setValue(5) #crease value
 			self.ui.s004.setValue(60) #normal angle
 
+
 	def chk008(self):
 		'''
 		Split U
 
 		'''
 		self.setButtons(self.ui, unchecked='chk010')
+
 
 	def chk009(self):
 		'''
@@ -46,12 +48,14 @@ class Polygons(Init):
 		'''
 		self.setButtons(self.ui, unchecked='chk010')
 
+
 	def chk010(self):
 		'''
 		Tris
 
 		'''
 		self.setButtons(self.ui, unchecked='chk008,chk009')
+
 
 	def chk003(self):
 		'''
@@ -66,6 +70,7 @@ class Polygons(Init):
 			self.ui.s003.setValue(5) #crease value
 			self.ui.s004.setValue(60) #normal angle
 
+
 	def chk006(self):
 		'''
 		
@@ -76,12 +81,14 @@ class Polygons(Init):
 		else:
 			self.ui.s001.setSingleStep(.5)
 
+
 	def b000(self):
 		'''
 		Merge Vertex Options
 
 		'''
 		rt.macros.run('Modifiers', 'VertexWeld')
+
 
 	def b001(self):
 		'''
@@ -90,13 +97,15 @@ class Polygons(Init):
 		'''
 		rt.macros.run('Modifiers', 'Cap_Holes')
 
+
 	def b002(self):
 		'''
 		Separate
 
 		'''
-		rt.macros.run('Ribbon - Modeling', 'GeometryDetach')
+		pass
 		# rt.detachElement(obj)
+
 
 	def b003(self):
 		'''
@@ -130,6 +139,7 @@ class Polygons(Init):
 		)
 		''')
 
+
 	def b004(self):
 		'''
 		Slice
@@ -137,6 +147,7 @@ class Polygons(Init):
 		'''
 		rt.macros.run('Ribbon - Modeling', 'CutsQuickSlice')
 		
+
 	def b005(self):
 		'''
 		Bridge
@@ -146,6 +157,7 @@ class Polygons(Init):
 			obj.EditablePoly.Bridge() #perform bridge
 		rt.redrawViews() #redraw changes in viewport
 
+
 	def b006(self):
 		'''
 		Extrude
@@ -154,6 +166,7 @@ class Polygons(Init):
 		rt.macros.run('Ribbon - Modeling', 'EPoly_Extrude')
 		# for obj in rt.selection:
 		# 	self.extrudeObject(obj)
+
 
 	def b007(self):
 		'''
@@ -169,12 +182,14 @@ class Polygons(Init):
 		# else: #bevel
 		# 	maxEval('modPanel.addModToSelection (Bevel ()) ui:on')
 
+
 	def b008(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b009(self):
 		'''
@@ -198,12 +213,14 @@ class Polygons(Init):
 
 		# rt.macros.run('Ribbon - Modeling', 'GeometryCollapse')
 
+
 	def b010(self):
 		'''
 		Extract Curve
 
 		'''
 		maxEval('')
+
 
 	def b011(self):
 		'''
@@ -212,12 +229,13 @@ class Polygons(Init):
 		'''
 		maxEval('')
 
+
 	def b012(self):
 		'''
 		Multi-Cut Tool
 
 		'''
-		rt.subObjectLevel = 4
+		self.setSubObjectLevel(4)
 		rt.macros.run('Ribbon - Modeling', 'CutsCut')
 		# obj = rt.Filters.GetModOrObj()
 		# if obj:
@@ -231,6 +249,7 @@ class Polygons(Init):
 		'''
 		maxEval('CombinePolygonsOptions;')
 
+
 	def b014(self):
 		'''
 		 Bevel Options
@@ -238,12 +257,14 @@ class Polygons(Init):
 		'''
 		maxEval('')
 
+
 	def b015(self):
 		'''
 		Delete Edgeloop
 
 		'''
 		maxEval('$.EditablePoly.Remove ()')
+
 
 	def b016(self):
 		'''
@@ -261,6 +282,7 @@ class Polygons(Init):
 		)
 		Catch()
 		''')
+
 
 	def b017(self):
 		'''
@@ -282,6 +304,7 @@ class Polygons(Init):
 		)
 		''')
 
+
 	def b018(self):
 		'''
 		Extrude Options
@@ -302,12 +325,14 @@ class Polygons(Init):
 		else (A.popupDialog #Extrude)
 		''')
 
+
 	def b019(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b020(self):
 		'''
@@ -316,12 +341,14 @@ class Polygons(Init):
 		'''
 		pass
 
+
 	def b021(self):
 		'''
 		Connect Border Edges
 
 		'''
 		mel.eval("performPolyConnectBorders 0;")
+
 
 	def b022(self):
 		'''
@@ -330,12 +357,14 @@ class Polygons(Init):
 		'''
 		rt.macros.run('Ribbon - Modeling', 'AttachMode')
 
+
 	def b023(self):
 		'''
 		Boolean
 
 		'''
 		mel.eval("PolygonBooleanUnion;")
+
 
 	def b024(self):
 		'''
@@ -344,12 +373,14 @@ class Polygons(Init):
 		'''
 		pass
 
+
 	def b025(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b026(self):
 		'''
@@ -358,6 +389,7 @@ class Polygons(Init):
 		'''
 		pass
 
+
 	def b027(self):
 		'''
 		
@@ -365,12 +397,14 @@ class Polygons(Init):
 		'''
 		pass
 
+
 	def b028(self):
 		'''
 		Quad Draw
 
 		'''
 		mel.eval("dR_quadDrawTool;")
+
 
 	def b029(self):
 		'''
@@ -396,12 +430,14 @@ class Polygons(Init):
 		for face in selectedFaces: #when performing polySubdivideFacet on multiple faces, adjacent subdivided faces will make the next face an n-gon and therefore not able to be subdivided. 
 			pm.polySubdivideFacet (face, divisions=0, divisionsU=2, divisionsV=2, mode=0, subdMethod=1)
 
+
 	def b030(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b031(self):
 		'''
@@ -410,12 +446,14 @@ class Polygons(Init):
 		'''
 		pass
 
+
 	def b032(self):
 		'''
 		Poke
 
 		'''
 		mel.eval("PokePolygon;")
+
 
 	def b033(self):
 		'''
@@ -424,12 +462,14 @@ class Polygons(Init):
 		'''
 		mel.eval("PokePolygonOptions;")
 
+
 	def b034(self):
 		'''
 		Wedge
 
 		'''
 		mel.eval("WedgePolygon;")
+
 
 	def b035(self):
 		'''
@@ -438,12 +478,14 @@ class Polygons(Init):
 		'''
 		mel.eval("WedgePolygonOptions;")
 
+
 	def b036(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b037(self):
 		'''
@@ -452,6 +494,7 @@ class Polygons(Init):
 		'''
 		pass
 
+
 	def b038(self):
 		'''
 		Assign Invisible
@@ -459,12 +502,14 @@ class Polygons(Init):
 		'''
 		mel.eval("polyHole -assignHole 1;")
 
+
 	def b039(self):
 		'''
 		Assign Invisible Options
 
 		'''
 		mel.eval("PolyAssignSubdivHoleOptions;")
+
 
 	def b040(self):
 		'''
@@ -489,12 +534,14 @@ class Polygons(Init):
 				obj.weldThreshold = tolerance
 				rt.polyop.weldVertsByThreshold(obj, vertices)
 
+
 	def b041(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b042(self):
 		'''
@@ -503,12 +550,13 @@ class Polygons(Init):
 		'''
 		pass
 
+
 	def b043(self):
 		'''
 		Target Weld
 
 		'''
-		rt.subObjectLevel = 1 #set component mode to vertex
+		self.setSubObjectLevel(1) #set component mode to vertex
 		rt.macros.run('Editable Polygon Object', 'EPoly_TargetWeld')
 		
 
@@ -517,21 +565,26 @@ class Polygons(Init):
 		Detach
 
 		'''
-		subObjectLevel = rt.subObjectLevel
+		#rt.macros.run('Ribbon - Modeling', 'GeometryDetach')
+		level = rt.subObjectLevel
 
-		element = False #else clone
-
+		
 		for obj in rt.selection:
-			if subObjectLevel==1:
+			if level==1: #vertices
 				vertices = rt.getVertSelection(obj)
 				for v in vertices:
 					obj.EditablePoly.breakVerts(v)
 
-			for level in [2, 4, 5]: #edge, face, or element
-				if subObjectLevel==level:
-					element=rt.polyop.getElementsUsingFace(obj, 1)
+			if level==2: #edges
+				pass #add function to detach edge. likely as spline.
+
+			if level==4: #faces
+				element=rt.polyop.getElementsUsingFace(obj, 1)
+				if rt.queryBox('Detach as Element?', title='Detach'): #detach as element
+					rt.polyop.detachFaces(obj, element, delete=False, asNode=False)
+				else: #detach as separate object
 					rt.polyop.detachFaces(obj, element, delete=True, asNode=True)
-					break
+				
 
 	def b045(self):
 		'''
@@ -545,6 +598,7 @@ class Polygons(Init):
 		mel.eval("setPolygonDisplaySettings(\"vertIDs\");") #set vertex id on
 		mel.eval("doBakeNonDefHistory( 1, {\"pre\"});") #history must be deleted
 		mel.eval("performPolyReorderVertex;") #start vertex reorder ctx
+
 
 	def b046(self):
 		'''
@@ -575,8 +629,9 @@ class Polygons(Init):
 		Insert Edgeloop
 
 		'''
-		rt.subObjectLevel = 0
+		self.setSubObjectLevel(0)
 		rt.macros.run('PolyTools', 'SwiftLoop')
+
 
 	def b048(self):
 		'''
@@ -585,12 +640,14 @@ class Polygons(Init):
 		'''
 		mel.eval("bt_polyCollapseEdgeRingTool;")
 
+
 	def b049(self):
 		'''
 		Slide Edge Tool
 
 		'''
 		mel.eval("SlideEdgeTool;")
+
 
 	def b050(self):
 		'''
@@ -599,12 +656,14 @@ class Polygons(Init):
 		'''
 		mel.eval("bt_polySpinEdgeTool;")
 
+
 	def b051(self):
 		'''
 		Offset Edgeloop
 
 		'''
 		mel.eval("performPolyDuplicateEdge 0;")
+
 
 	def b052(self):
 		'''
@@ -613,6 +672,7 @@ class Polygons(Init):
 		'''
 		mel.eval("DuplicateEdgesOptions;")
 
+
 	def b053(self):
 		'''
 		Edit Edge Flow
@@ -620,12 +680,14 @@ class Polygons(Init):
 		'''
 		mel.eval("PolyEditEdgeFlow;")
 
+
 	def b054(self):
 		'''
 		Edit Edge Flow Options
 
 		'''
 		mel.eval("PolyEditEdgeFlowOptions;")
+
 
 	def b055(self):
 		'''
@@ -670,6 +732,7 @@ class Polygons(Init):
 		'''
 		pass
 
+
 	def b057(self):
 		'''
 		Trifill
@@ -712,6 +775,7 @@ class Polygons(Init):
 			else:
 				vertexList.append(vertexPosition)
 
+
 		def createFacetAndUnite(vertices):
 			tempTriangle = "___fillTemp___" #create a polygon face using the list of vertex points and give it a temp name
 			pm.polyCreateFacet (point=vertices, texture=1, name=tempTriangle) #0-None; 1-Normalize; 2-Unitize
@@ -740,12 +804,14 @@ class Polygons(Init):
 			pm.selectType(edge=True)
 		pm.undoInfo (closeChunk=True)
 
+
 	def b058(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b059(self):
 		'''
@@ -755,6 +821,7 @@ class Polygons(Init):
 		print "crease"
 		from maya.app.general import creaseSetEditor
 		creaseSetEditor.showCreaseSetEditor()
+
 
 	def b060(self):
 		'''

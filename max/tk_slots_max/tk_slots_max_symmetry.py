@@ -46,9 +46,9 @@ class Symmetry(Init):
 			axis=2
 
 		for obj in rt.selection:
-			try: #check if exists
-				mod = obj.modifiers[rt.Symmetry]
-			except: #else create
+			#check if modifier exists
+			mod = obj.modifiers[rt.Symmetry]
+			if mod==None: #if not create
 				mod = rt.symmetry()
 				rt.addModifier (obj, mod)
 		

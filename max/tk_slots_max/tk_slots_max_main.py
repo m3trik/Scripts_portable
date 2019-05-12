@@ -143,7 +143,7 @@ class Main(Init):
 		text = self.menuSet.currentText()
 		
 		if text=='Modeling':
-			self.method('polygons','b002')()
+			self.method('polygons','b044')()
 
 		
 

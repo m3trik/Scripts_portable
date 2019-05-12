@@ -472,8 +472,6 @@ class Init(Slot):
 
 
 
-
-
 	@staticmethod
 	def bitArrayToArray(bitArray):
 		'''
@@ -492,6 +490,7 @@ class Init(Slot):
 				return [bit for array in list_ for bit in array]
 
 			return [i+1 for i, bit in enumerate(bitArray) if bit==1]
+
 
 
 	@staticmethod
@@ -514,12 +513,14 @@ class Init(Slot):
 			rt.maxOps.CollapseNodeTo(obj, index, False)
 
 
+
 	@staticmethod
 	def toggleXraySelected():
 		toggle = Slot.cycle([0,1], 'toggleXraySelected') #toggle 0/1
 
 		for obj in rt.selection:
 			obj.xray = toggle
+
 
 
 	@staticmethod
@@ -530,6 +531,7 @@ class Init(Slot):
 			obj.backfacecull = toggle
 
 
+
 	@staticmethod
 	def toggleMaterialOverride():
 		state = Slot.cycle([0,1], 'OverrideMateridal') #toggle 0/1
@@ -538,6 +540,7 @@ class Init(Slot):
 		else:
 			rt.actionMan.executeAction(0, "63572") #Views: Override with Fast Shader
 		rt.redrawViews
+
 
 
 	@staticmethod
@@ -631,7 +634,6 @@ class Init(Slot):
 
 
 
-
 	@staticmethod
 	def meshCleanup(isolatedVerts=False, edgeAngle=10, nGons=False, repair=False):
 		'''
@@ -642,23 +644,27 @@ class Init(Slot):
 			nGons=bool - search for n sided polygon faces.
 			repair=bool - delete or auto repair any of the specified artifacts 
 		'''
-
 		for obj in rt.selection:
 			if rt.classof(obj) == rt.Editable_poly:
 				obj.selectMode = 2 #multi-component selection preview
 
 
 				if nGons: #Convert N-Sided Faces To Quads
+
+					faces = Init.bitArrayToArray(rt.polyop.getFaceSelection(obj)) #get the selected vertices
+					if not faces: #else get all vertices for the selected object
+						faces = list(range(1, obj.faces.count))
+
+					Init.setSubObjectLevel(4)
+							
+					nGons_ = [f for f in faces if rt.polyop.getFaceDeg(obj, f)>4]
+
 					if repair:
 						maxEval('macros.run \"Modifiers\" \"QuadifyMeshMod\"')
-					else: #Find and select N-gons
-						Init.setSubObjectLevel(4)
-							
-						faces = list(range(1, obj.faces.count))
-						nGons_ = [f for f in faces if rt.polyop.getFaceDeg(obj, f)>4]
-							
+					else: #Find and select N-gons	
 						rt.setFaceSelection(obj, nGons_)
-						print 'Found '+str(len(nGons_))+' N-gons.'
+
+					print 'Found '+str(len(nGons_))+' N-gons.'
 
 
 				if isolatedVerts: #delete loose vertices
@@ -698,7 +704,6 @@ class Init(Slot):
 					Init.undo(False)
 					
 			else: rt.messagebox("Selection isn't an editable poly or nothing is selected.", title="Vertex Cleaner")
-
 
 
 
