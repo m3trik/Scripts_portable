@@ -180,19 +180,23 @@ class HotBox(QtWidgets.QWidget):
 
 	def mouseDoubleClickEvent(self, event):
 		#args: [QEvent]
-		#show last used submenu on double mouseclick
 		if event.button()==QtCore.Qt.RightButton:
-			try: self.layoutStack(self.sb.previousName(previousIndex=True))
-			except: pass
+			try: #show last used submenu on double mouseclick
+				self.layoutStack(self.sb.previousName(previousIndex=True))
+			except Exception as error: 
+				print "# Warning: No recent submenus in history. #"
 
 		if event.button()==QtCore.Qt.LeftButton:
-			try:
-				self.repeatLastCommand()
+			try: #show last view
+				self.repeatLastView()
 			except Exception as error: 
-				if not self.sb.prevCommand():
-					print "# Warning: No recent commands in history. #"
-				else:
-					print error
+				print "# Warning: No recent views in history. #"
+
+		if event.button()==QtCore.Qt.MiddleButton:
+			try: #repeat last command
+				self.repeatLastCommand()
+			except Exception as error:
+				print "# Warning: No recent commands in history. #"
 
 
 	def mouseMoveEvent(self, event):
@@ -237,7 +241,9 @@ class HotBox(QtWidgets.QWidget):
 		print self.sb.prevCommand(docString=1) #print command name string
 		
 
-
+	def repeatLastView(self):
+		self.sb.previousView()() #execute method
+		print self.sb.previousView(asList=1) #print command name string
 
 
 

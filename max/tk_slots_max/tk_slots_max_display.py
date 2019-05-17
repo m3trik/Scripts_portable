@@ -150,7 +150,11 @@ class Display(Init):
 		Override Material
 
 		'''
-		self.toggleMaterialOverride()
+		if self.ui.chk000.isChecked(): #override with UV checker material
+			self.toggleMaterialOverride(checker=1)
+		else:
+			self.toggleMaterialOverride()
+
 
 	def b010(self):
 		'''

@@ -533,14 +533,16 @@ class Init(Slot):
 
 
 	@staticmethod
-	def toggleMaterialOverride():
+	def toggleMaterialOverride(checker=False):
 		state = Slot.cycle([0,1], 'OverrideMateridal') #toggle 0/1
 		if state:
-			rt.actionMan.executeAction(0, "63574") #Views: Override Off
+			rt.actionMan.executeAction(0, "63574") #Views: Override Off	
 		else:
-			rt.actionMan.executeAction(0, "63572") #Views: Override with Fast Shader
+			if checker:
+				rt.actionMan.executeAction(0, "63573") #Views: Override with UV Checker
+			else:	
+				rt.actionMan.executeAction(0, "63572") #Views: Override with Fast Shader
 		rt.redrawViews
-
 
 
 	@staticmethod

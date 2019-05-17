@@ -401,6 +401,33 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 
 
+	def previousView(self, previousIndex=False, allowDuplicates=False, as_list=False):
+		'''
+		#args:
+			previousIndex=bool 	return the index of the last valid previously opened ui name.
+		#returns:
+			if previousIndex: int index of previously opened ui
+			else: string name of previously opened layout.
+		'''
+		sbDict['name'] = sbDict['name'][-10:] #keep original list length restricted to last ten elements
+
+		list_ = [i for i in sbDict['name'] if 'init' not in i] #work on a copy of the list, removing any instances of 'init', keeping the original intact
+		if not allowDuplicates:
+			[list_.remove(l) for l in list_[:] if list_.count(l)>1] #remove any previous duplicates if they exist; keeping the last added element.
+
+		if previousIndex:
+			validPrevious = [i for i in list_ if all(['viewport' not in i, 'main' not in i])]
+			return self.getUiIndex(validPrevious[-2])
+
+		elif as_list:
+			return list_
+
+		else:
+			try: return list_[-2]
+			except: return ''
+
+
+
 	def connectionDict(self, name):
 		'''
 		#args:

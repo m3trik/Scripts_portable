@@ -44,7 +44,7 @@
       <x>8</x>
       <y>48</y>
       <width>101</width>
-      <height>121</height>
+      <height>103</height>
      </rect>
     </property>
     <property name="title">
@@ -54,14 +54,14 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>48</y>
-       <width>102</width>
+       <y>30</y>
+       <width>115</width>
        <height>19</height>
       </rect>
      </property>
      <property name="minimumSize">
       <size>
-       <width>101</width>
+       <width>115</width>
        <height>0</height>
       </size>
      </property>
@@ -87,14 +87,14 @@
      <property name="geometry">
       <rect>
        <x>48</x>
-       <y>102</y>
-       <width>58</width>
+       <y>84</y>
+       <width>75</width>
        <height>19</height>
       </rect>
      </property>
      <property name="minimumSize">
       <size>
-       <width>49</width>
+       <width>75</width>
        <height>0</height>
       </size>
      </property>
@@ -120,14 +120,14 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>84</y>
-       <width>109</width>
+       <y>66</y>
+       <width>115</width>
        <height>19</height>
       </rect>
      </property>
      <property name="minimumSize">
       <size>
-       <width>101</width>
+       <width>115</width>
        <height>0</height>
       </size>
      </property>
@@ -153,14 +153,14 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>102</y>
-       <width>58</width>
+       <y>84</y>
+       <width>75</width>
        <height>19</height>
       </rect>
      </property>
      <property name="minimumSize">
       <size>
-       <width>49</width>
+       <width>75</width>
        <height>0</height>
       </size>
      </property>
@@ -185,16 +185,16 @@
     <widget class="QPushButton" name="b017">
      <property name="geometry">
       <rect>
-       <x>0</x>
+       <x>76</x>
        <y>12</y>
-       <width>101</width>
+       <width>25</width>
        <height>19</height>
       </rect>
      </property>
      <property name="minimumSize">
       <size>
-       <width>101</width>
-       <height>0</height>
+       <width>0</width>
+       <height>19</height>
       </size>
      </property>
      <property name="maximumSize">
@@ -203,22 +203,25 @@
        <height>19</height>
       </size>
      </property>
+     <property name="toolTip">
+      <string>Set Project Directory</string>
+     </property>
      <property name="text">
-      <string>Set Project Dir</string>
+      <string>Set</string>
      </property>
     </widget>
     <widget class="QComboBox" name="cmb000">
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>66</y>
-       <width>101</width>
+       <y>48</y>
+       <width>115</width>
        <height>19</height>
       </rect>
      </property>
      <property name="minimumSize">
       <size>
-       <width>101</width>
+       <width>115</width>
        <height>0</height>
       </size>
      </property>
@@ -244,14 +247,14 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>30</y>
-       <width>101</width>
+       <y>12</y>
+       <width>115</width>
        <height>19</height>
       </rect>
      </property>
      <property name="minimumSize">
       <size>
-       <width>101</width>
+       <width>115</width>
        <height>0</height>
       </size>
      </property>
@@ -273,13 +276,13 @@
       </property>
      </item>
     </widget>
+    <zorder>cmb006</zorder>
     <zorder>cmb003</zorder>
     <zorder>cmb001</zorder>
     <zorder>cmb002</zorder>
     <zorder>b017</zorder>
     <zorder>cmb000</zorder>
     <zorder>cmb004</zorder>
-    <zorder>cmb006</zorder>
    </widget>
    <widget class="QGroupBox" name="groupBox_4">
     <property name="geometry">

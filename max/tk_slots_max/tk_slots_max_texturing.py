@@ -120,6 +120,7 @@ class Texturing(Init):
 		'''
 		for obj in rt.selection:
 			obj.material = self.selectedMaterial #assign material per object in selection
+		rt.redrawViews()
 
 
 	def b004(self):

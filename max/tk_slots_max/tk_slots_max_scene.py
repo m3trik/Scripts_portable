@@ -94,6 +94,7 @@ class Scene(Init):
 		files = [f for f in os.listdir(path) if f.endswith('.max') or f.endswith('.bak')] #get list of max autosave files
 
 		list_ = [f+'  '+datetime.fromtimestamp(os.path.getmtime(path+'\\'+f)).strftime('%H:%M  %m-%d-%Y') for f in files] #attach modified timestamp
+		list_ = sorted(list_, reverse=1)
 		
 		contents = self.comboBox (cmb, list_, "Recent Autosave")
 

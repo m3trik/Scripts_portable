@@ -88,6 +88,7 @@ class Signal(QtCore.QObject):
 		return self.sb.connectionDict(self.name)
 
 
+
 	def addSignal(self, name):
 		#args: [string]
 		for buttonString in self.sb.connectionDict(name):
@@ -100,6 +101,7 @@ class Signal(QtCore.QObject):
 				except Exception as error: print '# Error: '+str(type(slot))+str(slot)+' #' #, error
 
 
+
 	def removeSignal(self, name):
 		#args: [string]
 		for buttonString in self.sb.connectionDict(name):
@@ -110,6 +112,7 @@ class Signal(QtCore.QObject):
 			except: 
 				try: signal.disconnect(slot) #add single slot (main and viewport)
 				except Exception as error: print '# Error: '+str(type(slot))+str(slot)+' #' #, error
+
 
 
 	def eventFilter(self, button, event):
@@ -136,14 +139,17 @@ class Signal(QtCore.QObject):
 		return QtWidgets.QWidget.eventFilter(self, button, event)
 
 
+
 	def onPressedEvent(self, method):
 		#args: [method object]
+		#add method and docstring to prevCommand list
 		if type(method)!=int and method.__name__.startswith('b'): #ie. 'b012'
 			docString = self.sb.getDocString(self.name, method.__name__) #get the 'docString'. ie. 'Multi-Cut Tool'
 			# print docString, method.__name__, self.sb.prevCommand(as_list=1)
 			self.sb.prevCommand(as_list=1).append([method, docString]) #build array that stores the command method object and the corresponding docString (ie. 'Multi-cut tool')
-
-
+		#add previous view to preView list
+		if type(method)!=int and method.__name__.startswith('v'): #ie. 'v012'
+			self.sb.previousView(as_list=1).append(method)
 
 
 

@@ -54,6 +54,7 @@ class Viewport(Init):
 			rt.select (cam) #select the camera
 			rt.viewport.setCamera (cam) #set viewport to camera
 			cmb.setCurrentIndex(0)
+			rt.redrawViews()
 
 
 	def cmb002(self):

@@ -47,12 +47,14 @@ class Uv(Init):
 				mel.evel('hairUVLinkingEditor;')
 			self.ui.cmb000.setCurrentIndex(0)
 
+
 	def b000(self):
 		'''
 		Cut Uv Hard Edges
 
 		'''
 		mel.eval("tk_cutUvHardEdge ();")
+
 
 	def b001(self):
 		'''
@@ -61,12 +63,14 @@ class Uv(Init):
 		'''
 		mel.eval("performPolyForceUV flip 0;")
 
+
 	def b002(self):
 		'''
 		Flip Uv Options
 
 		'''
 		mel.eval("performPolyForceUV flip 1;")
+
 
 	def b003(self):
 		'''
@@ -75,12 +79,14 @@ class Uv(Init):
 		'''
 		pm.selectType (meshUVShell=1)
 
+
 	def b004(self):
 		'''
 		Uv Selection Mask
 
 		'''
 		pm.selectType (polymeshUV=1)
+
 
 	def b005(self):
 		'''
@@ -89,6 +95,7 @@ class Uv(Init):
 		'''
 		pm.polyMapCut()
 
+
 	def b006(self):
 		'''
 		
@@ -96,15 +103,14 @@ class Uv(Init):
 		'''
 		pass
 
+
 	def b007(self):
 		'''
 		Display Checkered Pattern
 
 		'''
-		maxEval('''
-		$state = `textureWindow -query -displayCheckered polyTexturePlacementPanel1`;
-		textureWindow -edit -displayCheckered (!$state) polyTexturePlacementPanel1;
-		''')		
+		self.toggleMaterialOverride(checker=1)		
+
 
 	def b008(self):
 		'''
@@ -112,6 +118,7 @@ class Uv(Init):
 
 		'''
 		mel.eval("bt_textureEditorCheckerSize;")
+
 
 	def b009(self):
 		'''
@@ -124,6 +131,7 @@ class Uv(Init):
 		float $borderWidth[] = `optionVar -query displayPolyBorderEdgeSize`;
 		polyOptions -displayMapBorder (!$borders[0]) -sizeBorder $borderWidth[1];
 		''')
+
 
 	def b010(self):
 		'''
@@ -139,12 +147,14 @@ class Uv(Init):
 			textureWindow -edit -displayDistortion 0 $winName[0];
 		''')
 
+
 	def b011(self):
 		'''
 		Sew Uv'S
 
 		'''
 		pm.polyMapSew()
+
 
 	def b012(self):
 		'''
@@ -166,12 +176,14 @@ class Uv(Init):
 			except:
 				pass
  
+
 	def b013(self):
 		'''
 		Auto Map Multiple
 
 		'''
 		maxEval('bt_autoMapMultipleMeshes;')
+
 
 	def b014(self):
 		'''
@@ -180,12 +192,14 @@ class Uv(Init):
 		'''
 		maxEval('bt_checkSelectionOrderPref; bt_rotateUVsAroundLastWin;')
 
+
 	def b015(self):
 		'''
 		Flip Horizontally On Last
 
 		'''
 		maxEval('bt_checkSelectionOrderPref; bt_polyflipUVsAcrossLast 0;')
+
 
 	def b016(self):
 		'''
@@ -194,6 +208,7 @@ class Uv(Init):
 		'''
 		maxEval('bt_checkSelectionOrderPref; bt_polyflipUVsAcrossLast 1;')
 
+
 	def b017(self):
 		'''
 		Align Uv Shells
@@ -201,6 +216,7 @@ class Uv(Init):
 		'''
 		self.try_('from AlignUVShells import *; AlignUVShellsWindow()')
 		
+
 	def b018(self):
 		'''
 		Unfold Uv'S
@@ -208,12 +224,14 @@ class Uv(Init):
 		'''
 		maxEval('performUnfold 0;')
 
+
 	def b019(self):
 		'''
 		Optimize Uv'S
 
 		'''
 		maxEval('performPolyOptimizeUV 0;')
+
 
 	def b020(self):
 		'''
@@ -225,12 +243,14 @@ class Uv(Init):
 
 		pm.polyEditUV (u=u, v=v)
 
+
 	def b021(self):
 		'''
 		Straighten Uv
 
 		'''
 		maxEval('texStraightenUVs "UV" 30;')
+
 
 	def b022(self):
 		'''

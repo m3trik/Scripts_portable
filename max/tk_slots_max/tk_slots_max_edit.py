@@ -286,13 +286,11 @@ class Edit(Init):
 		Uninstance Selected Objects
 
 		'''
-		selectedObjects = pm.ls (sl=1)
-		#uninstance:
-		while len(selectedObjects):
-			parent = pm.listRelatives(instances[0], parent=True)[0]
-			pm.duplicate(parent, renameChildren=True)
-			pm.delete(parent)
-			instances = getInstances()
+		i=rt.instancemgr
+
+		for obj in rt.selection:
+			if i.CanMakeObjectsUnique(obj):
+				i.MakeObjectsUnique(obj, 'prompt') #uninstance obj.  enums: {#prompt | #individual | #group}
 
 	def b011(self):
 		'''

@@ -1,14 +1,18 @@
 try: from pymxs import runtime as rt; import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript;from tk_switchboard import Switchboard; sb = Switchboard();from tk_slots_max_init import Init as func;
 except: pass
 
-obj = rt.selection[0]
-faces = rt.polyop.getFaceSelection(obj)
-print rt.polyop.getElementsUsingFace(obj, faces)
+#~ obj = rt.selection[0]
+#~ faces = rt.polyop.getFaceSelection(obj)
+#~ print rt.polyop.getElementsUsingFace(obj, faces)
 
 
-for i in list(1, obj.numFaces):
-    rt.polyop.setFaceSelection(obj, i)
+#~ for i in list(1, obj.numFaces):
+    #~ rt.polyop.setFaceSelection(obj, i)
 
+for obj in rt.selection:
+	i=rt.instancemgr
+	if i.CanMakeObjectsUnique(obj):
+		i.MakeObjectsUnique(obj, 'prompt') #uninstance obj
 
 
 
@@ -22,8 +26,8 @@ for i in list(1, obj.numFaces):
 		#~ print node
 
 
-#~ for i = 1 to v.GetNumNodes() 
-	#~ where (n = v.getNode i).selected 
+#~ for i = 1 to v.GetNumNodes()
+	#~ where (n = v.getNode i).selected
 		#~ collect n
 
 
@@ -31,12 +35,12 @@ for i in list(1, obj.numFaces):
 #~ sme = maxEval('[#sme][(sme.activeView)][n].reference')
 
 
-#~ def SMEgetSelectedMaterials():    
+#~ def SMEgetSelectedMaterials():
 	#~ viewNode = rt.sme.GetView(rt.sme.activeView)
 	#~ selectedMats=[]
 	#~ nodes = rt.trackViewNodes[rt.name('SME')][rt.sme.activeView].numSubs
 	#~ for node in nodes:
-		#~ m = 
+		#~ m =
 		#~ b = viewNode.GetNodeByRef m
 		#~ if b.selected:
 			#~ selectedMats.append(m)
@@ -59,7 +63,7 @@ for i in list(1, obj.numFaces):
 
 #~ for obj in rt.selection:
 	#~ obj.material = materials[]
-	
+
 	#~ index = rt.modPanel.getModifierIndex(obj, mod)
 	#~ rt.maxOps.CollapseNodeTo(obj, index, False)
 
@@ -93,13 +97,13 @@ for i in list(1, obj.numFaces):
 
 
 
-# #Your custom dialog would then inherit from both QtCore.QDialog and PopupDialogMixin. 
+# #Your custom dialog would then inherit from both QtCore.QDialog and PopupDialogMixin.
 # #This gives you the option to use your dialog in the 'normal' way or make it a popup dialog. e.g:
 # dlg = MyDialog(self)
 # dlg.makePopup(self.myButton)
 
 #~ class popup(QtWidgets.QWidget):
-	#~ def __init__(self, parent = None, widget=None):    
+	#~ def __init__(self, parent = None, widget=None):
 		#~ QtWidgets.QWidget.__init__(self, parent)
 		#~ layout = QtWidgets.QGridLayout(self)
 		#~ button = QtWidgets.QPushButton("Popup")
