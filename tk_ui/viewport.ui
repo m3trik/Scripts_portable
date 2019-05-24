@@ -175,7 +175,7 @@
      <enum>Qt::LeftToRight</enum>
     </property>
     <property name="currentText">
-     <string>Options</string>
+     <string>Create</string>
     </property>
     <property name="maxVisibleItems">
      <number>50</number>
@@ -188,7 +188,7 @@
     </property>
     <item>
      <property name="text">
-      <string>Options</string>
+      <string>Create</string>
      </property>
     </item>
    </widget>
@@ -414,6 +414,49 @@
      <string>Persp</string>
     </property>
    </widget>
+   <widget class="QComboBox" name="cmb003">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>120</y>
+      <width>65</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>65</width>
+      <height>51</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>9999</width>
+      <height>61</height>
+     </size>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="currentText">
+     <string>Options</string>
+    </property>
+    <property name="maxVisibleItems">
+     <number>50</number>
+    </property>
+    <property name="sizeAdjustPolicy">
+     <enum>QComboBox::AdjustToContents</enum>
+    </property>
+    <property name="frame">
+     <bool>false</bool>
+    </property>
+    <item>
+     <property name="text">
+      <string>Options</string>
+     </property>
+    </item>
+   </widget>
+   <zorder>cmb003</zorder>
    <zorder>cmb000</zorder>
    <zorder>cmb001</zorder>
    <zorder>v008</zorder>

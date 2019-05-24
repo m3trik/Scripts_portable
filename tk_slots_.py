@@ -14,9 +14,10 @@ class Slot(object):
 
 		self.sb = Switchboard()
 		self.hotBox = self.sb.getClass('hotbox')
+		self.signal = self.sb.getClass('signal')()
 		self.ui = self.sb.getUi()
-
-
+		
+		
 		#init styleSheet
 		self.initStyleSheet()
 		#init widgets

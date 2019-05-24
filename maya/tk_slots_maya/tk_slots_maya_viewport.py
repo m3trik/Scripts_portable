@@ -67,13 +67,13 @@ class Viewport(Init):
 
 	def cmb002(self):
 		'''
-		Camera Options
+		Create
 
 		'''
 		cmb = self.ui.cmb002
 		
-		list_ = ['Create: Custom Camera','Create: Set Custom Camera','Create: Camera From View','Group Cameras']
-		contents = self.comboBox (cmb, list_, "Options")
+		list_ = ['Create: Custom Camera','Create: Set Custom Camera','Create: Camera From View']
+		contents = self.comboBox (cmb, list_, "Create")
 
 		index = cmb.currentIndex()
 		if index!=0:
@@ -83,7 +83,22 @@ class Viewport(Init):
 				mel.eval('string $homeName = `cameraView -camera persp`;')
 			if index==3:
 				mel.eval('print "--no code--"')
-			if index==4:
+			cmb.setCurrentIndex(0)
+
+
+	def cmb003(self):
+		'''
+		Options
+
+		'''
+		cmb = self.ui.cmb003
+		
+		list_ = ['Group Cameras']
+		contents = self.comboBox (cmb, list_, "Options")
+
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==1:
 				mel.eval('''
 				if (`objExists cameras`)
 				{
@@ -113,8 +128,6 @@ class Viewport(Init):
 				}
 				''')
 			cmb.setCurrentIndex(0)
-
-
 
 
 	def v000(self):

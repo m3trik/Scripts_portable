@@ -16,7 +16,32 @@ class Texturing(Init):
 		
 		self.ui = self.sb.getUi('texturing')
 
+		self.ui.t000.hide()
+		self.ui.t001.hide()
+		
+		self.ui.cmb001.removeEventFilter(self.signal)
+		self.ui.cmb002.removeEventFilter(self.signal)
 
+		self.storedMaterial=None
+		self.storedID_mats=None
+		self.randomMat=None
+
+
+
+	def t000(self):
+		'''
+		Rename Stored Material textfield
+		'''
+		self.ui.b008.setChecked(False)
+		self.b008()
+
+
+	def t001(self):
+		'''
+		Rename ID Material textfield
+		'''
+		self.ui.b009.setChecked(False)
+		self.b009()
 
 
 	def cmb000(self):
@@ -26,13 +51,18 @@ class Texturing(Init):
 		'''
 		cmb = self.ui.cmb000
 
-		contents = self.comboBox (cmb, [str(mat) for mat in pm.ls(materials=1)], "Scene Materials")
+		mats = [m for m in pm.ls(materials=1)]
+		matNames = [m.name() for m in mats]
+
+		contents = self.comboBox (cmb, matNames, "Scene Materials")
 
 		index = cmb.currentIndex()
 		if index!=0:
 			print contents[index]
-			# shader = pm.shadingNode (mat, asShader=1) #asShader, asTexture, asLight
-			pm.hyperShade (assign=contents[index])
+			
+			self.storedMaterial = mats[index-1] #store material
+			self.cmb002() #refresh combobox
+
 			cmb.setCurrentIndex(0)
 
 
@@ -53,8 +83,53 @@ class Texturing(Init):
 			cmb.setCurrentIndex(0)
 
 
+	def cmb002(self):
+		'''
+		Stored Material
+		'''
+		cmb = self.ui.cmb002
+		
+		mat = self.storedMaterial
+		if not mat:
+			return
+
+		matName = mat.name()
+
+		if pm.nodeType(node)=='VRayMultiSubTex':
+			subMaterials = pm.hyperShade(mat, listUpstreamShaderNodes=1) #get any connected submaterials
+			subMatNames = [s.name for s in subMaterials if s is not None]
+		else:
+			subMatNames = []
+
+		contents = self.comboBox(cmb, subMatNames, matName)
+
+		index = cmb.currentIndex()
+		if index!=0:
+			self.storedMaterial = subMaterials[index-1]
+		else:
+			self.storedMaterial = mat
+
+
+	def cmb003(self):
+		'''
+		Stored ID map
+		'''
+		cmb = self.ui.cmb003
+
+		matID_mats = [m for m in pm.ls(mat=1, flatten=1) if m.name().startswith('matID')]
+		matID_names = [m.name() for m in matID_mats]
+		if not matID_names: 
+			matID_names = ['ID Map: None']
+
+		contents = self.comboBox(cmb, matID_names)
+		
+		if matID_names[0]!='ID Map: None': #add mat objects to storedID_mats dict. 'mat name'=key, <mat object>=value
+			self.storedID_mats = {n:matID_mats[i] for i, n in enumerate(matID_names)}
+		
+
 	def chk000(self):
 		self.hotBox.ui.chk001.setChecked(False)
+
 
 	def chk001(self):
 		self.hotBox.ui.chk000.setChecked(False)
@@ -68,165 +143,189 @@ class Texturing(Init):
 		shell = self.hotBox.ui.chk000.isChecked()
 		invert = self.hotBox.ui.chk001.isChecked()
 
-		if self.try_('pm.ls(selection=1, objectsOnly=1)[0]', exceptions='print "# Warning: Nothing selected #"; pass'):
-			pm.hyperShade (pm.ls(sl=1, objectsOnly=1, visible=1)[0], shaderNetworksSelectMaterialNodes=1) #get material node from selection
-			pm.hyperShade (objects="") #select all with material. "" defaults to currently selected materials.
+		if not pm.nodeType(node)=='VRayMultiSubTex': #if not a multimaterial
+			mat = self.storedMaterial
+		else:
+			return '# Error: No valid stored material. If material is a multimaterial, select a submaterial. #'
 
-			faces = pm.filterExpand (selectionMask=34, expand=1)
-			transforms = [node.replace('Shape','') for node in pm.ls(sl=1, objectsOnly=1, visible=1)] #get transform node name from shape node
+		pm.select(mat)
+		pm.hyperShade (objects='') #select all with material. "" defaults to currently selected materials.
+
+		faces = pm.filterExpand (selectionMask=34, expand=1)
+		transforms = [node.replace('Shape','') for node in pm.ls(sl=1, objectsOnly=1, visible=1)] #get transform node name from shape node
+		# pm.select (faces, deselect=1)
+
+		if shell or invert: #deselect so that the selection can be modified.
 			pm.select (faces, deselect=1)
 
-			if shell or invert: #deselect so that the selection can be modified.
-				pm.select (faces, deselect=1)
-
-			if shell:
-				for shell in transforms:
-					pm.select (shell, add=1)
-			
-			if invert:
-				for shell in transforms:
-					allFaces = [shell+".f["+str(num)+"]" for num in range(pm.polyEvaluate (shell, face=1))] #create a list of all faces per shell
-					pm.select (list(set(allFaces)-set(faces)), add=1) #get inverse of previously selected faces from allFaces
+		if shell:
+			for shell in transforms:
+				pm.select (shell, add=1)
+		
+		if invert:
+			for shell in transforms:
+				allFaces = [shell+".f["+str(num)+"]" for num in range(pm.polyEvaluate (shell, face=1))] #create a list of all faces per shell
+				pm.select(list(set(allFaces)-set(faces)), add=1) #get inverse of previously selected faces from allFaces
 
 
 	def b001(self):
 		'''
-		
+		Delete Material
 
 		'''
-		pass
+		pm.delete(self.storedMaterial)
+		self.storedMaterial = None
+
+		self.comboBox(self.ui.cmb002, [], 'Stored Material: None') #init combobox
 
 
 	def b002(self):
 		'''
-		Store Material Id
+		Store Material
 
 		'''
-		pm.hyperShade("", shaderNetworksSelectMaterialNodes=1) #selects the material node 
-		matID = pm.ls(selection=1, materials=1)[0] #now add the selected node to a variable
-		self.hotBox.ui.lbl000.setText(str(matID))
+		if pm.ls(selection=1):
+			pm.hyperShade("", shaderNetworksSelectMaterialNodes=1) #selects the material node 
+			mat = pm.ls(selection=1, materials=1)[0] #now add the selected node to a variable
 
-		
+			self.storedMaterial = mat #store material
+			self.cmb002() #refresh combobox
+		else:
+			print '# Error: Nothing selected. #'
+
+
 	def b003(self):
 		'''
-		Assign Material Id
+		Assign Material
 
 		'''
-		matID = str(self.hotBox.ui.lbl000.text())
-
 		for obj in pm.ls(selection=1):
-			pm.hyperShade(obj, assign=matID) #select and assign material per object in selection
+			pm.hyperShade(obj, assign=self.storedMaterial) #select and assign material per object in selection
 
 
 	def b004(self):
 		'''
-		Assign Random Material
+		Assign New random mat ID
 
 		'''
-		mel.eval('''
-		string $selection[] = `ls -selection`;
+		import random
 
-		int $d = 2; //decimal places to round to
-		$r = rand (0,1);
-		$r = trunc($r*`pow 10 $d`+0.5)/`pow 10 $d`;
-		$g = rand (0,1);
-		$g = trunc($g*`pow 10 $d`+0.5)/`pow 10 $d`;
-		$b = rand (0,1);
-		$b = trunc($b*`pow 10 $d`+0.5)/`pow 10 $d`;
+		selection = pm.ls(selection=1, flatten=1)
 
-		string $rgb = ("_"+$r+"_"+$g+"_"+$b);
-		$rgb = substituteAllString($rgb, "0.", "");
+		if selection:
+			prefix = 'matID'
+			rgb = [random.randint(0, 255) for _ in range(3)] #generate a list containing 3 values between 0-255
 
-		$name = ("matID"+$rgb);
+			#format name
+			name = '_'.join([prefix, str(rgb[0]), str(rgb[1]), str(rgb[2])])
+			#create shader
+			mat = pm.shadingNode('lambert', asShader=1, name=name)
+			#convert RGB to 0-1 values and assign to shader
+			convertedRGB = [round(float(v)/255, 3) for v in rgb]
+			pm.setAttr(name+'.color', convertedRGB)
+			#assign to selected geometry
+			pm.select(selection) #initial selection is lost upon node creation
+			pm.hyperShade(assign=mat)
 
-		string $matID = `shadingNode -asShader lambert -name $name`;
-		setAttr ($name + ".colorR") $r;
-		setAttr ($name + ".colorG") $g;
-		setAttr ($name + ".colorB") $b;
+			#delete previous shader
+			if self.randomMat:
+				pm.delete(self.randomMat)
 
-		for ($object in $selection)
-			{
-			select $object;
-			hyperShade -assign $matID;
-			}
-		 ''')
+			self.randomMat = mat
+		else:
+			print '# Error: No valid object/s selected. #'
 
 
 	def b005(self):
 		'''
-		Re-Assign Random Id Material
+		Assign Existing mat ID
 
 		'''
-		mel.eval('''
-		string $objList[] = `ls -selection -flatten`;
-		$material = `hyperShade -shaderNetworksSelectMaterialNodes ""`;
-		string $matList[] = `ls -selection -flatten`;
+		name = self.ui.cmb003.currentText()
+		mat = self.storedID_mats[name]
 
-		hyperShade -objects $material;
-		string $selection[] = `ls -selection`;
-		//delete the old material and shader group nodes
-		for($i=0; $i<size($matList); $i++)
-			{
-			string $matSGplug[] = `connectionInfo -dfs ($matList[$i] + ".outColor")`;
-			$SGList[$i] = `match "^[^\.]*" $matSGplug[0]`;
-			print $matList; print $SGList;
-			delete $matList[$i];
-			delete $SGList[$i];
-			}
-		//create new random material
-		int $d = 2; //decimal places to round to
-		$r = rand (0,1);
-		$r = trunc($r*`pow 10 $d`+0.5)/`pow 10 $d`;
-		$g = rand (0,1);
-		$g = trunc($g*`pow 10 $d`+0.5)/`pow 10 $d`;
-		$b = rand (0,1);
-		$b = trunc($b*`pow 10 $d`+0.5)/`pow 10 $d`;
-
-		string $rgb = ("_"+$r+"_"+$g+"_"+$b+"");
-		$rgb = substituteAllString($rgb, "0.", "");
-
-		$name = ("matID"+$rgb);
-
-		string $matID = `shadingNode -asShader lambert -name $name`;
-		setAttr ($name + ".colorR") $r;
-		setAttr ($name + ".colorG") $g;
-		setAttr ($name + ".colorB") $b;
-
-		for ($object in $selection)
-			{
-			select $object;
-			hyperShade -assign $matID;
-			}
-		''')
+		for f in pm.ls(selection=1, flatten=1):
+			pm.hyperShade(f, assign=mat)
 
 
 	def b006(self):
 		'''
-		
+		Delete Unused Materials
 
 		'''
-		pass
+		print '-< no maya version coded >-'
+
 
 	def b007(self):
 		'''
-		
+		Open material in editor
 
 		'''
-		pass
+		if not self.storedMaterial: #get material from selected scene object
+			if rt.selection:
+				self.storedMaterial = rt.selection[0].material
+			else:
+				return '# Error: No stored material and no valid object selected. #'
+		mat = self.storedMaterial
+
+		#open the hypershade editor
+		mel.eval("HypershadeWindow;")
+
+		# #create a temp view in the material editor
+		# if rt.SME.GetViewByName('temp'):
+		# 	rt.SME.DeleteView(rt.SME.GetViewByName('temp'), False)
+		# index = rt.SME.CreateView('temp')
+		# view = rt.SME.GetView(index)
+
+		# #show node and corresponding parameter rollout
+		# node = view.CreateNode(mat, rt.point2(0, 0))
+		# rt.SME.SetMtlInParamEditor(mat)
+
 
 	def b008(self):
 		'''
-		
+		Rename Stored Material
 
 		'''
-		pass
+		if self.ui.b008.isChecked():
+			self.ui.t000.setText(self.ui.cmb002.currentText())
+			if self.ui.t000.text()=='Stored Material: None':
+				self.ui.b008.setChecked(False)
+			else:
+				self.ui.t000.show()
+		else:
+			if self.storedMaterial:
+				self.storedMaterial.name = self.ui.t000.text()
+
+			self.cmb002() #refresh combobox
+			self.ui.t000.hide()
+
 
 	def b009(self):
 		'''
-		
+		Rename ID map Material
 
 		'''
-		pass
+		if self.ui.b009.isChecked():
+			self.ui.t001.setText(self.ui.cmb003.currentText())
+			if self.ui.t001.text()=='ID Map: None':
+				self.ui.b009.setChecked(False)
+			else:
+				self.ui.t001.show()
+		else:
+			prefix='matID_'
+			newName=self.ui.t001.text()
+
+			name = self.ui.cmb003.currentText()
+			mat = self.storedID_mats[name] #get object from string key
+			if not newName.startswith(prefix):
+				pm.rename(mat, prefix+newName) 
+			else:
+				pm.rename(mat, newName)
+
+			self.cmb002() #refresh combobox
+			self.ui.t001.hide()
+
 
 	def b010(self):
 		'''
@@ -243,3 +342,77 @@ print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
+
+#depricated
+
+#assign random
+	# mel.eval('''
+# 		string $selection[] = `ls -selection`;
+
+# 		int $d = 2; //decimal places to round to
+# 		$r = rand (0,1);
+# 		$r = trunc($r*`pow 10 $d`+0.5)/`pow 10 $d`;
+# 		$g = rand (0,1);
+# 		$g = trunc($g*`pow 10 $d`+0.5)/`pow 10 $d`;
+# 		$b = rand (0,1);
+# 		$b = trunc($b*`pow 10 $d`+0.5)/`pow 10 $d`;
+
+# 		string $rgb = ("_"+$r+"_"+$g+"_"+$b);
+# 		$rgb = substituteAllString($rgb, "0.", "");
+
+# 		$name = ("matID"+$rgb);
+
+# 		string $matID = `shadingNode -asShader lambert -name $name`;
+# 		setAttr ($name + ".colorR") $r;
+# 		setAttr ($name + ".colorG") $g;
+# 		setAttr ($name + ".colorB") $b;
+
+# 		for ($object in $selection)
+# 			{
+# 			select $object;
+# 			hyperShade -assign $matID;
+# 			}
+# 		 ''')
+
+#re-assign random
+	# mel.eval('''
+		# string $objList[] = `ls -selection -flatten`;
+		# $material = `hyperShade -shaderNetworksSelectMaterialNodes ""`;
+		# string $matList[] = `ls -selection -flatten`;
+
+		# hyperShade -objects $material;
+		# string $selection[] = `ls -selection`;
+		# //delete the old material and shader group nodes
+		# for($i=0; $i<size($matList); $i++)
+		# 	{
+		# 	string $matSGplug[] = `connectionInfo -dfs ($matList[$i] + ".outColor")`;
+		# 	$SGList[$i] = `match "^[^\.]*" $matSGplug[0]`;
+		# 	print $matList; print $SGList;
+		# 	delete $matList[$i];
+		# 	delete $SGList[$i];
+		# 	}
+		# //create new random material
+		# int $d = 2; //decimal places to round to
+		# $r = rand (0,1);
+		# $r = trunc($r*`pow 10 $d`+0.5)/`pow 10 $d`;
+		# $g = rand (0,1);
+		# $g = trunc($g*`pow 10 $d`+0.5)/`pow 10 $d`;
+		# $b = rand (0,1);
+		# $b = trunc($b*`pow 10 $d`+0.5)/`pow 10 $d`;
+
+		# string $rgb = ("_"+$r+"_"+$g+"_"+$b+"");
+		# $rgb = substituteAllString($rgb, "0.", "");
+
+		# $name = ("matID"+$rgb);
+
+		# string $matID = `shadingNode -asShader lambert -name $name`;
+		# setAttr ($name + ".colorR") $r;
+		# setAttr ($name + ".colorG") $g;
+		# setAttr ($name + ".colorB") $b;
+
+		# for ($object in $selection)
+		# 	{
+		# 	select $object;
+		# 	hyperShade -assign $matID;
+		# 	}
+		# ''')

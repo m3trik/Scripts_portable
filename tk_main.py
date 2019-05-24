@@ -76,7 +76,7 @@ class HotBox(QtWidgets.QWidget):
 		# import timeit
 		# t0=timeit.default_timer()
 
-		if type(index)!=int: #get index from name
+		if type(index)!=int: #get index using name
 			index = self.sb.getUiIndex(index)
 
 		if not self.layout(): #if layout doesnt exist; initialize stackedLayout.
@@ -181,22 +181,25 @@ class HotBox(QtWidgets.QWidget):
 	def mouseDoubleClickEvent(self, event):
 		#args: [QEvent]
 		if event.button()==QtCore.Qt.RightButton:
-			try: #show last used submenu on double mouseclick
-				self.layoutStack(self.sb.previousName(previousIndex=True))
-			except Exception as error: 
-				print "# Warning: No recent submenus in history. #"
+			if any([self.name=='init', self.name=="main"]):
+				try: #show last used submenu on double mouseclick
+					self.layoutStack(self.sb.previousName(previousIndex=True))
+				except Exception as error: 
+					print "# Warning: No recent submenus in history. #"
 
 		if event.button()==QtCore.Qt.LeftButton:
-			try: #show last view
-				self.repeatLastView()
-			except Exception as error: 
-				print "# Warning: No recent views in history. #"
+			if any([self.name=='init', self.name=="viewport"]):
+				try: #show last view
+					self.repeatLastView()
+				except Exception as error: 
+					print "# Warning: No recent views in history. #"
 
 		if event.button()==QtCore.Qt.MiddleButton:
-			try: #repeat last command
-				self.repeatLastCommand()
-			except Exception as error:
-				print "# Warning: No recent commands in history. #"
+			if any([self.name=='init', self.name=="main" or self.name=="viewport"]):
+				try: #repeat last command
+					self.repeatLastCommand()
+				except Exception as error:
+					print "# Warning: No recent commands in history. #"
 
 
 	def mouseMoveEvent(self, event):

@@ -3,28 +3,45 @@ except ImportError as error: print error
 try: tk_scrollFieldReporter = pm.melGlobals['tk_scrollFieldReporter']; pm.scrollFieldReporter (tk_scrollFieldReporter, edit=1, clear=1)
 except: pass
 
-''' Start Code '''
-
-# sbDict={'prevCommand':[['b001', 'multi-cut tool'], ['b002', 'tool2']]}
-sbDict={'prevName':['init', 'polygons', 'viewport']}
-
-# for dict_ in sbDict['prevCommand']: 
-# 	for key in dict_:
-# 		key.__name__
-
-
-print [i for i in sbDict['prevName'] if all(['viewport' not in i, 'init'not in i])]
+from pydoc import locate
+# from tk_slots_maya_init import Init as func
+from tk_slots_ import Slot
+import tk_switchboard as sb
 
 
 
-# if not 'prevCommand' in sbDict: sbDict['prevCommand'] = []
 
-# print sbDict['prevCommand']
-# print len(sbDict['prevCommand'])
-# if len(sbDict['prevCommand']):
-# 	print 'true'
 
-# print sbDict['prevCommand'][-1][1]
+
+
+
+
+class Test001(Slot):
+	def __init__(self, *args, **kwargs):
+		super(Test001, self).__init__(*args, **kwargs)
+		'''
+		Start Code
+		'''
+		if pm.selectType(query=1, vertex=1): #get vertex selection info
+			selectedVerts = [v.split('[')[-1].rstrip(']') for v in pm.filterExpand(selectionMask=31)] #pm.polyEvaluate(vertexComponent=1);
+			collapsedList = self.collapseList(selectedVerts)
+			numVerts = pm.polyEvaluate (selection[0], vertex=1)
+			infoDict.update({'Selected '+str(len(selectedVerts))+'/'+str(numVerts)+" Vertices: ":collapsedList}) #selected verts
+
+
+
+
+
+	def method(self):
+		classes = [locate('tk_slots_'+self.hotBox.app+'_'+name+'.'+name.capitalize())(self.hotBox) for name in self.hotBox.uiList]
+		for class_ in classes:
+			print str(class_), class_
+
+
+
+
+test=Test001()
+# test.method()
 
 
 # obj = 'pPyramid1'

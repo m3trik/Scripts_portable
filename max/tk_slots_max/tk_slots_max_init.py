@@ -203,7 +203,7 @@ class Init(Slot):
 			rt.select(elementArray)
 
 		else:
-			print "-< Object must be an Editable_Poly >-"
+			print "-< Error: Object must be an Editable_Poly. >-"
 		
 		return elementArray
 
@@ -232,11 +232,11 @@ class Init(Slot):
 		componentArray = selection.selectedVerts
 		
 		if len(componentArray) == 0:
-			print "No vertices selected"
+			print "# Error: No vertices selected. #"
 		
 		if len(componentArray) < 2:
-			print "Selection must contain at least two vertices"
-			return
+			return "# Error: Selection must contain at least two vertices. #"
+			
 		
 		lastSelected = componentArray[-1]#3ds max re-orders array by vert index, so this doesnt work for aligning to last selected
 		#~ print lastSelected.pos
@@ -368,62 +368,63 @@ class Init(Slot):
 
 	#extrudes one object at a time but can be called repeatedly for an array of selected objects
 	#takes classString as an argument which is an array containing the object and class information
-	#~ --	[0] --object
-	#~ --	[1] --baseObject
-	#~ -- [4] --baseObject class
-	#~ -- [6] --baseObject class type string. eg. Editable,Shape,Geometry
+	#	[0] --object
+	#	[1] --baseObject
+	#	[4] --baseObject class
+	#	[6] --baseObject class type string. eg. Editable,Shape,Geometry
 	#notes: in another function; if selection (subobjectlevel) is == face or edge, store that face if necessary in an array and then extrude by a certain amount (if needed surface normal direction). then switch to move tool (calling a center pivot on component if needed) so that the extrude can be manipulated with widget instead of spinner.
-	@staticmethod
-	def extrudeObject (objects):
-		if (objects == rt.undefined or objects == "noSelection"):
-			print "Nothing selected. Returned string: noSelection"
-			return "noSelection"
+	# @staticmethod
+	# def extrudeObject (objects):
+	# 	if (objects == rt.undefined or objects == "noSelection"):
+	# 		print "# Error: Nothing selected. Returned string: noSelection #"
+	# 		return "noSelection"
 
-		for obj in objects:
+	# 	for obj in objects:
 			
-			classString = classInfo(obj)
+	# 		classString = classInfo(obj)
 			
-			if (classString[6] == "Editable_Poly" or classString[4] == rt.Editable_mesh): #had to add Editable_mesh explicitly, here and in the error catch, because the keyword was unknown to pymxs.runtime. added it to the called function anyhow in case they fix it at some point
-				maxEval('macros.run "Modifiers" "Face_Extrude"')
-				print classString[4]
+	# 		if (classString[6] == "Editable_Poly" or classString[4] == rt.Editable_mesh): #had to add Editable_mesh explicitly, here and in the error catch, because the keyword was unknown to pymxs.runtime. added it to the called function anyhow in case they fix it at some point
+	# 			maxEval('macros.run "Modifiers" "Face_Extrude"')
+	# 			print classString[4]
 				
-			if (classString[6] == "Shape"):
-				#if 'convert to mesh object' checkbox true convert currently selected:
-				if (tk_isChecked_000 == True):
-					maxEval('''
-					convertTo $ PolyMeshObject; --convert to poly
-					macros.run "Modifiers" "Face_Extrude"; --extrude modifier
-					''')
-				else:
-					maxEval('macros.run "Modifiers" "Extrude"')
-				print classString[4]
+	# 		if (classString[6] == "Shape"):
+	# 			#if 'convert to mesh object' checkbox true convert currently selected:
+	# 			if (tk_isChecked_000 == True):
+	# 				maxEval('''
+	# 				convertTo $ PolyMeshObject; --convert to poly
+	# 				macros.run "Modifiers" "Face_Extrude"; --extrude modifier
+	# 				''')
+	# 			else:
+	# 				maxEval('macros.run "Modifiers" "Extrude"')
+	# 			print classString[4]
 
-			if (classString[6] == "Geometry"):
-				#if 'convert to mesh object' checkbox true convert currently selected:
-				if (tk_isChecked_000 == True):
-					maxEval('''
-					convertTo $ TriMeshGeometry; --convert to mesh object
-					maxEval('macros.run "Modifiers" "Face_Extrude"; --extrude
-					''')
+	# 		if (classString[6] == "Geometry"):
+	# 			#if 'convert to mesh object' checkbox true convert currently selected:
+	# 			if (tk_isChecked_000 == True):
+	# 				maxEval('''
+	# 				convertTo $ TriMeshGeometry; --convert to mesh object
+	# 				maxEval('macros.run "Modifiers" "Face_Extrude"; --extrude
+	# 				''')
 
-			#else, if undefined..
-			else:
-				print "::unknown object type::"
-				print classString[4]
+	# 		#else, if undefined..
+	# 		else:
+	# 			print "::unknown object type::"
+	# 			print classString[4]
 
-			if (objects.count > 1):
-				rt.deselect(classString[0])
+	# 		if (objects.count > 1):
+	# 			rt.deselect(classString[0])
 			
-		if (objects.count > 1): #reselect all initially selected nodes
-			rt.clearSelection()
-			for obj in objects:
-				rt.selectMore(obj)
+	# 	if (objects.count > 1): #reselect all initially selected nodes
+	# 		rt.clearSelection()
+	# 		for obj in objects:
+	# 			rt.selectMore(obj)
 
 
 
 	#--centerPivotOnSelection----------------------------------------------------------------
-	@staticmethod
-	def centerPivotOnSelection ():
+
+	# @staticmethod
+	# def centerPivotOnSelection ():
 
 		#Get the face vertices, add their positions together, divide by the number of the vertices 
 		#- that's your centerpoint.
@@ -468,8 +469,20 @@ class Init(Slot):
 	# )
 
 
-		pass
 
+
+
+	#alternate bitArray to array function.
+	'''
+	#args:
+		bitArray=bit array
+	
+	ie. rt.bitArrayToArray(bitArray)
+	'''
+	MaxPlus.Core.EvalMAXScript('''
+		fn bitArrayToArray bitArray = 
+			(return bitArray as Array)
+		''')
 
 
 	@staticmethod
@@ -623,7 +636,7 @@ class Init(Slot):
 		sel = rt.selection
 
 		for obj in sel:
-			rt.modPanel.setCurrentObject (obj.baseObject)
+			rt.modPanel.setCurrentObject(obj.baseObject)
 			rt.subObjectLevel = level
 
 			if level==0: #reset the modifier selection to the top of the stack.
@@ -725,9 +738,12 @@ class Init(Slot):
 
 	@staticmethod
 	def maxUiSetChecked(id, table, item, state=True, query=False):
-		#args: id='string' - actionMan ID
-		#			table=int - actionMan table
-		#			item=int - actionMan item number
+		'''
+		#args:
+			id='string' - actionMan ID
+			table=int - actionMan table
+			item=int - actionMan item number
+		'''
 		atbl = rt.actionMan.getActionTable(table)
 		if atbl:
 			aitm = atbl.getActionItem(item)

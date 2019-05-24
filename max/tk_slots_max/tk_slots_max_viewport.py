@@ -59,13 +59,13 @@ class Viewport(Init):
 
 	def cmb002(self):
 		'''
-		Options
+		Create
 
 		'''
 		cmb = self.ui.cmb002
 		
-		list_ = ['Create: Custom Camera','Create: Set Custom Camera','Create: Camera From View','Group Cameras']
-		contents = self.comboBox (cmb, list_, "Options")
+		list_ = ['Create: Custom Camera','Create: Set Custom Camera','Create: Camera From View']
+		contents = self.comboBox (cmb, list_, "Create")
 
 		index = cmb.currentIndex()
 		if index!=0:
@@ -75,7 +75,22 @@ class Viewport(Init):
 				maxEval('Try(viewport.setcamera $) Catch()')
 			if index==3:
 				maxEval('macros.run "Lights and Cameras" "PhysicalCamera_CreateFromView"')
-			if index==4:
+			cmb.setCurrentIndex(0)
+
+
+	def cmb003(self):
+		'''
+		Options
+
+		'''
+		cmb = self.ui.cmb003
+		
+		list_ = ['Group Cameras']
+		contents = self.comboBox (cmb, list_, "Options")
+
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==1:
 				cameras = [cam for cam in rt.cameras] #List scene Cameras
 
 				layer = rt.LayerManager.getLayerFromName ("Cameras")
@@ -85,7 +100,6 @@ class Viewport(Init):
 				for cam in cameras:
 					layer.addnode(cam)
 			cmb.setCurrentIndex(0)
-
 
 
 

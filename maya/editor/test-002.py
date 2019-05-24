@@ -3,50 +3,95 @@ except ImportError as error: print error
 try: tk_scrollFieldReporter = pm.melGlobals['tk_scrollFieldReporter']; pm.scrollFieldReporter (tk_scrollFieldReporter, edit=1, clear=1)
 except: pass
 
-''' Start Code '''
-
-
-uiList = ['animation', 'cameras', 'create', 'display', 'edit', 'init']
-
-sbDict = {k:{} for k in uiList}
-
-sbDict={
-		'polygons':{ 
-		'class':'Polygons', 
-		'size':[295, 234], 
-		'connectionDict':{'b001':{'buttonObject':'b001', 'buttonObjectWithSignal':'b000.clicked', 'methodObject':'main.b001', 'methodName':'Multi-Cut Tool'}}, 
-		'uiList':['animation', 'cameras', 'create', 'display', 'edit'],
-		'prevName':['prevNameString', 'prevNameString', 'currentNameString'], 
-		'prevCommand':[{'b00', 'multi-cut tool'}] }
-}
-
-def hasKey(*args):
-	if len(args)==1:
-		if args[0] in sbDict: return True
-		else: return False
-	if len(args)==2:
-		if args[1] in sbDict[args[0]]: return True
-		else: return False
-	if len(args)==3:
-		if args[2] in sbDict[args[0]][args[1]]: return True
-		else: return False
+from pydoc import locate
+# from tk_slots_maya_init import Init as func
+from tk_slots_ import Slot
+import tk_switchboard as sb
 
 
 
-print hasKey('polygons', 'connectionDict', 'b000')
 
 
-{'i007': {
-'buttonObject': <PySide2.QtWidgets.QPushButton object at 0x0000020D6D0EA888>, 
-'methodObject': <function <lambda> at 0x0000020D6D0E5908>, 
-'buttonObjectWithSignal': <PySide2.QtCore.SignalInstance object at 0x0000020D6175A3A8>
-}, 
 
-'i006': {
-'buttonObject': <PySide2.QtWidgets.QPushButton object at 0x0000020D6D0EA9C8>, 
-'methodObject': <function <lambda> at 0x0000020D6D0E5898>, 
-'buttonObjectWithSignal': <PySide2.QtCore.SignalInstance object at 0x0000020D6175A378>
-}, 
+
+
+
+class Test001(Slot):
+	def __init__(self, *args, **kwargs):
+		super(Test001, self).__init__(*args, **kwargs)
+		'''
+		Start Code
+		'''
+		if pm.selectType(query=1, vertex=1): #get vertex selection info
+			selectedVerts = [v.split('[')[-1].rstrip(']') for v in pm.filterExpand(selectionMask=31)] #pm.polyEvaluate(vertexComponent=1);
+			collapsedList = self.collapseList(selectedVerts)
+			numVerts = pm.polyEvaluate (selection[0], vertex=1)
+			infoDict.update({'Selected '+str(len(selectedVerts))+'/'+str(numVerts)+" Vertices: ":collapsedList}) #selected verts
+
+
+
+
+
+	def method(self):
+		classes = [locate('tk_slots_'+self.hotBox.app+'_'+name+'.'+name.capitalize())(self.hotBox) for name in self.hotBox.uiList]
+		for class_ in classes:
+			print str(class_), class_
+
+
+
+
+# test=Test001()
+# test.method()
+
+# pm.hyperShade(shaderNetworksSelectMaterialNodes=1) #selects the material node
+node = pm.ls(selection=1, type='VRayMultiSubTex')[0] #now add the selected node to a variable
+
+if pm.nodeType(node)=='VRayMultiSubTex':
+	print node
+
+
+
+# uiList = ['animation', 'cameras', 'create', 'display', 'edit', 'init']
+
+# sbDict = {k:{} for k in uiList}
+
+# sbDict={
+# 		'polygons':{ 
+# 		'class':'Polygons', 
+# 		'size':[295, 234], 
+# 		'connectionDict':{'b001':{'buttonObject':'b001', 'buttonObjectWithSignal':'b000.clicked', 'methodObject':'main.b001', 'methodName':'Multi-Cut Tool'}}, 
+# 		'uiList':['animation', 'cameras', 'create', 'display', 'edit'],
+# 		'prevName':['prevNameString', 'prevNameString', 'currentNameString'], 
+# 		'prevCommand':[{'b00', 'multi-cut tool'}] }
+# }
+
+# def hasKey(*args):
+# 	if len(args)==1:
+# 		if args[0] in sbDict: return True
+# 		else: return False
+# 	if len(args)==2:
+# 		if args[1] in sbDict[args[0]]: return True
+# 		else: return False
+# 	if len(args)==3:
+# 		if args[2] in sbDict[args[0]][args[1]]: return True
+# 		else: return False
+
+
+
+# print hasKey('polygons', 'connectionDict', 'b000')
+
+
+# {'i007': {
+# 'buttonObject': <PySide2.QtWidgets.QPushButton object at 0x0000020D6D0EA888>, 
+# 'methodObject': <function <lambda> at 0x0000020D6D0E5908>, 
+# 'buttonObjectWithSignal': <PySide2.QtCore.SignalInstance object at 0x0000020D6175A3A8>
+# }, 
+
+# 'i006': {
+# 'buttonObject': <PySide2.QtWidgets.QPushButton object at 0x0000020D6D0EA9C8>, 
+# 'methodObject': <function <lambda> at 0x0000020D6D0E5898>, 
+# 'buttonObjectWithSignal': <PySide2.QtCore.SignalInstance object at 0x0000020D6175A378>
+# }, 
 
 
 

@@ -199,7 +199,7 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 			class_='string' module name and class to import and store class instance. ie. 'tk_slots_max_polygons.Polygons'
 				*or <class object>. to store class instance
 		#returns:
-			class object from key class_.
+			class object corresponding to key: class_.
 		'''
 		if type(class_)==str or type(class_)==unicode:
 			name = class_.split('_')[-1].split('.')[-1].lower(); #get key from class_ string ie. 'class' from 'tk_slots_max_polygons.Class'

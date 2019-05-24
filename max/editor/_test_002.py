@@ -6,21 +6,34 @@ except: pass
 #~ print rt.polyop.getElementsUsingFace(obj, faces)
 
 
-#~ for i in list(1, obj.numFaces):
-    #~ rt.polyop.setFaceSelection(obj, i)
+MaxPlus.Core.EvalMAXScript('fn bitArrayToArray bitArray = (return bitArray as Array)')
 
-for obj in rt.selection:
-	i=rt.instancemgr
-	if i.CanMakeObjectsUnique(obj):
-		i.MakeObjectsUnique(obj, 'prompt') #uninstance obj
+obj = rt.selection[0]
+mat = obj.material #get material from selection
 
+if rt.subObjectLevel == 4: #if face selection check for multimaterial
+	if rt.getNumSubMtls(mat): #if multimaterial; use selected face to get material ID
+		f = rt.bitArrayToArray(rt.getFaceSelection(obj))[0] #get selected faces
+		id = obj.GetFaceMaterial(f) #Returns the material ID of the specified face.
+		mat = rt.getSubMtl(mat, id) #get material from mat ID
 
+print mat
 
-#~ nodes = rt.SME.getView(rt.SME.activeView)
-#~ nodes.GetNumNodes()
-#~ nodes.getNode[1]
+mat = None
 
-#~ for node in nodes:
+if not mat:
+	mat = rt.selection[0].material #if no new material is passed in; use selected
+matName = mat.name
+subMaterials = [rt.getSubMtl(mat, id) for id in range(1, rt.getNumSubMtls(mat)+1)] #get the material using the matID index. modify index range for index starting at 1.
+print subMaterials
+subMatNames = [s.name for s in subMaterials if s is not None]
+print subMatNames
+
+#~ view = rt.SME.getView(rt.SME.activeView)
+#~ view.GetNumNodes()
+#~ view.getNode[1]
+
+#~ for node in view:
 	#~ print node
 	#~ if node.selected:
 		#~ print node

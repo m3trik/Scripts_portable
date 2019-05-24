@@ -6,6 +6,12 @@ except: pass
 from pydoc import locate
 # from tk_slots_maya_init import Init as func
 from tk_slots_ import Slot
+import tk_switchboard as sb
+
+
+
+
+
 
 
 
@@ -15,10 +21,19 @@ class Test001(Slot):
 		super(Test001, self).__init__(*args, **kwargs)
 
 
-''' Start Code '''
-		# classes=[]
-		# for name in self.hotBox.uiList:
-		# 	class_ = locate('tk_slots_'+self.hotBox.app+'_'+name+'.'+name.capitalize())(self.hotBox)
+		''' Start Code '''
+		selection = pm.ls(selection=1)
+
+		if selection:
+			print pm.selectType(query=1, vertex=1)
+			if pm.selectType(query=1, vertex=1): #get vertex selection info
+				# selectedVerts = [v.split('[')[-1].rstrip(']') for v in pm.filterExpand(selectionMask=31)] #pm.polyEvaluate(vertexComponent=1);
+				# collapsedList = self.collapseList(selectedVerts)
+				numVerts = pm.polyEvaluate (selection[0], vertex=1)
+				infoDict.update({'Selected '+str(len(selectedVerts))+'/'+str(numVerts)+" Vertices: ":collapsedList}) #selected verts
+
+
+
 
 
 	def method(self):
@@ -29,9 +44,68 @@ class Test001(Slot):
 
 
 
-test=Test001()
-test.method()
+# test=Test001()
+# test.method()
 
+
+
+
+
+
+# material = pm.hyperShade("", shaderNetworksSelectMaterialNodes=1)
+# matList = pm.ls(selection=1, flatten=1)
+
+# pm.hyperShade(material, objects=1)
+
+# #delete the old material and shader group nodes
+# for i in range(len(matList)):
+# 	matSGplug = pm.connectionInfo(matList[i]+".outColor", dfs=1)
+# 	SGList = pm.match("^[^\.]*" matSGplug[0])
+# 	print matList, SGList
+# 	pm.delete(matList[i])
+# 	pm.delete(SGList[i])
+
+
+# mel.eval("HypershadeWindow;")
+
+# #create a temp view in the material editor
+# pm.hyperShade(clearWorkArea=1, name='temp')
+# pm.hyperShade(setWorkArea='temp')
+
+
+# if rt.SME.GetViewByName('temp'):
+# 	rt.SME.DeleteView(rt.SME.GetViewByName('temp'), False)
+# index = rt.SME.CreateView('temp')
+# view = rt.SME.GetView(index)
+
+m = ['mat1', 'mat2']
+n = ['sub1', 'sub2']
+# print {index for index, element in enumerate(n)}
+print dict(enumerate(n, x))
+
+
+# matID_mats = [m for m in pm.ls(mat=1, flatten=1)]
+# for mat in matID_mats:
+# 	pm.hyperShade('', shaderNetworksSelectMaterialNodes=1) #selects the material nodes, first arg is optional
+	
+# 	# pm.hyperShade(mat, shaderNetwork=1)
+# 	break
+	# print pm.hyperShade(mat.name(), listUpstreamShaderNodes=1)
+	# pm.delete(mat)
+# matID_names = [m.name() for m in matID_mats]
+# if not matID_names:
+# 			matID_names = 'ID Map: None'
+
+# print matID_names
+
+# print matID_mats[0]
+# prefix='matID_'
+# newName='newName'
+
+# if not newName.startswith(prefix):
+# 	pm.rename(matID_mats[0], prefix+newName) 
+# else:
+# 	pm.rename(matID_mats[0], newName)
 
 
 # from random import triangular as tri

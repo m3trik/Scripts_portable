@@ -119,6 +119,7 @@ class Signal(QtCore.QObject):
 		#args:	[source object]
 		#		[QEvent]
 		if event.type()==QtCore.QEvent.Type.Enter: #enter event
+			self.mouseHover.emit(True)
 			if self.sb.getWidgetType(button)=='QComboBox':
 				#switch the index before opening to initialize the contents of the combobox
 				index = button.currentIndex()
@@ -126,15 +127,14 @@ class Signal(QtCore.QObject):
 				button.setCurrentIndex(index) #change index back to refresh contents
 				
 			if self.hotBox.name=='main' or self.hotBox.name=='viewport': #layoutStack index and viewport signals
-				self.mouseHover.emit(True)
 				# print button.__class__.__name__
 				if self.sb.getWidgetType(button)=='QComboBox':
 					button.showPopup()
 				else:
 					button.click()
 
-			if event.type()==QtCore.QEvent.Type.HoverLeave:
-				self.mouseHover.emit(False)
+		if event.type()==QtCore.QEvent.Type.HoverLeave:
+			self.mouseHover.emit(False)
 
 		return QtWidgets.QWidget.eventFilter(self, button, event)
 
@@ -144,12 +144,16 @@ class Signal(QtCore.QObject):
 		#args: [method object]
 		#add method and docstring to prevCommand list
 		if type(method)!=int and method.__name__.startswith('b'): #ie. 'b012'
-			docString = self.sb.getDocString(self.name, method.__name__) #get the 'docString'. ie. 'Multi-Cut Tool'
-			# print docString, method.__name__, self.sb.prevCommand(as_list=1)
-			self.sb.prevCommand(as_list=1).append([method, docString]) #build array that stores the command method object and the corresponding docString (ie. 'Multi-cut tool')
+			try:
+				docString = self.sb.getDocString(self.name, method.__name__) #get the 'docString'. ie. 'Multi-Cut Tool'
+				# print docString, method.__name__, self.sb.prevCommand(as_list=1)
+				self.sb.prevCommand(as_list=1).append([method, docString]) #build array that stores the command method object and the corresponding docString (ie. 'Multi-cut tool')
+			except Exception as error:
+				print 'tk_signals:147:', error
 		#add previous view to preView list
 		if type(method)!=int and method.__name__.startswith('v'): #ie. 'v012'
 			self.sb.previousView(as_list=1).append(method)
+
 
 
 
