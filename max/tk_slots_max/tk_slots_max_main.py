@@ -16,24 +16,8 @@ class Main(Init):
 
 		self.ui = self.sb.getUi('main')
 		self.menuSet = self.sb.getUi('preferences').cmb000
-
-
-
-	def method(self, name, method):
-		'''
-		#args:
-			name='string' class name (lowercase)
-			method='string' method name
-		#returns:
-		 	method object
-		'''
-		if not self.sb.hasKey(name, 'connectionDict'):
-			self.hotBox.signal.buildConnectionDict(name) #construct the signals and slots for the ui 
-
-			print self.sb.getDocString(name, method)
-		return self.sb.getMethod(name, method)
-
-
+		# self.getMethod('preferences', 'cmb000')() #init menuSet combobox
+		# self.getObject(self.sb.setClass('tk_slots_max_preferences.Preferences'), 'cmb000')[0]()
 
 
 
@@ -45,7 +29,7 @@ class Main(Init):
 		text = self.menuSet.currentText()
 		
 		if text=='Modeling':
-			self.method('polygons', 'b006')()
+			self.getMethod('polygons', 'b006')()
 
 		
 		
@@ -58,7 +42,7 @@ class Main(Init):
 		text = self.menuSet.currentText()
 		
 		if text=='Modeling':
-			self.method('polygons','b005')()
+			self.getMethod('polygons','b005')()
 
 		
 
@@ -71,7 +55,7 @@ class Main(Init):
 		text = self.menuSet.currentText()
 		
 		if text=='Modeling':
-			self.method('polygons','b012')()
+			self.getMethod('polygons','b012')()
 			
 
 		
@@ -84,7 +68,7 @@ class Main(Init):
 		text = self.menuSet.currentText()
 		
 		if text=='Modeling':
-			self.method('polygons','b004')()
+			self.getMethod('polygons','b004')()
 
 		
 
@@ -96,7 +80,7 @@ class Main(Init):
 		text = self.menuSet.currentText()
 		
 		if text=='Modeling':
-			self.method('edit','b032')()
+			self.getMethod('edit','b032')()
 
 		
 
@@ -107,7 +91,7 @@ class Main(Init):
 		text = self.menuSet.currentText()
 		
 		if text=='Modeling':
-			self.method('polygons','b009')()
+			self.getMethod('polygons','b009')()
 
 		
 
@@ -119,7 +103,7 @@ class Main(Init):
 		text = self.menuSet.currentText()
 		
 		if text=='Modeling':
-			self.method('polygons','b047')()
+			self.getMethod('polygons','b047')()
 
 		
 
@@ -131,7 +115,7 @@ class Main(Init):
 		text = self.menuSet.currentText()
 		
 		if text=='Modeling':
-			self.method('selection','b008')()
+			self.getMethod('selection','b008')()
 
 		
 
@@ -143,7 +127,7 @@ class Main(Init):
 		text = self.menuSet.currentText()
 		
 		if text=='Modeling':
-			self.method('polygons','b044')()
+			self.getMethod('polygons','b044')()
 
 		
 
@@ -155,7 +139,7 @@ class Main(Init):
 		text = self.menuSet.currentText()
 		
 		if text=='Modeling':
-			self.method('polygons','b022')()
+			self.getMethod('polygons','b022')()
 
 		
 
@@ -167,7 +151,7 @@ class Main(Init):
 		text = self.menuSet.currentText()
 		
 		if text=='Modeling':
-			self.method('polygons','b007')()
+			self.getMethod('polygons','b007')()
 
 		
 
@@ -179,7 +163,7 @@ class Main(Init):
 		text = self.menuSet.currentText()
 		
 		if text=='Modeling':
-			self.method('polygons','b043')()
+			self.getMethod('polygons','b043')()
 
 		
 
@@ -198,7 +182,7 @@ class Main(Init):
 		# text = 'Minimize'
 		# self.ui.v008.setText(text)
 
-		self.method('scene','b005')()
+		self.getMethod('scene','b005')()
 
 
 

@@ -18,11 +18,29 @@ class Slot(object):
 		self.ui = self.sb.getUi()
 		
 		
+
 		#init styleSheet
 		self.initStyleSheet()
 		#init widgets
-		self.initWidgets()
+		# self.initWidgets()
 
+
+
+
+
+	def getMethod(self, name, method):
+		'''
+		#args:
+			name='string' class name (lowercase)
+			method='string' method name
+		#returns:
+		 	method object
+		'''
+		if not self.sb.hasKey(name, 'connectionDict'):
+			self.hotBox.signal.buildConnectionDict(name) #construct the signals and slots for the ui 
+
+			print self.sb.getDocString(name, method)
+		return self.sb.getMethod(name, method)
 
 
 
@@ -264,10 +282,10 @@ class Slot(object):
 
 
 	#init signals, button states etc. for a stacked widget class
-	def initWidgets(self):
-		for comboBox in self.getObject(self, 'cmb000-50', False):
-			try: comboBox()
-			except: pass
+	# def initWidgets(self):
+	# 	for comboBox in self.getObject(self, 'cmb000-50', False):
+	# 		try: comboBox()
+	# 		except: pass
 
 
 

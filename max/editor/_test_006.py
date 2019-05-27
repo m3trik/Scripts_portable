@@ -3,6 +3,43 @@ except: pass
 
 
 
+from pydoc import locate
+# from tk_slots_maya_init import Init as func
+from tk_slots_ import Slot
+import tk_switchboard as sb
+
+
+
+
+
+
+
+
+
+class Test001(Slot):
+	def __init__(self, *args, **kwargs):
+		super(Test001, self).__init__(*args, **kwargs)
+		'''
+		Start Code
+		'''
+		
+
+
+
+
+	def method(self):
+		classes = [locate('tk_slots_'+self.hotBox.app+'_'+name+'.'+name.capitalize())(self.hotBox) for name in self.hotBox.uiList]
+		for class_ in classes:
+			print str(class_), class_
+
+
+
+
+test=Test001()
+# test.method()
+
+
+
 # def flattenComponentNames(list_):
 # 	for l in list_:
 # 		print type(l)

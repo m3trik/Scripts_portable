@@ -128,8 +128,7 @@ class HotBox(QtWidgets.QWidget):
 
 
 		#close window when pin unchecked
-		# if hasattr (self.ui, 'chkpin'):
-		try: self.ui.chkpin.released.connect(self.hide_)
+		try: self.ui.pin.released.connect(self.hide_)
 		except: pass
 
 		# t1=timeit.default_timer()
@@ -166,13 +165,9 @@ class HotBox(QtWidgets.QWidget):
 			if any ([self.name=="main", self.name=="viewport", self.name=="init", self.name=="display"]):
 				if event.button()==QtCore.Qt.LeftButton:
 					self.layoutStack('viewport')
+
 				elif event.button()==QtCore.Qt.RightButton:
 					self.layoutStack('main')
-
-					# self.mousePressEventOn = False
-					# windll.user32.mouse_event(0x10, 0, 0, 0,0) #right up
-					# # windll.user32.mouse_event(0x8, 0, 0, 0,0) #right down
-					# self.mousePressEventOn = True
 
 				elif event.button()==QtCore.Qt.MiddleButton:
 					self.layoutStack('display')
@@ -195,7 +190,7 @@ class HotBox(QtWidgets.QWidget):
 					print "# Warning: No recent views in history. #"
 
 		if event.button()==QtCore.Qt.MiddleButton:
-			if any([self.name=='init', self.name=="main" or self.name=="viewport"]):
+			if any([self.name=='init', self.name=="main", self.name=="viewport"]):
 				try: #repeat last command
 					self.repeatLastCommand()
 				except Exception as error:
@@ -204,14 +199,24 @@ class HotBox(QtWidgets.QWidget):
 
 	def mouseMoveEvent(self, event):
 		#args: [QEvent]
-		if (self.name=="main") or (self.name=="viewport"):
-			self.mousePosition = event.pos()
-			self.update()
+		if any([self.name=="main", self.name=="viewport"]):
+			self.mousePosition = event.pos() #current mouse position
+
+			if self.ui.r000.geometry().contains(self.mousePosition):
+				self.ui.r000.show()
+			else:
+				self.ui.r000.hide()
+
+			if self.ui.r001.geometry().contains(self.mousePosition):
+				self.ui.r001.show()
+			else:
+				self.ui.r001.hide()
+
 		elif self.name!="init" and event.buttons()==QtCore.Qt.LeftButton:
 			if (event.buttons() & QtCore.Qt.LeftButton): #drag window and pin
 				moveWindow(self, -self.point.x(), -self.point.y()*.1) #set mouse position and move window with mouse down
-				self.ui.chkpin.setChecked(True)
-
+				self.ui.pin.setChecked(True)
+	
 
 	def showEvent(self, event):
 		try: MaxPlus.CUI.DisableAccelerators()
@@ -224,13 +229,11 @@ class HotBox(QtWidgets.QWidget):
 
 
 	def hide_(self):
-		try:
-			if hasattr (self.ui, 'chkpin') and self.ui.chkpin.isChecked(): 
-				pass
-			else:
+		try: #if pin is unchecked: hide
+			if not self.ui.pin.isChecked():
 				self.hide()
-		except Exception as error:
-			if error!=RuntimeWarning: print error
+		except: #if ui doesn't have pin: hide
+			self.hide()
 
 
 	def hideEvent(self, event):
@@ -246,7 +249,7 @@ class HotBox(QtWidgets.QWidget):
 
 	def repeatLastView(self):
 		self.sb.previousView()() #execute method
-		print self.sb.previousView(asList=1) #print command name string
+		print self.sb.previousView(asList=1)
 
 
 
@@ -281,14 +284,17 @@ class Overlay(QtWidgets.QWidget):
 				painter.drawLine(self.start_line, self.end_line)
 				painter.drawEllipse(self.end_line, 5, 5)
 
+
 	def mousePressEvent(self, event):
 		self.start_line = self.point
 		self.end_line = event.pos()
 		self.update()
 
+
 	def mouseMoveEvent(self, event):
 		self.end_line = event.pos()
 		self.update()
+
 
 	def mouseReleaseEvent(self, event):
 		self.start_line = self.point
@@ -309,6 +315,7 @@ class OverlayFactoryFilter(QtCore.QObject):
 		if self.m_overlay is None:
 			self.m_overlay = Overlay()
 		self.m_overlay.setParent(w)
+
 
 	def eventFilter(self, obj, event):
 		if not obj.isWidgetType():

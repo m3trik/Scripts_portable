@@ -196,31 +196,35 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 	def setClass(self, class_):
 		'''
 		#args:
-			class_='string' module name and class to import and store class instance. ie. 'tk_slots_max_polygons.Polygons'
+			class_='string' module name and class to import and store class instance. 
+				ie. 'tk_slots_max_polygons.Polygons'
 				*or <class object>. to store class instance
 		#returns:
 			class object corresponding to key: class_.
 		'''
-		if type(class_)==str or type(class_)==unicode:
+		if type(class_)==str or type(class_)==unicode: #arg as string
 			name = class_.split('_')[-1].split('.')[-1].lower(); #get key from class_ string ie. 'class' from 'tk_slots_max_polygons.Class'
-			if not name in sbDict: sbDict[name] = {}
+			if not name in sbDict:
+				sbDict[name] = {}
 
 			sbDict[name]['class'] = locate(class_)
-		else:
+
+		else: #if class_ arg as <object>:
 			name = class_.__class__.__name__.lower();
-			if not name in sbDict: sbDict[name] = {}
+			if not name in sbDict:
+				sbDict[name] = {}
 			
 			sbDict[name]['class'] = class_
 
-		if sbDict[name]['class']!=None:
-			return sbDict[name]['class']
-		else:
+		if not sbDict[name]['class']:
 			return '# Error: '+class_+' not found. #'
-
+		else:
+			return sbDict[name]['class']
 
 
 	def getClass(self, name):
 		'''
+		If class is not in sbDict, use setClass() instead.
 		#args:
 			name='string' name of class. ie. 'polygons' (lowercase)
 		#returns:
@@ -280,14 +284,14 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 		#args:
 			name='string' name of class. ie. 'polygons'
 			methodString='string' name of method. ie. 'b001'
-			full=bool return full unedited docstring
+			full=bool return full unedited docString
 		#returns:
-			if full: full stored docstring
-			else: edited docstring; name of method
+			if full: full stored docString
+			else: edited docString; name of method
 		'''
-		if full: #entire unformatted docstring
+		if full: #entire unformatted docString
 			return sbDict[name]['connectionDict'][methodString]['docString']
-		else: #formatted docstring
+		else: #formatted docString
 			return sbDict[name]['connectionDict'][methodString]['docString'].strip('\n\t')
 
 
@@ -360,16 +364,16 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 
 
-	def prevCommand(self, docString=False, docStringList=False, methodList=False, as_list=False):
+	def prevCommand(self, docString=False, method=False, as_list=False):
 		'''
 		#args:
 			docString=bool 		return docString of last command
-			docStringList=bool 	return all docStrings in prevCommand list as a list
-			methodList=bool 	return all methods in prevCommand list as a list
+			methodList=bool 	return method of last command
 		#returns:
-			if docString: 'string' description (derived from the last used command method's docstring)
-			if docStringList: [string list] all docStrings, in order of use, as a list
-			if methodList: [<method object> list} all methods, in order of use, as a list
+			if docString: 'string' description (derived from the last used command method's docString)
+			if docString AND as_list: [string list] all docStrings, in order of use, as a list
+			if method: method of last used command.
+			if method AND as_list: [<method object> list} all methods, in order of use, as a list
 			if as_list: list of lists with <method object> as first element and <docString> as second. 'prevCommand':[[b001, 'multi-cut tool']] }
 			else : <method object> of the last used command
 		'''
@@ -380,21 +384,25 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 		list_ = sbDict['prevCommand']
 		[list_.remove(l) for l in list_[:] if list_.count(l)>1] #remove any previous duplicates if they exist; keeping the last added element.
 
-		if docString:
-			try: return list_[-1][1]
-			except: return ''
-
-		elif docStringList:
+		if docString and as_list:
 			try: return [i[1] for i in list_]
 			except: return None
 
+		elif docString:
+			try: return list_[-1][1]
+			except: return ''
+
+		elif method and as_list:
+			try:return [i[0] for i in list_]
+			except: return ['# No commands in history. #']
+
+		elif method:
+			try: return list_[-1][0]
+			except: return ''
+		
 		elif as_list:
 			return list_
 
-		elif methodList:
-			try:return [i[0] for i in list_]
-			except: return ['# No commands in history. #']
-		
 		else:
 			try: return list_[-1][0]
 			except: return None
@@ -438,7 +446,7 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 		'buttonObject':button ui object.  ie. b001
 		'buttonObjectWithSignal':button ui object with signal attached. ie. b001.connect
 		'methodObject':class method object for the corresponding ui button. ie. main.b001
-		'docString': string description of command from method docstring.  ie. 'Multi-Cut Tool'}
+		'docString': string description of command from method docString.  ie. 'Multi-Cut Tool'}
 		#ie. {'b001':{'buttonObject':b001, 'buttonObjectWithSignal':b001.onPressed, 'methodObject':main.b001, 'docString':'Multi-Cut Tool'}},
 		'''
 		if not 'connectionDict' in sbDict[name]: sbDict[name]['connectionDict'] = {}

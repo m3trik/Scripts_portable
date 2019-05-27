@@ -108,208 +108,6 @@
      <string/>
     </property>
    </widget>
-   <widget class="QComboBox" name="cmb000">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>70</y>
-      <width>65</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>65</width>
-      <height>51</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>9999</width>
-      <height>61</height>
-     </size>
-    </property>
-    <property name="layoutDirection">
-     <enum>Qt::LeftToRight</enum>
-    </property>
-    <property name="currentText">
-     <string>Editors</string>
-    </property>
-    <property name="maxVisibleItems">
-     <number>50</number>
-    </property>
-    <property name="sizeAdjustPolicy">
-     <enum>QComboBox::AdjustToContents</enum>
-    </property>
-    <property name="frame">
-     <bool>false</bool>
-    </property>
-    <item>
-     <property name="text">
-      <string>Editors</string>
-     </property>
-    </item>
-   </widget>
-   <widget class="QComboBox" name="cmb002">
-    <property name="geometry">
-     <rect>
-      <x>270</x>
-      <y>120</y>
-      <width>65</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>65</width>
-      <height>51</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>9999</width>
-      <height>61</height>
-     </size>
-    </property>
-    <property name="layoutDirection">
-     <enum>Qt::LeftToRight</enum>
-    </property>
-    <property name="currentText">
-     <string>Create</string>
-    </property>
-    <property name="maxVisibleItems">
-     <number>50</number>
-    </property>
-    <property name="sizeAdjustPolicy">
-     <enum>QComboBox::AdjustToContents</enum>
-    </property>
-    <property name="frame">
-     <bool>false</bool>
-    </property>
-    <item>
-     <property name="text">
-      <string>Create</string>
-     </property>
-    </item>
-   </widget>
-   <widget class="QComboBox" name="cmb001">
-    <property name="geometry">
-     <rect>
-      <x>270</x>
-      <y>70</y>
-      <width>68</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>65</width>
-      <height>51</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>999</width>
-      <height>38</height>
-     </size>
-    </property>
-    <property name="layoutDirection">
-     <enum>Qt::LeftToRight</enum>
-    </property>
-    <property name="currentText">
-     <string>Cameras</string>
-    </property>
-    <property name="maxVisibleItems">
-     <number>50</number>
-    </property>
-    <property name="sizeAdjustPolicy">
-     <enum>QComboBox::AdjustToContents</enum>
-    </property>
-    <property name="frame">
-     <bool>false</bool>
-    </property>
-    <item>
-     <property name="text">
-      <string>Cameras</string>
-     </property>
-    </item>
-   </widget>
-   <widget class="QPushButton" name="v010">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>45</x>
-      <y>40</y>
-      <width>66</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>Camera: Dolly</string>
-    </property>
-    <property name="text">
-     <string>Dolly</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="v011">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>205</x>
-      <y>40</y>
-      <width>66</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>Camera: Roll</string>
-    </property>
-    <property name="text">
-     <string>Roll</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="v012">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>95</x>
-      <y>10</y>
-      <width>66</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>Camera: Truck</string>
-    </property>
-    <property name="text">
-     <string>Truck</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="v013">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>160</x>
-      <y>10</y>
-      <width>66</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>Camera: Pan</string>
-    </property>
-    <property name="text">
-     <string>Orbit</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="v007">
     <property name="geometry">
      <rect>
@@ -414,68 +212,344 @@
      <string>Persp</string>
     </property>
    </widget>
-   <widget class="QComboBox" name="cmb003">
+   <widget class="QWidget" name="r000" native="true">
+    <property name="geometry">
+     <rect>
+      <x>45</x>
+      <y>0</y>
+      <width>226</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <widget class="QPushButton" name="v012">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>20</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Camera: Truck</string>
+     </property>
+     <property name="text">
+      <string>Truck</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="v013">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>115</x>
+       <y>20</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Camera: Pan</string>
+     </property>
+     <property name="text">
+      <string>Orbit</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="v010">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>40</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Camera: Dolly</string>
+     </property>
+     <property name="text">
+      <string>Dolly</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="v011">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>155</x>
+       <y>40</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Camera: Roll</string>
+     </property>
+     <property name="text">
+      <string>Roll</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="r001" native="true">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>200</y>
+      <width>176</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <widget class="QPushButton" name="v010_2">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="v010_3">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>110</x>
+       <y>10</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="r002" native="true">
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>120</y>
-      <width>65</width>
-      <height>51</height>
+      <y>69</y>
+      <width>51</width>
+      <height>111</height>
      </rect>
     </property>
-    <property name="minimumSize">
-     <size>
-      <width>65</width>
-      <height>51</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>9999</width>
-      <height>61</height>
-     </size>
-    </property>
-    <property name="layoutDirection">
-     <enum>Qt::LeftToRight</enum>
-    </property>
-    <property name="currentText">
-     <string>Options</string>
-    </property>
-    <property name="maxVisibleItems">
-     <number>50</number>
-    </property>
-    <property name="sizeAdjustPolicy">
-     <enum>QComboBox::AdjustToContents</enum>
-    </property>
-    <property name="frame">
-     <bool>false</bool>
-    </property>
-    <item>
-     <property name="text">
+    <widget class="QComboBox" name="cmb000">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>59</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>9999</width>
+       <height>61</height>
+      </size>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="currentText">
+      <string>Editors</string>
+     </property>
+     <property name="maxVisibleItems">
+      <number>50</number>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>Editors</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QComboBox" name="cmb003">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>70</y>
+       <width>63</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>9999</width>
+       <height>61</height>
+      </size>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="currentText">
       <string>Options</string>
      </property>
-    </item>
+     <property name="maxVisibleItems">
+      <number>50</number>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>Options</string>
+      </property>
+     </item>
+    </widget>
    </widget>
-   <zorder>cmb003</zorder>
-   <zorder>cmb000</zorder>
-   <zorder>cmb001</zorder>
+   <widget class="QWidget" name="r003" native="true">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>70</y>
+      <width>51</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <widget class="QComboBox" name="cmb002">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>70</y>
+       <width>59</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>9999</width>
+       <height>61</height>
+      </size>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="currentText">
+      <string>Create</string>
+     </property>
+     <property name="maxVisibleItems">
+      <number>50</number>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>Create</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QComboBox" name="cmb001">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>68</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>999</width>
+       <height>38</height>
+      </size>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="currentText">
+      <string>Cameras</string>
+     </property>
+     <property name="maxVisibleItems">
+      <number>50</number>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>Cameras</string>
+      </property>
+     </item>
+    </widget>
+   </widget>
+   <zorder>r003</zorder>
+   <zorder>r002</zorder>
    <zorder>v008</zorder>
    <zorder>v009</zorder>
    <zorder>v014</zorder>
    <zorder>v015</zorder>
-   <zorder>cmb002</zorder>
-   <zorder>v012</zorder>
-   <zorder>v013</zorder>
    <zorder>v007</zorder>
    <zorder>v006</zorder>
    <zorder>v000</zorder>
    <zorder>v002</zorder>
    <zorder>v003</zorder>
    <zorder>v005</zorder>
-   <zorder>v001</zorder>
    <zorder>v004</zorder>
-   <zorder>v011</zorder>
-   <zorder>v010</zorder>
+   <zorder>r001</zorder>
+   <zorder>v001</zorder>
+   <zorder>r000</zorder>
   </widget>
  </widget>
  <resources/>

@@ -49,7 +49,7 @@ class Signal(QtCore.QObject):
 					#get the button from the dynamic ui
 					buttonObject = getattr(self.ui, buttonString)  #equivilent to: self.ui.b000
 					size-=1 #decrease search length on each successful match
-
+					
 					#add eventfilter
 					buttonObject.installEventFilter(self) #ie. self.ui.i000.installEventFilter(self)
 
@@ -166,6 +166,8 @@ print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
+
+
 
 # if prefix=='i' or prefix=='v' or prefix=='cmb' and self.name=='main' or  self.name=='viewport': #layoutStack index and viewport signals
 

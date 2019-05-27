@@ -33,13 +33,13 @@ class Display(Init):
 		'''
 		cmb = self.ui.cmb001
 		
-		list_ = self.sb.prevCommand(methodList=1) #ie. get the list of previous command methods
+		list_ = self.sb.prevCommand(docString=1, as_list=1) #ie. get the list of previous command methods
 		contents = self.comboBox (cmb, list_, "Recent")
 
 		index = cmb.currentIndex()
 		if index!=0:
-			print self.sb.prevCommand(docString=1)[index+1] #prevCommand docString
-			self.sb.prevCommand(methodList=1)[index+1]() #execute command at index
+			print self.sb.prevCommand(docString=1, as_list=1)[index+1] #prevCommand docString
+			self.sb.prevCommand(method=1, as_list=1)[index+1]() #execute command at index
 			cmb.setCurrentIndex(0)
 
 

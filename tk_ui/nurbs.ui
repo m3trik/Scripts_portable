@@ -1735,7 +1735,7 @@
     <property name="frameShape">
      <enum>QFrame::StyledPanel</enum>
     </property>
-    <widget class="QPushButton" name="chkpin">
+    <widget class="QPushButton" name="pin">
      <property name="enabled">
       <bool>true</bool>
      </property>
@@ -1752,6 +1752,11 @@
        <width>111</width>
        <height>19</height>
       </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
      </property>
      <property name="toolTip">
       <string>pin this window to a separate instance.</string>

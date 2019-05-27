@@ -25,25 +25,22 @@ class Preferences(Init):
 		'''
 		cmb = self.ui.cmb000
 
-		list_ = ['None', 'Modeling', 'Normals', 'Materials', 'UV']
+		list_ = ['Modeling', 'Normals', 'Materials', 'UV']
 		contents = self.comboBox (cmb, list_)
 
 		index = cmb.currentIndex()
 		buttons = self.getObject(self.sb.getUi('main'), 'v000-11')
 		for i, button in enumerate(buttons):
 			if index==0:
-				button.setText('')
+				button.setText(['Extrude','Bridge','Cut','Slice','Delete','Collapse','Insert Loop','Select Loop','Detach','Attach','Chamfer','Target Weld'][i])
 
 			if index==1:
-				button.setText(['Extrude','Bridge','Cut','Slice','Delete','Collapse','Insert Loop','Select Loop','Detach','Attach','Chamfer','Target Weld'][i])
+				button.setText(['','','','','','','','','','','',''][i])
 
 			if index==2:
 				button.setText(['','','','','','','','','','','',''][i])
 
 			if index==3:
-				button.setText(['','','','','','','','','','','',''][i])
-
-			if index==4:
 				button.setText(['','','','','','','','','','','',''][i])
 				
 

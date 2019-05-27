@@ -288,20 +288,17 @@ class Texturing(Init):
 		Delete Unused Materials
 
 		'''
-		maxEval('''
-			def_material = Standard name:"Default Material"
-			count = 0
-			for mat in scenematerials do undo off
-			(
-				nodes = refs.dependentnodes mat 
-				if nodes.count == 0 do 
-				(
-					replaceinstances mat def_material
-					count += 1
-				)
-			)
-			gc()
-			freeSceneBitmaps()
+		defaultMat = rt.Standard(name='Default Material')
+		count = 0
+		for mat in rt.scenematerials
+			rt.undo(False)
+			nodes = refs.dependentnodes mat 
+			if nodes.count == 0 do 
+				replaceinstances mat def_material
+				count += 1
+				
+			rt.gc()
+			rt.freeSceneBitmaps()
 			count
 			''')
 
