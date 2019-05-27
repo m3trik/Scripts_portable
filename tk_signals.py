@@ -3,6 +3,7 @@ from PySide2 import QtCore, QtWidgets
 import os.path
 
 from tk_switchboard import Switchboard
+import tk_styleSheet as styleSheet
 
 
 
@@ -50,6 +51,9 @@ class Signal(QtCore.QObject):
 					buttonObject = getattr(self.ui, buttonString)  #equivilent to: self.ui.b000
 					size-=1 #decrease search length on each successful match
 					
+					#add stylesheet
+					buttonObject.setStyleSheet(styleSheet.css)
+
 					#add eventfilter
 					buttonObject.installEventFilter(self) #ie. self.ui.i000.installEventFilter(self)
 

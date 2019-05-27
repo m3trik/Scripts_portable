@@ -29,14 +29,12 @@ class Init(Slot):
 
 		if level==0: #object level
 			selCount = len(sel) #number of selected objects
-			currentSelection = [str(s.name) for s in sel]; infoDict.update({str(selCount)+" Selected Objects: ":currentSelection}) #currently selected objects
+			currentSelection = [str(s.name) for s in sel]; infoDict.update({str(selCount)+"Objects: ":currentSelection}) #currently selected objects
 
 
 		for obj in rt.selection:
 			type_ = str(rt.classOf(obj))
 			
-			
-
 			# symmetry = pm.symmetricModelling(query=1, symmetry=1);
 			# if symmetry==1: symmetry=True; infoDict.update({"Symmetry State: ":symmetry}) #symmetry state
 			# if symmetry: axis = pm.symmetricModelling(query=1, axis=1); infoDict.update({"Symmetry Axis: ":axis}) #symmetry axis
@@ -49,19 +47,19 @@ class Init(Slot):
 					selectedVerts = Init.bitArrayToArray(rt.polyop.getVertSelection(obj))
 					collapsedList = self.collapseList(selectedVerts)
 					numVerts = rt.polyop.getNumVerts(obj)
-					infoDict.update({'Selected '+str(len(selectedVerts))+'/'+str(numVerts)+" Vertices: ":collapsedList}) #selected verts
+					infoDict.update({'Vertices: '+str(len(selectedVerts))+'/'+str(numVerts):collapsedList}) #selected verts
 
 				if level==2: #get edge info
 					selectedEdges = Init.bitArrayToArray(rt.polyop.getEdgeSelection(obj))
 					collapsedList = self.collapseList(selectedEdges)
 					numEdges = rt.polyop.getNumEdges(obj)
-					infoDict.update({'Selected '+str(len(selectedEdges))+'/'+str(numEdges)+" Edges: ":collapsedList}) #selected edges
+					infoDict.update({'Edges: '+str(len(selectedEdges))+'/'+str(numEdges):collapsedList}) #selected edges
 					
 				if level==4: #get face info
 					selectedFaces = Init.bitArrayToArray(rt.polyop.getFaceSelection(obj))
 					collapsedList = self.collapseList(selectedFaces)
 					numFaces = rt.polyop.getNumFaces(obj)
-					infoDict.update({'Selected '+str(len(selectedFaces))+'/'+str(numFaces)+" Faces: ":collapsedList}) #selected faces
+					infoDict.update({'Faces: '+str(len(selectedFaces))+'/'+str(numFaces):collapsedList}) #selected faces
 
 
 			# selectedUVs = ; infoDict.update({"Selected UV's: ":selectedUVs}) #selected uv's

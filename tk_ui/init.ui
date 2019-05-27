@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>320</width>
-    <height>240</height>
+    <width>400</width>
+    <height>300</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -34,6 +34,9 @@
   <property name="windowTitle">
    <string>Toolkit</string>
   </property>
+  <property name="windowOpacity">
+   <double>0.100000000000000</double>
+  </property>
   <property name="tabShape">
    <enum>QTabWidget::Triangular</enum>
   </property>
@@ -53,8 +56,8 @@
    <widget class="QTextEdit" name="t000">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>0</y>
+      <x>40</x>
+      <y>30</y>
       <width>320</width>
       <height>240</height>
      </rect>
