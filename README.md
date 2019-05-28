@@ -6,7 +6,7 @@
 
 ## Design:
 ######
-*To build as app agnostic (as possible) modular ui to house user tools/common shortcuts/macros where each piece is constructed dynamically to allow 
+*To build an app agnostic (as possible) modular ui to house user tools/common shortcuts/macros where each piece is constructed dynamically to allow 
 for as little overhead as possible in construction and maintainence. Literally all you have to do to have 
 a new ui up and running, is to drop a qt ui file into the ui folder, create a module and class of the 
 same name, and a corresponding button to link to it. Naming convention allows for a stacked ui to be built, signals added/removed, and a master dictionary 
@@ -14,7 +14,7 @@ same name, and a corresponding button to link to it. Naming convention allows fo
 simple location, in one simple way.
 
 other general principles and methodologies going forward:
-keep things as simple as possible (only add what is necessary), and as modular as possible, so that future changes can be made with as little as possible overhead.*
+keep things as simple as possible (only add what is necessary), and as modular as is reasonable, so that future changes can be made with as little as possible overhead.*
 
 ##
 -----------------------------------------------
