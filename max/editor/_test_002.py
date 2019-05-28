@@ -5,19 +5,29 @@ except: pass
 #~ faces = rt.polyop.getFaceSelection(obj)
 #~ print rt.polyop.getElementsUsingFace(obj, faces)
 
-#~ print [rt.getSubMtl(mat, i) for i in range(1, rt.getNumSubMtls(mat)+1) for mat in rt.sceneMaterials if rt.getSubMtl(mat, i).name.startswith('matID')]
 
-mats=[]
-for mat in rt.sceneMaterials:
-	if rt.getNumSubMtls(mat):
-		for i in range(1, rt.getNumSubMtls(mat)+1):
-			subMat = rt.getSubMtl(mat, i)
-			if subMat.name.startswith('matID'):
-				mats.append(subMat)
-	elif mat.name.startswith('matID'):
-		mats.append(mat)
+MaxPlus.Core.EvalMAXScript('fn bitArrayToArray bitArray = (return bitArray as Array)')
 
-print mats
+obj = rt.selection[0]
+mat = obj.material #get material from selection
+
+if rt.subObjectLevel == 4: #if face selection check for multimaterial
+	if rt.getNumSubMtls(mat): #if multimaterial; use selected face to get material ID
+		f = rt.bitArrayToArray(rt.getFaceSelection(obj))[0] #get selected faces
+		id = obj.GetFaceMaterial(f) #Returns the material ID of the specified face.
+		mat = rt.getSubMtl(mat, id) #get material from mat ID
+
+print mat
+
+mat = None
+
+if not mat:
+	mat = rt.selection[0].material #if no new material is passed in; use selected
+matName = mat.name
+subMaterials = [rt.getSubMtl(mat, id) for id in range(1, rt.getNumSubMtls(mat)+1)] #get the material using the matID index. modify index range for index starting at 1.
+print subMaterials
+subMatNames = [s.name for s in subMaterials if s is not None]
+print subMatNames
 
 #~ view = rt.SME.getView(rt.SME.activeView)
 #~ view.GetNumNodes()

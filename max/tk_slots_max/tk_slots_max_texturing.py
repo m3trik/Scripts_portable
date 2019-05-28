@@ -5,7 +5,6 @@ import os.path
 
 from tk_slots_max_init import Init
 
-from PySide2 import QtGui
 
 
 
@@ -96,7 +95,7 @@ class Texturing(Init):
 
 		matName = mat.name
 		
-		subMaterials = [rt.getSubMtl(mat, i) for i in range(1, rt.getNumSubMtls(mat)+1)] #get the material using the matID index. modify index range for index starting at 1.
+		subMaterials = [rt.getSubMtl(mat, id) for id in range(1, rt.getNumSubMtls(mat)+1)] #get the material using the matID index. modify index range for index starting at 1.
 		subMatNames = [s.name for s in subMaterials if s is not None]
 		
 		contents = self.comboBox(cmb, subMatNames, matName)
@@ -114,33 +113,15 @@ class Texturing(Init):
 		'''
 		cmb = self.ui.cmb003
 
-		mats=[] #get any scene material that startswith 'matID'
-		for mat in rt.sceneMaterials:
-			if rt.getNumSubMtls(mat): #if material is a submaterial; search submaterials
-				for i in range(1, rt.getNumSubMtls(mat)+1):
-					subMat = rt.getSubMtl(mat, i)
-					if subMat.name.startswith('matID'):
-						mats.append(subMat)
-			elif mat.name.startswith('matID'):
-				mats.append(mat)
+		matID_mats = [m for m in rt.sceneMaterials if m.name.startswith('matID')]
+		matID_names = [m.name for m in matID_mats]
+		if not matID_names: 
+			matID_names = ['ID Map: None']
 
-		matNames = [m.name for m in mats]
-		if not matNames: 
-			matNames = ['ID Map: None']
+		contents = self.comboBox(cmb, matID_names)
 
-		contents = self.comboBox(cmb, matNames)
-
-		if matNames[0]!='ID Map: None': #add mat objects to storedID_mats dictionary. 'mat name'=key, <mat object>=value
-			self.storedID_mats = {n:mats[i] for i, n in enumerate(matNames)}
-
-		for index in range(len(mats)): #create icons with color swatch
-			r = int(mats[index].diffuse.r) #convert from float value
-			g = int(mats[index].diffuse.g)
-			b = int(mats[index].diffuse.b)
-			pixmap = QtGui.QPixmap(100,100)
-			pixmap.fill(QtGui.QColor.fromRgb(r, g, b))
-			cmb.setItemIcon(index, QtGui.QIcon(pixmap))
-
+		if matID_names[0]!='ID Map: None': #add mat objects to storedID_mats dict. 'mat name'=key, <mat object>=value
+			self.storedID_mats = {n:matID_mats[i] for i, n in enumerate(matID_names)}
 
 
 	def chk000(self):
@@ -283,7 +264,6 @@ class Texturing(Init):
 
 			self.randomMat = mat
 
-			self.cmb002() #refresh combobox
 			rt.redrawViews()
 		else:
 			print '# Error: No valid object/s selected. #'
@@ -308,16 +288,19 @@ class Texturing(Init):
 		Delete Unused Materials
 
 		'''
-		defaultMaterial = rt.Standard(name='Default Material')
-		
-		for mat in rt.scenematerials:
+		defaultMat = rt.Standard(name='Default Material')
+		count = 0
+		for mat in rt.scenematerials
 			rt.undo(False)
-			nodes = rt.refs().dependentnodes(mat) 
-			if nodes.count==0:
-				rt.replaceinstances(mat, defaultMaterial)
+			nodes = refs.dependentnodes mat 
+			if nodes.count == 0 do 
+				replaceinstances mat def_material
+				count += 1
 				
 			rt.gc()
 			rt.freeSceneBitmaps()
+			count
+			''')
 
 
 	def b007(self):
