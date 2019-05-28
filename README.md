@@ -56,8 +56,9 @@ keep things as simple as possible (typically, only add what is necessary), and a
 
 ## tk_switchboard: 
 ######
-*holds the following information for each tool class instance. From this information, you can call switchboard methods to 
+*the following is an example of some of the imformation held for each tool class instance. From this information, you can call switchboard methods to 
 get most relevent information easily wherever you need it.*
+*for a full list, check the tk_switchboard module.*
 
 * class name as string
 
@@ -77,7 +78,9 @@ get most relevent information easily wherever you need it.*
 
 * uiList : *string list of all ui filenames in the ui folder*
 
-* prevName : *list of last called relevant ui*
+* previousName : *list of last called relevant ui*
+
+* previousView: *index of the last valid previously opened ui name.*
 
 * prevCommand : *history of commands. uses the method docstring to generate a user friendly name from the dynamic element and stores it along side the command method.*
 
