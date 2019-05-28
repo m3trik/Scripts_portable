@@ -5,6 +5,7 @@ import os.path
 
 from tk_slots_maya_init import Init
 
+from PySide2 import QtGui
 
 
 
@@ -116,15 +117,24 @@ class Texturing(Init):
 		'''
 		cmb = self.ui.cmb003
 
-		matID_mats = [m for m in pm.ls(mat=1, flatten=1) if m.name().startswith('matID')]
-		matID_names = [m.name() for m in matID_mats]
-		if not matID_names: 
-			matID_names = ['ID Map: None']
+		mats = [m for m in pm.ls(mat=1, flatten=1) if m.name().startswith('matID')]
+		matNames = [m.name() for m in mats]
+		if not matNames: 
+			matNames = ['ID Map: None']
 
-		contents = self.comboBox(cmb, matID_names)
+		contents = self.comboBox(cmb, matNames)
 		
-		if matID_names[0]!='ID Map: None': #add mat objects to storedID_mats dict. 'mat name'=key, <mat object>=value
-			self.storedID_mats = {n:matID_mats[i] for i, n in enumerate(matID_names)}
+		if matNames[0]!='ID Map: None': #add mat objects to storedID_mats dict. 'mat name'=key, <mat object>=value
+			self.storedID_mats = {n:mats[i] for i, n in enumerate(matNames)}
+
+
+		for index in range(len(mats)): #create icons with color swatch
+			r = int(pm.getAttr(matNames[index]+'.colorR')*255) #convert from 0-1 to 0-255 value and then to an integer
+			g = int(pm.getAttr(matNames[index]+'.colorG')*255)
+			b = int(pm.getAttr(matNames[index]+'.colorB')*255)
+			pixmap = QtGui.QPixmap(100,100)
+			pixmap.fill(QtGui.QColor.fromRgb(r, g, b))
+			cmb.setItemIcon(index, QtGui.QIcon(pixmap))
 		
 
 	def chk000(self):
@@ -232,6 +242,8 @@ class Texturing(Init):
 				pm.delete(self.randomMat)
 
 			self.randomMat = mat
+
+			self.cmb002() #refresh combobox
 		else:
 			print '# Error: No valid object/s selected. #'
 
