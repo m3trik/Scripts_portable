@@ -89,7 +89,7 @@ get most relevent information easily wherever you need it.*
 -----------------------------------------------
 
 ######
-* ui files:     <name>.ui
+* ui files:     /<name/>.ui
  
 * tools module: tk_slots_<app>_<name>.py
  
