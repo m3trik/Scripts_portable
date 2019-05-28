@@ -142,7 +142,6 @@ class Texturing(Init):
 			cmb.setItemIcon(index, QtGui.QIcon(pixmap))
 
 
-
 	def chk000(self):
 		self.ui.chk001.setChecked(False)
 

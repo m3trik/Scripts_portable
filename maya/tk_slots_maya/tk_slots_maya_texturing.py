@@ -238,8 +238,8 @@ class Texturing(Init):
 			pm.hyperShade(assign=mat)
 
 			#delete previous shader
-			if self.randomMat:
-				pm.delete(self.randomMat)
+			# if self.randomMat:
+			# 	pm.delete(self.randomMat)
 
 			self.randomMat = mat
 
