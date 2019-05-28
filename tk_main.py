@@ -45,22 +45,22 @@ class HotBox(QtWidgets.QWidget):
 
 	def __init__(self, parent=None):
 		QtWidgets.QWidget.__init__(self)
-
+		
 		self.setObjectName(self.__class__.__name__) #set object name to: 'HotBox'
-
+		
 		#set window style
 		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint|QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.X11BypassWindowManagerHint)
 		self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 		self.setStyle(QtWidgets.QStyleFactory.create("plastique"))
 		self.setStyleSheet(styleSheet.css)
 		
-		self.setMouseTracking(True)
+		# self.setMouseTracking(True) #mouse tracking events during mouse button up state.
 		
-
+		
 		self.sb = Switchboard()
 		
 		self.app = self.sb.setApp(parent)
-
+		
 		self.sb.setClass(self) #add hotBox instance to switchboard dict
 		self.signal = self.sb.setClass('tk_signals.Signal')()
 
