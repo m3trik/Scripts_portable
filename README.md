@@ -101,9 +101,7 @@ instance is populated. Any of the buttons will also connect to a corresponding c
 
 * QPushButton   b000    (b000-b999) can contain 1000 buttons of one type max per class using this convention.
 
-* QPushButton   v000    these buttons are attached an event filter to change the ui index.
-
-* QPushButton   i000    buttons that are initially invisible.
+* QPushButton   i000    these buttons are attached an event filter to change the ui index.
 
 * QComboBox     cmb000  ""
 
@@ -113,6 +111,7 @@ instance is populated. Any of the buttons will also connect to a corresponding c
 
 * QtextField    t000    ""
 
+any additional widget types can be easily added when needed using this same convention.
 
 
 ##
