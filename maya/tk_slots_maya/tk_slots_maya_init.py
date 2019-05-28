@@ -36,7 +36,7 @@ class Init(Slot):
 
 		if selection:
 			if pm.selectType(query=1, allObjects=1): #object mode
-				currentSelection = [str(s) for s in pm.ls(selection=1, orderedSelection=1, objectsOnly=1)]; infoDict.update({'Objects: ':currentSelection}) #currently selected objects
+				currentSelection = [str(s) for s in pm.ls(selection=1, objectsOnly=1)]; infoDict.update({'Objects: ':currentSelection}) #currently selected objects #orderedSelection=1
 
 			if pm.selectType(query=1, vertex=1): #get vertex selection info
 				selectedVerts = [v.split('[')[-1].rstrip(']') for v in pm.filterExpand(selectionMask=31)] #pm.polyEvaluate(vertexComponent=1);

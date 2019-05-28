@@ -262,6 +262,13 @@ QPushButton::hover {
 	color: black;
 }
 
+QPushButton::pressed {   
+	border: 1px solid black;
+	border-radius: 5px;
+	background-color: #AAAAFF;
+	color: black;
+}
+
 QPushButton::checked {
 	background-color: #AAAAFF;
 	color: black;
@@ -275,11 +282,30 @@ QComboBox {
 }
 
 
-
+QCheckBox::indicator:checked {
+	background-color: #AAAAFF;
+	color: black;
+}
 
 
 
 '''
+
+# QPushButton {
+#	border: 2px solid #8f8f91;
+#	border-radius: 6px;
+#	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+#                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+#     min-width: 80px;
+# }
+
+# QPushButton:flat {
+#	border: none; /* no border for a flat push button */
+# }
+
+# QPushButton:default {
+#	border-color: navy; /* make the default button prominent */
+# }
 
 # QComboBox::down-arrow {
 # 	border: 1px solid #5A5A5A;
@@ -321,10 +347,7 @@ QComboBox {
 # 	border: 3px solid black;
 # 	};
 
-# QCheckBox::indicator:checked {
-# 	background-color: rgb(140,000,140);
-# 	color: rgb(0, 0, 0);
-# 	};
+
 
 
 

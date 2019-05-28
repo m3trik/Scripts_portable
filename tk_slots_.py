@@ -18,7 +18,7 @@ class Slot(object):
 		self.ui = self.sb.getUi()
 		
 		
-
+		self.styleSheetOverride()
 		
 
 
@@ -287,39 +287,18 @@ class Slot(object):
 
 
 
-	# def initStyleSheet(self):
-	# 	#set StyleSheet
-	# 	buttons = self.getObject(self.ui, 'i000-50, v000-50, b000-100, t000-50, s000-50, chk000-50, cmb000-50', showError_=False)
-	# 	# buttons.append (self.getObject(self.ui, 'chkpin'))
-	# 	for button in buttons:
-	# 		button.setStyleSheet(styleSheet.css)
-
-		#set StyleSheet overrides:
-		if self.hotBox.name=='main':
-			#setStyleSheet for transparent buttons
-			# buttons = self.getObject(self.ui, 'v000-13, i020-23, cmb000-25', showError_=False)
-			# for button in buttons:
-			# 	button.setStyleSheet('''
-			# 		QPushButton {border: 1px solid transparent;}
-			# 		QComboBox::drop-down {border-width: 0px;}
-			# 		QComboBox::down-arrow {image: url(:/none); border-width: 0px;}
-			# 		''')
-			pass
-				
-
+	def styleSheetOverride(self):
 		if self.hotBox.name=='viewport':
-			#setStyleSheet for transparent buttons
-			# buttons = self.getObject(self.ui, 'v008-15, cmb000-25', showError_=False)
-			# for button in buttons:
-			# 	button.setStyleSheet('''
-			# 		QPushButton {border: 1px solid transparent;}
-			# 		QComboBox {background-color: transparent; color: white;}
-			# 		QComboBox::drop-down {border-width: 0px;}
-			# 		QComboBox::down-arrow {image: url(:/none); border-width: 0px;}
-			# 		''')
-			pass
+			buttons = self.getObject(self.ui, 'cmb000-3', showError_=False)
+			for button in buttons: #setStyleSheet for transparent buttons
+				button.setStyleSheet('''
+					QPushButton {border: 1px solid transparent;}
+					QComboBox {background-color: transparent; color: white;}
+					QComboBox::drop-down {border-width: 0px;}
+					QComboBox::down-arrow {image: url(:/none); border-width: 0px;}
+					''')
+			
 				
-
 		if self.hotBox.name=='create':
 			self.setButtons(self.ui, invisible='s000-11, t000')
 
