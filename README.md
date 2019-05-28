@@ -13,7 +13,7 @@ same name, and a corresponding button to link to it. Naming convention allows fo
 (stored in the switchboard module) to be created that allows getting/setting of relevant data across modules from one 
 simple location, in one simple way.*
 
-*other general principles and methodologies going forward:
+*general principles and methodologies:
 keep things as simple as possible (typically, only add what is necessary), and as modular as is reasonable, so that future changes or additional features can be implemented as easily as possible.*
 
 ##
