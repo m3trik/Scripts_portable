@@ -126,17 +126,19 @@ any additional widget types can be easily added when needed using this same conv
 
 * right mouse down: shows main navigation window.
 
-* left mouse down: shows viewport navigation.
+* left mouse down: shows viewport navigation and camera settings.
 
 * middle mouse down: shows mesh display options.
 
-* releasing the mouse over any of the buttons in those windows takes you to the corresponding submenu.
+* releasing the mouse over any of the buttons in those windows takes you to the corresponding sub-menu.
 
-* double left mouseclick: produces last used window.
+* double left mouseclick: produces last used orthographic view.
 
-* double right mouseclick: repeats last command.
+* double right mouseclick: produces last sub-menu.
 
-* dragging on an empty are of the widget moves the window and pins it open in a separate instance.
+* double middle mouseclick: repeats last command.
+
+* dragging on an empty area of the widget moves the window and pins it open.
 
 * holding ctrl while using Spinboxes increments/decrements by an extra decimal place.
 
