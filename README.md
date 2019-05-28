@@ -2,16 +2,19 @@
 ###### *PySide marking menu style layered ui and toolkit for maya and max.
 
 
-*work in progress..*
+*personal toolkit. work in progress..*
 
 ## Design:
 ######
-*To build an app agnostic modular ui to house tools where each piece is constructed dynamically to allow 
+*To build as app agnostic (as possible) modular ui to house user tools/common shortcuts/macros where each piece is constructed dynamically to allow 
 for as little overhead as possible in construction and maintainence. Literally all you have to do to have 
-a new ui up and running, is to drop a qt ui file into the ui folder, and create a module and class of the 
-same name. Naming convention allows for a stacked ui to be built, signals added/removed, and a master dictionary 
-(stored in the switchboard module) to be created, that handles the getting/setting of all data from one 
-simple location, in one simple way.*
+a new ui up and running, is to drop a qt ui file into the ui folder, create a module and class of the 
+same name, and a corresponding button to link to it. Naming convention allows for a stacked ui to be built, signals added/removed, and a master dictionary 
+(stored in the switchboard module) to be created that allows getting/setting of relevant data from one 
+simple location, in one simple way.
+
+other general principles and methodologies going forward:
+keep things as simple as possible (only add what is necessary), and as modular as possible, so that future changes can be made with as little as possible overhead.*
 
 ##
 -----------------------------------------------
@@ -32,7 +35,7 @@ simple location, in one simple way.*
 
 * set event filters and overrides.
 
-* construct paint event overlay.
+* construct paint events.
 
 
 ## tk_signals: 
