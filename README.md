@@ -89,11 +89,11 @@ get most relevent information easily wherever you need it.*
 -----------------------------------------------
 
 ######
-* ui files:     /<name/>.ui
+* ui files:     \<name\>.ui
  
-* tools module: tk_slots_<app>_<name>.py
+* tools module: tk_slots_\<app\>_\<name\>.py
  
-* class name:   <Name>
+* class name:   \<Name\>
 
 *widget/corresponding class methods share the same naming convention across all modules: ie. widget b021 connects to method b021.
 the docstring of each method houses a user friendly name that is stored with all other widget info in the switchboard dict when an
