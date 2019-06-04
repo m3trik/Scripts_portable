@@ -171,11 +171,3 @@ print os.path.splitext(os.path.basename(__file__))[0]
 # Notes
 # -----------------------------------------------
 
-
-
-# if prefix=='i' or prefix=='v' or prefix=='cmb' and self.name=='main' or  self.name=='viewport': #layoutStack index and viewport signals
-
-# #set the spinboxes for the create menu to connect to the setAttributes method, and pass in the index of the spinbox to set attributes for.
-# if prefix=='s' and self.name=='create' and num<=11:
-# 	# method = lambda index=num: getattr(class_, 'setAttributes')(index)
-# 	pass #moved to class until this is fixed. oddly the above slot calls setAttributes with spinbox value as argument.

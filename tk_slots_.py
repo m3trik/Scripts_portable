@@ -15,7 +15,6 @@ class Slot(object):
 		self.sb = Switchboard()
 		self.hotBox = self.sb.getClass('hotbox')
 		self.signal = self.sb.getClass('signal')()
-		self.ui = self.sb.getUi()
 		
 		
 		self.styleSheetOverride()
@@ -25,25 +24,26 @@ class Slot(object):
 
 
 
-	def getMethod(self, name, method):
+	def getMethod(self, class_, method):
 		'''
 		#args:
-			name='string' class name (lowercase)
+			class_='string' class name (case insensitive)
 			method='string' method name
 		#returns:
 		 	method object
 		'''
-		if not self.sb.hasKey(name, 'connectionDict'):
-			self.hotBox.signal.buildConnectionDict(name) #construct the signals and slots for the ui 
+		c = class_.lower()
+		if not self.sb.hasKey(c, 'connectionDict'):
+			self.hotBox.signal.buildConnectionDict(c) #construct the signals and slots for the ui 
 
-			print self.sb.getDocString(name, method)
-		return self.sb.getMethod(name, method)
-
+			print self.sb.getDocString(c, method)
+		return self.sb.getMethod(c, method)
 
 
 
 	#returns a list of objects from a string list.
-	def getObject(self, class_, objectNames, showError_=False, print_=False):
+	@staticmethod
+	def getObject(class_, objectNames, showError_=False, print_=False):
 		'''
 		args:	 class_=class object
 				 objectNames='string' - names separated by ','. ie. 's000,b004-7'. b004-7 specifies buttons b004-b007.  
@@ -105,78 +105,125 @@ class Slot(object):
 
 
 
-	#ex. set various states for multiple buttons at once  
-	def setButtons(self, ui, checked=None, unchecked=None, enable=None, disable=None, visible=None, invisible=None):
+	#ex. set various states for multiple buttons at once
+	@staticmethod
+	def setButtons(ui, checked=None, unchecked=None, enable=None, disable=None, visible=None, invisible=None):
 		'''
 		args:	 setButtons=dynamic ui object
 				 checked/unchecked/enable/disable/visible/invisible=string - the names of buttons to modify separated by ','. ie. 'b000,b001,b022'
 		ex.	setButtons(self.ui, disable='b000', unchecked='chk009-12', invisible='b015')
 		'''
 		if checked:
-			checked = self.getObject(ui,checked)
+			checked = Slot.getObject(ui,checked)
 			[button.setChecked(True) for button in checked]
 			
 		if unchecked:
-			unchecked = self.getObject(ui,unchecked)
+			unchecked = Slot.getObject(ui,unchecked)
 			[button.setChecked(False) for button in unchecked]
 				
 		if enable:
-			enable = self.getObject(ui,enable)
+			enable = Slot.getObject(ui,enable)
 			[button.setEnabled(True) for button in enable]
 				
 		if disable:
-			disable = self.getObject(ui,disable)
+			disable = Slot.getObject(ui,disable)
 			[button.setDisabled(True) for button in disable]
 				
 		if visible:
-			visible = self.getObject(ui,visible)
+			visible = Slot.getObject(ui,visible)
 			[button.setVisible(True) for button in visible]
 				
 		if invisible:
-			invisible = self.getObject(ui,invisible)
+			invisible = Slot.getObject(ui,invisible)
 			[button.setVisible(False) for button in invisible]
-			
+	
+
+
+	@staticmethod
+	def getAttributes(node, exclude=None):
+		'''
+		args:	node=object
+				exclude='string list' - attributes to exclude from returned dictionay
+
+		returns:	dictionary {'string attribute': value}
+		'''
+		return {attr:getattr(node, attr) for attr in dir(node) if attr not in exclude}
+
+
+
+	@staticmethod
+	def setAttributes(node, attributes):
+		'''
+		args:	node=object
+				attributes=dictionary {'string attribute': value} - attributes and their correponding value to set
+		'''
+		[setattr(node, attr, value) for attr, value in attributes.iteritems() if attr and value]
 
 
 
 	#set spinbox values explicitly or for each in range
-	def setSpinboxes(self, ui, spinboxNames='s000-15', values=[]):
+	@staticmethod
+	def setSpinboxes(ui, spinboxNames, attributes={}):
 		'''
 		args:	 ui=<dynamic ui>
-				 spinboxNames='string' - spinbox string object names (used in place of the range argument). ie. 's001-4, s007'.  
+				 spinboxNames='string' - spinbox string object names (used in place of the range argument). ie. 's001-4, s007'.
 							  default value will try to add values to spinboxes starting at s000 and add values in order skipping any spinboxes not found in the ui.
-				 values=int or [(tuple) list] - tuple representing a string prefix label and value, and/or just a value. [(string prefix,int value)] ie. [("size",5), 20, ("width",8)]
-		
-		returns: list of values without prefix
-		ex. self.setSpinboxes (self.ui, values=[("width",1),("length ratio",1),("patches U",1),("patches V",1)]) #range. dict 'value's will be added to corresponding spinbox starting at s000 through s003.
-		ex. self.setSpinboxes (self.ui, spinboxNames='s000', values=[('size',5)]) #explicit;  set single s000 with a label 'size' and value of 5. multiple spinboxes can be set this way. specify a range of spinboxes using 's010-18'.
+				 attributes={'string key':value}
+
+		ex. self.setSpinboxes (self.ui, spinboxNames='s000-15', attributes={'width':1, 'length ratio':1, 'patches U':1, 'patches V':1})
+		ex. self.setSpinboxes (self.ui, spinboxNames='s000', attributes={'size':5} #explicit;  set single s000 with a label 'size' and value of 5
 		'''
-		spinboxes = self.getObject(ui, spinboxNames) #get spinbox objects
+		spinboxes = Slot.getObject(ui, spinboxNames) #get spinbox objects
 
 		#clear previous values
 		for spinbox in spinboxes:
-			spinbox.blockSignals(True) #block signals to keep from calling method on valueChanged
-			spinbox.setPrefix('')
-			spinbox.setValue(0)
-			spinbox.setDisabled(True)
+			spinbox.blockSignals(True)
 			spinbox.setVisible(False)
 
-		values_=[] #list of values to return.
-		#set new values
-		for i, value in enumerate(values):
-			spinboxes[i].setVisible(True)
-			spinboxes[i].setEnabled(True)
-			if type(value) == tuple:
-				spinboxes[i].setPrefix(value[0]+':  ')
-				spinboxes[i].setValue(value[1])
-				values_.append(value[1])
-			else:
-				spinboxes[i].setValue(value)
-				values_.append(value)
-			spinboxes[i].blockSignals(False)
+		#set values
+		for index, (key, value) in enumerate(attributes.items()):
+			if any([type(value)==int, type(value)==float, type(value)==bool]):
+				if value is bool:
+					value = int(value)
+					spinboxes[index].setMaximum(1)
+					spinboxes[index].setSuffix(' <bool>')
+				else:
+					spinboxes[index].setMaximum(9999)
+				spinboxes[index].setVisible(True)
+				spinboxes[index].setPrefix(key+':  ')
+				spinboxes[index].setValue(value)
+				spinboxes[index].setSuffix('')
+				spinboxes[index].blockSignals(False)
 
-		return values_
 
+
+	progress=0
+	def progressBar(self, length=100, init=False):
+		'''
+		args:
+			ui=dynamic ui object
+			length=int - total length of procedure
+
+		returns: current percentage
+		ie.
+		self.progressBar(init=1) #initialize the progress bar
+		for obj in selection:
+			self.progressBar(len(selection)) #register progress
+		'''
+		ui=self.sb.getUi()
+		global progress
+		if init:
+			progress=0
+			ui.progressBar.show()
+			return
+		progress+=1
+		value = 100*progress/length
+		ui.progressBar.setValue(value)
+		# QtGui.qApp.processEvents() #ensure that any pending events are processed sufficiently often for the GUI to remain responsive
+		if progress>=100:
+			ui.progressBar.hide()
+			ui.progressBar.setValue(0)
+		return value
 
 
 	global cycleDict
@@ -280,7 +327,7 @@ class Slot(object):
 
 	#init signals, button states etc. for a stacked widget class
 	# def initWidgets(self):
-	# 	for comboBox in self.getObject(self, 'cmb000-50', False):
+	# 	for comboBox in Slot.getObject(self, 'cmb000-50', False):
 	# 		try: comboBox()
 	# 		except: pass
 
@@ -288,8 +335,9 @@ class Slot(object):
 
 
 	def styleSheetOverride(self):
+		ui = self.sb.getUi()
 		if self.hotBox.name=='viewport':
-			buttons = self.getObject(self.ui, 'cmb000-3', showError_=False)
+			buttons = Slot.getObject(ui, 'cmb000-3', showError_=False)
 			for button in buttons: #setStyleSheet for transparent buttons
 				button.setStyleSheet('''
 					QPushButton {border: 1px solid transparent;}
@@ -298,14 +346,14 @@ class Slot(object):
 					QComboBox::down-arrow {image: url(:/none); border-width: 0px;}
 					''')
 			
-				
+
 		if self.hotBox.name=='create':
-			self.setButtons(self.ui, invisible='s000-11, t000')
+			self.setButtons(ui, invisible='s000-12')
 
 
 		if self.hotBox.name=='init':
-			self.ui.t000.viewport().setAutoFillBackground(False)
-			self.ui.t000.setTextBackgroundColor(QtGui.QColor(50, 50, 50))
+			ui.t000.viewport().setAutoFillBackground(False)
+			ui.t000.setTextBackgroundColor(QtGui.QColor(50, 50, 50))
 
 
 
@@ -322,3 +370,43 @@ print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
+
+
+#depricated:
+
+# def setSpinboxes(ui, spinboxNames='s000-15', values=[]):
+# 	'''
+# 	args:	 ui=<dynamic ui>
+# 			 spinboxNames='string' - spinbox string object names (used in place of the range argument). ie. 's001-4, s007'.  
+# 						  default value will try to add values to spinboxes starting at s000 and add values in order skipping any spinboxes not found in the ui.
+# 			 values=int or [(tuple) list] - tuple representing a string prefix label and value, and/or just a value. [(string prefix,int value)] ie. [("size",5), 20, ("width",8)]
+	
+# 	returns: list of values without prefix
+# 	ex. self.setSpinboxes (self.ui, values=[("width",1),("length ratio",1),("patches U",1),("patches V",1)]) #range. dict 'value's will be added to corresponding spinbox starting at s000 through s003.
+# 	ex. self.setSpinboxes (self.ui, spinboxNames='s000', values=[('size',5)]) #explicit;  set single s000 with a label 'size' and value of 5. multiple spinboxes can be set this way. specify a range of spinboxes using 's010-18'.
+# 	'''
+# 	spinboxes = Slot.getObject(ui, spinboxNames) #get spinbox objects
+
+# 	#clear previous values
+# 	for spinbox in spinboxes:
+# 		spinbox.blockSignals(True) #block signals to keep from calling method on valueChanged
+# 		spinbox.setPrefix('')
+# 		spinbox.setValue(0)
+# 		spinbox.setDisabled(True)
+# 		spinbox.setVisible(False)
+
+# 	values_=[] #list of values to return.
+# 	#set new values
+# 	for i, value in enumerate(values):
+# 		spinboxes[i].setVisible(True)
+# 		spinboxes[i].setEnabled(True)
+# 		if type(value) == tuple:
+# 			spinboxes[i].setPrefix(value[0]+':  ')
+# 			spinboxes[i].setValue(value[1])
+# 			values_.append(value[1])
+# 		else:
+# 			spinboxes[i].setValue(value)
+# 			values_.append(value)
+# 		spinboxes[i].blockSignals(False)
+
+# 	return values_

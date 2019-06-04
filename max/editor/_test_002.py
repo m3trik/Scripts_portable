@@ -7,17 +7,31 @@ except: pass
 
 #~ print [rt.getSubMtl(mat, i) for i in range(1, rt.getNumSubMtls(mat)+1) for mat in rt.sceneMaterials if rt.getSubMtl(mat, i).name.startswith('matID')]
 
-mats=[]
-for mat in rt.sceneMaterials:
-	if rt.getNumSubMtls(mat):
-		for i in range(1, rt.getNumSubMtls(mat)+1):
-			subMat = rt.getSubMtl(mat, i)
-			if subMat.name.startswith('matID'):
-				mats.append(subMat)
-	elif mat.name.startswith('matID'):
-		mats.append(mat)
 
-print mats
+def getFacesByMatID(obj, id):
+	return [i for i in range(1, obj.numFaces+1) if rt.getFaceMatID(obj, i)==id]
+
+#~ print getFacesByMatID(rt.selection[0], 1)
+
+obj = rt.selection[0]
+vertex = rt.bitArrayToArray(rt.polyop.getVertSelection(obj))
+point = rt.polyop.getVert(obj, vertex[0]) #Returns the position of the specified vertex.
+
+
+#~ rt.rotate(node, rt.eulerToQuat(euler))
+#~ rt.rotate(node, rt.eulerToQuat(euler))
+#~ for attr, value in attributes.iteritems():
+	#~ attr = attr.rstrip(': ')
+	#~ print attr, value
+	#~ node.attr = 10
+#~ setattr(node, 'height', 10)
+#~ print getattr(node, 'height')
+
+#~ rt.convertTo(node, rt.PolyMeshObject)
+
+
+
+
 
 #~ view = rt.SME.getView(rt.SME.activeView)
 #~ view.GetNumNodes()

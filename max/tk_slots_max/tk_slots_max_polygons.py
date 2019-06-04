@@ -15,7 +15,7 @@ class Polygons(Init):
 
 
 		self.ui = self.sb.getUi('polygons')
-
+		self.ui.progressBar.hide()
 
 
 
@@ -509,7 +509,7 @@ class Polygons(Init):
 
 		'''
 		mel.eval("PolyAssignSubdivHoleOptions;")
-
+		
 
 	def b040(self):
 		'''
@@ -525,10 +525,11 @@ class Polygons(Init):
 			print "// Warning: No object selected. Must select an object or component"
 			return
 
+		self.progressBar(init=1) #initialize the progress bar
 		for obj in sel:
+			self.progressBar(len(sel)) #register progress
 			if mergeAll:
 				rt.polyop.weldVertsByThreshold(obj, obj.verts)
-				
 			else:
 				vertices = rt.getVertSelection(obj)
 				obj.weldThreshold = tolerance

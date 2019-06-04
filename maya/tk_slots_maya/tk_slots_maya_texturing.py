@@ -18,7 +18,6 @@ class Texturing(Init):
 		self.ui = self.sb.getUi('texturing')
 
 		self.ui.t000.hide()
-		self.ui.t001.hide()
 		
 		self.ui.cmb001.removeEventFilter(self.signal)
 		self.ui.cmb002.removeEventFilter(self.signal)
@@ -31,18 +30,10 @@ class Texturing(Init):
 
 	def t000(self):
 		'''
-		Rename Stored Material textfield
+		Rename Material textfield
 		'''
 		self.ui.b008.setChecked(False)
 		self.b008()
-
-
-	def t001(self):
-		'''
-		Rename ID Material textfield
-		'''
-		self.ui.b009.setChecked(False)
-		self.b009()
 
 
 	def cmb000(self):
@@ -89,60 +80,59 @@ class Texturing(Init):
 		Stored Material
 		'''
 		cmb = self.ui.cmb002
-		
-		mat = self.storedMaterial
-		if not mat:
-			return
 
-		matName = mat.name()
+		if self.ui.chk002.isChecked(): #ID map mode
+			mats = [m for m in pm.ls(mat=1, flatten=1) if m.name().startswith('matID')]
+			matNames = [m.name() for m in mats]
+			if not matNames: 
+				matNames = ['ID Map: None']
 
-		if pm.nodeType(node)=='VRayMultiSubTex':
-			subMaterials = pm.hyperShade(mat, listUpstreamShaderNodes=1) #get any connected submaterials
-			subMatNames = [s.name for s in subMaterials if s is not None]
-		else:
-			subMatNames = []
+			contents = self.comboBox(cmb, matNames)
+			
+			if matNames[0]!='ID Map: None': #add mat objects to storedID_mats dict. 'mat name'=key, <mat object>=value
+				self.storedID_mats = {n:mats[i] for i, n in enumerate(matNames)}
 
-		contents = self.comboBox(cmb, subMatNames, matName)
+			#create icons with color swatch
+			for index in range(len(mats)):
+				r = int(pm.getAttr(matNames[index]+'.colorR')*255) #convert from 0-1 to 0-255 value and then to an integer
+				g = int(pm.getAttr(matNames[index]+'.colorG')*255)
+				b = int(pm.getAttr(matNames[index]+'.colorB')*255)
+				pixmap = QtGui.QPixmap(100,100)
+				pixmap.fill(QtGui.QColor.fromRgb(r, g, b))
+				cmb.setItemIcon(index, QtGui.QIcon(pixmap))
 
-		index = cmb.currentIndex()
-		if index!=0:
-			self.storedMaterial = subMaterials[index-1]
-		else:
-			self.storedMaterial = mat
+		else: #Stored Material
+			mat = self.storedMaterial
+			if not mat:
+				return
 
+			matName = mat.name
 
-	def cmb003(self):
-		'''
-		Stored ID map
-		'''
-		cmb = self.ui.cmb003
+			if pm.nodeType(mat)=='VRayMultiSubTex':
+				subMaterials = pm.hyperShade(mat, listUpstreamShaderNodes=1) #get any connected submaterials
+				subMatNames = [s.name for s in subMaterials if s is not None]
+			else:
+				subMatNames = []
 
-		mats = [m for m in pm.ls(mat=1, flatten=1) if m.name().startswith('matID')]
-		matNames = [m.name() for m in mats]
-		if not matNames: 
-			matNames = ['ID Map: None']
+			contents = self.comboBox(cmb, subMatNames, matName)
 
-		contents = self.comboBox(cmb, matNames)
-		
-		if matNames[0]!='ID Map: None': #add mat objects to storedID_mats dict. 'mat name'=key, <mat object>=value
-			self.storedID_mats = {n:mats[i] for i, n in enumerate(matNames)}
-
-
-		for index in range(len(mats)): #create icons with color swatch
-			r = int(pm.getAttr(matNames[index]+'.colorR')*255) #convert from 0-1 to 0-255 value and then to an integer
-			g = int(pm.getAttr(matNames[index]+'.colorG')*255)
-			b = int(pm.getAttr(matNames[index]+'.colorB')*255)
-			pixmap = QtGui.QPixmap(100,100)
-			pixmap.fill(QtGui.QColor.fromRgb(r, g, b))
-			cmb.setItemIcon(index, QtGui.QIcon(pixmap))
+			index = cmb.currentIndex()
+			if index!=0:
+				self.storedMaterial = subMaterials[index-1]
+			else:
+				self.storedMaterial = mat
 		
 
-	def chk000(self):
+	def chk000(self): #Select by material: invert
 		self.hotBox.ui.chk001.setChecked(False)
 
 
-	def chk001(self):
+	def chk001(self): #Select by material: shell
 		self.hotBox.ui.chk000.setChecked(False)
+
+
+	def chk002(self): #toggle stored material or ID map mode
+		self.cmb002()
 
 
 	def b000(self):
@@ -153,7 +143,9 @@ class Texturing(Init):
 		shell = self.hotBox.ui.chk000.isChecked()
 		invert = self.hotBox.ui.chk001.isChecked()
 
-		if not pm.nodeType(node)=='VRayMultiSubTex': #if not a multimaterial
+		selection = pm.ls(selection=1)
+
+		if not pm.nodeType(selection)=='VRayMultiSubTex': #if not a multimaterial
 			mat = self.storedMaterial
 		else:
 			return '# Error: No valid stored material. If material is a multimaterial, select a submaterial. #'
@@ -183,10 +175,14 @@ class Texturing(Init):
 		Delete Material
 
 		'''
-		pm.delete(self.storedMaterial)
-		self.storedMaterial = None
+		if self.ui.chk002.isChecked: #delete mat ID material
+			mat = self.storedID_mats[self.ui.cmb002.currentText()] #get object from string key
+			pm.delete(mat)
+		else: #delete stored material
+			pm.delete(self.storedMaterial)
+			self.storedMaterial = None
 
-		self.comboBox(self.ui.cmb002, [], 'Stored Material: None') #init combobox
+			self.comboBox(self.ui.cmb002, [], 'Stored Material: None') #init combobox
 
 
 	def b002(self):
@@ -194,6 +190,8 @@ class Texturing(Init):
 		Store Material
 
 		'''
+		self.ui.chk002.setChecked(False) #put combobox in stored material mode
+
 		if pm.ls(selection=1):
 			pm.hyperShade("", shaderNetworksSelectMaterialNodes=1) #selects the material node 
 			mat = pm.ls(selection=1, materials=1)[0] #now add the selected node to a variable
@@ -209,8 +207,13 @@ class Texturing(Init):
 		Assign Material
 
 		'''
-		for obj in pm.ls(selection=1):
-			pm.hyperShade(obj, assign=self.storedMaterial) #select and assign material per object in selection
+		if self.ui.chk002.isChecked(): #Assign Existing mat ID
+			mat = self.storedID_mats[self.ui.cmb002.currentText()]
+			for obj in pm.ls(selection=1, flatten=1):
+				pm.hyperShade(obj, assign=mat)
+		else: #assign stored material
+			for obj in pm.ls(selection=1):
+				pm.hyperShade(obj, assign=self.storedMaterial) #select and assign material per object in selection
 
 
 	def b004(self):
@@ -218,6 +221,8 @@ class Texturing(Init):
 		Assign New random mat ID
 
 		'''
+		self.ui.chk002.setChecked(True) #set combobox to ID map mode
+
 		import random
 
 		selection = pm.ls(selection=1, flatten=1)
@@ -250,14 +255,9 @@ class Texturing(Init):
 
 	def b005(self):
 		'''
-		Assign Existing mat ID
-
+		
 		'''
-		name = self.ui.cmb003.currentText()
-		mat = self.storedID_mats[name]
-
-		for f in pm.ls(selection=1, flatten=1):
-			pm.hyperShade(f, assign=mat)
+		pass
 
 
 	def b006(self):
@@ -273,12 +273,18 @@ class Texturing(Init):
 		Open material in editor
 
 		'''
-		if not self.storedMaterial: #get material from selected scene object
-			if rt.selection:
-				self.storedMaterial = rt.selection[0].material
-			else:
-				return '# Error: No stored material and no valid object selected. #'
-		mat = self.storedMaterial
+		if self.ui.chk002.isChecked(): #ID map mode
+			try:
+				mat = self.storedID_mats[self.ui.cmb002.currentText()] #get object from string key
+			except:
+				return '# Error: No stored material or no valid object selected. #'
+		else: #Stored material mode
+			if not self.storedMaterial: #get material from selected scene object
+				if rt.selection:
+					self.storedMaterial = rt.selection[0].material
+				else:
+					return '# Error: No stored material or no valid object selected. #'
+			mat = self.storedMaterial
 
 		#open the hypershade editor
 		mel.eval("HypershadeWindow;")
@@ -296,18 +302,28 @@ class Texturing(Init):
 
 	def b008(self):
 		'''
-		Rename Stored Material
+		Rename Material
 
 		'''
-		if self.ui.b008.isChecked():
+		if self.ui.b008.isChecked(): #(rename checkbox)
 			self.ui.t000.setText(self.ui.cmb002.currentText())
-			if self.ui.t000.text()=='Stored Material: None':
+			if self.ui.t000.text()=='ID Map: None' or self.ui.t000.text()=='Stored Material: None':
 				self.ui.b008.setChecked(False)
 			else:
 				self.ui.t000.show()
 		else:
-			if self.storedMaterial:
-				self.storedMaterial.name = self.ui.t000.text()
+			if self.ui.chk002.isChecked(): #Rename ID map Material
+				prefix='matID_'
+				newName=self.ui.t000.text()
+				 
+				mat = self.storedID_mats[self.ui.cmb002.currentText()] #get object from string key
+				if not newName.startswith(prefix):
+					pm.rename(mat, prefix+newName) 
+				else:
+					pm.rename(mat, newName)
+			else: #Rename Stored Material
+				if self.storedMaterial:
+					self.storedMaterial.name = self.ui.t000.text()
 
 			self.cmb002() #refresh combobox
 			self.ui.t000.hide()
@@ -315,28 +331,10 @@ class Texturing(Init):
 
 	def b009(self):
 		'''
-		Rename ID map Material
+		
 
 		'''
-		if self.ui.b009.isChecked():
-			self.ui.t001.setText(self.ui.cmb003.currentText())
-			if self.ui.t001.text()=='ID Map: None':
-				self.ui.b009.setChecked(False)
-			else:
-				self.ui.t001.show()
-		else:
-			prefix='matID_'
-			newName=self.ui.t001.text()
-
-			name = self.ui.cmb003.currentText()
-			mat = self.storedID_mats[name] #get object from string key
-			if not newName.startswith(prefix):
-				pm.rename(mat, prefix+newName) 
-			else:
-				pm.rename(mat, newName)
-
-			self.cmb002() #refresh combobox
-			self.ui.t001.hide()
+		pass
 
 
 	def b010(self):

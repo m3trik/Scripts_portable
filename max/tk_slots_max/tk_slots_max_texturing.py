@@ -18,7 +18,6 @@ class Texturing(Init):
 		self.ui = self.sb.getUi('texturing')
 		
 		self.ui.t000.hide()
-		self.ui.t001.hide()
 		
 		self.ui.cmb001.removeEventFilter(self.signal)
 		self.ui.cmb002.removeEventFilter(self.signal)
@@ -37,22 +36,26 @@ class Texturing(Init):
 		self.b008()
 
 
-	def t001(self):
-		'''
-		Rename ID Material textfield
-		'''
-		self.ui.b009.setChecked(False)
-		self.b009()
-
-
 	def cmb000(self):
 		'''
 		Existing Materials
 
 		'''
 		cmb = self.ui.cmb000
+
+		self.ui.chk002.setChecked(False) #put combobox cmb002 in stored material mode.
 		
-		materials = [mat for mat in rt.sceneMaterials if 'Multimaterial' not in mat.name and 'BlendMtl' not in mat.name and not mat.name.startswith('Material')]
+		# materials = [mat for mat in rt.sceneMaterials if 'Multimaterial' not in mat.name and 'BlendMtl' not in mat.name and not mat.name.startswith('Material')]
+		materials=[] #get any scene material that doesnt startswith 'Material'
+		for mat in rt.sceneMaterials:
+			if rt.getNumSubMtls(mat): #if material is a submaterial; search submaterials
+				for i in range(1, rt.getNumSubMtls(mat)+1):
+					subMat = rt.getSubMtl(mat, i)
+					if not subMat.name.startswith('Material'):
+						materials.append(subMat)
+			elif not mat.name.startswith('Material'):
+				materials.append(mat)
+
 		materialNames = sorted([mat.name for mat in materials])
 		
 		contents = self.comboBox(cmb, materialNames, 'Scene Materials:')
@@ -90,64 +93,63 @@ class Texturing(Init):
 		'''
 		cmb = self.ui.cmb002
 		
-		mat = self.storedMaterial
-		if not mat:
-			return
+		if self.ui.chk002.isChecked(): #ID map mode 
+			mats=[] #get any scene material that startswith 'matID'
+			for mat in rt.sceneMaterials:
+				if rt.getNumSubMtls(mat): #if material is a submaterial; search submaterials
+					for i in range(1, rt.getNumSubMtls(mat)+1):
+						subMat = rt.getSubMtl(mat, i)
+						if subMat.name.startswith('matID'):
+							mats.append(subMat)
+				elif mat.name.startswith('matID'):
+					mats.append(mat)
 
-		matName = mat.name
-		
-		subMaterials = [rt.getSubMtl(mat, i) for i in range(1, rt.getNumSubMtls(mat)+1)] #get the material using the matID index. modify index range for index starting at 1.
-		subMatNames = [s.name for s in subMaterials if s is not None]
-		
-		contents = self.comboBox(cmb, subMatNames, matName)
+			matNames = [m.name for m in mats]
+			if not matNames: 
+				matNames = ['ID Map: None']
 
-		index = cmb.currentIndex()
-		if index!=0:
-			self.storedMaterial = subMaterials[index-1]
-		else:
-			self.storedMaterial = mat
+			contents = self.comboBox(cmb, matNames)
 
+			if matNames[0]!='ID Map: None': #add mat objects to storedID_mats dictionary. 'mat name'=key, <mat object>=value
+				self.storedID_mats = {n:mats[i] for i, n in enumerate(matNames)}
 
-	def cmb003(self):
-		'''
-		Stored ID map
-		'''
-		cmb = self.ui.cmb003
+			for index in range(len(mats)): #create icons with color swatch
+				r = int(mats[index].diffuse.r) #convert from float value
+				g = int(mats[index].diffuse.g)
+				b = int(mats[index].diffuse.b)
+				pixmap = QtGui.QPixmap(100,100)
+				pixmap.fill(QtGui.QColor.fromRgb(r, g, b))
+				cmb.setItemIcon(index, QtGui.QIcon(pixmap))
 
-		mats=[] #get any scene material that startswith 'matID'
-		for mat in rt.sceneMaterials:
-			if rt.getNumSubMtls(mat): #if material is a submaterial; search submaterials
-				for i in range(1, rt.getNumSubMtls(mat)+1):
-					subMat = rt.getSubMtl(mat, i)
-					if subMat.name.startswith('matID'):
-						mats.append(subMat)
-			elif mat.name.startswith('matID'):
-				mats.append(mat)
+		else: #Stored Material
+			mat = self.storedMaterial
+			if not mat:
+				return
 
-		matNames = [m.name for m in mats]
-		if not matNames: 
-			matNames = ['ID Map: None']
+			matName = mat.name
+			
+			subMaterials = [rt.getSubMtl(mat, i) for i in range(1, rt.getNumSubMtls(mat)+1)] #get the material using the matID index. modify index range for index starting at 1.
+			subMatNames = [s.name for s in subMaterials if s is not None]
+			
+			contents = self.comboBox(cmb, subMatNames, matName)
 
-		contents = self.comboBox(cmb, matNames)
-
-		if matNames[0]!='ID Map: None': #add mat objects to storedID_mats dictionary. 'mat name'=key, <mat object>=value
-			self.storedID_mats = {n:mats[i] for i, n in enumerate(matNames)}
-
-		for index in range(len(mats)): #create icons with color swatch
-			r = int(mats[index].diffuse.r) #convert from float value
-			g = int(mats[index].diffuse.g)
-			b = int(mats[index].diffuse.b)
-			pixmap = QtGui.QPixmap(100,100)
-			pixmap.fill(QtGui.QColor.fromRgb(r, g, b))
-			cmb.setItemIcon(index, QtGui.QIcon(pixmap))
+			index = cmb.currentIndex()
+			if index!=0:
+				self.storedMaterial = subMaterials[index-1]
+			else:
+				self.storedMaterial = mat
 
 
-	def chk000(self):
-		self.ui.chk001.setChecked(False)
+	def chk000(self): #Select by material: invert
+		self.hotBox.ui.chk001.setChecked(False)
 
 
-	def chk001(self):
-		self.ui.chk000.setChecked(False)
+	def chk001(self): #Select by material: shell
+		self.hotBox.ui.chk000.setChecked(False)
+
+
+	def chk002(self): #toggle stored material or ID map mode
+		self.cmb002()
 
 
 	def b000(self):
@@ -216,10 +218,14 @@ class Texturing(Init):
 		Delete Material
 
 		'''
-		self.storedMaterial = rt.Standard(name="Default Material") #replace with standard material
-		self.storedMaterial = None
+		if self.ui.chk002.isChecked: #delete mat ID material
+			mat = self.storedID_mats[self.ui.cmb002.currentText()] #get object from string key
+			mat = rt.Standard(name="Default Material") #replace with standard material
+		else: #delete stored material
+			self.storedMaterial = rt.Standard(name="Default Material") #replace with standard material
+			self.storedMaterial = None
 
-		self.comboBox(self.ui.cmb002, [], 'Stored Material: None') #init combobox
+			self.comboBox(self.ui.cmb002, [], 'Stored Material: None') #init combobox
 
 
 	def b002(self):
@@ -227,6 +233,8 @@ class Texturing(Init):
 		Store Material
 
 		'''
+		self.ui.chk002.setChecked(False) #put combobox in stored material mode
+
 		obj = rt.selection[0]
 		mat = obj.material #get material from selection
 
@@ -248,8 +256,20 @@ class Texturing(Init):
 		Assign Material
 
 		'''
-		for obj in rt.selection:
-			obj.material = self.storedMaterial #assign material per object in selection
+		if self.ui.chk002.isChecked(): #Assign Existing mat ID
+			name = self.ui.cmb002.currentText()
+			mat = self.storedID_mats[name]
+			
+			for obj in rt.selection:
+				if rt.getNumSubMtls(mat): #if multimaterial
+					mat.materialList.count = mat.numsubs+1 #add slot to multimaterial
+					mat.materialList[-1] = material #assign new material to slot
+				else:
+					obj.material = mat
+		else: #assign stored material
+			for obj in rt.selection:
+				obj.material = self.storedMaterial #assign material per object in selection
+		
 		rt.redrawViews()
 
 
@@ -258,6 +278,8 @@ class Texturing(Init):
 		Assign New random mat ID
 
 		'''
+		self.ui.chk002.setChecked(True) #set combobox to ID map mode
+
 		import random
 
 		selection = rt.selection
@@ -290,16 +312,10 @@ class Texturing(Init):
 
 	def b005(self):
 		'''
-		Assign Existing mat ID
+		
 
 		'''
-		name = self.ui.cmb003.currentText()
-		mat = self.storedID_mats[name]
-		
-		for obj in rt.selection:
-				obj.material = mat
-
-		rt.redrawViews()
+		pass
 
 
 	def b006(self):
@@ -310,7 +326,6 @@ class Texturing(Init):
 		defaultMaterial = rt.Standard(name='Default Material')
 		
 		for mat in rt.scenematerials:
-			rt.undo(False)
 			nodes = rt.refs().dependentnodes(mat) 
 			if nodes.count==0:
 				rt.replaceinstances(mat, defaultMaterial)
@@ -324,12 +339,18 @@ class Texturing(Init):
 		Open material in editor
 
 		'''
-		if not self.storedMaterial: #get material from selected scene object
-			if rt.selection:
-				self.storedMaterial = rt.selection[0].material
-			else:
-				return '# Error: No stored material and no valid object selected. #'
-		mat = self.storedMaterial
+		if self.ui.chk002.isChecked(): #ID map mode
+			try:
+				mat = self.storedID_mats[self.ui.cmb002.currentText()] #get object from string key
+			except:
+				return '# Error: No stored material or no valid object selected. #'
+		else: #Stored material mode
+			if not self.storedMaterial: #get material from selected scene object
+				if rt.selection:
+					self.storedMaterial = rt.selection[0].material
+				else:
+					return '# Error: No stored material or no valid object selected. #'
+			mat = self.storedMaterial
 
 		#open the slate material editor
 		if not rt.SME.isOpen():
@@ -350,18 +371,29 @@ class Texturing(Init):
 
 	def b008(self):
 		'''
-		Rename Stored Material
+		Rename Material
 
 		'''
-		if self.ui.b008.isChecked():
+		if self.ui.b008.isChecked(): #(rename checkbox)
 			self.ui.t000.setText(self.ui.cmb002.currentText())
-			if self.ui.t000.text()=='Stored Material: None':
+			if self.ui.t000.text()=='ID Map: None' or self.ui.t000.text()=='Stored Material: None':
 				self.ui.b008.setChecked(False)
 			else:
 				self.ui.t000.show()
 		else:
-			if self.storedMaterial:
-				self.storedMaterial.name = self.ui.t000.text()
+			if self.ui.chk002.isChecked(): #Rename ID map Material
+				prefix='matID_'
+				newName=self.ui.t000.text()
+
+				matName = self.ui.cmb002.currentText()
+				mat = self.storedID_mats[matName]
+				if not newName.startswith(prefix):
+					mat.name = prefix+newName
+				else:
+					mat.name = newName
+			else: #Rename Stored Material
+				if self.storedMaterial:
+					self.storedMaterial.name = self.ui.t000.text()
 
 			self.cmb002() #refresh combobox
 			self.ui.t000.hide()
@@ -369,28 +401,10 @@ class Texturing(Init):
 
 	def b009(self):
 		'''
-		Rename ID map Material
+		
 
 		'''
-		if self.ui.b009.isChecked():
-			self.ui.t001.setText(self.ui.cmb003.currentText())
-			if self.ui.t001.text()=='ID Map: None':
-				self.ui.b009.setChecked(False)
-			else:
-				self.ui.t001.show()
-		else:
-			prefix='matID_'
-			newName=self.ui.t001.text()
-
-			matName = self.ui.cmb003.currentText()
-			mat = self.storedID_mats[matName]
-			if not newName.startswith(prefix):
-				mat.name = prefix+newName
-			else:
-				mat.name = newName
-
-			self.cmb002() #refresh combobox
-			self.ui.t001.hide()
+		pass
 
 
 	def b010(self):

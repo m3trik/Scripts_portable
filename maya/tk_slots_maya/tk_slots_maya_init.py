@@ -14,11 +14,10 @@ class Init(Slot):
 		super(Init, self).__init__(*args, **kwargs)
 
 
+		self.ui = self.sb.getUi('init')
 
-		# live surface #state and obj might need to be saved in external file
-		# 'main' shorcut mode: ie. polygons, uv's, etc
-		# pm.helpLine(width=20, height=8)
-		# progress bar
+
+
 
 
 	def info(self): #get current attributes. those with relavant values will be displayed.
@@ -275,6 +274,42 @@ class Init(Slot):
 
 
 	@staticmethod
+	def getAttributesMEL(node, exclude=None):
+		'''
+		returns history node attributes:values using the transform node. 
+		args:	node=transform node
+				exclude='string or unicode list' - attributes to exclude from the returned dictionay
+
+		returns:	dictionary {'string attribute': current value}
+		'''
+		#get shape node from transform:
+		shapes = pm.listRelatives(node, children=1, shapes=1) #returns list ie. [nt.Mesh(u'pConeShape1')]
+		#incoming connections:
+		historyNode = pm.listConnections(shapes, source=1, destination=0) #returns list ie. [nt.PolyCone(u'polyCone1')]
+		node = historyNode[0].name() #get the string name from the history node
+
+		return {attr:pm.getAttr(node+'.'+attr) for attr in pm.listAttr(node) if attr not in exclude}
+
+
+
+	@staticmethod
+	def setAttributesMEL(node, attributes):
+		'''
+		sets given attributes for the history node using the transform node.
+		args:	node=transform node
+				attributes=dictionary {'string attribute': value} - attributes and their correponding value to set
+		'''
+		#get shape node from transform:
+		shapes = pm.listRelatives(node, children=1, shapes=1) #returns list ie. [nt.Mesh(u'pConeShape1')]
+		#incoming connections:
+		historyNode = pm.listConnections(shapes, source=1, destination=0) #returns list ie. [nt.PolyCone(u'polyCone1')]
+		node = historyNode[0].name() #get the string name from the history node
+		print attributes
+		[pm.setAttr(node+'.'+attr, value) for attr, value in attributes.iteritems() if attr and value]
+
+
+
+	@staticmethod
 	def setAttributesOnSelected(attribute=None, value=None):
 		#args: obj='string' - attribute to modify
 		#			value=int - new attribute value
@@ -285,8 +320,6 @@ class Init(Slot):
 				pm.setAttr (obj+attribute, value)
 		else:
 			print "// Warning: No polygon object selected.", attribute, value, "not applied."
-
-
 
 
 

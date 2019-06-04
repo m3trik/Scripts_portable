@@ -13,11 +13,9 @@ class Init(Slot):
 	def __init__(self, *args, **kwargs):
 		super(Init, self).__init__(*args, **kwargs)
 
+		self.ui = self.sb.getUi('init')
+
 		
-		# live surface #state and obj might need to be saved in external file
-		# 'main' shorcut mode: ie. polygons, uv's, etc
-		# pm.helpLine(width=20, height=8)
-		# progress bar
 
 
 	def info(self): #get current attributes. those with relavant values will be displayed.

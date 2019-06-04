@@ -15,7 +15,7 @@ class Polygons(Init):
 
 
 		self.ui = self.sb.getUi('polygons')
-
+		self.ui.progressBar.hide()
 
 		
 
@@ -413,8 +413,11 @@ class Polygons(Init):
 			print "// Warning: No object selected. Must select an object or component"
 			return
 
+		
 		if mergeAll:
+			self.progressBar(init=1) #initialize the progress bar
 			for obj in selection:
+				self.progressBar(len(selection)) #register progress
 				# get number of vertices
 				count = pm.polyEvaluate(obj, vertex=1)
 				vertices = str(obj) + ".vtx [0:" + str(count) + "]" # mel expression: select -r geometry.vtx[0:1135];
