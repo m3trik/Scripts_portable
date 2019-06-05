@@ -2,11 +2,11 @@
 ###### *PySide marking menu style layered ui and toolkit for maya and max.
 
 
-*personal toolkit. work in progress..*
+*personal toolkit. continual work in progress..*
 
 ## Design:
 ######
-*To build a cross-platform, app agnostic, efficient, modular ui to house user tools/shortcuts/macros where each piece is constructed dynamically to allow 
+*This is a cross-platform, app agnostic, efficient, easy to use, modular ui to house user tools/shortcuts/macros where each piece is constructed dynamically to allow 
 for as little overhead as possible in construction and maintainence. Literally all you have to do to have 
 a new ui up and running, is to drop a qt designer ui file into the ui folder, create a module and class of the 
 same name, and a corresponding button to link to it. Naming convention allows for a stacked ui to be built, signals added/removed, and a master dictionary 
@@ -154,13 +154,14 @@ any additional widget types can be easily added when needed using this same conv
  Installation:
 -----------------------------------------------
 ######
-(Assuming the directory structure is left intact)
+(Assuming the directory structure is left intact).
+
 In maya:
- add maya directory to maya.env
+* add maya directory to maya.env
  (ie. MAYA_SCRIPT_PATH=<dir>)
  
 In 3ds Max
- add max/startup directory to system path by navigating to:
+* add max/startup directory to system path by navigating to:
  main menu> customize> additional startup scripts
  
-default hotkey for launching the menu set is f12. This is because I usually remap f12 to the windows key.
+The default hotkey for launching the menu set is f12. This is because I usually remap f12 to the windows key.
