@@ -146,3 +146,21 @@ any additional widget types can be easily added when needed using this same conv
 * holding ctrl while using Spinboxes increments/decrements by an extra decimal place.
 
 * mouse over buttons while window pinned to get an explanation of its function.
+
+
+
+##
+-----------------------------------------------
+ Installation:
+-----------------------------------------------
+######
+(Assuming the directory structure is left intact)
+In maya:
+ add maya directory to maya.env
+ (ie. MAYA_SCRIPT_PATH=<dir>)
+ 
+In 3ds Max
+ add max/startup directory to system path by navigating to:
+ main menu> customize> additional startup scripts
+ 
+default hotkey for launching the menu set is f12. This is because I usually remap f12 to the windows key.
