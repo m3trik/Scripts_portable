@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>138</width>
+    <width>159</width>
     <height>422</height>
    </rect>
   </property>
@@ -43,7 +43,7 @@
      <rect>
       <x>5</x>
       <y>30</y>
-      <width>121</width>
+      <width>136</width>
       <height>111</height>
      </rect>
     </property>
@@ -55,7 +55,7 @@
       <rect>
        <x>50</x>
        <y>10</y>
-       <width>93</width>
+       <width>86</width>
        <height>19</height>
       </rect>
      </property>
@@ -210,7 +210,7 @@
       <rect>
        <x>0</x>
        <y>90</y>
-       <width>121</width>
+       <width>136</width>
        <height>19</height>
       </rect>
      </property>
@@ -248,7 +248,7 @@
     <widget class="QPushButton" name="chk000">
      <property name="geometry">
       <rect>
-       <x>0</x>
+       <x>15</x>
        <y>50</y>
        <width>21</width>
        <height>18</height>
@@ -270,7 +270,7 @@
     <widget class="QPushButton" name="chk002">
      <property name="geometry">
       <rect>
-       <x>40</x>
+       <x>55</x>
        <y>50</y>
        <width>21</width>
        <height>18</height>
@@ -289,7 +289,7 @@
     <widget class="QPushButton" name="chk001">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>35</x>
        <y>50</y>
        <width>21</width>
        <height>18</height>
@@ -313,7 +313,7 @@
       <rect>
        <x>0</x>
        <y>30</y>
-       <width>121</width>
+       <width>136</width>
        <height>19</height>
       </rect>
      </property>
@@ -327,9 +327,9 @@
     <widget class="QLineEdit" name="t002">
      <property name="geometry">
       <rect>
-       <x>80</x>
+       <x>90</x>
        <y>70</y>
-       <width>41</width>
+       <width>46</width>
        <height>19</height>
       </rect>
      </property>
@@ -343,9 +343,9 @@
     <widget class="QLineEdit" name="t001">
      <property name="geometry">
       <rect>
-       <x>40</x>
+       <x>45</x>
        <y>70</y>
-       <width>41</width>
+       <width>46</width>
        <height>19</height>
       </rect>
      </property>
@@ -361,7 +361,7 @@
       <rect>
        <x>0</x>
        <y>70</y>
-       <width>41</width>
+       <width>46</width>
        <height>19</height>
       </rect>
      </property>
@@ -375,7 +375,7 @@
     <widget class="QPushButton" name="chk005">
      <property name="geometry">
       <rect>
-       <x>60</x>
+       <x>75</x>
        <y>50</y>
        <width>61</width>
        <height>19</height>
@@ -412,6 +412,28 @@
       <bool>true</bool>
      </property>
     </widget>
+    <widget class="QPushButton" name="chk003">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>50</y>
+       <width>16</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Create: X axis</string>
+     </property>
+     <property name="text">
+      <string>─</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+    </widget>
     <zorder>cmb000</zorder>
     <zorder>cmb001</zorder>
     <zorder>b000</zorder>
@@ -423,6 +445,7 @@
     <zorder>t001</zorder>
     <zorder>t000</zorder>
     <zorder>chk005</zorder>
+    <zorder>chk003</zorder>
    </widget>
    <widget class="QDoubleSpinBox" name="s005">
     <property name="enabled">
@@ -432,7 +455,7 @@
      <rect>
       <x>5</x>
       <y>240</y>
-      <width>121</width>
+      <width>136</width>
       <height>19</height>
      </rect>
     </property>
@@ -451,7 +474,7 @@
      <rect>
       <x>5</x>
       <y>200</y>
-      <width>121</width>
+      <width>136</width>
       <height>19</height>
      </rect>
     </property>
@@ -470,7 +493,7 @@
      <rect>
       <x>5</x>
       <y>220</y>
-      <width>121</width>
+      <width>136</width>
       <height>19</height>
      </rect>
     </property>
@@ -489,7 +512,7 @@
      <rect>
       <x>5</x>
       <y>140</y>
-      <width>121</width>
+      <width>136</width>
       <height>19</height>
      </rect>
     </property>
@@ -508,7 +531,7 @@
      <rect>
       <x>5</x>
       <y>180</y>
-      <width>121</width>
+      <width>136</width>
       <height>19</height>
      </rect>
     </property>
@@ -527,7 +550,7 @@
      <rect>
       <x>5</x>
       <y>160</y>
-      <width>121</width>
+      <width>136</width>
       <height>19</height>
      </rect>
     </property>
@@ -546,7 +569,7 @@
      <rect>
       <x>5</x>
       <y>260</y>
-      <width>121</width>
+      <width>136</width>
       <height>19</height>
      </rect>
     </property>
@@ -565,7 +588,7 @@
      <rect>
       <x>5</x>
       <y>280</y>
-      <width>121</width>
+      <width>136</width>
       <height>19</height>
      </rect>
     </property>
@@ -584,7 +607,7 @@
      <rect>
       <x>5</x>
       <y>300</y>
-      <width>121</width>
+      <width>136</width>
       <height>19</height>
      </rect>
     </property>
@@ -600,7 +623,7 @@
      <rect>
       <x>5</x>
       <y>0</y>
-      <width>121</width>
+      <width>136</width>
       <height>20</height>
      </rect>
     </property>
@@ -613,7 +636,7 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>100</x>
+       <x>115</x>
        <y>0</y>
        <width>21</width>
        <height>19</height>
@@ -655,7 +678,7 @@
      <rect>
       <x>5</x>
       <y>320</y>
-      <width>121</width>
+      <width>136</width>
       <height>19</height>
      </rect>
     </property>
@@ -674,7 +697,7 @@
      <rect>
       <x>5</x>
       <y>340</y>
-      <width>121</width>
+      <width>136</width>
       <height>19</height>
      </rect>
     </property>
@@ -693,7 +716,7 @@
      <rect>
       <x>5</x>
       <y>360</y>
-      <width>121</width>
+      <width>136</width>
       <height>19</height>
      </rect>
     </property>
@@ -712,7 +735,26 @@
      <rect>
       <x>5</x>
       <y>380</y>
-      <width>121</width>
+      <width>136</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="buttonSymbols">
+     <enum>QAbstractSpinBox::NoButtons</enum>
+    </property>
+    <property name="maximum">
+     <double>9999.000000000000000</double>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="s013">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>5</x>
+      <y>400</y>
+      <width>136</width>
       <height>19</height>
      </rect>
     </property>

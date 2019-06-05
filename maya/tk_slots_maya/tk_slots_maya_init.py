@@ -34,26 +34,28 @@ class Init(Slot):
 		if xformConstraint=='none': xformConstraint=None; infoDict.update({'Xform Constrait: ':xformConstraint}) #transform constraits
 
 		if selection:
-			if pm.selectType(query=1, allObjects=1): #object mode
-				currentSelection = [str(s) for s in pm.ls(selection=1, objectsOnly=1)]; infoDict.update({'Objects: ':currentSelection}) #currently selected objects #orderedSelection=1
+			if pm.selectMode(query=1, object=1): #object mode:
+				if pm.selectType(query=1, allObjects=1): #get object/s
+					currentSelection = [str(s) for s in pm.ls(selection=1, objectsOnly=1)]; infoDict.update({'Objects: ':currentSelection}) #currently selected objects #orderedSelection=1
 
-			if pm.selectType(query=1, vertex=1): #get vertex selection info
-				selectedVerts = [v.split('[')[-1].rstrip(']') for v in pm.filterExpand(selectionMask=31)] #pm.polyEvaluate(vertexComponent=1);
-				collapsedList = self.collapseList(selectedVerts)
-				numVerts = pm.polyEvaluate (selection[0], vertex=1)
-				infoDict.update({'Vertices: '+str(len(selectedVerts))+'/'+str(numVerts):collapsedList}) #selected verts
-				
-			if pm.selectType(query=1, edge=1): #get edge selection info
-				selectedEdges = [e.split('[')[-1].rstrip(']') for e in pm.filterExpand(selectionMask=32)] #pm.polyEvaluate(edgeComponent=1);
-				collapsedList = self.collapseList(selectedEdges)
-				numEdges = pm.polyEvaluate (selection[0], Edge=1)
-				infoDict.update({'Edges: '+str(len(selectedEdges))+'/'+str(numEdges):collapsedList}) #selected edges
-				
-			if pm.selectType(query=1, facet=1): #get face selection info
-				selectedFaces = [f.split('[')[-1].rstrip(']') for f in pm.filterExpand(selectionMask=34)] #pm.polyEvaluate(faceComponent=1);
-				collapsedList = self.collapseList(selectedFaces)
-				numFaces = pm.polyEvaluate (selection[0], face=1)
-				infoDict.update({'Faces: '+str(len(selectedFaces))+'/'+str(numFaces):collapsedList}) #selected faces
+			elif pm.selectMode(query=1, component=1): #component mode:
+				if pm.selectType(query=1, vertex=1): #get vertex selection info
+					selectedVerts = [v.split('[')[-1].rstrip(']') for v in pm.filterExpand(selectionMask=31)] #pm.polyEvaluate(vertexComponent=1);
+					collapsedList = self.collapseList(selectedVerts)
+					numVerts = pm.polyEvaluate (selection[0], vertex=1)
+					infoDict.update({'Vertices: '+str(len(selectedVerts))+'/'+str(numVerts):collapsedList}) #selected verts
+					
+				elif pm.selectType(query=1, edge=1): #get edge selection info
+					selectedEdges = [e.split('[')[-1].rstrip(']') for e in pm.filterExpand(selectionMask=32)] #pm.polyEvaluate(edgeComponent=1);
+					collapsedList = self.collapseList(selectedEdges)
+					numEdges = pm.polyEvaluate (selection[0], Edge=1)
+					infoDict.update({'Edges: '+str(len(selectedEdges))+'/'+str(numEdges):collapsedList}) #selected edges
+					
+				elif pm.selectType(query=1, facet=1): #get face selection info
+					selectedFaces = [f.split('[')[-1].rstrip(']') for f in pm.filterExpand(selectionMask=34)] #pm.polyEvaluate(faceComponent=1);
+					collapsedList = self.collapseList(selectedFaces)
+					numFaces = pm.polyEvaluate (selection[0], face=1)
+					infoDict.update({'Faces: '+str(len(selectedFaces))+'/'+str(numFaces):collapsedList}) #selected faces
 
 			
 			# selectedUVs = pm.polyEvaluate(uvComponent=1); 
@@ -230,8 +232,7 @@ class Init(Slot):
 		degree = 360/float(numPoints)
 		radian = math.radians(degree) #or math.pi*degree/180 (pi * degrees / 180)
 
-		vertexPoints = []
-
+		vertexPoints=[]
 		for _ in range(numPoints):
 			# print "deg:", degree,"\n", "cos:",math.cos(radian),"\n", "sin:",math.sin(radian),"\n", "rad:",radian
 			if axis =='x': #x axis
@@ -251,15 +252,15 @@ class Init(Slot):
 			#print x,y,"\n"
 			
 		pm.undoInfo (openChunk=True)
-		circle = pm.polyCreateFacet (point=vertexPoints, name='pCircle')
-		pm.polyNormal (circle, normalMode=4) #4=reverse and propagate
+		node = pm.polyCreateFacet (point=vertexPoints, name='pCircle')
+		pm.polyNormal (node, normalMode=4) #4=reverse and propagate
 		if mode==1:
 			pm.polySubdivideFacet (divisions=1, mode=1)
 		if mode==2:
 			pm.polySubdivideFacet (divisions=1, mode=0)
 		pm.undoInfo (closeChunk=True)
 
-		return circle
+		return node
 
 
 
@@ -304,7 +305,7 @@ class Init(Slot):
 		#incoming connections:
 		historyNode = pm.listConnections(shapes, source=1, destination=0) #returns list ie. [nt.PolyCone(u'polyCone1')]
 		node = historyNode[0].name() #get the string name from the history node
-		print attributes
+
 		[pm.setAttr(node+'.'+attr, value) for attr, value in attributes.iteritems() if attr and value]
 
 

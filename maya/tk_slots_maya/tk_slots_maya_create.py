@@ -21,26 +21,48 @@ class Create(Init):
 
 		self.node=None
 		self.rotation = {'x':[90,0,0], 'y':[0,90,0], 'z':[0,0,90], '-x':[-90,0,0], '-y':[0,-90,0], '-z':[0,0,-90], 'last':[]}
-		self.lastValue=0
 		self.point=[0,0,0]
 		self.history=[]
 
 
 		#spinboxes on valueChanged; connect to sXXX method with index as arg
-		self.spinboxes = self.getObject(self.ui, 's000-12')
+		self.spinboxes = self.getObject(self.ui, 's000-13')
 		for i, s in enumerate(self.spinboxes):
 			s.valueChanged.connect (lambda: self.sXXX(i)) #ie. self.ui.s000.valueChanged.connect (lambda: self.sXXX(0))
 
 
 
+	def getAxis(self):
+		if self.ui.chk000.isChecked():
+			axis = 'x'
+		elif self.ui.chk001.isChecked():
+			axis = 'y'
+		elif self.ui.chk002.isChecked():
+			axis = 'z'
+		if self.ui.chk003.isChecked(): #negative
+			axis = '-'+axis
+		return axis
 
-	def sXXX(self, index):
+
+	def rotateAbsolute(self, axis):
+		'''
+		undo previous rotation and rotate on the specified axis.
+		uses an external rotation dictionary.
+		args:	axis='string' - axis to rotate on. ie. '-x'
+		'''
+		axis = self.rotation[axis]
+
+		rotateOrder = pm.xform (self.node, query=1, rotateOrder=1)
+		pm.xform (self.node, preserve=1, rotation=axis, rotateOrder=rotateOrder, absolute=1)
+		self.rotation['last'] = axis
+
+
+	def sXXX(self, index=None):
 		'''
 		set node attributes from multiple spinbox values.
-		args: index=int - index of the spinbox that called this function. ie. 5 from s005
+		args: index=int - optional index of the spinbox that called this function. ie. 5 from s005
 		'''
 		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.spinboxes} #current spinbox values. ie. from s000 get the value of six and add it to the list
-		# print spinboxValues
 		self.setAttributesMEL(self.node, spinboxValues) #set attributes for the history node
 
 
@@ -83,10 +105,7 @@ class Create(Init):
 		'''
 		self.setButtons(self.ui, checked='chk000',unchecked='chk001, chk002')
 		if self.node:
-			axis = self.rotation['x']
-			rotateOrder = pm.xform (self.node, query=1, rotateOrder=1)
-			pm.xform (self.node, preserve=1, rotation=axis, rotateOrder=rotateOrder, absolute=1)
-			self.rotation['last'] = axis
+			self.rotateAbsolute(self.getAxis())
 
 
 	def chk001(self):
@@ -96,12 +115,7 @@ class Create(Init):
 		'''
 		self.setButtons(self.ui, checked='chk001',unchecked='chk000, chk002')
 		if self.node:
-			axis = self.rotation['y']
-			rotateOrder = pm.xform (self.node, query=1, rotateOrder=1)
-			pm.xform (self.node, preserve=1, rotation=axis, rotateOrder=rotateOrder, absolute=1)
-			self.rotation['last'] = axis
-		else:
-			print "# Warning: nothing selected #"
+			self.rotateAbsolute(self.getAxis())
 
 
 	def chk002(self):
@@ -111,10 +125,15 @@ class Create(Init):
 		'''
 		self.setButtons(self.ui, checked='chk002',unchecked='chk000, chk001')
 		if self.node:
-			axis = self.rotation['z']
-			rotateOrder = pm.xform (self.node, query=1, rotateOrder=1)
-			pm.xform (self.node, preserve=1, rotation=axis, rotateOrder=rotateOrder, absolute=1)
-			self.rotation['last'] = axis
+			self.rotateAbsolute(self.getAxis())
+
+
+	def chk003(self):
+		'''
+		Rotate Negative Axis
+		'''
+		if self.node:
+			self.rotateAbsolute(self.getAxis())
 
 
 	def chk005(self):
@@ -158,14 +177,7 @@ class Create(Init):
 		Create Object
 
 		'''
-		if self.ui.chk000.isChecked():
-			axis = self.rotation['x']
-		if self.ui.chk001.isChecked():
-			axis = self.rotation['y']
-		if self.ui.chk002.isChecked():
-			axis = self.rotation['z']
-		self.rotation['last'] = axis
-
+		axis = self.rotation[self.getAxis()] #get axis as [int list]
 
 		#polygons
 		if self.ui.cmb000.currentIndex() == 0:
@@ -261,18 +273,20 @@ class Create(Init):
 		
 
 		#set name
-		self.ui.t003.setText(self.node.name())
+		try:
+			self.ui.t003.setText(self.node[0].name())
+		except:
+			self.ui.t003.setText(self.node[0])
+
+		self.history.extend(self.node) #save current node to history
+		self.rotation['last']=[] #reset rotation history
 
 		#translate the newly created node
 		pm.xform (self.node, translation=self.point, worldSpace=1, absolute=1)
 
-		#set as current node for setting history
-		self.history.extend(self.node)
-		# print self.history
-
 		exclude = [u'message', u'caching', u'frozen', u'isHistoricallyInteresting', u'nodeState', u'binMembership', u'output', u'axis', u'axisX', u'axisY', u'axisZ', u'paramWarn', u'uvSetName', 'maya70']
 		attributes = self.getAttributesMEL(self.node, exclude) #get list of attributes and their values using the transform node.
-		self.setSpinboxes (self.ui, 's000-12', attributes)
+		self.setSpinboxes (self.ui, 's000-13', attributes)
 
 		pm.select(self.node) #select the transform node so that you can see any edits
 

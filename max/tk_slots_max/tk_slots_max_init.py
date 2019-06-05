@@ -47,13 +47,13 @@ class Init(Slot):
 					numVerts = rt.polyop.getNumVerts(obj)
 					infoDict.update({'Vertices: '+str(len(selectedVerts))+'/'+str(numVerts):collapsedList}) #selected verts
 
-				if level==2: #get edge info
+				elif level==2: #get edge info
 					selectedEdges = Init.bitArrayToArray(rt.polyop.getEdgeSelection(obj))
 					collapsedList = self.collapseList(selectedEdges)
 					numEdges = rt.polyop.getNumEdges(obj)
 					infoDict.update({'Edges: '+str(len(selectedEdges))+'/'+str(numEdges):collapsedList}) #selected edges
 					
-				if level==4: #get face info
+				elif level==4: #get face info
 					selectedFaces = Init.bitArrayToArray(rt.polyop.getFaceSelection(obj))
 					collapsedList = self.collapseList(selectedFaces)
 					numFaces = rt.polyop.getNumFaces(obj)

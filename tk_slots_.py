@@ -64,7 +64,7 @@ class Slot(object):
 			unpacked_names.extend([str(prefix)+'000'[:-len(str(num))]+str(num) for num in range(start,stop)]) #build list of name strings within given range
 
 		names = [n.strip() for n in objectNames.split(',') if '-' not in n] #all objectNames passed in not containing '-'
-		if print_: print names+unpacked_names
+		if print_: print names+unpacked_names #used for debugging
 
 		objects=[]
 		for name in names+unpacked_names:
@@ -348,7 +348,7 @@ class Slot(object):
 			
 
 		if self.hotBox.name=='create':
-			self.setButtons(ui, invisible='s000-12')
+			self.setButtons(ui, invisible='s000-13')
 
 
 		if self.hotBox.name=='init':

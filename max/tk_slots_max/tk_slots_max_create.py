@@ -21,23 +21,51 @@ class Create(Init):
 
 		self.node=None
 		self.rotation = {'x':[90,0,0], 'y':[0,90,0], 'z':[0,0,90], '-x':[-90,0,0], '-y':[0,-90,0], '-z':[0,0,-90], 'last':[]}
-		self.lastValue=0
 		self.point=[0,0,0]
 		self.history=[]
 
 
 		#spinboxes on valueChanged; connect to sXXX method with index as arg
-		self.spinboxes = self.getObject(self.ui, 's000-12')
+		self.spinboxes = self.getObject(self.ui, 's000-13')
 		for i, s in enumerate(self.spinboxes):
 			s.valueChanged.connect (lambda: self.sXXX(i)) #ie. self.ui.s000.valueChanged.connect (lambda: self.sXXX(0))
 
 
 
+	def getAxis(self):
+		if self.ui.chk000.isChecked():
+			axis = 'x'
+		elif self.ui.chk001.isChecked():
+			axis = 'y'
+		elif self.ui.chk002.isChecked():
+			axis = 'z'
+		if self.ui.chk003.isChecked(): #negative
+			axis = '-'+axis
+		return axis
 
-	def sXXX(self, index):
+
+	def rotateAbsolute(self, axis):
+		'''
+		undo previous rotation and rotate on the specified axis.
+		uses an external rotation dictionary.
+		args:	axis='string' - axis to rotate on. ie. '-x'
+		'''
+		angle = [a for a in self.rotation[axis] if a!=0][0] #get angle. ie. 90 or -90
+		axis = self.rotation[axis] #get axis list from string key. In 3ds max, the axis key is used as bool values, ie. [0, 90, 0] will essentially be used as [0,1,0]
+
+		last = self.rotation['last']
+		if last: #if previous rotation stored: undo previous rotation
+			rt.rotate(self.node, rt.angleaxis(angle*-1, rt.point3(last[0], last[1], last[2]))) #multiplying the angle *1 inverts it. ie. -90 becomes 90
+		
+		rt.rotate(self.node, rt.angleaxis(angle, rt.point3(axis[0], axis[1], axis[2]))) #perform new rotation
+		self.rotation['last'] = axis #store rotation
+		rt.redrawViews()
+
+
+	def sXXX(self, index=None):
 		'''
 		set node attributes from multiple spinbox values.
-		args: index=int - index of the spinbox that called this function. ie. 5 from s005
+		args: index=int - optional index of the spinbox that called this function. ie. 5 from s005
 		'''
 		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.spinboxes} #current spinbox values. ie. from s000 get the value of six and add it to the list
 		# print spinboxValues
@@ -84,11 +112,8 @@ class Create(Init):
 		'''
 		self.setButtons(self.ui, checked='chk000',unchecked='chk001,chk002')
 		if self.node:
-			axis = self.rotation['x']
-			rt.rotate(self.node, rt.angleaxis(90, rt.point3(axis[0], axis[1], axis[2])))
-			self.rotation['last'] = axis
-			rt.redrawViews()
-
+			self.rotateAbsolute(self.getAxis())
+			
 
 	def chk001(self):
 		'''
@@ -97,10 +122,7 @@ class Create(Init):
 		'''
 		self.setButtons(self.ui, checked='chk001',unchecked='chk000,chk002')
 		if self.node:
-			axis = self.rotation['y']
-			rt.rotate(self.node, rt.angleaxis(90, rt.point3(axis[0], axis[1], axis[2])))
-			self.rotation['last'] = axis
-			rt.redrawViews()
+			self.rotateAbsolute(self.getAxis())
 
 
 	def chk002(self):
@@ -110,15 +132,20 @@ class Create(Init):
 		'''
 		self.setButtons(self.ui, checked='chk002',unchecked='chk001,chk000')
 		if self.node:
-			axis = self.rotation['z']
-			rt.rotate(self.node, rt.angleaxis(90, rt.point3(axis[0], axis[1], axis[2])))
-			self.rotation['last'] = axis
-			rt.redrawViews()
+			self.rotateAbsolute(self.getAxis())
+
+
+	def chk003(self):
+		'''
+		Rotate Negative Axis
+		'''
+		if self.node:
+			self.rotateAbsolute(self.getAxis())
 
 
 	def chk005(self):
 		'''
-		Create: Set Point
+		Set Point
 
 		'''
 		#add support for averaging multiple components and multiple component types.
@@ -162,14 +189,7 @@ class Create(Init):
 		Create Object
 
 		'''
-		if self.ui.chk000.isChecked():
-			axis = self.rotation['x']
-		if self.ui.chk001.isChecked():
-			axis = self.rotation['y']
-		if self.ui.chk002.isChecked():
-			axis = self.rotation['z']
-		self.rotation['last'] = axis
-
+		axis = self.getAxis() #get axis as 'string'
 
 		# polygons
 		if self.ui.cmb000.currentIndex() == 0:
@@ -198,7 +218,7 @@ class Create(Init):
 
 			#Cone:
 			if self.ui.cmb001.currentIndex() == 5:
-				self.node = rt.Cone(radius1=5, radius2=5, height=5, capsegs=1, heightsegs=1, sides=12, smooth=True)
+				self.node = rt.Cone(radius1=5, radius2=1, height=5, capsegs=1, heightsegs=1, sides=12, smooth=True)
 
 			#Pyramid
 			if self.ui.cmb001.currentIndex() == 6:
@@ -265,23 +285,25 @@ class Create(Init):
 
 
 		#set name
-		self.ui.t003.setText(self.node.name)
+		try:
+			self.ui.t003.setText(self.node[0].name())
+		except:
+			self.ui.t003.setText(self.node[0])
+
+		self.history.extend(self.node) #save current node to history
+		self.rotation['last']=[] #reset rotation history
 
 		#translate the newly created node
 		self.node.pos = rt.point3(self.point[0], self.point[1], self.point[2])
 		#rotate
-		rt.rotate(self.node, rt.angleaxis(90, rt.point3(axis[0], axis[1], axis[2])))
+		self.rotateAbsolute(axis)
 
-		#set as current node for setting history
-		self.history.extend(self.node)
-		# print self.history
-
-		exclude = ['getmxsprop', 'setmxsprop', 'typeInHeight', 'typeInLength', 'typeInPos', 'typeInWidth', 'typeInRadius', 'typeInRadius1', 'typeInRadius2', 'typeinCreationMethod']	
+		exclude = ['getmxsprop', 'setmxsprop', 'typeInHeight', 'typeInLength', 'typeInPos', 'typeInWidth', 'typeInDepth', 'typeInRadius', 'typeInRadius1', 'typeInRadius2', 'typeinCreationMethod']	
 		attributes = self.getAttributes(self.node, exclude)
-		self.setSpinboxes(self.ui, 's000-12', attributes)
+		self.setSpinboxes(self.ui, 's000-13', attributes)
 
-		if self.ui.cmb000.currentIndex() == 0: #if create type: polygon; convert to editable poly
-			rt.convertTo(self.node, rt.PolyMeshObject) #convert after adding primitive attributes to spinboxes
+		# if self.ui.cmb000.currentIndex() == 0: #if create type: polygon; convert to editable poly
+		# 	rt.convertTo(self.node, rt.PolyMeshObject) #convert after adding primitive attributes to spinboxes
 
 		rt.select(self.node) #select the transform node so that you can see any edits
 		rt.redrawViews()

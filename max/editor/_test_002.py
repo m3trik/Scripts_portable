@@ -13,9 +13,38 @@ def getFacesByMatID(obj, id):
 
 #~ print getFacesByMatID(rt.selection[0], 1)
 
-obj = rt.selection[0]
-vertex = rt.bitArrayToArray(rt.polyop.getVertSelection(obj))
-point = rt.polyop.getVert(obj, vertex[0]) #Returns the position of the specified vertex.
+node = rt.selection[0]
+
+
+rotation = {'x':[90,0,0], 'y':[0,90,0], 'z':[0,0,90], '-x':[-90,0,0], '-y':[0,-90,0], '-z':[0,0,-90], 'last':[]}
+
+rotation['last']=[]
+
+def rotateAbsolute(axis):
+		'''
+		undo previous rotation and rotate on the specified axis.
+		uses an external rotation dictionary.
+		args:	axis='string' - axis to rotate on. ie. '-x'
+		'''
+		angle = [a for a in rotation[axis] if a!=0][0] #get angle. ie. 90 or -90
+		axis = rotation[axis] #get axis from string key. In 3ds max, the axis key is used as bool values, ie. [0, 90, 0] will be used as [0,1,0]
+
+		if rotation['last']: #undo previous rotation
+			last = rotation['last']
+			rt.rotate(node, rt.angleaxis(angle*-1, rt.point3(last[0], last[1], last[2]))) #multiplying the angle *1 reverses it.
+		rt.rotate(node, rt.angleaxis(angle, rt.point3(axis[0], axis[1], axis[2]))) #perform new rotation
+		rotation['last'] = axis #store rotation
+		rt.redrawViews()
+
+
+rotateAbsolute('y')
+rotateAbsolute('z')
+
+#~ currentMatrix = obj.transform
+#~ rt.preRotate(currentMatrix, rt.eulertoquat(rt.eulerAngles(0, 90, 0)))
+#~ obj.transform = currentMatrix
+
+
 
 
 #~ rt.rotate(node, rt.eulerToQuat(euler))
