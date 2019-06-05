@@ -285,10 +285,10 @@ class Create(Init):
 
 
 		#set name
-		try:
-			self.ui.t003.setText(self.node[0].name())
-		except:
-			self.ui.t003.setText(self.node[0])
+		if isinstance(self.node, (str,unicode)): #is type of:
+			self.ui.t003.setText(self.node)
+		else:
+			self.ui.t003.setText(self.node.name())
 
 		self.history.extend(self.node) #save current node to history
 		self.rotation['last']=[] #reset rotation history
