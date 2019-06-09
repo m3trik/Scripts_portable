@@ -15,39 +15,35 @@ class Edit(Init):
 
 
 		self.ui = self.sb.getUi('edit')
+		
+		self.ui.s000.valueChanged.connect(self.radialArray) #update radial array
+		self.ui.s001.valueChanged.connect(self.radialArray) 
 
-		self.ui.s000.valueChanged.connect(self.chk011) #update radial array
-		self.ui.s001.valueChanged.connect(self.chk011) 
+		self.ui.s002.valueChanged.connect(self.duplicateArray) #update duplicate array
+		self.ui.s003.valueChanged.connect(self.duplicateArray)
+		self.ui.s004.valueChanged.connect(self.duplicateArray)
+		self.ui.s005.valueChanged.connect(self.duplicateArray)
+		self.ui.s007.valueChanged.connect(self.duplicateArray) 
+		self.ui.s008.valueChanged.connect(self.duplicateArray)
+		self.ui.s009.valueChanged.connect(self.duplicateArray)
 		
 		
 
-	def chk001(self):
+	def radialArray(self):
 		'''
-		
+		Radial Array: Reset
 
 		'''
-		pass
+		self.chk015() #calling chk015 directly from valueChanged would pass the returned spinbox value to the create arg
 
-	def chk002(self):
-		'''
-		
 
+	def duplicateArray(self):
 		'''
-		pass
-
-	def chk003(self):
-		'''
-		
+		Duplicate: Reset
 
 		'''
-		pass
+		self.chk016() #calling chk015 directly from valueChanged would pass the returned spinbox value to the create arg
 
-	def chk004(self):
-		'''
-		
-
-		'''
-		pass
 
 	def chk007(self):
 		'''
@@ -59,6 +55,7 @@ class Edit(Init):
 			self.b034()
 		else:
 			self.setButtons(self.ui, disable='chk008,b034,cmb000',enable='chk000,chk009,s005')
+
 
 	def chk010(self):
 		'''
@@ -84,12 +81,14 @@ class Edit(Init):
 			del radialPivot[:]
 			self.ui.chk010.setText("Set Pivot")
 
+
 	def chk011(self):
 		'''
 		Radial Array: Instance/Duplicate Toggle
 
 		'''
 		self.chk015() #calling chk015 directly from valueChanged would pass the returned spinbox value to the create arg
+
 
 	def chk012(self):
 		'''
@@ -99,6 +98,7 @@ class Edit(Init):
 		self.setButtons(self.ui, checked='chk012', unchecked='chk013,chk014')
 		self.chk015()
 
+
 	def chk013(self):
 		'''
 		Radial Array: Y Axis
@@ -106,6 +106,7 @@ class Edit(Init):
 		'''
 		self.setButtons(self.ui, checked='chk013', unchecked='chk012,chk014')
 		self.chk015()
+
 
 	def chk014(self):
 		'''
@@ -115,64 +116,64 @@ class Edit(Init):
 		self.setButtons(self.ui, checked='chk014', unchecked='chk012,chk013')
 		self.chk015()
 
+
+	global radialArrayObjList
+	radialArrayObjList=[]
 	def chk015(self, create=False):
 		'''
-		Duplicate Radial Array.
+		Radial Array: Preview
 
 		'''
-		global radialArrayObjList
-		radialArrayObjList=[]
 		setPivot = self.ui.chk010.isChecked() #set pivot point
 		instance = self.ui.chk011.isChecked() #instance object
 
 		if self.ui.chk015.isChecked():
-			self.setButtons(self.ui, enable='b008')
+			self.setButtons(self.ui, enable='b003')
 
 			selection = pm.ls (selection=1, type="transform", flatten=1)
-			if len(selection):				
-				objectName = str(selection[0])
-				if len(radialArrayObjList):
-					self.try_ ('pm.delete (radialArrayObjList)')
-					del radialArrayObjList[:]
+			if selection:
+				if radialArrayObjList:
+					self.try_ ('pm.delete(arg1)', showError_=False, arg1=radialArrayObjList) #delete all the geometry in the list
+					del radialArrayObjList[:] #clear the list
+				for object_ in selection:
+					pm.select (object_)
+					objectName = str(object_)
 
-				numDuplicates = int(self.ui.s000.value())
-				angle = float(self.ui.s001.value())
+					numDuplicates = int(self.ui.s000.value())
+					angle = float(self.ui.s001.value())
 
-				x=y=z = 0
-				if self.ui.chk012.isChecked():
-					x = angle
-				if self.ui.chk013.isChecked():
-					y = angle
-				if self.ui.chk014.isChecked():
-					z = angle
+					x=y=z = 0
+					if self.ui.chk012.isChecked(): x = angle
+					if self.ui.chk013.isChecked(): y = angle
+					if self.ui.chk014.isChecked(): z = angle
 
-				pm.undoInfo (openChunk=1)
-				for i in xrange(1,numDuplicates):
-					if instance:
-						name = objectName+"_ins"+str(i)
-						pm.instance (name=name)
-					else:
-						name = objectName+"_dup"+str(i)
-						pm.duplicate (returnRootsOnly=1, name=name)
-					if setPivot:
-						if len(radialPivot):
-							pm.rotate (x, y, z, relative=1, pivot=radialPivot)
+					pm.undoInfo (openChunk=1)
+					for i in xrange(1,numDuplicates):
+						if instance:
+							name = objectName+"_ins"+str(i)
+							pm.instance (name=name)
 						else:
-							print "# Warning: No pivot point set. #"
-					else:
-						pm.rotate (x, y, z, relative=1)
-					radialArrayObjList.append(name)
-				#if in isolate select mode; add object	
-				currentPanel = pm.paneLayout('viewPanes', q=True, pane1=True) #get the current modelPanel view
-				if pm.isolateSelect (currentPanel, query=1, state=1):
-					for obj in radialArrayObjList:
-						pm.isolateSelect (currentPanel, addDagObject=obj)
-				#re-select the original selected object
-				pm.select (objectName)
-				pm.undoInfo (closeChunk=1)
+							name = objectName+"_dup"+str(i)
+							pm.duplicate (returnRootsOnly=1, name=name)
+						if setPivot:
+							if len(radialPivot):
+								pm.rotate (x, y, z, relative=1, pivot=radialPivot) #euler=1
+							else:
+								print "# Warning: No pivot point set. #"
+						else:
+							pm.rotate (x, y, z, relative=1) #euler=1
+						radialArrayObjList.append(name)
+					#if in isolate select mode; add object	
+					currentPanel = pm.paneLayout('viewPanes', q=True, pane1=True) #get the current modelPanel view
+					if pm.isolateSelect (currentPanel, query=1, state=1):
+						for obj_ in radialArrayObjList:
+							pm.isolateSelect (currentPanel, addDagObject=obj_)
+					#re-select the original selected object
+					pm.select (objectName)
+					pm.undoInfo (closeChunk=1)
 			else: #if both lists objects are empty:
 				print "# Warning: Nothing selected. #"
-				self.setButtons(self.ui, disable='b008',unchecked='chk015')
+				self.setButtons(self.ui, disable='b003',unchecked='chk015')
 				return
 		else: #if chk015 is unchecked by user or by create button
 			if create:
@@ -180,11 +181,170 @@ class Edit(Init):
 				radialArrayObjList.append(originalObj)
 				pm.polyUnite (radialArrayObjList, name=originalObj+"_array") #combine objects. using the original name results in a duplicate object error on deletion
 				print "# Result: "+str(radialArrayObjList)+" #"
-				pm.delete (radialArrayObjList); del radialArrayObjList[:]
+				pm.delete (radialArrayObjList); del radialArrayObjList[:] #delete all geometry and clear the list
 				return
-			self.try_('pm.delete (radialArrayObjList)'); del radialArrayObjList[:]
-			self.setButtons(self.ui, disable='b008')
+			self.try_ ('pm.delete(arg1)', showError_=False, arg1=radialArrayObjList) #delete all the geometry in the list
+			del radialArrayObjList[:] #clear the list
+			self.setButtons(self.ui, disable='b003')
+
+
+	@staticmethod
+	def getComponentPoint(component, alignToNormal=False):
+		'''
+		get the center point from the given component.
+		args: alignToNormal=bool - 
+
+		returns: [float list] - x, y, z  coordinate values.
+		'''
+		if ".vtx" in str(component):
+			x = pm.polyNormalPerVertex (component, query=1, x=1)
+			y = pm.polyNormalPerVertex (component, query=1, y=1)
+			z = pm.polyNormalPerVertex (component, query=1, z=1)
+			xyz = [sum(x) / float(len(x)), sum(y) / float(len(y)), sum(z) / float(len(z))] #get average
+		elif ".e" in str(component):
+			componentName = str(component).split(".")[0]
+			vertices = pm.polyInfo (component, edgeToVertex=1)[0]
+			vertices = vertices.split()
+			vertices = [componentName+".vtx["+vertices[2]+"]",componentName+".vtx["+vertices[3]+"]"]
+			x=[];y=[];z=[]
+			for vertex in vertices:
+				x_ = pm.polyNormalPerVertex (vertex, query=1, x=1)
+				x.append(sum(x_) / float(len(x_)))
+				y_ = pm.polyNormalPerVertex (vertex, query=1, y=1)
+				x.append(sum(y_) / float(len(y_)))
+				z_ = pm.polyNormalPerVertex (vertex, query=1, z=1)
+				x.append(sum(z_) / float(len(z_)))
+			xyz = [sum(x) / float(len(x)), sum(y) / float(len(y)), sum(z) / float(len(z))] #get average
+		else:# elif ".f" in str(component):
+			xyz = pm.polyInfo (component, faceNormals=1)
+			xyz = xyz[0].split()
+			xyz = [float(xyz[2]), float(xyz[3]), float(xyz[4])]
+
+		if alignToNormal: #normal constraint
+			normal = mel.eval("unit <<"+str(xyz[0])+", "+str(xyz[1])+", "+str(xyz[2])+">>;") #normalize value using MEL
+			# normal = [round(i-min(xyz)/(max(xyz)-min(xyz)),6) for i in xyz] #normalize and round value using python
+
+			constraint = pm.normalConstraint(component, object_,aimVector=normal,upVector=[0,1,0],worldUpVector=[0,1,0],worldUpType="vector") # "scene","object","objectrotation","vector","none"
+			pm.delete(constraint) #orient object_ then remove constraint.
+
+		vertexPoint = pm.xform (component, query=1, translation=1) #average vertex points on destination to get component center.
+		x = vertexPoint [0::3]
+		y = vertexPoint [1::3]
+		z = vertexPoint [2::3]
+
+		return [round(sum(x) / float(len(x)),4), round(sum(y) / float(len(y)),4), round(sum(z) / float(len(z)),4)]
+
+
+	global duplicateObjList
+	duplicateObjList=[]
+	def chk016(self, create=False):
+		'''
+		Duplicate: Preview
+		'''
+		if self.ui.chk016.isChecked():
+			self.setButtons(self.ui, enable='b002')
+
+			instance = self.ui.chk000.isChecked()
+			numOfDuplicates = int(self.ui.s005.value())
+			keepFacesTogether = self.ui.chk009.isChecked()
+			transXYZ = [float(self.ui.s002.value()),float(self.ui.s003.value()),float(self.ui.s004.value())]
+			rotXYZ =  [float(self.ui.s007.value()),float(self.ui.s008.value()),float(self.ui.s009.value())]
+			translateToComponent = self.ui.chk007.isChecked()
+			alignToNormal = self.ui.chk008.isChecked()
+			componentList = [self.ui.cmb000.itemText(i) for i in range(self.ui.cmb000.count())]
 			
+			try: pm.delete(duplicateObjList[1:]) #delete all the geometry in the list, except the original obj
+			except e as error: print e
+			del duplicateObjList[1:] #clear the list, leaving the original obj
+			selection = pm.ls(selection=1, flatten=1, objectsOnly=1) #there will only be a selection when first called. After, the last selected item will have been deleted with the other duplicated objects, leaving only the original un-selected.
+
+			if selection:
+				obj = selection[0]
+				duplicateObjList.insert(0, obj) #insert at first index
+			elif duplicateObjList:
+				obj = duplicateObjList[0]
+				pm.select(obj)
+			else:
+				return '# Warning: Nothing selected. #'
+
+			pm.undoInfo (openChunk=1)
+			if translateToComponent:
+				if componentList:
+					for num, component in componentList.iteritems():
+						vertexPoint = getComponentPoint(component)
+
+						#transform
+						pm.xform (obj, translation=[vertexPoint[0]+transXYZ[0], vertexPoint[1]+transXYZ[1], vertexPoint[2]+transXYZ[2]])
+						#rotate
+						pm.xform (obj, rotation=[rotXYZ[0], rotXYZ[1], rotXYZ[2]])
+
+						if component != componentList[len(componentList)-1]: #if not at the end of the list, create a new instance of the obj.
+							name = str(obj)+"_inst"+str(num)
+							duplicatedObject = pm.instance (obj, name=name)
+						# print "component:",component,"\n", "normal:",normal,"\n", "vertexPoint:",vertexPoint,"\n"
+
+						duplicateObjList.append(duplicatedObject) #append duplicated object to list
+				else:
+					return '# Warning: Component list empty. #'
+			else:
+				for _ in xrange(numOfDuplicates):
+					if ".f" in str(obj): #face
+						duplicatedObject = pm.duplicate(name="pExtract1")[0]
+
+						selectedFaces=[duplicatedObject+"."+face.split(".")[1] for face in obj] #create a list of the original selected faces numbers but with duplicated objects name
+						
+						numFaces = pm.polyEvaluate(duplicatedObject, face=1)
+						allFaces = [duplicatedObject+".f["+str(num)+"]" for num in range(numFaces)] #create a list of all faces on the duplicated object
+
+						pm.delete(set(allFaces) -set(selectedFaces)) #delete faces in 'allFaces' that were not in the original obj 
+
+					elif ".e" in str(obj): #edge
+						duplicatedObject = pm.polyToCurve(form=2, degree=3, conformToSmoothMeshPreview=1)
+					
+					elif instance:
+						duplicatedObject = pm.instance()
+
+					else:
+						duplicatedObject = pm.duplicate()
+
+					pm.xform (duplicatedObject, translation=transXYZ, relative=1)
+					pm.xform (duplicatedObject, rotation=rotXYZ, relative=1)
+
+					duplicateObjList.append(duplicatedObject) #append duplicated object to list
+					pm.select(duplicatedObject)
+			pm.undoInfo (closeChunk=1)
+
+		else: #if chk016 is unchecked by user or by create button
+			if create:
+				# originalObj = duplicateObjList[0][:duplicateObjList[0].rfind("_")] #remove the trailing _ins# or _dup#. ie. pCube1 from pCube1_inst1
+				# duplicateObjList.append(originalObj)
+				# pm.polyUnite (duplicateObjList, name=originalObj+"_array") #combine objects. using the original name results in a duplicate object error on deletion
+				# print "# Result: "+str(duplicateObjList)+" #"
+				# pm.delete(duplicateObjList) #delete all duplicated geometry
+				del duplicateObjList[:] #clear the list
+				return
+			pm.delete(duplicateObjList[1:]) #delete all the geometry in the list, except the original obj
+			pm.select(duplicateObjList[:1]) #re-select the original object
+			del duplicateObjList[:] #clear the list
+			self.setButtons(self.ui, disable='b002')
+
+
+	def cmb001(self):
+		'''
+		Editors
+
+		'''
+		cmb = self.ui.cmb001
+		
+		files = ['']
+		contents = self.comboBox (cmb, files, 'Editors')
+
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				mel.eval('')
+			cmb.setCurrentIndex(0)
+
 
 	def b000(self):
 		'''
@@ -205,58 +365,27 @@ class Edit(Init):
 
 		'''
 		mel.eval('CleanupPolygonOptions;')
-		
+
 
 	def b002(self):
 		'''
-		
+		Duplicate: Create
 
 		'''
-		pass
+		self.ui.chk016.setChecked(False) #must be in the false unchecked state to catch the create flag in chk015
+		self.chk016(create=True)
+
 
 	def b003(self):
 		'''
-
-		'''
-		pass
-
-	def b004(self):
-		'''
-		
-
-		'''
-		pass
-
-	def b005(self):
-		'''
-		
-
-		'''
-		pass
-
-	def b006(self):
-		'''
-		
-
-		'''
-		pass
-
-	def b007(self):
-		'''
-		Mirror Instance Mesh
-
-		'''
-		maxEval('bt_mirrorInstanceMesh;')
-
-	def b008(self):
-		'''
-		Create Radial Array
+		Radial Array: Create
 
 		'''
 		self.ui.chk015.setChecked(False) #must be in the false unchecked state to catch the create flag in chk015
 		self.chk015(create=True)
-		
-	def b009(self):
+
+
+	def b004(self):
 		'''
 		Select Instanced Objects
 
@@ -281,7 +410,8 @@ class Edit(Init):
 			except:
 				print "# Warning: No valid object selected."
 
-	def b010(self):
+
+	def b005(self):
 		'''
 		Uninstance Selected Objects
 
@@ -292,40 +422,8 @@ class Edit(Init):
 			if i.CanMakeObjectsUnique(obj):
 				i.MakeObjectsUnique(obj, 'prompt') #uninstance obj.  enums: {#prompt | #individual | #group}
 
-	def b011(self):
-		'''
-		Duplicate Special
 
-		'''
-		maxEval('DuplicateSpecialOptions;')
-
-	def b012(self):
-		'''
-		
-		'''
-		pass
-
-	def b013(self):
-		'''
-		
-		'''
-		pass
-
-	def b014(self):
-		'''
-		
-
-		'''
-		pass
-
-	def b015(self):
-		'''
-		
-
-		'''
-		pass
-
-	def b016(self):
+	def b006(self):
 		'''
 		Delete History
 
@@ -360,112 +458,8 @@ class Edit(Init):
 			else:
 				self.viewPortMessage("delete <hl>non-deformer</hl> history on "+str(objects))
 
-	def b017(self):
-		'''
-		
 
-		'''
-		pass
-
-	def b018(self):
-		'''
-		
-
-		'''
-		pass
-
-	def b019(self):
-		'''
-		
-
-		'''
-		pass
-
-	def b020(self):
-		'''
-		
-
-		'''
-		pass
-
-	def b021(self):
-		'''
-		Tranfer Maps
-
-		'''
-		maxEval('performSurfaceSampling 1;')
-
-	def b022(self):
-		'''
-		Transfer Vertex Order
-
-		'''
-		maxEval('TransferVertexOrder;')
-
-	def b023(self):
-		'''
-		Transfer Attribute Values
-
-		'''
-		maxEval('TransferAttributeValues;')
-
-	def b024(self):
-		'''
-		Transfer Attribute Values Options
-
-		'''
-		maxEval('TransferAttributeValuesOptions;')
-
-	def b025(self):
-		'''
-		Batch Transfer Attributes
-
-		'''
-		maxEval('tk_batchTransform();')
-
-	def b026(self):
-		'''
-		Transfer Attributes Options
-
-		'''
-		maxEval('performTransferAttributes 1;')
-
-	def b027(self):
-		'''
-		Shading Sets
-
-		'''
-		maxEval('performTransferShadingSets 0;')
-
-	def b028(self):
-		'''
-		Shading Sets Options
-
-		'''
-		maxEval('performTransferShadingSets 1;')
-
-	def b029(self):
-		'''
-		
-
-		'''
-		pass
-
-	def b030(self):
-		'''
-		
-
-		'''
-		pass
-
-	def b031(self):
-		'''
-		
-
-		'''
-		pass
-
-	def b032(self):
+	def b007(self):
 		'''
 		Delete Components
 		'''
@@ -488,161 +482,15 @@ class Edit(Init):
 				rt.polyop.deleteFaces(obj, faces, delIsoVerts=1)
 
 
-	def b033(self):
+	def b008(self):
 		'''
-		Duplicate
-
-		'''
-		instance = self.ui.chk000.isChecked()
-		amount = int(self.ui.s005.value())
-		keepFacesTogether = self.ui.chk009.isChecked()
-		transXYZ = [float(self.ui.s002.value()),float(self.ui.s003.value()),float(self.ui.s004.value())]
-		transRelative = self.ui.chk017.isChecked() #xform translate relative or absolute
-		translateToComponent = self.ui.chk007.isChecked()
-		alignToNormal = self.ui.chk008.isChecked()
-		componentList = [self.ui.cmb000.itemText(i) for i in range(self.ui.cmb000.count())]
-
-		selection = pm.ls (selection=1, flatten=1)
-
-		if len(selection)>0:
-			pm.undoInfo (openChunk=1)
-			if translateToComponent:
-				object_ = selection[0]
-				if translateToComponent and len(componentList)!=0:
-					num=0
-					for component in componentList:
-						if ".vtx" in str(component):
-							x = pm.polyNormalPerVertex (component, query=1, x=1)
-							y = pm.polyNormalPerVertex (component, query=1, y=1)
-							z = pm.polyNormalPerVertex (component, query=1, z=1)
-							xyz = [sum(x) / float(len(x)), sum(y) / float(len(y)), sum(z) / float(len(z))] #get average
-						elif ".e" in str(component):
-							componentName = str(component).split(".")[0]
-							vertices = pm.polyInfo (component, edgeToVertex=1)[0]
-							vertices = vertices.split()
-							vertices = [componentName+".vtx["+vertices[2]+"]",componentName+".vtx["+vertices[3]+"]"]
-							x=[];y=[];z=[]
-							for vertex in vertices:
-								x_ = pm.polyNormalPerVertex (vertex, query=1, x=1)
-								x.append(sum(x_) / float(len(x_)))
-								y_ = pm.polyNormalPerVertex (vertex, query=1, y=1)
-								x.append(sum(y_) / float(len(y_)))
-								z_ = pm.polyNormalPerVertex (vertex, query=1, z=1)
-								x.append(sum(z_) / float(len(z_)))
-							xyz = [sum(x) / float(len(x)), sum(y) / float(len(y)), sum(z) / float(len(z))] #get average
-						else:# elif ".f" in str(component):
-							xyz = pm.polyInfo (component, faceNormals=1)
-							xyz = xyz[0].split()
-							xyz = [float(xyz[2]), float(xyz[3]), float(xyz[4])]
-
-						if alignToNormal: #normal constraint
-							normal = mel.eval("unit <<"+str(xyz[0])+", "+str(xyz[1])+", "+str(xyz[2])+">>;") #normalize value using MEL
-							# normal = [round(i-min(xyz)/(max(xyz)-min(xyz)),6) for i in xyz] #normalize and round value using python
-
-							constraint = pm.normalConstraint(component, object_,aimVector=normal,upVector=[0,1,0],worldUpVector=[0,1,0],worldUpType="vector") # "scene","object","objectrotation","vector","none"
-							pm.delete(constraint) #orient object_ then remove constraint.
-
-						vertexPoint = pm.xform (component, query=1, translation=1) #average vertex points on destination to get component center.
-						x = vertexPoint [0::3]
-						y = vertexPoint [1::3]
-						z = vertexPoint [2::3]
-						vertexPoint = [round(sum(x) / float(len(x)),4), round(sum(y) / float(len(y)),4), round(sum(z) / float(len(z)),4)]
-
-						pm.xform (object_, translation=[vertexPoint[0]+transXYZ[0], vertexPoint[1]+transXYZ[1], vertexPoint[2]+transXYZ[2]])
-
-						if component != componentList[len(componentList)-1]: #if not at the end of the list, create a new instance of the object_.
-							name = str(object_)+"_inst"+str(num)
-							pm.instance (object_, name=name)
-						num+=1
-						# print "component:",component,"\n", "normal:",normal,"\n", "vertexPoint:",vertexPoint,"\n"
-				else:
-					print "# Warning: Component list empty. #"
-			else:
-				for _ in xrange(amount):
-					if ".f" in str(selection):
-						objectName = pm.ls (selection=1, flatten=1, objectsOnly=1)[0]
-						duplicatedObject = pm.duplicate(objectName, name="pExtract1")[0]
-
-						selectedFaces = [] #create a list of the original selected faces numbers but with duplicated objects name
-						for face in selection:
-							selectedFaces.append(duplicatedObject+"."+face.split(".")[1])
-
-						allFaces = [] #create a list of all faces on the duplicated object
-						numFaces = pm.polyEvaluate(duplicatedObject, face=1)
-						for num in range(numFaces):
-							allFaces.append(duplicatedObject+".f["+str(num)+"]")
-
-						pm.delete (set(allFaces) -set(selectedFaces)) #delete faces in 'allFaces' that were not in the original selection 
-						selection = pm.select (duplicatedObject)
-					elif ".e" in str(selection):
-						pm.polyToCurve (form=2, degree=3, conformToSmoothMeshPreview=1)
-					elif instance:
-						pm.instance()
-					else:
-						pm.duplicate()
-					if any([transXYZ[0]!=0, transXYZ[1]!=0, transXYZ[2]!=0]): #if anything other than 0 is input into the texfields; transform
-						pm.xform (relative=transRelative, translation=transXYZ)
-			pm.undoInfo (closeChunk=1)
-		else:
-			print "# Warning: Nothing selected. #"
-
-	def b034(self):
-		'''
-		Add Selected Components To Cmb000
+		Add Selected Components To cmb000
 
 		'''
 		self.comboBox (self.ui.cmb000, pm.ls (selection=1, flatten=1))
 
-	def b035(self):
-		'''
-		
 
-		'''
-		pass
-
-	def b036(self):
-		'''
-		
-
-		'''
-		pass
-
-	def b037(self):
-		'''
-		
-
-		'''
-		pass
-
-	def b038(self):
-		'''
-		
-
-		'''
-		pass
-
-	def b039(self):
-		'''
-		
-
-		'''
-		pass
-
-	def b040(self):
-		'''
-		
-
-		'''
-		pass
-
-	def b041(self):
-		'''
-		
-
-		'''
-		pass
-
-	def b042(self):
+	def b009(self):
 		'''
 		Hold Crease Set Name For Crease Set Transfer
 
@@ -664,7 +512,8 @@ class Edit(Init):
 		else:
 			self.ui.b042.setText("Crease Set")
 
-	def b043(self):
+
+	def b010(self):
 		'''
 		Hold Transform Node Name For Crease Set Transfer
 
@@ -686,63 +535,8 @@ class Edit(Init):
 		else:
 			self.ui.b043.setText("Object")
 
-	def b044(self):
-		'''
-		
 
-		'''
-		pass
-
-	def b045(self):
-		'''
-		
-
-		'''
-		pass
-
-	def b046(self):
-		'''
-		
-
-		'''
-		pass
-
-	def b047(self):
-		'''
-		
-
-		'''
-		pass
-
-	def b048(self):
-		'''
-		
-
-		'''
-		pass
-
-	def b049(self):
-		'''
-		
-
-		'''
-		pass
-
-	def b050(self):
-		'''
-		
-
-		'''
-		pass
-
-	def b051(self):
-		'''
-		
-
-		'''
-		pass
-
-	def b052(self):
+	def b011(self):
 		'''
 		Transfer Crease Edges
 
@@ -777,6 +571,140 @@ class Edit(Init):
 		self.setButtons(self.ui, disable='b052', unchecked='b042')#,self.ui.b043])
 		self.ui.b042.setText("Crease Set")
 		# self.ui.b043.setText("Object")
+
+
+	def b012(self):
+		'''
+		
+		'''
+		pass
+
+
+	def b013(self):
+		'''
+		
+		'''
+		pass
+
+
+	def b014(self):
+		'''
+		
+
+		'''
+		pass
+
+
+	def b015(self):
+		'''
+		
+
+		'''
+		pass
+
+
+	def b016(self):
+		'''
+
+		'''
+		pass
+
+
+	def b017(self):
+		'''
+		
+
+		'''
+		pass
+
+
+	def b018(self):
+		'''
+		
+
+		'''
+		pass
+
+
+	def b019(self):
+		'''
+		
+
+		'''
+		pass
+
+
+	def b020(self):
+		'''
+		
+
+		'''
+		pass
+
+
+	def b021(self):
+		'''
+		Tranfer Maps
+
+		'''
+		maxEval('performSurfaceSampling 1;')
+
+
+	def b022(self):
+		'''
+		Transfer Vertex Order
+
+		'''
+		maxEval('TransferVertexOrder;')
+
+
+	def b023(self):
+		'''
+		Transfer Attribute Values
+
+		'''
+		maxEval('TransferAttributeValues;')
+
+
+	def b024(self):
+		'''
+		Transfer Attribute Values Options
+
+		'''
+		maxEval('TransferAttributeValuesOptions;')
+
+
+	def b025(self):
+		'''
+		Batch Transfer Attributes
+
+		'''
+		maxEval('tk_batchTransform();')
+
+
+	def b026(self):
+		'''
+		Transfer Attributes Options
+
+		'''
+		maxEval('performTransferAttributes 1;')
+
+
+	def b027(self):
+		'''
+		Shading Sets
+
+		'''
+		maxEval('performTransferShadingSets 0;')
+
+
+	def b028(self):
+		'''
+		Shading Sets Options
+
+		'''
+		maxEval('performTransferShadingSets 1;')
+
 
 
 

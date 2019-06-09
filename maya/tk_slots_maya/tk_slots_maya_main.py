@@ -15,7 +15,7 @@ class Main(Init):
 
 
 		self.ui = self.sb.getUi('main')
-		self.menuSet = self.sb.getUi('preferences').cmb000
+		
 		# self.getMethod('preferences', 'cmb000')() #init menuSet combobox
 		# self.getObject(self.sb.setClass('tk_slots_max_preferences.Preferences'), 'cmb000')()
 
@@ -28,9 +28,9 @@ class Main(Init):
 		
 
 		'''
-		text = self.menuSet.currentText()
+		index = self.sb.getUi('preferences').cmb000.currentIndex()
 		
-		if text=='Modeling':
+		if index==0: #modeling
 			self.getMethod('polygons', 'b006')()
 
 		
@@ -40,9 +40,9 @@ class Main(Init):
 		
 
 		'''
-		text = self.menuSet.currentText()
+		index = self.sb.getUi('preferences').cmb000.currentIndex()
 		
-		if text=='Modeling':
+		if index==0: #modeling
 			self.getMethod('polygons','b005')()
 
 
@@ -51,9 +51,9 @@ class Main(Init):
 		
 
 		'''
-		text = self.menuSet.currentText()
+		index = self.sb.getUi('preferences').cmb000.currentIndex()
 		
-		if text=='Modeling':
+		if index==0: #modeling
 			self.getMethod('polygons','b012')()
 			self.hotBox.hide_()
 
@@ -63,9 +63,9 @@ class Main(Init):
 		
 
 		'''
-		text = self.menuSet.currentText()
+		index = self.sb.getUi('preferences').cmb000.currentIndex()
 		
-		if text=='Modeling':
+		if index==0: #modeling
 			self.getMethod('polygons','b004')()
 
 
@@ -74,9 +74,9 @@ class Main(Init):
 		
 
 		'''
-		text = self.menuSet.currentText()
+		index = self.sb.getUi('preferences').cmb000.currentIndex()
 		
-		if text=='Modeling':
+		if index==0: #modeling
 			self.getMethod('edit','b032')()
 
 
@@ -84,9 +84,9 @@ class Main(Init):
 		'''
 		
 		'''
-		text = self.menuSet.currentText()
+		index = self.sb.getUi('preferences').cmb000.currentIndex()
 		
-		if text=='Modeling':
+		if index==0: #modeling
 			self.getMethod('polygons','b009')()
 
 
@@ -95,9 +95,9 @@ class Main(Init):
 		
 
 		'''
-		text = self.menuSet.currentText()
+		index = self.sb.getUi('preferences').cmb000.currentIndex()
 		
-		if text=='Modeling':
+		if index==0: #modeling
 			self.getMethod('polygons','b047')()
 
 
@@ -106,9 +106,9 @@ class Main(Init):
 		
 
 		'''
-		text = self.menuSet.currentText()
+		index = self.sb.getUi('preferences').cmb000.currentIndex()
 		
-		if text=='Modeling':
+		if index==0: #modeling
 			self.getMethod('selection','b008')()
 
 
@@ -117,9 +117,9 @@ class Main(Init):
 		
 
 		'''
-		text = self.menuSet.currentText()
+		index = self.sb.getUi('preferences').cmb000.currentIndex()
 		
-		if text=='Modeling':
+		if index==0: #modeling
 			self.getMethod('polygons','b044')()
 
 
@@ -128,9 +128,9 @@ class Main(Init):
 		
 
 		'''
-		text = self.menuSet.currentText()
+		index = self.sb.getUi('preferences').cmb000.currentIndex()
 		
-		if text=='Modeling':
+		if index==0: #modeling
 			self.getMethod('polygons','b022')()
 
 
@@ -139,9 +139,9 @@ class Main(Init):
 		
 
 		'''
-		text = self.menuSet.currentText()
+		index = self.sb.getUi('preferences').cmb000.currentIndex()
 		
-		if text=='Modeling':
+		if index==0: #modeling
 			self.getMethod('polygons','b007')()
 
 
@@ -150,9 +150,9 @@ class Main(Init):
 		
 
 		'''
-		text = self.menuSet.currentText()
+		index = self.sb.getUi('preferences').cmb000.currentIndex()
 		
-		if text=='Modeling':
+		if index==0: #modeling
 			self.getMethod('polygons','b043')()
 
 
@@ -168,8 +168,8 @@ class Main(Init):
 		Minimize Main Application
 
 		'''
-		# text = 'Minimize'
-		# self.ui.v008.setText(text)
+		# index = 'Minimize'
+		# self.ui.v008.setText(index)
 
 		self.getMethod('scene','b005')()
 

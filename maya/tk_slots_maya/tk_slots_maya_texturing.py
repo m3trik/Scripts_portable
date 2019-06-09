@@ -66,12 +66,12 @@ class Texturing(Init):
 		cmb = self.ui.cmb001
 		
 		files = ['Hypershade']
-		contents = self.comboBox (cmb, files, "Editors")
+		contents = self.comboBox (cmb, files, 'Editors')
 
 		index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index('Hypershade'):
-				mel.eval("HypershadeWindow;")
+				mel.eval('HypershadeWindow;')
 			cmb.setCurrentIndex(0)
 
 
@@ -106,11 +106,11 @@ class Texturing(Init):
 			if not mat:
 				return
 
-			matName = mat.name
+			matName = mat.name()
 
 			if pm.nodeType(mat)=='VRayMultiSubTex':
 				subMaterials = pm.hyperShade(mat, listUpstreamShaderNodes=1) #get any connected submaterials
-				subMatNames = [s.name for s in subMaterials if s is not None]
+				subMatNames = [s.name() for s in subMaterials if s is not None]
 			else:
 				subMatNames = []
 
@@ -323,7 +323,7 @@ class Texturing(Init):
 					pm.rename(mat, newName)
 			else: #Rename Stored Material
 				if self.storedMaterial:
-					self.storedMaterial.name = self.ui.t000.text()
+					pm.rename(self.storedMaterial.name(), self.ui.t000.text())
 
 			self.cmb002() #refresh combobox
 			self.ui.t000.hide()

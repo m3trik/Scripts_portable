@@ -17,7 +17,7 @@ class Scene(Init):
 		self.ui = self.sb.getUi('scene')
 
 		self.ui.t002.setText(pm.workspace (query=1, rd=1).split('/')[-2]) #add current project path string to label. strip path and trailing '/'
-		
+
 
 
 	def cmb000(self):
@@ -124,17 +124,36 @@ class Scene(Init):
 		'''
 		cmb = self.ui.cmb005
 		
-		files = ['Hypergraph: Hierarchy', 'Hypergraph: Input/Output', 'Node Editor']
+		files = ['', '', '']
 		contents = self.comboBox (cmb, files, "Editors")
 
 		index = cmb.currentIndex()
 		if index!=0:
-			if index==contents.index('Hypergraph: Hierarchy'):
-				mel.eval("hyperGraphWindow \"\" \"DAG\";") #Hypergraph: Hierarchy
-			if index==contents.index('Hypergraph: Input/Output'):
-				mel.eval('hyperGraphWindow \"\" \"DG\";') #Hypergraph: Input/Output
-			if index==contents.index('Node Editor'):
-				mel.eval("nodeEditorWindow;") #Node Editor
+			if index==contents.index(''):
+				mel.eval('') #Hypergraph: Hierarchy
+			if index==contents.index(''):
+				mel.eval('') #Hypergraph: Input/Output
+			if index==contents.index(''):
+				mel.eval('') #Node Editor
+			cmb.setCurrentIndex(0)
+
+
+	def cmb006(self):
+		'''
+		Project Folder
+
+		'''
+		cmb = self.ui.cmb006
+		
+		path = MaxPlus.PathManager.GetProjectFolderDir() #replace with correct file or path
+		list_ = [f for f in os.listdir(path)]
+
+		contents = self.comboBox (cmb, list_, "Project Folder")
+
+		index = cmb.currentIndex()
+		if index!=0:
+			path=os.path.realpath(list_[index-1])
+			os.startfile(path)
 			cmb.setCurrentIndex(0)
 
 
@@ -143,8 +162,8 @@ class Scene(Init):
 		Save
 
 		'''
-		preSaveScript = ""
-		postSaveScript = ""
+		preSaveScript = ''
+		postSaveScript = ''
 
 		type_ = "mayaBinary"
 		if self.ui.chk003.isChecked(): #toggle ascii/ binary
@@ -295,8 +314,8 @@ class Scene(Init):
 		'''
 		newProject = mel.eval("SetProject;")
 
-		if type(newProject)==str:
-			self.ui.t002.setText(newProject.split('/')[-2])
+		self.ui.t002.setText(pm.workspace (query=1, rd=1).split('/')[-2]) #add current project path string to label. strip path and trailing '/'
+		#self.ui.t002.setText(newProject.split('/')[-2])
 
 
 #module name

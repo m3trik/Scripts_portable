@@ -363,6 +363,9 @@ class Scene(Init):
 		except:
 			maxEval('macros.run "Tools" "SetProjectFolder"')
 
+		self.ui.t002.setText(MaxPlus.PathManager.GetProjectFolderDir().split('\\')[-1]) #add current project path string to label. strip path and trailing '/'
+		
+
 
 #module name
 print os.path.splitext(os.path.basename(__file__))[0]

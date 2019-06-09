@@ -48,7 +48,7 @@ class Init(Slot):
 				elif pm.selectType(query=1, edge=1): #get edge selection info
 					selectedEdges = [e.split('[')[-1].rstrip(']') for e in pm.filterExpand(selectionMask=32)] #pm.polyEvaluate(edgeComponent=1);
 					collapsedList = self.collapseList(selectedEdges)
-					numEdges = pm.polyEvaluate (selection[0], Edge=1)
+					numEdges = pm.polyEvaluate (selection[0], edge=1)
 					infoDict.update({'Edges: '+str(len(selectedEdges))+'/'+str(numEdges):collapsedList}) #selected edges
 					
 				elif pm.selectType(query=1, facet=1): #get face selection info

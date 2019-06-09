@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>252</width>
-    <height>328</height>
+    <height>344</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -79,7 +79,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>130</y>
+      <y>160</y>
       <width>111</width>
       <height>161</height>
      </rect>
@@ -602,9 +602,9 @@
       </rect>
      </property>
      <property name="title">
-      <string>Transfer Crease Sets</string>
+      <string>Crease Sets</string>
      </property>
-     <widget class="QPushButton" name="b052">
+     <widget class="QPushButton" name="b011">
       <property name="enabled">
        <bool>false</bool>
       </property>
@@ -641,7 +641,7 @@
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QPushButton" name="b042">
+     <widget class="QPushButton" name="b010">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -678,7 +678,7 @@
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QPushButton" name="b043">
+     <widget class="QPushButton" name="b009">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -721,7 +721,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>30</y>
+      <y>70</y>
       <width>111</width>
       <height>31</height>
      </rect>
@@ -729,7 +729,7 @@
     <property name="title">
      <string>History</string>
     </property>
-    <widget class="QPushButton" name="b016">
+    <widget class="QPushButton" name="b006">
      <property name="geometry">
       <rect>
        <x>12</x>
@@ -755,48 +755,6 @@
        <width>18</width>
        <height>18</height>
       </size>
-     </property>
-     <property name="bnabled" stdset="0">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="chk018">
-     <property name="geometry">
-      <rect>
-       <x>-3</x>
-       <y>10</y>
-       <width>18</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>8</pointsize>
-      </font>
-     </property>
-     <property name="toolTip">
-      <string>Delete history: All objects</string>
-     </property>
-     <property name="text">
-      <string>All</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>16</width>
-       <height>16</height>
-      </size>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
      </property>
      <property name="bnabled" stdset="0">
       <bool>true</bool>
@@ -873,12 +831,54 @@
       <bool>true</bool>
      </property>
     </widget>
+    <widget class="QPushButton" name="chk018">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>17</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>Delete history: All objects</string>
+     </property>
+     <property name="text">
+      <string>All</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+     <property name="bnabled" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
    </widget>
    <widget class="QGroupBox" name="radialArray">
     <property name="geometry">
      <rect>
       <x>130</x>
-      <y>170</y>
+      <y>160</y>
       <width>111</width>
       <height>71</height>
      </rect>
@@ -969,15 +969,15 @@
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="b008">
+    <widget class="QPushButton" name="b003">
      <property name="enabled">
       <bool>false</bool>
      </property>
      <property name="geometry">
       <rect>
-       <x>45</x>
+       <x>65</x>
        <y>50</y>
-       <width>66</width>
+       <width>46</width>
        <height>19</height>
       </rect>
      </property>
@@ -1107,6 +1107,9 @@
      <property name="toolTip">
       <string>Radial Array: number of Instances</string>
      </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
+     </property>
      <property name="minimum">
       <number>1</number>
      </property>
@@ -1120,9 +1123,9 @@
     <widget class="QDoubleSpinBox" name="s001">
      <property name="geometry">
       <rect>
-       <x>45</x>
+       <x>65</x>
        <y>30</y>
-       <width>51</width>
+       <width>46</width>
        <height>19</height>
       </rect>
      </property>
@@ -1134,6 +1137,9 @@
      </property>
      <property name="toolTip">
       <string>Radial Array: angle amount in degrees</string>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
      </property>
      <property name="decimals">
       <number>2</number>
@@ -1148,55 +1154,12 @@
       <double>90.000000000000000</double>
      </property>
     </widget>
-    <widget class="QPushButton" name="chk006">
-     <property name="geometry">
-      <rect>
-       <x>95</x>
-       <y>30</y>
-       <width>16</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Radial Array: set step .01</string>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::RightToLeft</enum>
-     </property>
-     <property name="text">
-      <string>•</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-     <property name="default">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-     <property name="bnabled" stdset="0">
-      <bool>true</bool>
-     </property>
-    </widget>
     <widget class="QPushButton" name="chk010">
      <property name="geometry">
       <rect>
        <x>0</x>
        <y>50</y>
-       <width>46</width>
+       <width>66</width>
        <height>19</height>
       </rect>
      </property>
@@ -1284,55 +1247,18 @@
       <x>130</x>
       <y>30</y>
       <width>111</width>
-      <height>131</height>
+      <height>111</height>
      </rect>
     </property>
     <property name="title">
      <string>Duplicate</string>
     </property>
-    <widget class="QPushButton" name="b011">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>70</y>
-       <width>111</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>Duplicate Special</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>18</width>
-       <height>18</height>
-      </size>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-     <property name="default">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-     <property name="bnabled" stdset="0">
-      <bool>true</bool>
-     </property>
-    </widget>
     <widget class="QDoubleSpinBox" name="s002">
      <property name="geometry">
       <rect>
-       <x>14</x>
+       <x>2</x>
        <y>30</y>
-       <width>33</width>
+       <width>37</width>
        <height>19</height>
       </rect>
      </property>
@@ -1367,9 +1293,9 @@
     <widget class="QSpinBox" name="s005">
      <property name="geometry">
       <rect>
-       <x>80</x>
+       <x>70</x>
        <y>10</y>
-       <width>31</width>
+       <width>41</width>
        <height>19</height>
       </rect>
      </property>
@@ -1391,6 +1317,9 @@
      <property name="maximum">
       <number>999</number>
      </property>
+     <property name="value">
+      <number>5</number>
+     </property>
     </widget>
     <widget class="QPushButton" name="chk008">
      <property name="enabled">
@@ -1399,7 +1328,7 @@
      <property name="geometry">
       <rect>
        <x>12</x>
-       <y>50</y>
+       <y>70</y>
        <width>14</width>
        <height>19</height>
       </rect>
@@ -1444,9 +1373,9 @@
     <widget class="QDoubleSpinBox" name="s003">
      <property name="geometry">
       <rect>
-       <x>46</x>
+       <x>38</x>
        <y>30</y>
-       <width>33</width>
+       <width>37</width>
        <height>19</height>
       </rect>
      </property>
@@ -1481,9 +1410,9 @@
     <widget class="QDoubleSpinBox" name="s004">
      <property name="geometry">
       <rect>
-       <x>78</x>
+       <x>74</x>
        <y>30</y>
-       <width>33</width>
+       <width>37</width>
        <height>19</height>
       </rect>
      </property>
@@ -1515,12 +1444,12 @@
       <double>0.000000000000000</double>
      </property>
     </widget>
-    <widget class="QPushButton" name="b033">
+    <widget class="QPushButton" name="chk016">
      <property name="geometry">
       <rect>
        <x>0</x>
        <y>10</y>
-       <width>56</width>
+       <width>46</width>
        <height>19</height>
       </rect>
      </property>
@@ -1534,13 +1463,16 @@
       <string>Duplicate or instance the selected mesh/components.</string>
      </property>
      <property name="text">
-      <string>Duplicate</string>
+      <string>Preview</string>
      </property>
      <property name="iconSize">
       <size>
        <width>18</width>
        <height>18</height>
       </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
      </property>
      <property name="autoDefault">
       <bool>false</bool>
@@ -1559,7 +1491,7 @@
      <property name="geometry">
       <rect>
        <x>1</x>
-       <y>50</y>
+       <y>70</y>
        <width>14</width>
        <height>19</height>
       </rect>
@@ -1604,7 +1536,7 @@
     <widget class="QPushButton" name="chk000">
      <property name="geometry">
       <rect>
-       <x>55</x>
+       <x>45</x>
        <y>10</y>
        <width>14</width>
        <height>19</height>
@@ -1654,7 +1586,7 @@
      <property name="geometry">
       <rect>
        <x>35</x>
-       <y>50</y>
+       <y>70</y>
        <width>76</width>
        <height>19</height>
       </rect>
@@ -1684,7 +1616,7 @@
     <widget class="QPushButton" name="chk009">
      <property name="geometry">
       <rect>
-       <x>67</x>
+       <x>56</x>
        <y>10</y>
        <width>14</width>
        <height>19</height>
@@ -1727,14 +1659,14 @@
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="b034">
+    <widget class="QPushButton" name="b008">
      <property name="enabled">
       <bool>false</bool>
      </property>
      <property name="geometry">
       <rect>
        <x>25</x>
-       <y>50</y>
+       <y>70</y>
        <width>14</width>
        <height>19</height>
       </rect>
@@ -1776,52 +1708,15 @@
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="b010">
+    <widget class="QPushButton" name="b002">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
-       <x>0</x>
-       <y>110</y>
-       <width>111</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Uninstance selected objects. (no selection is needed for 'all' flag)</string>
-     </property>
-     <property name="text">
-      <string>Un-Instance Selected</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>18</width>
-       <height>18</height>
-      </size>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-     <property name="default">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-     <property name="bnabled" stdset="0">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="b009">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
+       <x>65</x>
        <y>90</y>
-       <width>91</width>
+       <width>46</width>
        <height>19</height>
       </rect>
      </property>
@@ -1832,16 +1727,13 @@
       </size>
      </property>
      <property name="toolTip">
-      <string>Select objects that are an instance of the current selection.</string>
+      <string>Duplicate: create array</string>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
      </property>
      <property name="text">
-      <string>Select Instanced</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>18</width>
-       <height>18</height>
-      </size>
+      <string>Create</string>
      </property>
      <property name="autoDefault">
       <bool>false</bool>
@@ -1856,111 +1748,132 @@
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="chk016">
+    <widget class="QDoubleSpinBox" name="s007">
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>90</y>
-       <width>21</width>
+       <x>2</x>
+       <y>50</y>
+       <width>37</width>
        <height>19</height>
       </rect>
      </property>
      <property name="maximumSize">
       <size>
-       <width>111</width>
+       <width>16777215</width>
        <height>19</height>
       </size>
      </property>
      <property name="toolTip">
-      <string>Select all instanced objects in the scene.</string>
+      <string>Duplicate: rotate X amount</string>
      </property>
-     <property name="text">
-      <string>All</string>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
      </property>
-     <property name="iconSize">
-      <size>
-       <width>18</width>
-       <height>18</height>
-      </size>
+     <property name="decimals">
+      <number>2</number>
      </property>
-     <property name="checkable">
-      <bool>true</bool>
+     <property name="minimum">
+      <double>-999.000000000000000</double>
      </property>
-     <property name="autoDefault">
-      <bool>false</bool>
+     <property name="maximum">
+      <double>999.000000000000000</double>
      </property>
-     <property name="default">
-      <bool>false</bool>
+     <property name="singleStep">
+      <double>0.250000000000000</double>
      </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-     <property name="bnabled" stdset="0">
-      <bool>true</bool>
+     <property name="value">
+      <double>0.000000000000000</double>
      </property>
     </widget>
-    <widget class="QPushButton" name="chk017">
+    <widget class="QDoubleSpinBox" name="s008">
      <property name="geometry">
       <rect>
-       <x>0</x>
-       <y>30</y>
-       <width>14</width>
+       <x>38</x>
+       <y>50</y>
+       <width>37</width>
        <height>19</height>
       </rect>
      </property>
      <property name="maximumSize">
       <size>
-       <width>111</width>
+       <width>16777215</width>
        <height>19</height>
       </size>
      </property>
      <property name="toolTip">
-      <string>Duplicate: absolute or relative translation</string>
+      <string>Duplicate: rotate Y amount</string>
      </property>
-     <property name="text">
-      <string>r</string>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
      </property>
-     <property name="iconSize">
-      <size>
-       <width>18</width>
-       <height>18</height>
-      </size>
+     <property name="decimals">
+      <number>2</number>
      </property>
-     <property name="checkable">
-      <bool>true</bool>
+     <property name="minimum">
+      <double>-999.000000000000000</double>
      </property>
-     <property name="checked">
-      <bool>true</bool>
+     <property name="maximum">
+      <double>999.000000000000000</double>
      </property>
-     <property name="autoDefault">
-      <bool>false</bool>
+     <property name="singleStep">
+      <double>0.250000000000000</double>
      </property>
-     <property name="default">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-     <property name="bnabled" stdset="0">
-      <bool>true</bool>
+     <property name="value">
+      <double>0.000000000000000</double>
      </property>
     </widget>
+    <widget class="QDoubleSpinBox" name="s009">
+     <property name="geometry">
+      <rect>
+       <x>74</x>
+       <y>50</y>
+       <width>37</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Duplicate: rotate Z amount</string>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
+     </property>
+     <property name="decimals">
+      <number>2</number>
+     </property>
+     <property name="minimum">
+      <double>-999.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>999.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.250000000000000</double>
+     </property>
+     <property name="value">
+      <double>0.000000000000000</double>
+     </property>
+    </widget>
+    <zorder>s004</zorder>
+    <zorder>s009</zorder>
     <zorder>cmb000</zorder>
-    <zorder>b011</zorder>
     <zorder>s002</zorder>
     <zorder>s005</zorder>
     <zorder>chk008</zorder>
     <zorder>s003</zorder>
-    <zorder>s004</zorder>
-    <zorder>b033</zorder>
+    <zorder>chk016</zorder>
     <zorder>chk007</zorder>
     <zorder>chk000</zorder>
     <zorder>chk009</zorder>
-    <zorder>b034</zorder>
-    <zorder>b010</zorder>
-    <zorder>b009</zorder>
-    <zorder>chk016</zorder>
-    <zorder>chk017</zorder>
+    <zorder>b008</zorder>
+    <zorder>b002</zorder>
+    <zorder>s007</zorder>
+    <zorder>s008</zorder>
    </widget>
    <widget class="QFrame" name="menubar">
     <property name="geometry">
@@ -2018,7 +1931,7 @@
     <property name="geometry">
      <rect>
       <x>130</x>
-      <y>260</y>
+      <y>290</y>
       <width>111</width>
       <height>31</height>
      </rect>
@@ -2026,7 +1939,7 @@
     <property name="title">
      <string>Delete</string>
     </property>
-    <widget class="QPushButton" name="b032">
+    <widget class="QPushButton" name="b007">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -2120,7 +2033,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>70</y>
+      <y>110</y>
       <width>111</width>
       <height>31</height>
      </rect>
@@ -2329,6 +2242,194 @@
      </property>
      <property name="checkable">
       <bool>true</bool>
+     </property>
+     <property name="bnabled" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_6">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Editors</string>
+    </property>
+    <widget class="QComboBox" name="cmb001">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>111</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>101</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Texturing: Editors</string>
+     </property>
+     <property name="maxCount">
+      <number>100</number>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>Editors</string>
+      </property>
+     </item>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_7">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>240</y>
+      <width>111</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Instance</string>
+    </property>
+    <widget class="QPushButton" name="b004">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>91</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Select objects that are an instance of the current selection.</string>
+     </property>
+     <property name="text">
+      <string>Select Instanced</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="bnabled" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b005">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>30</y>
+       <width>111</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Uninstance selected objects. (no selection is needed for 'all' flag)</string>
+     </property>
+     <property name="text">
+      <string>Un-Instance Selected</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="bnabled" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk017">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>10</y>
+       <width>21</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Select all instanced objects in the scene.</string>
+     </property>
+     <property name="text">
+      <string>All</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
      </property>
      <property name="bnabled" stdset="0">
       <bool>true</bool>
