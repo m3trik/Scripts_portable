@@ -58,7 +58,7 @@ keep things as simple as possible, and as modular as is reasonable, so that futu
 ######
 *the following is an example of some of the imformation held for each tool class instance. From this information, you can call switchboard methods to 
 get most relevent information easily wherever you need it.*
-*for a full list, check the tk_switchboard module.*
+*for a full up-to-date list, check the tk_switchboard module's docstring.*
 
 * class name as string
 
