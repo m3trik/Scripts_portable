@@ -287,10 +287,10 @@
    <widget class="QGroupBox" name="groupBox_4">
     <property name="geometry">
      <rect>
-      <x>116</x>
+      <x>120</x>
       <y>102</y>
       <width>101</width>
-      <height>67</height>
+      <height>49</height>
      </rect>
     </property>
     <property name="title">
@@ -303,7 +303,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>30</y>
+       <y>12</y>
        <width>101</width>
        <height>19</height>
       </rect>
@@ -315,7 +315,7 @@
       </size>
      </property>
      <property name="toolTip">
-      <string>Rename: find (modifiers=startswith*, *endswith, *contains*)</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rename: find&lt;/p&gt;&lt;p&gt;modifiers:&lt;/p&gt;&lt;p&gt;*find* - search contains chars&lt;/p&gt;&lt;p&gt;*find - search endswith chars&lt;/p&gt;&lt;p&gt;find* - search startswith chars&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="layoutDirection">
       <enum>Qt::RightToLeft</enum>
@@ -336,30 +336,14 @@
       <string>find:</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="b015">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>12</y>
-       <width>77</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="toolTip">
-      <string>Remove string from all object names.</string>
-     </property>
-     <property name="text">
-      <string>Rename</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="t001">
+    <widget class="QLineEdit" name="t001_2">
      <property name="enabled">
       <bool>true</bool>
      </property>
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>48</y>
+       <y>30</y>
        <width>101</width>
        <height>19</height>
       </rect>
@@ -371,7 +355,7 @@
       </size>
      </property>
      <property name="toolTip">
-      <string>Remove: string</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rename:: Replace with&lt;/p&gt;&lt;p&gt;modifiers:&lt;/p&gt;&lt;p&gt;**to - replace with suffix, moving tailing integers in front of replacement chars&lt;/p&gt;&lt;p&gt;ie. 'poly_low021'  to 'poly021_high' if **_high is passed as arg.&lt;/p&gt;&lt;p&gt;ie. 'poly021_low' if only ** is passed as arg.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="layoutDirection">
       <enum>Qt::RightToLeft</enum>
@@ -390,50 +374,6 @@
      </property>
      <property name="placeholderText">
       <string>Replace:</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="chk004">
-     <property name="geometry">
-      <rect>
-       <x>88</x>
-       <y>12</y>
-       <width>14</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="toolTip">
-      <string>Rename: Replace given text (else replace entire name)</string>
-     </property>
-     <property name="text">
-      <string>R</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="chk005">
-     <property name="geometry">
-      <rect>
-       <x>76</x>
-       <y>12</y>
-       <width>14</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="toolTip">
-      <string>Rename: currently selected objects</string>
-     </property>
-     <property name="text">
-      <string>S</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
      </property>
     </widget>
    </widget>

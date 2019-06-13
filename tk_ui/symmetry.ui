@@ -96,7 +96,7 @@
       <x>4</x>
       <y>102</y>
       <width>121</width>
-      <height>71</height>
+      <height>49</height>
      </rect>
     </property>
     <property name="title">
@@ -121,7 +121,7 @@
       <string>Mirror geometry across an axis.</string>
      </property>
      <property name="text">
-      <string>Mirror -X</string>
+      <string>Mirror</string>
      </property>
      <property name="iconSize">
       <size>
@@ -267,7 +267,7 @@
     <widget class="QPushButton" name="b008">
      <property name="geometry">
       <rect>
-       <x>79</x>
+       <x>80</x>
        <y>30</y>
        <width>41</width>
        <height>19</height>
@@ -468,37 +468,6 @@
      </property>
      <property name="flat">
       <bool>false</bool>
-     </property>
-     <property name="bnabled" stdset="0">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="b006">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>48</y>
-       <width>120</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>120</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Mirror selected mesh components across the symmetrical axis.</string>
-     </property>
-     <property name="text">
-      <string>Symmetrize</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>18</width>
-       <height>18</height>
-      </size>
      </property>
      <property name="bnabled" stdset="0">
       <bool>true</bool>
@@ -747,7 +716,7 @@
     <widget class="QDoubleSpinBox" name="s005">
      <property name="geometry">
       <rect>
-       <x>81</x>
+       <x>80</x>
        <y>12</y>
        <width>41</width>
        <height>19</height>

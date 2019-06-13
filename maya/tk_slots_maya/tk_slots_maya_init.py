@@ -20,11 +20,13 @@ class Init(Slot):
 
 
 
-	def info(self): #get current attributes. those with relavant values will be displayed.
-
+	def info(self):
+		'''
+		get current attributes. those with relavant values will be displayed.
+		'''
 		infoDict={}
 		selection = pm.ls(selection=1)
-		
+
 
 		symmetry = pm.symmetricModelling(query=1, symmetry=1);
 		if symmetry==1: symmetry=True; infoDict.update({'Symmetry State: ':symmetry}) #symmetry state
@@ -82,27 +84,24 @@ class Init(Slot):
 
 	#returns all faces on a specified axis
 	@staticmethod
-	def getAllFacesOnAxis(axis="-x", localspace=False):
-		#args: axis='string' - representing axis ie. "x"
-		#			localspace=bool - specify world or local space
-		#ex. self.getAllFacesOnAxis ('y')
-		sel = pm.ls(selection=1)
+	def getAllFacesOnAxis(obj, axis="-x", localspace=False):
+		'''
+		args:	obj=<geometry> - object to perform the operation on. 
+				axis='string' - representing axis ie. "x"
+					localspace=bool - specify world or local space
+		ex. self.getAllFacesOnAxis ('y')
+		'''
+		faceCount = pm.polyEvaluate(obj, face=1)
+		faces = []
 
-		if len(sel) >0:
-			faceCount = pm.polyEvaluate(sel[0], face=1)
-			faces = []
-		else:
-			traceback.print_exc()
-			return
-
-		index = 0
+		index = 0 #'x'
 		if any ([axis=="y",axis=="-y"]):
 			index = 1
 		if any ([axis=="z",axis=="-z"]):
 			index = 2
 
 		for i in xrange(faceCount):
-			attr = sel[0] + '.f[%d]' % i
+			attr = obj + '.f[%d]' % i
 
 			if any ([axis=="-x", axis=="-y", axis=="-z"]):
 				# if pm.xform(attr, query=1, worldSpace=1, translation=1)[index] < 0:

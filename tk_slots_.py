@@ -79,29 +79,24 @@ class Slot(object):
 
 
 	@staticmethod
-	def comboBox(comboBox, items, title=None):
+	def getAttributes(node, exclude=None):
 		'''
-		args:	 comboBox=QComboBox object - list of items to fill the comboBox with
-				 title='string' - optional value for the first index of the comboboxs list
-		
-		returns: combobox's current item list
-		ex. comboBox (self.ui.cmb003, ["Import file", "Import Options"], "Import")
+		args:	node=object
+				exclude='string list' - attributes to exclude from returned dictionay
+
+		returns:	dictionary {'string attribute': value}
 		'''
-		comboBox.blockSignals(True) #to keep clear from triggering currentIndexChanged
-		index = comboBox.currentIndex() #get current index before refreshing list
-		comboBox.clear()
-		
-		if title:
-			comboBox.addItem(title)
-		comboBox.addItems(items)
+		return {attr:getattr(node, attr) for attr in dir(node) if attr not in exclude}
 
-		comboBox.setCurrentIndex(index)
-		comboBox.blockSignals(False)
 
-		if title:
-			return [title]+items
-		else:
-			return items
+
+	@staticmethod
+	def setAttributes(node, attributes):
+		'''
+		args:	node=object
+				attributes=dictionary {'string attribute': value} - attributes and their correponding value to set
+		'''
+		[setattr(node, attr, value) for attr, value in attributes.iteritems() if attr and value]
 
 
 
@@ -139,28 +134,6 @@ class Slot(object):
 	
 
 
-	@staticmethod
-	def getAttributes(node, exclude=None):
-		'''
-		args:	node=object
-				exclude='string list' - attributes to exclude from returned dictionay
-
-		returns:	dictionary {'string attribute': value}
-		'''
-		return {attr:getattr(node, attr) for attr in dir(node) if attr not in exclude}
-
-
-
-	@staticmethod
-	def setAttributes(node, attributes):
-		'''
-		args:	node=object
-				attributes=dictionary {'string attribute': value} - attributes and their correponding value to set
-		'''
-		[setattr(node, attr, value) for attr, value in attributes.iteritems() if attr and value]
-
-
-
 	#set spinbox values explicitly or for each in range
 	@staticmethod
 	def setSpinboxes(ui, spinboxNames, attributes={}):
@@ -194,6 +167,33 @@ class Slot(object):
 				spinboxes[index].setValue(value)
 				spinboxes[index].setSuffix('')
 				spinboxes[index].blockSignals(False)
+
+
+
+	@staticmethod
+	def comboBox(comboBox, items, title=None):
+		'''
+		args:	 comboBox=QComboBox object - list of items to fill the comboBox with
+				 title='string' - optional value for the first index of the comboboxs list
+		
+		returns: combobox's current item list
+		ex. comboBox (self.ui.cmb003, ["Import file", "Import Options"], "Import")
+		'''
+		comboBox.blockSignals(True) #to keep clear from triggering currentIndexChanged
+		index = comboBox.currentIndex() #get current index before refreshing list
+		comboBox.clear()
+		
+		if title:
+			comboBox.addItem(title)
+		comboBox.addItems(items)
+
+		comboBox.setCurrentIndex(index)
+		comboBox.blockSignals(False)
+
+		if title:
+			return [title]+items
+		else:
+			return items
 
 
 
@@ -317,6 +317,13 @@ class Slot(object):
 		return collapsedList
 	
 	
+
+
+
+
+
+
+
 
 
 	# ------------------------------------------------

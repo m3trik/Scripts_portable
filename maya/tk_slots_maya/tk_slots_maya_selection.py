@@ -25,6 +25,8 @@ class Selection(Init):
 		self.ui.chk003.clicked.connect(self.b001) #un-paint
 
 
+
+
 	def t000(self):
 		'''
 		Select The Selection Set Itself (Not Members Of)
@@ -32,6 +34,7 @@ class Selection(Init):
 		'''
 		name = str(self.ui.t000.text())+"Set"
 		pm.select (name, noExpand=1) #noExpand=select set itself
+
 
 	def t001(self):
 		'''
@@ -41,6 +44,7 @@ class Selection(Init):
 		searchStr = str(self.ui.t001.text()) #asterisk denotes startswith*, *endswith, *contains* 
 		if searchStr:
 			selection = pm.select (pm.ls (searchStr))
+
 
 	def chk000(self):
 		'''
@@ -57,6 +61,7 @@ class Selection(Init):
 		'''
 		self.setButtons(self.ui, unchecked='chk000,chk002')
 
+
 	def chk002(self):
 		'''
 		Select Nth: uncheck other checkboxes
@@ -64,12 +69,14 @@ class Selection(Init):
 		'''
 		self.setButtons(self.ui, unchecked='chk000-1')
 
+
 	def chk003(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def chk004(self):
 		'''
@@ -83,6 +90,7 @@ class Selection(Init):
 			pm.selectPref(useDepth=False)
 			self.viewPortMessage("Camera-based selection <hl>Off</hl>.")
 
+
 	def chk005(self):
 		'''
 		
@@ -90,12 +98,14 @@ class Selection(Init):
 		'''
 		pass
 	
+
 	def chk006(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def cmb000(self):
 		'''
@@ -111,12 +121,14 @@ class Selection(Init):
 			pm.select (contents[index])
 			cmb.setCurrentIndex(0)
 
+
 	def cmb001(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def cmb002(self):
 		'''
@@ -133,8 +145,10 @@ class Selection(Init):
 			cmb.setCurrentIndex(0)
 		
 		#Select all Geometry
-		geometry = rt.geometry
-		rt.select(geometry)
+		geometry = pm.ls(geometry=True)
+		transforms = pm.listRelatives(geometry, p=True, path=True)
+		pm.select(transforms)
+
 
 	def cmb003(self):
 		'''
@@ -171,7 +185,8 @@ class Selection(Init):
 		else: #create set
 			pm.sets (name=name, text="gCharacterSet")
 			self.ui.t000.clear()
-			
+
+
 	def b001(self):
 		'''
 		Paint Select
@@ -189,12 +204,14 @@ class Selection(Init):
 		pm.artSelectCtx ("paintSelect", selectop=selectop, radius=radius, lowerradius=lowerradius)#, beforeStrokeCmd=beforeStrokeCmd())
 		pm.setToolTo ("paintSelect")
 
+
 	def b002(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b003(self):
 		'''
@@ -203,6 +220,7 @@ class Selection(Init):
 		'''
 		pass
 
+
 	def b004(self):
 		'''
 		
@@ -210,12 +228,14 @@ class Selection(Init):
 		'''
 		pass
 
+
 	def b005(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b006(self):
 		'''
@@ -225,6 +245,7 @@ class Selection(Init):
 		tolerance = str(self.ui.s000.value()) #string value because mel.eval is sending a command string
 		mel.eval("doSelectSimilar 1 {\""+ tolerance +"\"}")
 
+
 	def b007(self):
 		'''
 		Select Polygon Face Island
@@ -233,6 +254,7 @@ class Selection(Init):
 		rangeX=rangeY=rangeZ = float(self.ui.s002.value())
 
 		mel.eval("tk_selectPolyFaceIsland("+str(rangeX)+","+str(rangeY)+","+str(rangeZ)+")")
+
 
 	def b008(self):
 		'''
@@ -264,12 +286,14 @@ class Selection(Init):
 		'''
 		pass
 
+
 	def b10(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b011(self):
 		'''
@@ -278,12 +302,14 @@ class Selection(Init):
 		'''
 		pass
 
+
 	def b012(self):
 		'''
 		Selection Constraints
 
 		'''
 		mel.eval('PolygonSelectionConstraints;')
+
 
 	def b013(self):
 		'''
@@ -292,12 +318,14 @@ class Selection(Init):
 		'''
 		mel.eval("LassoTool;")
 
+
 	def b014(self):
 		'''
 		Grow Selection
 
 		'''
 		mel.eval('GrowPolygonSelectionRegion;')
+
 
 	def b015(self):
 		'''
@@ -306,12 +334,14 @@ class Selection(Init):
 		'''
 		mel.eval('ShrinkPolygonSelectionRegion;')
 
+
 	def b016(self):
 		'''
 		Convert Selection To Vertices
 
 		'''
 		mel.eval('PolySelectConvert 3;')
+
 
 	def b017(self):
 		'''
@@ -320,12 +350,14 @@ class Selection(Init):
 		'''
 		mel.eval('PolySelectConvert 2;')
 
+
 	def b018(self):
 		'''
 		Convert Selection To Faces
 
 		'''
 		mel.eval('PolySelectConvert 1;')
+
 
 	def b019(self):
 		'''
@@ -334,11 +366,14 @@ class Selection(Init):
 		'''
 		mel.eval('SelectEdgeRingSp;')
 
+
 	def b020(self):
 		'''
 
 		'''
 		pass
+
+
 
 
 

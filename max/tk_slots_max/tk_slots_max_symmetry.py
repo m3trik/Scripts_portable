@@ -26,6 +26,9 @@ class Symmetry(Init):
 		# if axis == "z":
 		# 	self.ui.chk002.setChecked(state)
 
+
+
+
 	def setSymmetry(self, state, axis):
 		# if self.ui.chk005.isChecked():
 		# 	space = "object"
@@ -70,6 +73,7 @@ class Symmetry(Init):
 		state = self.ui.chk000.isChecked() #symmetry button state
 		self.setSymmetry(state, 'x')
 
+
 	def chk001(self):
 		'''
 		Symmetry Y
@@ -79,6 +83,7 @@ class Symmetry(Init):
 		state = self.ui.chk001.isChecked() #symmetry button state
 		self.setSymmetry(state, 'y')
 
+
 	def chk002(self):
 		'''
 		Symmetry Z
@@ -87,6 +92,7 @@ class Symmetry(Init):
 		self.setButtons(self.ui, unchecked='chk000,chk001')
 		state = self.ui.chk002.isChecked() #symmetry button state
 		self.setSymmetry(state, 'z')
+
 
 	def chk003(self):
 		'''
@@ -106,6 +112,7 @@ class Symmetry(Init):
 		
 		self.setSymmetry(state, axis)
 
+
 	def chk004(self):
 		'''
 		Symmetry: Object
@@ -113,6 +120,7 @@ class Symmetry(Init):
 		'''
 		self.ui.chk006.setChecked(False) #uncheck symmetry:topological
 	
+
 	def chk005(self):
 		'''
 		Symmetry: Topo
@@ -123,6 +131,7 @@ class Symmetry(Init):
 			pm.symmetricModelling(edit=True, symmetry=False)
 			self.setButtons(self.ui, unchecked='chk000,chk001,chk002')
 			print "# Warning: First select a seam edge and then check the symmetry button to enable topographic symmetry #"
+
 
 	def chk007(self):
 		'''
@@ -143,6 +152,7 @@ class Symmetry(Init):
 				axis = "-Z"
 		self.ui.b000.setText("Mirror "+axis)
 
+
 	#set check states
 	def chk008(self):
 		'''
@@ -155,6 +165,7 @@ class Symmetry(Init):
 			axis = "-X"
 		self.ui.b000.setText("Mirror "+axis)
 
+
 	def chk009(self):
 		'''
 		Delete: Y Axis
@@ -165,6 +176,7 @@ class Symmetry(Init):
 		if self.ui.chk001.isChecked():
 			axis = "-Y"
 		self.ui.b000.setText("Mirror "+axis)
+
 
 	def chk010(self):
 		'''
@@ -178,24 +190,31 @@ class Symmetry(Init):
 		self.ui.b000.setText("Mirror "+axis)
 
 
-
 	def b000(self):
 		'''
 		Mirror Geometry
 
 		'''
 		mergeThreshold=0.005
-		axis = 0 #0=x 1=y, 2=z
-		y=z= 1; x=-1 #used to negaively scale instanced object
+		
 		cutMesh = self.ui.chk005.isChecked() #cut
-		axisStr = self.ui.b000.text()
 		instance = self.ui.chk021.isChecked()
-		if axisStr == "Mirror Y" or axisStr == "Mirror -Y":
-			axis=1; y=-1; x=1
-		if axisStr == "Mirror Z" or axisStr == "Mirror -Z":
-			axis=2; z=-1; x=1
+
+		if self.ui.chk008.isChecked():
+			axis = 0; x=-1; y=1; z=1 #'x'	0=x 1=y, 2=z  #used to negaively scale instanced object
+			if self.ui.chk007.isChecked(): #negative
+				pass
+		elif self.ui.chk009.isChecked():
+			axis = 1; x=1; y=-1; z=1 #'y'
+			if self.ui.chk007.isChecked(): #negative
+				pass
+		elif self.ui.chk010.isChecked():
+			axis = 2; x=1; y=1; z=-1; #'z'
+			if self.ui.chk007.isChecked(): #negative
+				pass
+
 		if not instance:
-			pm.polyMirrorFace (cutMesh=cutMesh, axis=axis, axisDirection=1, mergeMode=1, mergeThresholdType=1, mergeThreshold=mergeThreshold, mirrorAxis=1, mirrorPosition=0, smoothingAngle=30, flipUVs=0, ch=0)
+			pm.polyMirrorFace(cutMesh=cutMesh, axis=axis, axisDirection=1, mergeMode=1, mergeThresholdType=1, mergeThreshold=mergeThreshold, mirrorAxis=1, mirrorPosition=0, smoothingAngle=30, flipUVs=0, ch=0)
 		else:
 			pm.undoInfo(openChunk=1)
 			if cutMesh:
@@ -203,13 +222,15 @@ class Symmetry(Init):
 			instance = pm.instance() # bt_convertToMirrorInstanceMesh(0); #x=0, y=1, z=2, -x=3, -y=4, -z=5
 			pm.scale (z,x,y, pivot=(0,0,0), relative=1) #zxy
 			pm.undoInfo(closeChunk=1)
-		
+
+
 	def b001(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b002(self):
 		'''
@@ -218,33 +239,38 @@ class Symmetry(Init):
 		'''
 		maxEval('MirrorPolygonGeometryOptions;')
 
+
 	def b003(self):
 		'''
 		
 
 		'''
-		maxEval('')
+		pass
+
 
 	def b004(self):
 		'''
 		
 
 		'''
-		maxEval('')
+		pass
+
 
 	def b005(self):
 		'''
 		
 
 		'''
-		maxEval('')
+		pass
+
 
 	def b006(self):
 		'''
-		Maya Bonus Tools: Symmetrize
+		
 
 		'''
 		maxEval('dR_symmetrize;')
+
 
 	def b007(self):
 		'''
@@ -252,6 +278,7 @@ class Symmetry(Init):
 
 		'''
 		mel.eval('bt_mirrorInstanceMesh;')
+
 
 	def b008(self):
 		'''
@@ -293,12 +320,17 @@ class Symmetry(Init):
 			pm.delete()
 			self.viewPortMessage("delete.")
 
+
 	def b009(self):
 		'''
 		
 
 		'''
-		maxEval('')
+		pass
+
+
+
+
 
 
 #module name

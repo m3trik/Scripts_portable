@@ -265,10 +265,8 @@ class Edit(Init):
 					for num, component in componentList.iteritems():
 						vertexPoint = getComponentPoint(component)
 
-						#transform
-						pm.xform (obj, translation=[vertexPoint[0]+transXYZ[0], vertexPoint[1]+transXYZ[1], vertexPoint[2]+transXYZ[2]])
-						#rotate
 						pm.xform (obj, rotation=[rotXYZ[0], rotXYZ[1], rotXYZ[2]])
+						pm.xform (obj, translation=[vertexPoint[0]+transXYZ[0], vertexPoint[1]+transXYZ[1], vertexPoint[2]+transXYZ[2]])
 
 						if component != componentList[len(componentList)-1]: #if not at the end of the list, create a new instance of the obj.
 							name = str(obj)+"_inst"+str(num)
@@ -299,8 +297,8 @@ class Edit(Init):
 					else:
 						duplicatedObject = pm.duplicate()
 
-					pm.xform (duplicatedObject, translation=transXYZ, relative=1)
 					pm.xform (duplicatedObject, rotation=rotXYZ, relative=1)
+					pm.xform (duplicatedObject, translation=transXYZ, relative=1)
 
 					duplicateObjList.append(duplicatedObject) #append duplicated object to list
 					pm.select(duplicatedObject)

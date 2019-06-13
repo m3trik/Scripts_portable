@@ -1275,7 +1275,7 @@
       <enum>QAbstractSpinBox::NoButtons</enum>
      </property>
      <property name="decimals">
-      <number>2</number>
+      <number>3</number>
      </property>
      <property name="minimum">
       <double>-999.000000000000000</double>
@@ -1318,7 +1318,7 @@
       <number>999</number>
      </property>
      <property name="value">
-      <number>5</number>
+      <number>1</number>
      </property>
     </widget>
     <widget class="QPushButton" name="chk008">
@@ -1392,7 +1392,7 @@
       <enum>QAbstractSpinBox::NoButtons</enum>
      </property>
      <property name="decimals">
-      <number>2</number>
+      <number>3</number>
      </property>
      <property name="minimum">
       <double>-999.000000000000000</double>
@@ -1429,7 +1429,7 @@
       <enum>QAbstractSpinBox::NoButtons</enum>
      </property>
      <property name="decimals">
-      <number>2</number>
+      <number>3</number>
      </property>
      <property name="minimum">
       <double>-999.000000000000000</double>
@@ -1770,7 +1770,7 @@
       <enum>QAbstractSpinBox::NoButtons</enum>
      </property>
      <property name="decimals">
-      <number>2</number>
+      <number>3</number>
      </property>
      <property name="minimum">
       <double>-999.000000000000000</double>
@@ -1807,7 +1807,7 @@
       <enum>QAbstractSpinBox::NoButtons</enum>
      </property>
      <property name="decimals">
-      <number>2</number>
+      <number>3</number>
      </property>
      <property name="minimum">
       <double>-999.000000000000000</double>
@@ -1844,7 +1844,7 @@
       <enum>QAbstractSpinBox::NoButtons</enum>
      </property>
      <property name="decimals">
-      <number>2</number>
+      <number>3</number>
      </property>
      <property name="minimum">
       <double>-999.000000000000000</double>
@@ -2265,7 +2265,7 @@
       <rect>
        <x>0</x>
        <y>10</y>
-       <width>111</width>
+       <width>101</width>
        <height>19</height>
       </rect>
      </property>

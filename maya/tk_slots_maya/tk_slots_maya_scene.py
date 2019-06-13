@@ -16,8 +16,61 @@ class Scene(Init):
 
 		self.ui = self.sb.getUi('scene')
 
-		self.ui.t002.setText(pm.workspace (query=1, rd=1).split('/')[-2]) #add current project path string to label. strip path and trailing '/'
+		self.ui.t002.setText(pm.workspace(query=1, rd=1).split('/')[-2]) #add current project path string to label. strip path and trailing '/'
 
+
+
+
+	def t001(self):
+		'''
+		Remove String From Object Names.
+
+		*find* - search contains chars
+		*find - search endswith chars
+		find* - search startswith chars
+		**to - replace with suffix, moving tailing integers before replacement chars
+
+		'''
+		find = str(self.ui.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
+		to = str(self.ui.t001.text())
+
+		objects = pm.ls(sl=1) #current selection
+		if not objects:
+			objects = pm.ls(find) #Stores a list of all objects containing 'find'
+
+
+		for obj in objects:
+			relatives = pm.listRelatives(obj, parent=1) #Get a list of it's direct parent
+			if 'group*' in relatives: #If that parent starts with group, it came in root level and is pasted in a group, so ungroup it
+				relatives[0].ungroup()
+
+			#find modifiers
+			if find.startswith('*') and find.endswith('*'): #
+				find = find.strip('*') #strip modifiers
+				newName = obj.replace(find, to)
+
+			elif find.startswith('*'): #
+				stripped = obj.rstrip(find)
+				newName = stripped+to
+
+			elif find.endswith('*'): #
+				find = find.rstrip('*') #strip modifiers
+				newName = obj.replace(find, to, 1) #replace only the first instance
+
+			elif to.startswith('**'): #'to' as suffix; remove any trailing integers
+				num='' #get trailing integers
+				for char in reversed(obj):
+					if str.isdigit(char):
+						num = num+char
+					else:
+						num = num[::-1]
+						break
+				stripped = obj.rstrip('0123456789')
+				stripped = stripped.rstrip(find)
+				newName = stripped+num+to
+
+
+			name = pm.rename(obj, newName) #Rename the object with the new name
 
 
 	def cmb000(self):
@@ -36,6 +89,7 @@ class Scene(Init):
 			pm.openFile (contents[index], open=1, force=force)
 			cmb.setCurrentIndex(0)
 
+
 	def cmb001(self):
 		'''
 		Recent Projects
@@ -50,6 +104,7 @@ class Scene(Init):
 		if index!=0:
 			mel.eval('setProject "'+contents[index]+'"')
 			cmb.setCurrentIndex(0)
+
 
 	def cmb002(self):
 		'''
@@ -66,7 +121,8 @@ class Scene(Init):
 			force=True; force if str(mel.eval("file -query -sceneName -shortName;")) else not force #if sceneName prompt user to save; else force open
 			pm.openFile (contents[index], open=1, force=force)
 			cmb.setCurrentIndex(0)
-			
+
+
 	def cmb003(self):
 		'''
 		Import
@@ -84,6 +140,7 @@ class Scene(Init):
 			if index == 2: #Import options
 				mel.eval('ImportOptions;')
 			cmb.setCurrentIndex(0)
+
 
 	def cmb004(self):
 		'''
@@ -117,6 +174,7 @@ class Scene(Init):
 				mel.eval('AddToCurrentScene3dsMax;') #OneClickMenuExecute ("3ds Max", "AddToScene"); doMaxFlow { "add","perspShape","1" };
 			cmb.setCurrentIndex(0)
 
+
 	def cmb005(self):
 		'''
 		Editors
@@ -145,7 +203,7 @@ class Scene(Init):
 		'''
 		cmb = self.ui.cmb006
 		
-		path = MaxPlus.PathManager.GetProjectFolderDir() #replace with correct file or path
+		path = pm.workspace(query=1, rd=1) #current project path.
 		list_ = [f for f in os.listdir(path)]
 
 		contents = self.comboBox (cmb, list_, "Project Folder")
@@ -221,12 +279,14 @@ class Scene(Init):
 			mel.eval("quit;")
 			# pm.Quit()
 
+
 	def b001(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b002(self):
 		'''
@@ -235,12 +295,14 @@ class Scene(Init):
 		'''
 		pass
 
+
 	def b003(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b004(self):
 		'''
@@ -253,6 +315,7 @@ class Scene(Init):
 		mel.eval("quit;") if sceneName else mel.eval("quit -f;")
 		# pm.quit (force=force, exitcode=exitcode)
 
+
 	def b005(self):
 		'''
 		Minimize Main Application
@@ -261,12 +324,14 @@ class Scene(Init):
 		mel.eval("minimizeApp;")
 		self.hotBox.hbHide()
 
+
 	def b006(self):
 		'''
 		Restore Main Application
 
 		'''
 		pass
+
 
 	def b007(self):
 		'''
@@ -275,30 +340,13 @@ class Scene(Init):
 		'''
 		pass
 
+
 	def b015(self):
 		'''
-		Remove String From Object Names.
 
 		'''
-		from_ = str(self.ui.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
-		to = str(self.ui.t001.text())
-		replace = self.ui.chk004.isChecked()
-		selected = self.ui.chk005.isChecked()
+		pass
 
-		objects = pm.ls (from_) #Stores a list of all objects starting with 'from_'
-		if selected:
-			objects = pm.ls (selection=1) #if use selection option; get user selected objects instead
-		from_ = from_.strip('*') #strip modifier asterisk from user input
-
-		for obj in objects:
-			relatives = pm.listRelatives(obj, parent=1) #Get a list of it's direct parent
-			if 'group*' in relatives: #If that parent starts with group, it came in root level and is pasted in a group, so ungroup it
-				relatives[0].ungroup()
-
-			newName = to
-			if replace:
-				newName = obj.replace(from_, to)
-			pm.rename(obj, newName) #Rename the object with the new name
 
 	def b016(self):
 		'''
@@ -306,6 +354,7 @@ class Scene(Init):
 
 		'''
 		pass
+
 
 	def b017(self):
 		'''
@@ -315,7 +364,12 @@ class Scene(Init):
 		newProject = mel.eval("SetProject;")
 
 		self.ui.t002.setText(pm.workspace (query=1, rd=1).split('/')[-2]) #add current project path string to label. strip path and trailing '/'
-		#self.ui.t002.setText(newProject.split('/')[-2])
+
+
+
+
+
+
 
 
 #module name

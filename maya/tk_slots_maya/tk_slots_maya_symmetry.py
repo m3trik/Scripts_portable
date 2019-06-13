@@ -26,6 +26,9 @@ class Symmetry(Init):
 		if axis == "z":
 			self.ui.chk002.setChecked(state)
 
+
+
+
 	def setSymmetry(self, state, axis):
 		if self.ui.chk005.isChecked():
 			space = "object"
@@ -38,7 +41,6 @@ class Symmetry(Init):
 		pm.symmetricModelling(edit=True, symmetry=state, axis=axis, about=space, tolerance=tolerance)
 
 
-
 	def chk000(self):
 		'''
 		Symmetry X
@@ -47,6 +49,7 @@ class Symmetry(Init):
 		self.setButtons(self.ui, unchecked='chk001,chk002')
 		state = self.ui.chk000.isChecked() #symmetry button state
 		self.setSymmetry(state, 'x')
+
 
 	def chk001(self):
 		'''
@@ -57,6 +60,7 @@ class Symmetry(Init):
 		state = self.ui.chk001.isChecked() #symmetry button state
 		self.setSymmetry(state, 'y')
 
+
 	def chk002(self):
 		'''
 		Symmetry Z
@@ -65,6 +69,7 @@ class Symmetry(Init):
 		self.setButtons(self.ui, unchecked='chk000,chk001')
 		state = self.ui.chk002.isChecked() #symmetry button state
 		self.setSymmetry(state, 'z')
+
 
 	def chk003(self):
 		'''
@@ -84,6 +89,7 @@ class Symmetry(Init):
 		
 		self.setSymmetry(state, axis)
 
+
 	def chk004(self):
 		'''
 		Symmetry: Object
@@ -91,6 +97,7 @@ class Symmetry(Init):
 		'''
 		self.ui.chk006.setChecked(False) #uncheck symmetry:topological
 	
+
 	def chk005(self):
 		'''
 		Symmetry: Topo
@@ -101,6 +108,7 @@ class Symmetry(Init):
 			pm.symmetricModelling(edit=True, symmetry=False)
 			self.setButtons(self.ui, unchecked='chk000,chk001,chk002')
 			print "# Warning: First select a seam edge and then check the symmetry button to enable topographic symmetry #"
+
 
 	def chk007(self):
 		'''
@@ -121,6 +129,7 @@ class Symmetry(Init):
 				axis = "-Z"
 		self.ui.b000.setText("Mirror "+axis)
 
+
 	#set check states
 	def chk008(self):
 		'''
@@ -133,6 +142,7 @@ class Symmetry(Init):
 			axis = "-X"
 		self.ui.b000.setText("Mirror "+axis)
 
+
 	def chk009(self):
 		'''
 		Delete: Y Axis
@@ -143,6 +153,7 @@ class Symmetry(Init):
 		if self.ui.chk001.isChecked():
 			axis = "-Y"
 		self.ui.b000.setText("Mirror "+axis)
+
 
 	def chk010(self):
 		'''
@@ -155,37 +166,62 @@ class Symmetry(Init):
 			axis = "-Z"
 		self.ui.b000.setText("Mirror "+axis)
 
+
 	def b000(self):
 		'''
 		Mirror Geometry
 
 		'''
 		mergeThreshold=0.005
-		axis = 0 #0=x 1=y, 2=z
-		y=z= 1; x=-1 #used to negaively scale instanced object
+		
 		cutMesh = self.ui.chk005.isChecked() #cut
-		axisStr = self.ui.b000.text()
 		instance = self.ui.chk021.isChecked()
-		if axisStr == "Mirror Y" or axisStr == "Mirror -Y":
-			axis=1; y=-1; x=1
-		if axisStr == "Mirror Z" or axisStr == "Mirror -Z":
-			axis=2; z=-1; x=1
+
+		if self.ui.chk008.isChecked() and self.ui.chk007.isChecked(): #'-x'
+			direction = 0 #negative axis
+			axis = 0 #0=x 1=y, 2=z
+			x=1; y=1; z=1 #used to negaively scale instanced object
+		else: #'x'
+			direction = 1 #positive axis
+			axis = 0
+			x=-1; y=1; z=1
+			
+		if self.ui.chk009.isChecked() and self.ui.chk007.isChecked(): #'-y'
+			direction = 0
+			axis = 1
+			x=1; y=1; z=1
+		else: #'y'
+			direction = 1
+			axis = 1
+			x=1; y=-1; z=1
+				
+		if self.ui.chk010.isChecked() and self.ui.chk007.isChecked(): #'-z'
+			direction = 0
+			axis = 2
+			x=1; y=1; z=1
+		else: #'z'
+			direction = 1
+			axis = 2
+			x=1; y=1; z=-1
+
 		if not instance:
-			pm.polyMirrorFace (cutMesh=cutMesh, axis=axis, axisDirection=1, mergeMode=1, mergeThresholdType=1, mergeThreshold=mergeThreshold, mirrorAxis=1, mirrorPosition=0, smoothingAngle=30, flipUVs=0, ch=0)
+			pm.polyMirrorFace(cutMesh=cutMesh, axis=axis, axisDirection=1, mergeMode=1, mergeThresholdType=1, mergeThreshold=mergeThreshold, mirrorAxis=1, mirrorPosition=0, smoothingAngle=30, flipUVs=0, ch=0)
 		else:
 			pm.undoInfo(openChunk=1)
 			if cutMesh:
-				self.b032()
+				self.b008()
 			instance = pm.instance() # bt_convertToMirrorInstanceMesh(0); #x=0, y=1, z=2, -x=3, -y=4, -z=5
 			pm.scale (z,x,y, pivot=(0,0,0), relative=1) #zxy
 			pm.undoInfo(closeChunk=1)
 	
+
 	def b001(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b002(self):
 		'''
@@ -199,28 +235,31 @@ class Symmetry(Init):
 		
 
 		'''
-		mel.eval('')
+		pass
+
 
 	def b004(self):
 		'''
 		
 
 		'''
-		mel.eval('')
+		pass
+
 
 	def b005(self):
 		'''
 		
 
 		'''
-		mel.eval('')
+		pass
+
 
 	def b006(self):
 		'''
-		Maya Bonus Tools: Symmetrize
-
+		
 		'''
-		maxEval('dR_symmetrize;')
+		pass
+
 
 	def b007(self):
 		'''
@@ -229,52 +268,45 @@ class Symmetry(Init):
 		'''
 		mel.eval('bt_mirrorInstanceMesh;')
 
+
 	def b008(self):
 		'''
-		Delete Component Or If Object Selected, Along Axis   
+		Delete Along Axis   
 		'''
 		selectionMask = pm.selectMode (query=True, component=True)
 		maskVertex = pm.selectType (query=True, vertex=True)
 		maskEdge = pm.selectType (query=True, edge=True)
 		# maskFacet = pm.selectType (query=True, facet=True)
 
-		if all([selectionMask==1, maskEdge==1]): #delete edges
-			pm.polyDelEdge (cleanVertices=True)
-			self.viewPortMessage("delete <hl>edge(s)</hl>.")
+		selection = pm.ls(sl=1, objectsOnly=1)
 
-		if all([selectionMask==1, maskVertex==1]): #delete vertices
-			pm.polyDelVertex()
-			self.viewPortMessage("delete <hl>vertice(s)</hl>.")
+		if self.ui.chk002.isChecked():
+			axis = 'x'
+		elif self.ui.chk003.isChecked():
+			axis = 'y'
+		elif self.ui.chk004.isChecked():
+			axis = 'z'
+		if self.ui.chk001.isChecked():
+			axis = '-'+axis
 
-		if selectionMask==0: #object mode /delete faces along axis
-			if self.ui.chk002.isChecked():
-				axis = "x"
-				if self.ui.chk001.isChecked():
-					axis = "-x"
-			if self.ui.chk003.isChecked():
-				axis = "y"
-				if self.ui.chk001.isChecked():
-					axis = "-y"
-			if self.ui.chk004.isChecked():
-				axis = "z"
-				if self.ui.chk001.isChecked():
-					axis = "-z"
-
-			faces = self.getAllFacesOnAxis (axis)
+		for obj in selection:
+		# if selectionMask==0: #object mode /delete faces along axis
+			faces = self.getAllFacesOnAxis(obj, axis)
 			pm.delete(faces)
 			self.viewPortMessage("delete faces on <hl>"+axis+"</hl>.")
 			return axis
 
-		else:
-			pm.delete()
-			self.viewPortMessage("delete.")
 
 	def b009(self):
 		'''
 		
 
 		'''
-		mel.eval('')
+		pass
+
+
+
+
 
 
 #module name

@@ -559,6 +559,9 @@
      <property name="toolTip">
       <string>Bevel: Width</string>
      </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
+     </property>
      <property name="decimals">
       <number>2</number>
      </property>
@@ -2079,6 +2082,9 @@
      </property>
      <property name="toolTip">
       <string>Inset: offset amount</string>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
      </property>
      <property name="singleStep">
       <double>0.250000000000000</double>
@@ -3766,6 +3772,9 @@
      <property name="toolTip">
       <string>Crease: amount 0-10. Overriden if 'max' checked</string>
      </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
+     </property>
      <property name="minimum">
       <number>0</number>
      </property>
@@ -3795,7 +3804,7 @@
       <string>Crease: normal edge hardness 0-180</string>
      </property>
      <property name="buttonSymbols">
-      <enum>QAbstractSpinBox::UpDownArrows</enum>
+      <enum>QAbstractSpinBox::NoButtons</enum>
      </property>
      <property name="minimum">
       <number>0</number>
@@ -3829,7 +3838,7 @@
       <string>Auto crease: max angle constraint</string>
      </property>
      <property name="buttonSymbols">
-      <enum>QAbstractSpinBox::UpDownArrows</enum>
+      <enum>QAbstractSpinBox::NoButtons</enum>
      </property>
      <property name="minimum">
       <number>0</number>
@@ -3863,7 +3872,7 @@
       <string>Auto crease: low angle constraint</string>
      </property>
      <property name="buttonSymbols">
-      <enum>QAbstractSpinBox::UpDownArrows</enum>
+      <enum>QAbstractSpinBox::NoButtons</enum>
      </property>
      <property name="minimum">
       <number>0</number>

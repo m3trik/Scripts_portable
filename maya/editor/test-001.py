@@ -52,6 +52,9 @@ class Test001(Slot):
 
 
 
+
+
+
 # material = pm.hyperShade("", shaderNetworksSelectMaterialNodes=1)
 # matList = pm.ls(selection=1, flatten=1)
 
@@ -78,10 +81,10 @@ class Test001(Slot):
 # index = rt.SME.CreateView('temp')
 # view = rt.SME.GetView(index)
 
-m = ['mat1', 'mat2']
-n = ['sub1', 'sub2']
+# m = ['mat1', 'mat2']
+# n = ['sub1', 'sub2']
 # print {index for index, element in enumerate(n)}
-print dict(enumerate(n, x))
+# print dict(enumerate(n, x))
 
 
 # matID_mats = [m for m in pm.ls(mat=1, flatten=1)]

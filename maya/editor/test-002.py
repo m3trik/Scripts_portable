@@ -43,11 +43,83 @@ class Test001(Slot):
 # test=Test001()
 # test.method()
 
-# pm.hyperShade(shaderNetworksSelectMaterialNodes=1) #selects the material node
-node = pm.ls(selection=1, type='VRayMultiSubTex')[0] #now add the selected node to a variable
+x=1
+y=0
+z=0
+neg=1
 
-if pm.nodeType(node)=='VRayMultiSubTex':
-	print node
+
+mergeThreshold=0.005
+		
+cutMesh = 1 #cut
+instance = 0
+
+if x and neg: #'-x'
+	direction = 0 #negative axis
+	axis = 0 #0=x 1=y, 2=z
+	x=1; y=1; z=1 #used to negaively scale instanced object
+else: #'x'
+	direction = 1 #positive axis
+	axis = 0
+	x=-1; y=1; z=1
+	
+if y and neg: #'-y'
+	direction = 0
+	axis = 1
+	x=1; y=1; z=1
+else: #'y'
+	direction = 1
+	axis = 1
+	x=1; y=-1; z=1
+		
+if z and neg: #'-z'
+	direction = 0
+	axis = 2
+	x=1; y=1; z=1
+else: #'z'
+	direction = 1
+	axis = 2
+	x=1; y=1; z=-1
+
+
+if not instance:
+	pm.polyMirrorFace(cutMesh=cutMesh, axis=axis, axisDirection=direction, mergeMode=1, mergeThresholdType=1, mergeThreshold=mergeThreshold, mirrorAxis=1, mirrorPosition=0, smoothingAngle=30, flipUVs=0, ch=0)
+else:
+	pm.undoInfo(openChunk=1)
+	if cutMesh:
+		self.b032()
+	instance = pm.instance() # bt_convertToMirrorInstanceMesh(0); #x=0, y=1, z=2, -x=3, -y=4, -z=5
+	pm.scale (z,x,y, pivot=(0,0,0), relative=1) #zxy
+	pm.undoInfo(closeChunk=1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# # pm.hyperShade(shaderNetworksSelectMaterialNodes=1) #selects the material node
+# node = pm.ls(selection=1, type='VRayMultiSubTex')[0] #now add the selected node to a variable
+
+# if pm.nodeType(node)=='VRayMultiSubTex':
+# 	print node
 
 
 
