@@ -43,54 +43,105 @@ class Test001(Slot):
 # test=Test001()
 # test.method()
 
-x=1
-y=0
-z=0
-neg=1
+
+def getIntegers(string):
+	num='' #get trailing integers
+	for char in reversed(str(string)):
+		if str.isdigit(char):
+			num = num+char
+		else:
+			return num[::-1] #reverse the string
 
 
-mergeThreshold=0.005
-		
-cutMesh = 1 #cut
-instance = 0
+find = '*1|*2'#str(self.ui.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
+to = '1'#str(self.ui.t001.text())
 
-if x and neg: #'-x'
-	direction = 0 #negative axis
-	axis = 0 #0=x 1=y, 2=z
-	x=1; y=1; z=1 #used to negaively scale instanced object
-else: #'x'
-	direction = 1 #positive axis
-	axis = 0
-	x=-1; y=1; z=1
-	
-if y and neg: #'-y'
-	direction = 0
-	axis = 1
-	x=1; y=1; z=1
-else: #'y'
-	direction = 1
-	axis = 1
-	x=1; y=-1; z=1
-		
-if z and neg: #'-z'
-	direction = 0
-	axis = 2
-	x=1; y=1; z=1
-else: #'z'
-	direction = 1
-	axis = 2
-	x=1; y=1; z=-1
-
-
-if not instance:
-	pm.polyMirrorFace(cutMesh=cutMesh, axis=axis, axisDirection=direction, mergeMode=1, mergeThresholdType=1, mergeThreshold=mergeThreshold, mirrorAxis=1, mirrorPosition=0, smoothingAngle=30, flipUVs=0, ch=0)
+if pm.ls(selection=1): #if selection; operate on only the selected objects.
+	lists = [pm.ls(f, sl=1) for f in find.split('|')] #objects in current selection that match criteria
 else:
-	pm.undoInfo(openChunk=1)
-	if cutMesh:
-		self.b032()
-	instance = pm.instance() # bt_convertToMirrorInstanceMesh(0); #x=0, y=1, z=2, -x=3, -y=4, -z=5
-	pm.scale (z,x,y, pivot=(0,0,0), relative=1) #zxy
-	pm.undoInfo(closeChunk=1)
+	lists = [pm.ls(f) for f in find.split('|')] # objects = pm.ls(find) #Stores a list of all objects containing 'find'
+objects = set([i for sublist in lists for i in sublist]) #flatten and remove any duplicates.
+
+for obj in objects:
+	for f in  [f for f in find.split('|') if f.strip('*') in obj]: #get the objects that contain the chars in find.split('|')
+		relatives = pm.listRelatives(obj, parent=1) #Get a list of it's direct parent
+		if 'group*' in relatives: #If that parent starts with group, it came in root level and is pasted in a group, so ungroup it
+			relatives[0].ungroup()
+
+		#find modifiers
+		if to.startswith('*') and to.endswith('*'): #replace chars
+			newName = obj.name.replace(f, to)
+
+		elif to.startswith('*'): #replace suffix
+			newName = obj.name+to
+
+		elif to.endswith('*'): #replace prefix
+			newName = obj.name.replace(f, to, 1) #1=replace only the first occurance
+
+		elif to.startswith('**'): #replace suffix and move any trailing integers
+			num = self.getTrailingIntegers(obj.name)
+			stripped = obj.name.rstrip('0123456789').rstrip(f)
+			newName = stripped+num+to
+
+		else: #replace whole name
+			newName = to
+
+		newName = newName.replace('*', '')
+		while pm.objExists(newName):
+			newName = moveIntegers(newName+str(1))
+		name = pm.rename(obj, newName) #Rename the object with the new name
+		break
+
+
+
+# x=1
+# y=0
+# z=0
+# neg=1
+
+
+# mergeThreshold=0.005
+		
+# cutMesh = 1 #cut
+# instance = 0
+
+# if x and neg: #'-x'
+# 	direction = 0 #negative axis
+# 	axis = 0 #0=x 1=y, 2=z
+# 	x=1; y=1; z=1 #used to negaively scale instanced object
+# else: #'x'
+# 	direction = 1 #positive axis
+# 	axis = 0
+# 	x=-1; y=1; z=1
+	
+# if y and neg: #'-y'
+# 	direction = 0
+# 	axis = 1
+# 	x=1; y=1; z=1
+# else: #'y'
+# 	direction = 1
+# 	axis = 1
+# 	x=1; y=-1; z=1
+		
+# if z and neg: #'-z'
+# 	direction = 0
+# 	axis = 2
+# 	x=1; y=1; z=1
+# else: #'z'
+# 	direction = 1
+# 	axis = 2
+# 	x=1; y=1; z=-1
+
+
+# if not instance:
+# 	pm.polyMirrorFace(cutMesh=cutMesh, axis=axis, axisDirection=direction, mergeMode=1, mergeThresholdType=1, mergeThreshold=mergeThreshold, mirrorAxis=1, mirrorPosition=0, smoothingAngle=30, flipUVs=0, ch=0)
+# else:
+# 	pm.undoInfo(openChunk=1)
+# 	if cutMesh:
+# 		self.b032()
+# 	instance = pm.instance() # bt_convertToMirrorInstanceMesh(0); #x=0, y=1, z=2, -x=3, -y=4, -z=5
+# 	pm.scale (z,x,y, pivot=(0,0,0), relative=1) #zxy
+# 	pm.undoInfo(closeChunk=1)
 
 
 

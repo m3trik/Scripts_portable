@@ -315,7 +315,7 @@
       </size>
      </property>
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rename: find&lt;/p&gt;&lt;p&gt;modifiers:&lt;/p&gt;&lt;p&gt;*find* - search contains chars&lt;/p&gt;&lt;p&gt;*find - search endswith chars&lt;/p&gt;&lt;p&gt;find* - search startswith chars&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rename: Find&lt;/p&gt;&lt;p&gt;wildcards:&lt;/p&gt;&lt;p&gt;*find* - search contains chars&lt;/p&gt;&lt;p&gt;*find - search endswith chars&lt;/p&gt;&lt;p&gt;find* - search startswith chars&lt;/p&gt;&lt;p&gt;find|find - search any of. can be used in conjuction with other modifiers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="layoutDirection">
       <enum>Qt::RightToLeft</enum>
@@ -336,7 +336,7 @@
       <string>find:</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="t001_2">
+    <widget class="QLineEdit" name="t001">
      <property name="enabled">
       <bool>true</bool>
      </property>
@@ -355,7 +355,7 @@
       </size>
      </property>
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rename:: Replace with&lt;/p&gt;&lt;p&gt;modifiers:&lt;/p&gt;&lt;p&gt;**to - replace with suffix, moving tailing integers in front of replacement chars&lt;/p&gt;&lt;p&gt;ie. 'poly_low021'  to 'poly021_high' if **_high is passed as arg.&lt;/p&gt;&lt;p&gt;ie. 'poly021_low' if only ** is passed as arg.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rename:: Replace with&lt;/p&gt;&lt;p&gt;wildcards:&lt;/p&gt;&lt;p&gt;*to* - replace only 'find'&lt;/p&gt;&lt;p&gt;to* - replace prefix&lt;/p&gt;&lt;p&gt;*to - replace suffix&lt;/p&gt;&lt;p&gt;**to - replace suffix', moves any integers in front of replacement chars&lt;/p&gt;&lt;p&gt;ie. 'poly_low021' to 'poly021_high' if **_high is passed as arg.&lt;/p&gt;&lt;p&gt;ie. 'poly021_low' if only ** is passed as arg.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="layoutDirection">
       <enum>Qt::RightToLeft</enum>

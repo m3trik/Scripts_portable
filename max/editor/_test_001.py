@@ -2,6 +2,50 @@ try: from pymxs import runtime as rt; import MaxPlus; maxEval = MaxPlus.Core.Eva
 except: pass
 
 
+
+def getTrailingIntegers(string, increment=0):
+	'''
+	args: increment=int - optional step amount
+
+	Returns 'string' - any integers from the end of the given string.
+	'''
+	num='' #get trailing integers
+	for char in reversed(str(string)):
+		if str.isdigit(char):
+			num = num+char
+		else: #when a non-integer char is found return any integers as a string.
+			num = int(num[::-1])+increment #re-reverse the string and increment.
+			return '000'[:-len(str(num))]+str(num) #prefix '000' removing zeros according to num length ie. 009 becomes 010
+
+
+find = '*Box*|Box*'
+to = 'Box001'
+
+for o in rt.objects:
+	for f in find.split('|'):
+		if rt.matchPattern(o.name, pattern=f, ignoreCase=0):
+			print o
+			break
+
+
+lists = [[o for o in rt.objects if rt.matchPattern(o.name, pattern=f, ignoreCase=0)] for f in find.split('|')]
+objects = set([i for sublist in lists for i in sublist])
+
+# print objects
+
+newName = to.replace('*', '')
+
+
+while [o for o in rt.objects if o.name==newName]:
+	num = getTrailingIntegers(newName, increment=1)
+	newName = newName.rstrip('0123456789')+num
+
+
+
+for obj in objects:
+	print newName
+	obj.name = newName #Rename the object with the new name
+
 #~ creaseAmount = 1
 
 
@@ -11,23 +55,23 @@ except: pass
 #~ obj.EditablePoly.makeHardEdges(1) #1=flag bit 1 : 'is selected'
 #~ obj.EditablePoly.setEdgeData(1, creaseAmount)
 
-def bitArrayIndex(bitArray):
-	return [i for i, bit in enumerate(bitArray) if bit==1]
+# def bitArrayIndex(bitArray):
+# 	return [i for i, bit in enumerate(bitArray) if bit==1]
 
 
-creaseAmount = 5*0.1
+# creaseAmount = 5*0.1
 
-for obj in rt.selection:
-	obj.EditablePoly.setEdgeData(1, creaseAmount)
+# for obj in rt.selection:
+# 	obj.EditablePoly.setEdgeData(1, creaseAmount)
 	
-	edges = bitArrayIndex(rt.polyop.getEdgeSelection(obj))
-	print edges
-	for edge in edges:
-		print edge
-		edgeVerts = rt.polyop.getEdgeVerts(obj, edge)
-		normal = rt.averageSelVertNormal(obj)
-		for vertex in edgeVerts:
-			rt.setNormal(obj, vertex, normal)
+# 	edges = bitArrayIndex(rt.polyop.getEdgeSelection(obj))
+# 	print edges
+# 	for edge in edges:
+# 		print edge
+# 		edgeVerts = rt.polyop.getEdgeVerts(obj, edge)
+# 		normal = rt.averageSelVertNormal(obj)
+# 		for vertex in edgeVerts:
+# 			rt.setNormal(obj, vertex, normal)
 
 #~ print bitIndex([0,0,1,1])
 
