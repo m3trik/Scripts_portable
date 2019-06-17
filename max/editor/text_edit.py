@@ -17,7 +17,7 @@ path = os.path.join(os.path.dirname(__file__), 'batch') #get absolute path from 
 
 
 def files():
-	return [path+'\\'+f for f in os.listdir(path) if f.endswith('.py')]
+	return [path+'\\'+f for f in os.listdir(path) if any([f.endswith('.py'), f.endswith('.mel'), f.endswith('.ms'), f.endswith('.bat'), f.endswith('.cs'), f.endswith('.cpp'), f.endswith('.txt')])]
 
 def fileContents(file):
 	with open(file) as f:
@@ -25,17 +25,20 @@ def fileContents(file):
 
 
 for file in files():
-
+	#remove duplicates
 	list_ = fileContents(file)
-	for element in list_:
-		if not element.isspace():
-			if list_.count(element)>1:
-				list_.remove(element)
-	
+	for line in list_:
+		if not line.isspace() and list_.count(line)>1:
+			list_.remove(line)
+
+	#remove additional lines:
+	list_ = [l for l in list_ if not any([l.startswith('<<<<<<'), l.startswith('======'), l.startswith('>>>>>>')])]
+
+
 	for e in list_:
 		print e
 
-	with open(file+'.out', 'w') as output:
+	with open(file, 'w') as output:
 		output.writelines(list_)
 
 

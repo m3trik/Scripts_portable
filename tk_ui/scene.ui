@@ -315,7 +315,7 @@
       </size>
      </property>
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rename: Find&lt;/p&gt;&lt;p&gt;wildcards:&lt;/p&gt;&lt;p&gt;*find* - search contains chars&lt;/p&gt;&lt;p&gt;*find - search endswith chars&lt;/p&gt;&lt;p&gt;find* - search startswith chars&lt;/p&gt;&lt;p&gt;find|find - search any of. can be used in conjuction with other modifiers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rename: Find&lt;/p&gt;&lt;p&gt;Performs operation on any selected objects. Else, all objects are searched.&lt;/p&gt;&lt;p&gt;wildcards:&lt;/p&gt;&lt;p&gt;*find* - search contains chars&lt;/p&gt;&lt;p&gt;*find - search endswith chars&lt;/p&gt;&lt;p&gt;find* - search startswith chars&lt;/p&gt;&lt;p&gt;find|find - search any of. can be used in conjuction with other modifiers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="layoutDirection">
       <enum>Qt::RightToLeft</enum>
