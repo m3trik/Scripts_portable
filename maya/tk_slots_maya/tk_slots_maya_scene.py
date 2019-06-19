@@ -16,9 +16,9 @@ class Scene(Init):
 
 		self.ui = self.sb.getUi('scene')
 
-		self.ui.t002.setText(pm.workspace(query=1, rd=1).split('/')[-2]) #add current project path string to label. strip path and trailing '/'
-
 		self.ui.t000.returnPressed.connect(self.t001) #preform rename on returnPressed
+
+		self.cmb006() #refresh cmb006 contents to reflect the current project folder
 
 
 
@@ -173,7 +173,7 @@ class Scene(Init):
 		
 		list_ = ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ", 'Send to 3dsMax: As New Scene', 'Send to 3dsMax: Update Current', 'Send to 3dsMax: Add to Current']
 
-		contents = self.comboBox (cmb, list_, "Export")
+		contents = self.comboBox(cmb, list_, "Export")
 
 		index = cmb.currentIndex()
 		if index !=0: #hide hotBox then perform operation
@@ -204,8 +204,8 @@ class Scene(Init):
 		'''
 		cmb = self.ui.cmb005
 		
-		files = ['', '', '']
-		contents = self.comboBox (cmb, files, "Editors")
+		files = []
+		contents = self.comboBox(cmb, files, "Editors")
 
 		index = cmb.currentIndex()
 		if index!=0:
@@ -228,12 +228,14 @@ class Scene(Init):
 		path = pm.workspace(query=1, rd=1) #current project path.
 		list_ = [f for f in os.listdir(path)]
 
-		contents = self.comboBox (cmb, list_, "Project Folder")
+		project = pm.workspace(query=1, rd=1).split('/')[-2] #add current project path string to label. strip path and trailing '/'
+
+		contents = self.comboBox(cmb, list_, project)
 
 		index = cmb.currentIndex()
 		if index!=0:
-			path=os.path.realpath(list_[index-1])
-			os.startfile(path)
+			dir_= path+list_[index-1]
+			os.startfile(dir_)
 			cmb.setCurrentIndex(0)
 
 
@@ -385,8 +387,7 @@ class Scene(Init):
 		'''
 		newProject = mel.eval("SetProject;")
 
-		self.ui.t002.setText(pm.workspace (query=1, rd=1).split('/')[-2]) #add current project path string to label. strip path and trailing '/'
-
+		self.cmb006() #refresh cmb006 contents to reflect new project folder
 
 
 

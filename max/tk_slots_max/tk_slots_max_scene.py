@@ -16,10 +16,9 @@ class Scene(Init):
 
 		self.ui = self.sb.getUi('scene')
 
-		self.ui.t002.setText(MaxPlus.PathManager.GetProjectFolderDir().split('\\')[-1]) #add current project path string to label. strip path and trailing '/'
-		
 		self.ui.t000.returnPressed.connect(self.t001) #preform rename on returnPressed
 
+		self.cmb006() #refresh cmb006 contents to reflect the current project folder
 
 
 	def getTrailingIntegers(self, string, increment=0):
@@ -261,15 +260,17 @@ class Scene(Init):
 		'''
 		cmb = self.ui.cmb006
 		
-		path = MaxPlus.PathManager.GetProjectFolderDir() #replace with correct file or path
+		path = MaxPlus.PathManager.GetProjectFolderDir() #current project path.
 		list_ = [f for f in os.listdir(path)]
 
-		contents = self.comboBox (cmb, list_, "Project Folder")
+		project = MaxPlus.PathManager.GetProjectFolderDir().split('\\')[-1] #add current project path string to label. strip path and trailing '/'
+
+		contents = self.comboBox (cmb, list_, project)
 
 		index = cmb.currentIndex()
 		if index!=0:
-			path=os.path.realpath(list_[index-1])
-			os.startfile(path)
+			dir_= path+list_[index-1]
+			os.startfile(dir_)
 			cmb.setCurrentIndex(0)
 
 
@@ -446,8 +447,8 @@ class Scene(Init):
 		except:
 			maxEval('macros.run "Tools" "SetProjectFolder"')
 
-		self.ui.t002.setText(MaxPlus.PathManager.GetProjectFolderDir().split('\\')[-1]) #add current project path string to label. strip path and trailing '/'
-		
+		self.cmb006() #refresh cmb006 contents to reflect new project folder
+
 
 
 

@@ -37,7 +37,7 @@ class Symmetry(Init):
 		else:
 			space = "world"
 
-		tolerance = float(self.ui.s005.value())
+		tolerance = 0.25
 		pm.symmetricModelling(edit=True, symmetry=state, axis=axis, about=space, tolerance=tolerance)
 
 
@@ -115,19 +115,15 @@ class Symmetry(Init):
 		Delete: Negative Axis. Set Text Mirror Axis
 
 		'''
-		if self.ui.chk002.isChecked():
-			axis = "X"
-			if self.ui.chk001.isChecked():
-				axis = "-X"
-		if self.ui.chk003.isChecked():
+		axis = "X"
+		if self.ui.chk009.isChecked():
 			axis = "Y"
-			if self.ui.chk001.isChecked():
-				axis = "-Y"
-		if self.ui.chk004.isChecked():
+		if self.ui.chk010.isChecked():
 			axis = "Z"
-			if self.ui.chk001.isChecked():
-				axis = "-Z"
-		self.ui.b000.setText("Mirror "+axis)
+		if self.ui.chk007.isChecked():
+			axis = '-'+axis
+		self.ui.b000.setText('Mirror '+axis)
+		self.ui.b008.setText('Delete '+axis)
 
 
 	#set check states
@@ -136,11 +132,12 @@ class Symmetry(Init):
 		Delete: X Axis
 
 		'''
-		self.setButtons(self.ui, unchecked='chk003,chk004')
+		self.setButtons(self.ui, unchecked='chk009,chk010')
 		axis = "X"
-		if self.ui.chk001.isChecked():
-			axis = "-X"
-		self.ui.b000.setText("Mirror "+axis)
+		if self.ui.chk007.isChecked():
+			axis = '-'+axis
+		self.ui.b000.setText('Mirror '+axis)
+		self.ui.b008.setText('Delete '+axis)
 
 
 	def chk009(self):
@@ -148,11 +145,12 @@ class Symmetry(Init):
 		Delete: Y Axis
 
 		'''
-		self.setButtons(self.ui, unchecked='chk002,chk004')
+		self.setButtons(self.ui, unchecked='chk008,chk010')
 		axis = "Y"
-		if self.ui.chk001.isChecked():
-			axis = "-Y"
-		self.ui.b000.setText("Mirror "+axis)
+		if self.ui.chk007.isChecked():
+			axis = '-'+axis
+		self.ui.b000.setText('Mirror '+axis)
+		self.ui.b008.setText('Delete '+axis)
 
 
 	def chk010(self):
@@ -160,11 +158,12 @@ class Symmetry(Init):
 		Delete: Z Axis
 
 		'''
-		self.setButtons(self.ui, unchecked='chk003,chk002')
+		self.setButtons(self.ui, unchecked='chk008,chk009')
 		axis = "Z"
-		if self.ui.chk001.isChecked():
-			axis = "-Z"
-		self.ui.b000.setText("Mirror "+axis)
+		if self.ui.chk007.isChecked():
+			axis = '-'+axis
+		self.ui.b000.setText('Mirror '+axis)
+		self.ui.b008.setText('Delete '+axis)
 
 
 	def b000(self):
@@ -174,46 +173,46 @@ class Symmetry(Init):
 		'''
 		mergeThreshold=0.005
 		
-		cutMesh = self.ui.chk005.isChecked() #cut
+		cutMesh = self.ui.chk006.isChecked() #cut
 		instance = self.ui.chk021.isChecked()
 
 		if self.ui.chk008.isChecked() and self.ui.chk007.isChecked(): #'-x'
-			direction = 0 #negative axis
-			axis = 0 #0=x 1=y, 2=z
+			axisDirection = 1 #negative axis
+			axis = 1 #0=x 1=y, 2=z
 			x=1; y=1; z=1 #used to negaively scale instanced object
 		else: #'x'
-			direction = 1 #positive axis
+			axisDirection = 0 #positive axis
 			axis = 0
 			x=-1; y=1; z=1
-			
+
 		if self.ui.chk009.isChecked() and self.ui.chk007.isChecked(): #'-y'
-			direction = 0
-			axis = 1
+			axisDirection = 1
+			axis = 3
 			x=1; y=1; z=1
 		else: #'y'
-			direction = 1
-			axis = 1
+			axisDirection = 0
+			axis = 4
 			x=1; y=-1; z=1
 				
 		if self.ui.chk010.isChecked() and self.ui.chk007.isChecked(): #'-z'
-			direction = 0
-			axis = 2
+			axisDirection = 1
+			axis = 5
 			x=1; y=1; z=1
 		else: #'z'
-			direction = 1
-			axis = 2
+			axisDirection = 0
+			axis = 4
 			x=1; y=1; z=-1
 
-		if not instance:
-			pm.polyMirrorFace(cutMesh=cutMesh, axis=axis, axisDirection=1, mergeMode=1, mergeThresholdType=1, mergeThreshold=mergeThreshold, mirrorAxis=1, mirrorPosition=0, smoothingAngle=30, flipUVs=0, ch=0)
-		else:
-			pm.undoInfo(openChunk=1)
-			if cutMesh:
-				self.b008()
-			instance = pm.instance() # bt_convertToMirrorInstanceMesh(0); #x=0, y=1, z=2, -x=3, -y=4, -z=5
-			pm.scale (z,x,y, pivot=(0,0,0), relative=1) #zxy
-			pm.undoInfo(closeChunk=1)
-	
+		pm.undoInfo(openChunk=1)
+		if cutMesh:
+			self.b008() #delete mesh faces falling inside the specified axis
+		if instance: #create instance and scale negatively
+			inst = pm.instance() # bt_convertToMirrorInstanceMesh(0); #x=0, y=1, z=2, -x=3, -y=4, -z=5
+			pm.scale(z,x,y, pivot=(0,0,0), relative=1) #zxy is not a typo
+		else: #mirror
+			pm.polyMirrorFace(mirrorAxis=axisDirection, direction=axis, mergeMode=1, mergeThresholdType=1, mergeThreshold=mergeThreshold, worldSpace=0, smoothingAngle=30, flipUVs=0, ch=0) #mirrorPosition x, y, z - This flag specifies the position of the custom mirror axis plane
+		pm.undoInfo(closeChunk=1)
+
 
 	def b001(self):
 		'''
@@ -271,22 +270,22 @@ class Symmetry(Init):
 
 	def b008(self):
 		'''
-		Delete Along Axis   
+		Delete Along Axis
 		'''
-		selectionMask = pm.selectMode (query=True, component=True)
-		maskVertex = pm.selectType (query=True, vertex=True)
-		maskEdge = pm.selectType (query=True, edge=True)
+		selectionMask = pm.selectMode(query=True, component=True)
+		maskVertex = pm.selectType(query=True, vertex=True)
+		maskEdge = pm.selectType(query=True, edge=True)
 		# maskFacet = pm.selectType (query=True, facet=True)
 
 		selection = pm.ls(sl=1, objectsOnly=1)
 
-		if self.ui.chk002.isChecked():
+		if self.ui.chk008.isChecked():
 			axis = 'x'
-		elif self.ui.chk003.isChecked():
+		elif self.ui.chk009.isChecked():
 			axis = 'y'
-		elif self.ui.chk004.isChecked():
+		elif self.ui.chk010.isChecked():
 			axis = 'z'
-		if self.ui.chk001.isChecked():
+		if self.ui.chk007.isChecked():
 			axis = '-'+axis
 
 		for obj in selection:
@@ -295,14 +294,6 @@ class Symmetry(Init):
 			pm.delete(faces)
 			self.viewPortMessage("delete faces on <hl>"+axis+"</hl>.")
 			return axis
-
-
-	def b009(self):
-		'''
-		
-
-		'''
-		pass
 
 
 
