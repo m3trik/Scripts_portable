@@ -59,6 +59,7 @@ class Symmetry(Init):
 			mod.flip = negative
 
 		rt.redrawViews()
+		# self.viewPortMessage("Symmetry:<hl>"+axis+' '+str(state)+"</hl>")
 
 
 	def chk000(self):

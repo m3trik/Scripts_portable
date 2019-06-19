@@ -38,6 +38,8 @@ class Symmetry(Init):
 
 		tolerance = 0.25
 		pm.symmetricModelling(edit=True, symmetry=state, axis=axis, about=space, tolerance=tolerance)
+		self.viewPortMessage("Symmetry:<hl>"+axis+' '+str(state)+"</hl>")
+
 
 
 	def chk000(self):
