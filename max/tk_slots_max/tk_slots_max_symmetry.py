@@ -30,12 +30,11 @@ class Symmetry(Init):
 
 
 	def setSymmetry(self, state, axis):
-		# if self.ui.chk005.isChecked():
+		# space = "world" #workd space
+		# if self.ui.chk004.isChecked(): #object space
 		# 	space = "object"
-		# if self.ui.chk006.isChecked():
+		# elif self.ui.chk005.isChecked(): #topological symmetry
 		# 	space = "topo"
-		# else:
-		# 	space = "world"
 
 		negative = self.ui.chk003.isChecked()
 
@@ -92,31 +91,12 @@ class Symmetry(Init):
 		self.setSymmetry(state, 'z')
 
 
-	def chk003(self):
-		'''
-		Symmetry Negative Axes
-
-		'''
-		state=True
-		if self.ui.chk001.isChecked():	
-			axis='x'
-		elif self.ui.chk001.isChecked():
-			axis='y'
-		elif self.ui.chk002.isChecked():
-			axis='z'
-		else:
-			axis='x'
-			state=False
-		
-		self.setSymmetry(state, axis)
-
-
 	def chk004(self):
 		'''
 		Symmetry: Object
 
 		'''
-		self.ui.chk006.setChecked(False) #uncheck symmetry:topological
+		self.ui.chk005.setChecked(False) #uncheck symmetry:topological
 	
 
 	def chk005(self):
@@ -124,7 +104,7 @@ class Symmetry(Init):
 		Symmetry: Topo
 
 		'''
-		self.ui.chk005.setChecked(False) #uncheck symmetry:object space
+		self.ui.chk004.setChecked(False) #uncheck symmetry:object space
 		if any ([self.ui.chk000.isChecked(), self.ui.chk001.isChecked(), self.ui.chk002.isChecked()]): #(symmetry)
 			pm.symmetricModelling(edit=True, symmetry=False)
 			self.setButtons(self.ui, unchecked='chk000,chk001,chk002')
@@ -197,42 +177,47 @@ class Symmetry(Init):
 		cutMesh = self.ui.chk006.isChecked() #cut
 		instance = self.ui.chk021.isChecked()
 
-		if self.ui.chk008.isChecked() and self.ui.chk007.isChecked(): #'-x'
-			axisDirection = 1 #negative axis
-			axis = 1 #0=x 1=y, 2=z
-			x=1; y=1; z=1 #used to negaively scale instanced object
-		else: #'x'
+		negAxis = self.ui.chk007.isChecked() #mirror on negative axis
+
+		if self.ui.chk008.isChecked(): #'x'
 			axisDirection = 0 #positive axis
 			axis = 0
 			x=-1; y=1; z=1
+			if negAxis: #'-x'
+				axisDirection = 1 #negative axis
+				axis = 1 #0=-x, 1=x, 2=-y, 3=y, 4=-z, 5=z 
+				x=-1; y=1; z=1 #if instance: used to negatively scale
 
-		if self.ui.chk009.isChecked() and self.ui.chk007.isChecked(): #'-y'
-			axisDirection = 1
-			axis = 3
-			x=1; y=1; z=1
-		else: #'y'
+		if self.ui.chk009.isChecked(): #'y'
 			axisDirection = 0
-			axis = 4
+			axis = 2
 			x=1; y=-1; z=1
-				
-		if self.ui.chk010.isChecked() and self.ui.chk007.isChecked(): #'-z'
-			axisDirection = 1
-			axis = 5
-			x=1; y=1; z=1
-		else: #'z'
+			if negAxis: #'-y'
+				axisDirection = 1
+				axis = 3
+				x=1; y=-1; z=1
+
+		if self.ui.chk010.isChecked(): #'z'
 			axisDirection = 0
 			axis = 4
 			x=1; y=1; z=-1
+			if negAxis: #'-z'
+				axisDirection = 1
+				axis = 5
+				x=1; y=1; z=-1
 
-		pm.undoInfo(openChunk=1)
-		if cutMesh:
-			self.b008() #delete mesh faces falling inside the specified axis
-		if instance: #create instance and scale negatively
-			inst = pm.instance() # bt_convertToMirrorInstanceMesh(0); #x=0, y=1, z=2, -x=3, -y=4, -z=5
-			pm.scale(z,x,y, pivot=(0,0,0), relative=1) #zxy is not a typo
-		else: #mirror
-			pm.polyMirrorFace(mirrorAxis=axisDirection, direction=axis, mergeMode=1, mergeThresholdType=1, mergeThreshold=mergeThreshold, worldSpace=0, smoothingAngle=30, flipUVs=0, ch=0) #mirrorPosition x, y, z - This flag specifies the position of the custom mirror axis plane
-		pm.undoInfo(closeChunk=1)
+		if pm.ls(sl=1, objectsOnly=1):
+			pm.undoInfo(openChunk=1)
+			if cutMesh:
+				self.b008() #delete mesh faces that fall inside the specified axis
+			if instance: #create instance and scale negatively
+				inst = pm.instance() # bt_convertToMirrorInstanceMesh(0); #x=0, y=1, z=2, -x=3, -y=4, -z=5
+				pm.scale(z,x,y, pivot=(0,0,0), relative=1) #swap the xyz values to transform the instanced node
+			else: #mirror
+				pm.polyMirrorFace(mirrorAxis=axisDirection, direction=axis, mergeMode=1, mergeThresholdType=1, mergeThreshold=mergeThreshold, worldSpace=0, smoothingAngle=30, flipUVs=0, ch=0) #mirrorPosition x, y, z - This flag specifies the position of the custom mirror axis plane
+			pm.undoInfo(closeChunk=1)
+		else:
+			print '# Warning: Nothing Selected.'
 
 
 	def b001(self):
