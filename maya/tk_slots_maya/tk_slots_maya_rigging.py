@@ -16,40 +16,47 @@ class Rigging(Init):
 
 		self.ui = self.sb.getUi('rigging')
 
-		self.s000(pm.jointDisplayScale(query=1)) #init global joint display size
-		self.s001(pm.ikHandleDisplayScale(query=1)) #init IK handle display size
-		self.s002(pm.jointDisplayScale(query=1, ikfk=1)) #init IKFK display size
+		self.chk000() #init scale joint value
 
 
 
-	def s000(self, value=None):
+
+	def chk000(self):
 		'''
-		Joint Scale
+		Scale Joint
 		'''
-		if not value:
-			value = self.ui.s000.value()
-
-		pm.jointDisplayScale(value) #set global joint display size
+		self.setButtons(self.ui, unchecked='chk001-2')
+		self.ui.s000.setValue(pm.jointDisplayScale(query=1)) #init global joint display size
 
 
-	def s001(self, value=None):
+	def chk001(self):
 		'''
-		IK Scale
+		Scale IK
 		'''
-		if not value:
-			value = self.ui.s002.value()
+		self.setButtons(self.ui, unchecked='chk000, chk002')
+		self.ui.s000.setValue(pm.ikHandleDisplayScale(query=1)) #init IK handle display size
+		
 
-		pm.ikHandleDisplayScale(value) #set global IK handle display size
-
-
-	def s002(self, value=None):
+	def chk002(self):
 		'''
-		IK/Fk Scale
+		Scale IK/FK
 		'''
-		if not value:
-			value = self.ui.s001.value()
+		self.setButtons(self.ui, unchecked='chk000-1')
+		self.ui.s000.setValue(pm.jointDisplayScale(query=1, ikfk=1)) #init IKFK display size
 
-		pm.jointDisplayScale(value, ikfk=1) #set global IKFK display size
+
+	def s000(self):
+		'''
+		Scale Joint/IK/FK
+		'''
+		value = self.ui.s000.value()
+
+		if self.ui.chk000.isChecked():
+			pm.jointDisplayScale(value) #set global joint display size
+		elif self.ui.chk001.isChecked():
+			pm.ikHandleDisplayScale(value) #set global IK handle display size
+		else: #self.ui.chk002.isChecked():
+			pm.jointDisplayScale(value, ikfk=1) #set global IKFK display size
 
 
 	def cmb000(self):

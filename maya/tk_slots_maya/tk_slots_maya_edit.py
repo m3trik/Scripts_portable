@@ -477,19 +477,27 @@ class Edit(Init):
 		selectionMask = pm.selectMode (query=True, component=True)
 		maskVertex = pm.selectType (query=True, vertex=True)
 		maskEdge = pm.selectType (query=True, edge=True)
-		# maskFacet = pm.selectType (query=True, facet=True)
+		maskFacet = pm.selectType (query=True, facet=True)
 
-		if all([selectionMask==1, maskEdge==1]): #delete edges
-			pm.polyDelEdge (cleanVertices=True)
-			self.viewPortMessage("delete <hl>edge(s)</hl>.")
+		objects = pm.ls(sl=1)
+		
+		for obj in objects:
+			if pm.objectType(obj, isType='joint'):
+				pm.removeJoint(obj) #remove joints
 
-		if all([selectionMask==1, maskVertex==1]): #delete vertices
-			pm.polyDelVertex()
-			self.viewPortMessage("delete <hl>vertice(s)</hl>.")
+			elif pm.objectType(obj, isType='mesh'): 
+				if all([selectionMask==1, maskEdge==1]):
+					pm.polyDelEdge(cleanVertices=True) #delete edges
 
-		else:
-			pm.delete()
-			self.viewPortMessage("delete.")
+				elif all([selectionMask==1, maskVertex==1]):
+					pm.polyDelVertex() #delete vertices
+
+				elif all([selectionMask==1, maskFacet==1]):
+					pm.delete(obj) #delete faces
+			else:
+				pm.delete(obj)
+		
+		self.viewPortMessage('Delete <hl>'+str(objects)+'</hl>.')
 
 
 	def b008(self):
