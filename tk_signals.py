@@ -147,7 +147,7 @@ class Signal(QtCore.QObject):
 	def onPressedEvent(self, method):
 		#args: [method object]
 		#add method and docstring to prevCommand list
-		if type(method)!=int and method.__name__.startswith('b'): #ie. 'b012'
+		if callable(method) and method.__name__.startswith('b'): #ie. 'b012'
 			try:
 				docString = self.sb.getDocString(self.name, method.__name__) #get the 'docString'. ie. 'Multi-Cut Tool'
 				# print docString, method.__name__, self.sb.prevCommand(as_list=1)
@@ -155,7 +155,7 @@ class Signal(QtCore.QObject):
 			except Exception as error:
 				print 'tk_signals:147:', error
 		#add previous view to preView list
-		if type(method)!=int and method.__name__.startswith('v'): #ie. 'v012'
+		if callable(method) and method.__name__.startswith('v'): #ie. 'v012'
 			self.sb.previousView(as_list=1).append(method)
 
 

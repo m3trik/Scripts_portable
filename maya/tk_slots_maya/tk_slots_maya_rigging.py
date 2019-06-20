@@ -16,78 +16,172 @@ class Rigging(Init):
 
 		self.ui = self.sb.getUi('rigging')
 
+		self.s000(pm.jointDisplayScale(query=1)) #init global joint display size
+		self.s001(pm.ikHandleDisplayScale(query=1)) #init IK handle display size
+		self.s002(pm.jointDisplayScale(query=1, ikfk=1)) #init IKFK display size
 
+
+
+	def s000(self, value=None):
+		'''
+		Joint Scale
+		'''
+		if not value:
+			value = self.ui.s000.value()
+
+		pm.jointDisplayScale(value) #set global joint display size
+
+
+	def s001(self, value=None):
+		'''
+		IK Scale
+		'''
+		if not value:
+			value = self.ui.s002.value()
+
+		pm.ikHandleDisplayScale(value) #set global IK handle display size
+
+
+	def s002(self, value=None):
+		'''
+		IK/Fk Scale
+		'''
+		if not value:
+			value = self.ui.s001.value()
+
+		pm.jointDisplayScale(value, ikfk=1) #set global IKFK display size
+
+
+	def cmb000(self):
+		'''
+		Editors
+		'''
+		cmb = self.ui.cmb000
+
+		files = ['Quick Rig','HumanIK','Expression Editor', 'Shape Editor']
+		contents = self.comboBox(cmb, files, "Editors")
+
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index('Quick Rig'):
+				mel.eval('QuickRigEditor;') #Quick Rig
+			if index==contents.index('HumanIK'):
+				mel.eval('HIKCharacterControlsTool;') #HumanIK
+			if index==contents.index('Expression Editor'):
+				mel.eval('ExpressionEditor;') #Expression Editor
+			if index==contents.index('Shape Editor'):
+				mel.eval('ShapeEditor;') #Shape Editor
+			cmb.setCurrentIndex(0)
+
+
+	def cmb001(self):
+		'''
+		Create
+		'''
+		cmb = self.ui.cmb001
+
+		files = ['Joints','Locator','IK Handle', 'Lattice', 'Cluster']
+		contents = self.comboBox(cmb, files, "Create")
+
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index('Joints'):
+				pm.setToolTo('jointContext') #create joint tool
+			if index==contents.index('Locator'):
+				pm.spaceLocator(p=[0,0,0]) #locator
+			if index==contents.index('IK Handle'):
+				pm.setToolTo('ikHandleContext') #create ik handle
+			if index==contents.index('Lattice'):
+				pm.lattice(divisions=[2,5,2], objectCentered=1, ldv=[2,2,2]) ##create lattice
+			if index==contents.index('Cluster'):
+				mel.eval('CreateCluster;') #create cluster
+			cmb.setCurrentIndex(0)
 
 
 	def b000(self):
 		'''
-		
-
+		Toggle Display Local Rotation Axes
 		'''
-		mel.eval('')
+		state=False
+		if self.ui.b000.isChecked():
+			state=True
+
+		joints = pm.ls(type="joint") #get all scene joints
+		pm.toggle(joints, localAxis=state) #set display of local rotation axes
+		self.viewPortMessage("Display Local Rotation Axes:<hl>"+str(state)+"</hl>")
+
 
 	def b001(self):
 		'''
-		
 
 		'''
-		mel.eval('')
+		pass
+
 
 	def b002(self):
 		'''
-		
-
+		Insert Joint Tool
 		'''
-		mel.eval('')
+		pm.setToolTo('insertJointContext') #insert joint tool
+
 
 	def b003(self):
 		'''
-		
-
+		Orient Joints
 		'''
-		mel.eval('')
+		pm.joint(edit=1, orientJoint='xyz', zeroScaleOrient=1, ch=1) #orient joints
+
 
 	def b004(self):
 		'''
-		
-
+		Reroot
 		'''
-		mel.eval('')
+		pm.reroot() #re-root joints
+
 
 	def b005(self):
 		'''
-		
-
+		Constraint: Parent
 		'''
-		mel.eval('')
+		pm.parentConstraint(mo=1, weight=1)
+
 
 	def b006(self):
 		'''
-		
-
+		Constraint: Point
 		'''
-		mel.eval('')
+		pm.pointConstraint(offset=[0,0,0], weight=1)
+
 
 	def b007(self):
 		'''
-		
-
+		Constraint: Scale
 		'''
-		mel.eval('')
+		pm.scaleConstraint(offset=[1,1,1], weight=1)
+
 
 	def b008(self):
 		'''
-		
-
+		Constraint: Orient
 		'''
-		mel.eval("")
+		pm.orientConstraint(offset=[0,0,0], weight=1)
+
 
 	def b009(self):
 		'''
-		
-
+		Constraint: Aim
 		'''
-		mel.eval('')
+		pm.aimConstraint(offset=[0,0,0], weight=1, aimVector=[1,0,0], upVector=[0,1,0], worldUpType="vector", worldUpVector=[0,1,0])
+
+
+	def b010(self):
+		'''
+		Constraint: Pole Vector
+		'''
+		pm.orientConstraint(offset=[0,0,0], weight=1)
+
+
+
 
 
 

@@ -204,17 +204,17 @@ class Scene(Init):
 		'''
 		cmb = self.ui.cmb005
 		
-		files = []
+		files = ['Node Editor', 'Outlinder', 'Content Browser']
 		contents = self.comboBox(cmb, files, "Editors")
 
 		index = cmb.currentIndex()
 		if index!=0:
-			if index==contents.index(''):
-				mel.eval('') #Hypergraph: Hierarchy
-			if index==contents.index(''):
-				mel.eval('') #Hypergraph: Input/Output
-			if index==contents.index(''):
-				mel.eval('') #Node Editor
+			if index==contents.index('Node Editor'):
+				mel.eval('NodeEditorWindow;') #
+			if index==contents.index('Outlinder'):
+				mel.eval('OutlinerWindow;') #
+			if index==contents.index('Content Browser'):
+				mel.eval('ContentBrowserWindow;') #
 			cmb.setCurrentIndex(0)
 
 

@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>234</width>
-    <height>160</height>
+    <width>233</width>
+    <height>255</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -28,6 +28,9 @@
   <property name="windowTitle">
    <string>Toolkit</string>
   </property>
+  <property name="toolTip">
+   <string>Global joint display scale.</string>
+  </property>
   <property name="tabShape">
    <enum>QTabWidget::Triangular</enum>
   </property>
@@ -38,83 +41,12 @@
    <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::ForceTabbedDocks</set>
   </property>
   <widget class="QWidget" name="mainWindow">
-   <widget class="QGroupBox" name="groupBox_2">
-    <property name="geometry">
-     <rect>
-      <x>4</x>
-      <y>36</y>
-      <width>89</width>
-      <height>91</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="b003">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>48</y>
-       <width>89</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="b001">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>12</y>
-       <width>89</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="b002">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>30</y>
-       <width>89</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="b000">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>66</y>
-       <width>89</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </widget>
    <widget class="QFrame" name="menubar">
     <property name="geometry">
      <rect>
-      <x>4</x>
+      <x>8</x>
       <y>6</y>
-      <width>221</width>
+      <width>213</width>
       <height>20</height>
      </rect>
     </property>
@@ -127,7 +59,7 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>200</x>
+       <x>192</x>
        <y>0</y>
        <width>21</width>
        <height>19</height>
@@ -158,6 +90,415 @@
      </property>
      <property name="checkable">
       <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_3">
+    <property name="geometry">
+     <rect>
+      <x>8</x>
+      <y>72</y>
+      <width>101</width>
+      <height>49</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Joint</string>
+    </property>
+    <widget class="QPushButton" name="b002">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>12</y>
+       <width>49</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="text">
+      <string>Insert</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b004">
+     <property name="geometry">
+      <rect>
+       <x>52</x>
+       <y>30</y>
+       <width>49</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="text">
+      <string>Reroot</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b003">
+     <property name="geometry">
+      <rect>
+       <x>48</x>
+       <y>12</y>
+       <width>53</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="text">
+      <string>Orient</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_4">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>36</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Editors</string>
+    </property>
+    <widget class="QComboBox" name="cmb000">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>12</y>
+       <width>101</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>101</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>9999</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>Editors</string>
+      </property>
+     </item>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_5">
+    <property name="geometry">
+     <rect>
+      <x>8</x>
+      <y>126</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>IK</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_6">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>72</y>
+      <width>101</width>
+      <height>85</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Display</string>
+    </property>
+    <widget class="QDoubleSpinBox" name="s000">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>30</y>
+       <width>101</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="baseSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Global Joint Scale</string>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
+     </property>
+     <property name="prefix">
+      <string>Joint Scale: </string>
+     </property>
+     <property name="decimals">
+      <number>2</number>
+     </property>
+     <property name="singleStep">
+      <double>0.250000000000000</double>
+     </property>
+     <property name="value">
+      <double>1.000000000000000</double>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b000">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>12</y>
+       <width>101</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Toggle local rotation axis visiblitiy for all joint objects.</string>
+     </property>
+     <property name="text">
+      <string>Local Rotation Axes</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="s001">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>48</y>
+       <width>101</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="baseSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Global Joint Scale</string>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
+     </property>
+     <property name="prefix">
+      <string>IK Scale: </string>
+     </property>
+     <property name="decimals">
+      <number>2</number>
+     </property>
+     <property name="singleStep">
+      <double>0.250000000000000</double>
+     </property>
+     <property name="value">
+      <double>1.000000000000000</double>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="s002">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>66</y>
+       <width>101</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="baseSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Global Joint Scale</string>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
+     </property>
+     <property name="prefix">
+      <string>IK/FK Scale: </string>
+     </property>
+     <property name="decimals">
+      <number>2</number>
+     </property>
+     <property name="singleStep">
+      <double>0.250000000000000</double>
+     </property>
+     <property name="value">
+      <double>1.000000000000000</double>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_7">
+    <property name="geometry">
+     <rect>
+      <x>8</x>
+      <y>36</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Rigging</string>
+    </property>
+    <widget class="QComboBox" name="cmb001">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>12</y>
+       <width>101</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>101</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>9999</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>Create</string>
+      </property>
+     </item>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_8">
+    <property name="geometry">
+     <rect>
+      <x>8</x>
+      <y>162</y>
+      <width>101</width>
+      <height>67</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Contraints</string>
+    </property>
+    <widget class="QPushButton" name="b005">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>12</y>
+       <width>49</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="text">
+      <string>Parent</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b006">
+     <property name="geometry">
+      <rect>
+       <x>48</x>
+       <y>12</y>
+       <width>53</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="text">
+      <string>Point</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b008">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>30</y>
+       <width>49</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="text">
+      <string>Orient</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b007">
+     <property name="geometry">
+      <rect>
+       <x>48</x>
+       <y>30</y>
+       <width>53</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="text">
+      <string>Scale</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b009">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>48</y>
+       <width>37</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="text">
+      <string>Aim</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b010">
+     <property name="geometry">
+      <rect>
+       <x>36</x>
+       <y>48</y>
+       <width>65</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="text">
+      <string>Pole Vector</string>
      </property>
     </widget>
    </widget>
