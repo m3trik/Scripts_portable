@@ -109,20 +109,27 @@ class Rigging(Init):
 		'''
 		Toggle Display Local Rotation Axes
 		'''
-		state=False
-		if self.ui.b000.isChecked():
-			state=True
-
 		joints = pm.ls(type="joint") #get all scene joints
-		pm.toggle(joints, localAxis=state) #set display of local rotation axes
+
+		state = pm.toggle(joints[0], query=1, localAxis=1)
+		if self.ui.b000.isChecked():
+			if not state:
+				toggle=True
+		else:
+			if state:
+				toggle=True
+
+		if toggle:
+			pm.toggle(joints, localAxis=1) #set display off
+
 		self.viewPortMessage("Display Local Rotation Axes:<hl>"+str(state)+"</hl>")
 
 
 	def b001(self):
 		'''
-
+		Connect Joints
 		'''
-		pass
+		pm.connectJoint(cm=1)
 
 
 	def b002(self):

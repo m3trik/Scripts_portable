@@ -1,6 +1,8 @@
 import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
 from pymxs import runtime as rt
 
+from PySide2 import QtGui
+
 import os.path
 
 from tk_slots_ import Slot
@@ -27,19 +29,23 @@ class Init(Slot):
 
 		if level==0: #object level
 			selCount = len(sel) #number of selected objects
-			currentSelection = [str(s.name) for s in sel]; infoDict.update({str(selCount)+"Objects: ":currentSelection}) #currently selected objects
+			currentSelection = [str(s.name) for s in sel]; infoDict.update({str(selCount)+" Objects: ":currentSelection}) #currently selected objects
 
 
 		for obj in rt.selection:
 			type_ = str(rt.classOf(obj))
-			
-			# symmetry = pm.symmetricModelling(query=1, symmetry=1);
-			# if symmetry==1: symmetry=True; infoDict.update({"Symmetry State: ":symmetry}) #symmetry state
-			# if symmetry: axis = pm.symmetricModelling(query=1, axis=1); infoDict.update({"Symmetry Axis: ":axis}) #symmetry axis
+
+			symmetry = obj.modifiers[rt.Symmetry]
+			if symmetry:
+				s = symmetry.axis;
+				if s==0: axis='x'; 
+				if s==1: axis='y'; 
+				if s==2: axis='z'; 
+				infoDict.update({'Symmetry Axis: ':axis.upper()}) #symmetry axis
 
 			# xformConstraint = pm.xformConstraint(query=True, type=True)
 			# if xformConstraint=='none': xformConstraint=None; infoDict.update({"Xform Constrait: ":xformConstraint}) #transform constraits
-			
+
 			if type_=='Editable_Poly' or type_=='Edit_Poly':
 				if level==1: #get vertex info
 					selectedVerts = Init.bitArrayToArray(rt.polyop.getVertSelection(obj))
@@ -52,7 +58,7 @@ class Init(Slot):
 					collapsedList = self.collapseList(selectedEdges)
 					numEdges = rt.polyop.getNumEdges(obj)
 					infoDict.update({'Edges: '+str(len(selectedEdges))+'/'+str(numEdges):collapsedList}) #selected edges
-					
+
 				elif level==4: #get face info
 					selectedFaces = Init.bitArrayToArray(rt.polyop.getFaceSelection(obj))
 					collapsedList = self.collapseList(selectedFaces)
@@ -69,7 +75,16 @@ class Init(Slot):
 		t.clear()
 		for key, value in infoDict.iteritems():
 			if value:
-				t.append(key+str(value))
+				highlight = QtGui.QColor(255, 255, 0)
+				baseColor = QtGui.QColor(185, 185, 185)
+
+				t.setTextColor(baseColor)
+				t.append(key) #t.append(key+str(value))
+				t.setTextColor(highlight)
+				t.insertPlainText(str(value))
+
+
+
 
 
 

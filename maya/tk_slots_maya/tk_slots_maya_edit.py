@@ -492,10 +492,8 @@ class Edit(Init):
 				elif all([selectionMask==1, maskVertex==1]):
 					pm.polyDelVertex() #delete vertices
 
-				elif all([selectionMask==1, maskFacet==1]):
-					pm.delete(obj) #delete faces
-			else:
-				pm.delete(obj)
+				else: #all([selectionMask==1, maskFacet==1]):
+					pm.delete(obj) #delete faces\mesh objects
 		
 		self.viewPortMessage('Delete <hl>'+str(objects)+'</hl>.')
 

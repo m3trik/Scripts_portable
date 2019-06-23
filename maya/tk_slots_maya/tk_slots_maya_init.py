@@ -1,6 +1,8 @@
 import maya.mel as mel
 import pymel.core as pm
 
+from PySide2 import QtGui
+
 import os.path
 
 from tk_slots_ import Slot
@@ -29,8 +31,7 @@ class Init(Slot):
 
 
 		symmetry = pm.symmetricModelling(query=1, symmetry=1);
-		if symmetry==1: symmetry=True; infoDict.update({'Symmetry State: ':symmetry}) #symmetry state
-		if symmetry: axis = pm.symmetricModelling(query=1, axis=1); infoDict.update({'Symmetry Axis: ':axis}) #symmetry axis
+		if symmetry: axis = pm.symmetricModelling(query=1, axis=1); infoDict.update({'Symmetry Axis: ':axis.upper()}) #symmetry axis
 
 		xformConstraint = pm.xformConstraint(query=True, type=True)
 		if xformConstraint=='none': xformConstraint=None; infoDict.update({'Xform Constrait: ':xformConstraint}) #transform constraits
@@ -59,7 +60,7 @@ class Init(Slot):
 					numFaces = pm.polyEvaluate (selection[0], face=1)
 					infoDict.update({'Faces: '+str(len(selectedFaces))+'/'+str(numFaces):collapsedList}) #selected faces
 
-			
+
 			# selectedUVs = pm.polyEvaluate(uvComponent=1); 
 			# if type(selectedUvs)==int: infoDict.update({"Selected UV's: ":selectedUVs}) #selected uv's
 
@@ -70,7 +71,13 @@ class Init(Slot):
 		t.clear()
 		for key, value in infoDict.iteritems():
 			if value:
-				t.append(key+str(value))
+				highlight = QtGui.QColor(255, 255, 0)
+				baseColor = QtGui.QColor(185, 185, 185)
+
+				t.setTextColor(baseColor)
+				t.append(key) #t.append(key+str(value))
+				t.setTextColor(highlight)
+				t.insertPlainText(str(value))
 
 
 

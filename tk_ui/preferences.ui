@@ -89,7 +89,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Preferences</string>
+      <string>App Preferences</string>
      </property>
     </widget>
    </widget>
@@ -119,7 +119,7 @@
      </rect>
     </property>
     <property name="title">
-     <string>HotBox</string>
+     <string>Menu Sets</string>
     </property>
     <widget class="QComboBox" name="cmb000">
      <property name="geometry">
@@ -150,7 +150,7 @@
      </property>
      <item>
       <property name="text">
-       <string>Menu Sets:</string>
+       <string>Modeling</string>
       </property>
      </item>
     </widget>

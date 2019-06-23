@@ -1,7 +1,7 @@
 import maya.mel as mel
 import pymel.core as pm
 
-import os.path
+import os
 
 from tk_slots_maya_init import Init
 
@@ -33,6 +33,8 @@ class Scene(Init):
 			if str.isdigit(char):
 				num = num+char
 			else: #when a non-integer char is found return any integers as a string.
+				if not num:
+					num='0'
 				num = int(num[::-1])+increment #re-reverse the string and increment.
 				return '000'[:-len(str(num))]+str(num) #prefix '000' removing zeros according to num length ie. 009 becomes 010
 
@@ -54,45 +56,55 @@ class Scene(Init):
 		find = str(self.ui.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
 		to = str(self.ui.t001.text())
 
+
 		if pm.ls(selection=1): #if selection; operate on only the selected objects.
-			lists = [pm.ls(f, sl=1) for f in find.split('|')] #objects in current selection that match criteria
+			if find:
+				lists = [pm.ls(f, sl=1) for f in find.split('|')] #objects in current selection that match criteria
+			else:
+				lists = [pm.ls(sl=1)] #if 'find' field is blank, use all currently selected objects
 		else:
-			lists = [pm.ls(f) for f in find.split('|')] # objects = pm.ls(find) #Stores a list of all objects containing 'find'
+			if find:
+				lists = [pm.ls(f) for f in find.split('|')] # objects = pm.ls(find) #Stores a list of all objects containing 'find'
+			else:
+				lists = [pm.ls()] #if find field is blank, and nothing is selected, get all objects
 		objects = set([i for sublist in lists for i in sublist]) #flatten and remove any duplicates.
 
+
+		pm.undoInfo (openChunk=1)
 		for obj in objects:
-			for f in [f for f in find.split('|') if f.strip('*') in obj.name()]: #get the objects that contain the chars in find.split('|')
-				relatives = pm.listRelatives(obj, parent=1) #Get a list of it's direct parent
-				if 'group*' in relatives: #If that parent starts with group, it came in root level and is pasted in a group, so ungroup it
-					relatives[0].ungroup()
+			f = [f for f in find.split('|') if f.strip('*') in obj.name()][0] #get the objects that contain the chars in find.split('|')
+			
+			relatives = pm.listRelatives(obj, parent=1) #Get a list of it's direct parent
+			if 'group*' in relatives: #If that parent starts with group, it came in root level and is pasted in a group, so ungroup it
+				relatives[0].ungroup()
 
-				#find modifiers
-				if to.startswith('*') and to.endswith('*'): #replace chars
-					f = f.replace('*', '') #remove modifiers
-					newName = obj.name().replace(f, to)
+			#find modifiers
+			if to.startswith('*') and to.endswith('*'): #replace chars
+				f = f.replace('*', '') #remove modifiers
+				newName = obj.name().replace(f, to)
 
-				elif to.startswith('*'): #replace suffix
-					newName = obj.name()+to
+			elif to.startswith('*'): #replace suffix
+				newName = obj.name()+to
 
-				elif to.endswith('*'): #replace prefix
-					f = f.replace('*', '') #remove modifiers
-					newName = obj.name().replace(f, to, 1) #1=replace only the first occurance
+			elif to.endswith('*'): #replace prefix
+				f = f.replace('*', '') #remove modifiers
+				newName = obj.name().replace(f, to, 1) #1=replace only the first occurance
 
-				elif to.startswith('**'): #replace suffix and move any trailing integers
-					num = self.getTrailingIntegers(obj.name())
-					stripped = obj.name().rstrip(f+'0123456789')
-					newName = stripped+num+to
+			elif to.startswith('**'): #replace suffix and move any trailing integers
+				num = self.getTrailingIntegers(obj.name())
+				stripped = obj.name().rstrip(f+'0123456789')
+				newName = stripped+num+to
 
-				else: #replace whole name
-					newName = to
+			else: #replace whole name
+				newName = to
 
-				newName = newName.replace('*', '') #remove modifiers
-				while pm.objExists(newName):
-					num = self.getTrailingIntegers(newName, increment=1)
-					newName = newName.rstrip('0123456789')+num
+			newName = newName.replace('*', '') #remove modifiers
+			while pm.objExists(newName):
+				num = self.getTrailingIntegers(newName, increment=1)
+				newName = newName.rstrip('0123456789')+num
 
-				name = pm.rename(obj, newName) #Rename the object with the new name
-				break
+			name = pm.rename(obj, newName) #Rename the object with the new name
+		pm.undoInfo (closeChunk=1)
 
 
 	def cmb000(self):
@@ -134,13 +146,16 @@ class Scene(Init):
 
 		'''
 		cmb = self.ui.cmb002
-		
-		files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" in file_]
+
+		path = os.environ.get('MAYA_AUTOSAVE_FOLDER').split(';')[0] #get autosave dir path from env variable.
+		files = [f for f in os.listdir(path) if f.endswith('.mb') or f.endswith('.ma')] #[file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" in file_]
 		contents = self.comboBox (cmb, files, "Recent Autosave")
 
 		index = cmb.currentIndex()
 		if index!=0:
-			force=True; force if str(mel.eval("file -query -sceneName -shortName;")) else not force #if sceneName prompt user to save; else force open
+			force=True
+			if str(mel.eval("file -query -sceneName -shortName;")):
+				force=False #if sceneName, prompt user to save; else force open
 			pm.openFile (contents[index], open=1, force=force)
 			cmb.setCurrentIndex(0)
 
@@ -306,10 +321,14 @@ class Scene(Init):
 
 	def b001(self):
 		'''
-		
-
+		Open Most Recent File
 		'''
-		pass
+		files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in file_]
+
+		force=True
+		if str(mel.eval("file -query -sceneName -shortName;")):
+			force=False #if sceneName, prompt user to save; else force open
+		pm.openFile (files[0], open=1, force=force)
 
 
 	def b002(self):
