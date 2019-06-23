@@ -98,7 +98,8 @@ class Init(Slot):
 					localspace=bool - specify world or local space
 		ex. self.getAllFacesOnAxis ('y')
 		'''
-		faceCount = pm.polyEvaluate(obj, face=1)
+		childNodes = pm.listRelatives(obj, allDescendents=1)
+		faceCount = pm.polyEvaluate(childNodes, face=1)
 		faces = []
 
 		index = 0 #'x'

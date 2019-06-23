@@ -48,7 +48,7 @@
      </rect>
     </property>
     <property name="title">
-     <string>Maya App</string>
+     <string>App</string>
     </property>
     <widget class="QPushButton" name="b008">
      <property name="geometry">

@@ -674,18 +674,16 @@ class Edit(Init):
 
 	def b025(self):
 		'''
-		Batch Transfer Attributes
-
+		
 		'''
-		maxEval('tk_batchTransform();')
+		pass
 
 
 	def b026(self):
 		'''
-		Transfer Attributes Options
 
 		'''
-		maxEval('performTransferAttributes 1;')
+		pass
 
 
 	def b027(self):

@@ -682,26 +682,25 @@ class Edit(Init):
 
 	def b024(self):
 		'''
-		Transfer Attribute Values Options
+		Transfer Attribute Values: Options
 
 		'''
 		mel.eval('TransferAttributeValuesOptions;')
+		# mel.eval('performTransferAttributes 1;') #Transfer Attributes Options
 
 
 	def b025(self):
 		'''
-		Batch Transfer Attributes
 
 		'''
-		mel.eval('tk_batchTransform();')
+		pass
 
 
 	def b026(self):
 		'''
-		Transfer Attributes Options
-
+		
 		'''
-		mel.eval('performTransferAttributes 1;')
+		pass
 
 
 	def b027(self):
