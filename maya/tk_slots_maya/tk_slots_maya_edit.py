@@ -397,7 +397,7 @@ class Edit(Init):
 	def b004(self):
 		'''
 		Select Instanced Objects
-
+		
 		'''
 		if self.ui.chk017.isChecked(): #select all instances
 			import maya.OpenMaya as om

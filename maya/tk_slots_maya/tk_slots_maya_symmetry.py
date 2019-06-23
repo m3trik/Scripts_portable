@@ -187,15 +187,17 @@ class Symmetry(Init):
 				axis = 5
 				x=1; y=1; z=-1
 
-		if pm.ls(sl=1, objectsOnly=1):
+		selection = pm.ls(sl=1, objectsOnly=1)
+		if selection:
 			pm.undoInfo(openChunk=1)
 			if cutMesh:
 				self.b008() #delete mesh faces that fall inside the specified axis
-			if instance: #create instance and scale negatively
-				inst = pm.instance() # bt_convertToMirrorInstanceMesh(0); #x=0, y=1, z=2, -x=3, -y=4, -z=5
-				pm.scale(z,x,y, pivot=(0,0,0), relative=1) #swap the xyz values to transform the instanced node
-			else: #mirror
-				pm.polyMirrorFace(mirrorAxis=axisDirection, direction=axis, mergeMode=1, mergeThresholdType=1, mergeThreshold=mergeThreshold, worldSpace=0, smoothingAngle=30, flipUVs=0, ch=0) #mirrorPosition x, y, z - This flag specifies the position of the custom mirror axis plane
+			for obj in [n for n in pm.listRelatives(selection, allDescendents=1) if pm.objectType(n, isType='mesh')]: #get any mesh type child nodes of obj.
+				if instance: #create instance and scale negatively
+					inst = pm.instance(obj) # bt_convertToMirrorInstanceMesh(0); #x=0, y=1, z=2, -x=3, -y=4, -z=5
+					pm.xform(inst, scale=[x,y,z]) #pm.scale(z,x,y, pivot=(0,0,0), relative=1) #swap the xyz values to transform the instanced node
+				else: #mirror
+					pm.polyMirrorFace(obj, mirrorAxis=axisDirection, direction=axis, mergeMode=1, mergeThresholdType=1, mergeThreshold=mergeThreshold, worldSpace=0, smoothingAngle=30, flipUVs=0, ch=0) #mirrorPosition x, y, z - This flag specifies the position of the custom mirror axis plane
 			pm.undoInfo(closeChunk=1)
 		else:
 			print '# Warning: Nothing Selected.'
@@ -259,11 +261,6 @@ class Symmetry(Init):
 		'''
 		Delete Along Axis
 		'''
-		selectionMask = pm.selectMode(query=True, component=True)
-		maskVertex = pm.selectType(query=True, vertex=True)
-		maskEdge = pm.selectType(query=True, edge=True)
-		# maskFacet = pm.selectType (query=True, facet=True)
-
 		selection = pm.ls(sl=1, objectsOnly=1)
 
 		if self.ui.chk008.isChecked():
@@ -275,12 +272,18 @@ class Symmetry(Init):
 		if self.ui.chk007.isChecked():
 			axis = '-'+axis
 
+		pm.undoInfo(openChunk=1)
 		for obj in selection:
-		# if selectionMask==0: #object mode /delete faces along axis
-			faces = self.getAllFacesOnAxis(obj, axis)
-			pm.delete(faces)
-			self.viewPortMessage("delete faces on <hl>"+axis+"</hl>.")
-			return axis
+			for node in [n for n in pm.listRelatives(obj, allDescendents=1) if pm.objectType(n, isType='mesh')]: #get any mesh type child nodes of obj.
+				faces = self.getAllFacesOnAxis(node, axis)
+				if len(faces)==pm.polyEvaluate(node, face=1): #if all faces fall on the specified axis.
+					pm.delete(node) #delete entire node
+				else:
+					pm.delete(faces) #else, delete any individual faces.
+		pm.undoInfo(closeChunk=1)
+
+		self.viewPortMessage("Delete faces on <hl>"+axis.upper()+"</hl>.")
+
 
 
 

@@ -96,31 +96,18 @@ class Init(Slot):
 		args:	obj=<geometry> - object to perform the operation on. 
 				axis='string' - representing axis ie. "x"
 					localspace=bool - specify world or local space
-		ex. self.getAllFacesOnAxis ('y')
+		ex. self.getAllFacesOnAxis(polyObject, 'y')
 		'''
-		childNodes = pm.listRelatives(obj, allDescendents=1)
-		faceCount = pm.polyEvaluate(childNodes, face=1)
-		faces = []
-
-		index = 0 #'x'
+		i=0 #'x'
 		if any ([axis=="y",axis=="-y"]):
-			index = 1
+			i=1
 		if any ([axis=="z",axis=="-z"]):
-			index = 2
+			i=2
 
-		for i in xrange(faceCount):
-			attr = obj + '.f[%d]' % i
-
-			if any ([axis=="-x", axis=="-y", axis=="-z"]):
-				# if pm.xform(attr, query=1, worldSpace=1, translation=1)[index] < 0:
-				if pm.exactWorldBoundingBox (attr)[index] < -0.00001:
-					faces.append(attr)
-			else:
-				# if pm.xform(attr, query=1, worldSpace=1, translation=1)[index] > 0:
-				if pm.exactWorldBoundingBox (attr)[index] > -0.00001:
-					faces.append(attr)
-
-		return faces
+		if axis.startswith('-'): #any([axis=="-x", axis=="-y", axis=="-z"]):
+			return [face for face in pm.filterExpand(obj+'.f[*]', sm=34) if pm.exactWorldBoundingBox(face)[i] < -0.00001]
+		else:
+			return [face for face in pm.filterExpand(obj+'.f[*]', sm=34) if pm.exactWorldBoundingBox(face)[i] > -0.00001]
 
 
 	#select shortest edge path between (two or more) selected edges
@@ -364,12 +351,28 @@ class Init(Slot):
 
 
 	@staticmethod
-	def viewPortMessage (message='', statusMessage='', assistMessage='', position='topCenter'):
-		#args: statusMessage='string' - message to display (accepts html formatting).
-		#			position='string' - position on screen. possible values are: topCenter","topRight","midLeft","midCenter","midCenterTop","midCenterBot","midRight","botLeft","botCenter","botRight"
-		#ex. self.viewPortMessage("shutting down:<hl>"+str(timer)+"</hl>")
-		message=statusMessage; statusMessage=''
-		pm.inViewMessage(message=message, statusMessage=statusMessage, assistMessage=assistMessage, position=position, fontSize=10, fade=1, fadeInTime=0, fadeStayTime=1000, fadeOutTime=500, alpha=75) #1000ms = 1 sec
+	def viewPortMessage(message='', statusMessage='', assistMessage='', position='topCenter'):
+		'''
+		args: 	message='string' - The message to be displayed, (accepts html formatting). General message, inherited by -amg/assistMessage and -smg/statusMessage.
+				statusMessage='string' - The status info message to be displayed (accepts html formatting).
+				assistMessage='string' - The user assistance message to be displayed, (accepts html formatting).
+				position='string' - position on screen. possible values are: topCenter","topRight","midLeft","midCenter","midCenterTop","midCenterBot","midRight","botLeft","botCenter","botRight"
+		ex. self.viewPortMessage("shutting down:<hl>"+str(timer)+"</hl>")
+		'''
+		fontSize=10
+		fade=1
+		fadeInTime=0
+		fadeStayTime=1000
+		fadeOutTime=500
+		alpha=75
+
+		if message:
+			pm.inViewMessage(message=message, position=position, fontSize=fontSize, fade=fade, fadeInTime=fadeInTime, fadeStayTime=fadeStayTime, fadeOutTime=fadeOutTime, alpha=alpha) #1000ms = 1 sec
+		elif statusMessage:
+			pm.inViewMessage(statusMessage=statusMessage, position=position, fontSize=fontSize, fade=fade, fadeInTime=fadeInTime, fadeStayTime=fadeStayTime, fadeOutTime=fadeOutTime, alpha=alpha) #1000ms = 1 sec
+		elif assistMessage:
+			pm.inViewMessage(assistMessage=assistMessage, position=position, fontSize=fontSize, fade=fade, fadeInTime=fadeInTime, fadeStayTime=fadeStayTime, fadeOutTime=fadeOutTime, alpha=alpha) #1000ms = 1 sec
+
 
 
 	#output text
