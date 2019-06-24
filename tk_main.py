@@ -51,7 +51,7 @@ class HotBox(QtWidgets.QWidget):
 		#set window style
 		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint|QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.X11BypassWindowManagerHint)
 		self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
-		self.setStyle(QtWidgets.QStyleFactory.create("plastique"))
+		# self.setStyle(QtWidgets.QStyleFactory.create("plastique"))
 		self.setStyleSheet(styleSheet.css)
 		
 		# self.setMouseTracking(True) #mouse tracking events during mouse button up state.
@@ -198,9 +198,9 @@ class HotBox(QtWidgets.QWidget):
 	def mouseMoveEvent(self, event):
 		#args: [QEvent]
 		if self.name=='main':
-			self.setVisibility(event.pos(), 'r000-7')
-			self.setDown(event.pos(), 'i003-18, i020-23, v000-13')
-			
+			self.setVisibility(event.pos(), 'r000-11')
+			self.setDown(event.pos(), 'i003-18, i020-23, v000-31')
+
 		if self.name=='viewport':
 			self.setVisibility(event.pos(), 'r000-7')
 			self.setDown(event.pos(), 'v000-17')

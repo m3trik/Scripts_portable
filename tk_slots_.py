@@ -226,6 +226,7 @@ class Slot(object):
 		return value
 
 
+
 	global cycleDict
 	cycleDict={}
 	@staticmethod
