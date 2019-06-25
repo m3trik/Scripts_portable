@@ -157,11 +157,11 @@ any additional widget types can be easily added when needed using this same conv
 (Assuming the directory structure is left intact).
 
 In maya:
-* add maya directory to maya.env
- (ie. MAYA_SCRIPT_PATH=<dir>)
+* add \maya\tk_slots_maya directory to maya.env
+ (MAYA_SCRIPT_PATH=<dir>)
  
 In 3ds Max
-* add max/startup directory to system path by navigating to:
+* add \max\startup directory to system path by navigating in app to:
  main menu> customize> additional startup scripts
  
 The default hotkey for launching the menu set is f12. This is because I usually remap f12 to the windows key.
