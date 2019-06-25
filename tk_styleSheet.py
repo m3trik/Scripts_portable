@@ -14,7 +14,7 @@ import os.path
 # COLOR_MEDIUM   = #353535
 # COLOR_MEDLIGHT = #5A5A5A
 # COLOR_LIGHT    = #DDDDDD
-# COLOR_ACCENT   = #AAAAFF
+# COLOR_ACCENT   = rgba(82,133,166,200)
 
 
 css='''
@@ -23,7 +23,7 @@ css='''
 
 
 QWidget::item:selected {
-	background: #AAAAFF;
+	background: rgba(82,133,166,200);
 }
 
 QCheckBox, QRadioButton {
@@ -55,7 +55,10 @@ QRadioButton::indicator:checked:hover, QCheckBox::indicator:checked:hover {
 }
 
 QGroupBox {
-	margin-top: 6px;
+	margin-top: 4px;
+	background-color: rgba(100,100,100,80);
+	color: rgb(225, 225, 225);
+	border: 0px solid black;
 }
 
 QGroupBox::title {
@@ -131,7 +134,6 @@ QScrollBar::sub-line:vertical {
 	subcontrol-position: top;
 }
 
-
 QScrollBar::add-page, QScrollBar::sub-page {
 	background: none;
 }
@@ -146,7 +148,7 @@ QAbstractButton:pressed {
 
 QAbstractItemView {
 	show-decoration-selected: 1;
-	selection-background-color: #AAAAFF;
+	selection-background-color: rgba(82,133,166,200);
 	selection-color: #DDDDDD;
 	alternate-background-color: #353535;
 }
@@ -187,8 +189,6 @@ QAbstractSpinBox {
 	padding-right: 0px;
 }
 
-
-
 QSlider {
 	border: none;
 }
@@ -219,7 +219,7 @@ QSlider::handle:vertical {
 }
 
 QSlider::add-page:vertical, QSlider::sub-page:horizontal {
-	background: #AAAAFF;
+	background: rgba(82,133,166,200);
 }
 
 QSlider::sub-page:vertical, QSlider::add-page:horizontal {
@@ -236,7 +236,7 @@ QProgressBar {
 
 QProgressBar::chunk {
 	width: 1px;
-	background-color: #AAAAFF;
+	background-color: rgba(82,133,166,200);
 }
 
 QMenu::separator {
@@ -250,54 +250,49 @@ QMainWindow {
 }
 
 QToolTip {
-	background-color: rgb(225,225,225);
-	color: rgb(0,140,0);
+	background-color: rgba(225,225,225,225);
+	color: black;
 	border: 1px solid black;
+}
+
+QComboBox {
+	background-color: rgba(100,100,100);
+	color: white;
+	selection-background-color: rgba(82,133,166,200);
+	selection-color: black;
+}
+
+QPushButton {
+	border: 1px solid black;
+	background-color: rgba(100,100,100,200);
 }
 
 QPushButton::hover {   
 	border: 1px solid black;
-	border-radius: 5px;
-	background-color: #AAAAFF;
-	color: black;
+	background-color: rgba(82,133,166,200);
+	color: white;
 }
 
 QPushButton::pressed {   
 	border: 1px solid black;
-	border-radius: 5px;
-	background-color: #AAAAFF;
-	color: black;
+	background-color: rgba(82,133,166,200);
+	color: white;
 }
 
 QPushButton::checked {
-	background-color: #AAAAFF;
+	background-color: rgba(82,133,166,200);
 	color: black;
 }
 
-QComboBox {
-	background-color: rgba(100, 100, 100, 225);
-	color: white;
-	selection-background-color: #AAAAFF;
-	selection-color: black;
-}
-
-
-QCheckBox::indicator:checked {
-	background-color: #AAAAFF;
-	color: black;
-}
 
 
 
 '''
 
-# QPushButton {
-#	border: 2px solid #8f8f91;
-#	border-radius: 6px;
-#	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-#                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-#     min-width: 80px;
-# }
+
+# background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f6f7fa, stop: 1 #dadbde);
+# min-width: 80px;
+
 
 # QPushButton:flat {
 #	border: none; /* no border for a flat push button */
@@ -305,6 +300,16 @@ QCheckBox::indicator:checked {
 
 # QPushButton:default {
 #	border-color: navy; /* make the default button prominent */
+# }
+
+# QPushButton::unchecked::hover {
+# 	background-color: rgba(0,0,0,0);
+# 	color: rgba(82,133,166,200);
+# }
+
+# QPushButton::checked::hover {
+# 	background-color: rgba(0,0,0,0);
+# 	color: rgba(82,133,166,200);
 # }
 
 # QComboBox::down-arrow {
@@ -340,14 +345,6 @@ QCheckBox::indicator:checked {
 # 	background: #353535;
 # 	subcontrol-origin: border;
 # }
-
-# QGroupBox {
-# 	background-color: rgba(100,100,100,80);
-# 	color: rgb(225, 225, 225);
-# 	border: 3px solid black;
-# 	};
-
-
 
 
 

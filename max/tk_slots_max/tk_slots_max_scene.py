@@ -346,7 +346,7 @@ class Scene(Init):
 
 	def b001(self):
 		'''
-		Open Most Recent File
+		Recent Files: Open Last
 		'''
 		files = rt.getRecentfiles()
 		

@@ -72,7 +72,7 @@ class Viewport(Init):
 		'''
 		cmb = self.ui.cmb002
 		
-		list_ = ['Create: Custom Camera','Create: Set Custom Camera','Create: Camera From View']
+		list_ = ['Custom Camera', 'Set Custom Camera', 'Camera From View']
 		contents = self.comboBox (cmb, list_, "Create")
 
 		index = cmb.currentIndex()

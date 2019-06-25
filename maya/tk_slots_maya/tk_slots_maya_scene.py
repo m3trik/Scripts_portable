@@ -120,7 +120,7 @@ class Scene(Init):
 		index = cmb.currentIndex()
 		if index!=0:
 			force=True; force if str(mel.eval("file -query -sceneName -shortName;")) else not force #if sceneName prompt user to save; else force open
-			pm.openFile (contents[index], open=1, force=force)
+			pm.openFile(contents[index], open=1, force=force)
 			cmb.setCurrentIndex(0)
 
 
@@ -156,7 +156,8 @@ class Scene(Init):
 			force=True
 			if str(mel.eval("file -query -sceneName -shortName;")):
 				force=False #if sceneName, prompt user to save; else force open
-			pm.openFile (contents[index], open=1, force=force)
+			pm.openFile(path+contents[index], open=1, force=force)
+			print path+contents[index]
 			cmb.setCurrentIndex(0)
 
 
@@ -321,14 +322,14 @@ class Scene(Init):
 
 	def b001(self):
 		'''
-		Open Most Recent File
+		Recent Files: Open Last
 		'''
 		files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in file_]
 
 		force=True
 		if str(mel.eval("file -query -sceneName -shortName;")):
 			force=False #if sceneName, prompt user to save; else force open
-		pm.openFile (files[0], open=1, force=force)
+		pm.openFile(files[0], open=1, force=force)
 
 
 	def b002(self):

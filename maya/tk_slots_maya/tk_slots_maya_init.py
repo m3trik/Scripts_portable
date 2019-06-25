@@ -39,7 +39,7 @@ class Init(Slot):
 		if selection:
 			if pm.selectMode(query=1, object=1): #object mode:
 				if pm.selectType(query=1, allObjects=1): #get object/s
-					currentSelection = [str(s) for s in pm.ls(selection=1, objectsOnly=1)]; infoDict.update({'Objects: ':currentSelection}) #currently selected objects #orderedSelection=1
+					currentSelection = {pm.objectType(s):str(s) for s in pm.ls(selection=1, objectsOnly=1)}; infoDict.update({'Objects: ':currentSelection}) #currently selected objects #orderedSelection=1
 
 			elif pm.selectMode(query=1, component=1): #component mode:
 				if pm.selectType(query=1, vertex=1): #get vertex selection info
