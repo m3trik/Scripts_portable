@@ -2,19 +2,18 @@
 ###### *PySide marking menu style layered ui and toolkit for maya and max.
 
 
-*personal toolkit. continual work in progress..*
+*continual work in progress..*
 
 ## Design:
 ######
-*This is a cross-platform, app agnostic, modular ui to house user tools. Each piece is constructed dynamically to allow 
-for as little overhead as possible in construction and maintainence. Literally all you have to do to have 
+*This is a cross-platform, app agnostic, modular, marking menu style ui to house user tools. Each piece is constructed dynamically
+to allow for as little overhead as possible in construction and maintainence. Literally all you have to do to have 
 a new ui up and running, is to drop a qt designer ui file into the ui folder, create a module and class of the 
 same name. Naming convention allows for a stacked ui to be built, signals added/removed, and a master dictionary 
 (stored within the switchboard module) to be created that allows getting/setting of relevant data across modules from one 
 easy, and reliable location.*
 
-*general principles and methodologies:
-keep things as simple as possible, and as modular as is reasonable, so that future changes or additional features can be implemented as easily as possible.*
+
 
 ##
 -----------------------------------------------
