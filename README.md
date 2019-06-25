@@ -163,4 +163,4 @@ In 3ds Max
 * add \max\startup directory to system path by navigating in app to:
  main menu> customize> additional startup scripts
  
-The default hotkey for launching the menu set is f12. This is because I usually remap f12 to the windows key.
+The default hotkey for launching the menu set is f12. This is because I usually remap f12 to the windows key. This can be changed in the tk_main module.
