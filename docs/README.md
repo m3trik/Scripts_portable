@@ -2,7 +2,9 @@
 ###### *PySide marking menu style layered ui and toolkit for maya and max.
 
 
-*continual work in progress..*
+![alt text](https://raw.githubusercontent.com/m3trik/tk_hotBox/master/docs/Screenshot-Camera_navigation.jpg)
+*Example of camera navigation.
+
 
 ## Design:
 ######
@@ -13,7 +15,7 @@ same name. Naming convention allows for a stacked ui to be built, signals added/
 (stored within the switchboard module) to be created that allows getting/setting of relevant data across modules from one 
 easy, and reliable location.*
 
-
+*continual work in progress..*
 
 ##
 -----------------------------------------------
