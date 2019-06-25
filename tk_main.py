@@ -203,7 +203,7 @@ class HotBox(QtWidgets.QWidget):
 
 		if self.name=='viewport':
 			self.setVisibility(event.pos(), 'r000-7')
-			self.setDown(event.pos(), 'v000-17')
+			self.setDown(event.pos(), 'v000-23')
 
 		elif self.name!='init' and event.buttons()==QtCore.Qt.LeftButton:
 			if (event.buttons() & QtCore.Qt.LeftButton): #drag window and pin
