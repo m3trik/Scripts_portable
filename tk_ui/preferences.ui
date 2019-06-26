@@ -113,7 +113,7 @@
     <property name="geometry">
      <rect>
       <x>116</x>
-      <y>78</y>
+      <y>24</y>
       <width>97</width>
       <height>31</height>
      </rect>
@@ -153,51 +153,6 @@
        <string>Modeling</string>
       </property>
      </item>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="groupBox_5">
-    <property name="geometry">
-     <rect>
-      <x>116</x>
-      <y>24</y>
-      <width>97</width>
-      <height>49</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Import/Export</string>
-    </property>
-    <widget class="QPushButton" name="b003">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>12</y>
-       <width>97</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="toolTip">
-      <string>Re-Initialize instance</string>
-     </property>
-     <property name="text">
-      <string>Obj Presets</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="b002">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>30</y>
-       <width>97</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="toolTip">
-      <string>Re-Initialize instance</string>
-     </property>
-     <property name="text">
-      <string>Fbx Presets</string>
-     </property>
     </widget>
    </widget>
    <widget class="QFrame" name="menubar">

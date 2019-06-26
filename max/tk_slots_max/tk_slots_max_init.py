@@ -23,14 +23,14 @@ class Init(Slot):
 	def info(self): #get current attributes. those with relavant values will be displayed.
 
 		infoDict={}
-		sel = rt.selection
+		selection = rt.selection
 
 		level = rt.subObjectLevel
 
-		if level==0: #object level
-			selCount = len(sel) #number of selected objects
-			currentSelection = [str(s.name) for s in sel]; infoDict.update({str(selCount)+" Objects: ":currentSelection}) #currently selected objects
-
+		if not level: #object level 0
+			selCount = len(selection) #number of selected objects
+			selectedObjects={}; [selectedObjects.setdefault(str(rt.classOf(s.baseObject)),[]).append(str(s.name)) for s in selection] #for any selected objects, set object type as key and append object names as value. if key doesn't exist, use setdefault to initialize an empty list and append. ie. {'joint': ['joint_root_0', 'joint_lower_L8', 'joint_lower_L3']}
+			infoDict.update({'Objects: ':selectedObjects}) #currently selected objects
 
 		for obj in rt.selection:
 			type_ = str(rt.classOf(obj))
@@ -353,9 +353,9 @@ class Init(Slot):
 		z = tk_isChecked_004
 		#-------------------------
 		s = size
-		sel = self.getObjects ("Current", 0)
+		selection = self.getObjects ("Current", 0)
 
-		for obj in sel:
+		for obj in selection:
 			if (tk_isChecked_002 and tk_isChecked_003 and tk_isChecked_004):
 				obj.scale([s, s, s])
 			if (not tk_isChecked_002 and tk_isChecked_003 and tk_isChecked_004):
@@ -644,9 +644,9 @@ class Init(Slot):
 		'''
 		maxEval ('max modify mode')#set focus: modifier panel.
 
-		sel = rt.selection
+		selection = rt.selection
 
-		for obj in sel:
+		for obj in selection:
 			rt.modPanel.setCurrentObject(obj.baseObject)
 			rt.subObjectLevel = level
 

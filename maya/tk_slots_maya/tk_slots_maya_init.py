@@ -39,7 +39,8 @@ class Init(Slot):
 		if selection:
 			if pm.selectMode(query=1, object=1): #object mode:
 				if pm.selectType(query=1, allObjects=1): #get object/s
-					currentSelection = {pm.objectType(s):str(s) for s in pm.ls(selection=1, objectsOnly=1)}; infoDict.update({'Objects: ':currentSelection}) #currently selected objects #orderedSelection=1
+					selectedObjects={}; [selectedObjects.setdefault(str(pm.objectType(s)),[]).append(str(s)) for s in pm.ls(selection=1, objectsOnly=1)] #for any selected objects, set object type as key and append object names as value. if key doesn't exist, use setdefault to initialize an empty list and append. ie. {'joint': ['joint_root_0', 'joint_lower_L8', 'joint_lower_L3']}
+					infoDict.update({'Objects: ':selectedObjects}) #currently selected objects
 
 			elif pm.selectMode(query=1, component=1): #component mode:
 				if pm.selectType(query=1, vertex=1): #get vertex selection info

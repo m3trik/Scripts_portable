@@ -171,7 +171,7 @@ class Main(Init):
 		# index = 'Minimize'
 		# self.ui.v008.setText(index)
 
-		self.getMethod('scene','b005')()
+		self.getMethod('file','b005')()
 
 
 

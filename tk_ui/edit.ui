@@ -1856,7 +1856,7 @@
       </size>
      </property>
      <property name="toolTip">
-      <string>Delete Component or if object selected, along axis</string>
+      <string>Delete: Loop</string>
      </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
@@ -2123,24 +2123,24 @@
       <rect>
        <x>0</x>
        <y>10</y>
-       <width>101</width>
+       <width>111</width>
        <height>19</height>
       </rect>
      </property>
      <property name="minimumSize">
       <size>
-       <width>101</width>
+       <width>111</width>
        <height>0</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>16777215</width>
+       <width>999</width>
        <height>19</height>
       </size>
      </property>
      <property name="toolTip">
-      <string>Texturing: Editors</string>
+      <string>Editors</string>
      </property>
      <property name="maxCount">
       <number>100</number>

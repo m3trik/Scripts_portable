@@ -256,10 +256,16 @@ QToolTip {
 }
 
 QComboBox {
-	background-color: rgba(100,100,100);
+	background-color: rgba(100,100,100,200);
 	color: white;
 	selection-background-color: rgba(82,133,166,200);
-	selection-color: black;
+	/*selection-color: black;*/
+}
+
+QComboBox:open {
+	background-color: rgba(100,100,100,200);
+	color: white;
+	selection-background-color: rgba(82,133,166,200);
 }
 
 QPushButton {
@@ -357,3 +363,91 @@ print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
+
+
+'''
+List of Pseudo-States
+:active				This state is set when the widget resides in an active window.
+:adjoins-item		This state is set when the ::branch of a QTreeView is adjacent to an item.
+:alternate			This state is set for every alternate row whe painting the row of a QAbstractItemView when QAbstractItemView::alternatingRowColors() is set to true.
+:bottom				The item is positioned at the bottom. For example, a QTabBar that has its tabs positioned at the bottom.
+:checked			The item is checked. For example, the checked state of QAbstractButton.
+:closable			The items can be closed. For example, the QDockWidget has the QDockWidget::DockWidgetClosable feature turned on.
+:closed				The item is in the closed state. For example, an non-expanded item in a QTreeView
+:default			The item is the default. For example, a default QPushButton or a default action in a QMenu.
+:disabled			The item is disabled.
+:editable			The QComboBox is editable.
+:edit-focus			The item has edit focus (See QStyle::State_HasEditFocus). This state is available only for Qt Extended applications.
+:enabled			The item is enabled.
+:exclusive			The item is part of an exclusive item group. For example, a menu item in a exclusive QActionGroup.
+:first				The item is the first (in a list). For example, the first tab in a QTabBar.
+:flat				The item is flat. For example, a flat QPushButton.
+:floatable			The items can be floated. For example, the QDockWidget has the QDockWidget::DockWidgetFloatable feature turned on.
+:focus				The item has input focus.
+:has-children		The item has children. For example, an item in a QTreeView that has child items.
+:has-siblings		The item has siblings. For example, an item in a QTreeView that siblings.
+:horizontal			The item has horizontal orientation
+:hover				The mouse is hovering over the item.
+:indeterminate		The item has indeterminate state. For example, a QCheckBox or QRadioButton is partially checked.
+:last				The item is the last (in a list). For example, the last tab in a QTabBar.
+:left				The item is positioned at the left. For example, a QTabBar that has its tabs positioned at the left.
+:maximized			The item is maximized. For example, a maximized QMdiSubWindow.
+:middle				The item is in the middle (in a list). For example, a tab that is not in the beginning or the end in a QTabBar.
+:minimized			The item is minimized. For example, a minimized QMdiSubWindow.
+:movable			The item can be moved around. For example, the QDockWidget has the QDockWidget::DockWidgetMovable feature turned on.
+:no-frame			The item has no frame. For example, a frameless QSpinBox or QLineEdit.
+:non-exclusive		The item is part of a non-exclusive item group. For example, a menu item in a non-exclusive QActionGroup.
+:off				For items that can be toggled, this applies to items in the "off" state.
+:on					For items that can be toggled, this applies to widgets in the "on" state.
+:only-one			The item is the only one (in a list). For example, a lone tab in a QTabBar.
+:open				The item is in the open state. For example, an expanded item in a QTreeView, or a QComboBox or QPushButton with an open menu.
+:next-selected		The next item (in a list) is selected. For example, the selected tab of a QTabBar is next to this item.
+:pressed			The item is being pressed using the mouse.
+:previous-selected	The previous item (in a list) is selected. For example, a tab in a QTabBar that is next to the selected tab.
+:read-only			The item is marked read only or non-editable. For example, a read only QLineEdit or a non-editable QComboBox.
+:right				The item is positioned at the right. For example, a QTabBar that has its tabs positioned at the right.
+:selected			The item is selected. For example, the selected tab in a QTabBar or the selected item in a QMenu.
+:top				The item is positioned at the top. For example, a QTabBar that has its tabs positioned at the top.
+:unchecked			The item is unchecked.
+:vertical			The item has vertical orientation.
+:window				The widget is a window (i.e top level widget)
+
+
+List of Sub-Controls
+::add-line			The button to add a line of a QScrollBar.
+::add-page			The region between the handle (slider) and the add-line of a QScrollBar.
+::branch			The branch indicator of a QTreeView.
+::chunk				The progress chunk of a QProgressBar.
+::close-button		The close button of a QDockWidget or tabs of QTabBar
+::corner			The corner between two scrollbars in a QAbstractScrollArea
+::down-arrow		The down arrow of a QComboBox, QHeaderView (sort indicator), QScrollBar or QSpinBox.
+::down-button		The down button of a QScrollBar or a QSpinBox.
+::drop-down			The drop-down button of a QComboBox.
+::float-button		The float button of a QDockWidget
+::groove			The groove of a QSlider.
+::indicator			The indicator of a QAbstractItemView, a QCheckBox, a QRadioButton, a checkable QMenu item or a checkable QGroupBox.
+::handle			The handle (slider) of a QScrollBar, a QSplitter, or a QSlider.
+::icon				The icon of a QAbstractItemView or a QMenu.
+::item				An item of a QAbstractItemView, a QMenuBar, a QMenu, or a QStatusBar.
+::left-arrow		The left arrow of a QScrollBar.
+::left-corner		The left corner of a QTabWidget. For example, this control can be used to control position the left corner widget in a QTabWidget.
+::menu-arrow		The arrow of a QToolButton with a menu.
+::menu-button		The menu button of a QToolButton.
+::menu-indicator 	The menu indicator of a QPushButton.
+::right-arrow		The right arrow of a QMenu or a QScrollBar.
+::pane				The pane (frame) of a QTabWidget.
+::right-corner		The right corner of a QTabWidget. For example, this control can be used to control the position the right corner widget in a QTabWidget.
+::scroller			The scroller of a QMenu or QTabBar.
+::section			The section of a QHeaderView.
+::separator			The separator of a QMenu or in a QMainWindow.
+::sub-line			The button to subtract a line of a QScrollBar.
+::sub-page			The region between the handle (slider) and the sub-line of a QScrollBar.
+::tab				The tab of a QTabBar or QToolBox.
+::tab-bar			The tab bar of a QTabWidget. This subcontrol exists only to control the position of the QTabBar inside the QTabWidget. To style the tabs using the ::tab subcontrol.
+::tear				The tear indicator of a QTabBar.
+::tearoff			The tear-off indicator of a QMenu.
+::text				The text of a QAbstractItemView.
+::title				The title of a QGroupBox or a QDockWidget.
+::up-arrow			The up arrow of a QHeaderView (sort indicator), QScrollBar or a QSpinBox.
+::up-button			The up button of a QSpinBox.
+'''

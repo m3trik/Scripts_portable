@@ -199,11 +199,12 @@ class HotBox(QtWidgets.QWidget):
 		#args: [QEvent]
 		if self.name=='main':
 			self.setVisibility(event.pos(), 'r000-11')
-			self.setDown(event.pos(), 'i003-18, i020-23, v000-31')
+			self.setDown_(event.pos(), 'i003-18, i020-24, v000-30')
 
 		if self.name=='viewport':
 			self.setVisibility(event.pos(), 'r000-7')
-			self.setDown(event.pos(), 'v000-23')
+			self.setDown_(event.pos(), 'v000-23')
+			#self.showPopup_(event.pos(), 'cmb000-3')
 
 		elif self.name!='init' and event.buttons()==QtCore.Qt.LeftButton:
 			if (event.buttons() & QtCore.Qt.LeftButton): #drag window and pin
@@ -240,7 +241,7 @@ class HotBox(QtWidgets.QWidget):
 				w.hide()
 
 
-	def setDown(self, mousePosition, widgets):
+	def setDown_(self, mousePosition, widgets):
 		#args:	mousePosition=QPoint
 		#		widgets=string consisting of widget names separated by commas. ie. 'r000, r001, v000-13, i020-23'
 		for i in self.unpackNames(widgets):
@@ -250,6 +251,18 @@ class HotBox(QtWidgets.QWidget):
 				w.setDown(True)
 			else:
 				w.setDown(False)
+
+
+	def showPopup_(self, mousePosition, widgets):
+		#args:	mousePosition=QPoint
+		#		widgets=string 
+		for i in self.unpackNames(widgets):
+			w = getattr(self.ui, i)
+
+			if w.rect().contains(w.mapFromGlobal(QtGui.QCursor.pos())):
+				w.showPopup()
+			else:
+				w.hidePopup()
 
 
 	def showEvent(self, event):

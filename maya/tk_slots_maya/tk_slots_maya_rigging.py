@@ -65,7 +65,7 @@ class Rigging(Init):
 		'''
 		cmb = self.ui.cmb000
 
-		files = ['Quick Rig','HumanIK','Expression Editor', 'Shape Editor']
+		files = ['Quick Rig','HumanIK','Expression Editor','Shape Editor','Connection Editor','Channel Control Editor','Set Driven Key']
 		contents = self.comboBox(cmb, files, "Editors")
 
 		index = cmb.currentIndex()
@@ -78,6 +78,12 @@ class Rigging(Init):
 				mel.eval('ExpressionEditor;') #Expression Editor
 			if index==contents.index('Shape Editor'):
 				mel.eval('ShapeEditor;') #Shape Editor
+			if index==contents.index('Connection Editor'):
+				mel.eval('ConnectionEditor;') #Connection Editor
+			if index==contents.index('Channel Control Editor'):
+				mel.eval('ChannelControlEditor;') #Channel Control Editor
+			if index==contents.index('Set Driven Key'):
+				mel.eval('SetDrivenKeyOptions;') #Set Driven Key
 			cmb.setCurrentIndex(0)
 
 
@@ -143,7 +149,11 @@ class Rigging(Init):
 		'''
 		Orient Joints
 		'''
-		pm.joint(edit=1, orientJoint='xyz', zeroScaleOrient=1, ch=1) #orient joints
+		orientJoint = 'xyz' #orient joints
+		if self.ui.chk003.isChecked():
+			orientJoint = 'none' #orient joint to world
+
+		pm.joint(edit=1, orientJoint=orientJoint, zeroScaleOrient=1, ch=1)
 
 
 	def b004(self):

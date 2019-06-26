@@ -553,7 +553,7 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>999</width>
+        <width>121</width>
         <height>21</height>
        </size>
       </property>
@@ -567,7 +567,7 @@
        <number>50</number>
       </property>
       <property name="sizeAdjustPolicy">
-       <enum>QComboBox::AdjustToContents</enum>
+       <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
       </property>
       <property name="frame">
        <bool>false</bool>
@@ -595,7 +595,7 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>999</width>
+        <width>121</width>
         <height>21</height>
        </size>
       </property>
@@ -609,7 +609,7 @@
        <number>50</number>
       </property>
       <property name="sizeAdjustPolicy">
-       <enum>QComboBox::AdjustToContents</enum>
+       <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
       </property>
       <property name="frame">
        <bool>false</bool>
@@ -643,7 +643,7 @@
      <widget class="QComboBox" name="cmb002">
       <property name="geometry">
        <rect>
-        <x>0</x>
+        <x>-55</x>
         <y>0</y>
         <width>121</width>
         <height>21</height>
@@ -657,21 +657,18 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>999</width>
+        <width>121</width>
         <height>21</height>
        </size>
       </property>
       <property name="layoutDirection">
-       <enum>Qt::LeftToRight</enum>
+       <enum>Qt::RightToLeft</enum>
       </property>
       <property name="currentText">
        <string>Create</string>
       </property>
       <property name="maxVisibleItems">
        <number>50</number>
-      </property>
-      <property name="sizeAdjustPolicy">
-       <enum>QComboBox::AdjustToContents</enum>
       </property>
       <property name="frame">
        <bool>false</bool>
@@ -685,7 +682,7 @@
      <widget class="QComboBox" name="cmb001">
       <property name="geometry">
        <rect>
-        <x>0</x>
+        <x>-55</x>
         <y>40</y>
         <width>121</width>
         <height>21</height>
@@ -699,12 +696,12 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>999</width>
+        <width>121</width>
         <height>21</height>
        </size>
       </property>
       <property name="layoutDirection">
-       <enum>Qt::LeftToRight</enum>
+       <enum>Qt::RightToLeft</enum>
       </property>
       <property name="currentText">
        <string>Cameras</string>
@@ -713,7 +710,7 @@
        <number>50</number>
       </property>
       <property name="sizeAdjustPolicy">
-       <enum>QComboBox::AdjustToContents</enum>
+       <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
       </property>
       <property name="frame">
        <bool>false</bool>

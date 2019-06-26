@@ -44,7 +44,6 @@ class Preferences(Init):
 				button.setText(['','','','','','','','','','','',''][i])
 				
 
-
 	def b000(self):
 		'''
 		Init Tk_Main
@@ -60,47 +59,54 @@ class Preferences(Init):
 		'''
 		mel.eval('colorPrefWnd;')
 
+
 	def b002(self):
 		'''
-		Fbx Presets
+		
 
 		'''
-		mel.eval('FBXUICallBack -1 editExportPresetInNewWindow fbx;')
+		pass
+
 
 	def b003(self):
 		'''
-		Obj Presets
+		
 
 		'''
-		mel.eval('FBXUICallBack -1 editExportPresetInNewWindow obj;')
+		pass
+
 
 	def b004(self):
 		'''
 		
 
 		'''
-		mel.eval('')
+		pass
+
 
 	def b005(self):
 		'''
 		
 
 		'''
-		mel.eval('')
+		pass
+
 
 	def b006(self):
 		'''
 		
 
 		'''
-		mel.eval('')
+		pass
+
 
 	def b007(self):
 		'''
 		
 
 		'''
-		mel.eval('')
+		pass
+
 
 	def b008(self):
 		'''
@@ -109,6 +115,7 @@ class Preferences(Init):
 		'''
 		mel.eval("HotkeyPreferencesWindow;")
 
+
 	def b009(self):
 		'''
 		Plug-In Manager
@@ -116,12 +123,17 @@ class Preferences(Init):
 		'''
 		mel.eval('PluginManager;')
 
+
 	def b010(self):
 		'''
 		Settings/Preferences
 
 		'''
 		mel.eval("PreferencesWindow;")
+
+
+
+
 
 
 

@@ -61,47 +61,54 @@ class Preferences(Init):
 		'''
 		maxEval('colorPrefWnd;')
 
+	
 	def b002(self):
 		'''
-		Fbx Presets
+		
 
 		'''
-		maxEval('FBXUICallBack -1 editExportPresetInNewWindow fbx;')
+		pass
+
 
 	def b003(self):
 		'''
-		Obj Presets
+		
 
 		'''
-		maxEval('FBXUICallBack -1 editExportPresetInNewWindow obj;')
+		pass
+
 
 	def b004(self):
 		'''
 		
 
 		'''
-		maxEval('')
+		pass
+
 
 	def b005(self):
 		'''
 		
 
 		'''
-		maxEval('')
+		pass
+
 
 	def b006(self):
 		'''
 		
 
 		'''
-		maxEval('')
+		pass
+
 
 	def b007(self):
 		'''
 		
 
 		'''
-		maxEval('')
+		pass
+
 
 	def b008(self):
 		'''
@@ -110,6 +117,7 @@ class Preferences(Init):
 		'''
 		mel.eval("HotkeyPreferencesWindow;")
 
+
 	def b009(self):
 		'''
 		Plug-In Manager
@@ -117,12 +125,16 @@ class Preferences(Init):
 		'''
 		maxEval('PluginManager;')
 
+
 	def b010(self):
 		'''
 		Settings/Preferences
 
 		'''
 		mel.eval("PreferencesWindow;")
+
+
+
 
 
 
