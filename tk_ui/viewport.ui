@@ -31,6 +31,9 @@
     <height>850</height>
    </size>
   </property>
+  <property name="cursor">
+   <cursorShape>CrossCursor</cursorShape>
+  </property>
   <property name="windowTitle">
    <string>Toolkit</string>
   </property>

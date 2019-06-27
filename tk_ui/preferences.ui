@@ -126,19 +126,19 @@
       <rect>
        <x>0</x>
        <y>12</y>
-       <width>96</width>
+       <width>121</width>
        <height>19</height>
       </rect>
      </property>
      <property name="minimumSize">
       <size>
-       <width>96</width>
+       <width>121</width>
        <height>0</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>9999</width>
+       <width>121</width>
        <height>19</height>
       </size>
      </property>
@@ -221,6 +221,97 @@
      <property name="text">
       <string>Init</string>
      </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_5">
+    <property name="geometry">
+     <rect>
+      <x>116</x>
+      <y>60</y>
+      <width>97</width>
+      <height>49</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Working Units</string>
+    </property>
+    <widget class="QComboBox" name="cmb001">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>12</y>
+       <width>121</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>121</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>121</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Set working units: Linear</string>
+     </property>
+     <property name="maxCount">
+      <number>999</number>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>Linear</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QComboBox" name="cmb002">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>30</y>
+       <width>121</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>121</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>121</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Set working units: Time</string>
+     </property>
+     <property name="maxCount">
+      <number>999</number>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>Time</string>
+      </property>
+     </item>
     </widget>
    </widget>
   </widget>

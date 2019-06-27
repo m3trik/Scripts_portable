@@ -29,7 +29,7 @@ class File(Init):
 		cmb = self.ui.cmb000
 		
 		files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in file_]
-		contents = self.comboBox (cmb, files, "Recent Files")
+		contents = self.comboBox(cmb, files, "Recent Files")
 
 		index = cmb.currentIndex()
 		if index!=0:
@@ -46,7 +46,7 @@ class File(Init):
 		cmb = self.ui.cmb001
 		
 		files = (list(reversed(mel.eval("optionVar -query RecentProjectsList;"))))
-		contents = self.comboBox (cmb, files, "Recent Projects")
+		contents = self.comboBox(cmb, files, "Recent Projects")
 
 		index = cmb.currentIndex()
 		if index!=0:
@@ -63,7 +63,7 @@ class File(Init):
 
 		path = os.environ.get('MAYA_AUTOSAVE_FOLDER').split(';')[0] #get autosave dir path from env variable.
 		files = [f for f in os.listdir(path) if f.endswith('.mb') or f.endswith('.ma')] #[file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" in file_]
-		contents = self.comboBox (cmb, files, "Recent Autosave")
+		contents = self.comboBox(cmb, files, "Recent Autosave")
 
 		index = cmb.currentIndex()
 		if index!=0:
@@ -82,7 +82,7 @@ class File(Init):
 		'''
 		cmb = self.ui.cmb003
 		
-		contents = self.comboBox (cmb,["Import file", "Import Options"], "Import")
+		contents = self.comboBox(cmb,["Import file", "Import Options"], "Import")
 		
 		index = cmb.currentIndex()
 		if index!=0: #hide hotBox then perform operation

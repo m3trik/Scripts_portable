@@ -28,12 +28,7 @@ def getMousePosition():
 	windll.user32.GetCursorPos(byref(pt))
 	return { "x": pt.x, "y": pt.y}
 
-def moveWindow(window, x, y):
-	#args: [object], [int], [int]
-	mPos = getMousePosition()
-	x = mPos['x']+x
-	y = mPos['y']+y
-	window.move(x, y)
+
 
 
 
@@ -105,7 +100,10 @@ class HotBox(QtWidgets.QWidget):
 		self.resize(self.width, self.height) #window size
 		
 		self.point = QtCore.QPoint(self.sb.getUiSize(percentWidth=50), self.sb.getUiSize(percentHeight=50)) #set point to the middle of the layout
-		
+		#position window
+		if not any([self.name=='init', self.name=='main', self.name=='viewport']): #set initial positon on showEvent, and reposition here on index change.
+			self.moveWindow(self, -self.point.x(), -self.point.y()/2)
+			
 
 		if not self.sb.hasKey(self.name, 'connectionDict'):
 			self.signal.buildConnectionDict() #construct the signals and slots for the ui
@@ -117,8 +115,6 @@ class HotBox(QtWidgets.QWidget):
 			#remove old and add new signals for current ui from connectionDict
 			if self.name!=self.sb.previousName(allowDuplicates=1):
 				if self.sb.previousName():
-					# prevUi = self.sb.getUi(self.sb.previousName())
-					# prevUi.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
 					self.signal.removeSignal(self.sb.previousName())
 					self.signal.addSignal(self.name)
 				else: #if no previous ui exists
@@ -141,25 +137,33 @@ class HotBox(QtWidgets.QWidget):
 # Event overrides
 # ------------------------------------------------
 	def hoverEvent(self, event):
-		#args: [QEvent]
+		'''
+		args: [QEvent]
+		'''
 		print "hover"
 
 
 	def keyPressEvent(self, event):
-		#args: [QEvent]
+		'''
+		args: [QEvent]
+		'''
 		if event.key()==QtCore.Qt.Key_F12 and not event.isAutoRepeat(): #Key_Meta or Key_Menu =windows key
 			if all ([self.name!='init', self.name!='main', self.name!='viewport']):
 				self.layoutStack('init') #reset layout back to init on keyPressEvent
 			
 			
 	def keyReleaseEvent(self, event):
-		#args: [QEvent]
+		'''
+		args: [QEvent]
+		'''
 		if event.key()==QtCore.Qt.Key_F12 and not event.isAutoRepeat():
 			self.hide_()
 
 
 	def mousePressEvent(self, event):
-		#args: [QEvent]
+		'''
+		args: [QEvent]
+		'''
 		if any ([self.name=='main', self.name=='viewport', self.name=='init', self.name=='display']):
 			if event.button()==QtCore.Qt.LeftButton:
 				self.layoutStack('viewport')
@@ -172,7 +176,9 @@ class HotBox(QtWidgets.QWidget):
 
 
 	def mouseDoubleClickEvent(self, event):
-		#args: [QEvent]
+		'''
+		args: [QEvent]
+		'''
 		if event.button()==QtCore.Qt.RightButton:
 			if any([self.name=='init', self.name=='main']):
 				try: #show last used submenu on double mouseclick
@@ -196,7 +202,9 @@ class HotBox(QtWidgets.QWidget):
 
 
 	def mouseMoveEvent(self, event):
-		#args: [QEvent]
+		'''
+		args: [QEvent]
+		'''
 		if self.name=='main':
 			self.setVisibility(event.pos(), 'r000-11')
 			self.setDown_(event.pos(), 'i003-18, i020-24, v000-30')
@@ -204,17 +212,20 @@ class HotBox(QtWidgets.QWidget):
 		if self.name=='viewport':
 			self.setVisibility(event.pos(), 'r000-7')
 			self.setDown_(event.pos(), 'v000-23')
-			#self.showPopup_(event.pos(), 'cmb000-3')
+			self.showPopup_(event.pos(), 'cmb000-3')
 
 		elif self.name!='init' and event.buttons()==QtCore.Qt.LeftButton:
 			if (event.buttons() & QtCore.Qt.LeftButton): #drag window and pin
-				moveWindow(self, -self.point.x(), -self.point.y()*.1) #set mouse position and move window with mouse down
+				self.moveWindow(self, -self.point.x(), -self.point.y()*.1) #set mouse position and move window with mouse down
 				self.ui.pin.setChecked(True)
-	
+
 
 	def unpackNames(self, nameString):
-		#args:	nameString=string consisting of widget names separated by commas. ie. 'r000, r001, v000-13, i020-23'
-		#returns: unpacked names. ie. [v000,b004,b005,b006] from 'v000, b004-6'
+		'''
+		get a list of inidvidual names from a single name string.
+		args:	 nameString=string consisting of widget names separated by commas. ie. 'v000, b004-6'
+		returns: unpacked names. ie. ['v000','b004','b005','b006']
+		'''
 		packed_names = [n.strip() for n in nameString.split(',') if '-' in n] #build list of all widgets passed in containing '-'
 
 		unpacked_names=[]
@@ -231,8 +242,11 @@ class HotBox(QtWidgets.QWidget):
 
 
 	def setVisibility(self, mousePosition, widgets):
-		#args:	mousePosition=QPoint
-		#		widgets=string consisting of widget names separated by commas. ie. 'r000, r001, v000-13, i020-23'
+		'''
+		show/hide widgets.
+		args:	mousePosition=QPoint
+				widgets=string consisting of widget names separated by commas. ie. 'r000, r001, v000-13, i020-23'
+		'''
 		for i in self.unpackNames(widgets):
 			w = getattr(self.ui, i)
 			if w.geometry().contains(mousePosition):
@@ -242,8 +256,11 @@ class HotBox(QtWidgets.QWidget):
 
 
 	def setDown_(self, mousePosition, widgets):
-		#args:	mousePosition=QPoint
-		#		widgets=string consisting of widget names separated by commas. ie. 'r000, r001, v000-13, i020-23'
+		'''
+		set pushbutton down state.
+		args:	mousePosition=QPoint
+				widgets=string consisting of widget names separated by commas. ie. 'r000, r001, v000-13, i020-23'
+		'''
 		for i in self.unpackNames(widgets):
 			w = getattr(self.ui, i)
 
@@ -254,25 +271,29 @@ class HotBox(QtWidgets.QWidget):
 
 
 	def showPopup_(self, mousePosition, widgets):
-		#args:	mousePosition=QPoint
-		#		widgets=string 
+		'''
+		set combobox popup state.
+		args:	mousePosition=QPoint
+				widgets=string 
+		'''
 		for i in self.unpackNames(widgets):
 			w = getattr(self.ui, i)
 
 			if w.rect().contains(w.mapFromGlobal(QtGui.QCursor.pos())):
-				w.showPopup()
+				# w.showPopup()
+				w.setStyleSheet('''
+					QComboBox {
+					background-color: rgba(82,133,166,200);
+					color: white;
+					}
+					''')
 			else:
-				w.hidePopup()
-
-
-	def showEvent(self, event):
-		try: MaxPlus.CUI.DisableAccelerators()
-		except: pass
-		#move window to cursor position and offset from left corner to center
-		if any([self.name=='init', self.name=='main', self.name=='viewport']):
-			moveWindow(self, -self.point.x(), -self.point.y())
-		else:
-			moveWindow(self, -self.point.x(), -self.point.y()/2)
+				# w.hidePopup()
+				w.setStyleSheet('''
+					background-color: rgba(100,100,100,200);
+					color: white;
+					}
+					''')
 
 
 	def hide_(self):
@@ -284,9 +305,29 @@ class HotBox(QtWidgets.QWidget):
 
 
 	def hideEvent(self, event):
+		'''
+		args: [QEvent]
+		'''
 		try: MaxPlus.CUI.EnableAccelerators()
 		except: pass
 		self.layoutStack('init')
+
+
+	def showEvent(self, event):
+		'''
+		args: [QEvent]
+		'''
+		try: MaxPlus.CUI.DisableAccelerators()
+		except: pass
+		self.moveWindow(self, -self.point.x(), -self.point.y()) #move window to cursor position and offset from left corner to center
+
+
+	def moveWindow(self, window, x, y):
+		#args: [object], [int], [int]
+		mPos = getMousePosition()
+		x = mPos['x']+x
+		y = mPos['y']+y
+		window.move(x, y)
 
 
 	def repeatLastCommand(self):

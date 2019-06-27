@@ -54,7 +54,7 @@ class File(Init):
 		cmb = self.ui.cmb000
 		
 		list_ = rt.getRecentfiles()
-		contents = self.comboBox (cmb, list_, "Recent Files")
+		contents = self.comboBox(cmb, list_, "Recent Files")
 
 		index = cmb.currentIndex()
 		if index!=0:
@@ -74,7 +74,7 @@ class File(Init):
 		path = ''
 		list_ = []#[f for f in os.listdir(path)]
 
-		contents = self.comboBox (cmb, list_, "Recent Projects")
+		contents = self.comboBox(cmb, list_, "Recent Projects")
 
 		index = cmb.currentIndex()
 		if index!=0:
@@ -93,9 +93,8 @@ class File(Init):
 		files = [f for f in os.listdir(path) if f.endswith('.max') or f.endswith('.bak')] #get list of max autosave files
 
 		list_ = [f+'  '+datetime.fromtimestamp(os.path.getmtime(path+'\\'+f)).strftime('%H:%M  %m-%d-%Y') for f in files] #attach modified timestamp
-		list_ = sorted(list_, reverse=1)
 		
-		contents = self.comboBox (cmb, list_, "Recent Autosave")
+		contents = self.comboBox(cmb, sorted(list_, reverse=1), "Recent Autosave")
 
 		index = cmb.currentIndex()
 		if index!=0:
@@ -111,7 +110,7 @@ class File(Init):
 		'''
 		cmb = self.ui.cmb003
 		
-		contents = self.comboBox (cmb, ["Import file", "Import Options"], "Import")
+		contents = self.comboBox(cmb, ["Import file", "Import Options"], "Import")
 		
 		index = cmb.currentIndex()
 		if index!=0: #hide hotBox then perform operation
@@ -132,7 +131,7 @@ class File(Init):
 		
 		list_ = ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ", "Send to Maya: New Scene", "Send to Maya: Update Scene", "Send to Maya: Add to Scene"]
 
-		self.comboBox (cmb, list_, "Export")
+		self.comboBox(cmb, list_, "Export")
 
 		index = cmb.currentIndex()
 		if index !=0: #hide hotBox then perform operation
@@ -171,7 +170,7 @@ class File(Init):
 		cmb = self.ui.cmb005
 		
 		files = ['Schematic View']
-		contents = self.comboBox (cmb, files, "Editors")
+		contents = self.comboBox(cmb, files, "Editors")
 
 		index = cmb.currentIndex()
 		if index!=0:
@@ -192,7 +191,7 @@ class File(Init):
 
 		project = MaxPlus.PathManager.GetProjectFolderDir().split('\\')[-1] #add current project path string to label. strip path and trailing '/'
 
-		contents = self.comboBox (cmb, list_, project)
+		contents = self.comboBox(cmb, list_, project)
 
 		index = cmb.currentIndex()
 		if index!=0:

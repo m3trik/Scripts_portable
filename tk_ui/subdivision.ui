@@ -272,6 +272,9 @@
      <property name="toolTip">
       <string>Smooth Preview: Division Level</string>
      </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
+     </property>
      <property name="prefix">
       <string/>
      </property>
@@ -321,6 +324,9 @@
      </property>
      <property name="toolTip">
       <string>Smooth Preview: Division Level</string>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
      </property>
      <property name="prefix">
       <string/>

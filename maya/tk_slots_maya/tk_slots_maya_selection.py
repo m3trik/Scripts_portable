@@ -162,13 +162,13 @@ class Selection(Init):
 
 		index = cmb.currentIndex()
 		if index!=0:
-			if index==files.index('Verts'): #Convert Selection To Vertices
+			if index==contents.index('Verts'): #Convert Selection To Vertices
 				mel.eval('PolySelectConvert 3;')
-			if index==files.index('Edges'): #Convert Selection To Edges
+			if index==contents.index('Edges'): #Convert Selection To Edges
 				mel.eval('PolySelectConvert 2;')
-			if index==files.index('Faces'): #Convert Selection To Faces
+			if index==contents.index('Faces'): #Convert Selection To Faces
 				mel.eval('PolySelectConvert 1;')
-			if index==files.index('Ring'): #Convert Selection To Edge Ring
+			if index==contents.index('Ring'): #Convert Selection To Edge Ring
 				mel.eval('SelectEdgeRingSp;')
 			cmb.setCurrentIndex(0)
 

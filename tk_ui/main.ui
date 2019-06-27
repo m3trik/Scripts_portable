@@ -32,7 +32,7 @@
    </size>
   </property>
   <property name="cursor">
-   <cursorShape>BlankCursor</cursorShape>
+   <cursorShape>CrossCursor</cursorShape>
   </property>
   <property name="windowTitle">
    <string>Toolkit</string>

@@ -38,8 +38,8 @@ class Display(Init):
 
 		index = cmb.currentIndex()
 		if index!=0:
-			print self.sb.prevCommand(docString=1, as_list=1)[index+1] #prevCommand docString
-			self.sb.prevCommand(method=1, as_list=1)[index+1]() #execute command at index
+			print self.sb.prevCommand(docString=1, as_list=1).index(contents[index]) #prevCommand docString
+			self.sb.prevCommand(method=1, as_list=1).index(contents[index])() #execute command at index
 			cmb.setCurrentIndex(0)
 
 

@@ -335,7 +335,7 @@ class Edit(Init):
 		cmb = self.ui.cmb001
 		
 		files = ['']
-		contents = self.comboBox (cmb, files, 'Editors')
+		contents = self.comboBox(cmb, files, 'Editors')
 
 		index = cmb.currentIndex()
 		if index!=0:
@@ -485,7 +485,7 @@ class Edit(Init):
 		Add Selected Components To cmb000
 
 		'''
-		self.comboBox (self.ui.cmb000, pm.ls (selection=1, flatten=1))
+		self.comboBox(self.ui.cmb000, pm.ls(selection=1, flatten=1))
 
 
 	def b009(self):
