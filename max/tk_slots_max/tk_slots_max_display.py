@@ -27,27 +27,6 @@ class Display(Init):
 		pass
 
 
-
-	def cmb001(self):
-		'''
-		Recent Commands
-
-		'''
-		cmb = self.ui.cmb001
-		
-		list_ = self.sb.prevCommand(docString=1, as_list=1) #ie. get the list of previous command methods
-		contents = self.comboBox(cmb, list_, 'Recent')
-
-		index = cmb.currentIndex()
-		if index!=0:
-			print self.sb.prevCommand(docString=1, as_list=1).index(contents[index]) #prevCommand docString
-			self.sb.prevCommand(method=1, as_list=1).index(contents[index])() #execute command at index
-			cmb.setCurrentIndex(0)
-
-
-
-
-
 	def b000(self):
 		'''
 		Toggle Subdiv Proxy Display
@@ -59,6 +38,7 @@ class Display(Init):
 		except:
 			traceback.print_exc()
 			print "// Warning: Nothing Selected\n"
+
 
 	def b001(self):
 		'''
@@ -73,6 +53,7 @@ class Display(Init):
 			else:
 				obj.visibility = True
 
+
 	def b002(self):
 		'''
 		Hide Selected
@@ -83,6 +64,7 @@ class Display(Init):
 		for obj in sel:
 			if not obj.isHiddenInVpt:
 				obj.isHidden = True
+
 
 	def b003(self):
 		'''
@@ -95,6 +77,7 @@ class Display(Init):
 			if obj.isHiddenInVpt:
 				obj.isHidden = False
 
+
 	def b004(self):
 		'''
 		Show Geometry
@@ -106,6 +89,7 @@ class Display(Init):
 			if obj.isHiddenInVpt:
 				obj.isHidden = False
 
+
 	def b005(self):
 		'''
 		Xray Selected
@@ -116,6 +100,7 @@ class Display(Init):
 		for s in sel:
 			s.xray = True
 
+
 	def b006(self):
 		'''
 		Un-Xray All
@@ -125,6 +110,7 @@ class Display(Init):
 
 		for g in geometry:
 			g.xray = False
+
 
 	def b007(self):
 		'''
@@ -138,12 +124,14 @@ class Display(Init):
 			if g not in sel:
 				g.xray = True
 
+
 	def b008(self):
 		'''
 		Filter Objects
 
 		'''
 		mel.eval("bt_filterActionWindow;")
+
 
 	def b009(self):
 		'''
@@ -162,6 +150,7 @@ class Display(Init):
 
 		'''
 		pass
+
 
 	def b011(self):
 		'''
@@ -200,6 +189,7 @@ class Display(Init):
 		if index == 4:
 			self.viewPortMessage("component ID <hl>Off</hl>.")
 
+
 	def b012(self):
 		'''
 		Wireframe Non Active (Wireframe All But The Selected Item)
@@ -216,12 +206,14 @@ class Display(Init):
 		else:
 			self.maxUiSetChecked("40212", 62, 130, False) #Shade selected objects unchecked
 
+
 	def b013(self):
 		'''
 		Viewport Configuration
 
 		'''
 		maxEval('actionMan.executeAction 0 "40023"')
+
 
 	def b014(self):
 		'''
@@ -230,12 +222,14 @@ class Display(Init):
 		'''
 		pass
 
+
 	def b015(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b016(self):
 		'''
@@ -244,12 +238,14 @@ class Display(Init):
 		'''
 		pass
 
+
 	def b017(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b018(self):
 		'''
@@ -258,6 +254,7 @@ class Display(Init):
 		'''
 		pass
 
+
 	def b019(self):
 		'''
 		
@@ -265,12 +262,14 @@ class Display(Init):
 		'''
 		pass
 
+
 	def b020(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b021(self):
 		'''
@@ -285,12 +284,14 @@ class Display(Init):
 			else:
 				obj.isFrozen = True
 
+
 	def b022(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b023(self):
 		'''
@@ -299,6 +300,7 @@ class Display(Init):
 		'''
 		pass
 
+
 	def b024(self):
 		'''
 		Polygon Display Options
@@ -306,6 +308,8 @@ class Display(Init):
 		'''
 		mel.eval("CustomPolygonDisplayOptions")
 		# mel.eval("polysDisplaySetup 1;")
+
+
 
 
 

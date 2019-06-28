@@ -324,6 +324,10 @@ class Slot(object):
 
 	def styleSheetOverride(self):
 		ui = self.sb.getUi()
+
+		if self.hotBox.name=='main':
+			self.setButtons(ui, invisible='v025-28')
+
 		# if self.hotBox.name=='viewport':
 		# 	buttons = self.getObject(ui, 'cmb000-3', showError_=False)
 		# 	for button in buttons: #setStyleSheet for transparent buttons

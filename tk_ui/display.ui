@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>225</width>
-    <height>254</height>
+    <height>262</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -302,45 +302,6 @@
       <bool>true</bool>
      </property>
     </widget>
-   </widget>
-   <widget class="QComboBox" name="cmb001">
-    <property name="geometry">
-     <rect>
-      <x>115</x>
-      <y>220</y>
-      <width>97</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>97</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>9999</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="statusTip">
-     <string>Recent Commands</string>
-    </property>
-    <property name="maxVisibleItems">
-     <number>50</number>
-    </property>
-    <property name="sizeAdjustPolicy">
-     <enum>QComboBox::AdjustToContents</enum>
-    </property>
-    <property name="frame">
-     <bool>false</bool>
-    </property>
-    <item>
-     <property name="text">
-      <string>Recent</string>
-     </property>
-    </item>
    </widget>
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">

@@ -19,30 +19,14 @@ class Display(Init):
 
 
 
+
+
 	def cmb000(self):
 		'''
 		
 
 		'''
 		pass
-
-	def cmb001(self):
-		'''
-		Recent Commands
-
-		'''
-		cmb = self.ui.cmb001
-		
-		list_ = self.sb.prevCommand(docString=1, as_list=1) #ie. get the list of previous command methods
-		contents = self.comboBox (cmb, list_, "Recent")
-
-		index = cmb.currentIndex()
-		if index!=0:
-			print self.sb.prevCommand(docString=1, as_list=1).index(contents[index]) #prevCommand docString
-			self.sb.prevCommand(method=1, as_list=1).index(contents[index])() #execute command at index
-			cmb.setCurrentIndex(0)
-
-
 
 
 	def b000(self):
@@ -52,12 +36,14 @@ class Display(Init):
 		'''
 		pass
 
+
 	def b001(self):
 		'''
 		Toggle Visibility
 
 		'''
 		mel.eval('ToggleVisibilityAndKeepSelection();')
+
 
 	def b002(self):
 		'''
@@ -66,6 +52,7 @@ class Display(Init):
 		'''
 		mel.eval('HideSelectedObjects;')
 
+
 	def b003(self):
 		'''
 		Show Selected
@@ -73,12 +60,14 @@ class Display(Init):
 		'''
 		mel.eval('ShowSelectedObjects;')
 
+
 	def b004(self):
 		'''
 		Show Geometry
 
 		'''
 		mel.eval('hideShow -geometry -show;')
+
 
 	def b005(self):
 		'''
@@ -93,6 +82,7 @@ class Display(Init):
 			displaySurface -xRay ( !$xState[0] ) $object;
 			}
 		''')
+
 
 	def b006(self):
 		'''
@@ -110,6 +100,7 @@ class Display(Init):
 				}
 			}
 		''')
+
 
 	def b007(self):
 		'''
@@ -132,12 +123,14 @@ class Display(Init):
 		}
 		''')
 
+
 	def b008(self):
 		'''
 		Filter Objects
 
 		'''
 		mel.eval("bt_filterActionWindow;")
+
 
 	def b009(self):
 		'''
@@ -146,12 +139,14 @@ class Display(Init):
 		'''
 		pass
 
+
 	def b010(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b011(self):
 		'''
@@ -190,6 +185,7 @@ class Display(Init):
 		if index == 4:
 			self.viewPortMessage("component ID <hl>Off</hl>.")
 
+
 	def b012(self):
 		'''
 		Wireframe Non Active (Wireframe All But The Selected Item)
@@ -199,12 +195,14 @@ class Display(Init):
 		state = pm.modelEditor (current_panel, query=1, activeOnly=1)
 		pm.modelEditor (current_panel, edit=1, activeOnly=not state)
 
+
 	def b013(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b014(self):
 		'''
@@ -213,12 +211,14 @@ class Display(Init):
 		'''
 		pass
 
+
 	def b015(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b016(self):
 		'''
@@ -227,12 +227,14 @@ class Display(Init):
 		'''
 		pass
 
+
 	def b017(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b018(self):
 		'''
@@ -241,12 +243,14 @@ class Display(Init):
 		'''
 		pass
 
+
 	def b019(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b020(self):
 		'''
@@ -255,12 +259,14 @@ class Display(Init):
 		'''
 		pass
 
+
 	def b021(self):
 		'''
 		Template Selected
 
 		'''
 		mel.eval("toggle -template;")
+
 
 	def b022(self):
 		'''
@@ -269,6 +275,7 @@ class Display(Init):
 		'''
 		pass
 
+
 	def b023(self):
 		'''
 		
@@ -276,12 +283,17 @@ class Display(Init):
 		'''
 		pass
 
+
 	def b024(self):
 		'''
 		
 
 		'''
 		pass
+
+
+
+
 
 
 #module name

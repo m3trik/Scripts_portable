@@ -207,11 +207,11 @@ class HotBox(QtWidgets.QWidget):
 		args: [QEvent]
 		'''
 		if self.name=='main':
-			self.setVisibility(event.pos(), 'r000-11')
+			self.setVisibilityOnHover(event.pos(), 'r000-11')
 			self.setDown_(event.pos(), 'i003-18, i020-24, v000-30')
 
 		if self.name=='viewport':
-			self.setVisibility(event.pos(), 'r000-7')
+			self.setVisibilityOnHover(event.pos(), 'r000-7')
 			self.setDown_(event.pos(), 'v000-23')
 			self.showPopup_(event.pos(), 'cmb000-3')
 
@@ -257,9 +257,9 @@ class HotBox(QtWidgets.QWidget):
 		return objects
 
 
-	def setVisibility(self, mousePosition, widgets):
+	def setVisibilityOnHover(self, mousePosition, widgets):
 		'''
-		show/hide widgets.
+		show/hide widgets on mouseover event.
 		args:	mousePosition=QPoint
 				widgets=string consisting of widget names separated by commas. ie. 'r000, r001, v000-13, i020-23'
 		'''

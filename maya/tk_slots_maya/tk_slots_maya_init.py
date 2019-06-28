@@ -84,8 +84,17 @@ class Init(Slot):
 		mainUi = self.sb.getUi('main')
 		try:
 			mainUi.v025.setText(self.sb.prevCommand(docString=1, as_list=1)[-1]) #prevCommand docString
+			mainUi.v025.adjustSize()
+			mainUi.v025.show()
 			mainUi.v026.setText(self.sb.prevCommand(docString=1, as_list=1)[-2]) #prevCommand docString
+			mainUi.v026.adjustSize()
+			mainUi.v026.show()
 			mainUi.v027.setText(self.sb.prevCommand(docString=1, as_list=1)[-3]) #prevCommand docString
+			mainUi.v027.adjustSize()
+			mainUi.v027.show()
+			mainUi.v028.setText(self.sb.prevCommand(docString=1, as_list=1)[-4]) #prevCommand docString
+			mainUi.v028.adjustSize()
+			mainUi.v028.show()
 		except:
 			pass
 

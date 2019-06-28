@@ -195,6 +195,20 @@ class Main(Init):
 		self.sb.prevCommand(method=1, as_list=1)[-3]() #execute command at index
 
 
+	def v028(self):
+		'''
+		Recent Command: 2
+		'''
+		self.sb.prevCommand(method=1, as_list=1)[-4]() #execute command at index
+
+
+	def v029(self):
+		'''
+		Recent Command: 3
+		'''
+		self.sb.prevCommand(method=1, as_list=1)[-5]() #execute command at index
+
+
 
 
 
