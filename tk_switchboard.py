@@ -34,7 +34,7 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 	
 	def __init__(self):
 		'''
-		# keys/values ----------
+		# -- keys/values ---------- #
 			'string name of class'{
 				'class' : class object
 				'size' : list containing width int, height int. ie. [295, 234]
@@ -63,13 +63,13 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 	def uiList(self, name=False, ui=False):
 		'''
-		#args:
-			name=bool 	return string ui list
-			ui=bool 	return dynamic ui list
-		#returns:
-			if name: return list of ordered ui names
-			if ui: return list of ordered dynamic ui objects
-			else: list of string names of classes(lowercase) from key 'uiList'. ie. ['animation', 'cameras', 'create', 'display', 'edit']
+		args:
+				name=bool 	return string ui list
+				ui=bool 	return dynamic ui list
+		returns:
+				if name: return list of ordered ui names
+				if ui: return list of ordered dynamic ui objects
+				else: list of string names of classes(lowercase) from key 'uiList'. ie. ['animation', 'cameras', 'create', 'display', 'edit']
 		'''
 		if name:
 			return [i[0] for i in sbDict['uiList']]
@@ -82,11 +82,11 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 	def getUi(self, name=None):
 		'''
-		#args:
-			name='string' name of class. ie. 'polygons'
-		#returns:
-			if name: corresponding dynamic ui object of given name from the key 'uiList'.
-			else: current dynamic ui object
+		args:
+				name='string' name of class. ie. 'polygons'
+		returns:
+				if name: corresponding dynamic ui object of given name from the key 'uiList'.
+				else: current dynamic ui object
 		'''
 		if name:
 			return self.uiList(ui=1)[self.getUiIndex(name)]
@@ -97,10 +97,10 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 	def setUiName(self, index):
 		'''
-		#args:
-			index=int
-		#returns:
-			corresponding ui name as string
+		args:
+				index=int
+		returns:
+				corresponding ui name as string
 		'''
 		sbDict['name'].append(self.uiList(name=1)[index])
 		return sbDict['name'][-1]
@@ -109,8 +109,8 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 	def getUiName(self):
 		'''
-		#returns:
-			current ui name as string
+		returns:
+				current ui name as string
 		'''
 		return sbDict['name'][-1]
 
@@ -118,11 +118,11 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 	def getUiIndex(self, name=None):
 		'''
-		#args:
-			name='string' name of class. ie. 'polygons'
-		#returns:
-			if name: index of given name from the key 'uiList'.
-			else: index of current ui
+		args:
+				name='string' name of class. ie. 'polygons'
+		returns:
+				if name: index of given name from the key 'uiList'.
+				else: index of current ui
 		'''
 		if name:
 			return self.uiList(name=1).index(name)
@@ -133,10 +133,10 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 	def setApp(self, parent):
 		'''
-		#args:
-			parent=parent app object.
-		#returns:
-			string name of parent app
+		args:
+				parent=parent app object.
+		returns:
+				string name of parent app
 		'''
 		sbDict['app'] = parent.objectName().rstrip('Window').lower() #remove 'Window' from objectName ie. 'Maya' from 'MayaWindow' and set lowercase.
 		return sbDict['app']
@@ -145,8 +145,8 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 	def getApp(self):
 		'''
-		#args:
-			parent=parent app object.
+		args:
+				parent=parent app object.
 		'''
 		if not 'app' in sbDict: sbDict['app'] = '' #initialize list
 
@@ -156,10 +156,10 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 	def setUiSize(self, name, size): #store ui size.
 		'''
-		#args:
-			size=[int, int]
-		#returns:
-			ui size info as integer values in a list. [width, hight]
+		args:
+				size=[int, int]
+		returns:
+				ui size info as integer values in a list. [width, hight]
 		'''
 		sbDict[name]['size'] = size
 		return sbDict[name]['size']
@@ -168,17 +168,17 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 	def getUiSize(self, width=None, percentWidth=None, height=None, percentHeight=None): #get current ui size info.
 		'''
-		#args:
-			width=int 	returns width of current ui
-			height=int 	returns hight of current ui
-			percentWidth=int returns a percentage of the width
-			percentHeight=int returns a percentage of the height
-		#returns:
-			if width: returns width as int
-			if height: returns height as int
-			if percentWidth: returns the percentage of the width as an int
-			if percentHeight: returns the percentage of the height as an int
-			else: ui size info as integer values in a list. [width, hight]
+		args:
+				width=int 	returns width of current ui
+				height=int 	returns hight of current ui
+				percentWidth=int returns a percentage of the width
+				percentHeight=int returns a percentage of the height
+		returns:
+				if width: returns width as int
+				if height: returns height as int
+				if percentWidth: returns the percentage of the width as an int
+				if percentHeight: returns the percentage of the height as an int
+				else: ui size info as integer values in a list. [width, hight]
 		'''
 		if width:
 			return sbDict[self.getUiName()]['size'][0]
@@ -195,12 +195,12 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 	def setClass(self, class_):
 		'''
-		#args:
-			class_='string' module name and class to import and store class instance. 
-				ie. 'tk_slots_max_polygons.Polygons'
-				*or <class object>. to store class instance
-		#returns:
-			class object corresponding to key: class_.
+		args:
+				class_='string' module name and class to import and store class instance. 
+					ie. 'tk_slots_max_polygons.Polygons'
+					*or <class object>. to store class instance
+		returns:
+				class object corresponding to key: class_.
 		'''
 		if type(class_)==str or type(class_)==unicode: #arg as string
 			name = class_.split('_')[-1].split('.')[-1].lower(); #get key from class_ string ie. 'class' from 'tk_slots_max_polygons.Class'
@@ -225,10 +225,10 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 	def getClass(self, name):
 		'''
 		If class is not in sbDict, use setClass() instead.
-		#args:
-			name='string' name of class. ie. 'polygons' (lowercase)
-		#returns:
-			class object from given class name.
+		args:
+				name='string' name of class. ie. 'polygons' (lowercase)
+		returns:
+				class object from given class name.
 		'''
 		return sbDict[name]['class']
 
@@ -236,11 +236,11 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 	def getMethod(self, name, methodString):
 		'''
-		#args:
-			name='string' name of class. ie. 'polygons' (lowercase)
-			methodString='string' name of method. ie. 'b001'
-		#returns:
-			corresponding method object to given method name string.
+		args:
+				name='string' name of class. ie. 'polygons' (lowercase)
+				methodString='string' name of method. ie. 'b001'
+		returns:
+				corresponding method object to given method name string.
 		'''
 		try: return sbDict[name]['connectionDict'][methodString]['methodObject'][0] #if there are event filters attached, just get the method.
 		except: return  sbDict[name]['connectionDict'][methodString]['methodObject']
@@ -249,12 +249,12 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 	def getSignal(self, name, buttonName=None):
 		'''
-		#args:
-			name='string' name of class. ie. 'polygons'
-			buttonName='string'  ie. 'b001'
-		#returns:
-			if buttonName: the corresponding button object with attached signal (ie. b001.onPressed) of the given button name.
-			else: all of the signals associated with the given name as a list
+		args:
+				name='string' name of class. ie. 'polygons'
+				buttonName='string'  ie. 'b001'
+		returns:
+				if buttonName: the corresponding button object with attached signal (ie. b001.onPressed) of the given button name.
+				else: all of the signals associated with the given name as a list
 		'''
 		if buttonName:
 			return sbDict[name]['connectionDict'][buttonName]['buttonObjectWithSignal']
@@ -265,12 +265,12 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 	def getSlot(self, name, buttonName=None):
 		'''
-		#args:
-			name='string' name of class. ie. 'polygons'
-			buttonName='string'  ie. 'b001'
-		#returns:
-			if buttonName: the corresponding method object (ie. Polygons.b001) of the given button name.
-			else: all of the slots associated with the given name as a list
+		args:
+				name='string' name of class. ie. 'polygons'
+				buttonName='string'  ie. 'b001'
+		returns:
+				if buttonName: the corresponding method object (ie. Polygons.b001) of the given button name.
+				else: all of the slots associated with the given name as a list
 		'''
 		if buttonName:
 			return sbDict[name]['connectionDict'][buttonName]['methodObject']
@@ -281,13 +281,13 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 	def getDocString(self, name, methodString, full=False):
 		'''
-		#args:
-			name='string' name of class. ie. 'polygons'
-			methodString='string' name of method. ie. 'b001'
-			full=bool return full unedited docString
-		#returns:
-			if full: full stored docString
-			else: edited docString; name of method
+		args:
+				name='string' name of class. ie. 'polygons'
+				methodString='string' name of method. ie. 'b001'
+				full=bool return full unedited docString
+		returns:
+				if full: full stored docString
+				else: edited docString; name of method
 		'''
 		if full: #entire unformatted docString
 			return sbDict[name]['connectionDict'][methodString]['docString']
@@ -297,12 +297,12 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 	def getWidgetClass(self, button, name=None):
 		'''
-		#args:
-			button='string'  - name of button/widget
-				*or <object> -widget
-			name='string' - name of dynamic ui (else use current ui)
-		#returns:
-			<class object> - the corresponding widget class
+		args:
+				button='string'  - name of button/widget
+					*or <object> -widget
+				name='string' - name of dynamic ui (else use current ui)
+		returns:
+				<class object> - the corresponding widget class
 		'''
 		if not type(button)==str:
 			try:
@@ -318,12 +318,12 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 	def getWidgetType(self, button, name=None):
 		'''
-		#args:
-			button='string'  - name of button/widget
-				*or <object> -widget
-			name='string' - name of dynamic ui (else use current ui)
-		#returns:
-			'string' - the corresponding widget class name
+		args:
+				button='string'  - name of button/widget
+					*or <object> -widget
+				name='string' - name of dynamic ui (else use current ui)
+		returns:
+				'string' - the corresponding widget class name
 		'''
 		if not type(button)==str:
 			try:
@@ -339,11 +339,11 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 	def previousName(self, previousIndex=False, allowDuplicates=False, as_list=False):
 		'''
-		#args:
-			previousIndex=bool 	return the index of the last valid previously opened ui name.
-		#returns:
-			if previousIndex: int index of previously opened ui
-			else: string name of previously opened layout.
+		args:
+				previousIndex=bool 	return the index of the last valid previously opened ui name.
+		returns:
+				if previousIndex: int index of previously opened ui
+				else: string name of previously opened layout.
 		'''
 		sbDict['name'] = sbDict['name'][-10:] #keep original list length restricted to last ten elements
 
@@ -366,16 +366,16 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 	def prevCommand(self, docString=False, method=False, as_list=False):
 		'''
-		#args:
-			docString=bool 		return docString of last command
-			methodList=bool 	return method of last command
-		#returns:
-			if docString: 'string' description (derived from the last used command method's docString)
-			if docString AND as_list: [string list] all docStrings, in order of use, as a list
-			if method: method of last used command.
-			if method AND as_list: [<method object> list} all methods, in order of use, as a list
-			if as_list: list of lists with <method object> as first element and <docString> as second. 'prevCommand':[[b001, 'multi-cut tool']] }
-			else : <method object> of the last used command
+		args:
+				docString=bool 		return docString of last command
+				methodList=bool 	return method of last command
+		returns:
+				if docString: 'string' description (derived from the last used command method's docString)
+				if docString AND as_list: [string list] all docStrings, in order of use, as a list
+				if method: method of last used command.
+				if method AND as_list: [<method object> list} all methods, in order of use, as a list
+				if as_list: list of lists with <method object> as first element and <docString> as second. 'prevCommand':[[b001, 'multi-cut tool']] }
+				else : <method object> of the last used command
 		'''
 		if not 'prevCommand' in sbDict: sbDict['prevCommand'] = [] #initialize list
 
@@ -411,11 +411,11 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 	def previousView(self, previousIndex=False, allowDuplicates=False, as_list=False):
 		'''
-		#args:
-			previousIndex=bool 	return the index of the last valid previously opened ui name.
-		#returns:
-			if previousIndex: int index of previously opened ui
-			else: string name of previously opened layout.
+		args:
+				previousIndex=bool 	return the index of the last valid previously opened ui name.
+		returns:
+				if previousIndex: int index of previously opened ui
+				else: string name of previously opened layout.
 		'''
 		sbDict['name'] = sbDict['name'][-10:] #keep original list length restricted to last ten elements
 
@@ -438,10 +438,10 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 	def connectionDict(self, name):
 		'''
-		#args:
-			name='string' name of class. ie. 'polygons'
-		#returns:
-			connection dict of given name with button/corresponding method string as key.
+		args:
+				name='string' name of class. ie. 'polygons'
+		returns:
+				connection dict of given name with button/corresponding method string as key.
 		ex.
 		'buttonObject':button ui object.  ie. b001
 		'buttonObjectWithSignal':button ui object with signal attached. ie. b001.connect
@@ -458,8 +458,8 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 	def dict(self):
 		'''
-		#returns:
-			full switchboard dict
+		returns:
+				full switchboard dict
 		'''
 		return sbDict
 
@@ -467,10 +467,10 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 	def hasKey(self, *args): #check if key exists in switchboard dict.
 		'''
-		#args:
-			'string' dict keys in order of hierarchy.  ie. 'polygons', 'connectionDict', 'b001', 'methodObject'
-		#returns:
-			bool
+		args:
+				'string' dict keys in order of hierarchy.  ie. 'polygons', 'connectionDict', 'b001', 'methodObject'
+		returns:
+				bool
 		'''
 		if len(args)==1:
 			if args[0] in sbDict: return True

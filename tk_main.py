@@ -23,10 +23,11 @@ except: pass
 class Point(Structure):
 	_fields_ = [("x", c_long), ("y", c_long)]
 
+
 def getMousePosition():
 	pt = Point()
 	windll.user32.GetCursorPos(byref(pt))
-	return { "x": pt.x, "y": pt.y}
+	return {"x": pt.x, "y": pt.y}
 
 
 
@@ -241,14 +242,28 @@ class HotBox(QtWidgets.QWidget):
 		return names+unpacked_names
 
 
+	def getUiObject(self, widgets):
+		'''
+		get ui objects from name strings.
+		args:	 widgets='string' - ui object names
+		returns: list of corresponding ui objects	
+		'''
+		objects=[]
+		for name in self.unpackNames(widgets):
+			try:
+				w = getattr(self.ui, name)
+				objects.append(w)
+			except: pass
+		return objects
+
+
 	def setVisibility(self, mousePosition, widgets):
 		'''
 		show/hide widgets.
 		args:	mousePosition=QPoint
 				widgets=string consisting of widget names separated by commas. ie. 'r000, r001, v000-13, i020-23'
 		'''
-		for i in self.unpackNames(widgets):
-			w = getattr(self.ui, i)
+		for w in self.getUiObject(widgets):
 			if w.geometry().contains(mousePosition):
 				w.show()
 			else:
@@ -261,9 +276,7 @@ class HotBox(QtWidgets.QWidget):
 		args:	mousePosition=QPoint
 				widgets=string consisting of widget names separated by commas. ie. 'r000, r001, v000-13, i020-23'
 		'''
-		for i in self.unpackNames(widgets):
-			w = getattr(self.ui, i)
-
+		for w in self.getUiObject(widgets):
 			if w.rect().contains(w.mapFromGlobal(QtGui.QCursor.pos())):
 				w.setDown(True)
 			else:
@@ -276,9 +289,7 @@ class HotBox(QtWidgets.QWidget):
 		args:	mousePosition=QPoint
 				widgets=string 
 		'''
-		for i in self.unpackNames(widgets):
-			w = getattr(self.ui, i)
-
+		for w in self.getUiObject(widgets):
 			if w.rect().contains(w.mapFromGlobal(QtGui.QCursor.pos())):
 				# w.showPopup()
 				w.setStyleSheet('''

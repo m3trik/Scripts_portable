@@ -81,6 +81,15 @@ class Init(Slot):
 				t.insertPlainText(str(value))
 
 
+		mainUi = self.sb.getUi('main')
+		try:
+			mainUi.v025.setText(self.sb.prevCommand(docString=1, as_list=1)[-1]) #prevCommand docString
+			mainUi.v026.setText(self.sb.prevCommand(docString=1, as_list=1)[-2]) #prevCommand docString
+			mainUi.v027.setText(self.sb.prevCommand(docString=1, as_list=1)[-3]) #prevCommand docString
+		except:
+			pass
+
+
 
 
 	# ------------------------------------------------

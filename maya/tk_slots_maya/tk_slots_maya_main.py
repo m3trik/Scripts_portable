@@ -19,7 +19,7 @@ class Main(Init):
 		# self.getMethod('preferences', 'cmb000')() #init menuSet combobox
 		# self.getObject(self.sb.setClass('tk_slots_max_preferences.Preferences'), 'cmb000')()
 
-
+		
 
 
 
@@ -172,6 +172,27 @@ class Main(Init):
 		# self.ui.v008.setText(index)
 
 		self.getMethod('file','b005')()
+
+
+	def v025(self):
+		'''
+		Recent Command: 1
+		'''
+		self.sb.prevCommand(method=1, as_list=1)[-1]() #execute command at index
+			
+
+	def v026(self):
+		'''
+		Recent Command: 2
+		'''
+		self.sb.prevCommand(method=1, as_list=1)[-2]() #execute command at index
+
+
+	def v027(self):
+		'''
+		Recent Command: 3
+		'''
+		self.sb.prevCommand(method=1, as_list=1)[-3]() #execute command at index
 
 
 
