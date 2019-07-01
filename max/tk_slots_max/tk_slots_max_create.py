@@ -33,6 +33,9 @@ class Create(Init):
 
 
 	def getAxis(self):
+		'''
+
+		'''
 		if self.ui.chk000.isChecked():
 			axis = 'x'
 		elif self.ui.chk001.isChecked():
@@ -100,7 +103,6 @@ class Create(Init):
 	def t003(self):
 		'''
 		Set Name
-
 		'''
 		self.node.name = self.ui.t003.text()
 
@@ -108,7 +110,6 @@ class Create(Init):
 	def chk000(self):
 		'''
 		Rotate X Axis
-
 		'''
 		self.setButtons(self.ui, checked='chk000',unchecked='chk001,chk002')
 		if self.node:
@@ -118,7 +119,6 @@ class Create(Init):
 	def chk001(self):
 		'''
 		Rotate Y Axis
-
 		'''
 		self.setButtons(self.ui, checked='chk001',unchecked='chk000,chk002')
 		if self.node:
@@ -128,7 +128,6 @@ class Create(Init):
 	def chk002(self):
 		'''
 		Rotate Z Axis
-
 		'''
 		self.setButtons(self.ui, checked='chk002',unchecked='chk001,chk000')
 		if self.node:
@@ -146,7 +145,6 @@ class Create(Init):
 	def chk005(self):
 		'''
 		Set Point
-
 		'''
 		#add support for averaging multiple components and multiple component types.
 		obj = rt.selection[0]
@@ -184,10 +182,25 @@ class Create(Init):
 			self.ui.cmb001.addItems(lights)
 
 
+	def cmb002(self):
+		'''
+		Editors
+		'''
+		cmb = self.ui.cmb002
+		
+		files = ['']
+		contents = self.comboBox(cmb, files, '::')
+
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				pass
+			cmb.setCurrentIndex(0)
+
+
 	def b000(self):
 		'''
 		Create Object
-
 		'''
 		axis = self.getAxis() #get axis as 'string'
 
@@ -312,28 +325,24 @@ class Create(Init):
 	def b001(self):
 		'''
 		
-
 		'''
 		pass
 
 	def b002(self):
 		'''
 		
-
 		'''
 		pass
 
 	def b003(self):
 		'''
 		
-
 		'''
 		pass
 
 	def b004(self):
 		'''
 		
-
 		'''
 		pass
 

@@ -49,7 +49,6 @@ class File(Init):
 	def cmb000(self):
 		'''
 		Recent Files
-
 		'''
 		cmb = self.ui.cmb000
 		
@@ -67,7 +66,6 @@ class File(Init):
 	def cmb001(self):
 		'''
 		Recent Projects
-
 		'''
 		cmb = self.ui.cmb001
 		
@@ -85,7 +83,6 @@ class File(Init):
 	def cmb002(self):
 		'''
 		Recent Autosave
-
 		'''
 		cmb = self.ui.cmb002
 		
@@ -106,7 +103,6 @@ class File(Init):
 	def cmb003(self):
 		'''
 		Import
-
 		'''
 		cmb = self.ui.cmb003
 		
@@ -125,7 +121,6 @@ class File(Init):
 	def cmb004(self):
 		'''
 		Export
-
 		'''
 		cmb = self.ui.cmb004
 		
@@ -165,12 +160,11 @@ class File(Init):
 	def cmb005(self):
 		'''
 		Editors
-
 		'''
 		cmb = self.ui.cmb005
 		
 		files = ['Schematic View']
-		contents = self.comboBox(cmb, files, "Editors")
+		contents = self.comboBox(cmb, files, '::')
 
 		index = cmb.currentIndex()
 		if index!=0:
@@ -182,7 +176,6 @@ class File(Init):
 	def cmb006(self):
 		'''
 		Project Folder
-
 		'''
 		cmb = self.ui.cmb006
 		
@@ -203,7 +196,6 @@ class File(Init):
 	def b000(self):
 		'''
 		Save
-
 		'''
 		preSaveScript = ""
 		postSaveScript = ""
@@ -278,7 +270,6 @@ class File(Init):
 	def b002(self):
 		'''
 		Fbx Presets
-
 		'''
 		maxEval('FBXUICallBack -1 editExportPresetInNewWindow fbx;')
 
@@ -286,7 +277,6 @@ class File(Init):
 	def b003(self):
 		'''
 		Obj Presets
-
 		'''
 		maxEval('FBXUICallBack -1 editExportPresetInNewWindow obj;')
 
@@ -294,7 +284,6 @@ class File(Init):
 	def b004(self):
 		'''
 		Close Main Application
-
 		'''
 		# force=false #pymel has no attribute quit error.
 		# exitcode=""
@@ -306,7 +295,6 @@ class File(Init):
 	def b005(self):
 		'''
 		Minimize Main Application
-
 		'''
 		app = rt.createOLEObject('Shell.Application')
 		maxEval('minimizeAll app')
@@ -318,7 +306,6 @@ class File(Init):
 	def b006(self):
 		'''
 		Restore Main Application
-
 		'''
 		pass
 
@@ -326,7 +313,6 @@ class File(Init):
 	def b007(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -334,7 +320,6 @@ class File(Init):
 	def b015(self):
 		'''
 		Remove String From Object Names.
-
 		'''
 		from_ = str(self.ui.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
 		to = str(self.ui.t001.text())
@@ -360,7 +345,6 @@ class File(Init):
 	def b016(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -368,7 +352,6 @@ class File(Init):
 	def b017(self):
 		'''
 		Set Project
-
 		'''
 		try:
 			MaxPlus.PathManager.SetProjectFolderDir()

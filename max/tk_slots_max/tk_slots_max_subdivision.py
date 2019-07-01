@@ -28,13 +28,12 @@ class Subdivision(Init):
 
 	def cmb000(self):
 		'''
-		Modifiers
-
+		Editors
 		'''
 		cmb = self.ui.cmb000
 		
 		selectionSets = [set for set in rt.selectionSets]
-		contents = self.comboBox (cmb, ['TurboSmooth', 'TurboSmooth Pro', 'OpenSubDiv', 'Subdivide', 'Subdivide (WSM)', 'MeshSmooth', 'Optimize', 'Pro Optimizer'], "Modifiers")
+		contents = self.comboBox (cmb, ['TurboSmooth','TurboSmooth Pro','OpenSubDiv','Subdivide','Subdivide (WSM)','MeshSmooth','Optimize','Pro Optimizer','Add Divisions'], '::')
 
 		index = cmb.currentIndex()
 		if index!=0:
@@ -92,12 +91,21 @@ class Subdivision(Init):
 				mod = ProOptimizer()
 				rt.modpanel.addModToSelection(mod)
 
+			if index==contents.index('Add Divisions'):
+				maxEval('''
+				Try 
+				(
+					local A = modPanel.getCurrentObject()
+					A.popupDialog #Tessellate
+				)
+				Catch ()
+				''')
 			cmb.setCurrentIndex(0)
+
 
 	def s000(self):
 		'''
 		Division Level
-
 		'''
 		value = self.ui.s000.getValue()
 
@@ -108,10 +116,10 @@ class Subdivision(Init):
 				obj.modifiers['TurboSmooth'].iterations = value
 			except: pass
 
+
 	def s001(self):
 		'''
 		Tesselation Level
-
 		'''
 		value = self.ui.s001.getValue()
 
@@ -126,7 +134,6 @@ class Subdivision(Init):
 	def b000(self):
 		'''
 		Toggle Subdiv Proxy Display
-
 		'''
 		state = self.cycle([1,1,0], 'subdivProxy')
 		try:
@@ -135,10 +142,10 @@ class Subdivision(Init):
 			traceback.print_exc()
 			print "// Warning: Nothing Selected\n"
 
+
 	def b001(self):
 		'''
 		Subdiv Proxy
-
 		'''
 		global polySmoothBaseMesh
 		polySmoothBaseMesh=[]
@@ -172,81 +179,73 @@ class Subdivision(Init):
 		#toggle performSmoothProxy
 		mel.eval("performSmoothProxy 0;") #toggle SubDiv Proxy;
 
+
 	def b002(self):
 		'''
-		Subdiv Proxy Options
-
+		
 		'''
-		mel.eval('performSmoothProxy 1;') #SubDiv Proxy Options;
+		pass
+
 
 	def b003(self):
 		'''
-		Polygon Display Options
-
+		
 		'''
-		mel.eval("CustomPolygonDisplayOptions")
-		# mel.eval("polysDisplaySetup 1;")
+		pass
+
 
 	def b004(self):
 		'''
 		Poly Reduce
-
 		'''
 		mel.eval("polyReduce -version 1 -keepCreaseEdgeWeight 1;")
+
 
 	def b005(self):
 		'''
 		Reduce
-
 		'''
 		mel.eval("ReducePolygon;")
 
+
 	def b006(self):
 		'''
-		Reduce Options
-
+		
 		'''
-		mel.eval("ReducePolygonOptions;")
+		pass
+
 
 	def b007(self):
 		'''
-		Smooth Options
-
+		
 		'''
-		mel.eval("SmoothPolygonOptions;")
+		pass
+
 
 	def b008(self):
 		'''
 		Add Divisions - Subdivide Mesh
-
 		'''
 		maxEval('macros.run \"Modifiers\" \"Tessellate\"')
+
 
 	def b009(self):
 		'''
 		Smooth
-
 		'''
 		maxEval('macros.run \"Modifiers\" \"Smooth\"')
 
+
 	def b010(self):
 		'''
-		Add Divisions Options
-
+		
 		'''
-		maxEval('''
-		Try 
-		(
-			local A = modPanel.getCurrentObject()
-			A.popupDialog #Tessellate
-		)
-		Catch ()
-		''')
+		pass
+
 
 	def b011(self):
 		'''
 		Convert Smooth Preview
-
 		'''
 		#convert smooth mesh preview to polygons
 		geometry = rt.selection
@@ -268,10 +267,11 @@ class Subdivision(Init):
 
 
 
+
+
+
 #module name
 print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
-	#b012
-

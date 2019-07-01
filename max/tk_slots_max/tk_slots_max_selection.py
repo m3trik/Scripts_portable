@@ -27,28 +27,26 @@ class Selection(Init):
 
 
 
-
 	def t000(self):
 		'''
 		Select The Selection Set Itself (Not Members Of)
-
 		'''
 		name = str(self.ui.t000.text())+"Set"
 		pm.select (name, noExpand=1) #noExpand=select set itself
 
+
 	def t001(self):
 		'''
 		Select By Name
-
 		'''
 		searchStr = str(self.ui.t001.text()) #asterisk denotes startswith*, *endswith, *contains* 
 		if searchStr:
 			selection = rt.select(searchStr)
 
+
 	def chk000(self):
 		'''
 		Select Nth: uncheck other checkboxes
-
 		'''
 		self.setButtons(self.ui, unchecked='chk001-2')
 
@@ -56,21 +54,20 @@ class Selection(Init):
 	def chk001(self):
 		'''
 		Select Nth: uncheck other checkboxes
-
 		'''
 		self.setButtons(self.ui, unchecked='chk000,chk002')
+
 
 	def chk002(self):
 		'''
 		Select Nth: uncheck other checkboxes
-
 		'''
 		self.setButtons(self.ui, unchecked='chk000-1')
+
 
 	def chk004(self):
 		'''
 		Ignore Backfacing (Camera Based Selection)
-
 		'''
 		for obj in rt.selection:
 			if self.ui.chk004.isChecked():
@@ -80,24 +77,10 @@ class Selection(Init):
 				sel.ignoreBackfacing = False
 				# self.viewPortMessage("Camera-based selection <hl>Off</hl>.")
 
-	def chk005(self):
-		'''
-		
-
-		'''
-		pass
-	
-	def chk006(self):
-		'''
-		
-
-		'''
-		pass
 
 	def cmb000(self):
 		'''
 		List Selection Sets
-
 		'''
 		cmb = self.ui.cmb000
 		
@@ -112,44 +95,23 @@ class Selection(Init):
 
 	def cmb001(self):
 		'''
-		List current selection
-
+		Editors
 		'''
 		cmb = self.ui.cmb001
 		
-		level = rt.subObjectLevel
+		files = ['']
+		contents = self.comboBox(cmb, files, '::')
 
-		if len(rt.selection):
-			obj = rt.selection[0]
-			if level==1:
-				type_ = 'Vertex' #do not change. used for arg in SetSelection (and to change text in ui)
-				list_ = self.bitArrayToArray(rt.polyop.getVertSelection(obj))
-			elif level==2:
-				type_ = 'Edge'
-				list_ = self.bitArrayToArray(rt.polyop.getEdgeSelection(obj))
-			elif level==4:
-				type_ = 'Face'
-				list_ = self.bitArrayToArray(rt.polyop.getFaceSelection(obj))
-			else:
-				type_ = 'Object'
-				list_ = [obj for obj in rt.selection]
-
-			contents = self.comboBox (cmb, [str(i) for i in list_], 'Currently Selected '+type_+':')
-
-			index = cmb.currentIndex()
-			if index!=0: #if object
-				if level==0:
-					rt.select(list_[index]-1)
-				else: #if component
-					bitArray = rt.BitArray(list_[index])
-					obj.EditablePoly.SetSelection(type_, bitArray)
-				cmb.setCurrentIndex(0)
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				pass
+			cmb.setCurrentIndex(0)
 
 
 	def cmb002(self):
 		'''
 		Select All Of Type
-
 		'''
 		cmb = self.ui.cmb002
 		
@@ -181,7 +143,6 @@ class Selection(Init):
 	def cmb003(self):
 		'''
 		Convert Selection to
-
 		'''
 		cmb = self.ui.cmb003
 
@@ -202,7 +163,6 @@ class Selection(Init):
 	def b000(self):
 		'''
 		Create Selection Set
-
 		'''
 		name = str(self.ui.t000.text())+"Set"
 
@@ -222,7 +182,6 @@ class Selection(Init):
 	def b001(self):
 		'''
 		Paint Select
-
 		'''
 		if pm.contextInfo ("paintSelect", exists=True):
 			pm.deleteUI ("paintSelect")
@@ -236,33 +195,34 @@ class Selection(Init):
 		pm.artSelectCtx ("paintSelect", selectop=selectop, radius=radius, lowerradius=lowerradius)#, beforeStrokeCmd=beforeStrokeCmd())
 		pm.setToolTo ("paintSelect")
 
+
 	def b002(self):
 		'''
 		
-
 		'''
 		pass
+
 
 	def b003(self):
 		'''
 		
-
 		'''
 		pass
+
 
 	def b004(self):
 		'''
 		
-
 		'''
 		pass
+
 
 	def b005(self):
 		'''
 		
-
 		'''
 		pass
+
 
 	def b006(self):
 		'''
@@ -274,7 +234,6 @@ class Selection(Init):
 	def b007(self):
 		'''
 		Select Polygon Face Island
-
 		'''
 		rangeX=rangeY=rangeZ = float(self.ui.s002.value())
 
@@ -328,18 +287,20 @@ class Selection(Init):
 			# elif rt.subObjectLevel==4: #Face
 			# 	self.selectFaceLoop(tolerance=50)
 
+
 	def b009(self):
 		'''
 
 		'''
 		pass
 
+
 	def b10(self):
 		'''
 		
-
 		'''
 		pass
+
 
 	def b011(self):
 		'''
@@ -347,24 +308,24 @@ class Selection(Init):
 		'''
 		pass
 
+
 	def b012(self):
 		'''
 		Selection Constraints
-
 		'''
 		maxEval('PolygonSelectionConstraints;')
+
 
 	def b013(self):
 		'''
 		Lasso Select
-
 		'''
 		mel.eval("LassoTool;")
+
 
 	def b014(self):
 		'''
 		Grow Selection
-
 		'''
 		# expand functionalitly to grow according to selection type
 		#grow line #PolytoolsSelect.Pattern7 1
@@ -373,41 +334,42 @@ class Selection(Init):
 		for obj in rt.selection:
 			obj.EditablePoly.GrowSelection()
 
+
 	def b015(self):
 		'''
 		Shrink Selection
-
 		'''
 		for obj in rt.selection:
 			obj.EditablePoly.ShrinkSelection()
 
+
 	def b016(self):
 		'''
 		
-
 		'''
 		pass
+
 
 	def b017(self):
 		'''
 		
-
 		'''
 		pass
+
 
 	def b018(self):
 		'''
 		
-
 		'''
 		pass
+
 
 	def b019(self):
 		'''
 		
-
 		'''
 		pass
+
 
 	def b020(self):
 		'''
@@ -421,9 +383,6 @@ class Selection(Init):
 
 		
 
-
-
-		
 
 
 

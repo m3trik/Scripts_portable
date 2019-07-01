@@ -31,47 +31,47 @@ class Transform(Init):
 		# else:
 		# 	self.ui.chk013.setChecked(False)
 
+
 	def chk005(self):
 		'''
 		Transform: Scale
-
 		'''
 		self.setButtons(self.ui, unchecked='chk008,chk009',checked='chk000,chk001,chk002')
 		self.ui.s000.setValue(2)
 		self.ui.s000.setSingleStep(1)
 
+
 	def chk008(self):
 		'''
 		Transform: Move
-
 		'''
 		self.setButtons(self.ui, unchecked='chk005,chk009,chk000,chk001,chk002')
 		self.ui.s000.setValue(0.1)
 		self.ui.s000.setSingleStep(0.1)
 
+
 	def chk009(self):
 		'''
 		Transform: Rotate
-
 		'''
 		self.setButtons(self.ui, unchecked='chk005,chk008,chk000,chk001,chk002')
 		self.ui.s000.setValue(45)
 		self.ui.s000.setSingleStep(5)
 
+
 	def chk010(self):
 		'''
 		Align: Auto Align
-
 		'''
 		if self.ui.chk010.isChecked():
 			self.setButtons(self.ui, disable='b029,b030,b031')
 		else:
 			self.setButtons(self.ui, enable='b029,b030,b031')
 
+
 	def chk012(self):
 		'''
 		Constrain To Edge
-
 		'''
 		if self.ui.chk012.isChecked():
 			self.ui.chk013.setChecked(False)
@@ -81,10 +81,10 @@ class Transform(Init):
 			# pm.manipMoveSetXformConstraint(none=True);
 			pm.xformConstraint(type='none')
 
+
 	def chk013(self):
 		'''
 		Constrain To Surface
-
 		'''
 		if self.ui.chk013.isChecked():
 			self.ui.chk012.setChecked(False)
@@ -94,10 +94,27 @@ class Transform(Init):
 			# pm.manipMoveSetXformConstraint(none=True);
 			pm.xformConstraint(type='none')
 
-	def s000(self): #
-		pass
+
+	def cmb000(self):
+		'''
+		Editors
+		'''
+		cmb = self.ui.cmb000
+		
+		files = ['']
+		contents = self.comboBox(cmb, files, '::')
+
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				pass
+			cmb.setCurrentIndex(0)
+
 
 	def transformChecks(self):
+		'''
+
+		'''
 		floatXYZ = float(self.ui.s000.text())
 		floatX=floatY=floatZ = 0
 
@@ -118,6 +135,9 @@ class Transform(Init):
 		return xyz
 
 	def transform(self): #transform
+		'''
+
+		'''
 		relative = bool(self.ui.chk003.isChecked())#Move absolute/relative toggle
 		worldspace = bool(self.ui.chk004.isChecked())#Move object/worldspace toggle
 		xyz = self.transformChecks()
@@ -142,10 +162,10 @@ class Transform(Init):
 		if self.ui.chk009.isChecked():
 			pm.xform (relative=relative, worldSpace=worldspace, objectSpace=(not worldspace), rotation=(xyz[0], xyz[1], xyz[2]))
 
+
 	def b000(self):
 		'''
-		Transform -
-
+		Transform: negative
 		'''
 		#change the textfield to neg value and call transform
 		textfield = float(self.ui.s000.value())
@@ -154,10 +174,10 @@ class Transform(Init):
 			self.ui.s000.setValue(newText)
 		self.transform()
 
+
 	def b001(self):
 		'''
-		Transform +
-
+		Transform: positive
 		'''
 		#change the textfield to pos value and call transform
 		textfield = float(self.ui.s000.value())
@@ -166,28 +186,27 @@ class Transform(Init):
 			self.ui.s000.setValue(newText)
 		self.transform()
 
+
 	def b002(self):
 		'''
 		Freeze Transformations
-
 		'''
 		maxEval('macros.run \"Animation Tools\" \"FreezeTransform\"')
-		
+
+
 	def b003(self):
 		'''
 		Center Pivot Object
-
 		'''
 		for obj in rt.selection:
 			rt.toolMode.coordsys(obj)
 			obj.pivot = obj.center
-		
+
+
 	def b004(self):
 		'''
 		Align Vertices
-
 		'''
-
 		#a previous version of this has been translated to max
 		if self.ui.chk010.isChecked(): #if checked; set coordinates for auto align:
 			sel = pm.ls (selection=1)
@@ -265,10 +284,10 @@ class Transform(Init):
 		if all ([x, y, z]): #align xyz
 			self.alignVertices(mode=6,average=avg,edgeloop=loop)
 
+
 	def b005(self):
 		'''
 		Move To
-
 		'''
 		sel = [s for s in rt.getCurrentSelection()] #rebuild selection array in python.
 
@@ -278,61 +297,61 @@ class Transform(Init):
 		for obj in objects: 
 			obj.center = target.center
 
+
 	def b006(self):
 		'''
 		
-
 		'''
 		pass
+
 
 	def b007(self):
 		'''
 		
-
 		'''
 		pass
+
 
 	def b008(self):
 		'''
 		
-
 		'''
 		pass
+
 
 	def b009(self):
 		'''
 		
-
 		'''
 		pass
+
 
 	def b010(self):
 		'''
 		
-
 		'''
 		pass
+
 
 	def b011(self):
 		'''
 		
-
 		'''
 		pass
+
 
 	def b012(self):
 		'''
 		Make Live
-
 		'''
 		objects = pm.ls (sl=1)[0] #construction planes, nurbs surfaces and polygon meshes can be made live. makeLive supports one live object at a time.
 		pm.makeLive(obj)
 		print str(obj)+'is live.' 
 
+
 	def b013(self):
 		'''
 		Drop To Grid
-
 		'''
 		origin = self.ui.chk014.isChecked()
 		bBoxLowestPoint = self.ui.chk015.isChecked()
@@ -379,142 +398,142 @@ class Transform(Init):
 					pm.xform (obj, rotatePivot=osPivot, objectSpace=1) #return pivot to orig position
 				pm.select(selection) #retore the original selection
 
+
 	def b014(self):
 		'''
 		Center Pivot Component
-
 		'''
 		[pm.xform (s, centerPivot=1) for s in pm.ls (sl=1, objectsOnly=1, flatten=1)]
 		# mel.eval("moveObjectPivotToComponentCentre;")
 
+
 	def b015(self):
 		'''
 		Center Pivot World
-
 		'''
 		mel.eval("xform -worldSpace -pivots 0 0 0;")
+
 
 	def b016(self):
 		'''
 		Set To Bounding Box
-
 		'''
 		mel.eval("bt_alignPivotToBoundingBoxWin;")
+
 
 	def b017(self):
 		'''
 		Bake Pivot
-
 		'''
 		mel.eval("BakeCustomPivot;")
+
 
 	def b018(self):
 		'''
 		Snap Align Objects: Align Objects
-
 		'''
 		mel.eval("performAlignObjects 1;")
+
 
 	def b019(self):
 		'''
 		Align 1 Points
-
 		'''
 		mel.eval("SnapPointToPointOptions;")
+
 
 	def b020(self):
 		'''
 		Align 2 Points
-
 		'''
 		mel.eval("Snap2PointsTo2PointsOptions;")
+
 
 	def b021(self):
 		'''
 		Align 3 Points
-
 		'''
 		mel.eval("Snap3PointsTo3PointsOptions;")
+
 
 	def b022(self):
 		'''
 		Align Tool
-
 		'''
 		mel.eval("setToolTo alignToolCtx;")
+
 
 	def b023(self):
 		'''
 		Orient To Vertex/Edge
-
 		'''
 		mel.eval("orientToTool;")
+
 
 	def b024(self):
 		'''
 		Snap To Component
-
 		'''
 		mel.eval("bt_snapAlignObjectToComponent;")
+
 
 	def b025(self):
 		'''
 		Snap Together
-
 		'''
 		mel.eval("setToolTo snapTogetherToolCtx;")
+
 
 	def b026(self):
 		'''
 		Maya Bonus Tools: Snap Align Objects To Component Options
-
 		'''
 		mel.eval("bt_snapAlignObjectToComponentOptions;")
+
 
 	def b027(self):
 		'''
 		
-
 		'''
-		mel.eval("")
+		pass
+
 
 	def b028(self):
 		'''
 		
-
 		'''
-		mel.eval("")
+		pass
+
 
 	def b029(self):
 		'''
 		
-
 		'''
-		mel.eval("")
+		pass
+
 
 	def b030(self):
 		'''
 		
-
 		'''
-		mel.eval("")
+		pass
+
 
 	def b031(self):
 		'''
 		
-
 		'''
-		mel.eval("")
+		pass
+
 
 	def b032(self):
 		'''
 		Reset Pivot Transforms
-
 		'''
 		maxEval('''
-		{ string $objs[] = `ls -sl -type transform -type geometryShape`;
-		if (size($objs) > 0) { xform -cp; } manipPivot -rp -ro; };
-		''')
+			{ string $objs[] = `ls -sl -type transform -type geometryShape`;
+			if (size($objs) > 0) { xform -cp; } manipPivot -rp -ro; };
+			''')
 
 
 

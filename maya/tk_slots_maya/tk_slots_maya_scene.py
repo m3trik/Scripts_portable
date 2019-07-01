@@ -21,6 +21,22 @@ class Scene(Init):
 
 
 
+	def cmb000(self):
+		'''
+		Editors
+		'''
+		cmb = self.ui.cmb000
+		
+		files = ['']
+		contents = self.comboBox(cmb, files, '::')
+
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				mel.eval('')
+			cmb.setCurrentIndex(0)
+
+
 	def getTrailingIntegers(self, string, increment=0):
 		'''
 		args: increment=int - optional step amount

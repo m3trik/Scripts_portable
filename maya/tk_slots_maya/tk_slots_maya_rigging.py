@@ -66,7 +66,7 @@ class Rigging(Init):
 		cmb = self.ui.cmb000
 
 		files = ['Quick Rig','HumanIK','Expression Editor','Shape Editor','Connection Editor','Channel Control Editor','Set Driven Key']
-		contents = self.comboBox(cmb, files, "Editors")
+		contents = self.comboBox(cmb, files, '::')
 
 		index = cmb.currentIndex()
 		if index!=0:

@@ -31,6 +31,7 @@ class Transform(Init):
 		else:
 			self.ui.chk013.setChecked(False)
 
+
 	def chk005(self):
 		'''
 		Transform: Scale
@@ -39,6 +40,7 @@ class Transform(Init):
 		self.setButtons(self.ui, unchecked='chk008,chk009',checked='chk000,chk001,chk002')
 		self.ui.s000.setValue(2)
 		self.ui.s000.setSingleStep(1)
+
 
 	def chk008(self):
 		'''
@@ -49,6 +51,7 @@ class Transform(Init):
 		self.ui.s000.setValue(0.1)
 		self.ui.s000.setSingleStep(0.1)
 
+
 	def chk009(self):
 		'''
 		Transform: Rotate
@@ -57,6 +60,7 @@ class Transform(Init):
 		self.setButtons(self.ui, unchecked='chk005,chk008,chk000,chk001,chk002')
 		self.ui.s000.setValue(45)
 		self.ui.s000.setSingleStep(5)
+
 
 	def chk010(self):
 		'''
@@ -67,6 +71,7 @@ class Transform(Init):
 			self.setButtons(self.ui, disable='b029,b030,b031')
 		else:
 			self.setButtons(self.ui, enable='b029,b030,b031')
+
 
 	def chk012(self):
 		'''
@@ -81,6 +86,7 @@ class Transform(Init):
 			# pm.manipMoveSetXformConstraint(none=True);
 			pm.xformConstraint(type='none')
 
+
 	def chk013(self):
 		'''
 		Constrain To Surface
@@ -94,8 +100,22 @@ class Transform(Init):
 			# pm.manipMoveSetXformConstraint(none=True);
 			pm.xformConstraint(type='none')
 
-	def s000(self): #
-		pass
+
+	def cmb000(self):
+		'''
+		Editors
+		'''
+		cmb = self.ui.cmb000
+		
+		files = ['']
+		contents = self.comboBox(cmb, files, '::')
+
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				mel.eval('')
+			cmb.setCurrentIndex(0)
+
 
 	def transformChecks(self):
 		floatXYZ = float(self.ui.s000.text())
@@ -116,6 +136,7 @@ class Transform(Init):
 
 		xyz = [floatX, floatY, floatZ]
 		return xyz
+
 
 	def transform(self): #transform
 		relative = bool(self.ui.chk003.isChecked())#Move absolute/relative toggle
@@ -142,6 +163,7 @@ class Transform(Init):
 		if self.ui.chk009.isChecked():
 			pm.xform (relative=relative, worldSpace=worldspace, objectSpace=(not worldspace), rotation=(xyz[0], xyz[1], xyz[2]))
 
+
 	def b000(self):
 		'''
 		Transform -
@@ -153,6 +175,7 @@ class Transform(Init):
 			newText = -textfield
 			self.ui.s000.setValue(newText)
 		self.transform()
+
 
 	def b001(self):
 		'''

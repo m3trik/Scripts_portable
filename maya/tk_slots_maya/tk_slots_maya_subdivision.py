@@ -21,34 +21,39 @@ class Subdivision(Init):
 
 	def cmb000(self):
 		'''
-		Modifiers
-
+		Editors
 		'''
 		cmb = self.ui.cmb000
 		
-		files = ['']
-		contents = self.comboBox (cmb, files, "Editors")
+		files = ['Reduce Polygons','Add Divisions','Smooth','SubDiv Proxy']
+		contents = self.comboBox (cmb, files, '::')
 
 		index = cmb.currentIndex()
 		if index!=0:
-			if index==contents.index(''):
-				mel.eval('')
+			if index==contents.index('Reduce Polygons'):
+				mel.eval("ReducePolygonOptions;")
+			if index==contents.index('Add Divisions'):
+				mel.eval("SubdividePolygonOptions")
+			if index==contents.index('Smooth'):
+				mel.eval("SmoothPolygonOptions;")
+			if index==contents.index('SubDiv Proxy'):
+				mel.eval('performSmoothProxy 1;') #SubDiv Proxy Options;
 			cmb.setCurrentIndex(0)
+
 
 	def s000(self):
 		'''
 		Division Level
-
 		'''
 		value = self.ui.s000.value()
 
 		self.setAttributesOnSelected (attribute=".smoothLevel", value=value)
 		pm.optionVar (intValue=["proxyDivisions",1]) #subDiv proxy options: 'divisions'
 
+
 	def s001(self):
 		'''
 		Tesselation Level
-
 		'''
 		value = self.ui.s001.value()
 
@@ -106,10 +111,9 @@ class Subdivision(Init):
 
 	def b002(self):
 		'''
-		Subdiv Proxy Options
-
+		
 		'''
-		mel.eval('performSmoothProxy 1;') #SubDiv Proxy Options;
+		pass
 
 	def b003(self):
 		'''
@@ -122,30 +126,30 @@ class Subdivision(Init):
 	def b004(self):
 		'''
 		Poly Reduce
-
 		'''
 		mel.eval("polyReduce -version 1 -keepCreaseEdgeWeight 1;")
+
 
 	def b005(self):
 		'''
 		Reduce
-
 		'''
 		mel.eval("ReducePolygon;")
 
+
 	def b006(self):
 		'''
-		Reduce Options
-
+		
 		'''
-		mel.eval("ReducePolygonOptions;")
+		pass
+
 
 	def b007(self):
 		'''
-		Smooth Options
-
+		
 		'''
-		mel.eval("SmoothPolygonOptions;")
+		pass
+
 
 	def b008(self):
 		'''
@@ -163,10 +167,9 @@ class Subdivision(Init):
 
 	def b010(self):
 		'''
-		Add Divisions Options
-
+		
 		'''
-		mel.eval("SubdividePolygonOptions")
+		pass
 
 	def b011(self):
 		'''

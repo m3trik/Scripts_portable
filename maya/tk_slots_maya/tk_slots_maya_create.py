@@ -33,6 +33,9 @@ class Create(Init):
 
 
 	def getAxis(self):
+		'''
+
+		'''
 		if self.ui.chk000.isChecked():
 			axis = 'x'
 		elif self.ui.chk001.isChecked():
@@ -172,10 +175,25 @@ class Create(Init):
 			self.ui.cmb001.addItems(lights)
 
 
+	def cmb002(self):
+		'''
+		Editors
+		'''
+		cmb = self.ui.cmb002
+		
+		files = ['']
+		contents = self.comboBox(cmb, files, '::')
+
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				mel.eval('')
+			cmb.setCurrentIndex(0)
+
+
 	def b000(self):
 		'''
 		Create Object
-
 		'''
 		axis = self.rotation[self.getAxis()] #get axis as [int list]
 
@@ -294,30 +312,29 @@ class Create(Init):
 	def b001(self):
 		'''
 		
-
 		'''
 		pass
 
 	def b002(self):
 		'''
 		
-
 		'''
 		pass
 
 	def b003(self):
 		'''
 		
-
 		'''
 		pass
 
 	def b004(self):
 		'''
 		
-
 		'''
 		pass
+
+
+
 
 
 
@@ -330,262 +347,3 @@ print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 
 
-#deprecated:
-
-# def setAttributes(self, index): #set history attributes
-	# #arg: int (index of the spinbox that called this function)
-	# node = str(self.history[-1]) if self.history else None #gets the history node
-	# print 's00'+str(index)
-
-	# if node:
-	# 	v=[] #list of integer values
-	# 	#get current spinbox objects
-	# 	spinboxes = self.getObject(self.ui, 's000-11')
-	# 	for spinbox in spinboxes:
-	# 		v.append(int(spinbox.value())) #current spinbox values. ie. from s000 get the value of six and add it to the list
-
-	# 	pm.select(str(self.history[-2])) #make sure the transform node is selected so that you can see any edits
-
-	# 	axis = self.rotation['last']
-	# 	pm.undoInfo(openChunk=1)
-
-	# 	#polygons
-	# 	if self.ui.cmb000.currentIndex() == 0:
-	# 		if 'Cube' in node:
-	# 			print node, index
-	# 			if index ==0: #size
-	# 				i=1; value = self.ui.s000.value()
-	# 				if self.lastValue > value:
-	# 					i=-1
-	# 				w = pm.getAttr (node+'.width')+i
-	# 				d = pm.getAttr (node+'.depth')+i
-	# 				h = pm.getAttr (node+'.height')+i
-	# 				pm.setAttr (node+'.width', w)
-	# 				pm.setAttr (node+'.depth', d)
-	# 				pm.setAttr (node+'.height',h)
-	# 				self.setSpinboxes (self.ui, spinboxNames='s001-3', values=[('width',w),('depth',d),('height',h)])
-	# 				self.lastValue = value
-	# 			if any([index==1, index==2, index==3]): #width, depth, height
-	# 				pm.setAttr (node+'.width', v[1])
-	# 				pm.setAttr (node+'.depth', v[2])
-	# 				pm.setAttr (node+'.height',v[3])
-	# 				self.setSpinboxes (self.ui, spinboxNames='s000', values=[('size',v[1]+v[2]+v[3])])
-	# 			pm.setAttr (node+'.subdivisionsWidth', v[4])
-	# 			pm.setAttr (node+'.subdivisionsHeight', v[5])
-	# 			pm.setAttr (node+'.subdivisionsDepth', v[6])
-
-	# 		if 'Sphere' in node:
-	# 			pm.setAttr (node+'.radius', v[0])
-	# 			pm.setAttr (node+'.subdivisionsAxis', v[1])
-	# 			pm.setAttr (node+'.subdivisionsHeight', v[2])
-
-	# 		if 'Cylinder' in node:
-	# 			if index ==0: #size
-	# 				i=1; value = self.ui.s000.value()
-	# 				if self.lastValue > value:
-	# 					i=-1
-	# 				r = pm.getAttr (node+'.radius')+i
-	# 				h = pm.getAttr (node+'.height')+i
-	# 				pm.setAttr (node+'.radius', r)
-	# 				pm.setAttr (node+'.height', h)
-	# 				self.setSpinboxes (self.ui, spinboxNames='s001-2', values=[('radius',r),('height',h)])
-	# 				self.lastValue = value
-	# 			if any([index==1, index==2]): #radius, height
-	# 				pm.setAttr (node+'.radius', v[1])
-	# 				pm.setAttr (node+'.height', v[2])
-	# 				self.setSpinboxes (self.ui, spinboxNames='s000', values=[('size',v[1]+v[2])])
-	# 			pm.setAttr (node+'.subdivisionsAxis', v[3])
-	# 			pm.setAttr (node+'.subdivisionsHeight', v[4])
-	# 			pm.setAttr (node+'.subdivisionsCaps', v[5])
-	# 			pm.setAttr (node+'.roundCap', v[6])
-
-	# 		if 'Plane' in node:
-	# 			if index ==0: #size
-	# 				i=1; value = self.ui.s000.value()
-	# 				if self.lastValue > value:
-	# 					i=-1
-	# 				w = pm.getAttr (node+'.width')+i
-	# 				h = pm.getAttr (node+'.height')+i
-	# 				pm.setAttr (node+'.width', w)
-	# 				pm.setAttr (node+'.height',h)
-	# 				self.setSpinboxes (self.ui, spinboxNames='s001-2', values=[('width',w),('height',h)])
-	# 				self.lastValue = value
-	# 			if any([index==1, index==2]): #width, height
-	# 				pm.setAttr (node+'.width', v[1])
-	# 				pm.setAttr (node+'.height',v[2])
-	# 				self.setSpinboxes (self.ui, spinboxNames='s000', values=[('size',v[1]+v[2])])
-	# 			pm.setAttr (node+'.subdivisionsWidth', v[3])
-	# 			pm.setAttr (node+'.subdivisionsHeight', v[4])
-
-	# 		if 'polyCreateFace' in node: #circle
-	# 			pm.delete()
-
-	# 			axis = next(key for key, value in self.rotation.items() if value==axis and key!='last') #get key from value as createCircle takes the key string argument
-
-	# 			circle = self.createCircle(axis=axis, radius=v[0], numPoints=v[1], mode=v[2])
-
-	# 		if 'Cone' in node:
-	# 			if index ==0: #size
-	# 				i=1; value = self.ui.s000.value()
-	# 				if self.lastValue > value:
-	# 					i=-1
-	# 				r = pm.getAttr (node+'.radius')+i
-	# 				h = pm.getAttr (node+'.height')+i
-	# 				pm.setAttr (node+'.radius', r)
-	# 				pm.setAttr (node+'.height', h)
-	# 				self.setSpinboxes (self.ui, spinboxNames='s001-2', values=[('radius',r),('height',h)])
-	# 				self.lastValue = value
-	# 			if any([index==1, index==2]): #radius, height
-	# 				pm.setAttr (node+'.radius', v[1])
-	# 				pm.setAttr (node+'.height', v[2])
-	# 				self.setSpinboxes (self.ui, spinboxNames='s000', values=[('size',v[1]+v[2])])
-	# 			pm.setAttr (node+'.subdivisionsAxis', v[3])
-	# 			pm.setAttr (node+'.subdivisionsHeight', v[4])
-	# 			pm.setAttr (node+'.subdivisionsCap', v[5])
-	# 			pm.setAttr (node+'.roundCap', v[6])
-
-	# 		if 'Pyramid' in node:
-	# 			if index ==1: #history option for 'side length' doesnt exist so delete and recreate
-	# 				pm.delete()
-	# 				pyramid = pm.polyPyramid (axis=axis, sideLength=self.ui.s001.value())
-	# 			pm.setAttr (node+'.sideLength', v[0])
-	# 			pm.setAttr (node+'.numberOfSides', v[2])
-	# 			pm.setAttr (node+'.subdivisionsHeight', v[3])
-	# 			pm.setAttr (node+'.subdivisionsCaps', v[4])
-
-	# 		if 'Torus' in node:
-	# 			if index ==0: #size
-	# 				i=1; value = self.ui.s000.value()
-	# 				if self.lastValue > value:
-	# 					i=-1
-	# 				r = pm.getAttr (node+'.radius')+i
-	# 				s = pm.getAttr (node+'.sectionRadius')+i
-	# 				pm.setAttr (node+'.radius', r)
-	# 				pm.setAttr (node+'.sectionRadius', s)
-	# 				self.setSpinboxes (self.ui, spinboxNames='s001-2', values=[('radius',r),('section radius',s)])
-	# 				self.lastValue = value
-	# 			if any([index==1, index==2]): #radius, section radius
-	# 				pm.setAttr (node+'.radius', v[1])
-	# 				pm.setAttr (node+'.sectionRadius', v[2])
-	# 				self.setSpinboxes (self.ui, spinboxNames='s000', values=[('size',v[1]+v[2])])
-	# 			pm.setAttr (node+'.twist', v[3])
-	# 			pm.setAttr (node+'.subdivisionsAxis', v[4])
-	# 			pm.setAttr (node+'.subdivisionsHeight', v[5])
-
-	# 		if 'Pipe' in node:
-	# 			if index ==0: #size
-	# 				i=1; value = self.ui.s000.value()
-	# 				if self.lastValue > value:
-	# 					i=-1
-	# 				r = pm.getAttr (node+'.radius')+i
-	# 				t = pm.getAttr (node+'.thickness')+i
-	# 				pm.setAttr (node+'.radius', r)
-	# 				pm.setAttr (node+'.thickness', t)
-	# 				self.setSpinboxes (self.ui, spinboxNames='s001-2', values=[('radius',r),('thickness',t)])
-	# 				self.lastValue = value
-	# 			if any([index==1, index==2]): #radius, thickness
-	# 				pm.setAttr (node+'.radius', v[1])
-	# 				pm.setAttr (node+'.thickness', v[2])
-	# 				self.setSpinboxes (self.ui, spinboxNames='s000', values=[('size',v[1]+v[2])])
-	# 			pm.setAttr (node+'.subdivisionsHeight', v[3])
-	# 			pm.setAttr (node+'.subdivisionsCap', v[4])
-
-	# 		if 'Primitive' in node: #Soccer Ball
-	# 			if index ==0: #size
-	# 				i=1; value = self.ui.s000.value()
-	# 				if self.lastValue > value:
-	# 					i=-1
-	# 				r = pm.getAttr (node+'.radius')+i
-	# 				s = pm.getAttr (node+'.sideLength')+i
-	# 				pm.setAttr (node+'.radius', r)
-	# 				pm.setAttr (node+'.sideLength', s)
-	# 				self.setSpinboxes (self.ui, spinboxNames='s001-2', values=[('radius',r),('side length',s)])
-	# 				self.lastValue = value
-	# 			if any([index==1]): #radius
-	# 				pm.setAttr (node+'.radius', v[1])
-	# 				self.setSpinboxes (self.ui, spinboxNames='s000', values=[('size',v[1]+v[2])])
-	# 			if any([index==2]): #sideLength
-	# 				pm.setAttr (node+'.sideLength', v[2])
-	# 				self.setSpinboxes (self.ui, spinboxNames='s000', values=[('size',v[1]+v[2])])
-
-	# 	#nurbs
-	# 	if self.ui.cmb000.currentIndex() == 1:
-	# 		#Sphere
-	# 		if 'Sphere' in node:
-	# 			pm.setAttr (node+'.radius', v[0])
-	# 			pm.setAttr (node+'.startSweep', v[1])
-	# 			pm.setAttr (node+'.endSweep', v[2])
-	# 			pm.setAttr (node+'.sections', v[3])
-	# 			pm.setAttr (node+'.spans', v[4])
-	# 			pm.setAttr (node+'.heightRatio', v[5])
-
-	# 		#Cube
-	# 		if 'Cube' in node:
-	# 			pm.setAttr (node+'.width', v[0])
-	# 			pm.setAttr (node+'.lengthRatio', v[1])
-	# 			pm.setAttr (node+'.heightRatio', v[2])
-	# 			pm.setAttr (node+'.patchesU', v[3])
-	# 			pm.setAttr (node+'.patchesV', v[4])
-
-	# 		#Cylinder
-	# 		if 'Cylinder' in node:
-	# 			pm.setAttr (node+'.radius', v[0])
-	# 			pm.setAttr (node+'.startSweep', v[1])
-	# 			pm.setAttr (node+'.endSweep', v[2])
-	# 			pm.setAttr (node+'.sections', v[3])
-	# 			pm.setAttr (node+'.spans', v[4])
-	# 			pm.setAttr (node+'.heightRatio', v[5])
-
-	# 		#Cone
-	# 		if 'Cone' in node:
-	# 			pm.setAttr (node+'.radius', v[0])
-	# 			pm.setAttr (node+'.startSweep', v[1])
-	# 			pm.setAttr (node+'.endSweep', v[2])
-	# 			pm.setAttr (node+'.sections', v[3])
-	# 			pm.setAttr (node+'.spans', v[4])
-	# 			pm.setAttr (node+'.heightRatio', v[5])
-
-	# 		#Plane
-	# 		if 'Plane' in node:
-	# 			pm.setAttr (node+'.width', v[0])
-	# 			pm.setAttr (node+'.lengthRatio', v[1])
-	# 			pm.setAttr (node+'.patchesU', v[2])
-	# 			pm.setAttr (node+'.patchesV', v[3])
-
-	# 		#Torus
-	# 		if 'Torus' in node:
-	# 			pm.setAttr (node+'.radius', v[0])
-	# 			pm.setAttr (node+'.startSweep', v[1])
-	# 			pm.setAttr (node+'.endSweep', v[2])
-	# 			pm.setAttr (node+'.sections', v[3])
-	# 			pm.setAttr (node+'.spans', v[4])
-	# 			pm.setAttr (node+'.heightRatio', v[5])
-	# 			pm.setAttr (node+'.minorSweep', v[6])
-
-	# 		#Circle
-	# 		if 'Circle' in node:
-	# 			pm.setAttr (node+'.normalX', v[0])
-	# 			pm.setAttr (node+'.normalY', v[1])
-	# 			pm.setAttr (node+'.normalZ', v[2])
-	# 			pm.setAttr (node+'.centerX', v[3])
-	# 			pm.setAttr (node+'.centerY', v[4])
-	# 			pm.setAttr (node+'.centerZ', v[5])
-	# 			pm.setAttr (node+'.radius', v[6])
-	# 			pm.setAttr (node+'.sections', v[7])
-
-	# 		#Square
-	# 		if 'Square' in node:
-	# 			pm.setAttr (node+'.normalX', v[0])
-	# 			pm.setAttr (node+'.normalY', v[1])
-	# 			pm.setAttr (node+'.normalZ', v[2])
-	# 			pm.setAttr (node+'.centerX', v[3])
-	# 			pm.setAttr (node+'.centerY', v[4])
-	# 			pm.setAttr (node+'.centerZ', v[5])
-	# 			pm.setAttr (node+'.sideLength1', v[6])
-	# 			pm.setAttr (node+'.sideLength2', v[7])
-	# 			pm.setAttr (node+'.spansPerSide', v[8])
-
-	# 	#translate
-	# 	pm.xform (node, translation=[self.ui.s009.value(),self.ui.s009.value(),self.ui.s009.value()], worldSpace=1, absolute=1)
-
-	# 	pm.undoInfo(closeChunk=1)

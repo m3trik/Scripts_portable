@@ -22,26 +22,22 @@ class Viewport(Init):
 	def cmb000(self):
 		'''
 		Editors
-
 		'''
 		cmb = self.ui.cmb000
 		
-		list_ = ['Camera Sequencer', 'Camera Set Editor']
-		contents = self.comboBox (cmb, list_, "Editors")
+		files = ['']
+		contents = self.comboBox(cmb, files, '::')
 
 		index = cmb.currentIndex()
 		if index!=0:
-			if index==1:
-				mel.eval('SequenceEditor;')
-			if index==2:
-				mel.eval('cameraSetEditor;')
+			if index==contents.index(''):
+				pass
 			cmb.setCurrentIndex(0)
 
 
 	def cmb001(self):
 		'''
 		Cameras
-
 		'''
 		cmb = self.ui.cmb001
 		
@@ -60,7 +56,6 @@ class Viewport(Init):
 	def cmb002(self):
 		'''
 		Create
-
 		'''
 		cmb = self.ui.cmb002
 		
@@ -81,7 +76,6 @@ class Viewport(Init):
 	def cmb003(self):
 		'''
 		Options
-
 		'''
 		cmb = self.ui.cmb003
 		
@@ -106,61 +100,61 @@ class Viewport(Init):
 	def v000(self):
 		'''
 		Viewport: Back View
-
 		'''
 		maxEval("max vpt back")
+
 
 	def v001(self):
 		'''
 		Viewport: Top View
-
 		'''
 		maxEval("max vpt top")
+
 
 	def v002(self):
 		'''
 		Viewport: Right View
-
 		'''
 		maxEval("max vpt right")
+
 
 	def v003(self):
 		'''
 		Viewport: Left View
-
 		'''
 		maxEval("max vpt left")
+
 
 	def v004(self):
 		'''
 		Viewport: Perspective View
-
 		'''
 		maxEval("max vpt persp user")
+
 
 	def v005(self):
 		'''
 		Viewport: Front View
-
 		'''
 		maxEval("max vpt front")
+
 
 	def v006(self):
 		'''
 		Viewport: Bottom View
-
 		'''
 		maxEval("max vpt bottom")
+
 
 	def v007(self):
 		'''
 		Viewport: Align View
-
 		'''
 		maxEval('''
 		max vpt iso user
 		max align camera
 		''')
+
 
 	def v008(self):
 		'''
@@ -168,11 +162,13 @@ class Viewport(Init):
 		'''
 		pass
 
+
 	def v009(self):
 		'''
 
 		'''
 		pass
+
 
 	def v010(self):
 		'''
@@ -180,42 +176,43 @@ class Viewport(Init):
 		'''
 		maxEval("max dolly mode")
 
+
 	def v011(self):
 		'''
 		Camera: Roll
 		'''
 		maxEval("max roll")
 
+
 	def v012(self):
 		'''
 		Camera: Truck
-
 		'''
 		maxEval("max truck")
+
 
 	def v013(self):
 		'''
 		Camera: Orbit
-
 		'''
 		maxEval("max pancamera")
+
 
 	def v014(self):
 		'''
 		
-
 		'''
 		pass
+
 
 	def v015(self):
 		'''
 		
-
 		'''
 		pass
 
 
-	# ------------------------------------
+
 
 
 

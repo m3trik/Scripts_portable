@@ -39,7 +39,6 @@ class Texturing(Init):
 	def cmb000(self):
 		'''
 		Existing Materials
-
 		'''
 		cmb = self.ui.cmb000
 
@@ -73,12 +72,11 @@ class Texturing(Init):
 	def cmb001(self):
 		'''
 		Editors
-
 		'''
 		cmb = self.ui.cmb001
 		
 		files = ['Material Editor']
-		contents = self.comboBox(cmb, files, 'Editors')
+		contents = self.comboBox(cmb, files, '::')
 
 		index = cmb.currentIndex()
 		if index!=0:
@@ -141,21 +139,29 @@ class Texturing(Init):
 
 
 	def chk000(self): #Select by material: invert
+		'''
+
+		'''
 		self.hotBox.ui.chk001.setChecked(False)
 
 
 	def chk001(self): #Select by material: shell
+		'''
+
+		'''
 		self.hotBox.ui.chk000.setChecked(False)
 
 
 	def chk002(self): #toggle stored material or ID map mode
+		'''
+
+		'''
 		self.cmb002()
 
 
 	def b000(self):
 		'''
 		Select By Material Id
-
 		'''
 		shell = self.ui.chk000.isChecked() 
 		invert = self.ui.chk001.isChecked()
@@ -216,7 +222,6 @@ class Texturing(Init):
 	def b001(self):
 		'''
 		Delete Material
-
 		'''
 		if self.ui.chk002.isChecked: #delete mat ID material
 			mat = self.storedID_mats[self.ui.cmb002.currentText()] #get object from string key
@@ -231,7 +236,6 @@ class Texturing(Init):
 	def b002(self):
 		'''
 		Store Material
-
 		'''
 		self.ui.chk002.setChecked(False) #put combobox in stored material mode
 
@@ -254,7 +258,6 @@ class Texturing(Init):
 	def b003(self):
 		'''
 		Assign Material
-
 		'''
 		if self.ui.chk002.isChecked(): #Assign Existing mat ID
 			name = self.ui.cmb002.currentText()
@@ -276,7 +279,6 @@ class Texturing(Init):
 	def b004(self):
 		'''
 		Assign New random mat ID
-
 		'''
 		self.ui.chk002.setChecked(True) #set combobox to ID map mode
 
@@ -313,7 +315,6 @@ class Texturing(Init):
 	def b005(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -321,7 +322,6 @@ class Texturing(Init):
 	def b006(self):
 		'''
 		Delete Unused Materials
-
 		'''
 		defaultMaterial = rt.Standard(name='Default Material')
 		
@@ -337,7 +337,6 @@ class Texturing(Init):
 	def b007(self):
 		'''
 		Open material in editor
-
 		'''
 		if self.ui.chk002.isChecked(): #ID map mode
 			try:
@@ -372,7 +371,6 @@ class Texturing(Init):
 	def b008(self):
 		'''
 		Rename Material
-
 		'''
 		if self.ui.b008.isChecked(): #(rename checkbox)
 			self.ui.t000.setText(self.ui.cmb002.currentText())
@@ -402,7 +400,6 @@ class Texturing(Init):
 	def b009(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -410,7 +407,6 @@ class Texturing(Init):
 	def b010(self):
 		'''
 		
-
 		'''
 		pass
 

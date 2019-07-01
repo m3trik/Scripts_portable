@@ -21,16 +21,23 @@ class Display(Init):
 
 	def cmb000(self):
 		'''
-		
-
+		Editors
 		'''
-		pass
+		cmb = self.ui.cmb000
+		
+		files = ['']
+		contents = self.comboBox(cmb, files, '::')
+
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				pass
+			cmb.setCurrentIndex(0)
 
 
 	def b000(self):
 		'''
 		Toggle Subdiv Proxy Display
-
 		'''
 		state = self.cycle([1,1,0], 'subdivProxy')
 		try:
@@ -43,7 +50,6 @@ class Display(Init):
 	def b001(self):
 		'''
 		Toggle Visibility
-
 		'''
 		sel = [s for s in rt.getCurrentSelection()]
 
@@ -57,7 +63,6 @@ class Display(Init):
 	def b002(self):
 		'''
 		Hide Selected
-
 		'''
 		sel = [s for s in rt.getCurrentSelection()]
 	
@@ -69,7 +74,6 @@ class Display(Init):
 	def b003(self):
 		'''
 		Show Selected
-
 		'''
 		sel = [s for s in rt.getCurrentSelection()]
 	
@@ -81,7 +85,6 @@ class Display(Init):
 	def b004(self):
 		'''
 		Show Geometry
-
 		'''
 		geometry = rt.geometry
 
@@ -93,7 +96,6 @@ class Display(Init):
 	def b005(self):
 		'''
 		Xray Selected
-
 		'''
 		sel = [s for s in rt.getCurrentSelection()]
 
@@ -104,7 +106,6 @@ class Display(Init):
 	def b006(self):
 		'''
 		Un-Xray All
-
 		'''
 		geometry = [g for g in rt.geometry]
 
@@ -115,7 +116,6 @@ class Display(Init):
 	def b007(self):
 		'''
 		Xray Other
-
 		'''
 		sel = [s for s in rt.getCurrentSelection()]
 		geometry = [g for g in rt.geometry]
@@ -128,7 +128,6 @@ class Display(Init):
 	def b008(self):
 		'''
 		Filter Objects
-
 		'''
 		mel.eval("bt_filterActionWindow;")
 
@@ -136,7 +135,6 @@ class Display(Init):
 	def b009(self):
 		'''
 		Override Material
-
 		'''
 		if self.ui.chk000.isChecked(): #override with UV checker material
 			self.toggleMaterialOverride(checker=1)
@@ -147,7 +145,6 @@ class Display(Init):
 	def b010(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -155,7 +152,6 @@ class Display(Init):
 	def b011(self):
 		'''
 		Toggle Component ID Display
-
 		'''
 		index = self.cycle([0,1,2,3,4], 'componentID')
 
@@ -193,7 +189,6 @@ class Display(Init):
 	def b012(self):
 		'''
 		Wireframe Non Active (Wireframe All But The Selected Item)
-
 		'''
 		viewport = rt.viewport.activeViewport
 
@@ -210,7 +205,6 @@ class Display(Init):
 	def b013(self):
 		'''
 		Viewport Configuration
-
 		'''
 		maxEval('actionMan.executeAction 0 "40023"')
 
@@ -218,7 +212,6 @@ class Display(Init):
 	def b014(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -226,7 +219,6 @@ class Display(Init):
 	def b015(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -234,7 +226,6 @@ class Display(Init):
 	def b016(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -242,7 +233,6 @@ class Display(Init):
 	def b017(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -250,7 +240,6 @@ class Display(Init):
 	def b018(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -258,7 +247,6 @@ class Display(Init):
 	def b019(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -266,7 +254,6 @@ class Display(Init):
 	def b020(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -274,7 +261,6 @@ class Display(Init):
 	def b021(self):
 		'''
 		Template Selected
-
 		'''
 		sel = [s for s in rt.getCurrentSelection()]
 
@@ -288,7 +274,6 @@ class Display(Init):
 	def b022(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -296,7 +281,6 @@ class Display(Init):
 	def b023(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -304,7 +288,6 @@ class Display(Init):
 	def b024(self):
 		'''
 		Polygon Display Options
-
 		'''
 		mel.eval("CustomPolygonDisplayOptions")
 		# mel.eval("polysDisplaySetup 1;")

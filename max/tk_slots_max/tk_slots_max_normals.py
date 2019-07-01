@@ -19,10 +19,25 @@ class Normals(Init):
 		self.ui.b003.setText('Hard Edge Display')
 
 
+	def cmb000(self):
+		'''
+		Editors
+		'''
+		cmb = self.ui.cmb000
+		
+		files = ['']
+		contents = self.comboBox (cmb, files, '::')
+
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				mel.eval('')
+			cmb.setCurrentIndex(0)
+
+
 	def b000(self):
 		'''
 		Display Face Normals
-
 		'''
 		size = float(self.ui.s001.value())
 		# state = pm.polyOptions (query=True, displayNormal=True)
@@ -43,36 +58,36 @@ class Normals(Init):
 			pm.polyOptions (displayTangent=True)
 			pm.polyOptions (displayNormal=0)
 			self.viewPortMessage("<hl>Tangent</hl> Display <hl>On</hl>.")
-			
+
+
 	def b001(self):
 		'''
 		Soften Edge Normal
-
 		'''
 		self.hotBox.hide_()
 		maxEval('$.EditablePoly.makeSmoothEdges 1')
 
+
 	def b002(self):
 		'''
 		Harden Edge Normal
-
 		'''
 		self.hotBox.hide_()
 		maxEval('$.EditablePoly.makeHardEdges 1')
 
+
 	def b003(self):
 		'''
 		Soft Edge Display
-
 		'''
 		for obj in rt.selection:
 			state = obj.hardedgedisplay
 			obj.hardedgedisplay = not state
 
+
 	def b004(self):
 		'''
 		Set Normal Angle
-
 		'''
 		normalAngle = str(self.ui.s000.value())
 		subObjectLevel = rt.subObjectLevel
@@ -98,31 +113,31 @@ class Normals(Init):
 
 		self.hotBox.hide_()
 
+
 	def b005(self):
 		'''
 		Adjust Vertex Normals
-
 		'''
 		maxEval('bgAdjustVertexNormalsWin;')
+
 
 	def b006(self):
 		'''
 		Set To Face
-
 		'''
 		maxEval('macros.run "PolyTools" "HardSelection"')
+
 
 	def b007(self):
 		'''
 		Average Normals
-
 		'''
 		maxEval('macros.run "PolyTools" "SmoothSelection"')
+
 
 	def b008(self):
 		'''
 		Harden Creased Edges
-
 		'''
 		mel.eval("PolySelectConvert 2")
 		edges = pm.polyListComponentConversion (toEdge=1)
@@ -146,10 +161,10 @@ class Normals(Init):
 		pm.progressBar ("tk_progressBar", edit=1, endProgress=1)
 		pm.undoInfo (closeChunk=1)
 
+
 	def b009(self):
 		'''
 		Harden Uv Edges
-
 		'''
 		def createArrayFromSelection (): #(string sel[])	/* returns a string array of the selected transform nodes
 			pm.select (hierarchy=1)
@@ -188,10 +203,10 @@ class Normals(Init):
 
 			pm.select (nodes, replace=1)
 
+
 	def b010(self):
 		'''
 		Reverse Normals
-
 		'''
 		for obj in rt.selection:		
 			rt.modPanel.setCurrentObject (obj.baseObject)
@@ -204,10 +219,10 @@ class Normals(Init):
 			index = rt.modPanel.getModifierIndex(obj, mod)
 			rt.maxOps.CollapseNodeTo(obj, index, False)
 
+
 	def b011(self):
 		'''
 		Lock/Unlock Vertex Normals
-
 		'''
 		all_ = self.ui.chk001.isChecked()
 		state = self.ui.chk002.isChecked()#pm.polyNormalPerVertex(vertex, query=1, freezeNormal=1)
@@ -241,13 +256,17 @@ class Normals(Init):
 		else:
 			print "// Warning: No object selected. //"
 
+
 	def b012(self):
 		'''
 		
-
 		'''
 		pass
 		
+
+
+
+
 
 
 

@@ -85,10 +85,25 @@ class Preferences(Init):
 			pm.currentUnit(time=values[index]) #game | film | pal | ntsc | show | palf | ntscf
 
 
+	def cmb003(self):
+		'''
+		Editors
+		'''
+		cmb = self.ui.cmb003
+		
+		files = ['']
+		contents = self.comboBox(cmb, files, '::')
+
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				pass
+			cmb.setCurrentIndex(0)
+
+
 	def b000(self):
 		'''
 		Init Tk_Main
-
 		'''
 		print "init: tk_main"
 		reload(tk_main)
@@ -97,7 +112,6 @@ class Preferences(Init):
 	def b001(self):
 		'''
 		Color Settings
-
 		'''
 		maxEval('colorPrefWnd;')
 
@@ -105,7 +119,6 @@ class Preferences(Init):
 	def b002(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -113,7 +126,6 @@ class Preferences(Init):
 	def b003(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -121,7 +133,6 @@ class Preferences(Init):
 	def b004(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -129,7 +140,6 @@ class Preferences(Init):
 	def b005(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -137,7 +147,6 @@ class Preferences(Init):
 	def b006(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -145,7 +154,6 @@ class Preferences(Init):
 	def b007(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -153,7 +161,6 @@ class Preferences(Init):
 	def b008(self):
 		'''
 		Hotkeys
-
 		'''
 		mel.eval("HotkeyPreferencesWindow;")
 
@@ -161,7 +168,6 @@ class Preferences(Init):
 	def b009(self):
 		'''
 		Plug-In Manager
-
 		'''
 		maxEval('PluginManager;')
 
@@ -169,7 +175,6 @@ class Preferences(Init):
 	def b010(self):
 		'''
 		Settings/Preferences
-
 		'''
 		mel.eval("PreferencesWindow;")
 

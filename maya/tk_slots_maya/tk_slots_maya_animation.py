@@ -19,85 +19,95 @@ class Animation(Init):
 
 
 
-	def chk000(self):
+	def cmb000(self):
 		'''
-		Pin Open A Separate Instance Of The Ui In A New Window
+		Editors
+		'''
+		cmb = self.ui.cmb000
+		
+		files = ['']
+		contents = self.comboBox(cmb, files, '::')
 
-		'''
-		if self.ui.chk000.isChecked():
-			self.hotBox.pin()
-		else:
-			self.hotBox.pin.hide()
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				mel.eval('')
+			cmb.setCurrentIndex(0)
+
 
 	def b000(self):
 		'''
 		
-
 		'''
-		mel.eval('')
+		pass
+
 
 	def b001(self):
 		'''
 		
-
 		'''
-		mel.eval('')
+		pass
+
 
 	def b002(self):
 		'''
 		
-
 		'''
-		mel.eval('')
+		pass
+
 
 	def b003(self):
 		'''
 		
-
 		'''
-		mel.eval('')
+		pass
+
 
 	def b004(self):
 		'''
 		
-
 		'''
-		mel.eval('')
+		pass
+
 
 	def b005(self):
 		'''
 		
-
 		'''
-		mel.eval('')
+		pass
+
 
 	def b006(self):
 		'''
 		
-
 		'''
-		mel.eval('')
+		pass
+
 
 	def b007(self):
 		'''
 		
-
 		'''
-		mel.eval('')
+		pass
+
 
 	def b008(self):
 		'''
 		
-
 		'''
 		mel.eval("")
+
 
 	def b009(self):
 		'''
 		
-
 		'''
-		mel.eval('')
+		pass
+
+
+
+
+
 
 
 

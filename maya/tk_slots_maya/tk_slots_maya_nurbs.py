@@ -19,201 +19,190 @@ class Nurbs(Init):
 
 
 
-	def b000(self):
+	def cmb000(self):
 		'''
-		Ep Curve Tool
+		Editors
+		'''
+		cmb = self.ui.cmb000
+		
+		files = ['Project Curve','Duplicate Curve','Create Curve from Poly','Bend Curve', 'Curl Curve','Modify Curve Curvature','Smooth Curve','Straighten Curves','Extrude Curves','Revolve Curves','Loft Curves','Planar Curves','Insert Isoparms','Insert Knot','Rebuild Curve','Extend Curve']
+		contents = self.comboBox (cmb, files, '::')
 
-		'''
-		mel.eval('EPCurveTool;')
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index('Project Curve'):
+				mel.eval("ProjectCurveOnSurfaceOptions;")
+			if index==contents.index('Duplicate Curve'):
+				mel.eval("DuplicateCurveOptions;")
+			if index==contents.index('Create Curve from Poly'):
+				mel.eval("CreateCurveFromPolyOptions")
+			if index==contents.index('Bend Curve'):
+				mel.eval("BendCurvesOptions;")
+			if index==contents.index('Curl Curve'):
+				mel.eval("CurlCurvesOptions;")
+			if index==contents.index('Modify Curve Curvature'):
+				mel.eval("ScaleCurvatureOptions;")
+			if index==contents.index('Smooth Curve'):
+				mel.eval("SmoothHairCurvesOptions;")
+			if index==contents.index('Straighten Curves'):
+				mel.eval("StraightenCurvesOptions;")
+			if index==contents.index('Extrude Curves'):
+				mel.eval("ExtrudeOptions;")
+			if index==contents.index('Revolve Curves'):
+				mel.eval("RevolveOptions;")
+			if index==contents.index('Loft Curves'):
+				mel.eval("LoftOptions;")
+			if index==contents.index('Planar Curves'):
+				mel.eval("PlanarOptions;")
+			if index==contents.index('Insert Isoparms'):
+				mel.eval("InsertIsoparmsOptions;")
+			if index==contents.index('Insert Knot'):
+				mel.eval("InsertKnotOptions;")
+			if index==contents.index('Rebuild Curve'):
+				mel.eval("RebuildCurveOptions;")
+			if index==contents.index('Extend Curve'):
+				mel.eval("ExtendCurveOptions;")
+			if index==contents.index('Extend Curve On Surface'):
+				mel.eval("ExtendCurveOnSurfaceOptions;")
+			cmb.setCurrentIndex(0)
 
-	def b001(self):
-		'''
-		Ep Curve Tool Options
 
+	def cmb001(self):
 		'''
-		mel.eval('EPCurveToolOptions;')
+		Create: Curve
+		'''
+		cmb = self.ui.cmb001
+		
+		files = ['Ep Curve Tool','CV Curve Tool','Bezier Curve Tool','Pencil Curve Tool','2 Point Circular Arc','3 Point Circular Arc']
+		contents = self.comboBox(cmb, files, 'Create Curve')
 
-	def b002(self):
-		'''
-		Bezier Curve Tool
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index('Ep Curve Tool'):
+				mel.eval('EPCurveToolOptions;') #mel.eval('EPCurveTool;')
+			if index==contents.index('CV Curve Tool'):
+				mel.eval('CVCurveToolOptions') #mel.eval('CVCurveTool')
+			if index==contents.index('Bezier Curve Tool'):
+				mel.eval('CreateBezierCurveToolOptions') #mel.eval('CreateBezierCurveTool;')
+			if index==contents.index('Pencil Curve Tool'):
+				mel.eval('PencilCurveToolOptions;') #mel.eval('PencilCurveTool;')
+			if index==contents.index('2 Point Circular Arc'):
+				mel.eval('TwoPointArcToolOptions;') #mel.eval("TwoPointArcTool;")
+			if index==contents.index('3 Point Circular Arc'):
+				mel.eval("ThreePointArcToolOptions;") #mel.eval("ThreePointArcTool;")
+			cmb.setCurrentIndex(0)
 
-		'''
-		mel.eval('CreateBezierCurveTool;')
-
-	def b003(self):
-		'''
-		Bezier Curve Tool Options
-
-		'''
-		mel.eval('CreateBezierCurveToolOptions')
-
-	def b004(self):
-		'''
-		Cv Curve Tool
-
-		'''
-		mel.eval('CVCurveTool')
-
-	def b005(self):
-		'''
-		Cv Curve Tool Options
-
-		'''
-		mel.eval('CVCurveToolOptions')
-
-	def b006(self):
-		'''
-		Pencil Curve Tool
-
-		'''
-		mel.eval('PencilCurveTool;')
-
-	def b007(self):
-		'''
-		Pencil Curve Tool Options
-
-		'''
-		mel.eval('PencilCurveToolOptions;')
-
-	def b008(self):
-		'''
-		2 Point Circular Arc
-
-		'''
-		mel.eval("TwoPointArcTool;")
-
-	def b009(self):
-		'''
-		2 Point Circular Arc Options
-
-		'''
-		mel.eval('TwoPointArcToolOptions;')
-
-	def b010(self):
-		'''
-		3 Point Circular Arc
-
-		'''
-		mel.eval("ThreePointArcTool;")
-
-	def b011(self):
-		'''
-		3 Point Circular Arc Options
-
-		'''
-		mel.eval("ThreePointArcToolOptions;")
 
 	def b012(self):
 		'''
 		Project Curve
-
 		'''
 		mel.eval("projectCurve;") #ProjectCurveOnMesh;
 
+
 	def b013(self):
 		'''
-		Project Curve Options
-
+		
 		'''
-		mel.eval("ProjectCurveOnSurfaceOptions;")
+		pass
+
 
 	def b014(self):
 		'''
 		Duplicate Curve
-
 		'''
 		mel.eval("DuplicateCurve;")
 
+
 	def b015(self):
 		'''
-		Duplicate Curve Options
-
+		
 		'''
-		mel.eval("DuplicateCurveOptions;")
+		pass
+
 
 	def b016(self):
 		'''
 		Extract Curve
-
 		'''
 		mel.eval("CreateCurveFromPoly")
 
+
 	def b017(self):
 		'''
-		Extract Curve Options
 
 		'''
-		mel.eval("CreateCurveFromPolyOptions")
+		pass
+
 
 	def b018(self):
 		'''
 		Lock Curve
-
 		'''
 		mel.eval("LockCurveLength;")
+
 
 	def b019(self):
 		'''
 		Unlock Curve
-
 		'''
 		mel.eval("UnlockCurveLength;")
+
 
 	def b020(self):
 		'''
 		Bend Curve
-
 		'''
 		mel.eval("BendCurves;")
 
+
 	def b021(self):
 		'''
-		Bend Curve Options
-
+		
 		'''
-		mel.eval("BendCurvesOptions;")
+		pass
+
 
 	def b022(self):
 		'''
 		Curl Curve
-
 		'''
 		mel.eval("CurlCurves;")
 
+
 	def b023(self):
 		'''
-		Curl Curve Options
-
+		
 		'''
-		mel.eval("CurlCurvesOptions;")
+		pass
+
 
 	def b024(self):
 		'''
 		Modify Curve Curvature
-
 		'''
 		mel.eval("ScaleCurvature;")
 
 	def b025(self):
 		'''
-		Modify Curve Curvature Options
 
 		'''
-		mel.eval("ScaleCurvatureOptions;")
+		pass
+
 
 	def b026(self):
 		'''
 		Smooth Curve
-
 		'''
 		mel.eval("SmoothHairCurves;")
 
+
 	def b027(self):
 		'''
-		Smooth Curve Options
-
+		
 		'''
-		mel.eval("SmoothHairCurvesOptions;")
+		pass
+
 
 	def b028(self):
 		'''
@@ -222,12 +211,13 @@ class Nurbs(Init):
 		'''
 		mel.eval("StraightenCurves;")
 
+
 	def b029(self):
 		'''
-		Straighten Curve Options
-
+		
 		'''
-		mel.eval("StraightenCurvesOptions;")
+		pass
+
 
 	def b030(self):
 		'''
@@ -236,145 +226,146 @@ class Nurbs(Init):
 		'''
 		mel.eval("Extrude;")
 
+
 	def b031(self):
 		'''
-		Extrude Options
-
+		
 		'''
-		mel.eval("ExtrudeOptions;")
+		pass
+
 
 	def b032(self):
 		'''
 		Revolve
-
 		'''
 		mel.eval("Revolve;")
 
+
 	def b033(self):
 		'''
-		Revolve Options
-
+		
 		'''
-		mel.eval("RevolveOptions;")
+		pass
+
 
 	def b034(self):
 		'''
 		Loft
-
 		'''
 		mel.eval("loft")
 
+
 	def b035(self):
 		'''
-		Loft Options
-
+		
 		'''
-		mel.eval("LoftOptions;")
+		pass
+
 
 	def b036(self):
 		'''
 		Planar
-
 		'''
 		mel.eval("Planar;")
 
+
 	def b037(self):
 		'''
-		Planar Options
-
+		
 		'''
-		mel.eval("PlanarOptions;")
+		pass
+
 
 	def b038(self):
 		'''
 		Insert Isoparm
-
 		'''
 		mel.eval("InsertIsoparms;")
 
+
 	def b039(self):
 		'''
-		Insert Isoparm Options
-
+		
 		'''
-		mel.eval("InsertIsoparmsOptions;")
+		pass
+
 
 	def b040(self):
 		'''
 		Edit Curve Tool
-
 		'''
 		mel.eval("CurveEditTool;")
+
 
 	def b041(self):
 		'''
 		Attach Curve
-
 		'''
 		mel.eval("AttachCurveOptions;")
+
 
 	def b042(self):
 		'''
 		Detach Curve
-
 		'''
 		mel.eval("DetachCurve;")
+
 
 	def b043(self):
 		'''
 		Extend Curve
-
 		'''
 		mel.eval("ExtendCurveOptions;")
+
 
 	def b044(self):
 		'''
 		
-
 		'''
 		mel.eval("")
+
 
 	def b045(self):
 		'''
 		Cut Curve
-
 		'''
 		mel.eval("CutCurve;")
+
 
 	def b046(self):
 		'''
 		Open/Close Curve
-
 		'''
 		mel.eval("OpenCloseCurve;")
+
 
 	def b047(self):
 		'''
 		Insert Knot
-
 		'''
 		mel.eval("InsertKnot;")
 
+
 	def b048(self):
 		'''
-		Insert Knot Options
-
+		
 		'''
-		mel.eval("InsertKnotOptions;")
+		pass
+
 
 	def b049(self):
 		'''
 		Add Points Tool
-
 		'''
 		mel.eval("AddPointsTool;")
 
+
 	def b050(self):
 		'''
-		Rebuild Curve Options
-
+		
 		'''
-		mel.eval("RebuildCurveOptions;")
+		pass
+
 
 	def b051(self):
 		'''
@@ -383,33 +374,33 @@ class Nurbs(Init):
 		'''
 		mel.eval("reverse;")
 
+
 	def b052(self):
 		'''
 		Extend Curve
-
 		'''
 		mel.eval("ExtendCurve;")
 
+
 	def b053(self):
 		'''
-		Extend Curve Options
-
+		
 		'''
-		mel.eval("ExtendCurveOptions;")
+		pass
+
 
 	def b054(self):
 		'''
 		Extend On Surface
-
 		'''
 		mel.eval("ExtendCurveOnSurface;")
 
+
 	def b055(self):
 		'''
-		Extend On Surface Options
-
+		
 		'''
-		mel.eval("ExtendCurveOnSurfaceOptions;")
+		pass
 
 
 

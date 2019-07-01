@@ -19,75 +19,96 @@ class Utilities(Init):
 
 
 
+	def cmb000(self):
+		'''
+		Editors
+		'''
+		cmb = self.ui.cmb000
+		
+		files = ['']
+		contents = self.comboBox(cmb, files, '::')
+
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				pass
+			cmb.setCurrentIndex(0)
+
+
 	def b000(self):
 		'''
 		Measure
-
 		'''
 		maxEval('macros.run \"Tools\" \"two_point_dist\"')
+
 
 	def b001(self):
 		'''
 		Annotation
-
 		'''
 		mel.eval('CreateAnnotateNode;')
+
 
 	def b002(self):
 		'''
 		Calculator
-
 		'''
 		mel.eval('calculator;')
+
 
 	def b003(self):
 		'''
 		Grease Pencil
-
 		'''
 		mel.eval('greasePencilCtx;')
+
 
 	def b004(self):
 		'''
 		
-
 		'''
-		maxEval('')
+		pass
+
 
 	def b005(self):
 		'''
 		
-
 		'''
-		maxEval('')
+		pass
+
 
 	def b006(self):
 		'''
 		
-
 		'''
-		maxEval('')
+		pass
+
 
 	def b007(self):
 		'''
 		
-
 		'''
-		maxEval('')
+		pass
+
 
 	def b008(self):
 		'''
 		
-
 		'''
-		mel.eval("")
+		pass
+
 
 	def b009(self):
 		'''
-		
 
 		'''
-		maxEval('')
+		pass
+
+
+
+
+
+
 
 
 #module name

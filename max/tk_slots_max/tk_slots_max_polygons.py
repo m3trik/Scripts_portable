@@ -18,11 +18,10 @@ class Polygons(Init):
 		self.ui.progressBar.hide()
 
 
-
+	
 	def chk002(self):
 		'''
 		Un-Crease
-
 		'''
 		if self.ui.chk002.isChecked():
 			self.ui.s003.setValue(0) #crease value
@@ -36,7 +35,6 @@ class Polygons(Init):
 	def chk008(self):
 		'''
 		Split U
-
 		'''
 		self.setButtons(self.ui, unchecked='chk010')
 
@@ -44,7 +42,6 @@ class Polygons(Init):
 	def chk009(self):
 		'''
 		Split V
-
 		'''
 		self.setButtons(self.ui, unchecked='chk010')
 
@@ -52,7 +49,6 @@ class Polygons(Init):
 	def chk010(self):
 		'''
 		Tris
-
 		'''
 		self.setButtons(self.ui, unchecked='chk008,chk009')
 
@@ -60,7 +56,6 @@ class Polygons(Init):
 	def chk003(self):
 		'''
 		Crease: Max
-
 		'''
 		if self.ui.chk003.isChecked():
 			self.ui.s003.setValue(10) #crease value
@@ -74,7 +69,6 @@ class Polygons(Init):
 	def chk006(self):
 		'''
 		
-
 		'''
 		if self.ui.chk006.isChecked():
 			self.ui.s001.setSingleStep(.01)
@@ -82,18 +76,60 @@ class Polygons(Init):
 			self.ui.s001.setSingleStep(.5)
 
 
+	def cmb000(self):
+		'''
+		Editors
+		'''
+		cmb = self.ui.cmb000
+		
+		files = ['Bridge','Extrude']
+		contents = self.comboBox (cmb, files, '::')
+
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index('Bridge'):
+				maxEval('''
+				if Ribbon - Modeling.ValidSOMode() and (subObjectLevel == 2 or subObjectLevel == 3) then
+				(
+					curmod = Modpanel.getcurrentObject()
+					if subObjectLevel == 2 then
+					(   
+					    curmod.popupDialog #BridgeEdge
+					)
+					else 
+					(
+					    curmod.popupDialog #BridgeBorder
+					)
+				)
+				''')
+			if index==contents.index('Extrude'):
+				maxEval('''
+				If subObjectLevel == undefined then Max Modify Mode
+				-- default to Face level:
+				if subObjectLevel == 0 then subObjectLevel = 4
+				local A = modPanel.getCurrentObject()
+				if (Filters.Is_This_EditPolyMod A) then
+				(
+					local level = A.GetMeshSelLevel()
+					if (level == #Vertex) then (A.PopupDialog #ExtrudeVertex)
+					else if (level == #Edge) then (A.PopupDialog #ExtrudeEdge)
+					else if (level == #Face) then (A.PopupDialog #ExtrudeFace)
+				)
+				else (A.popupDialog #Extrude)
+				''')
+			cmb.setCurrentIndex(0)
+
+
 	def b000(self):
 		'''
-		Merge Vertex Options
-
+		
 		'''
-		rt.macros.run('Modifiers', 'VertexWeld')
+		pass
 
 
 	def b001(self):
 		'''
 		Fill Holes
-
 		'''
 		rt.macros.run('Modifiers', 'Cap_Holes')
 
@@ -101,7 +137,6 @@ class Polygons(Init):
 	def b002(self):
 		'''
 		Separate
-
 		'''
 		pass
 		# rt.detachElement(obj)
@@ -110,7 +145,6 @@ class Polygons(Init):
 	def b003(self):
 		'''
 		Combine
-
 		'''
 		if self.ui.chk000.isChecked():
 			pass
@@ -143,7 +177,6 @@ class Polygons(Init):
 	def b004(self):
 		'''
 		Slice
-
 		'''
 		rt.macros.run('Ribbon - Modeling', 'CutsQuickSlice')
 		
@@ -151,7 +184,6 @@ class Polygons(Init):
 	def b005(self):
 		'''
 		Bridge
-
 		'''
 		for obj in rt.selection:
 			obj.EditablePoly.Bridge() #perform bridge
@@ -161,7 +193,6 @@ class Polygons(Init):
 	def b006(self):
 		'''
 		Extrude
-
 		'''
 		rt.macros.run('Ribbon - Modeling', 'EPoly_Extrude')
 		# for obj in rt.selection:
@@ -171,7 +202,6 @@ class Polygons(Init):
 	def b007(self):
 		'''
 		Bevel (Chamfer)
-
 		'''
 		rt.macros.run('Ribbon - Modeling', 'EPoly_Chamfer')
 		# width = float(self.ui.s000.value())
@@ -186,7 +216,6 @@ class Polygons(Init):
 	def b008(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -194,7 +223,6 @@ class Polygons(Init):
 	def b009(self):
 		'''
 		Collapse Component
-
 		'''
 		#--[mesh] 0=object level,1=vertex level,2=edge level,3=face,4=polygon,5=element,
 		#--[poly] 0=object level,1=vertex level,2=edge level,3=border,4=polygon,5=element
@@ -217,23 +245,20 @@ class Polygons(Init):
 	def b010(self):
 		'''
 		Extract Curve
-
 		'''
 		maxEval('')
 
 
 	def b011(self):
 		'''
-		Extract Curve Options
-
+		
 		'''
-		maxEval('')
+		pass
 
 
 	def b012(self):
 		'''
 		Multi-Cut Tool
-
 		'''
 		self.setSubObjectLevel(4)
 		rt.macros.run('Ribbon - Modeling', 'CutsCut')
@@ -244,24 +269,21 @@ class Polygons(Init):
 
 	def b013(self):
 		'''
-		Combine Polygon Options
-
+		
 		'''
-		maxEval('CombinePolygonsOptions;')
+		pass
 
 
 	def b014(self):
 		'''
-		 Bevel Options
-
+		
 		'''
-		maxEval('')
+		pass
 
 
 	def b015(self):
 		'''
 		Delete Edgeloop
-
 		'''
 		maxEval('$.EditablePoly.Remove ()')
 
@@ -269,7 +291,6 @@ class Polygons(Init):
 	def b016(self):
 		'''
 		Inset Face Region
-
 		'''
 		offset = float(self.ui.s001.value())
 		maxEval('''
@@ -286,50 +307,21 @@ class Polygons(Init):
 
 	def b017(self):
 		'''
-		Bridge Options
-
+		
 		'''
-		maxEval('''
-		if Ribbon - Modeling.ValidSOMode() and (subObjectLevel == 2 or subObjectLevel == 3) then
-		(
-			curmod = Modpanel.getcurrentObject()
-			if subObjectLevel == 2 then
-			(   
-			    curmod.popupDialog #BridgeEdge
-			)
-			else 
-			(
-			    curmod.popupDialog #BridgeBorder
-			)
-		)
-		''')
+		pass
 
 
 	def b018(self):
 		'''
-		Extrude Options
-
+		
 		'''
-		maxEval('''
-		If subObjectLevel == undefined then Max Modify Mode
-		-- default to Face level:
-		if subObjectLevel == 0 then subObjectLevel = 4
-		local A = modPanel.getCurrentObject()
-		if (Filters.Is_This_EditPolyMod A) then
-		(
-			local level = A.GetMeshSelLevel()
-			if (level == #Vertex) then (A.PopupDialog #ExtrudeVertex)
-			else if (level == #Edge) then (A.PopupDialog #ExtrudeEdge)
-			else if (level == #Face) then (A.PopupDialog #ExtrudeFace)
-		)
-		else (A.popupDialog #Extrude)
-		''')
+		pass
 
 
 	def b019(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -337,7 +329,6 @@ class Polygons(Init):
 	def b020(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -345,7 +336,6 @@ class Polygons(Init):
 	def b021(self):
 		'''
 		Connect Border Edges
-
 		'''
 		mel.eval("performPolyConnectBorders 0;")
 
@@ -353,7 +343,6 @@ class Polygons(Init):
 	def b022(self):
 		'''
 		Attach
-
 		'''
 		rt.macros.run('Ribbon - Modeling', 'AttachMode')
 
@@ -361,7 +350,6 @@ class Polygons(Init):
 	def b023(self):
 		'''
 		Boolean
-
 		'''
 		mel.eval("PolygonBooleanUnion;")
 
@@ -369,7 +357,6 @@ class Polygons(Init):
 	def b024(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -377,7 +364,6 @@ class Polygons(Init):
 	def b025(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -385,7 +371,6 @@ class Polygons(Init):
 	def b026(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -393,7 +378,6 @@ class Polygons(Init):
 	def b027(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -401,7 +385,6 @@ class Polygons(Init):
 	def b028(self):
 		'''
 		Quad Draw
-
 		'''
 		mel.eval("dR_quadDrawTool;")
 
@@ -409,7 +392,6 @@ class Polygons(Init):
 	def b029(self):
 		'''
 		Divide Facet
-
 		'''
 		dv=u=v=0
 		if self.ui.chk008.isChecked(): #Split U
@@ -434,7 +416,6 @@ class Polygons(Init):
 	def b030(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -442,7 +423,6 @@ class Polygons(Init):
 	def b031(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -450,39 +430,34 @@ class Polygons(Init):
 	def b032(self):
 		'''
 		Poke
-
 		'''
 		mel.eval("PokePolygon;")
 
 
 	def b033(self):
 		'''
-		Poke Options
-
+		
 		'''
-		mel.eval("PokePolygonOptions;")
+		pass
 
 
 	def b034(self):
 		'''
 		Wedge
-
 		'''
 		mel.eval("WedgePolygon;")
 
 
 	def b035(self):
 		'''
-		Wedge Options
-
+		
 		'''
-		mel.eval("WedgePolygonOptions;")
+		pass
 
 
 	def b036(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -490,7 +465,6 @@ class Polygons(Init):
 	def b037(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -498,23 +472,20 @@ class Polygons(Init):
 	def b038(self):
 		'''
 		Assign Invisible
-
 		'''
 		mel.eval("polyHole -assignHole 1;")
 
 
 	def b039(self):
 		'''
-		Assign Invisible Options
-
+		
 		'''
-		mel.eval("PolyAssignSubdivHoleOptions;")
+		pass
 		
 
 	def b040(self):
 		'''
 		Merge All Vertices
-
 		'''
 		tolerance = float(self.ui.s002.value())
 		mergeAll = self.ui.chk006.isChecked()
@@ -539,7 +510,6 @@ class Polygons(Init):
 	def b041(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -547,7 +517,6 @@ class Polygons(Init):
 	def b042(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -555,7 +524,6 @@ class Polygons(Init):
 	def b043(self):
 		'''
 		Target Weld
-
 		'''
 		self.setSubObjectLevel(1) #set component mode to vertex
 		rt.macros.run('Editable Polygon Object', 'EPoly_TargetWeld')
@@ -564,7 +532,6 @@ class Polygons(Init):
 	def b044(self):
 		'''
 		Detach
-
 		'''
 		#rt.macros.run('Ribbon - Modeling', 'GeometryDetach')
 		level = rt.subObjectLevel
@@ -590,7 +557,6 @@ class Polygons(Init):
 	def b045(self):
 		'''
 		Re-Order Vertices
-
 		'''
 		symmetryOn = pm.symmetricModelling(query=True, symmetry=True) #query symmetry state
 		
@@ -604,7 +570,6 @@ class Polygons(Init):
 	def b046(self):
 		'''
 		Split
-
 		'''
 		level = rt.subObjectLevel
 
@@ -628,7 +593,6 @@ class Polygons(Init):
 	def b047(self):
 		'''
 		Insert Edgeloop
-
 		'''
 		self.setSubObjectLevel(0)
 		rt.macros.run('PolyTools', 'SwiftLoop')
@@ -637,7 +601,6 @@ class Polygons(Init):
 	def b048(self):
 		'''
 		Collapse Edgering
-
 		'''
 		mel.eval("bt_polyCollapseEdgeRingTool;")
 
@@ -645,7 +608,6 @@ class Polygons(Init):
 	def b049(self):
 		'''
 		Slide Edge Tool
-
 		'''
 		mel.eval("SlideEdgeTool;")
 
@@ -653,7 +615,6 @@ class Polygons(Init):
 	def b050(self):
 		'''
 		Spin Edge
-
 		'''
 		mel.eval("bt_polySpinEdgeTool;")
 
@@ -661,39 +622,34 @@ class Polygons(Init):
 	def b051(self):
 		'''
 		Offset Edgeloop
-
 		'''
 		mel.eval("performPolyDuplicateEdge 0;")
 
 
 	def b052(self):
 		'''
-		Offset Edgeloop Options
-
+		
 		'''
-		mel.eval("DuplicateEdgesOptions;")
+		pass
 
 
 	def b053(self):
 		'''
 		Edit Edge Flow
-
 		'''
 		mel.eval("PolyEditEdgeFlow;")
 
 
 	def b054(self):
 		'''
-		Edit Edge Flow Options
-
+		
 		'''
-		mel.eval("PolyEditEdgeFlowOptions;")
+		pass
 
 
 	def b055(self):
 		'''
 		Crease
-
 		'''
 		creaseAmount = int(self.ui.s003.value())
 		normalAngle = int(self.ui.s004.value())
@@ -729,15 +685,29 @@ class Polygons(Init):
 	def b056(self):
 		'''
 		
-
 		'''
 		pass
 
 
+	def createFacetAndUnite(vertices):
+			tempTriangle = "___fillTemp___" #create a polygon face using the list of vertex points and give it a temp name
+			pm.polyCreateFacet (point=vertices, texture=1, name=tempTriangle) #0-None; 1-Normalize; 2-Unitize
+
+			if (self.ui.chk001.isChecked()):
+				pm.polyNormal(tempTriangle, normalMode=4) #3-reverse and cut, 4-reverse and propagate
+
+			pm.select(tempTriangle, add=True) #select and assign material from main object
+			pm.hyperShade(assign=materials[0])
+			pm.select(tempTriangle, clear=True)
+
+			tempObject = "___objTemp___" #combine with main mesh, assigning a temp name so that the original name can be freed up and the object can then be renamed to the original name
+			pm.polyUnite (object_, tempTriangle, constructionHistory=False, name=tempObject)
+			pm.rename (tempObject, object_)
+	
+
 	def b057(self):
 		'''
 		Trifill
-
 		'''
 		pm.undoInfo (openChunk=True)
 		selectTypeEdge = pm.filterExpand(selectionMask=32) #returns True if selectionMask=Edges
@@ -776,22 +746,6 @@ class Polygons(Init):
 			else:
 				vertexList.append(vertexPosition)
 
-
-		def createFacetAndUnite(vertices):
-			tempTriangle = "___fillTemp___" #create a polygon face using the list of vertex points and give it a temp name
-			pm.polyCreateFacet (point=vertices, texture=1, name=tempTriangle) #0-None; 1-Normalize; 2-Unitize
-
-			if (self.ui.chk001.isChecked()):
-				pm.polyNormal(tempTriangle, normalMode=4) #3-reverse and cut, 4-reverse and propagate
-
-			pm.select(tempTriangle, add=True) #select and assign material from main object
-			pm.hyperShade(assign=materials[0])
-			pm.select(tempTriangle, clear=True)
-
-			tempObject = "___objTemp___" #combine with main mesh, assigning a temp name so that the original name can be freed up and the object can then be renamed to the original name
-			pm.polyUnite (object_, tempTriangle, constructionHistory=False, name=tempObject)
-			pm.rename (tempObject, object_)
-
 		if symmetryOn:
 			createFacetAndUnite(vertexList)
 			createFacetAndUnite(vertexListNeg)
@@ -809,7 +763,6 @@ class Polygons(Init):
 	def b058(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -817,7 +770,6 @@ class Polygons(Init):
 	def b059(self):
 		'''
 		Crease Editor
-
 		'''
 		print "crease"
 		from maya.app.general import creaseSetEditor
@@ -827,18 +779,9 @@ class Polygons(Init):
 	def b060(self):
 		'''
 		
-
 		'''
 		pass
 
-
-
-
-
-
-		
-
-		
 
 
 

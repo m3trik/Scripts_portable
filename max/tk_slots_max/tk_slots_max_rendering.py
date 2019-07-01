@@ -29,7 +29,6 @@ class Rendering(Init):
 	def cmb000(self):
 		'''
 		Render: camera
-
 		'''
 		cmb = self.ui.cmb000
 		
@@ -40,10 +39,25 @@ class Rendering(Init):
 			self.comboBox (cmb, list_)
 
 
+	def cmb001(self):
+		'''
+		Editors
+		'''
+		cmb = self.ui.cmb001
+		
+		files = ['']
+		contents = self.comboBox(cmb, files, '::')
+
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				pass
+			cmb.setCurrentIndex(0)
+
+
 	def b000(self):
 		'''
 		Render Current Frame
-
 		'''
 		cmb = self.ui.cmb000
 		index = cmb.currentIndex()
@@ -51,38 +65,38 @@ class Rendering(Init):
 		try: rt.render (camera=self.cams[index]) #render with selected camera
 		except: rt.render()
 
+
 	def b001(self):
 		'''
 		Open Render Settings Window
-
 		'''
 		maxEval('unifiedRenderGlobalsWindow;')
+
 
 	def b002(self):
 		'''
 		Redo Previous Render
-
 		'''
 		pass
+
 
 	def b003(self):
 		'''
 		Editor: Render Setup
-
 		'''
 		maxEval('max render scene')
+
 
 	def b004(self):
 		'''
 		Editor: Rendering Flags
-
 		'''
 		maxEval('renderFlagsWindow;')
+
 
 	def b005(self):
 		'''
 		Apply Vray Attributes To Selected Objects
-
 		'''
 		selection = pm.ls(selection=1)
 		currentID=1
@@ -98,10 +112,10 @@ class Rendering(Init):
 			pm.setAttr(obj+'.vrayObjectID',currentID)
 			currentID+=1
 
+
 	def b006(self):
 		'''
 		Load Vray Plugin
-
 		'''
 		vray = ['vrayformaya.mll','vrayformayapatch.mll']
 		if pm.pluginInfo ('vrayformaya.mll', query=1, loaded=1):
@@ -113,26 +127,33 @@ class Rendering(Init):
 		else:
 			pm.loadPlugin (vray)
 
+
 	def b007(self):
 		'''
 		
-
 		'''
-		maxEval('')
+		pass
+
 
 	def b008(self):
 		'''
 		
-
 		'''
-		mel.eval("")
+		pass
+
 
 	def b009(self):
 		'''
 		
 
 		'''
-		maxEval('')
+		pass
+
+
+
+
+
+
 
 
 

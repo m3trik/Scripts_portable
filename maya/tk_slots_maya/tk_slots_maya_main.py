@@ -15,9 +15,7 @@ class Main(Init):
 
 
 		self.ui = self.sb.getUi('main')
-		
-		# self.getMethod('preferences', 'cmb000')() #init menuSet combobox
-		# self.getObject(self.sb.setClass('tk_slots_max_preferences.Preferences'), 'cmb000')()
+
 
 		
 
@@ -26,19 +24,16 @@ class Main(Init):
 	def v000(self):
 		'''
 		
-
 		'''
 		index = self.sb.getUi('preferences').cmb000.currentIndex()
 		
 		if index==0: #modeling
 			self.getMethod('polygons', 'b006')()
-
 		
 
 	def v001(self):
 		'''
 		
-
 		'''
 		index = self.sb.getUi('preferences').cmb000.currentIndex()
 		
@@ -49,7 +44,6 @@ class Main(Init):
 	def v002(self):
 		'''
 		
-
 		'''
 		index = self.sb.getUi('preferences').cmb000.currentIndex()
 		
@@ -61,7 +55,6 @@ class Main(Init):
 	def v003(self):
 		'''
 		
-
 		'''
 		index = self.sb.getUi('preferences').cmb000.currentIndex()
 		
@@ -72,7 +65,6 @@ class Main(Init):
 	def v004(self):
 		'''
 		
-
 		'''
 		index = self.sb.getUi('preferences').cmb000.currentIndex()
 		
@@ -93,7 +85,6 @@ class Main(Init):
 	def v006(self):
 		'''
 		
-
 		'''
 		index = self.sb.getUi('preferences').cmb000.currentIndex()
 		
@@ -104,7 +95,6 @@ class Main(Init):
 	def v007(self):
 		'''
 		
-
 		'''
 		index = self.sb.getUi('preferences').cmb000.currentIndex()
 		
@@ -115,7 +105,6 @@ class Main(Init):
 	def v008(self):
 		'''
 		
-
 		'''
 		index = self.sb.getUi('preferences').cmb000.currentIndex()
 		
@@ -126,7 +115,6 @@ class Main(Init):
 	def v009(self):
 		'''
 		
-
 		'''
 		index = self.sb.getUi('preferences').cmb000.currentIndex()
 		
@@ -137,7 +125,6 @@ class Main(Init):
 	def v010(self):
 		'''
 		
-
 		'''
 		index = self.sb.getUi('preferences').cmb000.currentIndex()
 		
@@ -148,7 +135,6 @@ class Main(Init):
 	def v011(self):
 		'''
 		
-
 		'''
 		index = self.sb.getUi('preferences').cmb000.currentIndex()
 		
@@ -159,7 +145,6 @@ class Main(Init):
 	def v012(self):
 		'''
 		
-
 		'''
 		pass
 

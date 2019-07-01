@@ -21,12 +21,11 @@ class Uv(Init):
 
 	def cmb000(self):
 		'''
-		Uv Editors Combobox
-
+		Editors
 		'''
 		cmb = self.ui.cmb000
 
-		contents = self.comboBox (cmb, ["UV Editor", "UV Set Editor", "UV Tool Kit", "UV Linking: Texture-Centric", "UV Linking: UV-Centric", "UV Linking: Paint Effects/UV", "UV Linking: Hair/UV"], "Editors")
+		contents = self.comboBox (cmb, ["UV Editor", "UV Set Editor", "UV Tool Kit", "UV Linking: Texture-Centric", "UV Linking: UV-Centric", "UV Linking: Paint Effects/UV", "UV Linking: Hair/UV"], '::')
 
 		index = cmb.currentIndex()
 		if index !=0: #hide hotbox then perform operation
@@ -51,7 +50,6 @@ class Uv(Init):
 	def b000(self):
 		'''
 		Cut Uv Hard Edges
-
 		'''
 		mel.eval("tk_cutUvHardEdge ();")
 
@@ -59,23 +57,20 @@ class Uv(Init):
 	def b001(self):
 		'''
 		Flip Uv
-
 		'''
 		mel.eval("performPolyForceUV flip 0;")
 
 
 	def b002(self):
 		'''
-		Flip Uv Options
-
+		
 		'''
-		mel.eval("performPolyForceUV flip 1;")
+		pass
 
 
 	def b003(self):
 		'''
 		Uv Shell Selection Mask
-
 		'''
 		pm.selectType (meshUVShell=1)
 
@@ -83,7 +78,6 @@ class Uv(Init):
 	def b004(self):
 		'''
 		Uv Selection Mask
-
 		'''
 		pm.selectType (polymeshUV=1)
 
@@ -91,7 +85,6 @@ class Uv(Init):
 	def b005(self):
 		'''
 		Cut Uv'S
-
 		'''
 		pm.polyMapCut()
 
@@ -99,7 +92,6 @@ class Uv(Init):
 	def b006(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -107,7 +99,6 @@ class Uv(Init):
 	def b007(self):
 		'''
 		Display Checkered Pattern
-
 		'''
 		self.toggleMaterialOverride(checker=1)		
 
@@ -115,7 +106,6 @@ class Uv(Init):
 	def b008(self):
 		'''
 		Adjust Checkered Size
-
 		'''
 		mel.eval("bt_textureEditorCheckerSize;")
 
@@ -123,7 +113,6 @@ class Uv(Init):
 	def b009(self):
 		'''
 		Borders
-
 		'''
 		maxEval('''
 		textureWindowCreatePopupContextMenu "polyTexturePlacementPanel1popupMenusShift";
@@ -136,7 +125,6 @@ class Uv(Init):
 	def b010(self):
 		'''
 		Distortion
-
 		'''
 		maxEval('''
 		string $winName[] = `getPanel -scriptType polyTexturePlacementPanel`;
@@ -151,7 +139,6 @@ class Uv(Init):
 	def b011(self):
 		'''
 		Sew Uv'S
-
 		'''
 		pm.polyMapSew()
 
@@ -159,7 +146,6 @@ class Uv(Init):
 	def b012(self):
 		'''
 		Auto Unwrap
-
 		'''
 		scaleMode = self.ui.chk000.isChecked() #0 No scale is applied. 1 Uniform scale to fit in unit square. 2 Non proportional scale to fit in unit square.
 		createNewMap = self.ui.chk001.isChecked() #Create a new UV set, as opposed to editing the current one, or the one given by the -uvSetName flag.
@@ -180,7 +166,6 @@ class Uv(Init):
 	def b013(self):
 		'''
 		Auto Map Multiple
-
 		'''
 		maxEval('bt_autoMapMultipleMeshes;')
 
@@ -188,7 +173,6 @@ class Uv(Init):
 	def b014(self):
 		'''
 		Rotate On Last
-
 		'''
 		maxEval('bt_checkSelectionOrderPref; bt_rotateUVsAroundLastWin;')
 
@@ -196,7 +180,6 @@ class Uv(Init):
 	def b015(self):
 		'''
 		Flip Horizontally On Last
-
 		'''
 		maxEval('bt_checkSelectionOrderPref; bt_polyflipUVsAcrossLast 0;')
 
@@ -204,7 +187,6 @@ class Uv(Init):
 	def b016(self):
 		'''
 		Flip Vertically On Last
-
 		'''
 		maxEval('bt_checkSelectionOrderPref; bt_polyflipUVsAcrossLast 1;')
 
@@ -212,7 +194,6 @@ class Uv(Init):
 	def b017(self):
 		'''
 		Align Uv Shells
-
 		'''
 		self.try_('from AlignUVShells import *; AlignUVShellsWindow()')
 		
@@ -220,7 +201,6 @@ class Uv(Init):
 	def b018(self):
 		'''
 		Unfold Uv'S
-
 		'''
 		maxEval('performUnfold 0;')
 
@@ -228,7 +208,6 @@ class Uv(Init):
 	def b019(self):
 		'''
 		Optimize Uv'S
-
 		'''
 		maxEval('performPolyOptimizeUV 0;')
 
@@ -236,7 +215,6 @@ class Uv(Init):
 	def b020(self):
 		'''
 		Move To Uv Space
-
 		'''
 		u = str(self.ui.s000.value())
 		v = str(self.ui.s001.value())
@@ -247,7 +225,6 @@ class Uv(Init):
 	def b021(self):
 		'''
 		Straighten Uv
-
 		'''
 		maxEval('texStraightenUVs "UV" 30;')
 
@@ -255,9 +232,14 @@ class Uv(Init):
 	def b022(self):
 		'''
 		Stack Similar
-
 		'''
 		pm.polyUVStackSimilarShells (to=0.1)
+
+
+
+
+
+
 
 
 

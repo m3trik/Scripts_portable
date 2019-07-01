@@ -30,7 +30,6 @@ class Selection(Init):
 	def t000(self):
 		'''
 		Select The Selection Set Itself (Not Members Of)
-
 		'''
 		name = str(self.ui.t000.text())+"Set"
 		pm.select (name, noExpand=1) #noExpand=select set itself
@@ -39,7 +38,6 @@ class Selection(Init):
 	def t001(self):
 		'''
 		Select By Name
-
 		'''
 		searchStr = str(self.ui.t001.text()) #asterisk denotes startswith*, *endswith, *contains* 
 		if searchStr:
@@ -49,7 +47,6 @@ class Selection(Init):
 	def chk000(self):
 		'''
 		Select Nth: uncheck other checkboxes
-
 		'''
 		self.setButtons(self.ui, unchecked='chk001-2')
 
@@ -57,7 +54,6 @@ class Selection(Init):
 	def chk001(self):
 		'''
 		Select Nth: uncheck other checkboxes
-
 		'''
 		self.setButtons(self.ui, unchecked='chk000,chk002')
 
@@ -65,23 +61,13 @@ class Selection(Init):
 	def chk002(self):
 		'''
 		Select Nth: uncheck other checkboxes
-
 		'''
 		self.setButtons(self.ui, unchecked='chk000-1')
-
-
-	def chk003(self):
-		'''
-		
-
-		'''
-		pass
 
 
 	def chk004(self):
 		'''
 		Ignore Backfacing (Camera Based Selection)
-
 		'''
 		if self.ui.chk004.isChecked():
 			pm.selectPref(useDepth=True)
@@ -91,26 +77,9 @@ class Selection(Init):
 			self.viewPortMessage("Camera-based selection <hl>Off</hl>.")
 
 
-	def chk005(self):
-		'''
-		
-
-		'''
-		pass
-	
-
-	def chk006(self):
-		'''
-		
-
-		'''
-		pass
-
-
 	def cmb000(self):
 		'''
 		List Selection Sets
-
 		'''
 		cmb = self.ui.cmb000
 
@@ -124,16 +93,23 @@ class Selection(Init):
 
 	def cmb001(self):
 		'''
-		
-
+		Editors
 		'''
-		pass
+		cmb = self.ui.cmb001
+		
+		files = ['']
+		contents = self.comboBox(cmb, files, '::')
+
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				mel.eval('')
+			cmb.setCurrentIndex(0)
 
 
 	def cmb002(self):
 		'''
 		Select All Of Type
-
 		'''
 		cmb = self.ui.cmb002	
 
@@ -153,7 +129,6 @@ class Selection(Init):
 	def cmb003(self):
 		'''
 		Convert Selection to
-
 		'''
 		cmb = self.ui.cmb003
 
@@ -176,7 +151,6 @@ class Selection(Init):
 	def b000(self):
 		'''
 		Create Selection Set
-
 		'''
 		name = str(self.ui.t000.text())+"Set"
 		if pm.objExists (name):
@@ -190,7 +164,6 @@ class Selection(Init):
 	def b001(self):
 		'''
 		Paint Select
-
 		'''
 		if pm.contextInfo ("paintSelect", exists=True):
 			pm.deleteUI ("paintSelect")
@@ -208,7 +181,6 @@ class Selection(Init):
 	def b002(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -216,7 +188,6 @@ class Selection(Init):
 	def b003(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -224,7 +195,6 @@ class Selection(Init):
 	def b004(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -232,7 +202,6 @@ class Selection(Init):
 	def b005(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -240,7 +209,6 @@ class Selection(Init):
 	def b006(self):
 		'''
 		Select Similar
-
 		'''
 		tolerance = str(self.ui.s000.value()) #string value because mel.eval is sending a command string
 		mel.eval("doSelectSimilar 1 {\""+ tolerance +"\"}")
@@ -249,7 +217,6 @@ class Selection(Init):
 	def b007(self):
 		'''
 		Select Polygon Face Island
-
 		'''
 		rangeX=rangeY=rangeZ = float(self.ui.s002.value())
 
@@ -282,7 +249,6 @@ class Selection(Init):
 	def b009(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -290,7 +256,6 @@ class Selection(Init):
 	def b10(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -298,7 +263,6 @@ class Selection(Init):
 	def b011(self):
 		'''
 		
-
 		'''
 		pass
 
@@ -306,7 +270,6 @@ class Selection(Init):
 	def b012(self):
 		'''
 		Selection Constraints
-
 		'''
 		mel.eval('PolygonSelectionConstraints;')
 
@@ -314,7 +277,6 @@ class Selection(Init):
 	def b013(self):
 		'''
 		Lasso Select
-
 		'''
 		mel.eval("LassoTool;")
 
@@ -322,7 +284,6 @@ class Selection(Init):
 	def b014(self):
 		'''
 		Grow Selection
-
 		'''
 		mel.eval('GrowPolygonSelectionRegion;')
 
@@ -330,7 +291,6 @@ class Selection(Init):
 	def b015(self):
 		'''
 		Shrink Selection
-
 		'''
 		mel.eval('ShrinkPolygonSelectionRegion;')
 
@@ -338,7 +298,6 @@ class Selection(Init):
 	def b016(self):
 		'''
 		Convert Selection To Vertices
-
 		'''
 		mel.eval('PolySelectConvert 3;')
 
@@ -346,7 +305,6 @@ class Selection(Init):
 	def b017(self):
 		'''
 		Convert Selection To Edges
-
 		'''
 		mel.eval('PolySelectConvert 2;')
 
@@ -354,7 +312,6 @@ class Selection(Init):
 	def b018(self):
 		'''
 		Convert Selection To Faces
-
 		'''
 		mel.eval('PolySelectConvert 1;')
 
@@ -362,7 +319,6 @@ class Selection(Init):
 	def b019(self):
 		'''
 		Convert Selection To Edge Ring
-
 		'''
 		mel.eval('SelectEdgeRingSp;')
 

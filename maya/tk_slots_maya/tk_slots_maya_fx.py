@@ -16,75 +16,97 @@ class Fx(Init):
 
 
 
+
+
+
+	def cmb000(self):
+		'''
+		Editors
+		'''
+		cmb = self.ui.cmb000
+		
+		files = ['']
+		contents = self.comboBox(cmb, files, '::')
+
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				mel.eval('')
+			cmb.setCurrentIndex(0)
+
+
 	def b000(self):
 		'''
 		
-
 		'''
-		mel.eval('')
+		pass
+
 
 	def b001(self):
 		'''
 		
-
 		'''
-		mel.eval('')
+		pass
+
 
 	def b002(self):
 		'''
 		
-
 		'''
-		mel.eval('')
+		pass
+
 
 	def b003(self):
 		'''
 		
-
 		'''
-		mel.eval('')
+		pass
+
 
 	def b004(self):
 		'''
 		
-
 		'''
-		mel.eval('')
+		pass
+
 
 	def b005(self):
 		'''
 		
-
 		'''
-		mel.eval('')
+		pass
+
 
 	def b006(self):
 		'''
 		
-
 		'''
-		mel.eval('')
+		pass
+
 
 	def b007(self):
 		'''
 		
-
 		'''
-		mel.eval('')
+		pass
+
 
 	def b008(self):
 		'''
 		
-
 		'''
 		mel.eval("")
+
 
 	def b009(self):
 		'''
 		
-
 		'''
-		mel.eval('')
+		pass
+
+
+
+
 
 
 #module name

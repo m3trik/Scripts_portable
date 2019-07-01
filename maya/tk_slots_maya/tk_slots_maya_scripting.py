@@ -16,15 +16,15 @@ class Scripting(Init):
 
 		self.ui = self.sb.getUi('scripting')
 
-		tk_cmdScrollFieldReporter = pm.cmdScrollFieldReporter (
-																height=35,
-																backgroundColor=[0,0,0],
-																highlightColor=[0,0,0],
-																echoAllCommands=False,
-																filterSourceType="")
+		# tk_cmdScrollFieldReporter = pm.cmdScrollFieldReporter (
+		# 														height=35,
+		# 														backgroundColor=[0,0,0],
+		# 														highlightColor=[0,0,0],
+		# 														echoAllCommands=False,
+		# 														filterSourceType="")
 
-		self.ui.plainTextEdit.appendPlainText(tk_cmdScrollFieldReporter)
-		
+		# self.ui.plainTextEdit.appendPlainText(tk_cmdScrollFieldReporter)
+
 
 	def chk000(self):
 		'''
@@ -35,6 +35,22 @@ class Scripting(Init):
 			self.ui.chk000.setText("python")
 		else:
 			self.ui.chk000.setText("MEL")
+
+
+	def cmb000(self):
+		'''
+		Editors
+		'''
+		cmb = self.ui.cmb000
+		
+		files = ['']
+		contents = self.comboBox(cmb, files, '::')
+
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				mel.eval('')
+			cmb.setCurrentIndex(0)
 
 
 	def b000(self):

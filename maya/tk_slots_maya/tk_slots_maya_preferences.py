@@ -85,6 +85,22 @@ class Preferences(Init):
 			pm.currentUnit(time=values[index]) #game | film | pal | ntsc | show | palf | ntscf
 
 
+	def cmb003(self):
+		'''
+		Editors
+		'''
+		cmb = self.ui.cmb003
+		
+		files = ['']
+		contents = self.comboBox(cmb, files, '::')
+
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				mel.eval('')
+			cmb.setCurrentIndex(0)
+
+
 	def b000(self):
 		'''
 		Init Tk_Main

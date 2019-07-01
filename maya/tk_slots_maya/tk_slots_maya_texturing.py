@@ -66,7 +66,7 @@ class Texturing(Init):
 		cmb = self.ui.cmb001
 		
 		files = ['Hypershade']
-		contents = self.comboBox (cmb, files, 'Editors')
+		contents = self.comboBox (cmb, files, '::')
 
 		index = cmb.currentIndex()
 		if index!=0:
