@@ -38,57 +38,11 @@
    <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::ForceTabbedDocks</set>
   </property>
   <widget class="QWidget" name="mainWindow">
-   <widget class="QGroupBox" name="groupBox_4">
-    <property name="geometry">
-     <rect>
-      <x>120</x>
-      <y>30</y>
-      <width>101</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Editors</string>
-    </property>
-    <widget class="QComboBox" name="cmb000">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>10</y>
-       <width>101</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>101</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>UV set editors</string>
-     </property>
-     <property name="sizeAdjustPolicy">
-      <enum>QComboBox::AdjustToContents</enum>
-     </property>
-     <item>
-      <property name="text">
-       <string>Editors</string>
-      </property>
-     </item>
-    </widget>
-   </widget>
    <widget class="QGroupBox" name="groupBox_3">
     <property name="geometry">
      <rect>
       <x>120</x>
-      <y>70</y>
+      <y>30</y>
       <width>101</width>
       <height>171</height>
      </rect>
@@ -96,43 +50,6 @@
     <property name="title">
      <string>Transform</string>
     </property>
-    <widget class="QPushButton" name="b002">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>80</x>
-       <y>10</y>
-       <width>21</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Flip UV options</string>
-     </property>
-     <property name="text">
-      <string>☐</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>18</width>
-       <height>18</height>
-      </size>
-     </property>
-    </widget>
     <widget class="QPushButton" name="b001">
      <property name="enabled">
       <bool>true</bool>
@@ -141,7 +58,7 @@
       <rect>
        <x>0</x>
        <y>10</y>
-       <width>81</width>
+       <width>101</width>
        <height>19</height>
       </rect>
      </property>
@@ -967,6 +884,55 @@
       <bool>true</bool>
      </property>
     </widget>
+    <widget class="QComboBox" name="cmb000">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>1</y>
+       <width>27</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>20</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>9999</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="statusTip">
+      <string/>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="maxVisibleItems">
+      <number>50</number>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string/>
+      </property>
+     </item>
+    </widget>
+    <zorder>cmb000</zorder>
+    <zorder>pin</zorder>
    </widget>
    <widget class="QGroupBox" name="groupBox_2">
     <property name="enabled">
@@ -1121,7 +1087,6 @@
     </widget>
    </widget>
    <zorder>menubar</zorder>
-   <zorder>groupBox_4</zorder>
    <zorder>groupBox_3</zorder>
    <zorder>groupBox_7</zorder>
    <zorder>groupBox_6</zorder>

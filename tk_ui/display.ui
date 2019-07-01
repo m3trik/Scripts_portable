@@ -302,12 +302,61 @@
       <bool>true</bool>
      </property>
     </widget>
+    <widget class="QComboBox" name="cmb000">
+     <property name="geometry">
+      <rect>
+       <x>165</x>
+       <y>1</y>
+       <width>27</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>20</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>9999</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="statusTip">
+      <string/>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="maxVisibleItems">
+      <number>50</number>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string/>
+      </property>
+     </item>
+    </widget>
+    <zorder>cmb000</zorder>
+    <zorder>pin</zorder>
    </widget>
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
       <x>115</x>
-      <y>80</y>
+      <y>40</y>
       <width>96</width>
       <height>41</height>
      </rect>
@@ -354,65 +403,13 @@
      </property>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox_2">
-    <property name="geometry">
-     <rect>
-      <x>115</x>
-      <y>30</y>
-      <width>96</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Editors</string>
-    </property>
-    <widget class="QComboBox" name="cmb000">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>10</y>
-       <width>97</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>97</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>9999</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="statusTip">
-      <string>Viewport Editors</string>
-     </property>
-     <property name="maxVisibleItems">
-      <number>50</number>
-     </property>
-     <property name="sizeAdjustPolicy">
-      <enum>QComboBox::AdjustToContents</enum>
-     </property>
-     <property name="frame">
-      <bool>false</bool>
-     </property>
-     <item>
-      <property name="text">
-       <string>Editors</string>
-      </property>
-     </item>
-    </widget>
-   </widget>
    <widget class="QGroupBox" name="groupBox_3">
     <property name="geometry">
      <rect>
       <x>115</x>
-      <y>130</y>
+      <y>90</y>
       <width>96</width>
-      <height>41</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="title">

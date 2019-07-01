@@ -1,0 +1,1337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>QtUi</class>
+ <widget class="QMainWindow" name="QtUi">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>252</width>
+    <height>224</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>120</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>999</width>
+    <height>999</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Toolkit</string>
+  </property>
+  <property name="tabShape">
+   <enum>QTabWidget::Triangular</enum>
+  </property>
+  <property name="dockNestingEnabled">
+   <bool>true</bool>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::ForceTabbedDocks</set>
+  </property>
+  <property name="bnabled" stdset="0">
+   <bool>true</bool>
+  </property>
+  <widget class="QWidget" name="mainWindow">
+   <property name="palette">
+    <palette>
+     <active>
+      <colorrole role="Highlight">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>168</red>
+         <green>152</green>
+         <blue>250</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </active>
+     <inactive>
+      <colorrole role="Highlight">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>168</red>
+         <green>152</green>
+         <blue>250</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </inactive>
+     <disabled>
+      <colorrole role="Highlight">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>168</red>
+         <green>152</green>
+         <blue>250</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </disabled>
+    </palette>
+   </property>
+   <widget class="QGroupBox" name="radialArray">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>30</y>
+      <width>111</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Radial Array</string>
+    </property>
+    <widget class="QPushButton" name="chk012">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>30</y>
+       <width>16</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Radial Array: X axis</string>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="text">
+      <string>X</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="bnabled" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk013">
+     <property name="geometry">
+      <rect>
+       <x>15</x>
+       <y>30</y>
+       <width>16</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Radial Array: Y axis</string>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="text">
+      <string>Y</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="bnabled" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b003">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>65</x>
+       <y>50</y>
+       <width>46</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Radial Array: create array</string>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="text">
+      <string>Create</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="bnabled" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk014">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>30</y>
+       <width>16</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Radial Array: Z axis</string>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="text">
+      <string>Z</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="bnabled" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk015">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>56</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Start radial array preview.</string>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="text">
+      <string>Preview</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="bnabled" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="s000">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>10</y>
+       <width>41</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Radial Array: number of Instances</string>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>1000</number>
+     </property>
+     <property name="value">
+      <number>3</number>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="s001">
+     <property name="geometry">
+      <rect>
+       <x>65</x>
+       <y>30</y>
+       <width>46</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Radial Array: angle amount in degrees</string>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
+     </property>
+     <property name="decimals">
+      <number>2</number>
+     </property>
+     <property name="maximum">
+      <double>360.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.500000000000000</double>
+     </property>
+     <property name="value">
+      <double>90.000000000000000</double>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk010">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>50</y>
+       <width>66</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Radial Array: set pivot from selected object bounding box.</string>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="text">
+      <string>Set Pivot</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="bnabled" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk011">
+     <property name="geometry">
+      <rect>
+       <x>55</x>
+       <y>10</y>
+       <width>14</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Radial Array: instance</string>
+     </property>
+     <property name="text">
+      <string>i</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="bnabled" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="duplicate">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>111</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Duplicate</string>
+    </property>
+    <widget class="QDoubleSpinBox" name="s002">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>30</y>
+       <width>37</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Duplicate: transform X amount</string>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
+     </property>
+     <property name="decimals">
+      <number>3</number>
+     </property>
+     <property name="minimum">
+      <double>-999.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>999.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.250000000000000</double>
+     </property>
+     <property name="value">
+      <double>0.000000000000000</double>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="s005">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>10</y>
+       <width>41</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Duplicate: number of copies</string>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>999</number>
+     </property>
+     <property name="value">
+      <number>1</number>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk008">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>12</x>
+       <y>70</y>
+       <width>14</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Duplicate: along normal tangent</string>
+     </property>
+     <property name="text">
+      <string>n</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="bnabled" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="s003">
+     <property name="geometry">
+      <rect>
+       <x>38</x>
+       <y>30</y>
+       <width>37</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Duplicate: transform Y amount</string>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
+     </property>
+     <property name="decimals">
+      <number>3</number>
+     </property>
+     <property name="minimum">
+      <double>-999.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>999.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.250000000000000</double>
+     </property>
+     <property name="value">
+      <double>0.000000000000000</double>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="s004">
+     <property name="geometry">
+      <rect>
+       <x>74</x>
+       <y>30</y>
+       <width>37</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Duplicate: transform Z amount</string>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
+     </property>
+     <property name="decimals">
+      <number>3</number>
+     </property>
+     <property name="minimum">
+      <double>-999.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>999.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.250000000000000</double>
+     </property>
+     <property name="value">
+      <double>0.000000000000000</double>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk016">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>46</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Duplicate or instance the selected mesh/components.</string>
+     </property>
+     <property name="text">
+      <string>Preview</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="bnabled" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk007">
+     <property name="geometry">
+      <rect>
+       <x>1</x>
+       <y>70</y>
+       <width>14</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Duplicate: translate duplicated object(s) to items in the component list.</string>
+     </property>
+     <property name="text">
+      <string>c</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="bnabled" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk000">
+     <property name="geometry">
+      <rect>
+       <x>45</x>
+       <y>10</y>
+       <width>14</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Duplicate: instance</string>
+     </property>
+     <property name="text">
+      <string>i</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="bnabled" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="cmb000">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>35</x>
+       <y>70</y>
+       <width>76</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>76</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Duplicate: destination component list.</string>
+     </property>
+     <property name="maxVisibleItems">
+      <number>100</number>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk009">
+     <property name="geometry">
+      <rect>
+       <x>56</x>
+       <y>10</y>
+       <width>14</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Duplicate: keep faces together</string>
+     </property>
+     <property name="text">
+      <string>f</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="bnabled" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b008">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>25</x>
+       <y>70</y>
+       <width>14</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Duplicate: build destination component list.</string>
+     </property>
+     <property name="text">
+      <string>+</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="bnabled" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b002">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>65</x>
+       <y>90</y>
+       <width>46</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Duplicate: create array</string>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="text">
+      <string>Create</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="bnabled" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="s007">
+     <property name="geometry">
+      <rect>
+       <x>2</x>
+       <y>50</y>
+       <width>37</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Duplicate: rotate X amount</string>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
+     </property>
+     <property name="decimals">
+      <number>3</number>
+     </property>
+     <property name="minimum">
+      <double>-999.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>999.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.250000000000000</double>
+     </property>
+     <property name="value">
+      <double>0.000000000000000</double>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="s008">
+     <property name="geometry">
+      <rect>
+       <x>38</x>
+       <y>50</y>
+       <width>37</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Duplicate: rotate Y amount</string>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
+     </property>
+     <property name="decimals">
+      <number>3</number>
+     </property>
+     <property name="minimum">
+      <double>-999.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>999.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.250000000000000</double>
+     </property>
+     <property name="value">
+      <double>0.000000000000000</double>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="s009">
+     <property name="geometry">
+      <rect>
+       <x>74</x>
+       <y>50</y>
+       <width>37</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Duplicate: rotate Z amount</string>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
+     </property>
+     <property name="decimals">
+      <number>3</number>
+     </property>
+     <property name="minimum">
+      <double>-999.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>999.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.250000000000000</double>
+     </property>
+     <property name="value">
+      <double>0.000000000000000</double>
+     </property>
+    </widget>
+    <zorder>s004</zorder>
+    <zorder>s009</zorder>
+    <zorder>cmb000</zorder>
+    <zorder>s002</zorder>
+    <zorder>s005</zorder>
+    <zorder>chk008</zorder>
+    <zorder>s003</zorder>
+    <zorder>chk016</zorder>
+    <zorder>chk007</zorder>
+    <zorder>chk000</zorder>
+    <zorder>chk009</zorder>
+    <zorder>b008</zorder>
+    <zorder>b002</zorder>
+    <zorder>s007</zorder>
+    <zorder>s008</zorder>
+   </widget>
+   <widget class="QFrame" name="menubar">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>231</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <widget class="QPushButton" name="pin">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>0</y>
+       <width>21</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>pin this window to a separate instance.</string>
+     </property>
+     <property name="text">
+      <string>≡</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="cmb001">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>1</y>
+       <width>27</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>20</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>9999</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="statusTip">
+      <string>Viewport Editors</string>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="maxVisibleItems">
+      <number>50</number>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string/>
+      </property>
+     </item>
+    </widget>
+    <zorder>cmb001</zorder>
+    <zorder>pin</zorder>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_7">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>150</y>
+      <width>111</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Instance</string>
+    </property>
+    <widget class="QPushButton" name="b004">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>91</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Select objects that are an instance of the current selection.</string>
+     </property>
+     <property name="text">
+      <string>Select Instanced</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="bnabled" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="b005">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>30</y>
+       <width>111</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Uninstance selected objects. (no selection is needed for 'all' flag)</string>
+     </property>
+     <property name="text">
+      <string>Un-Instance Selected</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="bnabled" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="chk017">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>10</y>
+       <width>21</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>111</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Select all instanced objects in the scene.</string>
+     </property>
+     <property name="text">
+      <string>All</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="bnabled" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+ <designerdata>
+  <property name="gridDeltaX">
+   <number>5</number>
+  </property>
+  <property name="gridDeltaY">
+   <number>10</number>
+  </property>
+  <property name="gridSnapX">
+   <bool>true</bool>
+  </property>
+  <property name="gridSnapY">
+   <bool>true</bool>
+  </property>
+  <property name="gridVisible">
+   <bool>true</bool>
+  </property>
+ </designerdata>
+</ui>

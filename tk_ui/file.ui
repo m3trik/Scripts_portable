@@ -262,52 +262,6 @@
      </widget>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox_2">
-    <property name="geometry">
-     <rect>
-      <x>120</x>
-      <y>60</y>
-      <width>101</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Editors</string>
-    </property>
-    <widget class="QComboBox" name="cmb005">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>12</y>
-       <width>101</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>101</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>9999</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="sizeAdjustPolicy">
-      <enum>QComboBox::AdjustToContents</enum>
-     </property>
-     <property name="frame">
-      <bool>false</bool>
-     </property>
-     <item>
-      <property name="text">
-       <string>Editors</string>
-      </property>
-     </item>
-    </widget>
-   </widget>
    <widget class="QFrame" name="menubar">
     <property name="geometry">
      <rect>
@@ -362,7 +316,7 @@
     <widget class="QPushButton" name="b004">
      <property name="geometry">
       <rect>
-       <x>176</x>
+       <x>160</x>
        <y>0</y>
        <width>17</width>
        <height>19</height>
@@ -378,7 +332,7 @@
     <widget class="QPushButton" name="b006">
      <property name="geometry">
       <rect>
-       <x>160</x>
+       <x>144</x>
        <y>0</y>
        <width>17</width>
        <height>19</height>
@@ -394,7 +348,7 @@
     <widget class="QPushButton" name="b005">
      <property name="geometry">
       <rect>
-       <x>144</x>
+       <x>128</x>
        <y>0</y>
        <width>17</width>
        <height>19</height>
@@ -407,12 +361,64 @@
       <string>—</string>
      </property>
     </widget>
+    <widget class="QComboBox" name="cmb005">
+     <property name="geometry">
+      <rect>
+       <x>176</x>
+       <y>1</y>
+       <width>27</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>20</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>9999</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="statusTip">
+      <string/>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="maxVisibleItems">
+      <number>50</number>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string/>
+      </property>
+     </item>
+    </widget>
+    <zorder>cmb005</zorder>
+    <zorder>pin</zorder>
+    <zorder>b004</zorder>
+    <zorder>b006</zorder>
+    <zorder>b005</zorder>
    </widget>
    <widget class="QGroupBox" name="groupBox_5">
     <property name="geometry">
      <rect>
       <x>120</x>
-      <y>96</y>
+      <y>60</y>
       <width>101</width>
       <height>67</height>
      </rect>
@@ -633,11 +639,6 @@
     <zorder>cmb001</zorder>
     <zorder>b017</zorder>
    </widget>
-   <zorder>groupBox_2</zorder>
-   <zorder>groupBox</zorder>
-   <zorder>menubar</zorder>
-   <zorder>groupBox_5</zorder>
-   <zorder>groupBox_4</zorder>
   </widget>
  </widget>
  <resources/>

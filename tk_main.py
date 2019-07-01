@@ -207,8 +207,8 @@ class HotBox(QtWidgets.QWidget):
 		args: [QEvent]
 		'''
 		if self.name=='main':
-			self.setVisibilityOnHover(event.pos(), 'r000-11')
-			self.setDown_(event.pos(), 'i003-18, i020-24, v000-30')
+			self.setVisibilityOnHover(event.pos(), 'r000-7')
+			self.setDown_(event.pos(), 'i003-25, v000-30')
 
 		if self.name=='viewport':
 			self.setVisibilityOnHover(event.pos(), 'r000-7')

@@ -291,58 +291,6 @@
      </property>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox_4">
-    <property name="geometry">
-     <rect>
-      <x>115</x>
-      <y>110</y>
-      <width>101</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Editors</string>
-    </property>
-    <widget class="QComboBox" name="cmb001">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>10</y>
-       <width>101</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>101</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Texturing: Editors</string>
-     </property>
-     <property name="maxCount">
-      <number>100</number>
-     </property>
-     <property name="sizeAdjustPolicy">
-      <enum>QComboBox::AdjustToContents</enum>
-     </property>
-     <property name="frame">
-      <bool>true</bool>
-     </property>
-     <item>
-      <property name="text">
-       <string>Editors</string>
-      </property>
-     </item>
-    </widget>
-   </widget>
    <widget class="QFrame" name="menubar">
     <property name="geometry">
      <rect>
@@ -394,6 +342,55 @@
       <bool>true</bool>
      </property>
     </widget>
+    <widget class="QComboBox" name="cmb001">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>1</y>
+       <width>27</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>20</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>9999</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="statusTip">
+      <string/>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="maxVisibleItems">
+      <number>50</number>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string/>
+      </property>
+     </item>
+    </widget>
+    <zorder>cmb001</zorder>
+    <zorder>pin</zorder>
    </widget>
    <widget class="QGroupBox" name="groupBox_7">
     <property name="enabled">
@@ -659,7 +656,6 @@
    <zorder>cmb002</zorder>
    <zorder>t000</zorder>
    <zorder>groupBox_3</zorder>
-   <zorder>groupBox_4</zorder>
    <zorder>menubar</zorder>
    <zorder>groupBox_7</zorder>
    <zorder>b008</zorder>

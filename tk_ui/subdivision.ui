@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>224</width>
-    <height>254</height>
+    <height>205</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -42,7 +42,7 @@
     <property name="geometry">
      <rect>
       <x>115</x>
-      <y>150</y>
+      <y>120</y>
       <width>96</width>
       <height>51</height>
      </rect>
@@ -50,79 +50,6 @@
     <property name="title">
      <string>SubDiv Proxy</string>
     </property>
-    <widget class="QPushButton" name="b002">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>75</x>
-       <y>30</y>
-       <width>21</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>8</pointsize>
-      </font>
-     </property>
-     <property name="toolTip">
-      <string>Subdiv Proxy: subdiv proxy options</string>
-     </property>
-     <property name="text">
-      <string>☐</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>16</width>
-       <height>16</height>
-      </size>
-     </property>
-     <property name="balette" stdset="0">
-      <palette>
-       <active>
-        <colorrole role="ButtonText">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>155</red>
-           <green>155</green>
-           <blue>155</blue>
-          </color>
-         </brush>
-        </colorrole>
-       </active>
-       <inactive>
-        <colorrole role="ButtonText">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>155</red>
-           <green>155</green>
-           <blue>155</blue>
-          </color>
-         </brush>
-        </colorrole>
-       </inactive>
-       <disabled>
-        <colorrole role="ButtonText">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>120</red>
-           <green>120</green>
-           <blue>120</blue>
-          </color>
-         </brush>
-        </colorrole>
-       </disabled>
-      </palette>
-     </property>
-    </widget>
     <widget class="QPushButton" name="b001">
      <property name="enabled">
       <bool>true</bool>
@@ -131,7 +58,7 @@
       <rect>
        <x>0</x>
        <y>30</y>
-       <width>76</width>
+       <width>96</width>
        <height>19</height>
       </rect>
      </property>
@@ -393,6 +320,55 @@
       <bool>true</bool>
      </property>
     </widget>
+    <widget class="QComboBox" name="cmb000">
+     <property name="geometry">
+      <rect>
+       <x>165</x>
+       <y>1</y>
+       <width>27</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>20</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>9999</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="statusTip">
+      <string/>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="maxVisibleItems">
+      <number>50</number>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string/>
+      </property>
+     </item>
+    </widget>
+    <zorder>cmb000</zorder>
+    <zorder>pin</zorder>
    </widget>
    <widget class="QGroupBox" name="subdivision">
     <property name="geometry">
@@ -414,7 +390,7 @@
       <rect>
        <x>0</x>
        <y>30</y>
-       <width>81</width>
+       <width>101</width>
        <height>19</height>
       </rect>
      </property>
@@ -445,7 +421,7 @@
       <rect>
        <x>0</x>
        <y>50</y>
-       <width>81</width>
+       <width>101</width>
        <height>19</height>
       </rect>
      </property>
@@ -513,7 +489,7 @@
       <rect>
        <x>0</x>
        <y>70</y>
-       <width>81</width>
+       <width>101</width>
        <height>19</height>
       </rect>
      </property>
@@ -534,225 +510,6 @@
        <width>18</width>
        <height>18</height>
       </size>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="b007">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>80</x>
-       <y>70</y>
-       <width>21</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>8</pointsize>
-      </font>
-     </property>
-     <property name="toolTip">
-      <string>Smooth options</string>
-     </property>
-     <property name="text">
-      <string>☐</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>16</width>
-       <height>16</height>
-      </size>
-     </property>
-     <property name="balette" stdset="0">
-      <palette>
-       <active>
-        <colorrole role="ButtonText">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>155</red>
-           <green>155</green>
-           <blue>155</blue>
-          </color>
-         </brush>
-        </colorrole>
-       </active>
-       <inactive>
-        <colorrole role="ButtonText">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>155</red>
-           <green>155</green>
-           <blue>155</blue>
-          </color>
-         </brush>
-        </colorrole>
-       </inactive>
-       <disabled>
-        <colorrole role="ButtonText">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>120</red>
-           <green>120</green>
-           <blue>120</blue>
-          </color>
-         </brush>
-        </colorrole>
-       </disabled>
-      </palette>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="b006">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>80</x>
-       <y>30</y>
-       <width>21</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>8</pointsize>
-      </font>
-     </property>
-     <property name="toolTip">
-      <string>Reduce options</string>
-     </property>
-     <property name="text">
-      <string>☐</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>16</width>
-       <height>16</height>
-      </size>
-     </property>
-     <property name="balette" stdset="0">
-      <palette>
-       <active>
-        <colorrole role="ButtonText">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>155</red>
-           <green>155</green>
-           <blue>155</blue>
-          </color>
-         </brush>
-        </colorrole>
-       </active>
-       <inactive>
-        <colorrole role="ButtonText">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>155</red>
-           <green>155</green>
-           <blue>155</blue>
-          </color>
-         </brush>
-        </colorrole>
-       </inactive>
-       <disabled>
-        <colorrole role="ButtonText">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>120</red>
-           <green>120</green>
-           <blue>120</blue>
-          </color>
-         </brush>
-        </colorrole>
-       </disabled>
-      </palette>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="b010">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>80</x>
-       <y>50</y>
-       <width>21</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>8</pointsize>
-      </font>
-     </property>
-     <property name="toolTip">
-      <string>Add divisions options</string>
-     </property>
-     <property name="text">
-      <string>☐</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>16</width>
-       <height>16</height>
-      </size>
-     </property>
-     <property name="balette" stdset="0">
-      <palette>
-       <active>
-        <colorrole role="ButtonText">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>155</red>
-           <green>155</green>
-           <blue>155</blue>
-          </color>
-         </brush>
-        </colorrole>
-       </active>
-       <inactive>
-        <colorrole role="ButtonText">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>155</red>
-           <green>155</green>
-           <blue>155</blue>
-          </color>
-         </brush>
-        </colorrole>
-       </inactive>
-       <disabled>
-        <colorrole role="ButtonText">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>120</red>
-           <green>120</green>
-           <blue>120</blue>
-          </color>
-         </brush>
-        </colorrole>
-       </disabled>
-      </palette>
      </property>
     </widget>
     <widget class="QPushButton" name="b004">
@@ -793,8 +550,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>115</x>
-      <y>210</y>
+      <x>5</x>
+      <y>150</y>
       <width>96</width>
       <height>19</height>
      </rect>
@@ -820,45 +577,6 @@
     <property name="checkable">
      <bool>false</bool>
     </property>
-   </widget>
-   <widget class="QComboBox" name="cmb000">
-    <property name="geometry">
-     <rect>
-      <x>5</x>
-      <y>210</y>
-      <width>101</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>101</width>
-      <height>0</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="toolTip">
-     <string>Texturing: Editors</string>
-    </property>
-    <property name="maxCount">
-     <number>100</number>
-    </property>
-    <property name="sizeAdjustPolicy">
-     <enum>QComboBox::AdjustToContents</enum>
-    </property>
-    <property name="frame">
-     <bool>true</bool>
-    </property>
-    <item>
-     <property name="text">
-      <string>Modifiers</string>
-     </property>
-    </item>
    </widget>
   </widget>
  </widget>
