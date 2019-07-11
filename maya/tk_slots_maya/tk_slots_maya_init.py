@@ -112,9 +112,10 @@ class Init(Slot):
 	@staticmethod
 	def getAllFacesOnAxis(obj, axis="-x", localspace=False):
 		'''
-		args:	obj=<geometry> - object to perform the operation on. 
-				axis='string' - representing axis ie. "x"
-					localspace=bool - specify world or local space
+		args:
+			obj=<geometry> - object to perform the operation on. 
+			axis='string' - representing axis ie. "x"
+			localspace=bool - specify world or local space
 		ex. self.getAllFacesOnAxis(polyObject, 'y')
 		'''
 		i=0 #'x'
@@ -127,6 +128,38 @@ class Init(Slot):
 			return [face for face in pm.filterExpand(obj+'.f[*]', sm=34) if pm.exactWorldBoundingBox(face)[i] < -0.00001]
 		else:
 			return [face for face in pm.filterExpand(obj+'.f[*]', sm=34) if pm.exactWorldBoundingBox(face)[i] > -0.00001]
+
+
+
+	@staticmethod
+	def getBorderEdgeFromFace(faces=None):
+		'''
+		get border edges from faces.
+		args:
+			faces='string'/unicode or list of faces. ie. 'poly.f[696]' or 'polyShape.f[696]'
+		returns:
+			list of border edges.
+		ex. getBorderEdgeFromFace(['poly.f[696]', 'poly.f[705:708]'])
+		'''
+		if not faces: #if no faces passed in as arg, get current face selection
+			faces = [str(f) for f in pm.filterExpand(selectionMask=34)]
+
+		edges = [str(i).replace('Shape.', '.', -1).split('|')[-1] for i in pm.ls(pm.polyListComponentConversion(faces, ff=1, te=1), flatten=1)] #get edges from the faces
+
+		borderEdges=[]
+		for edge in edges:
+			edgeFaces = [str(i).replace('Shape.', '.', -1).split('|')[-1] for i in pm.ls(pm.polyListComponentConversion(edge, fe=1, tf=1), flatten=1)] #get faces that share the edge.
+
+			if len(edgeFaces)<2: #if the edge has only one shared face, it is a border edge.
+				borderEdges.append(edge)
+			else:
+				for f in edgeFaces:
+					if f not in faces: #else if the edge's shared face is not part of the selected faces, it is a border edge.
+						borderEdges.append(edge)
+						break
+
+		return borderEdges
+
 
 
 	#select shortest edge path between (two or more) selected edges
@@ -164,10 +197,13 @@ class Init(Slot):
 	#align vertices
 	@staticmethod
 	def alignVertices (mode, average=False, edgeloop=False):
-		#args: mode=int - possible values are align: 0-YZ, 1-XZ, 2-XY, 3-X, 4-Y, 5-Z, 6-XYZ 
-		#			average=bool - align to average of all selected vertices. else, align to last selected
-		#			edgeloop=bool - align vertices in edgeloop from a selected edge
-		#ex. self.alignVertices(mode=3,average=True,edgeloop=True)
+		'''
+		args:
+			mode=int - possible values are align: 0-YZ, 1-XZ, 2-XY, 3-X, 4-Y, 5-Z, 6-XYZ 
+			average=bool - align to average of all selected vertices. else, align to last selected
+			edgeloop=bool - align vertices in edgeloop from a selected edge
+		ex. self.alignVertices(mode=3,average=True,edgeloop=True)
+		'''
 		pm.undoInfo (openChunk=True)
 		selectTypeEdge = pm.selectType (query=True, edge=True)
 
@@ -231,15 +267,65 @@ class Init(Slot):
 
 
 
+	@staticmethod
+	def getComponentPoint(component, alignToNormal=False):
+		'''
+		get the center point from the given component.
+		args: alignToNormal=bool - 
+
+		returns: [float list] - x, y, z  coordinate values.
+		'''
+		if ".vtx" in str(component):
+			x = pm.polyNormalPerVertex (component, query=1, x=1)
+			y = pm.polyNormalPerVertex (component, query=1, y=1)
+			z = pm.polyNormalPerVertex (component, query=1, z=1)
+			xyz = [sum(x) / float(len(x)), sum(y) / float(len(y)), sum(z) / float(len(z))] #get average
+		elif ".e" in str(component):
+			componentName = str(component).split(".")[0]
+			vertices = pm.polyInfo (component, edgeToVertex=1)[0]
+			vertices = vertices.split()
+			vertices = [componentName+".vtx["+vertices[2]+"]",componentName+".vtx["+vertices[3]+"]"]
+			x=[];y=[];z=[]
+			for vertex in vertices:
+				x_ = pm.polyNormalPerVertex (vertex, query=1, x=1)
+				x.append(sum(x_) / float(len(x_)))
+				y_ = pm.polyNormalPerVertex (vertex, query=1, y=1)
+				x.append(sum(y_) / float(len(y_)))
+				z_ = pm.polyNormalPerVertex (vertex, query=1, z=1)
+				x.append(sum(z_) / float(len(z_)))
+			xyz = [sum(x) / float(len(x)), sum(y) / float(len(y)), sum(z) / float(len(z))] #get average
+		else:# elif ".f" in str(component):
+			xyz = pm.polyInfo (component, faceNormals=1)
+			xyz = xyz[0].split()
+			xyz = [float(xyz[2]), float(xyz[3]), float(xyz[4])]
+
+		if alignToNormal: #normal constraint
+			normal = mel.eval("unit <<"+str(xyz[0])+", "+str(xyz[1])+", "+str(xyz[2])+">>;") #normalize value using MEL
+			# normal = [round(i-min(xyz)/(max(xyz)-min(xyz)),6) for i in xyz] #normalize and round value using python
+
+			constraint = pm.normalConstraint(component, object_,aimVector=normal,upVector=[0,1,0],worldUpVector=[0,1,0],worldUpType="vector") # "scene","object","objectrotation","vector","none"
+			pm.delete(constraint) #orient object_ then remove constraint.
+
+		vertexPoint = pm.xform (component, query=1, translation=1) #average vertex points on destination to get component center.
+		x = vertexPoint [0::3]
+		y = vertexPoint [1::3]
+		z = vertexPoint [2::3]
+
+		return [round(sum(x) / float(len(x)),4), round(sum(y) / float(len(y)),4), round(sum(z) / float(len(z)),4)]
+
+
 
 	@staticmethod
 	def createCircle(axis='y', numPoints=5, radius=5, center=[0,0,0], mode=0):
-		#args: axis='string' - 'x','y','z' 
-		#			numPoints=int - number of outer points
-		#			radius=int
-		#			center=[float3 list] - point location of circle center
-		#			mode=int - 0 -no subdivisions, 1 -subdivide tris, 2 -subdivide quads
-		#ex. self.createCircle(axis='x', numPoints=20, radius=8, mode='tri')
+		'''
+		args:
+			axis='string' - 'x','y','z' 
+			numPoints=int - number of outer points
+			radius=int
+			center=[float3 list] - point location of circle center
+			mode=int - 0 -no subdivisions, 1 -subdivide tris, 2 -subdivide quads
+		ex. self.createCircle(axis='x', numPoints=20, radius=8, mode='tri')
+		'''
 		import math
 
 		degree = 360/float(numPoints)
@@ -290,11 +376,13 @@ class Init(Slot):
 	@staticmethod
 	def getAttributesMEL(node, exclude=None):
 		'''
-		returns history node attributes:values using the transform node. 
-		args:	node=transform node
-				exclude='string or unicode list' - attributes to exclude from the returned dictionay
+		get history node attributes:values using the transform node. 
+		args:
+			node=transform node
+			exclude='string or unicode list' - attributes to exclude from the returned dictionay
 
-		returns:	dictionary {'string attribute': current value}
+		returns:
+			dictionary {'string attribute': current value}
 		'''
 		#get shape node from transform:
 		shapes = pm.listRelatives(node, children=1, shapes=1) #returns list ie. [nt.Mesh(u'pConeShape1')]
@@ -310,8 +398,9 @@ class Init(Slot):
 	def setAttributesMEL(node, attributes):
 		'''
 		sets given attributes for the history node using the transform node.
-		args:	node=transform node
-				attributes=dictionary {'string attribute': value} - attributes and their correponding value to set
+		args:
+			node=transform node
+			attributes=dictionary {'string attribute': value} - attributes and their correponding value to set
 		'''
 		#get shape node from transform:
 		shapes = pm.listRelatives(node, children=1, shapes=1) #returns list ie. [nt.Mesh(u'pConeShape1')]
@@ -325,9 +414,12 @@ class Init(Slot):
 
 	@staticmethod
 	def setAttributesOnSelected(attribute=None, value=None):
-		#args: obj='string' - attribute to modify
-		#			value=int - new attribute value
-		#ex. self.setAttributesOnSelected (attribute=".smoothLevel", value=1)
+		'''
+		args:
+			obj='string' - attribute to modify
+			value=int - new attribute value
+		ex. self.setAttributesOnSelected (attribute=".smoothLevel", value=1)
+		'''
 		selection = pm.ls (selection=1, objectsOnly=1)
 		if selection:
 			for obj in selection:
@@ -345,37 +437,41 @@ class Init(Slot):
 	#to use main progressBar: name=string $gMainProgressBar
 	@staticmethod
 	def mainProgressBar (size, name="tk_progressBar", stepAmount=1):
-		#args: size=int - total amount
-	  #			name='string' - name of progress bar created
-	  #			stepAmount=int - increment amount
-	  status = "processing: "+str(size)+"."
-	  edit=0
-	  if pm.progressBar (name, exists=1):
-	  	edit=1
-	  pm.progressBar (name, edit=edit,
-	              beginProgress=1,
-	              isInterruptable=True,
-	              status=status,
-	              maxValue=size,
-	              step=stepAmount)
+		'''
+		args:
+			size=int - total amount
+			name='string' - name of progress bar created
+	  		stepAmount=int - increment amount
+	  	'''
+		status = "processing: "+str(size)+"."
+		edit=0
+		if pm.progressBar (name, exists=1):
+			edit=1
+		pm.progressBar (name, edit=edit,
+						beginProgress=1,
+						isInterruptable=True,
+						status=status,
+						maxValue=size,
+						step=stepAmount)
 
-	#add esc key pressed return False
+		#add esc key pressed return False
 
-	# example use-case:
-	# mainProgressBar (len(edges), progressCount)
-	# 	pm.progressBar ("tk_progressBar", edit=1, step=1)
-	# 	if pm.progressBar ("tk_progressBar", query=1, isCancelled=1):
-	# 		break
-	# pm.progressBar ("tk_progressBar", edit=1, endProgress=1)
+		# example use-case:
+		# mainProgressBar (len(edges), progressCount)
+		# 	pm.progressBar ("tk_progressBar", edit=1, step=1)
+		# 	if pm.progressBar ("tk_progressBar", query=1, isCancelled=1):
+		# 		break
+		# pm.progressBar ("tk_progressBar", edit=1, endProgress=1)
 
 
 	@staticmethod
 	def viewPortMessage(message='', statusMessage='', assistMessage='', position='topCenter'):
 		'''
-		args: 	message='string' - The message to be displayed, (accepts html formatting). General message, inherited by -amg/assistMessage and -smg/statusMessage.
-				statusMessage='string' - The status info message to be displayed (accepts html formatting).
-				assistMessage='string' - The user assistance message to be displayed, (accepts html formatting).
-				position='string' - position on screen. possible values are: topCenter","topRight","midLeft","midCenter","midCenterTop","midCenterBot","midRight","botLeft","botCenter","botRight"
+		args:
+			message='string' - The message to be displayed, (accepts html formatting). General message, inherited by -amg/assistMessage and -smg/statusMessage.
+			statusMessage='string' - The status info message to be displayed (accepts html formatting).
+			assistMessage='string' - The user assistance message to be displayed, (accepts html formatting).
+			position='string' - position on screen. possible values are: topCenter","topRight","midLeft","midCenter","midCenterTop","midCenterBot","midRight","botLeft","botCenter","botRight"
 		ex. self.viewPortMessage("shutting down:<hl>"+str(timer)+"</hl>")
 		'''
 		fontSize=10
@@ -492,9 +588,14 @@ class Init(Slot):
 
 
 	@staticmethod
-	def convertMelToPy(melScript): #convert mel to python
-		#args: melScript='string' - mel script to convert
-		#returns: converted script as a string
+	def convertMelToPy(melScript):
+		'''
+		convert mel to python
+		args:
+			melScript='string' - mel script to convert
+		returns:
+			converted script as a string
+		'''
 		from pymel.tools import mel2py
 		# convert to single line
 		translation = [mel2py.mel2pyStr(e+';') for e in melScript.split(';')] #get list of python commands from a mel string

@@ -3,6 +3,15 @@ except: pass
 
 
 
+
+
+print [i for i in rt.selection]
+
+#for i in rt.materials:
+#	print i
+
+
+
 obj = rt.selection[0]
 
 symmetry = obj.modifiers[rt.Symmetry]

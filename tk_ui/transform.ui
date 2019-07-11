@@ -189,7 +189,7 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>40</x>
+       <x>70</x>
        <y>50</y>
        <width>21</width>
        <height>19</height>
@@ -203,6 +203,7 @@
      </property>
      <property name="font">
       <font>
+       <pointsize>7</pointsize>
        <weight>75</weight>
        <bold>true</bold>
        <strikeout>true</strikeout>
@@ -212,7 +213,7 @@
       <string>Transform: -</string>
      </property>
      <property name="text">
-      <string>─</string>
+      <string>➖</string>
      </property>
      <property name="iconSize">
       <size>
@@ -404,6 +405,9 @@
      <property name="checkable">
       <bool>true</bool>
      </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
     </widget>
     <widget class="QPushButton" name="b001">
      <property name="enabled">
@@ -411,9 +415,9 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>60</x>
+       <x>90</x>
        <y>50</y>
-       <width>51</width>
+       <width>21</width>
        <height>19</height>
       </rect>
      </property>
@@ -423,11 +427,16 @@
        <height>19</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>7</pointsize>
+      </font>
+     </property>
      <property name="toolTip">
       <string>Transform: +</string>
      </property>
      <property name="text">
-      <string>Apply</string>
+      <string>➕</string>
      </property>
      <property name="iconSize">
       <size>
@@ -471,6 +480,12 @@
      </property>
      <property name="maximum">
       <double>999.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>45.000000000000000</double>
+     </property>
+     <property name="value">
+      <double>45.000000000000000</double>
      </property>
     </widget>
    </widget>

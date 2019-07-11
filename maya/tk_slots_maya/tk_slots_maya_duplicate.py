@@ -63,15 +63,20 @@ class Duplicate(Init):
 		#add support for averaging multiple components.
 		if self.ui.chk010.isChecked():
 			selection = pm.ls (selection=1, flatten=1)
-			try:
-				pivot = pm.xform (selection, query=1, translation=1, relative=1)
-			except:
+			if selection:
+				vertices = pm.filterExpand(selectionMask=31) #get selected vertices
+				if vertices is not None and vertices==1: #if a single vertex is selected, query that vertex position.
+					pivot = pm.xform (selection, query=1, translation=1, worldSpace=1)
+				else: #else, get the center of the objects bounding box.
+					bb = pm.xform (selection, query=1, boundingBox=1, worldSpace=1)
+					pivot = bb[0]+bb[3]/2, bb[1]+bb[4]/2, bb[2]+bb[5]/2 #get median of bounding box coordinates. from [min xyz, max xyz]
+			else:
 				print "# Warning: Nothing selected. #"
 				self.setButtons(self.ui, unchecked='chk010')
 				return
 			# radialPivot.extend ([pivot[0],pivot[1],pivot[2]])
-			radialPivot.extend (pivot) #extend the list contents
-			text = str(int(pivot[0]))+","+str(int(pivot[1]))+","+str(int(pivot[2])) #convert to int to
+			radialPivot.extend(pivot) #extend the list contents
+			text = str(int(pivot[0]))+","+str(int(pivot[1]))+","+str(int(pivot[2]))
 			self.ui.chk010.setText(text)
 		else:
 			del radialPivot[:]
@@ -172,53 +177,6 @@ class Duplicate(Init):
 			self.setButtons(self.ui, disable='b003')
 
 
-	@staticmethod
-	def getComponentPoint(component, alignToNormal=False):
-		'''
-		get the center point from the given component.
-		args: alignToNormal=bool - 
-
-		returns: [float list] - x, y, z  coordinate values.
-		'''
-		if ".vtx" in str(component):
-			x = pm.polyNormalPerVertex (component, query=1, x=1)
-			y = pm.polyNormalPerVertex (component, query=1, y=1)
-			z = pm.polyNormalPerVertex (component, query=1, z=1)
-			xyz = [sum(x) / float(len(x)), sum(y) / float(len(y)), sum(z) / float(len(z))] #get average
-		elif ".e" in str(component):
-			componentName = str(component).split(".")[0]
-			vertices = pm.polyInfo (component, edgeToVertex=1)[0]
-			vertices = vertices.split()
-			vertices = [componentName+".vtx["+vertices[2]+"]",componentName+".vtx["+vertices[3]+"]"]
-			x=[];y=[];z=[]
-			for vertex in vertices:
-				x_ = pm.polyNormalPerVertex (vertex, query=1, x=1)
-				x.append(sum(x_) / float(len(x_)))
-				y_ = pm.polyNormalPerVertex (vertex, query=1, y=1)
-				x.append(sum(y_) / float(len(y_)))
-				z_ = pm.polyNormalPerVertex (vertex, query=1, z=1)
-				x.append(sum(z_) / float(len(z_)))
-			xyz = [sum(x) / float(len(x)), sum(y) / float(len(y)), sum(z) / float(len(z))] #get average
-		else:# elif ".f" in str(component):
-			xyz = pm.polyInfo (component, faceNormals=1)
-			xyz = xyz[0].split()
-			xyz = [float(xyz[2]), float(xyz[3]), float(xyz[4])]
-
-		if alignToNormal: #normal constraint
-			normal = mel.eval("unit <<"+str(xyz[0])+", "+str(xyz[1])+", "+str(xyz[2])+">>;") #normalize value using MEL
-			# normal = [round(i-min(xyz)/(max(xyz)-min(xyz)),6) for i in xyz] #normalize and round value using python
-
-			constraint = pm.normalConstraint(component, object_,aimVector=normal,upVector=[0,1,0],worldUpVector=[0,1,0],worldUpType="vector") # "scene","object","objectrotation","vector","none"
-			pm.delete(constraint) #orient object_ then remove constraint.
-
-		vertexPoint = pm.xform (component, query=1, translation=1) #average vertex points on destination to get component center.
-		x = vertexPoint [0::3]
-		y = vertexPoint [1::3]
-		z = vertexPoint [2::3]
-
-		return [round(sum(x) / float(len(x)),4), round(sum(y) / float(len(y)),4), round(sum(z) / float(len(z)),4)]
-
-
 	global duplicateObjList
 	duplicateObjList=[]
 	def chk016(self, create=False):
@@ -255,7 +213,7 @@ class Duplicate(Init):
 			if translateToComponent:
 				if componentList:
 					for num, component in componentList.iteritems():
-						vertexPoint = getComponentPoint(component)
+						vertexPoint = self.getComponentPoint(component)
 
 						pm.xform (obj, rotation=[rotXYZ[0], rotXYZ[1], rotXYZ[2]])
 						pm.xform (obj, translation=[vertexPoint[0]+transXYZ[0], vertexPoint[1]+transXYZ[1], vertexPoint[2]+transXYZ[2]])

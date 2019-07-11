@@ -66,11 +66,8 @@ class HotBox(QtWidgets.QWidget):
 		'''
 		#args:
 			index=int - index for ui in stacked layout
-				*or string - name of ui in stacked layout
+						*or string - name of ui in stacked layout
 		'''
-		# import timeit
-		# t0=timeit.default_timer()
-
 		if type(index)!=int: #get index using name
 			index = self.sb.getUiIndex(index)
 
@@ -127,9 +124,6 @@ class HotBox(QtWidgets.QWidget):
 		try: self.ui.pin.released.connect(self.hide_)
 		except: pass
 
-		# t1=timeit.default_timer()
-		# print 'time:',t1-t0
-
 		
 
 
@@ -139,14 +133,16 @@ class HotBox(QtWidgets.QWidget):
 # ------------------------------------------------
 	def hoverEvent(self, event):
 		'''
-		args: [QEvent]
+		args:
+			event=QEvent
 		'''
 		print "hover"
 
 
 	def keyPressEvent(self, event):
 		'''
-		args: [QEvent]
+		args:
+			event=QEvent
 		'''
 		if event.key()==QtCore.Qt.Key_F12 and not event.isAutoRepeat(): #Key_Meta or Key_Menu =windows key
 			if all ([self.name!='init', self.name!='main', self.name!='viewport']):
@@ -155,7 +151,8 @@ class HotBox(QtWidgets.QWidget):
 			
 	def keyReleaseEvent(self, event):
 		'''
-		args: [QEvent]
+		args:
+			event=QEvent
 		'''
 		if event.key()==QtCore.Qt.Key_F12 and not event.isAutoRepeat():
 			self.hide_()
@@ -163,7 +160,8 @@ class HotBox(QtWidgets.QWidget):
 
 	def mousePressEvent(self, event):
 		'''
-		args: [QEvent]
+		args:
+			event=QEvent
 		'''
 		if any ([self.name=='main', self.name=='viewport', self.name=='init', self.name=='display']):
 			if event.button()==QtCore.Qt.LeftButton:
@@ -178,7 +176,8 @@ class HotBox(QtWidgets.QWidget):
 
 	def mouseDoubleClickEvent(self, event):
 		'''
-		args: [QEvent]
+		args:
+			event=QEvent
 		'''
 		if event.button()==QtCore.Qt.RightButton:
 			if any([self.name=='init', self.name=='main']):
@@ -204,15 +203,16 @@ class HotBox(QtWidgets.QWidget):
 
 	def mouseMoveEvent(self, event):
 		'''
-		args: [QEvent]
+		args:
+			event=QEvent
 		'''
 		if self.name=='main':
-			self.setVisibilityOnHover(event.pos(), 'r000-7')
-			self.setDown_(event.pos(), 'i003-25, v000-30')
+			self.setVisibilityOnHover(event.pos(), 'r000-8')
+			self.setDown_(event.pos(), 'i003-25, v000-32')
 
 		if self.name=='viewport':
-			self.setVisibilityOnHover(event.pos(), 'r000-7')
-			self.setDown_(event.pos(), 'v000-23')
+			self.setVisibilityOnHover(event.pos(), 'r000-8')
+			self.setDown_(event.pos(), 'v000-29')
 			self.showPopup_(event.pos(), 'cmb000-3')
 
 		elif self.name!='init' and event.buttons()==QtCore.Qt.LeftButton:
@@ -224,8 +224,10 @@ class HotBox(QtWidgets.QWidget):
 	def unpackNames(self, nameString):
 		'''
 		get a list of inidvidual names from a single name string.
-		args:	 nameString=string consisting of widget names separated by commas. ie. 'v000, b004-6'
-		returns: unpacked names. ie. ['v000','b004','b005','b006']
+		args:
+			nameString=string consisting of widget names separated by commas. ie. 'v000, b004-6'
+		returns:
+			unpacked names. ie. ['v000','b004','b005','b006']
 		'''
 		packed_names = [n.strip() for n in nameString.split(',') if '-' in n] #build list of all widgets passed in containing '-'
 
@@ -245,8 +247,10 @@ class HotBox(QtWidgets.QWidget):
 	def getUiObject(self, widgets):
 		'''
 		get ui objects from name strings.
-		args:	 widgets='string' - ui object names
-		returns: list of corresponding ui objects	
+		args:
+			widgets='string' - ui object names
+		returns:
+			list of corresponding ui objects	
 		'''
 		objects=[]
 		for name in self.unpackNames(widgets):
@@ -260,8 +264,9 @@ class HotBox(QtWidgets.QWidget):
 	def setVisibilityOnHover(self, mousePosition, widgets):
 		'''
 		show/hide widgets on mouseover event.
-		args:	mousePosition=QPoint
-				widgets=string consisting of widget names separated by commas. ie. 'r000, r001, v000-13, i020-23'
+		args:
+			mousePosition=QPoint
+			widgets=string consisting of widget names separated by commas. ie. 'r000, r001, v000-13, i020-23'
 		'''
 		for w in self.getUiObject(widgets):
 			if w.geometry().contains(mousePosition):
@@ -273,8 +278,9 @@ class HotBox(QtWidgets.QWidget):
 	def setDown_(self, mousePosition, widgets):
 		'''
 		set pushbutton down state.
-		args:	mousePosition=QPoint
-				widgets=string consisting of widget names separated by commas. ie. 'r000, r001, v000-13, i020-23'
+		args:
+			mousePosition=QPoint
+			widgets=string consisting of widget names separated by commas. ie. 'r000, r001, v000-13, i020-23'
 		'''
 		for w in self.getUiObject(widgets):
 			if w.rect().contains(w.mapFromGlobal(QtGui.QCursor.pos())):
@@ -286,8 +292,9 @@ class HotBox(QtWidgets.QWidget):
 	def showPopup_(self, mousePosition, widgets):
 		'''
 		set combobox popup state.
-		args:	mousePosition=QPoint
-				widgets=string 
+		args:
+			mousePosition=QPoint
+			widgets=string 
 		'''
 		for w in self.getUiObject(widgets):
 			if w.rect().contains(w.mapFromGlobal(QtGui.QCursor.pos())):
@@ -317,7 +324,8 @@ class HotBox(QtWidgets.QWidget):
 
 	def hideEvent(self, event):
 		'''
-		args: [QEvent]
+		args:
+			event=QEvent
 		'''
 		try: MaxPlus.CUI.EnableAccelerators()
 		except: pass
@@ -326,7 +334,8 @@ class HotBox(QtWidgets.QWidget):
 
 	def showEvent(self, event):
 		'''
-		args: [QEvent]
+		args:
+			event=QEvent
 		'''
 		try: MaxPlus.CUI.DisableAccelerators()
 		except: pass
@@ -334,7 +343,13 @@ class HotBox(QtWidgets.QWidget):
 
 
 	def moveWindow(self, window, x, y):
-		#args: [object], [int], [int]
+		'''
+		move window from it's current position to the mouse position.
+		args:
+			window=widget
+			x=int - x coordinate
+			y=int = y coordinate
+		'''
 		mPos = getMousePosition()
 		x = mPos['x']+x
 		y = mPos['y']+y
@@ -342,12 +357,18 @@ class HotBox(QtWidgets.QWidget):
 
 
 	def repeatLastCommand(self):
-		self.sb.prevCommand()() #execute command object
+		'''
+		repeat the last used command.
+		'''
+		self.sb.prevCommand()()
 		print self.sb.prevCommand(docString=1) #print command name string
 		
 
 	def repeatLastView(self):
-		self.sb.previousView()() #execute method
+		'''
+		show the previous view.
+		'''
+		self.sb.previousView()()
 		print self.sb.previousView(asList=1)
 
 
@@ -465,11 +486,6 @@ class Popup(QtWidgets.QWidget):
 		self.adjustSize()
 
 		self.setWindowFlags(QtCore.Qt.Popup | QtCore.Qt.Tool | QtCore.Qt.FramelessWindowHint) #tag this widget as a popup
-		
-		# point = ui.rect().bottomRight() #calculate the botoom right point from the parents rectangle
-		# global_point = ui.mapToGlobal(point) #map that point as a global position
-
-		# self.move(global_point - QtCore.QPoint(self.width(), 0)) #widget will be placed from its top-left corner, move it to the left based on the widgets width
 
 
 
@@ -505,6 +521,12 @@ def createInstance():
 	_GCProtector.widgets.append(hotBox)
 
 	return hotBox
+
+
+
+
+
+
 
 
 

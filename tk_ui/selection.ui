@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>279</width>
-    <height>246</height>
+    <width>264</width>
+    <height>216</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -606,7 +606,7 @@
      </property>
      <item>
       <property name="text">
-       <string>By Type:</string>
+       <string>By Type</string>
       </property>
      </item>
     </widget>
@@ -666,53 +666,6 @@
     <zorder>s002</zorder>
     <zorder>cmb002</zorder>
     <zorder>chk004</zorder>
-   </widget>
-   <widget class="QGroupBox" name="groupBox_3">
-    <property name="geometry">
-     <rect>
-      <x>5</x>
-      <y>190</y>
-      <width>121</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Constrain</string>
-    </property>
-    <widget class="QPushButton" name="b012">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>10</y>
-       <width>121</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="toolTip">
-      <string>Set logical selection contraints of components of the selected polygonal surfaces.</string>
-     </property>
-     <property name="text">
-      <string>Selection Contraints</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>18</width>
-       <height>18</height>
-      </size>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-     <property name="default">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-    </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_4">
     <property name="geometry">
@@ -938,7 +891,7 @@
     <property name="geometry">
      <rect>
       <x>135</x>
-      <y>190</y>
+      <y>150</y>
       <width>120</width>
       <height>31</height>
      </rect>
@@ -984,7 +937,7 @@
      </property>
      <item>
       <property name="text">
-       <string>Convert to</string>
+       <string>Convert To</string>
       </property>
      </item>
     </widget>
@@ -993,7 +946,7 @@
     <property name="geometry">
      <rect>
       <x>135</x>
-      <y>150</y>
+      <y>110</y>
       <width>121</width>
       <height>31</height>
      </rect>

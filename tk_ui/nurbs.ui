@@ -307,13 +307,13 @@
       <rect>
        <x>0</x>
        <y>10</y>
-       <width>101</width>
+       <width>116</width>
        <height>19</height>
       </rect>
      </property>
      <property name="minimumSize">
       <size>
-       <width>101</width>
+       <width>116</width>
        <height>19</height>
       </size>
      </property>
@@ -343,7 +343,7 @@
      </property>
      <item>
       <property name="text">
-       <string>Create: Curve</string>
+       <string>Create Curve</string>
       </property>
      </item>
     </widget>

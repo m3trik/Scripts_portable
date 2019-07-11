@@ -44,53 +44,91 @@ class Test001(Slot):
 # test.method()
 
 
-def getIntegers(string):
-	num='' #get trailing integers
-	for char in reversed(str(string)):
-		if str.isdigit(char):
-			num = num+char
+
+
+def getBorderEdgeFromFace(faces=None):
+	'''
+	args:
+		faces='string'/unicode or list of faces. ie. 'poly.f[696]' or 'polyShape.f[696]'
+	returns:
+		list of border edges.
+	ie. getBorderEdgeFromFace(['poly.f[696]', 'poly.f[705:708]'])
+	'''
+	if not faces: #if no faces passed in as arg, get current face selection
+		faces = [str(f) for f in pm.filterExpand(selectionMask=34)]
+
+	edges = [str(i).replace('Shape.', '.', -1).split('|')[-1] for i in pm.ls(pm.polyListComponentConversion(faces, ff=1, te=1), flatten=1)] #get edges from the faces
+
+	borderEdges=[]
+	for edge in edges:
+		edgeFaces = [str(i).replace('Shape.', '.', -1).split('|')[-1] for i in pm.ls(pm.polyListComponentConversion(edge, fe=1, tf=1), flatten=1)] #get faces that share the edge.
+
+		if len(edgeFaces)<2: #if the edge has only one shared face, it is a border edge.
+			borderEdges.append(edge)
 		else:
-			return num[::-1] #reverse the string
+			for f in edgeFaces:
+				if f not in faces: #else if the edge's shared face is not part of the selected faces, it is a border edge.
+					borderEdges.append(edge)
+					break
+
+	return borderEdges
 
 
-find = '*1|*2'#str(self.ui.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
-to = '1'#str(self.ui.t001.text())
 
-if pm.ls(selection=1): #if selection; operate on only the selected objects.
-	lists = [pm.ls(f, sl=1) for f in find.split('|')] #objects in current selection that match criteria
-else:
-	lists = [pm.ls(f) for f in find.split('|')] # objects = pm.ls(find) #Stores a list of all objects containing 'find'
-objects = set([i for sublist in lists for i in sublist]) #flatten and remove any duplicates.
 
-for obj in objects:
-	for f in  [f for f in find.split('|') if f.strip('*') in obj]: #get the objects that contain the chars in find.split('|')
-		relatives = pm.listRelatives(obj, parent=1) #Get a list of it's direct parent
-		if 'group*' in relatives: #If that parent starts with group, it came in root level and is pasted in a group, so ungroup it
-			relatives[0].ungroup()
+pm.select(getBorderEdgeFromFace())
 
-		#find modifiers
-		if to.startswith('*') and to.endswith('*'): #replace chars
-			newName = obj.name.replace(f, to)
 
-		elif to.startswith('*'): #replace suffix
-			newName = obj.name+to
 
-		elif to.endswith('*'): #replace prefix
-			newName = obj.name.replace(f, to, 1) #1=replace only the first occurance
 
-		elif to.startswith('**'): #replace suffix and move any trailing integers
-			num = self.getTrailingIntegers(obj.name)
-			stripped = obj.name.rstrip('0123456789').rstrip(f)
-			newName = stripped+num+to
 
-		else: #replace whole name
-			newName = to
+# def getIntegers(string):
+# 	num='' #get trailing integers
+# 	for char in reversed(str(string)):
+# 		if str.isdigit(char):
+# 			num = num+char
+# 		else:
+# 			return num[::-1] #reverse the string
 
-		newName = newName.replace('*', '')
-		while pm.objExists(newName):
-			newName = moveIntegers(newName+str(1))
-		name = pm.rename(obj, newName) #Rename the object with the new name
-		break
+
+# find = '*1|*2'#str(self.ui.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
+# to = '1'#str(self.ui.t001.text())
+
+# if pm.ls(selection=1): #if selection; operate on only the selected objects.
+# 	lists = [pm.ls(f, sl=1) for f in find.split('|')] #objects in current selection that match criteria
+# else:
+# 	lists = [pm.ls(f) for f in find.split('|')] # objects = pm.ls(find) #Stores a list of all objects containing 'find'
+# objects = set([i for sublist in lists for i in sublist]) #flatten and remove any duplicates.
+
+# for obj in objects:
+# 	for f in  [f for f in find.split('|') if f.strip('*') in obj]: #get the objects that contain the chars in find.split('|')
+# 		relatives = pm.listRelatives(obj, parent=1) #Get a list of it's direct parent
+# 		if 'group*' in relatives: #If that parent starts with group, it came in root level and is pasted in a group, so ungroup it
+# 			relatives[0].ungroup()
+
+# 		#find modifiers
+# 		if to.startswith('*') and to.endswith('*'): #replace chars
+# 			newName = obj.name.replace(f, to)
+
+# 		elif to.startswith('*'): #replace suffix
+# 			newName = obj.name+to
+
+# 		elif to.endswith('*'): #replace prefix
+# 			newName = obj.name.replace(f, to, 1) #1=replace only the first occurance
+
+# 		elif to.startswith('**'): #replace suffix and move any trailing integers
+# 			num = self.getTrailingIntegers(obj.name)
+# 			stripped = obj.name.rstrip('0123456789').rstrip(f)
+# 			newName = stripped+num+to
+
+# 		else: #replace whole name
+# 			newName = to
+
+# 		newName = newName.replace('*', '')
+# 		while pm.objExists(newName):
+# 			newName = moveIntegers(newName+str(1))
+# 		name = pm.rename(obj, newName) #Rename the object with the new name
+#		break
 
 
 

@@ -142,12 +142,12 @@ class Selection(Init):
 
 	def cmb003(self):
 		'''
-		Convert Selection to
+		Convert To
 		'''
 		cmb = self.ui.cmb003
 
 		list_ = ['Vertex', 'Edge', 'Border', 'Face', 'Element']
-		contents = self.comboBox (cmb, list_, 'Convert to:')
+		contents = self.comboBox (cmb, list_, 'Convert To')
 		
 		index = cmb.currentIndex()
 		if index!=0:
@@ -311,9 +311,9 @@ class Selection(Init):
 
 	def b012(self):
 		'''
-		Selection Constraints
+		
 		'''
-		maxEval('PolygonSelectionConstraints;')
+		pass
 
 
 	def b013(self):

@@ -97,54 +97,87 @@ class Selection(Init):
 		'''
 		cmb = self.ui.cmb001
 		
-		files = ['']
+		files = ['Selection Constraints']
 		contents = self.comboBox(cmb, files, '::')
 
 		index = cmb.currentIndex()
 		if index!=0:
-			if index==contents.index(''):
-				mel.eval('')
+			if index==contents.index('Selection Constraints'):
+				mel.eval('PolygonSelectionConstraints;')
 			cmb.setCurrentIndex(0)
 
 
 	def cmb002(self):
 		'''
-		Select All Of Type
+		Select by Type
 		'''
 		cmb = self.ui.cmb002	
 
-		list_ = []
-		contents = self.comboBox (cmb, list_, "")
+		list_ = ['Geometry']
+		contents = self.comboBox(cmb, list_, 'By Type')
 
 		index = cmb.currentIndex()
 		if index!=0:
 			cmb.setCurrentIndex(0)
 		
-		#Select all Geometry
-		geometry = pm.ls(geometry=True)
-		transforms = pm.listRelatives(geometry, p=True, path=True)
-		pm.select(transforms)
+		if index==contents.index('Geometry'): #Select all Geometry
+			geometry = pm.ls(geometry=True)
+			type_ = pm.listRelatives(geometry, p=True, path=True)
+		pm.select(type_)
 
 
 	def cmb003(self):
 		'''
-		Convert Selection to
+		Convert To
 		'''
 		cmb = self.ui.cmb003
 
-		list_ = ['Verts', 'Edge', 'Face', 'Ring']
-		contents = self.comboBox (cmb, list_, 'Convert Selection to')
+		list_ = ['Verts', 'Vertex Faces', 'Vertex Perimeter', 'Edges', 'Edge Loop', 'Edge Ring', 'Contained Edges', 'Edge Perimeter', 'Border Edges', 'Faces', 'Face Path', 'Contained Faces', 'Face Perimeter', 'UV\'s', 'UV Shell', 'UV Shell Border', 'UV Perimeter', 'UV Edge Loop', 'Shell', 'Shell Border'] 
+
+		contents = self.comboBox (cmb, list_, 'Convert To')
 
 		index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index('Verts'): #Convert Selection To Vertices
 				mel.eval('PolySelectConvert 3;')
+			if index==contents.index('Vertex Faces'): #
+				mel.eval('PolySelectConvert 5;')
+			if index==contents.index('Vertex Perimeter'): #
+				mel.eval('ConvertSelectionToVertexPerimeter;')
 			if index==contents.index('Edges'): #Convert Selection To Edges
 				mel.eval('PolySelectConvert 2;')
+			if index==contents.index('Edge Loop'): #
+				mel.eval('polySelectSp -loop;')
+			if index==contents.index('Edge Ring'): #Convert Selection To Edge Ring
+				mel.eval('SelectEdgeRingSp;')
+			if index==contents.index('Contained Edges'): #
+				mel.eval('PolySelectConvert 20;')
+			if index==contents.index('Edge Perimeter'): #
+				mel.eval('ConvertSelectionToEdgePerimeter;')
+			if index==contents.index('Border Edges'): #
+				pm.select(self.getBorderEdgeFromFace())
 			if index==contents.index('Faces'): #Convert Selection To Faces
 				mel.eval('PolySelectConvert 1;')
-			if index==contents.index('Ring'): #Convert Selection To Edge Ring
-				mel.eval('SelectEdgeRingSp;')
+			if index==contents.index('Face Path'): #
+				mel.eval('polySelectEdges edgeRing;')
+			if index==contents.index('Contained Faces'): #
+				mel.eval('PolySelectConvert 10;')
+			if index==contents.index('Face Perimeter'): #
+				mel.eval('polySelectFacePerimeter;')
+			if index==contents.index('UV\'s'): #
+				mel.eval('PolySelectConvert 4;')
+			if index==contents.index('UV Shell'): #
+				mel.eval('polySelectBorderShell 0;')
+			if index==contents.index('UV Shell Border'): #
+				mel.eval('polySelectBorderShell 1;')
+			if index==contents.index('UV Perimeter'): #
+				mel.eval('ConvertSelectionToUVPerimeter;')
+			if index==contents.index('UV Edge Loop'): #
+				mel.eval('polySelectEdges edgeUVLoopOrBorder;')
+			if index==contents.index('Shell'): #
+				mel.eval('polyConvertToShell;')
+			if index==contents.index('Shell Border'): #
+				mel.eval('polyConvertToShellBorder;')
 			cmb.setCurrentIndex(0)
 
 
@@ -269,9 +302,9 @@ class Selection(Init):
 
 	def b012(self):
 		'''
-		Selection Constraints
+		
 		'''
-		mel.eval('PolygonSelectionConstraints;')
+		pass
 
 
 	def b013(self):
