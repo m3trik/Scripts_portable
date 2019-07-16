@@ -590,8 +590,11 @@
        <height>19</height>
       </size>
      </property>
+     <property name="maxVisibleItems">
+      <number>50</number>
+     </property>
      <property name="sizeAdjustPolicy">
-      <enum>QComboBox::AdjustToContents</enum>
+      <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
      </property>
      <property name="frame">
       <bool>false</bool>

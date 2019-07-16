@@ -109,52 +109,6 @@
      <string>Ui Color</string>
     </property>
    </widget>
-   <widget class="QGroupBox" name="groupBox_4">
-    <property name="geometry">
-     <rect>
-      <x>116</x>
-      <y>24</y>
-      <width>97</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Menu Sets</string>
-    </property>
-    <widget class="QComboBox" name="cmb000">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>12</y>
-       <width>121</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>121</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>121</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="sizeAdjustPolicy">
-      <enum>QComboBox::AdjustToContents</enum>
-     </property>
-     <property name="frame">
-      <bool>false</bool>
-     </property>
-     <item>
-      <property name="text">
-       <string>Modeling</string>
-      </property>
-     </item>
-    </widget>
-   </widget>
    <widget class="QFrame" name="menubar">
     <property name="geometry">
      <rect>
@@ -277,7 +231,7 @@
     <property name="geometry">
      <rect>
       <x>116</x>
-      <y>60</y>
+      <y>24</y>
       <width>97</width>
       <height>49</height>
      </rect>

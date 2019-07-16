@@ -10,12 +10,12 @@ from PySide2 import QtGui
 
 
 
-class Texturing(Init):
+class Materials(Init):
 	def __init__(self, *args, **kwargs):
-		super(Texturing, self).__init__(*args, **kwargs)
+		super(Materials, self).__init__(*args, **kwargs)
 
 		
-		self.ui = self.sb.getUi('texturing')
+		self.ui = self.sb.getUi('materials')
 
 		self.ui.t000.hide()
 		

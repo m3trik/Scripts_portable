@@ -313,12 +313,28 @@ class Slot(object):
 
 
 
-	#init signals, button states etc. for a stacked widget class
-	# def initWidgets(self):
-	# 	for comboBox in self.getObject(self, 'cmb000-50', False):
-	# 		try: comboBox()
-	# 		except: pass
-
+	def resizeAndCenterWidget(self, widget):
+		'''
+		adjust the given widget to fix contents and re-center.
+		args:
+			widget=<ui object> - 
+		'''
+		# x = widget.parentWidget().rect().center().x()
+		# x1 = widget.rect().center().x()
+		widget.adjustSize()
+		# x2 = widget.rect().center().x()
+		# print x1, x2
+		# size1 = widget.frameGeometry().width()
+		# x = abs(x1-x2)/2
+		# print x
+		# widget.move(widget.x()-x, widget.y())
+		# size2 = widget.frameGeometry().width()
+		# print 'size', size1, size2
+		# difference = abs(size1-size2)/2
+		# print difference, widget.x()
+		# widget.move(widget.x()-difference, widget.y())
+		# widget.resize.width(size2+difference)
+		# widget.setText(str(widget.text())+' '*difference)
 
 
 
@@ -326,7 +342,7 @@ class Slot(object):
 		ui = self.sb.getUi()
 
 		if self.hotBox.name=='main':
-			self.setButtons(ui, invisible='v025-28')
+			self.setButtons(ui, invisible='v024-29') #resizing is currently being handled in tk_slots_app_init \ init().
 
 		# if self.hotBox.name=='viewport':
 		# 	buttons = self.getObject(ui, 'cmb000-3', showError_=False)

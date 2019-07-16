@@ -113,17 +113,67 @@ class Selection(Init):
 		'''
 		cmb = self.ui.cmb002	
 
-		list_ = ['Geometry']
+		list_ = ['IK Handles','Joints','Clusters','Lattices','Sculpt Objects','Wires','Transforms','Geometry','NURBS Curves','NURBS Surfaces','Polygon Geometry','Cameras','Lights','Image Planes','Assets','Fluids','Particles','Rigid Bodies','Rigid Constraints','Brushes','Strokes','Dynamic Constraints','Follicles','nCloths','nParticles','nRigids']
 		contents = self.comboBox(cmb, list_, 'By Type')
 
 		index = cmb.currentIndex()
 		if index!=0:
+			if index==contents.index('IK Handles'): #
+				type_ = pm.ls(type=['ikHandle', 'hikEffector'])
+			if index==contents.index('Joints'): #
+				type_ = pm.ls(type='joint')
+			if index==contents.index('Clusters'): #
+				type_ = pm.listTransforms(type='clusterHandle')
+			if index==contents.index('Lattices'): #
+				type_ = pm.listTransforms(type='lattice')
+			if index==contents.index('Sculpt Objects'): #
+				type_ = pm.listTransforms(type=['implicitSphere', 'sculpt'])
+			if index==contents.index('Wires'): #
+				type_ = pm.ls(type='wire')
+			if index==contents.index('Transforms'): #
+				type_ = pm.ls(type='transform')
+			if index==contents.index('Geometry'): #Select all Geometry
+				geometry = pm.ls(geometry=True)
+				type_ = pm.listRelatives(geometry, p=True, path=True) #pm.listTransforms(type='nRigid')
+			if index==contents.index('NURBS Curves'): #
+				type_ = pm.listTransforms(type='nurbsCurve')
+			if index==contents.index('NURBS Surfaces'): #
+				type_ = pm.ls(type='nurbsSurface')
+			if index==contents.index('Polygon Geometry'): #
+				type_ = pm.listTransforms(type='mesh')
+			if index==contents.index('Cameras'): #
+				type_ = pm.listTransforms(cameras=1)
+			if index==contents.index('Lights'): #
+				type_ = pm.listTransforms(lights=1)
+			if index==contents.index('Image Planes'): #
+				type_ = pm.ls(type='imagePlane')
+			if index==contents.index('Assets'): #
+				type_ = pm.ls(type=['container', 'dagContainer'])
+			if index==contents.index('Fluids'): #
+				type_ = pm.listTransforms(type='fluidShape')
+			if index==contents.index('Particles'): #
+				type_ = pm.listTransforms(type='particle')
+			if index==contents.index('Rigid Bodies'): #
+				type_ = pm.listTransforms(type='rigidBody')
+			if index==contents.index('Rigid Constraints'): #
+				type_ = pm.ls(type='rigidConstraint')
+			if index==contents.index('Brushes'): #
+				type_ = pm.ls(type='brush')
+			if index==contents.index('Strokes'): #
+				type_ = pm.listTransforms(type='stroke')
+			if index==contents.index('Dynamic Constraints'): #
+				type_ = pm.listTransforms(type='dynamicConstraint')
+			if index==contents.index('Follicles'): #
+				type_ = pm.listTransforms(type='follicle')
+			if index==contents.index('nCloths'): #
+				type_ = pm.listTransforms(type='nCloth')
+			if index==contents.index('nParticles'): #
+				type_ = pm.listTransforms(type='nParticle')
+			if index==contents.index('nRigids'): #
+				type_ = pm.listTransforms(type='nRigid')
+
+			pm.select(type_)
 			cmb.setCurrentIndex(0)
-		
-		if index==contents.index('Geometry'): #Select all Geometry
-			geometry = pm.ls(geometry=True)
-			type_ = pm.listRelatives(geometry, p=True, path=True)
-		pm.select(type_)
 
 
 	def cmb003(self):

@@ -26,7 +26,19 @@ class Signal(QtCore.QObject):
 
 
 	def buildConnectionDict(self, name=None):
+		'''
+		args:
+			name='string' - name of the ui to construct connections for.
 
+		button prefix types:
+			i = pushbutton - index - on mouse release set stacked ui to given index.
+			b = pushbutton - standard button with an on clicked event.
+			v = pushbutton - triggers on mouse release
+			s = spinbox
+			chk = checkbox
+			cmb = combobox
+			t = textfield
+		'''
 		if name: #build connections for the specified name
 			self.name = name
 		else: #get current name
@@ -65,7 +77,7 @@ class Signal(QtCore.QObject):
 						method = lambda i=index: self.hotBox.layoutStack(i) #lambda function to call index. ie. hotBox.layoutStack(6)
 					else:
 						m = getattr(class_, buttonString) #use signal 'buttonString' (ie. b006) to get method/slot of the same name in current class.
-						method = [m, lambda method=m: self.onPressedEvent(method)] #add onPressedEvent. pass multiple slots as list.
+						method = [m, lambda method=m: self.onClickedEvent(method)] #add onClickedEvent. pass multiple slots as list.
 					
 					#add docString info
 					try:
@@ -155,7 +167,7 @@ class Signal(QtCore.QObject):
 
 
 
-	def onPressedEvent(self, method):
+	def onClickedEvent(self, method):
 		#args: [method object]
 		#add method and docstring to prevCommand list
 		if callable(method) and method.__name__.startswith('b'): #ie. 'b012'
@@ -164,7 +176,7 @@ class Signal(QtCore.QObject):
 				# print docString, method.__name__, self.sb.prevCommand(as_list=1)
 				self.sb.prevCommand(as_list=1).append([method, docString]) #build array that stores the command method object and the corresponding docString (ie. 'Multi-cut tool')
 			except Exception as error:
-				print 'tk_signals:147:', error
+				print 'tk_signals: line 167:', error
 		#add previousView to list
 		if callable(method) and method.__name__.startswith('v'): #ie. 'v012'
 			self.sb.previousView(as_list=1).append(method)

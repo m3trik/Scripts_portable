@@ -23,7 +23,7 @@ class Normals(Init):
 		'''
 		Editors
 		'''
-		cmb = self.ui.cmb00
+		cmb = self.ui.cmb000
 		
 		files = ['']
 		contents = self.comboBox (cmb, files, '::')

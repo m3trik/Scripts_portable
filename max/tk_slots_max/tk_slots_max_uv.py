@@ -29,7 +29,7 @@ class Uv(Init):
 
 		index = cmb.currentIndex()
 		if index !=0: #hide hotbox then perform operation
-			self.hotBox.hbHide()
+			self.hotBox.hide_()
 			if index == 1: #UV Editor
 				maxEval('TextureViewWindow;') 
 			if index == 2: #UV Set Editor

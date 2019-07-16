@@ -17,32 +17,6 @@ class Polygons(Init):
 		self.ui = self.sb.getUi('polygons')
 		self.ui.progressBar.hide()
 
-		
-
-	def chk002(self):
-		'''
-		Un-Crease
-		'''
-		if self.ui.chk002.isChecked():
-			self.ui.s003.setValue(0) #crease value
-			self.ui.s004.setValue(180) #normal angle
-			self.setButtons(self.ui, unchecked='chk003')
-		else:
-			self.ui.s003.setValue(7.5) #crease value
-			self.ui.s004.setValue(30) #normal angle
-
-
-	def chk003(self):
-		'''
-		Crease: Max
-		'''
-		if self.ui.chk003.isChecked():
-			self.ui.s003.setValue(10) #crease value
-			self.ui.s004.setValue(30) #normal angle
-			self.setButtons(self.ui, unchecked='chk002')
-		else:
-			self.ui.s003.setValue(7.5) #crease value
-			self.ui.s004.setValue(60) #normal angle
 
 
 	def chk006(self):
@@ -74,16 +48,6 @@ class Polygons(Init):
 		Tris
 		'''
 		self.setButtons(self.ui, unchecked='chk008,chk009')
-
-
-	def chk011(self):
-		'''
-		Crease: Auto
-		'''
-		if self.ui.chk011.isChecked():
-			self.setButtons(self.ui, enabled='s005,s006')
-		else:
-			self.setButtons(self.ui, disabled='s005,s006')
 
 
 	def cmb000(self):
@@ -639,38 +603,9 @@ class Polygons(Init):
 
 	def b055(self):
 		'''
-		Crease
+		
 		'''
-		creaseAmount = float(self.ui.s003.value())
-		normalAngle = int(self.ui.s004.value()) 
-
-		if self.ui.chk011.isChecked(): #crease: Auto
-			angleLow = int(self.ui.s005.value()) 
-			angleHigh = int(self.ui.s006.value()) 
-
-			mel.eval("PolySelectConvert 2;") #convert selection to edges
-			contraint = pm.polySelectConstraint( mode=3, type=0x8000, angle=True, anglebound=(angleLow, angleHigh) ) # to get edges with angle between two degrees. mode=3 (All and Next) type=0x8000 (edge). 
-
-		operation = 0 #Crease selected components
-		pm.polySoftEdge (angle=0, constructionHistory=0) #Harden edge normal
-		if self.ui.chk002.isChecked():
-			objectMode = pm.selectMode (query=True, object=True)
-			if objectMode: #if in object mode,
-				operation = 2 #2-Remove all crease values from mesh
-			else:
-				operation = 1 #1-Remove crease from sel components
-				pm.polySoftEdge (angle=180, constructionHistory=0) #soften edge normal
-
-		if self.ui.chk004.isChecked(): #crease vertex point
-			pm.polyCrease (value=creaseAmount, vertexValue=creaseAmount, createHistory=True, operation=operation)
-		else:
-			pm.polyCrease (value=creaseAmount, createHistory=True, operation=operation) #PolyCreaseTool;
-
-		if self.ui.chk005.isChecked(): #adjust normal angle
-			pm.polySoftEdge (angle=normalAngle)
-
-		if self.ui.chk011.isChecked(): #crease: Auto
-			pm.polySelectConstraint( angle=False ) # turn off angle constraint
+		pass
 
 
 	def b056(self):
@@ -751,26 +686,7 @@ class Polygons(Init):
 		pm.undoInfo (closeChunk=True)
 
 
-	def b058(self):
-		'''
-		
-		'''
-		pass
 
-
-	def b059(self):
-		'''
-		Crease Editor
-		'''
-		from maya.app.general import creaseSetEditor
-		creaseSetEditor.showCreaseSetEditor()
-
-
-	def b060(self):
-		'''
-		
-		'''
-		pass
 
 
 

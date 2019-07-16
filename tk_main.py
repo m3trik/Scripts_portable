@@ -207,8 +207,9 @@ class HotBox(QtWidgets.QWidget):
 			event=QEvent
 		'''
 		if self.name=='main':
-			self.setVisibilityOnHover(event.pos(), 'r000-8')
-			self.setDown_(event.pos(), 'i003-25, v000-32')
+			self.setVisibilityOnHover(event.pos(), 'r000-9')
+			self.setDown_(event.pos(), 'i003-29, v000-32')
+			self.showPopup_(event.pos(), 'cmb000-2')
 
 		if self.name=='viewport':
 			self.setVisibilityOnHover(event.pos(), 'r000-8')
@@ -223,7 +224,7 @@ class HotBox(QtWidgets.QWidget):
 
 	def unpackNames(self, nameString):
 		'''
-		get a list of inidvidual names from a single name string.
+		get a list of individual names from a single name string.
 		args:
 			nameString=string consisting of widget names separated by commas. ie. 'v000, b004-6'
 		returns:

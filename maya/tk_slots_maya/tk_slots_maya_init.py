@@ -81,22 +81,17 @@ class Init(Slot):
 				t.insertPlainText(str(value))
 
 
-		mainUi = self.sb.getUi('main')
-		try:
-			mainUi.v025.setText(self.sb.prevCommand(docString=1, as_list=1)[-1]) #prevCommand docString
-			mainUi.v025.adjustSize()
-			mainUi.v025.show()
-			mainUi.v026.setText(self.sb.prevCommand(docString=1, as_list=1)[-2]) #prevCommand docString
-			mainUi.v026.adjustSize()
-			mainUi.v026.show()
-			mainUi.v027.setText(self.sb.prevCommand(docString=1, as_list=1)[-3]) #prevCommand docString
-			mainUi.v027.adjustSize()
-			mainUi.v027.show()
-			mainUi.v028.setText(self.sb.prevCommand(docString=1, as_list=1)[-4]) #prevCommand docString
-			mainUi.v028.adjustSize()
-			mainUi.v028.show()
-		except:
-			pass
+		#construct buttons for any previous commands.
+		ui = self.sb.getUi('main')
+		for num, w in enumerate(self.getObject(ui, 'v024-29'), 1): #num starting from 1
+			try:
+				w.setText(self.sb.prevCommand(docString=1, as_list=1)[-num]) #prevCommand docString
+				self.resizeAndCenterWidget(w)
+				w.show()
+			except: pass
+
+
+	
 
 
 
