@@ -2,11 +2,11 @@
 ###### *PySide marking menu style layered ui and toolkit for maya and max.
 
 
-![*Example of camera navigation.](https://raw.githubusercontent.com/m3trik/tk_hotBox/master/docs/Screenshot-Camera_navigation.jpg)
+![alt text](https://raw.githubusercontent.com/m3trik/tk_hotBox/master/docs/Screenshot-Camera_navigation.jpg)
+*Example of camera navigation.
 
-
-![*Menu set.](https://raw.githubusercontent.com/m3trik/tk_hotBox/master/docs/Screenshot-Menu.jpg)
-
+![alt text](https://raw.githubusercontent.com/m3trik/tk_hotBox/master/docs/Screenshot-Menu.jpg)
+*Menu set.
 
 
 ## Design:
