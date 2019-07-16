@@ -5,6 +5,9 @@
 ![alt text](https://raw.githubusercontent.com/m3trik/tk_hotBox/master/docs/Screenshot-Camera_navigation.jpg)
 *Example of camera navigation.
 
+![alt text](https://raw.githubusercontent.com/m3trik/tk_hotBox/master/docs/Screenshot-Menu.jpg)
+*Menu set.
+
 
 ## Design:
 ######
