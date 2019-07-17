@@ -1,36 +1,39 @@
-from PySide2.QtWidgets  import QTextEdit
-from PySide2.QtGui      import QSyntaxHighlighter, QColor, QTextCharFormat#, QFont
-from PySide2.QtCore     import QRegExp
+from PySide2 import QtWidgets, QtGui, QtGui, QtCore
 
-from shiboken2          import wrapInstance
-from maya.OpenMayaUI    import MQtUtil 
+from shiboken2 import wrapInstance
+from maya.OpenMayaUI import MQtUtil 
+
+
+
 
 
 # dependancies: scriptEditorOutput.mel
-
-class SH(QSyntaxHighlighter):
+class SyntaxHighlighter(QtGui.QSyntaxHighlighter):
 	'''
-	Syntax Highlight class, used by all SK_*_Codes SHs
-	:param parent: parent's widget
+	args:
+		parent=parent's widget
 	'''
 	def __init__(self, parent):
-		QSyntaxHighlighter.__init__(self, parent) #inherit
-		self.parent = parent #define parent explicitly
-		
+		QtGui.QSyntaxHighlighter.__init__(self, parent) #inherit
+
+
+
 	def highlightBlock(self, text):
-		# Derived from Qt function, used to apply color-syntaxing to text
-		# :param text: text input
-		
-		rules = [(QColor( 90,  90,  90), r"^(//|#).+$"),         #grey 90, 90, 90
-				 (QColor(205, 200, 120), r"^(//|#) Warning.+$"), #yellow 205, 200, 120
-				 (QColor(165,  75,  75), r"^(//|#).+Error.+$"),  #red 165, 75, 75
-				 (QColor(115, 215, 150), r"^(//|#).+Result.+$")] #green 115, 215, 150
+		'''
+		apply color-syntaxing to text
+		args:
+			text=text input
+		'''
+		rules = [(QtGui.QColor( 90,  90,  90), r"^(//|#).+$"),         #grey 90, 90, 90
+				 (QtGui.QColor(205, 200, 120), r"^(//|#) Warning.+$"), #yellow 205, 200, 120
+				 (QtGui.QColor(165,  75,  75), r"^(//|#).+Error.+$"),  #red 165, 75, 75
+				 (QtGui.QColor(115, 215, 150), r"^(//|#).+Result.+$")] #green 115, 215, 150
 		# loop through rules
 		for color, pattern in rules:
-			keyword = QTextCharFormat()
+			keyword = QtGui.QTextCharFormat()
 			keyword.setForeground(color)
 			# get regexp pattern
-			expression = QRegExp(pattern)
+			expression = QtCore.QRegExp(pattern)
 			index = expression.indexIn(text)
 			# loop until all matches are done
 			while index >= 0:
@@ -41,20 +44,21 @@ class SH(QSyntaxHighlighter):
 		self.setCurrentBlockState(0)
 
 
+
 def wrap():
 	i=1
 	while i:
 		try:
-			se_edit = wrapInstance(long(MQtUtil.findControl('cmdScrollFieldReporter%i' %i)), QTextEdit)
+			se_edit = wrapInstance(long(MQtUtil.findControl('cmdScrollFieldReporter%i' %i)), QtWidgets.QTextEdit)
 			break
 		except TypeError:
 			i+=1
-	syntax_highlighter = SH(se_edit)
+	syntax_highlighter = SyntaxHighlighter(se_edit)
 
 	#untested.  send to $tk_cmdScrollFieldReporter explicitly. used in place of above code.
 	# cmdScrollFieldReporter = "$tk_cmdScrollFieldReporter"
-	# se_edit = wrapInstance(long(MQtUtil.findControl(cmdScrollFieldReporter)), QTextEdit)
-	# syntax_highlighter = SH(se_edit)
+	# se_edit = wrapInstance(long(MQtUtil.findControl(cmdScrollFieldReporter)), QtWidgets.QTextEdit)
+	# syntax_highlighter = SyntaxHighlighter(se_edit)
   
 
 

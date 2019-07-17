@@ -3,7 +3,7 @@
 //   RMB context menu
 
 
-global proc scriptEditorOutput()
+global proc tk_scriptEditorOutput()
     {
 
     formLayout -numberOfDivisions 100 -width 50 mainLayout;
@@ -151,7 +151,7 @@ global proc tk_initScriptEditorOutputWin()
     {
 
     string $workspaceName  = "scriptEditorOutputWorkspace";
-    string $uiScript       = "scriptEditorOutput()";
+    string $uiScript       = "tk_scriptEditorOutput()";
 
     if (`workspaceControl -exists $workspaceName`)
         deleteUI $workspaceName;
@@ -171,7 +171,7 @@ global proc tk_initScriptEditorOutputWin()
 
 
 // python version of tk_initScriptEditorOutputWin:
-// uiScript       = "$scriptEditorOutput()"
+// uiScript       = "$tk_scriptEditorOutput()"
 // workspaceName  = "scriptEditorOutputWorkspace"
 
 // if pm.workspaceControl (workspaceName, exists=1):
@@ -192,7 +192,7 @@ global proc tk_initScriptEditorOutputWin()
 
 
 
-// scriptEditorOutput();
+// tk_scriptEditorOutput();
 // tk_initScriptEditorOutputWin();
 
 

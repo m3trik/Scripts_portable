@@ -36,7 +36,7 @@ for path in paths:
 import commandPort #commandPort.py -opens ports 7001/7002 for external script editor
 
 
-mel.eval ('source "scriptEditorOutput.mel";')
+mel.eval ('source "tk_scriptEditorOutput.mel";')
 mel.eval ('evalDeferred -lowPriority ("tk_initScriptEditorOutputWin");')
 
 
