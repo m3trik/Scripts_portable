@@ -6,7 +6,7 @@ from shiboken2          import wrapInstance
 from maya.OpenMayaUI    import MQtUtil 
 
 
-# dependancies: tk_scriptEditorOutput.mel
+# dependancies: scriptEditorOutput.mel
 
 class SH(QSyntaxHighlighter):
 	'''

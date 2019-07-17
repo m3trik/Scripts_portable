@@ -105,7 +105,7 @@ proc finalSelection (string $namespace, float $rangeX, float $rangeY, float $ran
     }
   }
 
-global proc tk_selectPolyFaceIsland (float $rangeX, float $rangeY, float $rangeZ)
+global proc selectPolyFaceIsland (float $rangeX, float $rangeY, float $rangeZ)
   {
   $initialUserSelection = initialUserSelection();
   // print ($initialUserSelection[0]+"\n");
@@ -118,5 +118,5 @@ global proc tk_selectPolyFaceIsland (float $rangeX, float $rangeY, float $rangeZ
   }
 
 float $range = 0.5;
-tk_selectPolyFaceIsland($range, $range, $range);
-// tk_selectPolyFaceIsland (0.5, 0.5, 0.5);
+selectPolyFaceIsland($range, $range, $range);
+// selectPolyFaceIsland (0.5, 0.5, 0.5);
