@@ -54,9 +54,9 @@ dir_ = substring file 1 (findString file ("max")-2) --take substring from index 
 --append to system path:
 paths = #(
 		dir_,
-		dir_+"/tk_ui",
+		dir_+"/ui",
 		dir_+"/max",
-		dir_+"/max/tk_slots_max"
+		dir_+"/max/slots"
 		)
 
 
@@ -156,14 +156,14 @@ delayTimer.enabled = true
 -- #add absolute paths:
 -- # paths = [
 -- # r'%CLOUD%/____Graphics/__general/_portable/_scripts/__path',
--- # r'%CLOUD%/____Graphics/__general/_portable/_scripts/__path/tk_ui',
+-- # r'%CLOUD%/____Graphics/__general/_portable/_scripts/__path/ui',
 -- # r'%CLOUD%/____Graphics/__general/_portable/_scripts/__path/max',
--- # r'%CLOUD%/____Graphics/__general/_portable/_scripts/__path/max/tk_slots_max',
+-- # r'%CLOUD%/____Graphics/__general/_portable/_scripts/__path/max/slots',
 
 -- # r'%USERPROFILE%/Documents/_portable/_scripts/__path',
--- # r'%USERPROFILE%/Documents/_portable/_scripts/__path/tk_ui',
+-- # r'%USERPROFILE%/Documents/_portable/_scripts/__path/ui',
 -- # r'%USERPROFILE%/Documents/_portable/_scripts/__path/max',
--- # r'%USERPROFILE%/Documents/_portable/_scripts/__path/max/tk_slots_max'
+-- # r'%USERPROFILE%/Documents/_portable/_scripts/__path/max/slots'
 -- # ]
 
 -- # for path in paths:
