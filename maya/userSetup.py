@@ -22,9 +22,9 @@ if not dir_:
 #append to system path:
 paths = [
 	dir_,
-	dir_+"/tk_ui",
+	dir_+"/ui",
 	dir_+"/maya",
-	dir_+"/maya/tk_slots_maya"
+	dir_+"/maya/slots"
 	]
 
 for path in paths:
@@ -36,7 +36,7 @@ for path in paths:
 import commandPort #commandPort.py -opens ports 7001/7002 for external script editor
 
 
-mel.eval ('source "tk_scriptEditorOutput.mel";')
+mel.eval ('source "scriptEditorOutput.mel";')
 mel.eval ('evalDeferred -lowPriority ("tk_initScriptEditorOutputWin");')
 
 

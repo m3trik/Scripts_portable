@@ -11,7 +11,7 @@ import os.path
 
 
 #set path to the directory containing the ui files.
-path = os.path.join(os.path.dirname(__file__), 'tk_ui') #get absolute path from dir of this module + relative path to directory
+path = os.path.join(os.path.dirname(__file__), 'ui') #get absolute path from dir of this module + relative path to directory
 
 #build uiList
 uiList = [[file_.replace('.ui',''), QUiLoader().load(path+'/'+file_)] for file_ in os.listdir(path) if file_.endswith('.ui')] #constructs uiList from directory contents. ie. [['polygons', <polygons dynamic ui object>]]
