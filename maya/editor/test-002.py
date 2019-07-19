@@ -46,37 +46,39 @@ class Test001(Slot):
 
 
 
-def getBorderEdgeFromFace(faces=None):
-	'''
-	args:
-		faces='string'/unicode or list of faces. ie. 'poly.f[696]' or 'polyShape.f[696]'
-	returns:
-		list of border edges.
-	ie. getBorderEdgeFromFace(['poly.f[696]', 'poly.f[705:708]'])
-	'''
-	if not faces: #if no faces passed in as arg, get current face selection
-		faces = [str(f) for f in pm.filterExpand(selectionMask=34)]
-
-	edges = [str(i).replace('Shape.', '.', -1).split('|')[-1] for i in pm.ls(pm.polyListComponentConversion(faces, ff=1, te=1), flatten=1)] #get edges from the faces
-
-	borderEdges=[]
-	for edge in edges:
-		edgeFaces = [str(i).replace('Shape.', '.', -1).split('|')[-1] for i in pm.ls(pm.polyListComponentConversion(edge, fe=1, tf=1), flatten=1)] #get faces that share the edge.
-
-		if len(edgeFaces)<2: #if the edge has only one shared face, it is a border edge.
-			borderEdges.append(edge)
-		else:
-			for f in edgeFaces:
-				if f not in faces: #else if the edge's shared face is not part of the selected faces, it is a border edge.
-					borderEdges.append(edge)
-					break
-
-	return borderEdges
 
 
+# def getBorderEdgeFromFace(faces=None):
+# 	'''
+# 	args:
+# 		faces='string'/unicode or list of faces. ie. 'poly.f[696]' or 'polyShape.f[696]'
+# 	returns:
+# 		list of border edges.
+# 	ie. getBorderEdgeFromFace(['poly.f[696]', 'poly.f[705:708]'])
+# 	'''
+# 	if not faces: #if no faces passed in as arg, get current face selection
+# 		faces = [str(f) for f in pm.filterExpand(selectionMask=34)]
+
+# 	edges = [str(i).replace('Shape.', '.', -1).split('|')[-1] for i in pm.ls(pm.polyListComponentConversion(faces, ff=1, te=1), flatten=1)] #get edges from the faces
+
+# 	borderEdges=[]
+# 	for edge in edges:
+# 		edgeFaces = [str(i).replace('Shape.', '.', -1).split('|')[-1] for i in pm.ls(pm.polyListComponentConversion(edge, fe=1, tf=1), flatten=1)] #get faces that share the edge.
+
+# 		if len(edgeFaces)<2: #if the edge has only one shared face, it is a border edge.
+# 			borderEdges.append(edge)
+# 		else:
+# 			for f in edgeFaces:
+# 				if f not in faces: #else if the edge's shared face is not part of the selected faces, it is a border edge.
+# 					borderEdges.append(edge)
+# 					break
+
+# 	return borderEdges
 
 
-pm.select(getBorderEdgeFromFace())
+
+
+# pm.select(getBorderEdgeFromFace())
 
 
 

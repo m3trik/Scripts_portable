@@ -308,42 +308,61 @@ class Duplicate(Init):
 		self.chk015(create=True)
 
 
-	def b004(self):
+	@staticmethod
+	def getInstances(object_=None):
 		'''
-		Select Instanced Objects
+		get any intances of given object, or if no object given, get all instanced objects in the scene.
+		args:
+			object=<scene object>
+		returns:
+			any instances.
 		'''
-		if self.ui.chk017.isChecked(): #select all instances
+		instances=[]
+
+		if not object_: #get all instanced objects in the scene.
 			import maya.OpenMaya as om
-			#get all Instanced objects
-			instances = []
+
 			iterDag = om.MItDag(om.MItDag.kBreadthFirst)
 			while not iterDag.isDone():
 				instanced = om.MItDag.isInstanced(iterDag)
 				if instanced:
 					instances.append(iterDag.fullPathName())
 				iterDag.next()
-			pm.select (instances)
 		else:
-			try:
-				selectedObj = pm.ls (sl=1)[0]
-				pm.select (selectedObj, deselect=1)
-				shapes = pm.listRelatives (selectedObj, s=1)
-				mel.eval('select `listRelatives -ap '+shapes[0]+'`;')
-			except:
-				print "# Warning: No valid object selected."
+			pm.select (object_, deselect=1)
+			shapes = pm.listRelatives(object_, s=1)
+			instances = listRelatives('+shapes[0]+', ap=1)
+
+		return instances
+
+
+	def b004(self):
+		'''
+		Select Instanced Objects
+		'''
+		selection = pm.ls(sl=1)
+
+		if not selection: #select all instanced objects in the scene.
+			instances = self.getInstances()
+			pm.select(instances)
+		else: #select instances of the selected objects.
+			pm.select(deselect=1, all=1)
+			for obj in selection:
+				instance = self.getInstances(obj)
+				pm.select(instance, add=1)
 
 
 	def b005(self):
 		'''
 		Uninstance Selected Objects
 		'''
-		selectedObjects = pm.ls (sl=1)
+		selection = pm.ls(sl=1)
 		#uninstance:
-		while len(selectedObjects):
+		while len(selection):
+			instances = self.getInstances()
 			parent = pm.listRelatives(instances[0], parent=True)[0]
 			pm.duplicate(parent, renameChildren=True)
 			pm.delete(parent)
-			instances = getInstances()
 
 
 	def b008(self):

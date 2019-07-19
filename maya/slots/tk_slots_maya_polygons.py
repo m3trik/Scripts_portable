@@ -131,7 +131,11 @@ class Polygons(Init):
 		'''
 		divisions = self.ui.s003.value()
 
-		pm.polyBridgeEdge(divisions=divisions)
+		selection = pm.ls(sl=1)
+		edges = pm.filterExpand(selection, selectionMask=32, expand=1) #get edges from selection
+
+		pm.polyBridgeEdge(edges, divisions=divisions) #bridge edges
+		pm.polyCloseBorder(edges) #fill edges if they lie on a border
 
 
 	def b006(self):
@@ -142,7 +146,7 @@ class Polygons(Init):
 
 		if pm.selectType(query=1, facet=1): #face selection
 			pm.polyExtrudeFacet(keepFacesTogether=keepFacesTogether)
-		pm.selectType(query=1, edge=1) #edge selection
+		elif pm.selectType(query=1, edge=1): #edge selection
 			pm.polyExtrudeEdge(keepFacesTogether=keepFacesTogether)
 
 
@@ -155,13 +159,6 @@ class Polygons(Init):
 		pm.polyBevel3 (fraction=width, offsetAsFraction=1, autoFit=1, depth=1, mitering=0, 
 			miterAlong=0, chamfer=chamfer, segments=1, worldSpace=1, smoothingAngle=30, subdivideNgons=1,
 			mergeVertices=1, mergeVertexTolerance=0.0001, miteringAngle=180, angleTolerance=180, ch=0)
-
-
-	def b008(self):
-		'''
-		
-		'''
-		pass
 
 
 	def b009(self):
@@ -180,32 +177,11 @@ class Polygons(Init):
 		pm.polyToCurve (form=2, degree=3, conformToSmoothMeshPreview=True) #degree: 1=linear,2= ,3=cubic,5= ,7=
 
 
-	def b011(self):
-		'''
-		
-		'''
-		pass
-
-
 	def b012(self):
 		'''
 		Multi-Cut Tool
 		'''
 		mel.eval('dR_multiCutTool;')
-
-
-	def b013(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b014(self):
-		'''
-		
-		'''
-		pass
 
 
 	def b015(self):
@@ -221,34 +197,6 @@ class Polygons(Init):
 		'''
 		offset = float(self.ui.s001.value())
 		pm.polyExtrudeFacet (keepFacesTogether=1, pvx=0, pvy=40.55638003, pvz=33.53797107, divisions=1, twist=0, taper=1, offset=offset, thickness=0, smoothingAngle=30)
-
-
-	def b017(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b018(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b019(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b020(self):
-		'''
-		
-		'''
-		pass
 
 
 	def b021(self):
@@ -270,34 +218,6 @@ class Polygons(Init):
 		Boolean
 		'''
 		mel.eval("PolygonBooleanUnion;")
-
-
-	def b024(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b025(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b026(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b027(self):
-		'''
-		
-		'''
-		pass
 
 
 	def b028(self):
@@ -335,32 +255,11 @@ class Polygons(Init):
 			print '# Warning: No faces selected. #'
 
 
-	def b030(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b031(self):
-		'''
-		
-		'''
-		pass
-
-
 	def b032(self):
 		'''
 		Poke
 		'''
 		mel.eval("PokePolygon;")
-
-
-	def b033(self):
-		'''
-		
-		'''
-		pass
 
 
 	def b034(self):
@@ -370,39 +269,11 @@ class Polygons(Init):
 		mel.eval("WedgePolygon;")
 
 
-	def b035(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b036(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b037(self):
-		'''
-		
-		'''
-		pass
-
-
 	def b038(self):
 		'''
 		Assign Invisible
 		'''
 		mel.eval("polyHole -assignHole 1;")
-
-
-	def b039(self):
-		'''
-		
-		'''
-		pass
 
 
 	def b040(self):
@@ -437,20 +308,6 @@ class Polygons(Init):
 				pm.polyMergeVertex(distance=floatXYZ, alwaysMergeTwoVertices=True, constructionHistory=True)
 			else: #if selection type =edges or facets:
 				mel.eval("MergeToCenter;")
-
-
-	def b041(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b042(self):
-		'''
-		
-		'''
-		pass
 
 
 	def b043(self):
@@ -588,13 +445,6 @@ class Polygons(Init):
 		mel.eval("performPolyDuplicateEdge 0;")
 
 
-	def b052(self):
-		'''
-		
-		'''
-		pass
-
-
 	def b053(self):
 		'''
 		Edit Edge Flow
@@ -602,96 +452,6 @@ class Polygons(Init):
 		mel.eval("PolyEditEdgeFlow;")
 
 
-	def b054(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b055(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b056(self):
-		'''
-		
-		'''
-		pass
-
-
-	def createFacetAndUnite(vertices):
-		tempTriangle = "___fillTemp___" #create a polygon face using the list of vertex points and give it a temp name
-		pm.polyCreateFacet (point=vertices, texture=1, name=tempTriangle) #0-None; 1-Normalize; 2-Unitize
-
-		if (self.ui.chk001.isChecked()):
-			pm.polyNormal(tempTriangle, normalMode=4) #3-reverse and cut, 4-reverse and propagate
-
-		pm.select(tempTriangle, add=True) #select and assign material from main object
-		pm.hyperShade(assign=materials[0])
-		pm.select(tempTriangle, clear=True)
-
-		tempObject = "___objTemp___" #combine with main mesh, assigning a temp name so that the original name can be freed up and the object can then be renamed to the original name
-		pm.polyUnite (object_, tempTriangle, constructionHistory=False, name=tempObject)
-		pm.rename (tempObject, object_)
-
-
-	def b057(self):
-		'''
-		Trifill
-		'''
-		pm.undoInfo (openChunk=True)
-		selectTypeEdge = pm.filterExpand(selectionMask=32) #returns True if selectionMask=Edges
-
-		symmetryOn = pm.symmetricModelling(query=True, symmetry=True) #query symmetry state
-		if symmetryOn:
-			axis = pm.symmetricModelling(query=True, axis=True) #query the symmetry axis and assign which vertex point position in list to query later in order to filter and perform an operation on them seperately 
-			if axis == "x":
-				axisInt = 0
-			if axis == "y":
-				axisInt = 1
-			if axis == "z":
-				axisInt = 2
-
-		if (selectTypeEdge): #if selection is polygon edges, convert to vertices.
-			mel.eval("PolySelectConvert 3;")
-
-		selected = pm.ls (selection=True, flatten=True) #now that the selection is converted, get selected vertices
-		if (len(selected)>0): #check to see if there is anything selected
-			object_ = selected[0].split('.vtx')[0] #strip .vtx from the vertex name to get the object (shape) name
-		else:
-			print "// Warning: Nothing Selected. You must select two edges that share a vertex or at least three vertices. //"
-
-		shadingEngines = pm.listConnections(object_, type="shadingEngine") #get the connected "shadingEngines"
-		materials = pm.ls(pm.listConnections(shadingEngines), materials=True) #list the connected materials (shaders)
-
-		vertexList = []
-		vertexListNeg = []
-		for vertex in selected:
-			vertexPosition =  pm.pointPosition(vertex)
-			if symmetryOn:
-				if vertexPosition[axisInt]<0: #if symmetry on, seperate negative vertices on which ever axis is being used
-					vertexListNeg.append(vertexPosition)
-				else:
-					vertexList.append(vertexPosition)
-			else:
-				vertexList.append(vertexPosition)
-
-		if symmetryOn:
-			createFacetAndUnite(vertexList)
-			createFacetAndUnite(vertexListNeg)
-		else:
-			createFacetAndUnite(vertexList)
-
-		pm.hilite (object_, replace=True)
-
-		if (selectTypeEdge): #if original selection was edges, convert back to edges.
-			mel.eval("PolySelectConvert 2;")
-			pm.selectType(edge=True)
-		pm.undoInfo (closeChunk=True)
 
 
 

@@ -1194,7 +1194,7 @@
       <rect>
        <x>0</x>
        <y>10</y>
-       <width>91</width>
+       <width>111</width>
        <height>19</height>
       </rect>
      </property>
@@ -1205,10 +1205,10 @@
       </size>
      </property>
      <property name="toolTip">
-      <string>Select objects that are an instance of the current selection.</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select objects that are an instance of the current selection.&lt;/p&gt;&lt;p&gt;If no user selection exists, function will select all instanced objects in the scene.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
-      <string>Select Instanced</string>
+      <string>Select Instances</string>
      </property>
      <property name="iconSize">
       <size>
@@ -1255,49 +1255,6 @@
        <width>18</width>
        <height>18</height>
       </size>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-     <property name="default">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-     <property name="bnabled" stdset="0">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="chk017">
-     <property name="geometry">
-      <rect>
-       <x>90</x>
-       <y>10</y>
-       <width>21</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Select all instanced objects in the scene.</string>
-     </property>
-     <property name="text">
-      <string>All</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>18</width>
-       <height>18</height>
-      </size>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
      </property>
      <property name="autoDefault">
       <bool>false</bool>
