@@ -11,7 +11,7 @@
 
 ## Design:
 ######
-*This is a cross-platform, app agnostic, modular, marking menu style ui to house user tools. Each piece is constructed dynamically
+*This is a cross-platform, modular, marking menu style ui framework to house user tools. Each piece is constructed dynamically
 to allow for as little overhead as possible in construction and maintainence. Literally all you have to do to have 
 a new ui up and running, is to drop a qt designer ui file into the ui folder, create a module and class of the 
 same name. Naming convention allows for a stacked ui to be built, signals added/removed, and a master dictionary 
