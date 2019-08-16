@@ -5,15 +5,13 @@
 ![alt text](https://raw.githubusercontent.com/m3trik/tk_hotBox/master/docs/Screenshot-Camera_navigation.jpg)
 *Example of camera navigation.
 
-![alt text](https://raw.githubusercontent.com/m3trik/tk_hotBox/master/docs/Screenshot-Menu.jpg)
-*Menu set.
 
 
 ## Design:
 ######
-*This is a cross-platform, modular, marking menu style ui framework to house user tools. Each piece is constructed dynamically
+*This is a cross-platform, modular, marking menu style ui based on a QStackedLayout. Each piece is constructed dynamically
 to allow for as little overhead as possible in construction and maintainence. Literally all you have to do to have 
-a new ui up and running, is to drop a qt designer ui file into the ui folder, create a module and class of the 
+a new layout up and running, is to drop a qt designer ui file into the ui folder, create a module and class of the 
 same name. Naming convention allows for a stacked ui to be built, signals added/removed, and a master dictionary 
 (stored within the switchboard module) to be created that allows getting/setting of relevant data across modules from one 
 easy, and reliable location.*
