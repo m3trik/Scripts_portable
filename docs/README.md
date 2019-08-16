@@ -16,7 +16,7 @@ same name. Naming convention allows for a stacked ui to be built, signals added/
 (stored within the switchboard module) to be created that allows getting/setting of relevant data across modules from one 
 easy, and reliable location.*
 
-*continual work in progress..*
+*work in progress..*
 
 ##
 -----------------------------------------------
