@@ -15,6 +15,8 @@ class Rendering(Init):
 
 
 		self.ui = self.sb.getUi('rendering')
+
+		self.ui.progressBar.hide()
 		
 		# #checkable comboBox not working
 		# comboBox = self.CheckableComboBox(self.ui.cmb000)
@@ -24,7 +26,6 @@ class Rendering(Init):
 		# comboBox.checkIndex(2)
 
 		
-
 
 	def cmb000(self):
 		'''

@@ -15,18 +15,9 @@ class Polygons(Init):
 
 
 		self.ui = self.sb.getUi('polygons')
+
 		self.ui.progressBar.hide()
 
-
-
-	def chk006(self):
-		'''
-		Merge: All
-		'''
-		if self.ui.chk006.isChecked():
-			self.ui.s002.setSingleStep(.01)
-		else:
-			self.ui.s002.setSingleStep(.5)
 
 
 	def chk008(self):
@@ -47,17 +38,17 @@ class Polygons(Init):
 		'''
 		Tris
 		'''
-		self.setButtons(self.ui, unchecked='chk008,chk009')
+		self.setButtons(self.ui, unchecked='chk008-9')
 
 
 	def cmb000(self):
 		'''
-		Editors
+		Header comboBox
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.hotBox.header.cmb
 		
 		files = ['Extrude Options','Bevel Options','Bridge Options','Combine Options','Merge Vertex Options','Offset Edgeloop','Edit Edgeflow Options','Extract Curve Options','Poke Options','Wedge Options','Assign Invisible Options']
-		contents = self.comboBox (cmb, files, '::')
+		contents = self.comboBox(cmb, files, '::')
 
 		index = cmb.currentIndex()
 		if index!=0:
@@ -88,9 +79,9 @@ class Polygons(Init):
 
 	def b000(self):
 		'''
-		
+		Circularize
 		'''
-		pass
+		pm.polyCircularize(constructionHistory=1, alignment=0, radialOffset=0, normalOffset=0, normalOrientation=0, smoothingAngle=30, evenlyDistribute=1, divisions=0, supportingEdges=0, twist=0, relaxInterior=1)
 
 
 	def b001(self):
@@ -152,12 +143,14 @@ class Polygons(Init):
 
 	def b007(self):
 		'''
-		Bevel Options Chamfer
+		Bevel /Chamfer
 		'''
 		width = float(self.ui.s000.value())
 		chamfer = True
+		segments = 1
+
 		pm.polyBevel3 (fraction=width, offsetAsFraction=1, autoFit=1, depth=1, mitering=0, 
-			miterAlong=0, chamfer=chamfer, segments=1, worldSpace=1, smoothingAngle=30, subdivideNgons=1,
+			miterAlong=0, chamfer=chamfer, segments=segments, worldSpace=1, smoothingAngle=30, subdivideNgons=1,
 			mergeVertices=1, mergeVertexTolerance=0.0001, miteringAngle=180, angleTolerance=180, ch=0)
 
 
@@ -278,36 +271,34 @@ class Polygons(Init):
 
 	def b040(self):
 		'''
-		Merge All
+		Merge Vertices
 		'''
-		floatXYZ = float(self.ui.s002.value())
-		mergeAll = self.ui.chk006.isChecked()
-
+		tolerance = float(self.ui.s002.value())
 		selection = pm.ls(selection=1, objectsOnly=1)
 
-		if len(selection)<1:
+		if selection:
+			if pm.selectMode(query=1, component=1): #merge selected components.
+				if pm.filterExpand(selectionMask=31): #selectionMask=vertices
+					pm.polyMergeVertex(distance=tolerance, alwaysMergeTwoVertices=True, constructionHistory=True)
+				else: #if selection type =edges or facets:
+					mel.eval("MergeToCenter;")
+
+			else: #if object mode. merge all vertices on the selected object.
+				self.progressBar(init=1) #initialize the progress bar
+				for obj in selection:
+					self.progressBar(len(selection)) #register progress
+					# get number of vertices
+					count = pm.polyEvaluate(obj, vertex=1)
+					vertices = str(obj) + ".vtx [0:" + str(count) + "]" # mel expression: select -r geometry.vtx[0:1135];
+					pm.polyMergeVertex(vertices, distance=tolerance, alwaysMergeTwoVertices=False, constructionHistory=False)
+
+				#return to original state
+				pm.select(clear=1)
+				for obj in selection:
+					pm.select(obj, add=1)
+		else:
 			print "// Warning: No object selected. Must select an object or component"
 			return
-
-		
-		if mergeAll:
-			self.progressBar(init=1) #initialize the progress bar
-			for obj in selection:
-				self.progressBar(len(selection)) #register progress
-				# get number of vertices
-				count = pm.polyEvaluate(obj, vertex=1)
-				vertices = str(obj) + ".vtx [0:" + str(count) + "]" # mel expression: select -r geometry.vtx[0:1135];
-				pm.polyMergeVertex(vertices, distance=floatXYZ, alwaysMergeTwoVertices=False, constructionHistory=False)
-
-			#return to original state
-			pm.select(clear=1)
-			for obj in selection:
-				pm.select(obj, add=1)
-		else:
-			if pm.filterExpand(selectionMask=31): #returns True if selectionMask=vertices
-				pm.polyMergeVertex(distance=floatXYZ, alwaysMergeTwoVertices=True, constructionHistory=True)
-			else: #if selection type =edges or facets:
-				mel.eval("MergeToCenter;")
 
 
 	def b043(self):

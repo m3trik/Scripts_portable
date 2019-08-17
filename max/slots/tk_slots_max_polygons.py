@@ -15,18 +15,10 @@ class Polygons(Init):
 
 
 		self.ui = self.sb.getUi('polygons')
+
 		self.ui.progressBar.hide()
 
 
-
-	def chk006(self):
-		'''
-		Merge: All
-		'''
-		if self.ui.chk006.isChecked():
-			self.ui.s001.setSingleStep(.01)
-		else:
-			self.ui.s001.setSingleStep(.5)
 
 
 	def chk008(self):
@@ -326,26 +318,25 @@ class Polygons(Init):
 
 	def b040(self):
 		'''
-		Merge All Vertices
+		Merge Vertices
 		'''
 		tolerance = float(self.ui.s002.value())
-		mergeAll = self.ui.chk006.isChecked()
-
-		sel = rt.selection
-
-		if not sel:
-			print "// Warning: No object selected. Must select an object or component"
-			return
+		selection = rt.selection
 
 		self.progressBar(init=1) #initialize the progress bar
-		for obj in sel:
-			self.progressBar(len(sel)) #register progress
-			if mergeAll:
-				rt.polyop.weldVertsByThreshold(obj, obj.verts)
-			else:
-				vertices = rt.getVertSelection(obj)
-				obj.weldThreshold = tolerance
-				rt.polyop.weldVertsByThreshold(obj, vertices)
+		if selection:
+			for obj in selection:
+				self.progressBar(len(selection)) #register progress
+				vertSelection = rt.getVertSelection(obj)
+				if rt.subObjectLevel==1 and vertSelection>1: #merge selected components.
+					obj.weldThreshold = tolerance
+					rt.polyop.weldVertsByThreshold(obj, vertSelection)
+
+				else: #if object mode. merge all vertices on the selected object.
+					rt.polyop.weldVertsByThreshold(obj, obj.verts)
+		else:
+			print "// Warning: No object selected. Must select an object or component"
+			return
 
 
 	def b043(self):

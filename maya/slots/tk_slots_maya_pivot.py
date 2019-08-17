@@ -9,12 +9,12 @@ from tk_slots_maya_init import Init
 
 
 
-class Utilities(Init):
+class Pivot(Init):
 	def __init__(self, *args, **kwargs):
-		super(Utilities, self).__init__(*args, **kwargs)
+		super(Pivot, self).__init__(*args, **kwargs)
 
 
-		self.ui = self.sb.getUi('utilities')
+		self.ui = self.sb.getUi('pivot')
 
 		self.ui.progressBar.hide()
 
@@ -36,76 +36,56 @@ class Utilities(Init):
 				mel.eval('')
 			cmb.setCurrentIndex(0)
 
-
+		
 	def b000(self):
 		'''
-		Measure
+		Center Pivot Object
 
 		'''
-		mel.eval("DistanceTool;")
+		mel.eval("CenterPivot;")
+
 
 	def b001(self):
 		'''
-		Annotation
+		Center Pivot Component
 
 		'''
-		mel.eval('CreateAnnotateNode;')
+		[pm.xform (s, centerPivot=1) for s in pm.ls (sl=1, objectsOnly=1, flatten=1)]
+		# mel.eval("moveObjectPivotToComponentCentre;")
 
 	def b002(self):
 		'''
-		Calculator
+		Center Pivot World
 
 		'''
-		mel.eval('calculator;')
+		mel.eval("xform -worldSpace -pivots 0 0 0;")
 
 	def b003(self):
 		'''
-		Grease Pencil
+		Set To Bounding Box
 
 		'''
-		mel.eval('greasePencilCtx;')
+		mel.eval("bt_alignPivotToBoundingBoxWin;")
 
 	def b004(self):
 		'''
-		
+		Bake Pivot
 
 		'''
-		mel.eval('')
+		mel.eval("BakeCustomPivot;")
+
 
 	def b005(self):
 		'''
-		
+		Reset Pivot Transforms
 
 		'''
-		mel.eval('')
+		mel.eval('''
+		{ string $objs[] = `ls -sl -type transform -type geometryShape`;
+		if (size($objs) > 0) { xform -cp; } manipPivot -rp -ro; };
+		''')
 
-	def b006(self):
-		'''
-		
 
-		'''
-		mel.eval('')
-
-	def b007(self):
-		'''
-		
-
-		'''
-		mel.eval('')
-
-	def b008(self):
-		'''
-		
-
-		'''
-		mel.eval("")
-
-	def b009(self):
-		'''
-		
-
-		'''
-		mel.eval('')
 
 
 #module name

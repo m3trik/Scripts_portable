@@ -16,6 +16,8 @@ class File(Init):
 
 		self.ui = self.sb.getUi('file')
 
+		self.ui.progressBar.hide()
+
 		self.cmb006() #refresh cmb006 contents to reflect the current project folder
 
 
@@ -86,7 +88,7 @@ class File(Init):
 		
 		index = cmb.currentIndex()
 		if index!=0: #hide hotBox then perform operation
-			self.hotBox.hide_()
+			self.hotBox.hide()
 			if index == 1: #Import
 				mel.eval('Import;')
 			if index == 2: #Import options
@@ -107,7 +109,7 @@ class File(Init):
 
 		index = cmb.currentIndex()
 		if index !=0: #hide hotBox then perform operation
-			self.hotBox.hide_()
+			self.hotBox.hide()
 			if index==1: #Export selection
 				mel.eval('ExportSelection;')
 			if index==2: #Export options

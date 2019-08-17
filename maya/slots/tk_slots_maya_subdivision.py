@@ -16,6 +16,8 @@ class Subdivision(Init):
 
 		self.ui = self.sb.getUi('subdivision')
 
+		self.ui.progressBar.hide()
+
 
 
 

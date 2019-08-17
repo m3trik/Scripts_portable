@@ -19,7 +19,7 @@ class Signal(QtCore.QObject):
 
 
 		self.sb = Switchboard()
-		self.hotBox = self.sb.getClass('hotbox')
+		self.hotBox = self.sb.getClass('hotBox')
 		self.app = self.sb.getApp()
 		
 
@@ -29,113 +29,138 @@ class Signal(QtCore.QObject):
 		'''
 		args:
 			name='string' - name of the ui to construct connections for.
+		returns:
+			dict - 'buttonName':{'buttonObject':<buttonObject>,'buttonObjectWithSignal':<buttonObjectWithSignal>,'methodObject':<method>,'docString':'docString','widgetClass':<class object>,'widgetClassName':'class name'}
 
 		button prefix types:
-			i = pushbutton - index - on mouse release set stacked ui to given index.
-			b = pushbutton - standard button with an on clicked event.
-			v = pushbutton - triggers on mouse release
+			b = pushbutton - triggers on clicked event.
+			v = pushbutton - triggers on hover event if mouse released (event handler).
+			i = pushbutton - triggers on hover event if mouse released (event handler). sets stacked ui to given index.
 			s = spinbox
 			chk = checkbox
 			cmb = combobox
 			t = textfield
 		'''
-		if name: #build connections for the specified name
-			self.name = name
-		else: #get current name
-			self.name = self.sb.getUiName()
-		self.ui = self.sb.getUi(self.name)
+		if not name: #build connections for the given current ui name
+			name = self.sb.getUiName()
 
-		class_ = self.sb.setClass('tk_slots_'+self.app+'_'+self.name+'.'+self.name.capitalize())() #append class object to switchboardDict
+		ui = self.sb.getUi(name)
+		class_ = self.sb.setClass_tk_slots(name)()
 
 
+		signalType = {
+			'QPushButton':'clicked',
+			'QSpinBox':'valueChanged',
+			'QDoubleSpinBox':'valueChanged',
+			'QCheckBox':'released',
+			'QComboBox':'currentIndexChanged',
+			'QLineEdit':'returnPressed'}
 
-		buttonType = {'i':'clicked','b':'clicked','v':'clicked','s':'valueChanged','chk':'released','cmb':'currentIndexChanged','t':'returnPressed'}
+		for buttonName, buttonObject in ui.__dict__.iteritems(): #for each object in the ui:
+			for buttonType, signal in signalType.iteritems():
+				if buttonObject.__class__.__name__==buttonType: #if it is a type listed in the signalType dict, construct with the associated signal.
 
-		for prefix,signal in buttonType.iteritems(): #button/method's that start with ie. 'b'
-			size = 200
-			for num in xrange(size):
-				numString = '000'[:-len(str(num))]+str(num) #remove zeros from the prefix string corresponding to the length of num
-				buttonString = prefix+numString
-				# if hasattr(self.ui, buttonString):
-				try: 
-					#get the button from the dynamic ui
-					buttonObject = getattr(self.ui, buttonString)  #equivilent to: self.ui.b000
-					size-=1 #decrease search length on each successful match
-					
-					#add stylesheet
-					buttonObject.setStyleSheet(styleSheet.css)
+					buttonObjectWithSignal = getattr(buttonObject, signal) #add signal to buttonObject
 
-					#add eventfilter
-					buttonObject.installEventFilter(self) #ie. self.ui.i000.installEventFilter(self)
-
-					#add signal to buttonObject
-					buttonObjectWithSignal = getattr(buttonObject, signal)
+					m = getattr(class_, buttonName, None) #use signal 'buttonName' (ie. b006) to get method/slot of the same name in current class.
+					docString = getattr(m, '__doc__', None)
 
 					#set the corresponding method
-					if prefix=='i': #connect to layoutStack and pass in an index as int or string name.
+					if buttonName.startswith('i'): #connect to layoutStack and pass in an index as int or string 'name'.
 						index = buttonObject.whatsThis().lower() #buttonObject.text().lower()
 						method = lambda i=index: self.hotBox.layoutStack(i) #lambda function to call index. ie. hotBox.layoutStack(6)
 					else:
-						m = getattr(class_, buttonString) #use signal 'buttonString' (ie. b006) to get method/slot of the same name in current class.
-						method = [m, lambda method=m: self.onClickedEvent(method)] #add onClickedEvent. pass multiple slots as list.
+						method = [m, lambda b=buttonName: self.onSignalEvent(b)] #add onSignalEvent. passing multiple slots as list.
 					
-					#add docString info
-					try:
-						docString = m.__doc__
-					except:
-						docString = None
-
+					
 					#add values to connectionDict
-					self.sb.connectionDict(self.name).update(
-						{buttonString:{
+					self.sb.connectionDict(name).update(
+						{buttonName:{
 							'buttonObject':buttonObject, 
 							'buttonObjectWithSignal':buttonObjectWithSignal, 
-							'methodObject':method, 
+							'methodObject':method,
 							'docString':docString,
-							'widgetClass':buttonObject.__class__,
-							'widgetClassName':buttonObject.__class__.__name__,
-							}})
+							'buttonType':buttonType,
+							'widgetClass':buttonObject.__class__}})
 
-				except Exception as error:
-					if error==AttributeError:
-						print 'Exception:',error
-		# print self.sb.connectionDict(self.name)
-		return self.sb.connectionDict(self.name)
+					
+					buttonObject.setStyleSheet(styleSheet.css) #add stylesheet
+					buttonObject.installEventFilter(self) #add eventfilter
+
+		return self.sb.connectionDict(name)
 
 
 
 	def addSignal(self, name):
-		#args: [string]
-		for buttonString in self.sb.connectionDict(name):
-			signal = self.sb.getSignal(name, buttonString)
-			slot = self.sb.getSlot(name, buttonString)
+		'''
+		Connect signals/slots for the given ui.
+		args:
+			name='string' - name of ui
+		'''
+		for buttonName in self.sb.connectionDict(name):
+			signal = self.sb.getSignal(name, buttonName)
+			slot = self.sb.getSlot(name, buttonName)
 			# print 'addSignal: ', signal, slot
 			try: map(signal.connect, slot) #add multiple slots
 			except:
 				try: signal.connect(slot) #add single slot (main and viewport)
-				except Exception as error: print '# Error: '+str(type(slot))+str(slot)+' #' #, error
+				except Exception as error: pass#print '# Error: '+buttonName+str(type(slot))+str(slot)+' #' #, error
 
 
 
 	def removeSignal(self, name):
-		#args: [string]
-		for buttonString in self.sb.connectionDict(name):
-			signal = self.sb.getSignal(name, buttonString)
-			slot = self.sb.getSlot(name, buttonString)
+		'''
+		Disconnect signals/slots for the given ui.
+		args:
+			name='string' - name of ui
+		'''
+		for buttonName in self.sb.connectionDict(name):
+			signal = self.sb.getSignal(name, buttonName)
+			slot = self.sb.getSlot(name, buttonName)
 			# print 'removeSignal: ', signal, slot
 			try: map(signal.disconnect, slot) #add multiple slots
 			except: 
 				try: signal.disconnect(slot) #add single slot (main and viewport)
-				except Exception as error: print '# Error: '+str(type(slot))+str(slot)+' #' #, error
+				except Exception as error: pass#print '# Error: '+buttonName+str(type(slot))+str(slot)+' #' #, error
 
 
 
 	def eventFilter(self, button, event):
-		#args:	[source object]
-		#		[QEvent]
+		'''
+		Event filter for dynamic ui objects.
+		args:
+			button=filtered object
+			event=QEvent
+		'''
+		buttonName = button.objectName()
+		buttonType = self.sb.getWidgetType(button)
+
+		
+		#Override pushbutton to move the main window on left mouse drag event.
+		#When checked, prevents hide event on main window.
+		if buttonName=='pin':
+			if event.type()==QtCore.QEvent.MouseButtonPress:
+				self.__mousePressPos = event.globalPos()
+				return True
+
+			if event.type()==QtCore.QEvent.MouseMove:
+				self.hotBox.moveToMousePosition(self.hotBox, -self.hotBox.point.x(), -self.hotBox.point.y()*.1) #move window on left mouse drag.
+				return True
+
+			if event.type()==QtCore.QEvent.MouseButtonRelease:
+				moveAmount = event.globalPos() - self.__mousePressPos
+				if moveAmount.manhattanLength() > 5: #if button moved:
+					button.setChecked(True) #setChecked to prevent window from closing.
+					event.ignore()
+				else:
+					button.setChecked(not button.isChecked()) #toggle check state
+					self.hotBox.hide_()
+				return True
+
+
 		if event.type()==QtCore.QEvent.Type.Enter: #enter event
 			self.mouseHover.emit(True)
-			if self.sb.getWidgetType(button)=='QComboBox':
+			if buttonType=='QComboBox':
 				#switch the index before opening to initialize the contents of the combobox
 				index = button.currentIndex()
 				button.blockSignals(True); button.setCurrentIndex(-1); button.blockSignals(False)
@@ -144,42 +169,41 @@ class Signal(QtCore.QObject):
 					QComboBox {
 					background-color: rgba(82,133,166,200);
 					color: white;
-					}
-					''')
+					}''')
 				
 			if self.hotBox.name=='main' or self.hotBox.name=='viewport': #layoutStack index and viewport signals
 				# print button.__class__.__name__
-				if self.sb.getWidgetType(button)=='QComboBox':
+				if buttonType=='QComboBox':
 					button.showPopup()
 				else:
 					button.click()
 
+
 		if event.type()==QtCore.QEvent.Type.HoverLeave:
 			self.mouseHover.emit(False)
-			if self.sb.getWidgetType(button)=='QComboBox':
+			if buttonType=='QComboBox':
 				button.setStyleSheet('''
 					background-color: rgba(100,100,100,200);
 					color: white;
-					}
-					''')
+					}''')
 
 		return QtWidgets.QWidget.eventFilter(self, button, event)
 
 
 
-	def onClickedEvent(self, method):
-		#args: [method object]
-		#add method and docstring to prevCommand list
-		if callable(method) and method.__name__.startswith('b'): #ie. 'b012'
-			try:
-				docString = self.sb.getDocString(self.name, method.__name__) #get the 'docString'. ie. 'Multi-Cut Tool'
-				# print docString, method.__name__, self.sb.prevCommand(as_list=1)
-				self.sb.prevCommand(as_list=1).append([method, docString]) #build array that stores the command method object and the corresponding docString (ie. 'Multi-cut tool')
-			except Exception as error:
-				print 'tk_signals: line 167:', error
-		#add previousView to list
-		if callable(method) and method.__name__.startswith('v'): #ie. 'v012'
-			self.sb.previousView(as_list=1).append(method)
+	def onSignalEvent(self, buttonName):
+		'''
+		Called on any ui widget when it's signal is triggered.
+		args:
+			buttonName='string' - objectName of button
+		'''
+		if buttonName.startswith('b'): #ie. 'b012'
+			self.sb.prevCommand(as_list=1).append([self.sb.getMethod(buttonName), self.sb.getDocString(buttonName)]) #store the command method object and it's docString (ie. 'Multi-cut tool')
+
+		if buttonName.startswith('v'): #ie. 'v012'
+			self.sb.previousView(as_list=1).append(self.sb.getMethod(buttonName)) #store the camera view
+
+
 
 
 
@@ -194,3 +218,16 @@ print os.path.splitext(os.path.basename(__file__))[0]
 # Notes
 # -----------------------------------------------
 
+	# def onSignalEvent(self, method):
+	# 	#args: [method object]
+	# 	#add method and docString to prevCommand list
+	# 	if callable(method) and method.__name__.startswith('b'): #ie. 'b012'
+	# 		try:
+	# 			docString = self.sb.getDocString(method.__name__, name) #get the 'docString'. ie. 'Multi-Cut Tool'
+	# 			# print docString, method.__name__, self.sb.prevCommand(as_list=1)
+	# 			self.sb.prevCommand(as_list=1).append([method, docString]) #build array that stores the command method object and the corresponding docString (ie. 'Multi-cut tool')
+	# 		except Exception as error:
+	# 			print 'tk_signals: onSignalEvent:', error
+	# 	#add previousView to list
+	# 	if callable(method) and method.__name__.startswith('v'): #ie. 'v012'
+	# 		self.sb.previousView(as_list=1).append(method)

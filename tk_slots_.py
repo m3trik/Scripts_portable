@@ -9,8 +9,9 @@ from tk_switchboard import Switchboard
 
 
 
-class Slot(object):
-	def __init__(self):
+class Slot(QtCore.QObject):
+	def __init__(self, parent=None):
+		super(Slot, self).__init__(parent)
 
 		self.sb = Switchboard()
 		self.hotBox = self.sb.getClass('hotbox')
@@ -18,34 +19,40 @@ class Slot(object):
 		
 		
 		self.styleSheetOverride()
-		
+
+
+
+
 
 
 	def getMethod(self, class_, method):
 		'''
 		args:
-				 class_='string' class name (case insensitive)
-				 method='string' method name
+			class_='string' class name (case insensitive)
+			method='string' method name
 
-		returns: method object
+		returns:
+			method object
 		'''
 		c = class_.lower()
 		if not self.sb.hasKey(c, 'connectionDict'):
 			self.hotBox.signal.buildConnectionDict(c) #construct the signals and slots for the ui 
 
-			print self.sb.getDocString(c, method)
-		return self.sb.getMethod(c, method)
+			print self.sb.getDocString(method, c)
+		return self.sb.getMethod(method, c)
 
 
 
 	def getObject(self, class_, objectNames, showError_=False):
 		'''
 		get a list of corresponding objects from a single string.
-		args:	 class_=class object
-				 objectNames='string' - names separated by ','. ie. 's000,b004-7'. b004-7 specifies buttons b004-b007.  
-				 showError=bool - show attribute error if item doesnt exist
+		args:
+			class_=class object
+			objectNames='string' - names separated by ','. ie. 's000,b004-7'. b004-7 specifies buttons b004-b007.  
+			showError=bool - show attribute error if item doesnt exist
 		
-		returns: list of corresponding objects
+		returns:
+			list of corresponding objects
 		#ex. getObject(self.ui, 's000,b002,cmb011-15') #get objects for s000,b002, and cmb011-cmb015
 		'''
 		names = self.hotBox.unpackNames(objectNames)
@@ -65,10 +72,12 @@ class Slot(object):
 	@staticmethod
 	def getAttributes(node, exclude=None):
 		'''
-		args:	 node=object
-				 exclude='string list' - attributes to exclude from returned dictionay
+		args:
+			node=object
+			exclude='string list' - attributes to exclude from returned dictionay
 
-		returns:	dictionary {'string attribute': value}
+		returns:
+			dictionary {'string attribute': value}
 		'''
 		return {attr:getattr(node, attr) for attr in dir(node) if attr not in exclude}
 
@@ -77,8 +86,9 @@ class Slot(object):
 	@staticmethod
 	def setAttributes(node, attributes):
 		'''
-		args:	 node=object
-				 attributes=dictionary {'string attribute': value} - attributes and their correponding value to set
+		args:
+			node=object
+			attributes=dictionary {'string attribute': value} - attributes and their correponding value to set
 		'''
 		[setattr(node, attr, value) for attr, value in attributes.iteritems() if attr and value]
 
@@ -87,8 +97,9 @@ class Slot(object):
 	def setButtons(self, ui, checked=None, unchecked=None, enable=None, disable=None, visible=None, invisible=None):
 		'''
 		set various states for multiple buttons at once
-		args:	 setButtons=dynamic ui object
-				 checked/unchecked/enable/disable/visible/invisible=string - the names of buttons to modify separated by ','. ie. 'b000,b001,b022'
+		args:
+			setButtons=dynamic ui object
+			checked/unchecked/enable/disable/visible/invisible=string - the names of buttons to modify separated by ','. ie. 'b000,b001,b022'
 		ex.	setButtons(self.ui, disable='b000', unchecked='chk009-12', invisible='b015')
 		'''
 		if checked:
@@ -120,9 +131,10 @@ class Slot(object):
 	def setSpinboxes(self, ui, spinboxNames, attributes={}):
 		'''
 		set spinbox values.
-		args:	 ui=<dynamic ui>
-				 spinboxNames='string' - spinbox names. ie. 's001-4, s007'.
-				 attributes={'string key':value}
+		args:
+			ui=<dynamic ui>
+			spinboxNames='string' - spinbox names. ie. 's001-4, s007'.
+			attributes={'string key':value}
 
 		ex. self.setSpinboxes (self.ui, spinboxNames='s000-15', attributes={'width':1, 'length ratio':1, 'patches U':1, 'patches V':1})
 		ex. self.setSpinboxes (self.ui, spinboxNames='s000', attributes={'size':5} #explicit;  set single s000 with a label 'size' and value of 5
@@ -155,10 +167,11 @@ class Slot(object):
 	def comboBox(comboBox, items, title=None):
 		'''
 		args:
-				 comboBox=QComboBox object - list of items to fill the comboBox with
-				 title='string' - optional value for the first index of the comboBox's list
+			comboBox=QComboBox object - list of items to fill the comboBox with
+			title='string' - optional value for the first index of the comboBox's list
 
-		returns: comboBox's current item list minus any title.
+		returns:
+			comboBox's current item list minus any title.
 		ex. comboBox (self.ui.cmb003, ["Import file", "Import Options"], "Import")
 		'''
 		comboBox.blockSignals(True) #to keep clear from triggering currentIndexChanged
@@ -179,10 +192,11 @@ class Slot(object):
 	def progressBar(self, length=100, init=False):
 		'''
 		args:
-				 ui=dynamic ui object
-				 length=int - total length of procedure
+			ui=dynamic ui object
+			length=int - total length of procedure
 
-		returns: current percentage
+		returns:
+			current percentage
 		ie.
 		self.progressBar(init=1) #initialize the progress bar
 		for obj in selection:
@@ -190,15 +204,17 @@ class Slot(object):
 		'''
 		ui=self.sb.getUi()
 		global progress
+
 		if init:
 			progress=0
 			ui.progressBar.show()
 			return
+
 		progress+=1
 		value = 100*progress/length
 		ui.progressBar.setValue(value)
 		# QtGui.qApp.processEvents() #ensure that any pending events are processed sufficiently often for the GUI to remain responsive
-		if progress>=100:
+		if value>=100:
 			ui.progressBar.hide()
 			ui.progressBar.setValue(0)
 		return value
@@ -216,8 +232,8 @@ class Slot(object):
 		using the name string as an identifier key.
 		
 		args:
-				 sequence=[list] - sequence to cycle through. ie. [1,2,3].
-				 name='string' - identifier. used as a key to get the sequence value from the dict.
+			sequence=[list] - sequence to cycle through. ie. [1,2,3].
+			name='string' - identifier. used as a key to get the sequence value from the dict.
 			
 		ex. cycle([0,1,2,3,4], 'componentID')
 		'''
@@ -241,13 +257,14 @@ class Slot(object):
 	def try_(expressions, exceptions='pass', showError_=True, print_=False, **kwargs):
 		'''
 		args:
-				 expressions='string' - expression separated by ';'
-				 exceptions='string' - separated by ';'
-				 showError_=bool - hide or show any errors
-				 printCommand=bool - print expression/s to console
-				 *kwargs=any additional arguments used by expressions.
+			expressions='string' - expression separated by ';'
+			exceptions='string' - separated by ';'
+			showError_=bool - hide or show any errors
+			printCommand=bool - print expression/s to console
+			*kwargs=any additional arguments used by expressions.
 		
-		returns: True if no errors occured, else: False
+		returns:
+			True if no errors occured, else: False
 		ex. self.try_('pm.delete(arg1)', arg1=radialArrayObjList) #pass in radialArrayObjList as a **kwarg.
 		ex. self.try_('pm.ls(selection=1, objectsOnly=1)[0]; <additional command>, exceptions=" ERROR: Nothing selected."')
 		'''
@@ -278,9 +295,10 @@ class Slot(object):
 	def collapseList(list_):
 		'''
 		args:
-				 list_=list - of integers
+			list_=list - of integers
 
-		returns: list with sequencial integers collapsed in string format. ie. ['20', '22..28']
+		returns:
+			list with sequencial integers collapsed in string format. ie. ['20', '22..28']
 		'''
 		list_ = [str(x) for x in list_] #make sure the list is made up of strings.
 		

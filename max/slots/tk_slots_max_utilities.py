@@ -16,6 +16,8 @@ class Utilities(Init):
 
 		self.ui = self.sb.getUi('utilities')
 
+		self.ui.progressBar.hide()
+
 
 
 

@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>600</width>
     <height>600</height>
    </rect>
   </property>
@@ -27,7 +27,7 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>800</width>
+    <width>600</width>
     <height>600</height>
    </size>
   </property>
@@ -56,7 +56,7 @@
    <widget class="QPushButton" name="v007">
     <property name="geometry">
      <rect>
-      <x>365</x>
+      <x>265</x>
       <y>360</y>
       <width>66</width>
       <height>21</height>
@@ -81,7 +81,7 @@
    <widget class="QPushButton" name="v006">
     <property name="geometry">
      <rect>
-      <x>310</x>
+      <x>210</x>
       <y>330</y>
       <width>66</width>
       <height>21</height>
@@ -106,7 +106,7 @@
    <widget class="QPushButton" name="v000">
     <property name="geometry">
      <rect>
-      <x>420</x>
+      <x>320</x>
       <y>330</y>
       <width>66</width>
       <height>21</height>
@@ -131,7 +131,7 @@
    <widget class="QPushButton" name="v002">
     <property name="geometry">
      <rect>
-      <x>455</x>
+      <x>355</x>
       <y>290</y>
       <width>66</width>
       <height>21</height>
@@ -156,7 +156,7 @@
    <widget class="QPushButton" name="v003">
     <property name="geometry">
      <rect>
-      <x>275</x>
+      <x>175</x>
       <y>290</y>
       <width>66</width>
       <height>21</height>
@@ -181,7 +181,7 @@
    <widget class="QPushButton" name="v005">
     <property name="geometry">
      <rect>
-      <x>440</x>
+      <x>340</x>
       <y>260</y>
       <width>66</width>
       <height>21</height>
@@ -206,7 +206,7 @@
    <widget class="QPushButton" name="v001">
     <property name="geometry">
      <rect>
-      <x>290</x>
+      <x>190</x>
       <y>260</y>
       <width>66</width>
       <height>21</height>
@@ -231,7 +231,7 @@
    <widget class="QPushButton" name="v004">
     <property name="geometry">
      <rect>
-      <x>365</x>
+      <x>265</x>
       <y>240</y>
       <width>66</width>
       <height>21</height>
@@ -256,7 +256,7 @@
    <widget class="QWidget" name="r000" native="true">
     <property name="geometry">
      <rect>
-      <x>285</x>
+      <x>185</x>
       <y>180</y>
       <width>226</width>
       <height>51</height>
@@ -390,7 +390,7 @@
    <widget class="QWidget" name="r001" native="true">
     <property name="geometry">
      <rect>
-      <x>290</x>
+      <x>190</x>
       <y>380</y>
       <width>216</width>
       <height>51</height>
@@ -524,7 +524,7 @@
    <widget class="QWidget" name="r002" native="true">
     <property name="geometry">
      <rect>
-      <x>200</x>
+      <x>100</x>
       <y>259</y>
       <width>76</width>
       <height>81</height>
@@ -637,7 +637,7 @@
    <widget class="QWidget" name="r003" native="true">
     <property name="geometry">
      <rect>
-      <x>520</x>
+      <x>420</x>
       <y>260</y>
       <width>81</width>
       <height>81</height>
@@ -750,7 +750,7 @@
    <widget class="QWidget" name="r007" native="true">
     <property name="geometry">
      <rect>
-      <x>505</x>
+      <x>405</x>
       <y>340</y>
       <width>96</width>
       <height>121</height>
@@ -810,7 +810,7 @@
    <widget class="QWidget" name="r006" native="true">
     <property name="geometry">
      <rect>
-      <x>200</x>
+      <x>100</x>
       <y>340</y>
       <width>91</width>
       <height>121</height>
@@ -870,7 +870,7 @@
    <widget class="QWidget" name="r005" native="true">
     <property name="geometry">
      <rect>
-      <x>510</x>
+      <x>410</x>
       <y>160</y>
       <width>91</width>
       <height>101</height>
@@ -930,7 +930,7 @@
    <widget class="QWidget" name="r004" native="true">
     <property name="geometry">
      <rect>
-      <x>200</x>
+      <x>100</x>
       <y>160</y>
       <width>86</width>
       <height>101</height>
@@ -990,7 +990,7 @@
    <widget class="QWidget" name="r008" native="true">
     <property name="geometry">
      <rect>
-      <x>355</x>
+      <x>255</x>
       <y>440</y>
       <width>86</width>
       <height>101</height>

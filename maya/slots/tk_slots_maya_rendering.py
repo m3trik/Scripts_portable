@@ -16,12 +16,9 @@ class Rendering(Init):
 
 		self.ui = self.sb.getUi('rendering')
 
-		# #checkable comboBox not working
-		# comboBox = self.CheckableComboBox(self.ui.cmb000)
-		# for num in range(6):
-		# 	comboBox.addItem("checkbox " + str(num))
-		# comboBox.checkIndex(1)
-		# comboBox.checkIndex(2)
+		self.ui.progressBar.hide()
+
+
 
 
 	def cmb000(self):

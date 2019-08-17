@@ -15,6 +15,8 @@ class Edit(Init):
 
 
 		self.ui = self.sb.getUi('edit')
+
+		self.ui.progressBar.hide()
 		
 		
 

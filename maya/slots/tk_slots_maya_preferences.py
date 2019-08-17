@@ -18,11 +18,11 @@ class Preferences(Init):
 
 		self.ui.b010.setText(self.hotBox.app.capitalize()+' Preferences')
 
+		self.ui.progressBar.hide()
 
 		self.cmb001(init=1) #init cmb001
 		self.cmb002(init=1) #init cmb002
 		
-
 
 
 	def cmb001(self, index=None, init=False):

@@ -16,6 +16,8 @@ class Uv(Init):
 
 		self.ui = self.sb.getUi('uv')
 
+		self.ui.progressBar.hide()
+
 
 
 

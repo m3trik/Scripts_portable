@@ -16,6 +16,8 @@ class Create(Init):
 
 		self.ui = self.sb.getUi('create')
 
+		self.ui.progressBar.hide()
+
 		self.ui.cmb000.removeEventFilter(self.signal)
 		self.ui.cmb001.removeEventFilter(self.signal)
 

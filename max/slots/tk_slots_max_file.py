@@ -16,6 +16,8 @@ class File(Init):
 
 		self.ui = self.sb.getUi('file')
 
+		self.ui.progressBar.hide()
+
 		self.cmb006() #refresh cmb006 contents to reflect the current project folder
 
 
@@ -59,7 +61,7 @@ class File(Init):
 		if index!=0:
 			# force=True; force if maxEval("maxFileName;") else not force #if sceneName prompt user to save; else force open.  also: checkForSave(); If the scene has been modified since the last file save (if any), calling this function displays the message box prompting the user that the scene has been modified and requests to save.
 			rt.loadMaxFile(str(contents[index]))
-			self.hotBox.hide_()
+			self.hotBox.hide()
 			cmb.setCurrentIndex(0)
 
 
@@ -96,7 +98,7 @@ class File(Init):
 		index = cmb.currentIndex()
 		if index!=0:
 			rt.loadMaxFile(path+'\\'+str(files[index-1]))
-			self.hotBox.hide_()
+			self.hotBox.hide()
 			cmb.setCurrentIndex(0)
 
 
@@ -110,7 +112,7 @@ class File(Init):
 		
 		index = cmb.currentIndex()
 		if index!=0: #hide hotBox then perform operation
-			self.hotBox.hide_()
+			self.hotBox.hide()
 			if index == 1: #Import
 				maxEval('Import;')
 			if index == 2: #Import options
@@ -130,7 +132,7 @@ class File(Init):
 
 		index = cmb.currentIndex()
 		if index !=0: #hide hotBox then perform operation
-			self.hotBox.hide_()
+			self.hotBox.hide()
 			if index==1: #Export selection
 				maxEval('ExportSelection;')
 			if index==2: #Export options
@@ -264,7 +266,7 @@ class File(Init):
 		files = rt.getRecentfiles()
 		
 		rt.loadMaxFile(str(files[0]))
-		self.hotBox.hide_()
+		self.hotBox.hide()
 
 
 	def b002(self):

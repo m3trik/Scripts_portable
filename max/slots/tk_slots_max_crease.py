@@ -15,10 +15,12 @@ class Crease(Init):
 
 
 		self.ui = self.sb.getUi('crease')
+
 		self.ui.progressBar.hide()
 
 
-	
+
+
 	def chk002(self):
 		'''
 		Un-Crease

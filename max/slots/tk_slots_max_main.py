@@ -15,9 +15,11 @@ class Main(Init):
 
 
 		self.ui = self.sb.getUi('main')
+
 		
-		# self.getMethod('preferences', 'cmb000')() #init menuSet combobox
+		# self.getMethod('cmb000', 'preferences')() #init menuSet combobox
 		# self.getObject(self.sb.setClass('tk_slots_max_preferences.Preferences'), 'cmb000')[0]()
+
 
 
 
@@ -69,7 +71,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('polygons', 'b006')()
+			self.getMethod('b006', 'polygons')()
 
 
 	def v001(self):
@@ -79,7 +81,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('polygons','b005')()
+			self.getMethod('b005', 'polygons')()
 
 
 	def v002(self):
@@ -89,7 +91,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('polygons','b012')()
+			self.getMethod('b012', 'polygons')()
 
 
 	def v003(self):
@@ -99,7 +101,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('polygons','b004')()
+			self.getMethod('b004', 'polygons')()
 
 
 	def v004(self):
@@ -109,7 +111,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('edit','b032')()
+			self.getMethod('b032', 'edit')()
 
 
 	def v005(self):
@@ -119,7 +121,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('polygons','b009')()
+			self.getMethod('b009', 'polygons')()
 
 
 	def v006(self):
@@ -129,7 +131,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('polygons','b047')()
+			self.getMethod('b047', 'polygons')()
 
 
 	def v007(self):
@@ -139,7 +141,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('selection','b008')()
+			self.getMethod('b008', 'selection')()
 
 
 	def v008(self):
@@ -149,7 +151,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('polygons','b044')()
+			self.getMethod('b044', 'polygons')()
 		
 
 	def v009(self):
@@ -159,7 +161,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('polygons','b022')()
+			self.getMethod('b022', 'polygons')()
 
 
 	def v010(self):
@@ -169,7 +171,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('polygons','b007')()
+			self.getMethod('b007', 'polygons')()
 
 
 	def v011(self):
@@ -179,7 +181,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('polygons','b043')()
+			self.getMethod('b043', 'polygons')()
 
 
 	def v012(self):
@@ -197,7 +199,7 @@ class Main(Init):
 		# text = 'Minimize'
 		# self.ui.v008.setText(text)
 
-		self.getMethod('file','b005')()
+		self.getMethod('b005', 'file')()
 
 
 	def v024(self):

@@ -16,6 +16,8 @@ class Scripting(Init):
 
 		self.ui = self.sb.getUi('scripting')
 
+		self.ui.progressBar.hide()
+
 		# tk_cmdScrollFieldReporter = pm.cmdScrollFieldReporter (
 		# 														height=35,
 		# 														backgroundColor=[0,0,0],

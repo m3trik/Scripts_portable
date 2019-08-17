@@ -16,6 +16,8 @@ class Materials(Init):
 
 
 		self.ui = self.sb.getUi('materials')
+
+		self.ui.progressBar.hide()
 		
 		self.ui.t000.hide()
 		

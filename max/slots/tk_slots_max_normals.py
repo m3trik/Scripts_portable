@@ -16,6 +16,8 @@ class Normals(Init):
 
 		self.ui = self.sb.getUi('normals')
 
+		self.ui.progressBar.hide()
+
 		self.ui.b003.setText('Hard Edge Display')
 
 
@@ -64,7 +66,7 @@ class Normals(Init):
 		'''
 		Soften Edge Normal
 		'''
-		self.hotBox.hide_()
+		self.hotBox.hide()
 		maxEval('$.EditablePoly.makeSmoothEdges 1')
 
 
@@ -72,7 +74,7 @@ class Normals(Init):
 		'''
 		Harden Edge Normal
 		'''
-		self.hotBox.hide_()
+		self.hotBox.hide()
 		maxEval('$.EditablePoly.makeHardEdges 1')
 
 
@@ -111,7 +113,7 @@ class Normals(Init):
 				index = [mod for mod in obj.modifiers].index(mod)+1 #add one to convert index from python to maxscript
 				rt.maxOps.CollapseNodeTo(obj, index, False)
 
-		self.hotBox.hide_()
+		self.hotBox.hide()
 
 
 	def b005(self):

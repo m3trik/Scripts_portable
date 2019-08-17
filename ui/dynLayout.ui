@@ -2,15 +2,12 @@
 <ui version="4.0">
  <class>QtUi</class>
  <widget class="QMainWindow" name="QtUi">
-  <property name="enabled">
-   <bool>true</bool>
-  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>254</width>
-    <height>362</height>
+    <width>419</width>
+    <height>346</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -37,13 +34,53 @@
   <property name="dockOptions">
    <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::ForceTabbedDocks</set>
   </property>
+  <property name="bnabled" stdset="0">
+   <bool>true</bool>
+  </property>
   <widget class="QWidget" name="mainWindow">
+   <property name="palette">
+    <palette>
+     <active>
+      <colorrole role="Highlight">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>168</red>
+         <green>152</green>
+         <blue>250</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </active>
+     <inactive>
+      <colorrole role="Highlight">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>168</red>
+         <green>152</green>
+         <blue>250</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </inactive>
+     <disabled>
+      <colorrole role="Highlight">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>168</red>
+         <green>152</green>
+         <blue>250</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </disabled>
+    </palette>
+   </property>
    <widget class="QWidget" name="layoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>8</x>
-      <y>6</y>
-      <width>226</width>
+      <x>10</x>
+      <y>10</y>
+      <width>401</width>
       <height>321</height>
      </rect>
     </property>
@@ -149,10 +186,10 @@
  <connections/>
  <designerdata>
   <property name="gridDeltaX">
-   <number>4</number>
+   <number>5</number>
   </property>
   <property name="gridDeltaY">
-   <number>6</number>
+   <number>10</number>
   </property>
   <property name="gridSnapX">
    <bool>true</bool>

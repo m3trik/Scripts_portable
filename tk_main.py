@@ -17,6 +17,8 @@ except: pass
 
 
 
+
+
 # ------------------------------------------------
 # Mouse Tracking
 # ------------------------------------------------
@@ -35,73 +37,64 @@ def getMousePosition():
 
 
 # ------------------------------------------------
-# Custom HotBox Widget
+# hotBox 
 # ------------------------------------------------
 class HotBox(QtWidgets.QWidget):
-
-	def __init__(self, parent=None):
+	'''
+	Construct the main widget
+	'''
+	def __init__(self, parent):
 		QtWidgets.QWidget.__init__(self)
-		
-		self.setObjectName(self.__class__.__name__) #set object name to: 'HotBox'
-		
+		self.setObjectName(self.__class__.__name__) #set objectName to: 'HotBox'
+
 		#set window style
 		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint|QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.X11BypassWindowManagerHint)
 		self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 		# self.setStyle(QtWidgets.QStyleFactory.create("plastique"))
 		self.setStyleSheet(styleSheet.css)
-		
-		# self.setMouseTracking(True) #mouse tracking events during mouse button up state.
-		
-		
+
 		self.sb = Switchboard()
-		
 		self.app = self.sb.setApp(parent)
-		
+
 		self.sb.setClass(self) #add hotBox instance to switchboard dict
 		self.signal = self.sb.setClass('tk_signals.Signal')()
+
+		self.stackedLayout = None
 
 
 
 	def layoutStack(self, index):
 		'''
-		#args:
-			index=int - index for ui in stacked layout
-						*or string - name of ui in stacked layout
+		args:
+			index=int - index of ui in stacked layout
+				or 'string' - name of ui in stacked layout
 		'''
 		if type(index)!=int: #get index using name
 			index = self.sb.getUiIndex(index)
-
-		if not self.layout(): #if layout doesnt exist; initialize stackedLayout.
-			self.stackedLayout = QtWidgets.QStackedLayout()
-
-			for name, ui in self.sb.uiList():
-				# store size info for each ui
-				self.sb.setUiSize(name, [ui.frameGeometry().width(), ui.frameGeometry().height()])
-				# ui.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
-				# add ui to layoutStack
-				self.stackedLayout.addWidget(ui) #add each ui
-			self.setLayout(self.stackedLayout)
-
 
 		self.index = index
 		self.name = self.sb.setUiName(self.index) #get/set current ui name from index
 		self.ui = self.sb.getUi() #get the current dymanic ui
 
-		#set ui from stackedLayout
-		self.stackedLayout.setCurrentIndex(self.index)
 
-		
-		#get ui size for current ui and resize window
-		self.width = self.sb.getUiSize(width=1)
-		self.height = self.sb.getUiSize(height=1)
-		# self.ui.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-		self.resize(self.width, self.height) #window size
-		
+		if not self.stackedLayout: #add the stacked layout.
+			self.stackedLayout = QtWidgets.QStackedLayout(self)
+
+			for name, ui in self.sb.uiList():
+				self.sb.setUiSize(name) #store size info for each ui
+				self.stackedLayout.addWidget(ui) #add each ui to the stackedLayout.
+
+		self.stackedLayout.setCurrentIndex(self.index) #set the index in the stackedLayout for the given ui.
+
+
+		self.resize(self.sb.getUiSize(width=1), self.sb.getUiSize(height=1)) #get ui size for current ui and resize window
+
 		self.point = QtCore.QPoint(self.sb.getUiSize(percentWidth=50), self.sb.getUiSize(percentHeight=50)) #set point to the middle of the layout
-		#position window
-		if not any([self.name=='init', self.name=='main', self.name=='viewport']): #set initial positon on showEvent, and reposition here on index change.
-			self.moveWindow(self, -self.point.x(), -self.point.y()/2)
-			
+
+
+		# if not any([self.name=='init', self.name=='main', self.name=='viewport']):
+		self.moveToMousePosition(self, -self.point.x(), -self.point.y()) #set initial positon on showEvent, and reposition here on index change.
+
 
 		if not self.sb.hasKey(self.name, 'connectionDict'):
 			self.signal.buildConnectionDict() #construct the signals and slots for the ui
@@ -109,8 +102,7 @@ class HotBox(QtWidgets.QWidget):
 
 		if self.name=='init':
 			self.sb.getClass('init')().info()
-		else:
-			#remove old and add new signals for current ui from connectionDict
+		else: #remove old and add new signals for current ui from connectionDict
 			if self.name!=self.sb.previousName(allowDuplicates=1):
 				if self.sb.previousName():
 					self.signal.removeSignal(self.sb.previousName())
@@ -120,13 +112,6 @@ class HotBox(QtWidgets.QWidget):
 
 
 
-		#close window when pin unchecked
-		try: self.ui.pin.released.connect(self.hide_)
-		except: pass
-
-		
-
-
 
 # ------------------------------------------------
 # Event overrides
@@ -134,7 +119,7 @@ class HotBox(QtWidgets.QWidget):
 	def hoverEvent(self, event):
 		'''
 		args:
-			event=QEvent
+			event=<QEvent>
 		'''
 		print "hover"
 
@@ -142,7 +127,7 @@ class HotBox(QtWidgets.QWidget):
 	def keyPressEvent(self, event):
 		'''
 		args:
-			event=QEvent
+			event=<QEvent>
 		'''
 		if event.key()==QtCore.Qt.Key_F12 and not event.isAutoRepeat(): #Key_Meta or Key_Menu =windows key
 			if all ([self.name!='init', self.name!='main', self.name!='viewport']):
@@ -152,7 +137,7 @@ class HotBox(QtWidgets.QWidget):
 	def keyReleaseEvent(self, event):
 		'''
 		args:
-			event=QEvent
+			event=<QEvent>
 		'''
 		if event.key()==QtCore.Qt.Key_F12 and not event.isAutoRepeat():
 			self.hide_()
@@ -161,7 +146,7 @@ class HotBox(QtWidgets.QWidget):
 	def mousePressEvent(self, event):
 		'''
 		args:
-			event=QEvent
+			event=<QEvent>
 		'''
 		if any ([self.name=='main', self.name=='viewport', self.name=='init', self.name=='display']):
 			if event.button()==QtCore.Qt.LeftButton:
@@ -177,7 +162,7 @@ class HotBox(QtWidgets.QWidget):
 	def mouseDoubleClickEvent(self, event):
 		'''
 		args:
-			event=QEvent
+			event=<QEvent>
 		'''
 		if event.button()==QtCore.Qt.RightButton:
 			if any([self.name=='init', self.name=='main']):
@@ -204,27 +189,22 @@ class HotBox(QtWidgets.QWidget):
 	def mouseMoveEvent(self, event):
 		'''
 		args:
-			event=QEvent
+			event=<QEvent>
 		'''
 		if self.name=='main':
 			self.setVisibilityOnHover(event.pos(), 'r000-9')
-			self.setDown_(event.pos(), 'i003-29, v000-32')
+			self.setDown_(event.pos(), 'i003-32, v000-37')
 			self.showPopup_(event.pos(), 'cmb000-2')
 
-		if self.name=='viewport':
+		elif self.name=='viewport':
 			self.setVisibilityOnHover(event.pos(), 'r000-8')
 			self.setDown_(event.pos(), 'v000-29')
 			self.showPopup_(event.pos(), 'cmb000-3')
 
-		elif self.name!='init' and event.buttons()==QtCore.Qt.LeftButton:
-			if (event.buttons() & QtCore.Qt.LeftButton): #drag window and pin
-				self.moveWindow(self, -self.point.x(), -self.point.y()*.1) #set mouse position and move window with mouse down
-				self.ui.pin.setChecked(True)
-
 
 	def unpackNames(self, nameString):
 		'''
-		get a list of individual names from a single name string.
+		Get a list of individual names from a single name string.
 		args:
 			nameString=string consisting of widget names separated by commas. ie. 'v000, b004-6'
 		returns:
@@ -247,7 +227,7 @@ class HotBox(QtWidgets.QWidget):
 
 	def getUiObject(self, widgets):
 		'''
-		get ui objects from name strings.
+		Get ui objects from name strings.
 		args:
 			widgets='string' - ui object names
 		returns:
@@ -264,7 +244,7 @@ class HotBox(QtWidgets.QWidget):
 
 	def setVisibilityOnHover(self, mousePosition, widgets):
 		'''
-		show/hide widgets on mouseover event.
+		Show/hide widgets on mouseover event.
 		args:
 			mousePosition=QPoint
 			widgets=string consisting of widget names separated by commas. ie. 'r000, r001, v000-13, i020-23'
@@ -278,7 +258,7 @@ class HotBox(QtWidgets.QWidget):
 
 	def setDown_(self, mousePosition, widgets):
 		'''
-		set pushbutton down state.
+		Set pushbutton down state.
 		args:
 			mousePosition=QPoint
 			widgets=string consisting of widget names separated by commas. ie. 'r000, r001, v000-13, i020-23'
@@ -292,7 +272,7 @@ class HotBox(QtWidgets.QWidget):
 
 	def showPopup_(self, mousePosition, widgets):
 		'''
-		set combobox popup state.
+		Set combobox popup state.
 		args:
 			mousePosition=QPoint
 			widgets=string 
@@ -316,6 +296,9 @@ class HotBox(QtWidgets.QWidget):
 
 
 	def hide_(self):
+		'''
+		Prevent hide event under certain circumstances.
+		'''
 		try: #if pin is unchecked: hide
 			if not self.ui.pin.isChecked():
 				self.hide()
@@ -326,40 +309,42 @@ class HotBox(QtWidgets.QWidget):
 	def hideEvent(self, event):
 		'''
 		args:
-			event=QEvent
+			event=<QEvent>
 		'''
 		try: MaxPlus.CUI.EnableAccelerators()
 		except: pass
+
 		self.layoutStack('init')
 
 
 	def showEvent(self, event):
 		'''
 		args:
-			event=QEvent
+			event=<QEvent>
 		'''
 		try: MaxPlus.CUI.DisableAccelerators()
 		except: pass
-		self.moveWindow(self, -self.point.x(), -self.point.y()) #move window to cursor position and offset from left corner to center
+
+		self.moveToMousePosition(self, -self.point.x(), -self.point.y()) #move window to cursor position and offset from left corner to center
 
 
-	def moveWindow(self, window, x, y):
+	def moveToMousePosition(self, window, xOffset=None, yOffset=None):
 		'''
-		move window from it's current position to the mouse position.
+		Move window from it's current position to the mouse position.
 		args:
 			window=widget
-			x=int - x coordinate
-			y=int = y coordinate
+			xOffset=int - optional x coordinate offset amount
+			yOffset=int - optional y coordinate offset amount
 		'''
 		mPos = getMousePosition()
-		x = mPos['x']+x
-		y = mPos['y']+y
+		x = mPos['x']+xOffset
+		y = mPos['y']+yOffset
 		window.move(x, y)
 
 
 	def repeatLastCommand(self):
 		'''
-		repeat the last used command.
+		Repeat the last used command.
 		'''
 		self.sb.prevCommand()()
 		print self.sb.prevCommand(docString=1) #print command name string
@@ -367,12 +352,10 @@ class HotBox(QtWidgets.QWidget):
 
 	def repeatLastView(self):
 		'''
-		show the previous view.
+		Show the previous view.
 		'''
 		self.sb.previousView()()
 		print self.sb.previousView(asList=1)
-
-
 
 
 
@@ -388,42 +371,66 @@ class Overlay(QtWidgets.QWidget):
 	def __init__(self, parent=None):
 		super(Overlay, self).__init__(parent)
 
-		self.setAttribute(QtCore.Qt.WA_NoSystemBackground)
+		self.setAttribute(QtCore.Qt.WA_NoSystemBackground) #takes a single arg
 		self.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
 
 		self.sb = Switchboard()
+		self.point = self.sb.getClass('hotBox').point #self.point = QtCore.QPoint(self.sb.getUiSize(percentWidth=50), self.sb.getUiSize(percentHeight=50)) #set point to the middle of the layout
 
-		self.point = QtCore.QPoint(self.sb.getUiSize(percentWidth=50), self.sb.getUiSize(percentHeight=50)) #set point to the middle of the layout
 		self.start_line, self.end_line = self.point, QtCore.QPoint()
 
 
 
 	def paintEvent(self, event):
+		'''
+		args:
+			event=<QEvent>
+		'''
 		if any([self.sb.getUiName()=='main', self.sb.getUiName()=='viewport']):
+
+			greyPen = QtGui.QPen(QtGui.QColor(115, 115, 115), 3, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
+			blackPen = QtGui.QPen(QtGui.QColor(0, 0, 0), 1, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
+
+			path = QtGui.QPainterPath()
+			path.addEllipse(QtCore.QPointF(self.point), 7, 7)
+
 			painter = QtGui.QPainter(self) #Initialize painter
-			painter.fillRect(self.rect(), QtGui.QColor(127, 127, 127, 0))
-			pen = QtGui.QPen(QtGui.QColor(115, 115, 115), 3, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
-			painter.setPen(pen)
+			painter.fillRect(self.rect(), QtGui.QColor(127, 127, 127, 0)) #transparent overlay background.
 			painter.setRenderHint(QtGui.QPainter.Antialiasing, True)
 			painter.setBrush(QtGui.QColor(115, 115, 115))
-			painter.drawEllipse(self.point, 5, 5)
+			painter.fillPath(path, QtGui.QColor(115, 115, 115))
+			painter.setPen(blackPen)
+			painter.drawPath(path) #stroke
 			if not self.end_line.isNull():
+				painter.setPen(greyPen)
 				painter.drawLine(self.start_line, self.end_line)
 				painter.drawEllipse(self.end_line, 5, 5)
 
 
 	def mousePressEvent(self, event):
+		'''
+		args:
+			event=<QEvent>
+		'''
 		self.start_line = self.point
 		self.end_line = event.pos()
 		self.update()
 
 
 	def mouseMoveEvent(self, event):
+		'''
+		args:
+			event=<QEvent>
+		'''
 		self.end_line = event.pos()
 		self.update()
 
 
 	def mouseReleaseEvent(self, event):
+		'''
+		args:
+			event=<QEvent>
+		'''
 		self.start_line = self.point
 		self.end_line = QtCore.QPoint()
 
@@ -436,8 +443,11 @@ class OverlayFactoryFilter(QtCore.QObject):
 		self.m_overlay = None
 
 
-
 	def setWidget(self, w):
+		'''
+		args:
+			w=<QWidget>
+		'''
 		w.installEventFilter(self)
 		if self.m_overlay is None:
 			self.m_overlay = Overlay()
@@ -445,6 +455,10 @@ class OverlayFactoryFilter(QtCore.QObject):
 
 
 	def eventFilter(self, obj, event):
+		'''
+		args:
+			event=<QEvent>
+		'''
 		if not obj.isWidgetType():
 			return False
 
@@ -462,11 +476,8 @@ class OverlayFactoryFilter(QtCore.QObject):
 				self.m_overlay.resize(obj.size())
 		elif event.type() == QtCore.QEvent.Show:
 			self.m_overlay.raise_()
-			# self.m_overlay.activateWindow()
+			#self.m_overlay.activateWindow()
 		return super(OverlayFactoryFilter, self).eventFilter(obj, event)
-
-
-
 
 
 
@@ -475,18 +486,18 @@ class OverlayFactoryFilter(QtCore.QObject):
 # Popup Window
 # ------------------------------------------------
 class Popup(QtWidgets.QWidget):
-	def __init__(self, parent = None, ui=None):
+	def __init__(self, ui, parent=None):
 		QtWidgets.QWidget.__init__(self, parent)
 
 		layout = QtWidgets.QGridLayout(self)
 		layout.addWidget(ui)
-
-		layout.setContentsMargins(0, 0, 0, 0) #adjust the margins or you will get an invisible, unintended border
+		layout.setContentsMargins(0,0,0,0) #adjust the margins or you will get an invisible, unintended border
 
 		self.setLayout(layout)
 		self.adjustSize()
 
 		self.setWindowFlags(QtCore.Qt.Popup | QtCore.Qt.Tool | QtCore.Qt.FramelessWindowHint) #tag this widget as a popup
+
 
 
 
@@ -502,6 +513,8 @@ class _GCProtector(object):
 	widgets=[]
 
 
+
+
 # ------------------------------------------------
 # Initialize
 # ------------------------------------------------
@@ -514,10 +527,11 @@ def createInstance():
 	try: mainWindow = MaxPlus.GetQMaxMainWindow(); mainWindow.setObjectName('MaxWindow')
 	except: mainWindow = [x for x in app.topLevelWidgets() if x.objectName() == 'MayaWindow'][0]
 	
-	hotBox = HotBox(parent=mainWindow)
+	hotBox = HotBox(mainWindow)
 	hotBox.layoutStack('init') #initialize layout
 	hotBox.overlay = OverlayFactoryFilter()
 	hotBox.overlay.setWidget(hotBox)
+
 
 	_GCProtector.widgets.append(hotBox)
 
@@ -540,20 +554,101 @@ print os.path.splitext(os.path.basename(__file__))[0]
 # Notes
 # -----------------------------------------------
 
-# ------------------------------------------------
-	# def mouseReleaseEvent(self, event):
-	# 	# if event.button() == QtCore.Qt.LeftButton:
-	# 	if self.mouseHover:
-	# 		# self.buttonObject.click()
-	# 		pass
-	# 		# print "mouseReleaseEvent", self.mouseHover
-			
-
-	# def leaveEvent(self, event):
-	# 	#args: [QEvent]
-	# 	#can be temp set with; self.leaveEventOn = bool
-	# 	pass
-
-# ------------------------------------------------
 
 
+
+# # ------------------------------------------------
+# # Grid
+# # ------------------------------------------------
+# class Grid(QtWidgets.QWidget):
+# 	def __init__(self, hotBox, parent=None):
+# 		super(Grid, self).__init__(parent)
+
+
+# 		# layout = QtWidgets.QHBoxLayout(self)
+# 		# layout.setSpacing(0)
+# 		# layout.setContentsMargins(0,0,0,0)
+
+# 		# self.pin = Pin(hotBox)
+# 		# layout.addWidget(self.pin)
+
+# 		# self.cmb = QtWidgets.QComboBox()
+# 		# self.cmb.setMaximumSize(18,18)
+# 		# layout.addWidget(self.cmb)
+
+# 		self.hotBox = hotBox
+
+# 		self.hotBox.signal.buildConnectionDict('grid') #construct the signals and slots for the ui
+# 		self.ui = self.hotBox.sb.getUi('grid')
+
+# 		self.ui.pin.installEventFilter(self)
+
+
+
+# 	def eventFilter(self, obj, event):
+# 		# if event.buttons()==QtCore.Qt.LeftButton:
+# 		if event.type()==QtCore.QEvent.MouseButtonPress:
+# 			self.__mousePressPos = event.globalPos()
+# 			return True
+
+# 		if event.type()==QtCore.QEvent.MouseMove:
+# 			self.hotBox.moveToMousePosition(self.hotBox, -self.hotBox.point.x(), -self.hotBox.point.y()*.1) #move window on left mouse drag.
+# 			return True
+
+# 		if event.type()==QtCore.QEvent.MouseButtonRelease:
+# 			moveAmount = event.globalPos() - self.__mousePressPos
+# 			if moveAmount.manhattanLength() > 5: #if button moved:
+# 				self.setChecked(True) #setChecked to prevent window from closing.
+# 				event.ignore()
+# 			else:
+# 				self.setChecked(not self.isChecked()) #toggle check state
+# 				self.hotBox.hide_()
+# 			return True
+# 		return False #return False for other event types
+
+
+
+
+# class Pin(QtWidgets.QPushButton):
+# 	'''
+# 	Pushbutton overridden to move the main window on left mouse drag event.
+# 	When checked, prevents hide event on main window.
+# 	'''
+# 	def __init__(self, hotBox, parent=None):
+# 		super(Pin, self).__init__(parent)
+
+# 		self.hotBox = hotBox
+# 		self.setCheckable(True)
+
+
+# 	def mousePressEvent(self, event):
+# 		'''
+# 		args:
+# 			event=<QEvent>
+# 		'''
+# 		if event.button()==QtCore.Qt.LeftButton:
+# 			self.__mousePressPos = event.globalPos()
+
+
+# 	def mouseMoveEvent(self, event):
+# 		'''
+# 		args:
+# 			event=<QEvent>
+# 		'''
+# 		if event.buttons()==QtCore.Qt.LeftButton:
+# 			self.hotBox.moveToMousePosition(self.hotBox, -self.hotBox.point.x(), -self.hotBox.point.y()*.1) #move window on left mouse drag.
+
+
+# 	def mouseReleaseEvent(self, event):
+# 		'''
+# 		args:
+# 			event=<QEvent>
+# 		'''
+# 		if event.button()==QtCore.Qt.LeftButton:
+# 			moveAmount = event.globalPos() - self.__mousePressPos
+# 			if moveAmount.manhattanLength() > 5: #if button moved:
+# 				self.setChecked(True) #setChecked to prevent window from closing.
+# 				event.ignore()
+# 			else:
+# 				self.setChecked(not self.isChecked()) #toggle check state
+# 				self.hotBox.hide_()

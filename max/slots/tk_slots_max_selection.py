@@ -15,6 +15,8 @@ class Selection(Init):
 		
 		
 		self.ui = self.sb.getUi('selection')
+
+		self.ui.progressBar.hide()
 		
 		#set checked button states
 		#chk004 ignore backfacing (camera based selection)

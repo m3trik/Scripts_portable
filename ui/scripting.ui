@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>457</width>
-    <height>302</height>
+    <width>499</width>
+    <height>348</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -38,371 +38,367 @@
    <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::ForceTabbedDocks</set>
   </property>
   <widget class="QWidget" name="mainWindow">
-   <widget class="QGroupBox" name="groupBox_2">
+   <widget class="QWidget" name="layoutWidget_2">
     <property name="geometry">
      <rect>
       <x>8</x>
-      <y>210</y>
-      <width>305</width>
-      <height>73</height>
+      <y>12</y>
+      <width>473</width>
+      <height>313</height>
      </rect>
     </property>
-    <property name="title">
-     <string>Command</string>
-    </property>
-    <widget class="QPushButton" name="b003x">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>12</y>
-       <width>89</width>
-       <height>19</height>
-      </rect>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <property name="spacing">
+      <number>0</number>
      </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="b003x_2">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>30</y>
-       <width>89</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="b003x_3">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>48</y>
-       <width>89</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QPushButton" name="chk000">
-    <property name="geometry">
-     <rect>
-      <x>332</x>
-      <y>30</y>
-      <width>41</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>toggle MEL/python syntax</string>
-    </property>
-    <property name="text">
-     <string>python</string>
-    </property>
-    <property name="checkable">
-     <bool>true</bool>
-    </property>
-    <property name="checked">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QTabWidget" name="tabWidget">
-    <property name="geometry">
-     <rect>
-      <x>8</x>
-      <y>30</y>
-      <width>401</width>
-      <height>157</height>
-     </rect>
-    </property>
-    <property name="tabShape">
-     <enum>QTabWidget::Rounded</enum>
-    </property>
-    <property name="currentIndex">
-     <number>0</number>
-    </property>
-    <property name="elideMode">
-     <enum>Qt::ElideNone</enum>
-    </property>
-    <property name="documentMode">
-     <bool>false</bool>
-    </property>
-    <property name="tabsClosable">
-     <bool>false</bool>
-    </property>
-    <property name="movable">
-     <bool>true</bool>
-    </property>
-    <widget class="QWidget" name="tab">
-     <attribute name="title">
-      <string/>
-     </attribute>
-     <widget class="QPlainTextEdit" name="plainTextEdit">
-      <property name="geometry">
-       <rect>
-        <x>-4</x>
-        <y>0</y>
-        <width>397</width>
-        <height>127</height>
-       </rect>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::Box</enum>
-      </property>
-      <property name="lineWidth">
-       <number>0</number>
-      </property>
-      <property name="lineWrapMode">
-       <enum>QPlainTextEdit::NoWrap</enum>
-      </property>
-      <property name="tabStopWidth">
-       <number>2</number>
-      </property>
-      <property name="backgroundVisible">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </widget>
-   </widget>
-   <widget class="QPushButton" name="b003">
-    <property name="geometry">
-     <rect>
-      <x>372</x>
-      <y>30</y>
-      <width>16</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
-    <property name="toolTip">
-     <string>Text editor: create new tab</string>
-    </property>
-    <property name="text">
-     <string>+</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="b004">
-    <property name="geometry">
-     <rect>
-      <x>316</x>
-      <y>30</y>
-      <width>16</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
-    <property name="toolTip">
-     <string>Text editor: delete current tab</string>
-    </property>
-    <property name="text">
-     <string>-</string>
-    </property>
-   </widget>
-   <widget class="QGroupBox" name="groupBox">
-    <property name="geometry">
-     <rect>
-      <x>320</x>
-      <y>210</y>
-      <width>89</width>
-      <height>73</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QPushButton" name="b001">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>12</y>
-       <width>89</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Script Window</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="b002">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>30</y>
-       <width>89</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="toolTip">
-      <string>Lauch the script editor</string>
-     </property>
-     <property name="text">
-      <string>Script Editor</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="b000">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>48</y>
-       <width>89</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="toolTip">
-      <string>toggle script output window</string>
-     </property>
-     <property name="text">
-      <string>Output Window</string>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QComboBox" name="comboBox">
-    <property name="geometry">
-     <rect>
-      <x>8</x>
-      <y>186</y>
-      <width>401</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="editable">
-     <bool>false</bool>
-    </property>
-    <item>
-     <property name="text">
-      <string>Recent Commands:</string>
-     </property>
-    </item>
-   </widget>
-   <widget class="QFrame" name="menubar">
-    <property name="geometry">
-     <rect>
-      <x>8</x>
-      <y>0</y>
-      <width>401</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <widget class="QPushButton" name="pin">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>380</x>
-       <y>0</y>
-       <width>21</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>111</width>
-       <height>19</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
-     <property name="toolTip">
-      <string>pin this window to a separate instance.</string>
-     </property>
-     <property name="text">
-      <string>≡</string>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>18</width>
-       <height>18</height>
-      </size>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QComboBox" name="cmb000">
-     <property name="geometry">
-      <rect>
-       <x>360</x>
-       <y>1</y>
-       <width>27</width>
-       <height>18</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>20</width>
-       <height>18</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>9999</width>
-       <height>18</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>9</pointsize>
-      </font>
-     </property>
-     <property name="statusTip">
-      <string/>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::RightToLeft</enum>
-     </property>
-     <property name="maxVisibleItems">
-      <number>50</number>
-     </property>
-     <property name="sizeAdjustPolicy">
-      <enum>QComboBox::AdjustToContents</enum>
-     </property>
-     <property name="frame">
-      <bool>false</bool>
-     </property>
-     <item>
-      <property name="text">
-       <string/>
-      </property>
+     <item row="2" column="1" colspan="2">
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="tabShape">
+        <enum>QTabWidget::Rounded</enum>
+       </property>
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <property name="elideMode">
+        <enum>Qt::ElideNone</enum>
+       </property>
+       <property name="documentMode">
+        <bool>false</bool>
+       </property>
+       <property name="tabsClosable">
+        <bool>false</bool>
+       </property>
+       <property name="movable">
+        <bool>true</bool>
+       </property>
+       <widget class="QWidget" name="tab">
+        <attribute name="title">
+         <string/>
+        </attribute>
+        <widget class="QPlainTextEdit" name="plainTextEdit">
+         <property name="geometry">
+          <rect>
+           <x>-4</x>
+           <y>18</y>
+           <width>469</width>
+           <height>193</height>
+          </rect>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="lineWidth">
+          <number>0</number>
+         </property>
+         <property name="lineWrapMode">
+          <enum>QPlainTextEdit::NoWrap</enum>
+         </property>
+         <property name="tabStopWidth">
+          <number>2</number>
+         </property>
+         <property name="backgroundVisible">
+          <bool>true</bool>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="b004">
+         <property name="geometry">
+          <rect>
+           <x>392</x>
+           <y>0</y>
+           <width>16</width>
+           <height>19</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string>Text editor: delete current tab</string>
+         </property>
+         <property name="text">
+          <string>-</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="b003">
+         <property name="geometry">
+          <rect>
+           <x>448</x>
+           <y>0</y>
+           <width>16</width>
+           <height>19</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string>Text editor: create new tab</string>
+         </property>
+         <property name="text">
+          <string>+</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="chk000">
+         <property name="geometry">
+          <rect>
+           <x>408</x>
+           <y>0</y>
+           <width>41</width>
+           <height>19</height>
+          </rect>
+         </property>
+         <property name="toolTip">
+          <string>toggle MEL/python syntax</string>
+         </property>
+         <property name="text">
+          <string>python</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </widget>
+      </widget>
      </item>
-    </widget>
-    <zorder>cmb000</zorder>
-    <zorder>pin</zorder>
+     <item row="1" column="2">
+      <widget class="QComboBox" name="cmb">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>18</width>
+         <height>15</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>18</width>
+         <height>15</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1" colspan="2">
+      <widget class="QProgressBar" name="progressBar">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>10</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>10</height>
+        </size>
+       </property>
+       <property name="value">
+        <number>0</number>
+       </property>
+       <property name="textVisible">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1" colspan="2">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <property name="spacing">
+          <number>12</number>
+         </property>
+         <item>
+          <widget class="QGroupBox" name="groupBox_2">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>73</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>111</width>
+             <height>73</height>
+            </size>
+           </property>
+           <property name="title">
+            <string>Command</string>
+           </property>
+           <widget class="QPushButton" name="b003x">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>12</y>
+              <width>89</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="b003x_2">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>30</y>
+              <width>89</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="b003x_3">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>48</y>
+              <width>89</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="spacing">
+          <number>12</number>
+         </property>
+         <item>
+          <widget class="QGroupBox" name="groupBox">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>73</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>111</width>
+             <height>73</height>
+            </size>
+           </property>
+           <property name="title">
+            <string/>
+           </property>
+           <widget class="QPushButton" name="b001">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>12</y>
+              <width>109</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Script Window</string>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="b002">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>30</y>
+              <width>109</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="toolTip">
+             <string>Lauch the script editor</string>
+            </property>
+            <property name="text">
+             <string>Script Editor</string>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="b000">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>48</y>
+              <width>109</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="toolTip">
+             <string>toggle script output window</string>
+            </property>
+            <property name="text">
+             <string>Output Window</string>
+            </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item row="3" column="1" colspan="2">
+      <widget class="QComboBox" name="comboBox">
+       <property name="editable">
+        <bool>false</bool>
+       </property>
+       <item>
+        <property name="text">
+         <string>Recent Commands:</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="pin">
+       <property name="minimumSize">
+        <size>
+         <width>19</width>
+         <height>17</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>999</width>
+         <height>17</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
-   <zorder>tabWidget</zorder>
-   <zorder>groupBox_2</zorder>
-   <zorder>chk000</zorder>
-   <zorder>b003</zorder>
-   <zorder>b004</zorder>
-   <zorder>groupBox</zorder>
-   <zorder>comboBox</zorder>
-   <zorder>menubar</zorder>
   </widget>
  </widget>
  <resources/>

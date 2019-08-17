@@ -4,8 +4,7 @@ try: tk_scrollFieldReporter = pm.melGlobals['tk_scrollFieldReporter']; pm.scroll
 except: pass
 
 from pydoc import locate
-# from tk_slots_maya_init import Init as func
-from tk_slots_ import Slot
+from tk_slots_maya_init import Init as func #inherits from Slot
 import tk_switchboard as sb
 
 
@@ -16,7 +15,7 @@ import tk_switchboard as sb
 
 
 
-class Test001(Slot):
+class Test001(func):
 	def __init__(self, *args, **kwargs):
 		super(Test001, self).__init__(*args, **kwargs)
 
@@ -48,51 +47,70 @@ class Test001(Slot):
 # test.method()
 
 
-
-
 import maya.OpenMayaUI as omUI
 from PySide2 import QtWidgets, QtCore
 import shiboken2
 
 
-def getMayaWindow():
-	'''
-	Get the main Maya window as a QtGui.QMainWindow instance
-	@return: QtGui.QMainWindow instance of the top level Maya windows
-	'''
-	ptr = apiUI.MQtUtil.mainWindow()
-	if ptr:
-		return shiboken2.wrapInstance(long(ptr), QtWidgets.QWidget)
+def mayaWidgets(widgetList):
+	return {widget:self.getMayaWidget(widget) for widget in widgetList}
 
 
-def toQtObject(mayaName):
-	'''
-	Given the name of a Maya UI element of any type,
-	return the corresponding QWidget or QAction.
-	If the object does not exist, returns None
-	'''
-	ptr = omUI.MQtUtil.findControl(mayaName)
-	if ptr is None:
-		ptr = omUI.MQtUtil.findLayout(mayaName)
-	if ptr is None:
-		ptr = omUI.MQtUtil.findMenuItem(mayaName)
-	if ptr is not None:
-		return sip.wrapinstance(long(ptr), QtCore.QObject)
 
-
-class MayaSubWindow(QtWidgets.QMainWindow):
+class embedWidget(QtWidgets.QMainWindow):
 	'''
 
 	'''
-	def __init__(self, parent=getMayaWindow()):
-		super(MayaSubWindow, self).__init__(parent)
-		self.executer = pm.cmdScrollFieldExecuter(sourceType='python')
-		qtObj = toQtObject(self.executer)
-		#Fill the window, could use qtObj.setParent
-		#and then add it to a layout.
-		self.setCentralWidget(qtObj)
+	def __init__(self, parent=func.getMayaMainWindow()):
+		super(embedWidget, self).__init__(parent)
 
-w = MayaSubWindow()
+
+		keyword1 = 'outliner'
+		keyword2 = ''
+		widgets = {w.objectName():w for w in QtWidgets.QApplication.allWidgets() if keyword1 in w.objectName() and keyword2 in w.objectName() or keyword1.title() in w.objectName() and keyword2 in w.objectName()}
+		# for widget in widgets:
+		# 	print widget
+
+
+		widget = func.getMayaWidget('ToggledOutlinerLayout') #DisplayLayerTab
+		layout = widget.layout()
+		# print widget, layout
+		self.setLayout(layout)
+		self.setCentralWidget(widget)
+		# self.setCentralWidget(func.convertToWidget(widget))
+
+
+w = embedWidget()
 w.show()
+# w.resize(w.sizeHint())
+
+
+# # We create a simple window with a QWidget
+# window = QtWidgets.QWidget()
+# window.resize(500,500)
+# # We have our Qt Layout where we want to insert, say, a Maya viewport
+# qtLayout = QtWidgets.QVBoxLayout(window)
+
+# # We set a qt object name for this layout.
+# qtLayout.setObjectName('viewportLayout') 
+
+# # We set the given layout as parent and create the paneLayout under it.
+# pm.setParent('viewportLayout')
+# paneLayoutName = pm.paneLayout()
+    
+# # Create the model panel. I use # to generate a new panel with no conflicting name
+# modelPanelName = pm.modelPanel("embeddedModelPanel#", cam='persp')
+
+# # Find a pointer to the paneLayout that we just created using Maya API
+# ptr = omUI.MQtUtil.findControl(paneLayoutName)
+    
+# # Wrap the pointer into a python QObject. Note that with PyQt QObject is needed. In Shiboken we use QWidget.
+# paneLayoutQt = shiboken2.wrapInstance(long(ptr), QtWidgets.QWidget)
+
+# # Now that we have a QtWidget, we add it to our Qt layout
+# qtLayout.addWidget(paneLayoutQt)
+
+# window.show()
+
 
 

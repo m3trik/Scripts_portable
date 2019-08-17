@@ -16,6 +16,8 @@ class Animation(Init):
 
 		self.ui = self.sb.getUi('animation')
 
+		self.ui.progressBar.hide()
+
 
 
 

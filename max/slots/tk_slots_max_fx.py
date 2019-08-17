@@ -16,6 +16,8 @@ class Fx(Init):
 
 		self.ui = self.sb.getUi('fx')
 
+		self.ui.progressBar.hide()
+
 
 
 

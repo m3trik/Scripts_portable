@@ -16,6 +16,8 @@ class Rigging(Init):
 
 		self.ui = self.sb.getUi('rigging')
 
+		self.ui.progressBar.hide()
+
 
 
 

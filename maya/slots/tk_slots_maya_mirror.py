@@ -16,6 +16,8 @@ class Mirror(Init):
 
 		self.ui = self.sb.getUi('mirror')
 
+		self.ui.progressBar.hide()
+
 
 
 

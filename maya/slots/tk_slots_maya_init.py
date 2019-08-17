@@ -1,7 +1,9 @@
 import maya.mel as mel
 import pymel.core as pm
+import maya.OpenMayaUI as omUI
 
-from PySide2 import QtGui
+from PySide2 import QtGui, QtWidgets
+import shiboken2
 
 import os.path
 
@@ -22,9 +24,10 @@ class Init(Slot):
 
 
 
+
 	def info(self):
 		'''
-		get current attributes. those with relavant values will be displayed.
+		get current attributes. those with relevant values will be displayed.
 		'''
 		infoDict={}
 		selection = pm.ls(selection=1)
@@ -424,12 +427,80 @@ class Init(Slot):
 
 
 
+
+
+
 	# ------------------------------------------------
 	' Ui'
 	# ------------------------------------------------
 
 
-	#to use main progressBar: name=string $gMainProgressBar
+
+	@staticmethod
+	def getMayaMainWindow():
+		'''
+		Get the main Maya window as a QtGui.QMainWindow instance
+		returns:
+			QtGui.QMainWindow instance of the top level Maya windows
+		'''
+		ptr = omUI.MQtUtil.mainWindow()
+		if ptr:
+			return shiboken2.wrapInstance(long(ptr), QtWidgets.QWidget)
+
+
+
+	@staticmethod
+	def getMayaWindow(name, allWindows=False):
+		'''
+		args:
+			name='string' - name of window (window.objectName)
+			allWindows=bool - return a dictionary of all windows {windowName:window}
+		returns:
+			corresponding <window object> from given window object name
+		'''
+		windows = {w.objectName():w for w in QtWidgets.QApplication.allWindows()}
+		if allWindows:
+			return windows
+		return windows[name]
+
+
+
+	@staticmethod
+	def getMayaWidget(name, allWidgets=False):
+		'''
+		args:
+			name='string' - name of widget (widget.objectName)
+			allWidgets=bool - return a dictionary of all widgets {widgetName:widget}
+		returns:
+			corresponding <widget object> from given widget object name
+		'''
+		widgets = {w.objectName():w for w in QtWidgets.QApplication.allWidgets()}
+		if allWidgets:
+			return widgets
+		return widgets[name]
+
+
+
+	@staticmethod
+	def convertToWidget(name):
+		'''
+		args:
+			name='string' - name of a Maya UI element of any type.
+			type_=<qt object type> - default is QWidget
+		returns:
+			the corresponding QWidget or QAction.
+			If the object does not exist, returns None
+		'''
+		ptr = omUI.MQtUtil.findControl(name)
+		if ptr is None:
+			ptr = omUI.MQtUtil.findLayout(name)
+			if ptr is None:
+				ptr = omUI.MQtUtil.findMenuItem(name)
+		if ptr is not None:
+			return shiboken2.wrapInstance(long(ptr), QtWidgets.QWidget)
+
+
+
 	@staticmethod
 	def mainProgressBar (size, name="tk_progressBar", stepAmount=1):
 		'''
@@ -437,6 +508,7 @@ class Init(Slot):
 			size=int - total amount
 			name='string' - name of progress bar created
 	  		stepAmount=int - increment amount
+	  	to use main progressBar: name=string $gMainProgressBar
 	  	'''
 		status = "processing: "+str(size)+"."
 		edit=0
@@ -457,6 +529,7 @@ class Init(Slot):
 		# 	if pm.progressBar ("tk_progressBar", query=1, isCancelled=1):
 		# 		break
 		# pm.progressBar ("tk_progressBar", edit=1, endProgress=1)
+
 
 
 	@staticmethod
@@ -485,9 +558,11 @@ class Init(Slot):
 
 
 
-	#output text
 	@staticmethod
 	def outputText (text, window_title):
+		'''
+		output text
+		'''
 		#window_title = mel.eval(python("window_title"))
 		window = str(pm.window(	widthHeight=(300, 300), 
 								topLeftCorner=(65,265),
@@ -526,9 +601,12 @@ class Init(Slot):
 	# 	return
 
 
-	#output scroll layout
+
 	@staticmethod
 	def outputscrollField (text, window_title, width, height):
+		'''
+		output scroll layout
+		'''
 		window_width  = width  * 300
 		window_height = height * 600
 		scroll_width  = width  * 294
@@ -551,9 +629,12 @@ class Init(Slot):
 		return
 
 
-	#output text field
+
 	@staticmethod
 	def outputTextField (array, window_title):
+		'''
+		output text field
+		'''
 		window = str(pm.window(	widthHeight=(250, 650), 
 								topLeftCorner=(65,275),
 								maximizeButton=False,

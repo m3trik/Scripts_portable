@@ -1,8 +1,9 @@
 import maya.mel as mel
 import pymel.core as pm
 
-import os.path
+from PySide2 import QtWidgets
 
+import os.path
 
 from tk_slots_maya_init import Init
 
@@ -16,7 +17,35 @@ class Main(Init):
 
 		self.ui = self.sb.getUi('main')
 
+		#construct stacked widget from maya layouts
+		self.widgetList = ['MainAttributeEditorLayout','MainChannelBoxLayout','ToggledOutlinerLayout','MainToolSettingsLayout','LayerEditorDisplayLayerLayout']
+		
+		self.stackedWidget = QtWidgets.QStackedWidget()
+		for w in self.widgetList:
+			self.stackedWidget.addWidget(self.getMayaWidget(w))
 
+		# layout = QtWidgets.QVBoxLayout(self.sb.getUi('dynLayout')) #parent the layout to dynlayout
+		# layout.addWidget(self.stackedWidget)
+		self.sb.getUi('dynLayout').setCentralWidget(self.stackedWidget)
+
+
+
+	def setWidgetIndex(self, name):
+		'''
+		Set the active widget on the dynLayout ui.
+		args:
+			name='string' - name of widget
+		returns:
+			the current widget object from the stacked widget.
+		'''
+		index = self.widgetList.index(name)
+		self.stackedWidget.setCurrentIndex(index)
+		currentWidget = self.stackedWidget.currentWidget()
+		currentWidget.adjustSize()
+		self.hotBox.layoutStack('dynLayout') #change layout
+		# self.hotBox.resize(currentWidget.minimumSizeHint())
+		# self.hotBox.resize(currentWidget.sizeHint())
+		return currentWidget
 
 
 	def cmb000(self):
@@ -108,7 +137,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('polygons', 'b006')()
+			self.getMethod('b006', 'polygons')()
 		
 
 	def v001(self):
@@ -118,7 +147,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('polygons','b005')()
+			self.getMethod('b005', 'polygons')()
 
 
 	def v002(self):
@@ -128,8 +157,8 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('polygons','b012')()
-			self.hotBox.hide_()
+			self.getMethod('b012', 'polygons')()
+			self.hotBox.hide()
 
 
 	def v003(self):
@@ -139,7 +168,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('polygons','b004')()
+			self.getMethod('b004', 'polygons')()
 
 
 	def v004(self):
@@ -149,7 +178,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('edit','b032')()
+			self.getMethod('b007', 'edit')() #delete
 
 
 	def v005(self):
@@ -159,7 +188,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('polygons','b009')()
+			self.getMethod('b009', 'polygons')()
 
 
 	def v006(self):
@@ -169,7 +198,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('polygons','b047')()
+			self.getMethod('b047', 'polygons')()
 
 
 	def v007(self):
@@ -179,7 +208,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('selection','b008')()
+			self.getMethod('b008', 'selection')()
 
 
 	def v008(self):
@@ -189,7 +218,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('polygons','b044')()
+			self.getMethod('b044', 'polygons')()
 
 
 	def v009(self):
@@ -199,7 +228,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('polygons','b022')()
+			self.getMethod('b022', 'polygons')()
 
 
 	def v010(self):
@@ -209,7 +238,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('polygons','b007')()
+			self.getMethod('b007', 'polygons')()
 
 
 	def v011(self):
@@ -219,7 +248,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('polygons','b043')()
+			self.getMethod('b043', 'polygons')()
 
 
 	def v012(self):
@@ -227,6 +256,7 @@ class Main(Init):
 		
 		'''
 		pass
+
 
 	def v013(self):
 		'''
@@ -236,7 +266,27 @@ class Main(Init):
 		# index = 'Minimize'
 		# self.ui.v008.setText(index)
 
-		self.getMethod('file','b005')()
+		self.getMethod('b005', 'file')()
+
+
+	def v022(self):
+		'''
+		
+		'''
+		index = self.ui.cmb000.currentIndex()
+		
+		if index==0: #modeling
+			self.getMethod('b006', 'selection')() #select similar
+
+
+	def v023(self):
+		'''
+		
+		'''
+		index = self.ui.cmb000.currentIndex()
+		
+		if index==0: #modeling
+			self.getMethod('b007', 'selection')() #select island
 
 
 	def v024(self):
@@ -279,6 +329,45 @@ class Main(Init):
 		Recent Command: 6
 		'''
 		self.sb.prevCommand(method=1, as_list=1)[-6]() #execute command at index
+
+
+	def v033(self):
+		'''
+		Attributes
+		'''
+		self.setWidgetIndex('MainAttributeEditorLayout')
+
+
+	def v034(self):
+		'''
+		Outliner
+		'''
+		self.setWidgetIndex('ToggledOutlinerLayout')
+
+
+	def v035(self):
+		'''
+		Tool
+		'''
+		self.setWidgetIndex('MainToolSettingsLayout')
+
+
+	def v036(self):
+		'''
+		Layers
+		'''
+		self.setWidgetIndex('LayerEditorDisplayLayerLayout')
+
+
+	def v037(self):
+		'''
+		Channels
+		'''
+		self.setWidgetIndex('MainChannelBoxLayout')
+
+
+
+
 
 
 

@@ -9,12 +9,12 @@ from tk_slots_maya_init import Init
 
 
 
-class Lighting(Init):
+class DynLayout(Init):
 	def __init__(self, *args, **kwargs):
-		super(Lighting, self).__init__(*args, **kwargs)
+		super(DynLayout, self).__init__(*args, **kwargs)
 
 
-		self.ui = self.sb.getUi('lighting')
+		self.ui = self.sb.getUi('dynLayout')
 
 		self.ui.progressBar.hide()
 
@@ -40,72 +40,9 @@ class Lighting(Init):
 	def b000(self):
 		'''
 		
-		'''
-		pass
-
-
-	def b001(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b002(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b003(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b004(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b005(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b006(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b007(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b008(self):
-		'''
-		
-		'''
-		mel.eval("")
-
-
-	def b009(self):
-		'''
 
 		'''
 		pass
-
 
 
 
