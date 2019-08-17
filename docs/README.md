@@ -13,8 +13,8 @@
 to allow for as little overhead as possible in construction and maintainence. Literally all you have to do to have 
 a new layout up and running, is to drop a qt designer ui file into the ui folder, create a module and class of the 
 same name. Naming convention allows for a stacked ui to be built, signals added/removed, and a master dictionary 
-(stored within the switchboard module) to be created that allows getting/setting of relevant data across modules from one 
-easy, and reliable location.*
+(stored within the switchboard module) to be created, with built-in methods that allow getting/setting of relevant data
+across modules from one easy, and reliable location.*
 
 *work in progress..*
 
