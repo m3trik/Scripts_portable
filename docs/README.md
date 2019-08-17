@@ -67,6 +67,8 @@ across modules from one easy, and reliable location.*
 
 * widget size
 
+* widget type
+
 * widget name/method name as string
 
 * widget Object
