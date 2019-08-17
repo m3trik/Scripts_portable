@@ -35,9 +35,9 @@ across modules from one easy, and reliable location.*
 
 * set window flags and attributes.
 
-* set event filters and overrides.
+* set event filters and overrides for the main widget.
 
-* construct paint events.
+* construct an overlay for paint events.
 
 
 ## tk_signals: 
