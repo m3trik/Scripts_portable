@@ -48,6 +48,7 @@ across modules from one easy, and reliable location.*
 
 * add/remove signals using the switchboard dict each time the stacked layout index is changed.
 
+* handle event filters for the dynamic ui objects.
 
 
 ## tk_slots: 
