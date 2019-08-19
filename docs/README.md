@@ -13,8 +13,8 @@
 to allow for as little overhead as possible in construction and maintainence. Literally all you have to do to have 
 a new layout up and running, is to drop a qt designer ui file into the ui folder, create a module and class of the 
 same name. Naming convention allows for a stacked ui to be built, signals added/removed, and a master dictionary 
-(stored within the switchboard module) to be created that allows getting/setting of relevant data across modules from one 
-easy, and reliable location.*
+(stored within the switchboard module) to be created, with built-in methods that allow getting/setting of relevant data
+across modules from one easy, and reliable location.*
 
 *work in progress..*
 
@@ -35,9 +35,9 @@ easy, and reliable location.*
 
 * set window flags and attributes.
 
-* set event filters and overrides.
+* set event filters and overrides for the main widget.
 
-* construct paint events.
+* construct an overlay for paint events.
 
 
 ## tk_signals: 
@@ -48,6 +48,7 @@ easy, and reliable location.*
 
 * add/remove signals using the switchboard dict each time the stacked layout index is changed.
 
+* handle event filters for the dynamic ui objects.
 
 
 ## tk_slots: 
@@ -58,8 +59,7 @@ easy, and reliable location.*
 
 ## tk_switchboard: 
 ######
-*the following is an example of some of the imformation held for each tool class instance. From this information, you can call switchboard methods to 
-get most relevent information easily wherever you need it.*
+*the following is an example of some of the data held for each tool class instance.*
 *for a full up-to-date list, check the tk_switchboard module's docstring.*
 
 * class name as string
@@ -67,6 +67,8 @@ get most relevent information easily wherever you need it.*
 * class object
 
 * widget size
+
+* widget type
 
 * widget name/method name as string
 
@@ -98,15 +100,16 @@ get most relevent information easily wherever you need it.*
  
 * tools module: tk_slots_\<app\>_\<name\>.py
  
-* class name:   \<Name\>
 
-*widget/corresponding class methods share the same naming convention across all modules: ie. widget b021 connects to method b021.
-the docstring of each method houses a user friendly name that is stored with all other widget info in the switchboard dict when an
-instance is populated. Any of the buttons will also connect to a corresponding class method should it exist.*
+
+*each ui widget looks to connect to a corresponding class method of the same name: ie. widget b021 connects to method b021. The docstring of each method houses a user friendly name that is stored with all other widget info in the switchboard dict when an
+instance is populated. All of the ui widgets have an event filter attached for additional handling of specific events.*
 
 * QPushButton   b000    (b000-b999) can contain 1000 buttons of one type max per class using this convention.
 
-* QPushButton   i000    these buttons are attached an event filter to change the ui index.
+* QPushButton   v000    triggered on mouse release when hovered.
+
+* QPushButton   i000    triggered on mouse release when hovered. changes the ui index.
 
 * QComboBox     cmb000  ""
 
@@ -116,7 +119,7 @@ instance is populated. Any of the buttons will also connect to a corresponding c
 
 * QtextField    t000    ""
 
-any additional widget types can be easily added when needed using this same convention.
+
 
 
 ##
@@ -131,11 +134,11 @@ any additional widget types can be easily added when needed using this same conv
 
 * right mouse down: shows main navigation window.
 
+* releasing the mouse over any of the buttons in those windows takes you to the corresponding sub-menu.
+
 * left mouse down: shows viewport navigation and camera settings.
 
-* middle mouse down: shows mesh display options.
-
-* releasing the mouse over any of the buttons in those windows takes you to the corresponding sub-menu.
+* middle mouse down: shows embedded app ui (ie. maya's outliner, or max's modifier stack).
 
 * double left mouseclick: produces last used orthographic view.
 
@@ -145,9 +148,10 @@ any additional widget types can be easily added when needed using this same conv
 
 * dragging on an empty area of the widget moves the window and pins it open.
 
-* holding ctrl while using Spinboxes increments/decrements by an extra decimal place.
+* mouse over buttons while window pinned to get a tooltip explanation of its function.
 
-* mouse over buttons while window pinned to get an explanation of its function.
+* holding ctrl while using Spinboxes increments/decrements by an extra decimal.
+
 
 
 
