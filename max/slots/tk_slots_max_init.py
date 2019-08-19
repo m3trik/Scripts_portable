@@ -1,7 +1,7 @@
 import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
 from pymxs import runtime as rt
 
-from PySide2 import QtGui
+from PySide2 import QtGui, QtWidgets
 
 import os.path
 
@@ -757,6 +757,7 @@ class Init(Slot):
 
 
 
+	
 	@staticmethod
 	def maxUiSetChecked(id, table, item, state=True, query=False):
 		'''

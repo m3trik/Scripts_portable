@@ -450,38 +450,6 @@ class Init(Slot):
 
 
 	@staticmethod
-	def getMayaWindow(name, allWindows=False):
-		'''
-		args:
-			name='string' - name of window (window.objectName)
-			allWindows=bool - return a dictionary of all windows {windowName:window}
-		returns:
-			corresponding <window object> from given window object name
-		'''
-		windows = {w.objectName():w for w in QtWidgets.QApplication.allWindows()}
-		if allWindows:
-			return windows
-		return windows[name]
-
-
-
-	@staticmethod
-	def getMayaWidget(name, allWidgets=False):
-		'''
-		args:
-			name='string' - name of widget (widget.objectName)
-			allWidgets=bool - return a dictionary of all widgets {widgetName:widget}
-		returns:
-			corresponding <widget object> from given widget object name
-		'''
-		widgets = {w.objectName():w for w in QtWidgets.QApplication.allWidgets()}
-		if allWidgets:
-			return widgets
-		return widgets[name]
-
-
-
-	@staticmethod
 	def convertToWidget(name):
 		'''
 		args:

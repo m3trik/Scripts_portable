@@ -20,11 +20,11 @@ uiList = [[file_.replace('.ui',''), QUiLoader().load(path+'/'+file_)] for file_ 
 global sbDict
 sbDict = {name[0]:{} for name in uiList} # ie. { 'edit':{}, 'create':{}, 'animation':{}, 'cameras':{}, 'display':{} }
 
-#add uiList to sbDict
-if 'uiList' not in sbDict: sbDict['uiList'] = uiList
+sbDict['uiList'] = uiList #add list of ui objects to sbDict in the 'uiList' key.
+sbDict['name'] = ['init'] #add list of ui names sbDict. Each time a ui is called the current name is added at the last index and any previously called ui names are kept in order before that.
 
-#add name list to sbDict
-if 'name' not in sbDict: sbDict['name'] = ['init']
+
+
 
 
 # ------------------------------------------------
@@ -153,18 +153,20 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 
 
-	def setUiSize(self, name, ui=None, size=None): #store ui size.
+	def setUiSize(self, name=None, size=None): #store ui size.
 		'''
+		Set UI size. If no size is given, the minimum ui size needed to frame its
+		contents will be used. If no name is given, the current ui will be used.
 		args:
-				name='string' - ui name
-				ui=<ui object>
-				size=[int, int] - integer list. [width, height]
+				name='string' - optional ui name
+				size=[int, int] - optional width and height as an integer list. [width, height]
 		returns:
 				ui size info as integer values in a list. [width, hight]
 		'''
-		if not ui:
-			ui = self.getUi(name)
+		if not name:
+			name = self.getUiName()
 		if not size:
+			ui = self.getUi(name)
 			size = [ui.frameGeometry().width(), ui.frameGeometry().height()]
 
 		sbDict[name]['size'] = size
@@ -251,12 +253,73 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 		If class is not in sbDict, use setClass() to first store the class.
 		Case insensitive. class string keys are lowercase and any given string will be converted automatically.
 		args:
-				name='string' name of class. ie. 'polygons' (lowercase)
+				name='string' name of class. ie. 'polygons'
 		returns:
 				class object from given class name.
 		'''
 		name = name.lower()
 		return sbDict[name]['class']
+
+
+
+	def getWidget(self, buttonName, name=None):
+		'''
+		Case insensitive. Get the widget object from its name.
+		args:
+				name='string' - name of ui. ie. 'polygons'. If no name is given, the current ui will be used.
+				buttonName='string' name of widget. ie. 'b000'
+		returns:
+				widget object with the given name.
+		'''
+		if not name:
+			name = self.getUiName()
+		name = name.lower()
+
+		return sbDict[name]['connectionDict'][buttonName]['buttonObject']
+
+
+
+	def getWidgetClass(self, button, name=None):
+		'''
+		args:
+				button='string'  - name of button/widget
+					*or <object> -widget
+				name='string' - name of dynamic ui (else use current ui)
+		returns:
+				<class object> - the corresponding widget class
+		'''
+		if not type(button)==str:
+			try:
+				return button.__class__
+			except:
+				button = button.objectName()
+
+		if not name:
+			name = self.getUiName()
+
+		return sbDict[name]['connectionDict'][button]['widgetClass']
+
+
+
+	def getWidgetType(self, button, name=None):
+		'''
+		args:
+				button='string'  - name of button/widget
+					*or <object> -widget
+				name='string' - name of dynamic ui (else use current ui)
+		returns:
+				'string' - the corresponding widget class name
+		'''
+		if not type(button)==str:
+			try:
+				return button.__class__.__name__
+			except:
+				button = button.objectName() #use the objectName to get a string key for 'button'
+
+		if not name:
+			name = self.getUiName()
+
+		return sbDict[name]['connectionDict'][button]['buttonType']
 
 
 
@@ -276,15 +339,18 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 
 
-	def getSignal(self, name, buttonName=None):
+	def getSignal(self, buttonName=None, name=None):
 		'''
 		args:
-				name='string' name of class. ie. 'polygons'
-				buttonName='string'  ie. 'b001'
+				name='string' optionalname of ui. ie. 'polygons'
+				buttonName='string' optional button name. ie. 'b001'
 		returns:
 				if buttonName: the corresponding button object with attached signal (ie. b001.onPressed) of the given button name.
-				else: all of the signals associated with the given name as a list
+				else: all of the signals associated with the given name as a list. If no ui name is given, the current ui will be used.
 		'''
+		if not name:
+			name = self.getUiName()
+
 		if buttonName:
 			return sbDict[name]['connectionDict'][buttonName]['buttonObjectWithSignal']
 		else:
@@ -292,15 +358,18 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 
 
 
-	def getSlot(self, name, buttonName=None):
+	def getSlot(self, buttonName=None, name=None):
 		'''
 		args:
-				name='string' name of class. ie. 'polygons'
-				buttonName='string'  ie. 'b001'
+				name='string' - optional name of class. ie. 'polygons'
+				buttonName='string' optional button name. ie. 'b001'
 		returns:
 				if buttonName: the corresponding method object (ie. Polygons.b001) of the given button name.
-				else: all of the slots associated with the given name as a list
+				else: all of the slots associated with the given name as a list. If no ui name is given, the current ui will be used.
 		'''
+		if not name:
+			name = self.getUiName()
+
 		if buttonName:
 			return sbDict[name]['connectionDict'][buttonName]['methodObject']
 		else:
@@ -326,47 +395,6 @@ class Switchboard(object): #get/set elements across modules from a single dictio
 		else: #formatted docString
 			return sbDict[name]['connectionDict'][methodString]['docString'].strip('\n\t')
 
-
-	def getWidgetClass(self, button, name=None):
-		'''
-		args:
-				button='string'  - name of button/widget
-					*or <object> -widget
-				name='string' - name of dynamic ui (else use current ui)
-		returns:
-				<class object> - the corresponding widget class
-		'''
-		if not type(button)==str:
-			try:
-				return button.__class__
-			except:
-				button = button.objectName()
-
-		if not name:
-			name = self.getUiName()
-
-		return sbDict[name]['connectionDict'][button]['widgetClass']
-
-
-	def getWidgetType(self, button, name=None):
-		'''
-		args:
-				button='string'  - name of button/widget
-					*or <object> -widget
-				name='string' - name of dynamic ui (else use current ui)
-		returns:
-				'string' - the corresponding widget class name
-		'''
-		if not type(button)==str:
-			try:
-				return button.__class__.__name__
-			except:
-				button = button.objectName() #use the objectName to get a string key for 'button'
-
-		if not name:
-			name = self.getUiName()
-
-		return sbDict[name]['connectionDict'][button]['buttonType']
 
 
 	def previousName(self, previousIndex=False, allowDuplicates=False, as_list=False):

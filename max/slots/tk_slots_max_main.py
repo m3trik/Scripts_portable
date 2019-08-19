@@ -17,8 +17,6 @@ class Main(Init):
 		self.ui = self.sb.getUi('main')
 
 		
-		# self.getMethod('cmb000', 'preferences')() #init menuSet combobox
-		# self.getObject(self.sb.setClass('tk_slots_max_preferences.Preferences'), 'cmb000')[0]()
 
 
 

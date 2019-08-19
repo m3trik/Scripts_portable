@@ -25,6 +25,42 @@ class Slot(QtCore.QObject):
 
 
 
+
+
+	@staticmethod
+	def getWindow(name=None, allWindows=False):
+		'''
+		Get Qt window/s
+		args:
+			name='string' - optional name of window (window.objectName)
+			allWindows=bool - optional; return a dictionary of all windows {windowName:window}
+		returns:
+			corresponding <window object> from given window object name
+		'''
+		windows = {w.objectName():w for w in QtWidgets.QApplication.allWindows()}
+		if allWindows:
+			return windows
+		return windows[name]
+
+
+
+	@staticmethod
+	def getWidget(name=None, allWidgets=False):
+		'''
+		Get Qt widget/s
+		args:
+			name='string' - optional name of widget (widget.objectName)
+			allWidgets=bool - optional; return a dictionary of all widgets {widgetName:widget}
+		returns:
+			corresponding <widget object> from given widget object name
+		'''
+		widgets = {w.objectName():w for w in QtWidgets.QApplication.allWidgets()}
+		if allWidgets:
+			return widgets
+		return widgets[name]
+
+
+
 	def getMethod(self, class_, method):
 		'''
 		args:

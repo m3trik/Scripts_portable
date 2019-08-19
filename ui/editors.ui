@@ -162,7 +162,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="v033">
+   <widget class="QPushButton" name="i000">
     <property name="geometry">
      <rect>
       <x>180</x>
@@ -187,13 +187,13 @@
      <string/>
     </property>
     <property name="whatsThis">
-     <string>embed</string>
+     <string>dynLayout</string>
     </property>
     <property name="text">
      <string>Attributes</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="v034">
+   <widget class="QPushButton" name="i001">
     <property name="geometry">
      <rect>
       <x>350</x>
@@ -218,13 +218,13 @@
      <string/>
     </property>
     <property name="whatsThis">
-     <string>embed</string>
+     <string>dynLayout</string>
     </property>
     <property name="text">
      <string>Outliner</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="v035">
+   <widget class="QPushButton" name="i002">
     <property name="geometry">
      <rect>
       <x>265</x>
@@ -249,13 +249,13 @@
      <string/>
     </property>
     <property name="whatsThis">
-     <string>embed</string>
+     <string>dynLayout</string>
     </property>
     <property name="text">
      <string>Tool</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="v036">
+   <widget class="QPushButton" name="i003">
     <property name="geometry">
      <rect>
       <x>340</x>
@@ -280,13 +280,13 @@
      <string/>
     </property>
     <property name="whatsThis">
-     <string>embed</string>
+     <string>dynLayout</string>
     </property>
     <property name="text">
      <string>Layers</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="v037">
+   <widget class="QPushButton" name="i004">
     <property name="geometry">
      <rect>
       <x>190</x>
@@ -311,7 +311,7 @@
      <string/>
     </property>
     <property name="whatsThis">
-     <string>embed</string>
+     <string>dynLayout</string>
     </property>
     <property name="text">
      <string>Channels</string>
@@ -327,11 +327,11 @@
    <zorder>r002</zorder>
    <zorder>r008</zorder>
    <zorder>r009</zorder>
-   <zorder>v033</zorder>
-   <zorder>v034</zorder>
-   <zorder>v035</zorder>
-   <zorder>v036</zorder>
-   <zorder>v037</zorder>
+   <zorder>i000</zorder>
+   <zorder>i001</zorder>
+   <zorder>i002</zorder>
+   <zorder>i003</zorder>
+   <zorder>i004</zorder>
   </widget>
  </widget>
  <resources/>

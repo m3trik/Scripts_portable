@@ -21,7 +21,7 @@ class Signal(QtCore.QObject):
 		self.sb = Switchboard()
 		self.hotBox = self.sb.getClass('hotBox')
 		self.app = self.sb.getApp()
-		
+
 
 
 
@@ -31,15 +31,6 @@ class Signal(QtCore.QObject):
 			name='string' - name of the ui to construct connections for.
 		returns:
 			dict - 'buttonName':{'buttonObject':<buttonObject>,'buttonObjectWithSignal':<buttonObjectWithSignal>,'methodObject':<method>,'docString':'docString','widgetClass':<class object>,'widgetClassName':'class name'}
-
-		button prefix types:
-			b = pushbutton - triggers on clicked event.
-			v = pushbutton - triggers on hover event if mouse released (event handler).
-			i = pushbutton - triggers on hover event if mouse released (event handler). sets stacked ui to given index.
-			s = spinbox
-			chk = checkbox
-			cmb = combobox
-			t = textfield
 		'''
 		if not name: #build connections for the given current ui name
 			name = self.sb.getUiName()
@@ -64,15 +55,8 @@ class Signal(QtCore.QObject):
 
 					m = getattr(class_, buttonName, None) #use signal 'buttonName' (ie. b006) to get method/slot of the same name in current class.
 					docString = getattr(m, '__doc__', None)
+					method = list(filter(None, [m, lambda b=buttonName: self.onSignalEvent(b)])) #add onSignalEvent. passing multiple slots as list. filter any None values out.
 
-					#set the corresponding method
-					if buttonName.startswith('i'): #connect to layoutStack and pass in an index as int or string 'name'.
-						index = buttonObject.whatsThis().lower() #buttonObject.text().lower()
-						method = lambda i=index: self.hotBox.layoutStack(i) #lambda function to call index. ie. hotBox.layoutStack(6)
-					else:
-						method = [m, lambda b=buttonName: self.onSignalEvent(b)] #add onSignalEvent. passing multiple slots as list.
-					
-					
 					#add values to connectionDict
 					self.sb.connectionDict(name).update(
 						{buttonName:{
@@ -98,13 +82,13 @@ class Signal(QtCore.QObject):
 			name='string' - name of ui
 		'''
 		for buttonName in self.sb.connectionDict(name):
-			signal = self.sb.getSignal(name, buttonName)
-			slot = self.sb.getSlot(name, buttonName)
+			signal = self.sb.getSignal(buttonName, name)
+			slot = self.sb.getSlot(buttonName, name)
 			# print 'addSignal: ', signal, slot
-			try: map(signal.connect, slot) #add multiple slots
+			try: map(signal.connect, slot) #add multiple slots from list.
 			except:
 				try: signal.connect(slot) #add single slot (main and viewport)
-				except Exception as error: pass#print '# Error: '+buttonName+str(type(slot))+str(slot)+' #' #, error
+				except Exception as error: print '# Error: '+buttonName+str(type(slot))+str(slot)+' #' #, error
 
 
 
@@ -115,13 +99,13 @@ class Signal(QtCore.QObject):
 			name='string' - name of ui
 		'''
 		for buttonName in self.sb.connectionDict(name):
-			signal = self.sb.getSignal(name, buttonName)
-			slot = self.sb.getSlot(name, buttonName)
+			signal = self.sb.getSignal(buttonName, name)
+			slot = self.sb.getSlot(buttonName, name)
 			# print 'removeSignal: ', signal, slot
-			try: map(signal.disconnect, slot) #add multiple slots
+			try: map(signal.disconnect, slot) #add multiple slots from list.
 			except: 
 				try: signal.disconnect(slot) #add single slot (main and viewport)
-				except Exception as error: pass#print '# Error: '+buttonName+str(type(slot))+str(slot)+' #' #, error
+				except Exception as error: print '# Error: '+buttonName+str(type(slot))+str(slot)+' #' #, error
 
 
 
@@ -158,7 +142,7 @@ class Signal(QtCore.QObject):
 				return True
 
 
-		if event.type()==QtCore.QEvent.Type.Enter: #enter event
+		if event.type()==QtCore.QEvent.Type.Enter: #hover enter event
 			self.mouseHover.emit(True)
 			if buttonType=='QComboBox':
 				#switch the index before opening to initialize the contents of the combobox
@@ -179,7 +163,7 @@ class Signal(QtCore.QObject):
 					button.click()
 
 
-		if event.type()==QtCore.QEvent.Type.HoverLeave:
+		if event.type()==QtCore.QEvent.Type.HoverLeave: #hover leave event
 			self.mouseHover.emit(False)
 			if buttonType=='QComboBox':
 				button.setStyleSheet('''
@@ -197,6 +181,12 @@ class Signal(QtCore.QObject):
 		args:
 			buttonName='string' - objectName of button
 		'''
+		buttonObject = self.sb.getWidget(buttonName)
+
+		if buttonName.startswith('i'): #connect to layoutStack and pass in an index as int or string 'name'.
+			index = buttonObject.whatsThis() #buttonObject.text()
+			self.hotBox.layoutStack(index) #switch the stacked layout to the given ui.
+
 		if buttonName.startswith('b'): #ie. 'b012'
 			self.sb.prevCommand(as_list=1).append([self.sb.getMethod(buttonName), self.sb.getDocString(buttonName)]) #store the command method object and it's docString (ie. 'Multi-cut tool')
 

@@ -148,15 +148,15 @@ class HotBox(QtWidgets.QWidget):
 		args:
 			event=<QEvent>
 		'''
-		if any ([self.name=='main', self.name=='viewport', self.name=='init', self.name=='display']):
+		if any ([self.name=='init', self.name=='main', self.name=='viewport', self.name=='editors']):
 			if event.button()==QtCore.Qt.LeftButton:
 				self.layoutStack('viewport')
 
+			elif event.button()==QtCore.Qt.MiddleButton:
+				self.layoutStack('editors')
+
 			elif event.button()==QtCore.Qt.RightButton:
 				self.layoutStack('main')
-
-			elif event.button()==QtCore.Qt.MiddleButton:
-				self.layoutStack('display')
 
 
 	def mouseDoubleClickEvent(self, event):
@@ -195,6 +195,11 @@ class HotBox(QtWidgets.QWidget):
 			self.setVisibilityOnHover(event.pos(), 'r000-9')
 			self.setDown_(event.pos(), 'i003-32, v000-37')
 			self.showPopup_(event.pos(), 'cmb000-2')
+
+		if self.name=='editors':
+			self.setVisibilityOnHover(event.pos(), 'r000-9')
+			self.setDown_(event.pos(), 'v000-4')
+			# self.showPopup_(event.pos(), 'cmb000-2')
 
 		elif self.name=='viewport':
 			self.setVisibilityOnHover(event.pos(), 'r000-8')
@@ -386,7 +391,8 @@ class Overlay(QtWidgets.QWidget):
 		args:
 			event=<QEvent>
 		'''
-		if any([self.sb.getUiName()=='main', self.sb.getUiName()=='viewport']):
+		uiName = self.sb.getUiName()
+		if any([uiName=='main', uiName=='viewport', uiName=='editors']):
 
 			greyPen = QtGui.QPen(QtGui.QColor(115, 115, 115), 3, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
 			blackPen = QtGui.QPen(QtGui.QColor(0, 0, 0), 1, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
