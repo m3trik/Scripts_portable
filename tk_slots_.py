@@ -1,4 +1,4 @@
-from PySide2 import QtGui, QtCore, QtWidgets
+from PySide2 import QtGui, QtWidgets
 
 import os.path
 
@@ -9,16 +9,28 @@ from tk_switchboard import Switchboard
 
 
 
-class Slot(QtCore.QObject):
-	def __init__(self, parent=None):
-		super(Slot, self).__init__(parent)
+class Slot(object):
+	'''
+	
+	'''
+	def __init__(self):
+		super(Slot, self).__init__()
 
 		self.sb = Switchboard()
-		self.hotBox = self.sb.getClass('hotbox')
-		self.signal = self.sb.getClass('signal')()
-		
-		
-		self.styleSheetOverride()
+		self.name = self.sb.getUiName()
+		self.ui = self.sb.getUi()
+
+
+		if self.name=='init':
+			self.ui.t000.setAutoFillBackground(False)
+			self.ui.t000.setTextBackgroundColor(QtGui.QColor(50, 50, 50))
+
+		if self.name=='main' or self.name=='viewport':
+			self.setButtons(self.ui, invisible='r000-10')
+
+
+		if self.name=='create':
+			self.setButtons(self.ui, invisible='s000-13')
 
 
 
@@ -63,6 +75,7 @@ class Slot(QtCore.QObject):
 
 	def getMethod(self, class_, method):
 		'''
+		Get method from switchboard. If it doesn't exist, construct, store, and return it.
 		args:
 			class_='string' class name (case insensitive)
 			method='string' method name
@@ -72,7 +85,7 @@ class Slot(QtCore.QObject):
 		'''
 		c = class_.lower()
 		if not self.sb.hasKey(c, 'connectionDict'):
-			self.hotBox.signal.buildConnectionDict(c) #construct the signals and slots for the ui 
+			self.sb.buildConnectionDict(c) #construct the signals and slots for the ui 
 
 			print self.sb.getDocString(method, c)
 		return self.sb.getMethod(method, c)
@@ -81,7 +94,7 @@ class Slot(QtCore.QObject):
 
 	def getObject(self, class_, objectNames, showError_=False):
 		'''
-		get a list of corresponding objects from a single string.
+		Get a list of corresponding objects from a single string.
 		args:
 			class_=class object
 			objectNames='string' - names separated by ','. ie. 's000,b004-7'. b004-7 specifies buttons b004-b007.  
@@ -91,23 +104,47 @@ class Slot(QtCore.QObject):
 			list of corresponding objects
 		#ex. getObject(self.ui, 's000,b002,cmb011-15') #get objects for s000,b002, and cmb011-cmb015
 		'''
-		names = self.hotBox.unpackNames(objectNames)
-
 		objects=[]
-		for name in names:
+		for name in Slot.unpackNames(objectNames):
 			try:
 				objects.append(getattr(class_, name)) #equivilent to:(self.ui.m000)
 			except: 
 				if showError_:
-					print "# Error in getObject():"+str(class_)+" has no attribute "+str(name)+" #"
+					print "# Error: getObject()"+str(class_)+" has no attribute "+str(name)+" #"
 				else: pass
 		return objects
 
 
 
 	@staticmethod
+	def unpackNames(nameString):
+		'''
+		Get a list of individual names from a single name string.
+		args:
+			nameString=string consisting of widget names separated by commas. ie. 'v000, b004-6'
+		returns:
+			unpacked names. ie. ['v000','b004','b005','b006']
+		'''
+		packed_names = [n.strip() for n in nameString.split(',') if '-' in n] #build list of all widgets passed in containing '-'
+
+		unpacked_names=[]
+		for name in packed_names:
+			name=name.split('-') #ex. split 'b000-8'
+			prefix = name[0].strip('0123456789') #ex. split 'b' from 'b000'
+			start = int(name[0].strip('abcdefghijklmnopqrstuvwxyz') or 0) #start range. #ex. '000' #converting int('000') returns None, if case; assign 0.
+			stop = int(name[1])+1 #end range. #ex. '9' from 'b000-8' for range up to 9 but not including 9.
+			unpacked_names.extend([str(prefix)+'000'[:-len(str(num))]+str(num) for num in range(start,stop)]) #build list of name strings within given range
+
+		names = [n.strip() for n in nameString.split(',') if '-' not in n] #all widgets passed in not containing '-'
+
+		return names+unpacked_names
+
+
+
+	@staticmethod
 	def getAttributes(node, exclude=None):
 		'''
+		Get existing node attributes.
 		args:
 			node=object
 			exclude='string list' - attributes to exclude from returned dictionay
@@ -122,6 +159,7 @@ class Slot(QtCore.QObject):
 	@staticmethod
 	def setAttributes(node, attributes):
 		'''
+		Set node attributes.
 		args:
 			node=object
 			attributes=dictionary {'string attribute': value} - attributes and their correponding value to set
@@ -132,7 +170,7 @@ class Slot(QtCore.QObject):
 
 	def setButtons(self, ui, checked=None, unchecked=None, enable=None, disable=None, visible=None, invisible=None):
 		'''
-		set various states for multiple buttons at once
+		Set various states for multiple buttons at once.
 		args:
 			setButtons=dynamic ui object
 			checked/unchecked/enable/disable/visible/invisible=string - the names of buttons to modify separated by ','. ie. 'b000,b001,b022'
@@ -145,28 +183,28 @@ class Slot(QtCore.QObject):
 		if unchecked:
 			unchecked = self.getObject(ui,unchecked)
 			[button.setChecked(False) for button in unchecked]
-				
+			
 		if enable:
 			enable = self.getObject(ui,enable)
 			[button.setEnabled(True) for button in enable]
-				
+			
 		if disable:
 			disable = self.getObject(ui,disable)
 			[button.setDisabled(True) for button in disable]
-				
+			
 		if visible:
 			visible = self.getObject(ui,visible)
 			[button.setVisible(True) for button in visible]
-				
+			
 		if invisible:
 			invisible = self.getObject(ui,invisible)
 			[button.setVisible(False) for button in invisible]
-	
+
 
 
 	def setSpinboxes(self, ui, spinboxNames, attributes={}):
 		'''
-		set spinbox values.
+		Set spinbox values.
 		args:
 			ui=<dynamic ui>
 			spinboxNames='string' - spinbox names. ie. 's001-4, s007'.
@@ -202,6 +240,7 @@ class Slot(QtCore.QObject):
 	@staticmethod
 	def comboBox(comboBox, items, title=None):
 		'''
+		Set comboBox items.
 		args:
 			comboBox=QComboBox object - list of items to fill the comboBox with
 			title='string' - optional value for the first index of the comboBox's list
@@ -288,7 +327,6 @@ class Slot(QtCore.QObject):
 
 
 
-
 	@staticmethod
 	def try_(expressions, exceptions='pass', showError_=True, print_=False, **kwargs):
 		'''
@@ -326,7 +364,6 @@ class Slot(QtCore.QObject):
 
 
 
-		
 	@staticmethod
 	def collapseList(list_):
 		'''
@@ -367,55 +404,31 @@ class Slot(QtCore.QObject):
 
 
 
-	def resizeAndCenterWidget(self, widget):
-		'''
-		adjust the given widget to fix contents and re-center.
-		args:
-			widget=<ui object> - 
-		'''
-		# x = widget.parentWidget().rect().center().x()
-		# x1 = widget.rect().center().x()
-		widget.adjustSize()
-		# x2 = widget.rect().center().x()
-		# print x1, x2
-		# size1 = widget.frameGeometry().width()
-		# x = abs(x1-x2)/2
-		# print x
-		# widget.move(widget.x()-x, widget.y())
-		# size2 = widget.frameGeometry().width()
-		# print 'size', size1, size2
-		# difference = abs(size1-size2)/2
-		# print difference, widget.x()
-		# widget.move(widget.x()-difference, widget.y())
-		# widget.resize.width(size2+difference)
-		# widget.setText(str(widget.text())+' '*difference)
+	# def resizeAndCenterWidget(self, widget):
+	# 	'''
+	# 	adjust the given widget to fix contents and re-center.
+	# 	args:
+	# 		widget=<ui object> - 
+	# 	'''
+	# 	# x = widget.parentWidget().rect().center().x()
+	# 	# x1 = widget.rect().center().x()
+	# 	widget.adjustSize()
+	# 	# x2 = widget.rect().center().x()
+	# 	# print x1, x2
+	# 	# size1 = widget.frameGeometry().width()
+	# 	# x = abs(x1-x2)/2
+	# 	# print x
+	# 	# widget.move(widget.x()-x, widget.y())
+	# 	# size2 = widget.frameGeometry().width()
+	# 	# print 'size', size1, size2
+	# 	# difference = abs(size1-size2)/2
+	# 	# print difference, widget.x()
+	# 	# widget.move(widget.x()-difference, widget.y())
+	# 	# widget.resize.width(size2+difference)
+	# 	# widget.setText(str(widget.text())+' '*difference)
 
 
 
-	def styleSheetOverride(self):
-		ui = self.sb.getUi()
-
-		if self.hotBox.name=='main':
-			self.setButtons(ui, invisible='v024-29') #resizing is currently being handled in tk_slots_app_init \ init().
-
-		# if self.hotBox.name=='viewport':
-		# 	buttons = self.getObject(ui, 'cmb000-3', showError_=False)
-		# 	for button in buttons: #setStyleSheet for transparent buttons
-		# 		button.setStyleSheet('''
-		# 			QPushButton {border: 1px solid transparent;}
-		# 			QComboBox {background-color: transparent; color: white;}
-		# 			QComboBox::drop-down {border-width: 0px;}
-		# 			QComboBox::down-arrow {image: url(:/none); border-width: 0px;}
-		# 			''')
-			
-
-		if self.hotBox.name=='create':
-			self.setButtons(ui, invisible='s000-13')
-
-
-		if self.hotBox.name=='init':
-			ui.t000.viewport().setAutoFillBackground(False)
-			ui.t000.setTextBackgroundColor(QtGui.QColor(50, 50, 50))
 
 
 
@@ -435,6 +448,26 @@ print os.path.splitext(os.path.basename(__file__))[0]
 
 
 #depricated:
+
+
+	# def getUiObject(self, widgets):
+	# 	'''
+	# 	Get ui objects from name strings.
+	# 	args:
+	# 		widgets='string' - ui object names
+	# 	returns:
+	# 		list of corresponding ui objects	
+	# 	'''
+	# 	objects=[]
+	# 	for name in self.unpackNames(widgets):
+	# 		try:
+	# 			w = getattr(self.ui, name)
+	# 			objects.append(w)
+	# 		except: pass
+	# 	return objects
+
+
+
 
 # def setSpinboxes(ui, spinboxNames='s000-15', values=[]):
 # 	'''

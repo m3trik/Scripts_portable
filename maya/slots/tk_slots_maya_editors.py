@@ -1,8 +1,6 @@
 import maya.mel as mel
 import pymel.core as pm
 
-from PySide2 import QtWidgets
-
 import os.path
 
 from tk_slots_maya_init import Init
@@ -20,7 +18,6 @@ class Editors(Init):
 		#construct stacked widget from maya layouts
 		# self.widgetList = ['MainAttributeEditorLayout','MainChannelBoxLayout','ToggledOutlinerLayout','MainToolSettingsLayout','LayerEditorDisplayLayerLayout']
 		self.stackedWidget = self.sb.getUi('dynLayout').stackedWidget
-		# self.stackedWidget = QtWidgets.QStackedWidget()
 		# self.stackedWidget = self.sb.getUi('dynLayout').stackedWidget
 		# for w in self.widgetList:
 		# 	self.stackedWidget.addWidget(self.getWidget(w))

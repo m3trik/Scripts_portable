@@ -15,11 +15,7 @@ class Create(Init):
 
 
 		self.ui = self.sb.getUi('create')
-
 		self.ui.progressBar.hide()
-
-		self.ui.cmb000.removeEventFilter(self.signal)
-		self.ui.cmb001.removeEventFilter(self.signal)
 
 		self.node=None
 		self.rotation = {'x':[90,0,0], 'y':[0,90,0], 'z':[0,0,90], '-x':[-90,0,0], '-y':[0,-90,0], '-z':[0,0,-90], 'last':[]}

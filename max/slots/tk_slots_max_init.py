@@ -1,7 +1,7 @@
 import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
 from pymxs import runtime as rt
 
-from PySide2 import QtGui, QtWidgets
+from PySide2 import QtGui
 
 import os.path
 
@@ -15,12 +15,13 @@ class Init(Slot):
 	def __init__(self, *args, **kwargs):
 		super(Init, self).__init__(*args, **kwargs)
 
-		self.ui = self.sb.getUi('init')
-
-		
 
 
-	def info(self): #get current attributes. those with relavant values will be displayed.
+
+
+
+
+	def t000(self): #get current attributes. those with relavant values will be displayed.
 
 		infoDict={}
 		selection = rt.selection
@@ -38,9 +39,9 @@ class Init(Slot):
 			symmetry = obj.modifiers[rt.Symmetry]
 			if symmetry:
 				s = symmetry.axis;
-				if s==0: axis='x'; 
-				if s==1: axis='y'; 
-				if s==2: axis='z'; 
+				if s==0: axis='x';
+				if s==1: axis='y';
+				if s==2: axis='z';
 				infoDict.update({'Symmetry Axis: ':axis.upper()}) #symmetry axis
 
 			# xformConstraint = pm.xformConstraint(query=True, type=True)
