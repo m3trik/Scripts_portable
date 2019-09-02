@@ -38,7 +38,7 @@ class Editors(Init):
 			the current widget object from the stacked widget.
 		'''
 		print 8*' -'
-		self.stackedWidget.addWidget(self.getWidget(name))
+		self.stackedWidget.addWidget(self.sb.getWidget(name))
 		self.stackedWidget.setCurrentWidget(name)
 		currentWidget = self.stackedWidget.currentWidget()
 		currentWidget.adjustSize()

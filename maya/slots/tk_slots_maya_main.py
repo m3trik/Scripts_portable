@@ -110,7 +110,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('b006', 'polygons')()
+			self.sb.getMethod('polygons', 'b006')()
 		
 
 	def v001(self):
@@ -120,7 +120,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('b005', 'polygons')()
+			self.sb.getMethod('polygons', 'b005')()
 
 
 	def v002(self):
@@ -130,7 +130,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('b012', 'polygons')()
+			self.sb.getMethod('polygons', 'b012')()
 			self.hotBox.hide()
 
 
@@ -141,7 +141,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('b004', 'polygons')()
+			self.sb.getMethod('polygons', 'b004')()
 
 
 	def v004(self):
@@ -151,7 +151,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('b007', 'edit')() #delete
+			self.sb.getMethod('edit', 'b007')() #delete
 
 
 	def v005(self):
@@ -161,7 +161,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('b009', 'polygons')()
+			self.sb.getMethod('polygons', 'b009')()
 
 
 	def v006(self):
@@ -171,7 +171,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('b047', 'polygons')()
+			self.sb.getMethod('polygons', 'b047')()
 
 
 	def v007(self):
@@ -181,7 +181,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('b008', 'selection')()
+			self.sb.getMethod('selection', 'b008')()
 
 
 	def v008(self):
@@ -191,7 +191,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('b044', 'polygons')()
+			self.sb.getMethod('polygons', 'b044')()
 
 
 	def v009(self):
@@ -201,7 +201,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('b022', 'polygons')()
+			self.sb.getMethod('polygons', 'b022')()
 
 
 	def v010(self):
@@ -211,7 +211,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('b007', 'polygons')()
+			self.sb.getMethod('polygons', 'b007')()
 
 
 	def v011(self):
@@ -221,7 +221,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('b043', 'polygons')()
+			self.sb.getMethod('polygons', 'b043')()
 
 
 	def v012(self):
@@ -239,7 +239,7 @@ class Main(Init):
 		# index = 'Minimize'
 		# self.ui.v008.setText(index)
 
-		self.getMethod('b005', 'file')()
+		self.sb.getMethod('file', 'b005')()
 
 
 	def v022(self):
@@ -249,7 +249,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('b006', 'selection')() #select similar
+			self.sb.getMethod('selection', 'b006')() #select similar
 
 
 	def v023(self):
@@ -259,7 +259,7 @@ class Main(Init):
 		index = self.ui.cmb000.currentIndex()
 		
 		if index==0: #modeling
-			self.getMethod('b007', 'selection')() #select island
+			self.sb.getMethod('selection', 'b007')() #select island
 
 
 	def v024(self):

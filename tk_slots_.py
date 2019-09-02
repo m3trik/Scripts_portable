@@ -21,74 +21,62 @@ class Slot(object):
 		self.ui = self.sb.getUi()
 
 
-		if self.name=='init':
-			self.ui.t000.setAutoFillBackground(False)
-			self.ui.t000.setTextBackgroundColor(QtGui.QColor(50, 50, 50))
+		# if self.name=='main':
+		# 	self.setButtons(self.ui, invisible='v024-29') #resizing is currently being handled in tk_slots_app_init \ init().
 
-		if self.name=='main' or self.name=='viewport':
-			self.setButtons(self.ui, invisible='r000-10')
+		# # if self.hotBox.name=='viewport':
+		# # 	buttons = self.getObject(self.ui, 'cmb000-3', showError_=False)
+		# # 	for button in buttons: #setStyleSheet for transparent buttons
+		# # 		button.setStyleSheet('''
+		# # 			QPushButton {border: 1px solid transparent;}
+		# # 			QComboBox {background-color: transparent; color: white;}
+		# # 			QComboBox::drop-down {border-width: 0px;}
+		# # 			QComboBox::down-arrow {image: url(:/none); border-width: 0px;}
+		# # 			''')
 
+		# if self.name=='create':
+		# 	self.setButtons(self.ui, invisible='s000-13')
 
-		if self.name=='create':
-			self.setButtons(self.ui, invisible='s000-13')
-
-
-
-
+		# if self.name=='init':
+		# 	self.ui.t000.setAutoFillBackground(False)
+		# 	self.ui.t000.setTextBackgroundColor(QtGui.QColor(50, 50, 50))
 
 
 
 
 	@staticmethod
-	def getWindow(name=None, allWindows=False):
+	def getWindow(name=None):
 		'''
 		Get Qt window/s
 		args:
-			name='string' - optional name of window (window.objectName)
-			allWindows=bool - optional; return a dictionary of all windows {windowName:window}
+			name='string' - optional name of window (widget.objectName)
 		returns:
-			corresponding <window object> from given window object name
+			if name: corresponding <window object>
+			else: return a dictionary of all windows {windowName:window}
 		'''
 		windows = {w.objectName():w for w in QtWidgets.QApplication.allWindows()}
-		if allWindows:
+		if name:
+			return windows[name]
+		else:
 			return windows
-		return windows[name]
 
 
 
 	@staticmethod
-	def getWidget(name=None, allWidgets=False):
+	def getWidget(name=None):
 		'''
 		Get Qt widget/s
 		args:
 			name='string' - optional name of widget (widget.objectName)
-			allWidgets=bool - optional; return a dictionary of all widgets {widgetName:widget}
 		returns:
-			corresponding <widget object> from given widget object name
+			if name: corresponding <widget object>
+			else: return a dictionary of all widgets {widgetName:widget}
 		'''
 		widgets = {w.objectName():w for w in QtWidgets.QApplication.allWidgets()}
-		if allWidgets:
+		if name:
+			return widgets[name]
+		else:
 			return widgets
-		return widgets[name]
-
-
-
-	def getMethod(self, class_, method):
-		'''
-		Get method from switchboard. If it doesn't exist, construct, store, and return it.
-		args:
-			class_='string' class name (case insensitive)
-			method='string' method name
-
-		returns:
-			method object
-		'''
-		c = class_.lower()
-		if not self.sb.hasKey(c, 'connectionDict'):
-			self.sb.buildConnectionDict(c) #construct the signals and slots for the ui 
-
-			print self.sb.getDocString(method, c)
-		return self.sb.getMethod(method, c)
 
 
 
