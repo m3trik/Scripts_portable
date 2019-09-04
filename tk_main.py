@@ -10,7 +10,7 @@ import os.path
 from tk_switchboard import Switchboard
 from tk_styleSheet import StyleSheet
 from tk_overlay import OverlayFactoryFilter
-from tk_dynWidgetEvents import DynWidgetEvents
+from tk_dynWidgetEvents import EventFactoryFilter
 
 try: import MaxPlus
 except: pass
@@ -78,7 +78,8 @@ class HotBox(QtWidgets.QWidget):
 
 
 		if not self.sb.hasKey(self.name, 'connectionDict'): #build the connectionDict containing the widgets and their connections.
-			DynWidgetEvents(self.name, self)
+			if not self.name=='init':
+				_GCProtector.widgets.append(EventFactoryFilter(self.name, self))
 
 		if not any([self.name=='init',self.name==self.sb.previousName(allowDuplicates=1)]):
 			if self.sb.previousName():
@@ -129,7 +130,7 @@ class HotBox(QtWidgets.QWidget):
 			if any([self.name=='init', self.name=='main']):
 				try: #show last used submenu on double mouseclick
 					self.layoutStack(self.sb.previousName(previousIndex=True))
-				except Exception as error: 
+				except Exception as error:
 					print "# Warning: No recent submenus in history. #"
 
 		if event.button()==QtCore.Qt.LeftButton:
@@ -148,9 +149,20 @@ class HotBox(QtWidgets.QWidget):
 
 
 
+	def mouseReleaseEvent(self, event):
+		'''
+		args:
+			event=<QEvent>
+		'''
+		if any([self.name=='init', self.name=='main', self.name=='viewport', self.name=='editors']):
+			if any([event.button()==QtCore.Qt.LeftButton,event.button()==QtCore.Qt.MiddleButton,event.button()==QtCore.Qt.RightButton]):
+				self.layoutStack('init')
+
+
+
 	def hide_(self):
 		'''
-		Prevent hide event under certain circumstances.
+		Prevents hide event under certain circumstances.
 		'''
 		try: #if pin is unchecked: hide
 			if not self.ui.pin.isChecked():
