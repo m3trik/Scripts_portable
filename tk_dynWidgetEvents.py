@@ -9,38 +9,24 @@ from tk_styleSheet import StyleSheet
 
 
 
-class Events(QtCore.QObject):
+class Events(QtWidgets.QWidget):
 	'''
-	
+	Event filter for dynamic ui widgets.
 	'''
 	__mouseHover = QtCore.Signal(bool)
 
 	def __init__(self, widget):
 		super(Events, self).__init__()
 		'''
-		Set initial states for dynamic ui widgets. 
+		Set initial widget states. 
 		'''
 		self.sb = Switchboard()
 		self.name = self.sb.getUiName()
-		# print 'name 2',self.name
+		print 'Events:',self.name,widget.objectName()
 
 		self.widget = widget
-		self.widgetName = self.widget.objectName()
-		self.widgetType = self.widget.__class__.__name__ # self.sb.getWidgetType(self.widget)
-
-		self.widget.setStyleSheet(StyleSheet.css) #add StyleSheet
-
-		if self.name=='init' and self.widgetName=='t000':
-			self.widget.viewport().setAutoFillBackground(False)
-			self.widget.setTextBackgroundColor(QtGui.QColor(50, 50, 50))
-
-		if self.name=='main' or self.name=='viewport':
-			if self.widgetName.startswith('r'):
-				self.widget.setVisible(False)
-
-		if self.name=='create':
-			if self.widgetName.startswith('s'):
-				self.widget.setVisible(False)
+		self.widgetName = widget.objectName()
+		self.widgetType = widget.__class__.__name__ # self.sb.getWidgetType(self.widget)
 
 
 
@@ -49,7 +35,9 @@ class Events(QtCore.QObject):
 		args:
 			event=<QEvent>
 		'''
+		# print 'mousePressEvent'
 		self.__mousePressPos = event.globalPos()
+
 
 
 	def mouseMoveEvent(self, event):
@@ -82,6 +70,7 @@ class Events(QtCore.QObject):
 				self.widget.setStyleSheet(StyleSheet.comboBox)
 
 
+
 	def mouseReleaseEvent(self, event):
 		'''
 		args:
@@ -92,7 +81,7 @@ class Events(QtCore.QObject):
 			if self.widget.rect().contains(self.widget.mapFromGlobal(QtGui.QCursor.pos())):
 				if self.widgetName.startswith('i'): #connect to layoutStack and pass in an index as int or string 'name'.
 					index = self.widget.whatsThis()
-					print self.widget.layout()
+					print 'layout:',self.widget.layout()
 					# self.layoutStack(index) #switch the stacked layout to the given ui.
 
 				elif self.widgetName.startswith('v'): #ie. 'v012'
@@ -118,21 +107,49 @@ class Events(QtCore.QObject):
 				self.widget.showPopup()
 
 
-	def mouseEnterEvent(self, event):
+
+	def enterEvent(self, event):
 		'''
 		args:
 			event=<QEvent>
 		'''
-		print 'mouseEnterEvent',self.widgetName
+		print 'enterEvent',self.widgetName
 		self.__mouseHover.emit(True)
 
 
-	def mouseLeaveEvent(self, event):
+
+	def dragEnterEvent(self, event):
+		event.accept()
+		print 'dragEnterEvent'
+
+	
+
+	def dragMoveEvent(self, event):
+		event.accept()
+
+
+
+	def leaveEvent(self, event):
 		'''
 		args:
 			event=<QEvent>
 		'''
 		self.__mouseHover.emit(False)
+
+
+
+	def dragLeaveEvent(self, event):
+		event.accept()
+		print 'dragLeaveEvent'
+
+
+
+	def dropEvent(self, event):
+		event.accept()
+		print 'dropEvent'
+
+
+
 
 
 
@@ -145,18 +162,28 @@ class EventFactoryFilter(QtCore.QObject):
 	def __init__(self, name, parent=None):
 		super(EventFactoryFilter, self).__init__(parent)
 
-		self.name = name
-		print 'name 1',self.name
 		self.sb = Switchboard()
 
-		for widget in self.sb.getWidget(self.name): #get all widgets for the given ui name.
-			if not widget.objectName()=='mainWindow' or widget.objectName()=='t000':
-				print widget.objectName()
+		for widget in self.sb.getWidget(name): #get all widgets for the given ui name.
 
-				widget.installEventFilter(self)
-				# widget.setMouseTracking(True)
+			widget.setStyleSheet(StyleSheet.css) #add StyleSheet
+			widget.installEventFilter(self)
+			# widget.setMouseTracking(True)
+			# widget.setAcceptDrops(True)
+			# widget.mousePressEvent = Events(widget).mousePressEvent
+			# widget.mouseReleaseEvent = Events(widget).mouseReleaseEvent
 
-				self.Events = Events(widget)
+			if name=='init' and widget.objectName()=='t000':
+				widget.viewport().setAutoFillBackground(False)
+				widget.setTextBackgroundColor(QtGui.QColor(50, 50, 50))
+
+			if name=='main' or name=='viewport':
+				if widget.objectName().startswith('r'):
+					widget.setVisible(False)
+
+			if name=='create':
+				if widget.objectName().startswith('s'):
+					widget.setVisible(False)
 
 
 
@@ -171,20 +198,31 @@ class EventFactoryFilter(QtCore.QObject):
 
 
 		if event.type()==QtCore.QEvent.MouseButtonPress:
-			self.Events.mousePressEvent(event)
+			Events(widget).mousePressEvent(event)
 
 		elif event.type()==QtCore.QEvent.MouseButtonRelease:
-			self.Events.mouseReleaseEvent(event)
+			Events(widget).mouseReleaseEvent(event)
 
 		elif event.type()==QtCore.QEvent.MouseMove:
-			self.Events.mouseMoveEvent(event)
+			Events(widget).mouseMoveEvent(event)
 
-		elif event.type()==QtCore.QEvent.Type.Enter:
-			self.Events.mouseEnterEvent(event)
+		elif event.type()==QtCore.QEvent.Type.Enter: #HoverEnter
+			Events(widget).enterEvent(event)
 
-		elif event.type()==QtCore.QEvent.Type.HoverLeave:
-			self.Events.mouseLeaveEvent(event)
+		elif event.type()==QtCore.QEvent.Type.Leave: #HoverLeave
+			Events(widget).leaveEvent(event)
+
+		elif event.type()==QtCore.QEvent.Type.DragEnter:
+			Events(widget).dragEnterEvent(event)
+
+		elif event.type()==QtCore.QEvent.Type.DragLeave:
+			Events(widget).dragLeaveEvent(event)
+
+		elif event.type()==QtCore.QEvent.Type.DragMove:
+			Events(widget).dragMoveEvent(event)
+
+		elif event.type()==QtCore.QEvent.Type.Drop:
+			Events(widget).dropEvent(event)
 
 
 		return super(EventFactoryFilter, self).eventFilter(widget, event)
-

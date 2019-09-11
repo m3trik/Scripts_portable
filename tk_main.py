@@ -1,11 +1,10 @@
-# ||||||||||||||||||||||||||||||||||||||||||||||||||
-# |||||||||     hotBox marking menu     ||||||||||||
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# |||||||||||||||||||||||||||||||||||||||||||||||||
+# ||||||   	 	hotBox marking menu			|||||||
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 from PySide2 import QtCore, QtGui, QtWidgets
-from ctypes import windll, Structure, c_long, byref
 
-import os.path
+import sys, os.path
 
 from tk_switchboard import Switchboard
 from tk_styleSheet import StyleSheet
@@ -21,8 +20,9 @@ except: pass
 
 
 
+
 # ------------------------------------------------
-# hotBox 
+# Stacked Widget
 # ------------------------------------------------
 class HotBox(QtWidgets.QWidget):
 	'''
@@ -32,7 +32,7 @@ class HotBox(QtWidgets.QWidget):
 	args:
 		parent=main application window object.
 	'''
-	def __init__(self, parent):
+	def __init__(self, parent=None):
 		super(HotBox, self).__init__(parent)
 
 		#set window style
@@ -42,8 +42,6 @@ class HotBox(QtWidgets.QWidget):
 		# self.setStyle(QtWidgets.QStyleFactory.create("plastique"))
 
 		self.sb = Switchboard(parent)
-		# self.installEventFilter(self)
-		# self.setMouseTracking(True)
 		self.stackedLayout = None
 
 
@@ -78,16 +76,13 @@ class HotBox(QtWidgets.QWidget):
 
 
 		if not self.sb.hasKey(self.name, 'connectionDict'): #build the connectionDict containing the widgets and their connections.
-			if not self.name=='init':
-				_GCProtector.widgets.append(EventFactoryFilter(self.name, self))
+			EventFactoryFilter(self.name, self)
 
 		if not any([self.name=='init',self.name==self.sb.previousName(allowDuplicates=1)]):
-			if self.sb.previousName():
+			if self.sb.previousName(): #if previous ui signals exist
 				# print self.name, self.sb.previousName()
 				self.sb.removeSignal(self.sb.previousName())
-				self.sb.addSignal(self.name)
-			else: #if no previous ui exists
-				self.sb.addSignal(self.name)
+			self.sb.addSignal(self.name)
 
 
 
@@ -119,6 +114,19 @@ class HotBox(QtWidgets.QWidget):
 			elif event.button()==QtCore.Qt.RightButton:
 				self.layoutStack('main')
 
+			# return super(HotBox, self).mousePressEvent(event)
+		# for w in self.sb.getWidget(self.name):
+		# 	w.mousePressEvent(event)
+
+
+		# if any([self.name=='main', self.name=='viewport', self.name=='editors']):
+		# 	drag = QtGui.QDrag(self)
+		# 	drag.setMimeData(QtCore.QMimeData())
+		# 	# drag.setHotSpot(event.pos())
+		# 	# drag.setDragCursor(QtGui.QCursor(QtCore.Qt.CrossCursor).pixmap(), QtCore.Qt.MoveAction) #QtCore.Qt.CursorShape(2) #QtCore.Qt.DropAction
+		# 	drag.start(QtCore.Qt.MoveAction) #drag.exec_(QtCore.Qt.MoveAction)
+		# 	print drag.target() #the widget where the drag object was dropped.
+
 
 
 	def mouseDoubleClickEvent(self, event):
@@ -149,12 +157,27 @@ class HotBox(QtWidgets.QWidget):
 
 
 
+	# def mouseMoveEvent(self, event):
+	# 	'''
+	# 	args:
+	# 		event=<QEvent>
+	# 	'''
+	# 	if any([self.name=='main', self.name=='viewport', self.name=='editors']):
+	# 		drag = QtGui.QDrag(self)
+	# 		drag.setMimeData(QtCore.QMimeData())
+	# 		# drag.setHotSpot(event.pos())
+	# 		# drag.setDragCursor(QtGui.QCursor(QtCore.Qt.CrossCursor).pixmap(), QtCore.Qt.MoveAction) #QtCore.Qt.CursorShape(2) #QtCore.Qt.DropAction
+	# 		drag.start(QtCore.Qt.MoveAction) #drag.exec_(QtCore.Qt.MoveAction)
+	# 		print drag.target() #the widget where the drag object was dropped.
+
+
+
 	def mouseReleaseEvent(self, event):
 		'''
 		args:
 			event=<QEvent>
 		'''
-		if any([self.name=='init', self.name=='main', self.name=='viewport', self.name=='editors']):
+		if any([self.name=='main', self.name=='viewport', self.name=='editors']):
 			if any([event.button()==QtCore.Qt.LeftButton,event.button()==QtCore.Qt.MiddleButton,event.button()==QtCore.Qt.RightButton]):
 				self.layoutStack('init')
 
@@ -233,44 +256,30 @@ class HotBox(QtWidgets.QWidget):
 
 
 
-
-
-
-# ------------------------------------------------
-# Garbage-collection-management
-# ------------------------------------------------
-class _GCProtector(object):
-	widgets=[]
-
-
-
-
-
-
 # ------------------------------------------------
 # Initialize
 # ------------------------------------------------
 def createInstance():
+	try: mainWindow = [x for x in app.topLevelWidgets() if x.objectName()=='MayaWindow'][0]
+	except:
+		try: mainWindow = MaxPlus.GetQMaxMainWindow(); mainWindow.setObjectName('MaxWindow')
+		except: mainWindow = None
 
-	app = QtWidgets.QApplication.instance()
-	if not app:
-		app = QtWidgets.QApplication([])
-
-	try: mainWindow = MaxPlus.GetQMaxMainWindow(); mainWindow.setObjectName('MaxWindow')
-	except: mainWindow = [x for x in app.topLevelWidgets() if x.objectName()=='MayaWindow'][0]
-	
 	hotBox = HotBox(mainWindow)
 	hotBox.layoutStack('init') #initialize layout
 	hotBox.overlay = OverlayFactoryFilter(hotBox)
-
-
-	_GCProtector.widgets.append(hotBox)
 
 	return hotBox
 
 
 
+if __name__ == "__main__":
+	qApp = QtWidgets.QApplication.instance()
+	if not qApp:
+		qApp = QtWidgets.QApplication(sys.argv)
 
+	createInstance().show()
+	sys.exit(qApp.exec_())
 
 
 
@@ -283,8 +292,6 @@ def createInstance():
 
 #module name
 print os.path.splitext(os.path.basename(__file__))[0]
-
-
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
