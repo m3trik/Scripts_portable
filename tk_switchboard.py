@@ -15,7 +15,7 @@ import sys, os.path
 class Switchboard():
 	'''
 	Get/set elements across modules from a single dictionary.
-	key/value structure of __sbDict:
+	key/value structure of _sbDict:
 		'name'{
 			'class' : <class obj>
 			'size' : [list containing width int, height int]. ie. [295, 234]
@@ -26,7 +26,7 @@ class Switchboard():
 		'prevCommand' : list of 2 element lists. [history of commands, last used method at element[-1]]. [[method,'methodNameString']]  ie. [{b00, 'multi-cut tool'}]
 		'gcProtect' : [list of items protected from garbage collection]
 	ex.
-	__sbDict={
+	_sbDict={
 		'polygons' : { 
 			'class' : Polygons, 
 			'size' : [295, 234], 
@@ -39,16 +39,19 @@ class Switchboard():
 	'''
 
 	#initialize the main dict.
-	__sbDict = {'name':[]}
+	_sbDict = {'name':[]}
 
 	#set path to the directory containing the ui files.
 	path = os.path.join(os.path.dirname(__file__), 'ui') #get absolute path from dir of this module + relative path to directory
 
 	#construct the uiList from directory contents. ie. [['polygons', <polygons dynamic ui object>]]
-	qApp = QApplication(sys.argv)
-	__sbDict['uiList'] = [[file_.replace('.ui',''), QUiLoader().load(path+'/'+file_)] for file_ in os.listdir(path) if file_.endswith('.ui')]
+	qApp = QApplication.instance() #get the qApp instance if it exists
+	if not qApp:
+		qApp = QApplication(sys.argv)
+
+	_sbDict['uiList'] = [[file_.replace('.ui',''), QUiLoader().load(path+'/'+file_)] for file_ in os.listdir(path) if file_.endswith('.ui')]
 	 #use the uiList to initialize the main dict. ie. { 'edit':{}, 'create':{}, 'animation':{}, 'cameras':{}, 'display':{} }
-	[__sbDict.update({ui[0]:{}}) for ui in __sbDict['uiList']]
+	[_sbDict.update({ui[0]:{}}) for ui in _sbDict['uiList']]
 
 
 
@@ -116,11 +119,11 @@ class Switchboard():
 		'docString': string description of command from method docString.  ie. 'Multi-Cut Tool'}
 		#ie. {'b001':{'widget':b001, 'widgetWithSignal':b001.onPressed, 'method':main.b001, 'docString':'Multi-Cut Tool'}},
 		'''
-		if not 'connectionDict' in self.__sbDict[name]:
-			self.__sbDict[name]['connectionDict'] = {}
+		if not 'connectionDict' in self._sbDict[name]:
+			self._sbDict[name]['connectionDict'] = {}
 			self.buildConnectionDict(name) #construct the signals and slots for the ui
 
-		return self.__sbDict[name]['connectionDict']
+		return self._sbDict[name]['connectionDict']
 
 
 
@@ -177,11 +180,11 @@ class Switchboard():
 			else: list of string names of classes(lowercase) from key 'uiList'. ie. ['animation', 'cameras', 'create', 'display', 'edit']
 		'''
 		if name:
-			return [i[0] for i in self.__sbDict['uiList']]
+			return [i[0] for i in self._sbDict['uiList']]
 		elif ui:
-			return [i[1] for i in self.__sbDict['uiList']]
+			return [i[1] for i in self._sbDict['uiList']]
 		else:
-			return self.__sbDict['uiList']
+			return self._sbDict['uiList']
 
 
 
@@ -207,8 +210,8 @@ class Switchboard():
 		returns:
 			corresponding ui name as string
 		'''
-		self.__sbDict['name'].append(self.uiList(name=1)[index])
-		return self.__sbDict['name'][-1]
+		self._sbDict['name'].append(self.uiList(name=1)[index])
+		return self._sbDict['name'][-1]
 
 
 
@@ -217,7 +220,7 @@ class Switchboard():
 		returns:
 			current ui name as string
 		'''
-		return self.__sbDict['name'][-1]
+		return self._sbDict['name'][-1]
 
 
 
@@ -236,6 +239,27 @@ class Switchboard():
 
 
 
+	def getNameFrom(self, obj):
+		'''
+		Get the method class/ui name from any object existing in connectionDict.
+		args:
+			obj=<object> - 
+		returns:
+			 'string' - the corresponding method name from the given object.
+			 ie. 'polygons' from <widget>
+		'''
+		for key, v in self._sbDict.iteritems():
+			if type(v)==dict:
+				for k, v in v.iteritems():
+					if type(v)==dict:
+						for k, v in v.iteritems():
+							if type(v)==dict:
+								for k, v in v.iteritems():
+									if v==obj:
+										return key
+
+
+
 	def setApp(self, app):
 		'''
 		args:
@@ -243,8 +267,8 @@ class Switchboard():
 		returns:
 			string name of app
 		'''
-		self.__sbDict['app'] = app.objectName().rstrip('Window').lower() #remove 'Window' from objectName ie. 'Maya' from 'MayaWindow' and set lowercase.
-		return self.__sbDict['app']
+		self._sbDict['app'] = app.objectName().rstrip('Window').lower() #remove 'Window' from objectName ie. 'Maya' from 'MayaWindow' and set lowercase.
+		return self._sbDict['app']
 
 
 
@@ -253,10 +277,10 @@ class Switchboard():
 		returns:
 			string name of app
 		'''
-		if not 'app' in self.__sbDict:
-			self.__sbDict['app'] = '' #initialize list
+		if not 'app' in self._sbDict:
+			self._sbDict['app'] = '' #initialize list
 
-		return self.__sbDict['app']
+		return self._sbDict['app']
 
 
 
@@ -276,8 +300,8 @@ class Switchboard():
 			ui = self.getUi(name)
 			size = [ui.frameGeometry().width(), ui.frameGeometry().height()]
 
-		self.__sbDict[name]['size'] = size
-		return self.__sbDict[name]['size']
+		self._sbDict[name]['size'] = size
+		return self._sbDict[name]['size']
 
 
 
@@ -296,15 +320,15 @@ class Switchboard():
 			else: ui size info as integer values in a list. [width, hight]
 		'''
 		if width:
-			return self.__sbDict[self.getUiName()]['size'][0]
+			return self._sbDict[self.getUiName()]['size'][0]
 		elif height:
-			return self.__sbDict[self.getUiName()]['size'][1]
+			return self._sbDict[self.getUiName()]['size'][1]
 		elif percentWidth:
-			return self.__sbDict[self.getUiName()]['size'][0] *percentWidth /100
+			return self._sbDict[self.getUiName()]['size'][0] *percentWidth /100
 		elif percentHeight:
-			return self.__sbDict[self.getUiName()]['size'][1] *percentHeight /100
+			return self._sbDict[self.getUiName()]['size'][1] *percentHeight /100
 		else:
-			return self.__sbDict[self.getUiName()]['size']
+			return self._sbDict[self.getUiName()]['size']
 
 
 
@@ -319,27 +343,27 @@ class Switchboard():
 		'''
 		if type(class_)==str or type(class_)==unicode: #arg given as string or unicode:
 			name = class_.split('_')[-1].split('.')[-1].lower(); #get key from class_ string ie. 'class' from 'tk_slots_max_polygons.Class'
-			if not name in self.__sbDict:
-				self.__sbDict[name] = {}
-			self.__sbDict[name]['class'] = locate(class_)
+			if not name in self._sbDict:
+				self._sbDict[name] = {}
+			self._sbDict[name]['class'] = locate(class_)
 
 		else: #if class_ arg as <object>:
 			name = class_.__class__.__name__.lower();
-			if not name in self.__sbDict:
-				self.__sbDict[name] = {}
+			if not name in self._sbDict:
+				self._sbDict[name] = {}
 			
-			self.__sbDict[name]['class'] = class_
+			self._sbDict[name]['class'] = class_
 
-		if not self.__sbDict[name]['class']:
+		if not self._sbDict[name]['class']:
 			return '# Error: '+class_+' not found. #'
 		else:
-			return self.__sbDict[name]['class']
+			return self._sbDict[name]['class']
 
 
 
 	def getClass(self, name):
 		'''
-		If class is not in self.__sbDict, use setClass() to first store the class.
+		If class is not in self._sbDict, use setClass() to first store the class.
 		Case insensitive. class string keys are lowercase and any given string will be converted automatically.
 		args:
 			name='string' name of class. ie. 'polygons'
@@ -348,10 +372,10 @@ class Switchboard():
 		'''
 		name = name.lower()
 
-		if not 'class' in self.__sbDict[name]:
+		if not 'class' in self._sbDict[name]:
 			return self.setClass(name) #construct the signals and slots for the ui
 
-		return self.__sbDict[name]['class']
+		return self._sbDict[name]['class']
 
 
 
@@ -365,13 +389,13 @@ class Switchboard():
 			if widgetName: widget object with the given name.
 			else: all widgets from the given ui.
 		'''
-		if not 'connectionDict' in self.__sbDict[name]:
+		if not 'connectionDict' in self._sbDict[name]:
 			self.getConnectionDict(name) #construct the signals and slots for the ui
 
 		if widgetName:
-			return self.__sbDict[name]['connectionDict'][widgetName]['widget']
+			return self._sbDict[name]['connectionDict'][widgetName]['widget']
 		else: #return all widgets:
-			return [self.__sbDict[name]['connectionDict'][widgetName]['widget'] for widgetName in self.__sbDict[name]['connectionDict']]
+			return [self._sbDict[name]['connectionDict'][widgetName]['widget'] for widgetName in self._sbDict[name]['connectionDict']]
 
 
 
@@ -393,10 +417,10 @@ class Switchboard():
 		if not name:
 			name = self.getUiName()
 
-		if not 'connectionDict' in self.__sbDict[name]:
+		if not 'connectionDict' in self._sbDict[name]:
 			self.getConnectionDict(name) #construct the signals and slots for the ui
 
-		return self.__sbDict[name]['connectionDict'][widget]['widgetClass']
+		return self._sbDict[name]['connectionDict'][widget]['widgetClass']
 
 
 
@@ -418,10 +442,10 @@ class Switchboard():
 		if not name:
 			name = self.getUiName()
 
-		if not 'connectionDict' in self.__sbDict[name]:
+		if not 'connectionDict' in self._sbDict[name]:
 			self.getConnectionDict(name) #construct the signals and slots for the ui
 
-		return self.__sbDict[name]['connectionDict'][widget]['widgetType']
+		return self._sbDict[name]['connectionDict'][widget]['widgetType']
 
 
 
@@ -434,16 +458,16 @@ class Switchboard():
 			if methodName: corresponding method object to given method name string.
 			else: all of the methods associated with the given name as a list.
 		'''
-		if not 'connectionDict' in self.__sbDict[name]:
+		if not 'connectionDict' in self._sbDict[name]:
 			self.getConnectionDict(name) #construct the signals and slots for the ui
 		
 		if methodName:
 			try:
-				return self.__sbDict[name]['connectionDict'][methodName]['method'][0] #if there are event filters attached (ie. a list), just get the method.
+				return self._sbDict[name]['connectionDict'][methodName]['method'][0] #if there are event filters attached (ie. a list), just get the method.
 			except:
-				return  self.__sbDict[name]['connectionDict'][methodName]['method']
+				return  self._sbDict[name]['connectionDict'][methodName]['method']
 		else:
-			return [self.__sbDict[name]['connectionDict'][methodName]['method'] for methodName in self.__sbDict[name]['connectionDict']]
+			return [self._sbDict[name]['connectionDict'][methodName]['method'] for methodName in self._sbDict[name]['connectionDict']]
 
 
 
@@ -456,13 +480,13 @@ class Switchboard():
 			if widgetName: the corresponding widget object with attached signal (ie. b001.onPressed) of the given widget name.
 			else: all of the signals associated with the given name as a list.
 		'''
-		if not 'connectionDict' in self.__sbDict[name]:
+		if not 'connectionDict' in self._sbDict[name]:
 			self.getConnectionDict(name) #construct the signals and slots for the ui
 
 		if widgetName:
-			return self.__sbDict[name]['connectionDict'][widgetName]['widgetWithSignal']
+			return self._sbDict[name]['connectionDict'][widgetName]['widgetWithSignal']
 		else:
-			return [self.__sbDict[name]['connectionDict'][widgetName]['widgetWithSignal'] for widgetName in self.__sbDict[name]['connectionDict']]
+			return [self._sbDict[name]['connectionDict'][widgetName]['widgetWithSignal'] for widgetName in self._sbDict[name]['connectionDict']]
 
 
 
@@ -479,13 +503,13 @@ class Switchboard():
 		if not name:
 			name = self.getUiName()
 
-		if not 'connectionDict' in self.__sbDict[name]:
+		if not 'connectionDict' in self._sbDict[name]:
 			self.getConnectionDict(name) #construct the signals and slots for the ui
 			
 		if full: #entire unformatted docString
-			return self.__sbDict[name]['connectionDict'][methodName]['docString']
+			return self._sbDict[name]['connectionDict'][methodName]['docString']
 		else: #formatted docString
-			return self.__sbDict[name]['connectionDict'][methodName]['docString'].strip('\n\t')
+			return self._sbDict[name]['connectionDict'][methodName]['docString'].strip('\n\t')
 
 
 
@@ -497,9 +521,9 @@ class Switchboard():
 			if previousIndex: int index of previously opened ui
 			else: string name of previously opened layout.
 		'''
-		self.__sbDict['name'] = self.__sbDict['name'][-10:] #keep original list length restricted to last ten elements
+		self._sbDict['name'] = self._sbDict['name'][-10:] #keep original list length restricted to last ten elements
 
-		list_ = [i for i in self.__sbDict['name'] if 'init' not in i] #work on a copy of the list, removing any instances of 'init', keeping the original intact
+		list_ = [i for i in self._sbDict['name'] if 'init' not in i] #work on a copy of the list, removing any instances of 'init', keeping the original intact
 		
 		if not allowDuplicates:
 			[list_.remove(l) for l in list_[:] if list_.count(l)>1] #remove any previous duplicates if they exist; keeping the last added element.
@@ -532,11 +556,11 @@ class Switchboard():
 			if as_list: list of lists with <method object> as first element and <docString> as second. 'prevCommand':[[b001, 'multi-cut tool']] }
 			else : <method object> of the last used command
 		'''
-		if not 'prevCommand' in self.__sbDict: self.__sbDict['prevCommand'] = [] #initialize list
+		if not 'prevCommand' in self._sbDict: self._sbDict['prevCommand'] = [] #initialize list
 
-		self.__sbDict['prevCommand'] = self.__sbDict['prevCommand'][-20:] #keep original list length restricted to last 20 elements
+		self._sbDict['prevCommand'] = self._sbDict['prevCommand'][-20:] #keep original list length restricted to last 20 elements
 
-		list_ = self.__sbDict['prevCommand']
+		list_ = self._sbDict['prevCommand']
 		[list_.remove(l) for l in list_[:] if list_.count(l)>1] #remove any previous duplicates if they exist; keeping the last added element.
 
 		if docString and as_list:
@@ -582,9 +606,9 @@ class Switchboard():
 			if previousIndex: int index of previously opened ui
 			else: string name of previously opened layout.
 		'''
-		self.__sbDict['name'] = self.__sbDict['name'][-10:] #keep original list length restricted to last ten elements
+		self._sbDict['name'] = self._sbDict['name'][-10:] #keep original list length restricted to last ten elements
 
-		list_ = [i for i in self.__sbDict['name'] if 'init' not in i] #work on a copy of the list, removing any instances of 'init', keeping the original intact
+		list_ = [i for i in self._sbDict['name'] if 'init' not in i] #work on a copy of the list, removing any instances of 'init', keeping the original intact
 		if not allowDuplicates:
 			[list_.remove(l) for l in list_[:] if list_.count(l)>1] #remove any previous duplicates if they exist; keeping the last added element.
 
@@ -609,9 +633,9 @@ class Switchboard():
 		args:
 			obj=<object>
 		'''
-		if not 'gcProtect' in self.__sbDict:
-			self.__sbDict['gcProtect']=[]
-		self.__sbDict['gcProtect'].append(obj)
+		if not 'gcProtect' in self._sbDict:
+			self._sbDict['gcProtect']=[]
+		self._sbDict['gcProtect'].append(obj)
 
 
 
@@ -620,7 +644,7 @@ class Switchboard():
 		returns:
 			full switchboard dict
 		'''
-		return self.__sbDict
+		return self._sbDict
 
 
 
@@ -632,19 +656,19 @@ class Switchboard():
 			bool
 		'''
 		if len(args)==1:
-			if args[0] in self.__sbDict:
+			if args[0] in self._sbDict:
 				return True
 
 		elif len(args)==2:
-			if args[1] in self.__sbDict[args[0]]:
+			if args[1] in self._sbDict[args[0]]:
 				return True
 
 		elif len(args)==3:
-			if args[2] in self.__sbDict[args[0]][args[1]]:
+			if args[2] in self._sbDict[args[0]][args[1]]:
 				return True
 
 		elif len(args)==4:
-			if args[3] in self.__sbDict[args[0]][args[1]][args[2]]:
+			if args[3] in self._sbDict[args[0]][args[1]][args[2]]:
 				return True
 		else:
 			return False

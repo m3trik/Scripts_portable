@@ -9,7 +9,7 @@ import sys, os.path
 from tk_switchboard import Switchboard
 from tk_styleSheet import StyleSheet
 from tk_overlay import OverlayFactoryFilter
-from tk_dynWidgetEvents import EventFactoryFilter
+from tk_childEvents import EventFactoryFilter
 
 try: import MaxPlus
 except: pass
@@ -19,10 +19,8 @@ except: pass
 
 
 
-
-
 # ------------------------------------------------
-# Stacked Widget
+# 
 # ------------------------------------------------
 class HotBox(QtWidgets.QWidget):
 	'''
@@ -42,7 +40,12 @@ class HotBox(QtWidgets.QWidget):
 		# self.setStyle(QtWidgets.QStyleFactory.create("plastique"))
 
 		self.sb = Switchboard(parent)
-		self.stackedLayout = None
+		self.sb.setClass(self) #store this class instance.
+
+		self.stackedLayout = QtWidgets.QStackedLayout(self)
+		for name, ui in self.sb.uiList():
+			self.sb.setUiSize(name) #store size info for each ui
+			self.stackedLayout.addWidget(ui) #add each ui to the stackedLayout.
 
 
 
@@ -60,15 +63,7 @@ class HotBox(QtWidgets.QWidget):
 		self.name = self.sb.setUiName(self.index) #set current ui name from index
 		self.ui = self.sb.getUi() #get the current dymanic ui
 
-		if not self.stackedLayout: #add the stacked layout.
-			self.stackedLayout = QtWidgets.QStackedLayout(self)
-
-			for name, ui in self.sb.uiList():
-				self.sb.setUiSize(name) #store size info for each ui
-				self.stackedLayout.addWidget(ui) #add each ui to the stackedLayout.
-
 		self.stackedLayout.setCurrentIndex(self.index) #set the index in the stackedLayout for the given ui.
-
 
 		self.point = QtCore.QPoint(self.sb.getUiSize(percentWidth=50), self.sb.getUiSize(percentHeight=50)) #set point to the middle of the layout
 		self.moveToMousePosition(self, -self.point.x(), -self.point.y()) #set initial positon on showEvent, and reposition here on index change.
@@ -76,12 +71,12 @@ class HotBox(QtWidgets.QWidget):
 
 
 		if not self.sb.hasKey(self.name, 'connectionDict'): #build the connectionDict containing the widgets and their connections.
-			EventFactoryFilter(self.name, self)
+			EventFactoryFilter(self.name)
 
-		if not any([self.name=='init',self.name==self.sb.previousName(allowDuplicates=1)]):
-			if self.sb.previousName(): #if previous ui signals exist
-				# print self.name, self.sb.previousName()
-				self.sb.removeSignal(self.sb.previousName())
+
+		if not any([self.name=='init', self.name==self.sb.previousName(allowDuplicates=1)]):
+			if self.sb.previousName(): #if previous ui signals exist:
+				self.sb.removeSignal(self.sb.previousName()) #remove signals from the previous ui.
 			self.sb.addSignal(self.name)
 
 
@@ -114,18 +109,31 @@ class HotBox(QtWidgets.QWidget):
 			elif event.button()==QtCore.Qt.RightButton:
 				self.layoutStack('main')
 
-			# return super(HotBox, self).mousePressEvent(event)
-		# for w in self.sb.getWidget(self.name):
-		# 	w.mousePressEvent(event)
 
 
-		# if any([self.name=='main', self.name=='viewport', self.name=='editors']):
-		# 	drag = QtGui.QDrag(self)
-		# 	drag.setMimeData(QtCore.QMimeData())
-		# 	# drag.setHotSpot(event.pos())
-		# 	# drag.setDragCursor(QtGui.QCursor(QtCore.Qt.CrossCursor).pixmap(), QtCore.Qt.MoveAction) #QtCore.Qt.CursorShape(2) #QtCore.Qt.DropAction
-		# 	drag.start(QtCore.Qt.MoveAction) #drag.exec_(QtCore.Qt.MoveAction)
-		# 	print drag.target() #the widget where the drag object was dropped.
+	def mouseMoveEvent(self, event):
+		'''
+		args:
+			event=<QEvent>
+		'''
+		if any([self.name=='main', self.name=='viewport', self.name=='editors']):
+			for w in self.sb.getWidget(self.name): #get all widgets from the current ui.
+				if w.rect().contains(w.mapFromGlobal(QtGui.QCursor.pos())) and not w.objectName()=='mainWindow': #if mouse over widget:
+					w.grabMouse() #set widget to receive mouse events.
+					return True
+			#else: if mouse not over any child widgets;
+			self.sb.getWidget(self.name, 'mainWindow').grabMouse() #set mainWindow widget to receive mouse events.
+
+
+
+	def mouseReleaseEvent(self, event):
+		'''
+		args:
+			event=<QEvent>
+		'''
+		if any([self.name=='main', self.name=='viewport', self.name=='editors']):
+			if any([event.button()==QtCore.Qt.LeftButton,event.button()==QtCore.Qt.MiddleButton,event.button()==QtCore.Qt.RightButton]):
+				self.layoutStack('init')
 
 
 
@@ -154,33 +162,6 @@ class HotBox(QtWidgets.QWidget):
 					self.repeatLastCommand()
 				except Exception as error:
 					print "# Warning: No recent commands in history. #"
-
-
-
-	# def mouseMoveEvent(self, event):
-	# 	'''
-	# 	args:
-	# 		event=<QEvent>
-	# 	'''
-	# 	if any([self.name=='main', self.name=='viewport', self.name=='editors']):
-	# 		drag = QtGui.QDrag(self)
-	# 		drag.setMimeData(QtCore.QMimeData())
-	# 		# drag.setHotSpot(event.pos())
-	# 		# drag.setDragCursor(QtGui.QCursor(QtCore.Qt.CrossCursor).pixmap(), QtCore.Qt.MoveAction) #QtCore.Qt.CursorShape(2) #QtCore.Qt.DropAction
-	# 		drag.start(QtCore.Qt.MoveAction) #drag.exec_(QtCore.Qt.MoveAction)
-	# 		print drag.target() #the widget where the drag object was dropped.
-
-
-
-	def mouseReleaseEvent(self, event):
-		'''
-		args:
-			event=<QEvent>
-		'''
-		if any([self.name=='main', self.name=='viewport', self.name=='editors']):
-			if any([event.button()==QtCore.Qt.LeftButton,event.button()==QtCore.Qt.MiddleButton,event.button()==QtCore.Qt.RightButton]):
-				self.layoutStack('init')
-
 
 
 	def hide_(self):
@@ -274,10 +255,6 @@ def createInstance():
 
 
 if __name__ == "__main__":
-	qApp = QtWidgets.QApplication.instance()
-	if not qApp:
-		qApp = QtWidgets.QApplication(sys.argv)
-
 	createInstance().show()
 	sys.exit(qApp.exec_())
 
@@ -295,3 +272,11 @@ print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
+
+		# if any([self.name=='main', self.name=='viewport', self.name=='editors']):
+		# 	drag = QtGui.QDrag(self)
+		# 	drag.setMimeData(QtCore.QMimeData())
+		# 	# drag.setHotSpot(event.pos())
+		# 	# drag.setDragCursor(QtGui.QCursor(QtCore.Qt.CrossCursor).pixmap(), QtCore.Qt.MoveAction) #QtCore.Qt.CursorShape(2) #QtCore.Qt.DropAction
+		# 	drag.start(QtCore.Qt.MoveAction) #drag.exec_(QtCore.Qt.MoveAction)
+		# 	print drag.target() #the widget where the drag object was dropped.
