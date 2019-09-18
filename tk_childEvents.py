@@ -18,9 +18,7 @@ class Events(QtWidgets.QWidget):
 
 	def __init__(self, widget):
 		super(Events, self).__init__()
-		'''
-		Set initial widget states. 
-		'''
+ 
 		self.sb = Switchboard()
 
 		self.widget = widget #self.sb.getWidget(self.name, 'mainWindow').mouseGrabber()
@@ -31,13 +29,11 @@ class Events(QtWidgets.QWidget):
 		# print self.__mousePressPos
 
 
-
 	def mousePressEvent(self, event):
 		'''
 		args:
 			event=<QEvent>
 		'''
-		event.accept()
 		print self.name,'mousePressEvent',self.widgetType,self.widgetName
 		self.__mousePressPos = event.globalPos()
 
@@ -48,8 +44,6 @@ class Events(QtWidgets.QWidget):
 		args:
 			event=<QEvent>
 		'''
-		# event.accept()
-		print self.name,'mouseMoveEvent',self.widgetType,self.widgetName
 		if self.widgetType=='QPushButton':
 			if self.widgetName.startswith('i') or self.widgetName.startswith('v'):
 				for w in self.sb.getWidget(self.name):
@@ -88,12 +82,11 @@ class Events(QtWidgets.QWidget):
 		args:
 			event=<QEvent>
 		'''
-		# event.accept()
 		print self.name,'mouseReleaseEvent',self.widgetType,self.widgetName
 		if self.widgetType=='QPushButton':
 			if self.widget.rect().contains(self.widget.mapFromGlobal(QtGui.QCursor.pos())):
-				if self.widgetName.startswith('i'): #connect to layoutStack and pass in an index as int or string 'name'.
-					self.sb.getClass('hotBox').layoutStack(self.widget.whatsThis()) #switch the stacked layout to the given ui.
+				if self.widgetName.startswith('i'): #set the stacked widget.
+					self.sb.getClass('hotBox').setWidget(self.widget.whatsThis()) #switch the stacked layout to the given ui.
 
 				if self.widgetName.startswith('v'): #ie. 'v012'
 					self.sb.previousView(as_list=1).append(self.sb.getMethod(self.name, self.widgetName)) #store the camera view
@@ -123,7 +116,6 @@ class Events(QtWidgets.QWidget):
 		args:
 			event=<QEvent>
 		'''
-		event.accept()
 		print self.name,'enterEvent',self.widgetType,self.widgetName
 		self.__mouseHover.emit(True)
 
@@ -134,7 +126,6 @@ class Events(QtWidgets.QWidget):
 		args:
 			event=<QEvent>
 		'''
-		event.accept()
 		print self.name,'leaveEvent',self.widgetType,self.widgetName
 		self.__mouseHover.emit(False)
 
@@ -158,10 +149,14 @@ class EventFactoryFilter(QtCore.QObject):
 			widgetName = widget.objectName()
 
 			widget.setStyleSheet(StyleSheet.css) #add StyleSheet
+
 			if any([name=='init', name=='main', name=='viewport', name=='editors']):
 				if not widgetName=='mainWindow':
 					widget.installEventFilter(self)
 
+			# Set initial widget states.
+			if widgetName=='pin':
+				widget.setStyleSheet(StyleSheet.pin)
 
 			if name=='init' and widgetName=='t000':
 				widget.viewport().setAutoFillBackground(False)

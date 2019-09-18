@@ -16,26 +16,29 @@ class Switchboard():
 	'''
 	Get/set elements across modules from a single dictionary.
 	key/value structure of _sbDict:
+		'app' : 'string name of the parent application'. ie. 'maya' or 'max'
+		'name' : [string list]. when a new ui is called it's name is at element[-1] and the previous ui is at element[-2]. ie. ['previousName', 'previousName', 'currentName']
+		'uiList' : [list of two element lists containing all ui filenames in the ui folder and their corresponding dynamic ui object]. ie. [['polygons', <polygons dynamic ui object>]]
+
 		'name'{
 			'class' : <class obj>
 			'size' : [list containing width int, height int]. ie. [295, 234]
 			'connectionDict' : {'widgetName':{'widget':<obj>, 'widgetWithSignal':<obj.connect>, 'method':<obj>, 'docString':'', 'widgetClass':<QPushButton>, widgetType':'QPushButton'}},}
-		'uiList' : [list of two element lists containing all ui filenames in the ui folder and their corresponding dynamic ui object]. ie. [['polygons', <polygons dynamic ui object>]]
-		'app' : 'string name of the parent application'. ie. 'maya' or 'max'
-		'name' : [string list]. when a new ui is called it's name is at element[-1] and the previous ui is at element[-2]. ie. ['previousName', 'previousName', 'currentName']
+
 		'prevCommand' : list of 2 element lists. [history of commands, last used method at element[-1]]. [[method,'methodNameString']]  ie. [{b00, 'multi-cut tool'}]
 		'gcProtect' : [list of items protected from garbage collection]
 	ex.
 	_sbDict={
-		'polygons' : { 
-			'class' : Polygons, 
-			'size' : [295, 234], 
-			'connectionDict' : {'b001':{'widget':b001, 'widgetWithSignal':b001.connect, 'method':main.b001, 'docString':'Multi-Cut Tool', 'widgetClass':QPushButton, widgetType':'QPushButton'}}}
-		'uiList' : [['animation', <animation dynamic ui object>], ['cameras', <cameras dynamic ui object>], ['create', <create dynamic ui object>], ['display', <display dynamic ui object>]],
-		'app' : 'maya'
-		'name' : ['polygons', 'edit', 'cameras'], 
-		'prevCommand' : [[b00, 'multi-cut tool']],
-		'gcProtect' : [<protected object>]
+		'app':'maya',
+		'name':['polygons', 'edit', 'cameras'],
+		'uiList':[['animation', '<animation dynamic ui object>'], ['cameras', '<cameras dynamic ui object>'], ['create', '<create dynamic ui object>'], ['display', '<display dynamic ui object>']],
+
+		'polygons':{'class':'<Polygons>', 
+					'size':[295, 234],
+					'connectionDict':{'b001':{'widget':'<b001>', 'widgetWithSignal':'<b001.connect>', 'method':'<main.b001>', 'docString':'Multi-Cut Tool', 'widgetClass':'<QPushButton>', 'widgetType':'QPushButton'}}},
+
+		'prevCommand':[['b000', 'multi-cut tool']],
+		'gcProtect':['<protected object>']}
 	'''
 
 	#initialize the main dict.
@@ -55,9 +58,9 @@ class Switchboard():
 
 
 
-	def __init__(self, app=None):
-		if app:
-			self.setApp(app)
+	def __init__(self, parent=None):
+		if parent:
+			self.setApp(parent)
 
 
 
@@ -206,11 +209,16 @@ class Switchboard():
 	def setUiName(self, index):
 		'''
 		args:
-			index=int
+			index='string' - name
+				*or int - index of ui name
 		returns:
 			corresponding ui name as string
 		'''
+		if not type(index)==int:
+			index = self.getUiIndex(index) #get index using name
+
 		self._sbDict['name'].append(self.uiList(name=1)[index])
+
 		return self._sbDict['name'][-1]
 
 

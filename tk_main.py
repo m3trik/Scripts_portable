@@ -20,9 +20,9 @@ except: pass
 
 
 # ------------------------------------------------
-# 
+# Stacked Widget
 # ------------------------------------------------
-class HotBox(QtWidgets.QWidget):
+class HotBox(QtWidgets.QStackedWidget):
 	'''
 	Marking menu-style modal window.
 	Getting and setting of signal connections are handled by the switchboard module.
@@ -30,6 +30,8 @@ class HotBox(QtWidgets.QWidget):
 	args:
 		parent=main application window object.
 	'''
+	__mouseGrabber = QtWidgets.QWidget()
+
 	def __init__(self, parent=None):
 		super(HotBox, self).__init__(parent)
 
@@ -37,33 +39,27 @@ class HotBox(QtWidgets.QWidget):
 		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint|QtCore.Qt.X11BypassWindowManagerHint) #|QtCore.Qt.WindowStaysOnTopHint
 		self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 		self.setStyleSheet(StyleSheet.css)
-		# self.setStyle(QtWidgets.QStyleFactory.create("plastique"))
+		# self.setStyle(QtWidgets.QStyleFactory.create('plastique'))
 
 		self.sb = Switchboard(parent)
 		self.sb.setClass(self) #store this class instance.
 
-		self.stackedLayout = QtWidgets.QStackedLayout(self)
 		for name, ui in self.sb.uiList():
 			self.sb.setUiSize(name) #store size info for each ui
-			self.stackedLayout.addWidget(ui) #add each ui to the stackedLayout.
+			self.addWidget(ui) #add each ui to the stackedLayout.
 
 
 
-	def layoutStack(self, index):
+	def setWidget(self, name):
 		'''
-		Set the stacked layout.
+		Set the stacked Widgets index.
 		args:
-			index=int - index of ui in stacked layout.
-				*or 'string' - name of ui in stacked layout.
+			index=int - 'string' - name of ui in stacked layout.
 		'''
-		if type(index)!=int: #get index using name
-			index = self.sb.getUiIndex(index)
-
-		self.index = index
-		self.name = self.sb.setUiName(self.index) #set current ui name from index
+		self.name = self.sb.setUiName(name) #set ui name
 		self.ui = self.sb.getUi() #get the current dymanic ui
 
-		self.stackedLayout.setCurrentIndex(self.index) #set the index in the stackedLayout for the given ui.
+		self.setCurrentWidget(self.ui) #set the stacked widget to the given ui.
 
 		self.point = QtCore.QPoint(self.sb.getUiSize(percentWidth=50), self.sb.getUiSize(percentHeight=50)) #set point to the middle of the layout
 		self.moveToMousePosition(self, -self.point.x(), -self.point.y()) #set initial positon on showEvent, and reposition here on index change.
@@ -101,13 +97,13 @@ class HotBox(QtWidgets.QWidget):
 		'''
 		if any([self.name=='init', self.name=='main', self.name=='viewport', self.name=='editors']):
 			if event.button()==QtCore.Qt.LeftButton:
-				self.layoutStack('viewport')
+				self.setWidget('viewport')
 
 			elif event.button()==QtCore.Qt.MiddleButton:
-				self.layoutStack('editors')
+				self.setWidget('editors')
 
 			elif event.button()==QtCore.Qt.RightButton:
-				self.layoutStack('main')
+				self.setWidget('main')
 
 
 
@@ -120,9 +116,10 @@ class HotBox(QtWidgets.QWidget):
 			for w in self.sb.getWidget(self.name): #get all widgets from the current ui.
 				if w.rect().contains(w.mapFromGlobal(QtGui.QCursor.pos())) and not w.objectName()=='mainWindow': #if mouse over widget:
 					w.grabMouse() #set widget to receive mouse events.
+					self.__mouseGrabber = w
 					return True
-			#else: if mouse not over any child widgets;
-			self.sb.getWidget(self.name, 'mainWindow').grabMouse() #set mainWindow widget to receive mouse events.
+
+		# self.currentWidget().grabMouse()
 
 
 
@@ -133,7 +130,9 @@ class HotBox(QtWidgets.QWidget):
 		'''
 		if any([self.name=='main', self.name=='viewport', self.name=='editors']):
 			if any([event.button()==QtCore.Qt.LeftButton,event.button()==QtCore.Qt.MiddleButton,event.button()==QtCore.Qt.RightButton]):
-				self.layoutStack('init')
+				self.setWidget('init')
+		else:
+			self.__mouseGrabber.releaseMouse()
 
 
 
@@ -145,7 +144,7 @@ class HotBox(QtWidgets.QWidget):
 		if event.button()==QtCore.Qt.RightButton:
 			if any([self.name=='init', self.name=='main']):
 				try: #show last used submenu on double mouseclick
-					self.layoutStack(self.sb.previousName(previousIndex=True))
+					self.setWidget(self.sb.previousName(previousIndex=True))
 				except Exception as error:
 					print "# Warning: No recent submenus in history. #"
 
@@ -162,6 +161,7 @@ class HotBox(QtWidgets.QWidget):
 					self.repeatLastCommand()
 				except Exception as error:
 					print "# Warning: No recent commands in history. #"
+
 
 
 	def hide_(self):
@@ -184,7 +184,7 @@ class HotBox(QtWidgets.QWidget):
 		try: MaxPlus.CUI.EnableAccelerators()
 		except: pass
 
-		self.layoutStack('init') #reset layout back to init on keyPressEvent
+		self.setWidget('init') #reset layout back to init on keyPressEvent
 
 
 
@@ -247,7 +247,7 @@ def createInstance():
 		except: mainWindow = None
 
 	hotBox = HotBox(mainWindow)
-	hotBox.layoutStack('init') #initialize layout
+	hotBox.setWidget('init') #initialize layout
 	hotBox.overlay = OverlayFactoryFilter(hotBox)
 
 	return hotBox

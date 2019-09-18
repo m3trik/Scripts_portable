@@ -22,24 +22,29 @@ class StyleSheet():
 	COLOR_ACCENT   = rgba(82,133,166,200)
 	'''
 	comboBox='''
-		QComboBox {background-color: 
-			rgba(100,100,100,200);
+		QComboBox {
+			background-color: rgba(100,100,100,200);
 			color: white;
 		}'''
 
 	comboBox_alt='''
-		QComboBox {background-color: 
-			rgba(82,133,166,200);
+		QComboBox {
+			background-color: rgba(82,133,166,200);
 			color: white;
 		}'''
 
 	comboBox_popup='''
-		QComboBox {background-color: 
-			rgba(100,100,100,200);
+		QComboBox {
+			background-color: rgba(100,100,100,200);
 			color: white;
 		}'''
 
 
+	pin='''
+		QPushButton {
+			border: none;
+			background-color: rgba(100,100,100,1);
+		}'''
 
 
 	css='''
@@ -387,7 +392,9 @@ print os.path.splitext(os.path.basename(__file__))[0]
 
 
 '''
-List of Pseudo-States
+
+
+List of Pseudo-States:
 :active				This state is set when the widget resides in an active window.
 :adjoins-item		This state is set when the ::branch of a QTreeView is adjacent to an item.
 :alternate			This state is set for every alternate row whe painting the row of a QAbstractItemView when QAbstractItemView::alternatingRowColors() is set to true.
@@ -434,7 +441,7 @@ List of Pseudo-States
 :window				The widget is a window (i.e top level widget)
 
 
-List of Sub-Controls
+List of Sub-Controls:
 ::add-line			The button to add a line of a QScrollBar.
 ::add-page			The region between the handle (slider) and the add-line of a QScrollBar.
 ::branch			The branch indicator of a QTreeView.
@@ -471,4 +478,27 @@ List of Sub-Controls
 ::title				The title of a QGroupBox or a QDockWidget.
 ::up-arrow			The up arrow of a QHeaderView (sort indicator), QScrollBar or a QSpinBox.
 ::up-button			The up button of a QSpinBox.
+
+List of Colors (Qt namespace (ie. Qt::red)):
+white
+black
+red
+darkRed
+green
+darkGreen
+blue
+darkBlue
+cyan
+darkCyan
+magenta
+darkMagenta
+yellow
+darkYellow
+gray
+darkGray
+lightGray
+color0 (zero pixel value) (transparent, i.e. background)
+color1 (non-zero pixel value) (opaque, i.e. foreground)
+
+
 '''
