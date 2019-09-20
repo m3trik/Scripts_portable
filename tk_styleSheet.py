@@ -21,26 +21,60 @@ class StyleSheet():
 	COLOR_LIGHT    = #DDDDDD
 	COLOR_ACCENT   = rgba(82,133,166,200)
 	'''
-	comboBox='''
-		QComboBox {
-			background-color: rgba(100,100,100,200);
-			color: white;
+	QMainWindow='''
+		QMainWindow {
+			background-color: rgba(127,127,127,2); 
+			color: rgb(225, 225, 225);
 		}'''
 
-	comboBox_alt='''
-		QComboBox {
+	QWidget='''
+		QWidget::item:selected {
+			background: rgba(82,133,166,200);
+		}'''
+
+	QPushButton='''
+		QPushButton {
+			border: 1px solid black;
+			background-color: rgba(100,100,100,200);
+		}
+
+		QPushButton::checked {
+			border: 1px solid black;
+			background-color: rgba(82,133,166,200);
+			color: black;
+		}
+
+		QPushButton::hover {   
+			border: 1px solid black;
 			background-color: rgba(82,133,166,200);
 			color: white;
-		}'''
+		}
 
-	comboBox_popup='''
-		QComboBox {
-			background-color: rgba(100,100,100,200);
+		QPushButton::unchecked::hover {
+			background-color: rgba(0,0,0,0);
+			color: rgba(82,133,166,200);
+		}
+
+		QPushButton::checked::hover {
+			background-color: rgba(0,0,0,0);
+			color: rgba(82,133,166,200);
+		}
+
+		QPushButton::pressed {   
+			border: 1px solid black;
+			background-color: rgba(82,133,166,200);
 			color: white;
+		}
+
+		QPushButton:flat {
+			border: none; /* no border for a flat push button */
+		}
+
+		QPushButton:default {
+			border-color: navy; /* make the default button prominent */
 		}'''
 
-
-	pin='''
+	QPushButton_pin='''
 		QPushButton {
 			border: none;
 			background: rgba(100,100,100,50);
@@ -52,16 +86,103 @@ class StyleSheet():
 			background-color: rgba(82,133,166,200);
 		}'''
 
-
-	css='''
-		QWidget::item:selected {
-			background: rgba(82,133,166,200);
+	QAbstractButton='''
+		QAbstractButton:hover {
+			background: #353535;
 		}
 
+		QAbstractButton:pressed {
+			background: #5A5A5A;
+		}'''
+
+	QComboBox='''
+		QComboBox {
+			background-color: rgba(100,100,100,200);
+			color: white;
+			selection-background-color: rgba(82,133,166,200);
+			/*selection-color: black;*/
+		}
+
+		QComboBox:open {
+			background-color: rgba(100,100,100,200);
+			color: white;
+			selection-background-color: rgba(82,133,166,200);
+		}
+
+		QComboBox::down-arrow {
+			border: 1px solid #5A5A5A;
+			background: #353535;
+		}
+
+		QComboBox::drop-down {
+			border: 1px solid #5A5A5A;
+			background: #353535;
+		}
+
+		QComboBox::down-arrow {
+			width: 3px;
+			height: 3px;
+			border: 1px solid #5A5A5A;
+		}'''
+
+	QComboBox_alt='''
+		QComboBox {
+			background-color: rgba(82,133,166,200);
+			color: white;
+		}'''
+
+	QComboBox_popup='''
+		QComboBox {
+			background-color: rgba(100,100,100,200);
+			color: white;
+		}'''
+
+	QComboBox_cmb='''
+		QComboBox {
+			background: rgba(100,100,100,50);
+		}'''
+
+		# QComboBox:open {
+		# 	background-color: rgba(100,100,100,200);
+		# 	color: white;
+		# 	selection-background-color: rgba(82,133,166,200);
+		# }'''
+
+	QSpinBox='''
+		QSpinBox {
+
+		}'''
+
+	QDoubleSpinBox='''
+		QDoubleSpinBox {
+
+		}'''
+
+	QAbstractSpinBox='''
+		QScrollBar:left-arrow, QScrollBar::right-arrow, QScrollBar::up-arrow, QScrollBar::down-arrow {
+			border: 1px solid #5A5A5A;
+			width: 3px;
+			height: 3px;
+		}
+
+		QAbstractSpinBox::up-arrow, QAbstractSpinBox::down-arrow {
+			width: 3px;
+			height: 3px;
+			border: 1px solid #5A5A5A;
+		}
+
+		QAbstractSpinBox::up-button, QAbstractSpinBox::down-button {
+			border: 1px solid #5A5A5A;
+			background: #353535;
+			subcontrol-origin: border;
+		}'''
+
+	QCheckBox='''
 		QCheckBox, QRadioButton {
 			border: none;
-		}
+		}'''
 
+	QRadioButton='''
 		QRadioButton::indicator, QCheckBox::indicator {
 			width: 13px;
 			height: 13px;
@@ -84,20 +205,85 @@ class StyleSheet():
 		QRadioButton::indicator:checked:hover, QCheckBox::indicator:checked:hover {
 			border: 1px solid #DDDDDD;
 			background: #DDDDDD;
+		}'''
+
+	QAbstractItemView='''
+		QAbstractItemView {
+			show-decoration-selected: 1;
+			selection-background-color: rgba(82,133,166,200);
+			selection-color: #DDDDDD;
+			alternate-background-color: #353535;
+		}'''
+
+	QHeaderView='''
+		QHeaderView {
+			border: 1px solid #5A5A5A;
 		}
 
-		QGroupBox {
-			margin-top: 4px;
-			background-color: rgba(100,100,100,80);
-			color: rgb(225, 225, 225);
-			border: 0px solid black;
+		QHeaderView::section {
+			background: #191919;
+			border: 1px solid #5A5A5A;
+			padding: 1px;
 		}
 
-		QGroupBox::title {
-			top: -7px;
-			left: 7px;
+		QHeaderView::section:selected, QHeaderView::section::checked {
+			background: #353535;
+		}'''
+
+	QTableView='''
+		QTableView {
+			gridline-color: #5A5A5A;
+		}'''
+
+	QTextEdit='''
+		QTextEdit {
+
+		}'''
+
+	QAbstractSpinBox='''
+		QAbstractSpinBox {
+			padding-right: 0px;
+		}'''
+
+	QSlider='''
+		QSlider {
+			border: none;
 		}
 
+		QSlider::groove:horizontal {
+			height: 5px;
+			margin: 4px 0px 4px 0px;
+		}
+
+		QSlider::groove:vertical {
+			width: 5px;
+			margin: 0px 4px 0px 4px;
+		}
+
+		QSlider::handle {
+			border: 1px solid #5A5A5A;
+			background: #353535;
+		}
+
+		QSlider::handle:horizontal {
+			width: 15px;
+			margin: -4px 0px -4px 0px;
+		}
+
+		QSlider::handle:vertical {
+			height: 15px;
+			margin: 0px -4px 0px -4px;
+		}
+
+		QSlider::add-page:vertical, QSlider::sub-page:horizontal {
+			background: rgba(82,133,166,200);
+		}
+
+		QSlider::sub-page:vertical, QSlider::add-page:horizontal {
+			background: #353535;
+		}'''
+
+	QScrollBar='''
 		QScrollBar {
 			border: 1px solid #5A5A5A;
 			background: #191919;
@@ -168,41 +354,22 @@ class StyleSheet():
 
 		QScrollBar::add-page, QScrollBar::sub-page {
 			background: none;
+		}'''
+
+	QGroupBox='''
+		QGroupBox {
+			margin-top: 4px;
+			background-color: rgba(100,100,100,80);
+			color: rgb(225, 225, 225);
+			border: 0px solid black;
 		}
 
-		QAbstractButton:hover {
-			background: #353535;
-		}
+		QGroupBox::title {
+			top: -7px;
+			left: 7px;
+		}'''
 
-		QAbstractButton:pressed {
-			background: #5A5A5A;
-		}
-
-		QAbstractItemView {
-			show-decoration-selected: 1;
-			selection-background-color: rgba(82,133,166,200);
-			selection-color: #DDDDDD;
-			alternate-background-color: #353535;
-		}
-
-		QHeaderView {
-			border: 1px solid #5A5A5A;
-		}
-
-		QHeaderView::section {
-			background: #191919;
-			border: 1px solid #5A5A5A;
-			padding: 1px;
-		}
-
-		QHeaderView::section:selected, QHeaderView::section::checked {
-			background: #353535;
-		}
-
-		QTableView {
-			gridline-color: #5A5A5A;
-		}
-
+	QTabBar='''
 		QTabBar {
 			margin-left: 2px;
 		}
@@ -215,53 +382,26 @@ class StyleSheet():
 
 		QTabBar::tab:selected {
 			background: #353535;
-		}
+		}'''
 
-		QAbstractSpinBox {
-			padding-right: 0px;
-		}
-
-		QSlider {
-			border: none;
-		}
-
-		QSlider::groove:horizontal {
-			height: 5px;
-			margin: 4px 0px 4px 0px;
-		}
-
-		QSlider::groove:vertical {
-			width: 5px;
-			margin: 0px 4px 0px 4px;
-		}
-
-		QSlider::handle {
-			border: 1px solid #5A5A5A;
+	QMenu='''
+		QMenu::separator {
 			background: #353535;
-		}
+		}'''
 
-		QSlider::handle:horizontal {
-			width: 15px;
-			margin: -4px 0px -4px 0px;
-		}
-
-		QSlider::handle:vertical {
-			height: 15px;
-			margin: 0px -4px 0px -4px;
-		}
-
-		QSlider::add-page:vertical, QSlider::sub-page:horizontal {
-			background: rgba(82,133,166,200);
-		}
-
-		QSlider::sub-page:vertical, QSlider::add-page:horizontal {
-			background: #353535;
-		}
-
+	QLabel='''
 		QLabel {
 			border: none;
-		}
+		}'''
 
+	QToolTip='''
+		QToolTip {
+			background-color: rgba(225,225,225,225);
+			color: black;
+			border: 1px solid black;
+		}'''
+
+	QProgressBar='''
 		QProgressBar {
 			text-align: center;
 		}
@@ -269,121 +409,16 @@ class StyleSheet():
 		QProgressBar::chunk {
 			width: 1px;
 			background-color: rgba(82,133,166,200);
-		}
-
-		QMenu::separator {
-			background: #353535;
-		}
+		}'''
 
 
-		QMainWindow {
-			background-color: rgba(127,127,127,2); 
-			color: rgb(225, 225, 225);
-		}
 
-		QToolTip {
-			background-color: rgba(225,225,225,225);
-			color: black;
-			border: 1px solid black;
-		}
-
-		QComboBox {
-			background-color: rgba(100,100,100,200);
-			color: white;
-			selection-background-color: rgba(82,133,166,200);
-			/*selection-color: black;*/
-		}
-
-		QComboBox:open {
-			background-color: rgba(100,100,100,200);
-			color: white;
-			selection-background-color: rgba(82,133,166,200);
-		}
-
-		QPushButton {
-			border: 1px solid black;
-			background-color: rgba(100,100,100,200);
-		}
-
-		QPushButton::hover {   
-			border: 1px solid black;
-			background-color: rgba(82,133,166,200);
-			color: white;
-		}
-
-		QPushButton::pressed {   
-			border: 1px solid black;
-			background-color: rgba(82,133,166,200);
-			color: white;
-		}
-
-		QPushButton::checked {
-			border: 1px solid black;
-			background-color: rgba(82,133,166,200);
-			color: black;
-		}
+# background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f6f7fa, stop: 1 #dadbde);
+# min-width: 80px;
 
 
 
 
-		'''
-
-
-		# background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f6f7fa, stop: 1 #dadbde);
-		# min-width: 80px;
-
-
-		# QPushButton:flat {
-		#	border: none; /* no border for a flat push button */
-		# }
-
-		# QPushButton:default {
-		#	border-color: navy; /* make the default button prominent */
-		# }
-
-		# QPushButton::unchecked::hover {
-		# 	background-color: rgba(0,0,0,0);
-		# 	color: rgba(82,133,166,200);
-		# }
-
-		# QPushButton::checked::hover {
-		# 	background-color: rgba(0,0,0,0);
-		# 	color: rgba(82,133,166,200);
-		# }
-
-		# QComboBox::down-arrow {
-		# 	border: 1px solid #5A5A5A;
-		# 	background: #353535;
-		# }
-
-		# QComboBox::drop-down {
-		# 	border: 1px solid #5A5A5A;
-		# 	background: #353535;
-		# }
-
-		# QComboBox::down-arrow {
-		# 	width: 3px;
-		# 	height: 3px;
-		# 	border: 1px solid #5A5A5A;
-		# }
-
-		# QScrollBar:left-arrow, QScrollBar::right-arrow, QScrollBar::up-arrow, QScrollBar::down-arrow {
-		# 	border: 1px solid #5A5A5A;
-		# 	width: 3px;
-		# 	height: 3px;
-		# }
-
-		# QAbstractSpinBox::up-arrow, QAbstractSpinBox::down-arrow {
-		# 	width: 3px;
-		# 	height: 3px;
-		# 	border: 1px solid #5A5A5A;
-		# }
-
-		# QAbstractSpinBox::up-button, QAbstractSpinBox::down-button {
-		# 	border: 1px solid #5A5A5A;
-		# 	background: #353535;
-		# 	subcontrol-origin: border;
-		# }
 
 
 

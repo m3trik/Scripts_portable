@@ -343,7 +343,8 @@ class Switchboard():
 
 	def setClass(self, class_):
 		'''
-		Case insensitive. class string keys are stored lowercase regardless of how they are recieved.
+		Case insensitive.
+		Class string keys are stored lowercase regardless of how they are recieved.
 		args:
 			class_='string' *or <class object> - module name and class to import and store class. 
 					ie. 'tk_slots_max_polygons.Polygons'
@@ -372,8 +373,8 @@ class Switchboard():
 
 	def getClass(self, name):
 		'''
+		Case insensitive. (Class string keys are lowercase and any given string will be converted automatically)
 		If class is not in self._sbDict, use setClass() to first store the class.
-		Case insensitive. class string keys are lowercase and any given string will be converted automatically.
 		args:
 			name='string' name of class. ie. 'polygons'
 		returns:

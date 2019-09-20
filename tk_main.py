@@ -7,7 +7,6 @@ from PySide2 import QtCore, QtGui, QtWidgets
 import sys, os.path
 
 from tk_switchboard import Switchboard
-from tk_styleSheet import StyleSheet
 from tk_overlay import OverlayFactoryFilter
 from tk_childEvents import EventFactoryFilter
 
@@ -36,7 +35,6 @@ class HotBox(QtWidgets.QStackedWidget):
 		#set window style
 		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint) #QtCore.Qt.X11BypassWindowManagerHint|QtCore.Qt.WindowStaysOnTopHint
 		self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
-		self.setStyleSheet(StyleSheet.css)
 		# self.setStyle(QtWidgets.QStyleFactory.create('plastique'))
 
 		self.sb = Switchboard(parent)
@@ -52,14 +50,14 @@ class HotBox(QtWidgets.QStackedWidget):
 
 	def setWidget(self, name):
 		'''
-		Set the stacked Widgets index.
+		Set the stacked Widget's index.
 		args:
-			index=int - 'string' - name of ui in stacked layout.
+			index='string' - name of qtui widget.
 		'''
-		self.name = self.sb.setUiName(name) #set ui name
-		self.ui = self.sb.getUi() #get the current dymanic ui
+		self.name = self.sb.setUiName(name) #set ui name.
+		self.ui = self.sb.getUi() #get the current dymanic ui.
 
-		self.setCurrentWidget(self.ui) #set the stacked widget to the given ui.
+		self.setCurrentWidget(self.ui) #set the current ui.
 
 		self.point = QtCore.QPoint(self.sb.getUiSize(percentWidth=50), self.sb.getUiSize(percentHeight=50)) #set point to the middle of the layout
 		self.moveToMousePosition(self, -self.point.x(), -self.point.y()) #set initial positon on showEvent, and reposition here on index change.
@@ -80,6 +78,17 @@ class HotBox(QtWidgets.QStackedWidget):
 	# ------------------------------------------------
 	# Event overrides
 	# ------------------------------------------------
+	def keyPressEvent(self, event):
+		'''
+		args:
+			event=<QEvent>
+		'''
+		if event.key()==QtCore.Qt.Key_F12 and not event.isAutoRepeat():
+			if self.name=='init':
+				self.sb.getClass('init')().t000()
+				# self.ui.t000.connect(self.sb.getClass('init')().t000())
+
+
 	def keyReleaseEvent(self, event):
 		'''
 		args:
@@ -137,21 +146,21 @@ class HotBox(QtWidgets.QStackedWidget):
 			if any([self.name=='init', self.name=='main']):
 				try: #show last used submenu on double mouseclick
 					self.setWidget(self.sb.previousName(previousIndex=True))
-				except Exception as error:
+				except:
 					print "# Warning: No recent submenus in history. #"
 
 		if event.button()==QtCore.Qt.LeftButton:
 			if any([self.name=='init', self.name=='viewport']):
 				try: #show last view
 					self.repeatLastView()
-				except Exception as error: 
+				except: 
 					print "# Warning: No recent views in history. #"
 
 		if event.button()==QtCore.Qt.MiddleButton:
 			if any([self.name=='init', self.name=='editors']):
 				try: #repeat last command
 					self.repeatLastCommand()
-				except Exception as error:
+				except:
 					print "# Warning: No recent commands in history. #"
 
 

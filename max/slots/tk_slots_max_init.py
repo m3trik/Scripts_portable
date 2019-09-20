@@ -21,8 +21,10 @@ class Init(Slot):
 
 
 
-	def t000(self): #get current attributes. those with relavant values will be displayed.
-
+	def t000(self):
+		'''
+		Get current scene attributes. Only those with relevant values will be displayed.
+		'''
 		infoDict={}
 		selection = rt.selection
 

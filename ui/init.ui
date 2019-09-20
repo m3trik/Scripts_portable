@@ -31,11 +31,20 @@
     <height>600</height>
    </size>
   </property>
+  <property name="cursor">
+   <cursorShape>CrossCursor</cursorShape>
+  </property>
   <property name="windowTitle">
-   <string>Toolkit</string>
+   <string>toolkit</string>
   </property>
   <property name="windowOpacity">
-   <double>0.100000000000000</double>
+   <double>1.000000000000000</double>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QMainWindow {
+			background-color: rgba(127,127,127,2); 
+			color: rgb(225, 225, 225);
+}</string>
   </property>
   <property name="tabShape">
    <enum>QTabWidget::Triangular</enum>

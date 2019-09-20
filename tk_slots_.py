@@ -11,7 +11,7 @@ from tk_switchboard import Switchboard
 
 class Slot(object):
 	'''
-	
+	Parent class for all app sepecfic slot type classes.
 	'''
 	def __init__(self):
 		super(Slot, self).__init__()
@@ -21,25 +21,6 @@ class Slot(object):
 		self.ui = self.sb.getUi()
 
 
-		# if self.name=='main':
-		# 	self.setButtons(self.ui, invisible='v024-29') #resizing is currently being handled in tk_slots_app_init \ init().
-
-		# # if self.hotBox.name=='viewport':
-		# # 	buttons = self.getObject(self.ui, 'cmb000-3', showError_=False)
-		# # 	for button in buttons: #setStyleSheet for transparent buttons
-		# # 		button.setStyleSheet('''
-		# # 			QPushButton {border: 1px solid transparent;}
-		# # 			QComboBox {background-color: transparent; color: white;}
-		# # 			QComboBox::drop-down {border-width: 0px;}
-		# # 			QComboBox::down-arrow {image: url(:/none); border-width: 0px;}
-		# # 			''')
-
-		# if self.name=='create':
-		# 	self.setButtons(self.ui, invisible='s000-13')
-
-		# if self.name=='init':
-		# 	self.ui.t000.setAutoFillBackground(False)
-		# 	self.ui.t000.setTextBackgroundColor(QtGui.QColor(50, 50, 50))
 
 
 

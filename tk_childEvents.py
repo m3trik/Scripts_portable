@@ -37,14 +37,18 @@ class EventFactoryFilter(QtCore.QObject):
 		'''
 		for widget in self.sb.getWidget(name): #get all widgets for the given ui name.
 			widgetName = widget.objectName()
+			widgetType = self.sb.getWidgetType(widget)
 
-			widget.setStyleSheet(StyleSheet.css) #add StyleSheet
+			widget.setStyleSheet(getattr(StyleSheet, widgetType, '')) #add StyleSheet
 			widget.installEventFilter(self)
 
 			# Set initial widget states.
 			if widgetName=='pin':
-				widget.setStyleSheet(StyleSheet.pin)
+				widget.setStyleSheet(StyleSheet.QPushButton_pin)
 				widget.setDisabled(True)
+
+			if widgetName=='cmb':
+				widget.setStyleSheet(StyleSheet.QComboBox_cmb)
 
 			if name=='init' and widgetName=='t000':
 				widget.viewport().setAutoFillBackground(False)
@@ -83,8 +87,6 @@ class EventFactoryFilter(QtCore.QObject):
 					if widget in self.__mouseOver:
 						QtWidgets.QApplication.sendEvent(widget, self.leaveEvent_)
 						self.__mouseOver.remove(widget)
-
-						widget.releaseMouse()
 
 
 
@@ -130,6 +132,32 @@ class EventFactoryFilter(QtCore.QObject):
 
 
 
+	# ------------------------------------------------
+	# Events
+	# ------------------------------------------------
+	def enterEvent(self, event):
+		'''
+		args:
+			event=<QEvent>
+		'''
+		print self.name,'enterEvent',self.widgetType,self.widgetName
+		self.__mouseHover.emit(True)
+
+		if self.widgetName.startswith('r'):
+			self.widget.setVisible(True) #set visibility
+
+
+
+	def leaveEvent(self, event):
+		'''
+		args:
+			event=<QEvent>
+		'''
+		print self.name,'leaveEvent',self.widgetType,self.widgetName
+		self.__mouseHover.emit(False)
+
+		if self.widgetName.startswith('r'):
+			self.widget.setVisible(False) #set visibility
 
 
 
@@ -161,14 +189,14 @@ class EventFactoryFilter(QtCore.QObject):
 
 		elif self.widgetType=='QComboBox':
 			if self.widget.rect().contains(self.widget.mapFromGlobal(QtGui.QCursor.pos())):
-				self.widget.setStyleSheet(StyleSheet.comboBox_alt)
+				self.widget.setStyleSheet(StyleSheet.QComboBox_alt)
 				index = self.widget.currentIndex()
 				self.widget.blockSignals(True)
 				self.widget.setCurrentIndex(-1) #switch the index before opening to initialize the contents of the comboBox
 				self.widget.blockSignals(False)
 				self.widget.setCurrentIndex(index) #change index back to refresh contents
 			else:
-				self.widget.setStyleSheet(StyleSheet.comboBox)
+				self.widget.setStyleSheet(StyleSheet.QComboBox)
 
 
 
@@ -177,7 +205,7 @@ class EventFactoryFilter(QtCore.QObject):
 		args:
 			event=<QEvent>
 		'''
-		# print self.name,'mouseReleaseEvent',self.widgetType,self.widgetName
+		print self.name,'mouseReleaseEvent',self.widgetType,self.widgetName
 		if self.widget.mouseGrabber():
 			self.widget.releaseMouse()
 
@@ -202,34 +230,9 @@ class EventFactoryFilter(QtCore.QObject):
 
 		elif self.widgetType=='QComboBox':
 			if self.widget.rect().contains(self.widget.mapFromGlobal(QtGui.QCursor.pos())):
-				self.widget.setStyleSheet(StyleSheet.comboBox_popup)
+				self.widget.setStyleSheet(StyleSheet.QComboBox_popup)
 				self.widget.showPopup()
 
-
-
-	def enterEvent(self, event):
-		'''
-		args:
-			event=<QEvent>
-		'''
-		# print self.name,'enterEvent',self.widgetType,self.widgetName
-		self.__mouseHover.emit(True)
-
-		if self.widgetName.startswith('r'):
-			self.widget.setVisible(True) #set visibility
-
-
-
-	def leaveEvent(self, event):
-		'''
-		args:
-			event=<QEvent>
-		'''
-		# print self.name,'leaveEvent',self.widgetType,self.widgetName
-		self.__mouseHover.emit(False)
-
-		if self.widgetName.startswith('r'):
-			self.widget.setVisible(False) #set visibility
 
 
 
