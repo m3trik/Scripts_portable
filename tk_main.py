@@ -20,23 +20,21 @@ except: pass
 
 
 # ------------------------------------------------
-# Stacked Widget
+# Widget Stack
 # ------------------------------------------------
 class HotBox(QtWidgets.QStackedWidget):
 	'''
 	Marking menu-style modal window.
-	Getting and setting of signal connections are handled by the switchboard module.
+	Gets and sets signal connections through the switchboard module.
 	Paint events are handled by the overlay module.
 	args:
 		parent=main application window object.
 	'''
-	__mouseGrabber = QtWidgets.QWidget()
-
 	def __init__(self, parent=None):
 		super(HotBox, self).__init__(parent)
 
 		#set window style
-		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint|QtCore.Qt.X11BypassWindowManagerHint) #|QtCore.Qt.WindowStaysOnTopHint
+		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint) #QtCore.Qt.X11BypassWindowManagerHint|QtCore.Qt.WindowStaysOnTopHint
 		self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 		self.setStyleSheet(StyleSheet.css)
 		# self.setStyle(QtWidgets.QStyleFactory.create('plastique'))
@@ -47,6 +45,8 @@ class HotBox(QtWidgets.QStackedWidget):
 		for name, ui in self.sb.uiList():
 			self.sb.setUiSize(name) #store size info for each ui
 			self.addWidget(ui) #add each ui to the stackedLayout.
+
+		self.childEvents = EventFactoryFilter()
 
 
 
@@ -67,7 +67,7 @@ class HotBox(QtWidgets.QStackedWidget):
 
 
 		if not self.sb.hasKey(self.name, 'connectionDict'): #build the connectionDict containing the widgets and their connections.
-			EventFactoryFilter(self.name)
+			self.childEvents.init(self.name)
 
 
 		if not any([self.name=='init', self.name==self.sb.previousName(allowDuplicates=1)]):
@@ -113,13 +113,7 @@ class HotBox(QtWidgets.QStackedWidget):
 			event=<QEvent>
 		'''
 		if any([self.name=='main', self.name=='viewport', self.name=='editors']):
-			for w in self.sb.getWidget(self.name): #get all widgets from the current ui.
-				if w.rect().contains(w.mapFromGlobal(QtGui.QCursor.pos())) and not w.objectName()=='mainWindow': #if mouse over widget:
-					w.grabMouse() #set widget to receive mouse events.
-					self.__mouseGrabber = w
-					return True
-
-		# self.currentWidget().grabMouse()
+			self.childEvents.mouseTracking(self.name)
 
 
 
@@ -131,8 +125,6 @@ class HotBox(QtWidgets.QStackedWidget):
 		if any([self.name=='main', self.name=='viewport', self.name=='editors']):
 			if any([event.button()==QtCore.Qt.LeftButton,event.button()==QtCore.Qt.MiddleButton,event.button()==QtCore.Qt.RightButton]):
 				self.setWidget('init')
-		else:
-			self.__mouseGrabber.releaseMouse()
 
 
 

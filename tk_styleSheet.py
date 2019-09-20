@@ -43,7 +43,13 @@ class StyleSheet():
 	pin='''
 		QPushButton {
 			border: none;
-			background-color: rgba(100,100,100,1);
+			background: rgba(100,100,100,50);
+
+		}
+
+		QPushButton::checked {
+			border: none;
+			background-color: rgba(82,133,166,200);
 		}'''
 
 
@@ -312,6 +318,7 @@ class StyleSheet():
 		}
 
 		QPushButton::checked {
+			border: 1px solid black;
 			background-color: rgba(82,133,166,200);
 			color: black;
 		}
@@ -389,6 +396,122 @@ print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
+
+# background-color: #ABABAB; /* sets background of the menu */
+# border: 1px solid black;
+
+# /* sets background of menu item. set this to something non-transparent
+# if you want menu color and menu item color to be different */
+# background-color: transparent;
+
+# QMenu::item:selected { /* when user selects item using mouse or keyboard */
+#     background-color: #654321;
+# For a more advanced customization, use a style sheet as follows:
+
+# QMenu {
+#     background-color: white;
+#     margin: 2px; /* some spacing around the menu */
+
+# QMenu::item {
+#     padding: 2px 25px 2px 20px;
+#     border: 1px solid transparent; /* reserve space for selection border */
+
+# QMenu::item:selected {
+#     border-color: darkblue;
+#     background: rgba(100, 100, 100, 150);
+# }
+
+# QMenu::icon:checked { /* appearance of a 'checked' icon */
+#     background: gray;
+#     border: 1px inset gray;
+#     position: absolute;
+#     top: 1px;
+#     right: 1px;
+#     bottom: 1px;
+#     left: 1px;
+
+# QPushButton {
+# 	background:rgba(127,127,127,2);
+# 	background-color: red;
+# 	color: white;
+# 	border-width: 2px;
+# 	border-radius: 10px;
+# 	border-color: beige;
+# 	border-style: outset;
+# 	font: bold 14px;
+# 	min-width: 10em;
+# 	padding: 5px;
+
+# QPushButton:hover {   
+# 	border: 1px solid black;
+# 	border-radius: 5px;   
+# 	background-color:#66c0ff;
+
+# QPushButton:pressed {
+# 	background-color: rgb(224, 0, 0);
+# 	border-style: inset;
+
+# QPushButton:enabled {
+# 	color: red
+
+# QComboBox {
+# 	image: url(:/none);}
+
+# QComboBox::drop-down {
+# 	border-width: 0px; 
+# 	color: transparent
+
+# QComboBox::down-arrow {
+# 	border: 0px solid transparent; 
+# 	border-width: 0px; left: 0px; top: 0px; width: 0px; height: 0px; 
+# 	background-color: transparent; 
+# 	color: transparent; 
+# 	image: url(:/none);
+
+# QTreeWidget {
+# 	border:none;
+# } 
+
+# QTreeWidget::item {
+# 	height: 20px;
+
+# QTreeView {
+#   alternate-background-color: rgba(35,35,35,255);
+#   background: rgba(45,45,45,255);
+# }
+
+# QMenu {
+# 	background-color: white; /* background-color: #ABABAB; sets background of the menu */
+# 	margin: 2px; /* some spacing around the menu */
+# 	border: 1px solid black;
+# }
+
+# QMenu::item {
+# 	/* sets background of menu item. set this to something non-transparent
+# 	if you want menu color and menu item color to be different */
+# 	background-color: transparent;
+# 	padding: 2px 25px 2px 20px;
+# 	border: 1px solid transparent; /* reserve space for selection border */
+# }
+
+# QMenu::item:selected { 
+# 	/* when user selects item using mouse or keyboard */
+# 	background-color: #654321;
+# 	border-color: darkblue;
+# 	background: rgba(100, 100, 100, 150);
+# }
+
+# QMenu::icon:checked { /* appearance of a 'checked' icon */
+# 	background: gray;
+# 	border: 1px inset gray;
+# 	position: absolute;
+# 	top: 1px;
+# 	right: 1px;
+# 	bottom: 1px;
+# 	left: 1px;
+# }
+
+
 
 
 '''

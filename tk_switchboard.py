@@ -105,6 +105,7 @@ class Switchboard():
 											'method':method,
 											'docString':docString}})
 
+		# print self.getConnectionDict(name)
 		return self.getConnectionDict(name)
 
 
