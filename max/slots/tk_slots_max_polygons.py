@@ -9,14 +9,14 @@ from tk_slots_max_init import Init
 
 
 
+
 class Polygons(Init):
 	def __init__(self, *args, **kwargs):
 		super(Polygons, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('polygons')
 
-		self.ui.progressBar.hide()
+
 
 
 

@@ -16,7 +16,7 @@ class Transform(Init):
 		
 		self.ui = self.sb.getUi('transform')
 
-		self.ui.progressBar.hide()
+		
 
 		#set input masks for text fields
 		# self.ui.t000.setInputMask("00.00") #change to allow for neg values

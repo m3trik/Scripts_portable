@@ -16,7 +16,7 @@ class File(Init):
 
 		self.ui = self.sb.getUi('file')
 
-		self.ui.progressBar.hide()
+		
 
 		self.cmb006() #refresh cmb006 contents to reflect the current project folder
 

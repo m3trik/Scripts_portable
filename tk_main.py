@@ -38,11 +38,7 @@ class HotBox(QtWidgets.QStackedWidget):
 		# self.setStyle(QtWidgets.QStyleFactory.create('plastique'))
 
 		self.sb = Switchboard(parent)
-		self.sb.setClass(self) #store this class instance.
-
-		for name, ui in self.sb.uiList():
-			self.sb.setUiSize(name) #store size info for each ui
-			self.addWidget(ui) #add each ui to the stackedLayout.
+		self.sb.setClassInstance(self) #store this class instance.
 
 		self.childEvents = EventFactoryFilter()
 
@@ -54,6 +50,11 @@ class HotBox(QtWidgets.QStackedWidget):
 		args:
 			index='string' - name of qtui widget.
 		'''
+		if not name in self.sb.previousName(allowInit=1, as_list=1): #if ui(name) hasn't been set before, init the ui for the given name.
+			self.sb.setUiSize(name) #store size info for each ui
+			self.addWidget(self.sb.getUi(name)) #add each ui to the stackedLayout.
+			self.childEvents.init(name)
+
 		self.name = self.sb.setUiName(name) #set ui name.
 		self.ui = self.sb.getUi() #get the current dymanic ui.
 
@@ -62,10 +63,6 @@ class HotBox(QtWidgets.QStackedWidget):
 		self.point = QtCore.QPoint(self.sb.getUiSize(percentWidth=50), self.sb.getUiSize(percentHeight=50)) #set point to the middle of the layout
 		self.moveToMousePosition(self, -self.point.x(), -self.point.y()) #set initial positon on showEvent, and reposition here on index change.
 		self.resize(self.sb.getUiSize(width=1), self.sb.getUiSize(height=1)) #get ui size for current ui and resize window
-
-
-		if not self.sb.hasKey(self.name, 'connectionDict'): #build the connectionDict containing the widgets and their connections.
-			self.childEvents.init(self.name)
 
 
 		if not any([self.name=='init', self.name==self.sb.previousName(allowDuplicates=1)]):
@@ -85,8 +82,8 @@ class HotBox(QtWidgets.QStackedWidget):
 		'''
 		if event.key()==QtCore.Qt.Key_F12 and not event.isAutoRepeat():
 			if self.name=='init':
-				self.sb.getClass('init')().t000()
-				# self.ui.t000.connect(self.sb.getClass('init')().t000())
+				self.sb.getClassInstance('init').info()
+
 
 
 	def keyReleaseEvent(self, event):
@@ -131,7 +128,7 @@ class HotBox(QtWidgets.QStackedWidget):
 		args:
 			event=<QEvent>
 		'''
-		if any([self.name=='main', self.name=='viewport', self.name=='editors']):
+		if any([self.name=='main', self.name=='editors']):
 			if any([event.button()==QtCore.Qt.LeftButton,event.button()==QtCore.Qt.MiddleButton,event.button()==QtCore.Qt.RightButton]):
 				self.setWidget('init')
 
@@ -242,6 +239,7 @@ class HotBox(QtWidgets.QStackedWidget):
 # Initialize
 # ------------------------------------------------
 def createInstance():
+
 	try: mainWindow = [x for x in app.topLevelWidgets() if x.objectName()=='MayaWindow'][0]
 	except:
 		try: mainWindow = MaxPlus.GetQMaxMainWindow(); mainWindow.setObjectName('MaxWindow')
@@ -256,6 +254,10 @@ def createInstance():
 
 
 if __name__ == "__main__":
+	qApp = QtWidgets.QApplication.instance() #get the qApp instance if it exists.
+	if not qApp:
+		qApp = QtWidgets.QApplication(sys.argv)
+	
 	createInstance().show()
 	sys.exit(qApp.exec_())
 

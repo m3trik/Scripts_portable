@@ -13,14 +13,13 @@ class Viewport(Init):
 	def __init__(self, *args, **kwargs):
 		super(Viewport, self).__init__(*args, **kwargs)
 
-
-		self.ui = self.sb.getUi('viewport')
-
+		self.name = self.sb.getUiName('viewport')
 
 
 
 
-		
+
+
 	def cmb000(self):
 		'''
 		Editors

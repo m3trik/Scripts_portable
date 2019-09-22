@@ -16,7 +16,7 @@ class Scene(Init):
 
 		self.ui = self.sb.getUi('scene')
 
-		self.ui.progressBar.hide()
+		
 
 		self.ui.t000.returnPressed.connect(self.t001) #preform rename on returnPressed
 

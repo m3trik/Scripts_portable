@@ -20,8 +20,8 @@ class Editors(Init):
 		self.stackedWidget = self.sb.getUi('dynLayout').stackedWidget
 		# self.stackedWidget = self.sb.getUi('dynLayout').stackedWidget
 		# for w in self.widgetList:
-		# 	self.stackedWidget.addWidget(self.getWidget(w))
-			# self.stackedWidget.addWidget(self.getWidget(w))
+		# 	self.stackedWidget.addWidget(self.sb.qApp_getWidget(w))
+			# self.stackedWidget.addWidget(self.sb.qApp_getWidget(w))
 
 
 		# self.sb.getUi('dynLayout').setCentralWidget(self.stackedWidget)

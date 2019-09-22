@@ -16,7 +16,7 @@ class Symmetry(Init):
 
 		self.ui = self.sb.getUi('symmetry')
 
-		self.ui.progressBar.hide()
+		
 
 		#symmetry: set initial checked state
 		state = pm.symmetricModelling(query=True, symmetry=True) #application symmetry state

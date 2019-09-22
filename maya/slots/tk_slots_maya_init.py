@@ -71,7 +71,7 @@ class Init(Slot):
 		prevCommand = self.sb.prevCommand(docString=True); infoDict.update({"Previous Command: ":prevCommand})  #get button text from last used command
 
 		#populate the textedit with any values
-		t = self.ui.t000
+		t = self.ui.info
 		t.clear()
 		for key, value in infoDict.iteritems():
 			if value:

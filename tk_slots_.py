@@ -1,5 +1,3 @@
-from PySide2 import QtGui, QtWidgets
-
 import os.path
 
 from tk_switchboard import Switchboard
@@ -17,47 +15,9 @@ class Slot(object):
 		super(Slot, self).__init__()
 
 		self.sb = Switchboard()
-		self.name = self.sb.getUiName()
-		self.ui = self.sb.getUi()
 
 
 
-
-
-
-	@staticmethod
-	def getWindow(name=None):
-		'''
-		Get Qt window/s
-		args:
-			name='string' - optional name of window (widget.objectName)
-		returns:
-			if name: corresponding <window object>
-			else: return a dictionary of all windows {windowName:window}
-		'''
-		windows = {w.objectName():w for w in QtWidgets.QApplication.allWindows()}
-		if name:
-			return windows[name]
-		else:
-			return windows
-
-
-
-	@staticmethod
-	def getWidget(name=None):
-		'''
-		Get Qt widget/s
-		args:
-			name='string' - optional name of widget (widget.objectName)
-		returns:
-			if name: corresponding <widget object>
-			else: return a dictionary of all widgets {widgetName:widget}
-		'''
-		widgets = {w.objectName():w for w in QtWidgets.QApplication.allWidgets()}
-		if name:
-			return widgets[name]
-		else:
-			return widgets
 
 
 
@@ -251,7 +211,7 @@ class Slot(object):
 
 		if init:
 			progress=0
-			ui.progressBar.show()
+			ui.progressBar.setVisible(True)
 			return
 
 		progress+=1
@@ -259,8 +219,9 @@ class Slot(object):
 		ui.progressBar.setValue(value)
 		# QtGui.qApp.processEvents() #ensure that any pending events are processed sufficiently often for the GUI to remain responsive
 		if value>=100:
-			ui.progressBar.hide()
+			ui.progressBar.setVisible(False)
 			ui.progressBar.setValue(0)
+		print value
 		return value
 
 

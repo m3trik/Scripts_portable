@@ -16,7 +16,7 @@ class Normals(Init):
 
 		self.ui = self.sb.getUi('normals')
 
-		self.ui.progressBar.hide()
+		
 
 
 

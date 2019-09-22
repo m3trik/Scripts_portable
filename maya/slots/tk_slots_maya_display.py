@@ -16,7 +16,7 @@ class Display(Init):
 
 		self.ui = self.sb.getUi('display')
 
-		self.ui.progressBar.hide()
+		
 
 
 

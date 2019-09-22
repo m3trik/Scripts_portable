@@ -15,52 +15,56 @@ import sys, os.path
 class Switchboard():
 	'''
 	Get/set elements across modules from a single dictionary.
-	key/value structure of _sbDict:
-		'app' : 'string name of the parent application'. ie. 'maya' or 'max'
-		'name' : [string list]. when a new ui is called it's name is at element[-1] and the previous ui is at element[-2]. ie. ['previousName', 'previousName', 'currentName']
-		'uiList' : [list of two element lists containing all ui filenames in the ui folder and their corresponding dynamic ui object]. ie. [['polygons', <polygons dynamic ui object>]]
+	
+	ui name/corresponding class name - should always be the same. (case insensitive)
+	widget name/corresponding method name - also need to be the same.
 
-		'name'{
-			'class' : <class obj>
-			'size' : [list containing width int, height int]. ie. [295, 234]
-			'connectionDict' : {'widgetName':{'widget':<obj>, 'widgetWithSignal':<obj.connect>, 'method':<obj>, 'docString':'', 'widgetClass':<QPushButton>, widgetType':'QPushButton'}},}
+	structure:
+	_sbDict = {	
+		'(ui name)'{
+			'class' : <Class>
+			'size' : [(width) int, (height) int]
+			'connectionDict' : {'(widget name)':{'widget':<widget>, 'widgetWithSignal':<widget.signal>, 'method':<method>, 'docString':'', 'widgetClass':<Class>, widgetType':'Class'}
+			}
+		'uiList' : [list of two element lists] containing all ui filenames in the ui folder and their corresponding dynamic ui object. ie. [['polygons', <polygons dynamic ui object>]]
+		'name' : [string list]} Tracks the order in which the uis are called. A new ui is placed at element[-1]. ie. ['previousName2', 'previousName1', 'currentName']
+		'prevCommand' : [list of 2 element lists] ie. [history of commands, last used method at element[-1]]. [[method,'methodNameString']]  ie. [{b00, 'multi-cut tool'}]
+		'app' : 'string name' of the parent application. ie. 'maya' or 'max'
+		'gcProtect' : [items protected from garbage collection]
+	}
 
-		'prevCommand' : list of 2 element lists. [history of commands, last used method at element[-1]]. [[method,'methodNameString']]  ie. [{b00, 'multi-cut tool'}]
-		'gcProtect' : [list of items protected from garbage collection]
-	ex.
+	dict structure at constructor:
 	_sbDict={
-		'app':'maya',
-		'name':['polygons', 'edit', 'cameras'],
-		'uiList':[['animation', '<animation dynamic ui object>'], ['cameras', '<cameras dynamic ui object>'], ['create', '<create dynamic ui object>'], ['display', '<display dynamic ui object>']],
+	'name':[],
+	'polygons':{},
+	'uiList:[['polygons', '<polygons ui object>']],
+	'app':'maya'
+	}
 
-		'polygons':{'class':'<Polygons>', 
-					'size':[295, 234],
-					'connectionDict':{'b001':{'widget':'<b001>', 'widgetWithSignal':'<b001.connect>', 'method':'<main.b001>', 'docString':'Multi-Cut Tool', 'widgetClass':'<QPushButton>', 'widgetType':'QPushButton'}}},
-
-		'prevCommand':[['b000', 'multi-cut tool']],
-		'gcProtect':['<protected object>']}
+	the connectionDict is built a'la carte for each class when addSignal (or any other dependant method) is called.
 	'''
 
-	#initialize the main dict.
 	_sbDict = {'name':[]}
 
 	#set path to the directory containing the ui files.
 	path = os.path.join(os.path.dirname(__file__), 'ui') #get absolute path from dir of this module + relative path to directory
 
 	#construct the uiList from directory contents. ie. [['polygons', <polygons dynamic ui object>]]
-	qApp = QApplication.instance() #get the qApp instance if it exists
+	qApp = QApplication.instance() #get the qApp instance if it exists (for the QUiLoader)
 	if not qApp:
 		qApp = QApplication(sys.argv)
 
 	_sbDict['uiList'] = [[file_.replace('.ui',''), QUiLoader().load(path+'/'+file_)] for file_ in os.listdir(path) if file_.endswith('.ui')]
-	 #use the uiList to initialize the main dict. ie. { 'edit':{}, 'create':{}, 'animation':{}, 'cameras':{}, 'display':{} }
+	 #use the uiList to initialize the main dict keys. ie. { 'edit':{}, 'create':{}, 'animation':{}, 'cameras':{}, 'display':{} }
 	[_sbDict.update({ui[0]:{}}) for ui in _sbDict['uiList']]
-
 
 
 	def __init__(self, parent=None):
 		if parent:
 			self.setApp(parent)
+
+
+
 
 
 
@@ -73,13 +77,12 @@ class Switchboard():
 			dict - 'widgetName':{'widget':<widget>,'widgetWithSignal':<widgetWithSignal>,'method':<method>,'docString':'docString','widgetClass':<class object>,'widgetClassName':'class name'}
 		'''
 		ui = self.getUi(name)
-		class_ = self.setClass('tk_slots_'+self.getApp()+'_'+name+'.'+name[0].upper()+name[1:]) #ie. tk_slots_maya_init.Init
-		if callable(class_):
-			class_ = class_()
+		class_ = self.setClassInstance('tk_slots_'+self.getApp()+'_'+name+'.'+name[0].upper()+name[1:]) #ie. tk_slots_maya_init.Init
 
 
 		signalType = {'QMainWindow':'',
 					'QWidget':'',
+					'QProgressBar':'valueChanged',
 					'QPushButton':'released',
 					'QSpinBox':'valueChanged',
 					'QDoubleSpinBox':'valueChanged',
@@ -203,7 +206,7 @@ class Switchboard():
 		if not name:
 			name = self.getUiName()
 
-		return self.uiList(ui=1)[self.getUiIndex(name)]
+		return self.uiList(ui=True)[self.getUiIndex(name)]
 
 
 
@@ -218,18 +221,29 @@ class Switchboard():
 		if not type(index)==int:
 			index = self.getUiIndex(index) #get index using name
 
-		self._sbDict['name'].append(self.uiList(name=1)[index])
+		self._sbDict['name'].append(self.uiList(name=True)[index])
 
 		return self._sbDict['name'][-1]
 
 
 
-	def getUiName(self):
+	def getUiName(self, ui=None):
 		'''
+		Get the ui name as a string.
+		If no argument is given, the name for the current ui will be returned.
+		args:
+			ui=<ui object> - use ui object to get its corresponding name.
 		returns:
-			current ui name as string
+			'string' - ui name.
 		'''
-		return self._sbDict['name'][-1]
+		if ui:
+			for list_ in self._sbDict['uiList']:
+				if list_[1]==ui:
+					return list_[0] #return 'cameras' from ['cameras', '<cameras dynamic ui object>']
+		try:
+			return self._sbDict['name'][-1]
+		except: #else if index out of range (no value exists):
+			return None
 
 
 
@@ -250,7 +264,7 @@ class Switchboard():
 
 	def getNameFrom(self, obj):
 		'''
-		Get the method class/ui name from any object existing in connectionDict.
+		Get the ui(class) name from any object existing in connectionDict.
 		args:
 			obj=<object> - 
 		returns:
@@ -341,40 +355,38 @@ class Switchboard():
 
 
 
-	def setClass(self, class_):
+	def setClassInstance(self, class_):
 		'''
-		Case insensitive.
-		Class string keys are stored lowercase regardless of how they are recieved.
+		Case insensitive. Class string keys are stored lowercase regardless of how they are recieved.
 		args:
 			class_='string' *or <class object> - module name and class to import and store class. 
 					ie. 'tk_slots_max_polygons.Polygons'
 		returns:
 			class object.
 		'''
-		if type(class_)==str or type(class_)==unicode: #arg given as string or unicode:
-			name = class_.split('_')[-1].split('.')[-1].lower(); #get key from class_ string ie. 'class' from 'tk_slots_max_polygons.Class'
-			if not name in self._sbDict:
-				self._sbDict[name] = {}
-			self._sbDict[name]['class'] = locate(class_)
+		if type(class_)==str or type(class_)==unicode: #if arg given as string or unicode:
+			name = class_.split('_')[-1].split('.')[-1].lower(); #get key from class_ string ie. 'class' from 'module.Class'
+			class_ = locate(class_)
 
-		else: #if class_ arg as <object>:
+		else: #if arg as <object>:
 			name = class_.__class__.__name__.lower();
-			if not name in self._sbDict:
-				self._sbDict[name] = {}
-			
+
+		if not name in self._sbDict:
+			self._sbDict[name] = {}
+
+		if callable(class_):
+			self._sbDict[name]['class'] = class_()
+		else:
 			self._sbDict[name]['class'] = class_
 
-		if not self._sbDict[name]['class']:
-			return '# Error: '+class_+' not found. #'
-		else:
-			return self._sbDict[name]['class']
+		return self._sbDict[name]['class']
 
 
 
-	def getClass(self, name):
+	def getClassInstance(self, name):
 		'''
 		Case insensitive. (Class string keys are lowercase and any given string will be converted automatically)
-		If class is not in self._sbDict, use setClass() to first store the class.
+		If class is not in self._sbDict, getClassInstance will attempt to use setClassInstance() to first store the class.
 		args:
 			name='string' name of class. ie. 'polygons'
 		returns:
@@ -383,7 +395,7 @@ class Switchboard():
 		name = name.lower()
 
 		if not 'class' in self._sbDict[name]:
-			return self.setClass(name) #construct the signals and slots for the ui
+			return self.setClassInstance(name) #construct the signals and slots for the ui
 
 		return self._sbDict[name]['class']
 
@@ -500,7 +512,7 @@ class Switchboard():
 
 
 
-	def getDocString(self, methodName, name=None, full=False):
+	def getDocString(self, name, methodName, full=False):
 		'''
 		args:
 			name='string' optional name of class. ie. 'polygons'. else; use current name.
@@ -510,9 +522,6 @@ class Switchboard():
 			if full: full stored docString
 			else: edited docString; name of method
 		'''
-		if not name:
-			name = self.getUiName()
-
 		if not 'connectionDict' in self._sbDict[name]:
 			self.getConnectionDict(name) #construct the signals and slots for the ui
 			
@@ -523,17 +532,25 @@ class Switchboard():
 
 
 
-	def previousName(self, previousIndex=False, allowDuplicates=False, as_list=False):
+	def previousName(self, previousIndex=False, allowDuplicates=False, allowInit=False, as_list=False):
 		'''
+		Get the previously called ui name string, or a list of ui name strings ordered by use. ie. ['previousName2', 'previousName1', 'currentName']
 		args:
-			previousIndex=bool 	return the index of the last valid previously opened ui name.
+			previousIndex=bool - return the index of the last valid previously opened ui name.
+			allowDuplicates=bool - applicable when returning as_list. Returns the list allowing for duplicate names.
+			allowInit=bool - keep instances of init. Default is Off.
+			as_list=bool - returns the full list of previously called names. By default duplicates are removed.
 		returns:
-			if previousIndex: int index of previously opened ui
-			else: string name of previously opened layout.
+			with no arguments given - string name of previously opened layout.
+			if previousIndex: int - index of previously opened ui
+			if as_list: returns [list of string names]
 		'''
-		self._sbDict['name'] = self._sbDict['name'][-10:] #keep original list length restricted to last ten elements
+		self._sbDict['name'] = self._sbDict['name'][-50:] #keep original list length restricted to last fifty elements
 
-		list_ = [i for i in self._sbDict['name'] if 'init' not in i] #work on a copy of the list, removing any instances of 'init', keeping the original intact
+		if allowInit:
+			list_ = [i for i in self._sbDict['name']] #work on a copy of the list, keeping the original intact
+		else:	
+			list_ = [i for i in self._sbDict['name'] if 'init' not in i] #work on a copy of the list, removing any instances of 'init', keeping the original intact
 		
 		if not allowDuplicates:
 			[list_.remove(l) for l in list_[:] if list_.count(l)>1] #remove any previous duplicates if they exist; keeping the last added element.
@@ -685,6 +702,42 @@ class Switchboard():
 
 
 
+	@staticmethod
+	def qApp_getWindow(name=None):
+		'''
+		Get Qt window/s
+		args:
+			name='string' - optional name of window (widget.objectName)
+		returns:
+			if name: corresponding <window object>
+			else: return a dictionary of all windows {windowName:window}
+		'''
+		windows = {w.objectName():w for w in QApplication.allWindows()}
+		if name:
+			return windows[name]
+		else:
+			return windows
+
+
+
+	@staticmethod
+	def qApp_getWidget(name=None):
+		'''
+		Get Qt widget/s
+		args:
+			name='string' - optional name of widget (widget.objectName)
+		returns:
+			if name: corresponding <widget object>
+			else: return a dictionary of all widgets {widgetName:widget}
+		'''
+		widgets = {w.objectName():w for w in QApplication.allWidgets()}
+		if name:
+			return widgets[name]
+		else:
+			return widgets
+
+
+
 
 
 
@@ -696,3 +749,18 @@ print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
+
+'''
+test example:
+	_sbDict={
+		'app':'maya',
+		'name':['polygons'],
+		'uiList':[['polygons', '<polygons dynamic ui object>']],
+
+		'polygons':{'class':'<Polygons>', 
+					'size':[295, 234],
+					'connectionDict':{'b001':{'widget':'<b001>', 'widgetWithSignal':'<b001.connect>', 'method':'<main.b001>', 'docString':'Multi-Cut Tool', 'widgetClass':'<QPushButton>', 'widgetType':'QPushButton'}}},
+
+		'prevCommand':[['b000', 'multi-cut tool']],
+		'gcProtect':['<protected object>']}
+'''

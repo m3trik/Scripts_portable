@@ -16,7 +16,7 @@ class Lighting(Init):
 
 		self.ui = self.sb.getUi('lighting')
 
-		self.ui.progressBar.hide()
+		
 
 
 

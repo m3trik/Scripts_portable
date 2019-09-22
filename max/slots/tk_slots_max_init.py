@@ -15,13 +15,14 @@ class Init(Slot):
 	def __init__(self, *args, **kwargs):
 		super(Init, self).__init__(*args, **kwargs)
 
+		self.ui = self.sb.getUi('init')
 
 
 
 
 
 
-	def t000(self):
+	def info(self):
 		'''
 		Get current scene attributes. Only those with relevant values will be displayed.
 		'''
@@ -74,7 +75,7 @@ class Init(Slot):
 		prevCommand = self.sb.prevCommand(docString=True); infoDict.update({"Previous Command: ":prevCommand})  #get button text from last used command
 
 		#populate the textedit with any values
-		t = self.ui.t000
+		t = self.ui.info
 		t.clear()
 		for key, value in infoDict.iteritems():
 			if value:

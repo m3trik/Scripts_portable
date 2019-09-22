@@ -16,7 +16,7 @@ class Rigging(Init):
 
 		self.ui = self.sb.getUi('rigging')
 
-		self.ui.progressBar.hide()
+		
 
 		self.chk000() #init scale joint value
 

@@ -16,7 +16,7 @@ class Rendering(Init):
 
 		self.ui = self.sb.getUi('rendering')
 
-		self.ui.progressBar.hide()
+		
 
 
 

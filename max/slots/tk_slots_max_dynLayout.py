@@ -16,7 +16,7 @@ class DynLayout(Init):
 
 		self.ui = self.sb.getUi('dynLayout')
 
-		self.ui.progressBar.hide()
+		
 
 
 

@@ -16,7 +16,7 @@ class Polygons(Init):
 
 		self.ui = self.sb.getUi('polygons')
 
-		self.ui.progressBar.hide()
+		
 
 
 

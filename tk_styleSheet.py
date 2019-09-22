@@ -23,7 +23,7 @@ class StyleSheet():
 	'''
 	QMainWindow='''
 		QMainWindow {
-			background-color: rgba(127,127,127,2); 
+			background-color: transparent /*rgba(127,127,127,2)*/; 
 			color: rgb(225, 225, 225);
 		}'''
 
@@ -141,12 +141,6 @@ class StyleSheet():
 		QComboBox {
 			background: rgba(100,100,100,50);
 		}'''
-
-		# QComboBox:open {
-		# 	background-color: rgba(100,100,100,200);
-		# 	color: white;
-		# 	selection-background-color: rgba(82,133,166,200);
-		# }'''
 
 	QSpinBox='''
 		QSpinBox {
@@ -361,7 +355,7 @@ class StyleSheet():
 			margin-top: 4px;
 			background-color: rgba(100,100,100,80);
 			color: rgb(225, 225, 225);
-			border: 0px solid black;
+			border: none;
 		}
 
 		QGroupBox::title {

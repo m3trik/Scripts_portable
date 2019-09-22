@@ -16,7 +16,7 @@ class Subdivision(Init):
 
 		self.ui = self.sb.getUi('subdivision')
 
-		self.ui.progressBar.hide()
+		
 
 		#Set 3ds Max specific naming
 		self.ui.gb000.setTitle('TurboSmooth')

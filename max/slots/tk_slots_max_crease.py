@@ -16,7 +16,7 @@ class Crease(Init):
 
 		self.ui = self.sb.getUi('crease')
 
-		self.ui.progressBar.hide()
+		
 
 
 

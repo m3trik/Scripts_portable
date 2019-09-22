@@ -16,7 +16,7 @@ class Nurbs(Init):
 
 		self.ui = self.sb.getUi('nurbs')
 
-		self.ui.progressBar.hide()
+		
 
 
 

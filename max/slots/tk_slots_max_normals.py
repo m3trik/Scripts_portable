@@ -16,7 +16,7 @@ class Normals(Init):
 
 		self.ui = self.sb.getUi('normals')
 
-		self.ui.progressBar.hide()
+		
 
 		self.ui.b003.setText('Hard Edge Display')
 

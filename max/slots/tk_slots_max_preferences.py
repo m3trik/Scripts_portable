@@ -16,7 +16,7 @@ class Preferences(Init):
 
 		self.ui = self.sb.getUi('preferences')
 
-		self.ui.progressBar.hide()
+		
 
 		self.ui.b010.setText(self.hotBox.app.capitalize()+' Preferences')
 

@@ -16,7 +16,7 @@ class Pivot(Init):
 		
 		self.ui = self.sb.getUi('pivot')
 
-		self.ui.progressBar.hide()
+		
 
 
 

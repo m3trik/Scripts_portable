@@ -16,7 +16,7 @@ class Duplicate(Init):
 
 		self.ui = self.sb.getUi('duplicate')
 
-		self.ui.progressBar.hide()
+		
 		
 		self.ui.s000.valueChanged.connect(self.radialArray) #update radial array
 		self.ui.s001.valueChanged.connect(self.radialArray) 
