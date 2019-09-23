@@ -45,7 +45,7 @@ class EventFactoryFilter(QtCore.QObject):
 			widgetName = widget.objectName()
 			widgetType = self.sb.getWidgetType(widget)
 
-			# widget.setStyleSheet(getattr(StyleSheet, widgetType, '')) #add StyleSheet
+			widget.setStyleSheet(getattr(StyleSheet, widgetType, '')) #add StyleSheet
 			widget.installEventFilter(self)
 
 			# Set initial widget states.
@@ -222,6 +222,10 @@ class EventFactoryFilter(QtCore.QObject):
 			# if self.widget in self.__mouseOver:
 				if self.widgetName.startswith('i'): #set the stacked widget.
 					self.sb.getClassInstance('hotBox').setWidget(self.widget.whatsThis()) #switch the stacked layout to the given ui.
+					self.__mouseGrabber.releaseMouse()
+					self.__mouseGrabber = None
+					# self.sb.getUi().activateWindow()
+					self.sb.getClassInstance('hotBox').activateWindow()
 
 				elif self.widgetName.startswith('v'): #ie. 'v012'
 					self.sb.previousView(as_list=1).append(self.sb.getMethod(self.name, self.widgetName)) #store the camera view

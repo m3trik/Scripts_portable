@@ -23,7 +23,7 @@ class StyleSheet():
 	'''
 	QMainWindow='''
 		QMainWindow {
-			background-color: transparent /*rgba(127,127,127,2)*/; 
+			background-color: transparent; 
 			color: rgb(225, 225, 225);
 		}'''
 

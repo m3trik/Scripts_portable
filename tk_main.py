@@ -42,6 +42,7 @@ class HotBox(QtWidgets.QStackedWidget):
 
 		self.childEvents = EventFactoryFilter()
 
+		self.setWidget('init') #initialize layout
 
 
 	def setWidget(self, name):
@@ -101,7 +102,7 @@ class HotBox(QtWidgets.QStackedWidget):
 		args:
 			event=<QEvent>
 		'''
-		if any([self.name=='init', self.name=='main', self.name=='viewport', self.name=='editors']):
+		if any([self.name=='init', self.name=='main', self.name=='editors', self.name=='viewport']):
 			if event.button()==QtCore.Qt.LeftButton:
 				self.setWidget('viewport')
 
@@ -118,7 +119,7 @@ class HotBox(QtWidgets.QStackedWidget):
 		args:
 			event=<QEvent>
 		'''
-		if any([self.name=='main', self.name=='viewport', self.name=='editors']):
+		if any([self.name=='main', self.name=='editors', self.name=='viewport']):
 			self.childEvents.mouseTracking(self.name)
 
 
@@ -128,7 +129,7 @@ class HotBox(QtWidgets.QStackedWidget):
 		args:
 			event=<QEvent>
 		'''
-		if any([self.name=='main', self.name=='editors']):
+		if any([self.name=='main', self.name=='editors', self.name=='viewport']):
 			if any([event.button()==QtCore.Qt.LeftButton,event.button()==QtCore.Qt.MiddleButton,event.button()==QtCore.Qt.RightButton]):
 				self.setWidget('init')
 
@@ -246,7 +247,6 @@ def createInstance():
 		except: mainWindow = None
 
 	hotBox = HotBox(mainWindow)
-	hotBox.setWidget('init') #initialize layout
 	hotBox.overlay = OverlayFactoryFilter(hotBox)
 
 	return hotBox
