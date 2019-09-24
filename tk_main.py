@@ -184,8 +184,6 @@ class HotBox(QtWidgets.QStackedWidget):
 		try: MaxPlus.CUI.EnableAccelerators()
 		except: pass
 
-		self.setWidget('init') #reset layout back to init on keyPressEvent
-
 
 
 	def showEvent(self, event):
@@ -195,6 +193,8 @@ class HotBox(QtWidgets.QStackedWidget):
 		'''
 		try: MaxPlus.CUI.DisableAccelerators()
 		except: pass
+
+		self.setWidget('init') #reset layout back to init on keyPressEvent
 
 		self.moveToMousePosition(self, -self.point.x(), -self.point.y()) #move window to cursor position and offset from left corner to center
 		self.activateWindow()

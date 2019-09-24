@@ -110,6 +110,9 @@ class StyleSheet():
 		}
 
 		QComboBox::down-arrow {
+			width: 3px;
+			height: 3px;
+			border: 1px solid #5A5A5A;
 			border: 1px solid #5A5A5A;
 			background: #353535;
 		}
@@ -117,12 +120,6 @@ class StyleSheet():
 		QComboBox::drop-down {
 			border: 1px solid #5A5A5A;
 			background: #353535;
-		}
-
-		QComboBox::down-arrow {
-			width: 3px;
-			height: 3px;
-			border: 1px solid #5A5A5A;
 		}'''
 
 	QComboBox_alt='''

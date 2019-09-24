@@ -147,11 +147,20 @@ class EventFactoryFilter(QtCore.QObject):
 		args:
 			event=<QEvent>
 		'''
-		# print self.name,'enterEvent',self.widgetType,self.widgetName
+		print self.name,'enterEvent',self.widgetType,self.widgetName
 		self.__mouseHover.emit(True)
 
-		if self.widgetName.startswith('r'):
-			self.widget.setVisible(True) #set visibility
+		if self.widgetType=='QWidget':
+			if self.widgetName.startswith('r'):
+				self.widget.setVisible(True) #set visibility
+
+		elif self.widgetType=='QComboBox':
+			self.widget.setStyleSheet(StyleSheet.QComboBox_alt)
+			index = self.widget.currentIndex()
+			self.widget.blockSignals(True)
+			self.widget.setCurrentIndex(-1) #switch the index before opening to initialize the contents of the comboBox
+			self.widget.blockSignals(False)
+			self.widget.setCurrentIndex(index) #change index back to refresh contents
 
 
 
@@ -160,16 +169,23 @@ class EventFactoryFilter(QtCore.QObject):
 		args:
 			event=<QEvent>
 		'''
-		# print self.name,'leaveEvent',self.widgetType,self.widgetName
+		print self.name,'leaveEvent',self.widgetType,self.widgetName
 		self.__mouseHover.emit(False)
 
 		if self.widget==self.__mouseGrabber: #self.widget.mouseGrabber():
 			mainWindow = self.sb.getWidget(self.name, 'mainWindow')
-			mainWindow.grabMouse()
-			self.__mouseGrabber = mainWindow
+			if mainWindow.isVisible():
+				mainWindow.grabMouse()
+				self.__mouseGrabber = mainWindow
 
-		if self.widgetName.startswith('r'):
-			self.widget.setVisible(False) #set visibility
+		if self.widgetType=='QWidget':
+			if self.widgetName.startswith('r'):
+				self.widget.setVisible(False) #set visibility
+
+		elif self.widgetType=='QComboBox':
+			print 'standard'
+			self.widget.setStyleSheet(StyleSheet.QComboBox)
+			self.widget.hidePopup()
 
 
 
@@ -198,17 +214,6 @@ class EventFactoryFilter(QtCore.QObject):
 				diff = globalPos -self.__mouseMovePos
 				hotBox.move(hotBox.mapFromGlobal(curPos + diff))
 				self.__mouseMovePos = globalPos
-
-		elif self.widgetType=='QComboBox':
-			if self.widget in self.__mouseOver:
-				self.widget.setStyleSheet(StyleSheet.QComboBox_alt)
-				index = self.widget.currentIndex()
-				self.widget.blockSignals(True)
-				self.widget.setCurrentIndex(-1) #switch the index before opening to initialize the contents of the comboBox
-				self.widget.blockSignals(False)
-				self.widget.setCurrentIndex(index) #change index back to refresh contents
-			else:
-				self.widget.setStyleSheet(StyleSheet.QComboBox)
 
 
 
@@ -245,7 +250,6 @@ class EventFactoryFilter(QtCore.QObject):
 		elif self.widgetType=='QComboBox':
 			if self.widget in self.__mouseOver:
 				self.widget.setStyleSheet(StyleSheet.QComboBox_popup)
-				print 'QComboBox MouseButtonRelease --', self.widgetName
 				self.widget.showPopup()
 
 
