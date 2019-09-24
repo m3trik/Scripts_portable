@@ -58,7 +58,8 @@ class Switchboard():
 
 
 	def __init__(self, parent=None):
-		self.setApp(parent)
+		if parent: #check for parent, so that if another instance of switchboard is called without arguments, it doesn't overwrite setApp to None.
+			self.setApp(parent)
 
 
 
@@ -74,7 +75,8 @@ class Switchboard():
 			dict - 'widgetName':{'widget':<widget>,'widgetWithSignal':<widgetWithSignal>,'method':<method>,'docString':'docString','widgetClass':<class object>,'widgetClassName':'class name'}
 		'''
 		ui = self.getUi(name)
-		class_ = self.setClassInstance('tk_slots_'+self.getApp(objectName=True)+'_'+name+'.'+name[0].upper()+name[1:]) #ie. tk_slots_maya_init.Init
+		pathToSlots = 'tk_slots_'+self.getApp(objectName=True)+'_'+name+'.'+name[0].upper()+name[1:] #ie. tk_slots_maya_init.Init
+		class_ = self.setClassInstance(pathToSlots)
 
 
 		signalType = {'QMainWindow':'',
@@ -249,7 +251,7 @@ class Switchboard():
 
 		try:
 			return self._sbDict['name'][-1]
-		except: #if index out of range (no value exists):
+		except: #if index out of range (no value exists): return None
 			return None
 
 
@@ -313,6 +315,9 @@ class Switchboard():
 		returns:
 			app object or string name
 		'''
+		if not 'app' in self._sbDict:
+			self._sbDict['app'] = None
+		
 		app = self._sbDict['app']
 
 		if objectName:
@@ -396,6 +401,7 @@ class Switchboard():
 			self._sbDict[name]['class'] = class_()
 		else:
 			self._sbDict[name]['class'] = class_
+
 
 		return self._sbDict[name]['class']
 

@@ -45,6 +45,7 @@ class HotBox(QtWidgets.QStackedWidget):
 		self.setWidget('init') #initialize layout
 
 
+
 	def setWidget(self, name):
 		'''
 		Set the stacked Widget's index.

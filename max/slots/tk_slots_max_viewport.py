@@ -13,7 +13,7 @@ class Viewport(Init):
 	def __init__(self, *args, **kwargs):
 		super(Viewport, self).__init__(*args, **kwargs)
 
-		self.name = self.sb.getUiName('viewport')
+		self.ui = self.sb.getUi('viewport')
 
 
 
@@ -43,7 +43,7 @@ class Viewport(Init):
 		cmb = self.ui.cmb001
 		
 		cameras = [cam.name for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
-		contents = self.comboBox (cmb, cameras, "Cameras:")
+		contents = self.comboBox(cmb, cameras, "Cameras:")
 		
 		index = cmb.currentIndex()
 		if index!=0:
@@ -61,7 +61,7 @@ class Viewport(Init):
 		cmb = self.ui.cmb002
 		
 		list_ = ['Custom Camera','Set Custom Camera','Camera From View']
-		contents = self.comboBox (cmb, list_, "Create")
+		contents = self.comboBox(cmb, list_, "Create")
 
 		index = cmb.currentIndex()
 		if index!=0:
@@ -81,7 +81,7 @@ class Viewport(Init):
 		cmb = self.ui.cmb003
 		
 		list_ = ['Group Cameras']
-		contents = self.comboBox (cmb, list_, "Options")
+		contents = self.comboBox(cmb, list_, "Options")
 
 		index = cmb.currentIndex()
 		if index!=0:

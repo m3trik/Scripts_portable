@@ -56,14 +56,14 @@ class EventFactoryFilter(QtCore.QObject):
 			elif widgetName=='cmb':
 				widget.setStyleSheet(StyleSheet.QComboBox_cmb)
 
-			elif widgetType=='QProgressBar':
-				widget.setVisible(False)
-
-			elif name=='init' and widgetName=='info':
+			elif widgetName=='info':
 				widget.viewport().setAutoFillBackground(False)
 				widget.setTextBackgroundColor(QtGui.QColor(50, 50, 50))
 
-			elif name=='main' or name=='viewport':
+			elif widgetType=='QProgressBar':
+				widget.setVisible(False)
+
+			elif any([name=='main', name=='viewport']):
 				if widgetName.startswith('r'):
 					widget.setVisible(False)
 
@@ -87,7 +87,7 @@ class EventFactoryFilter(QtCore.QObject):
 					QtWidgets.QApplication.sendEvent(widget, self.enterEvent_)
 					self.__mouseOver.append(widget)
 
-					if widgetName.startswith('i') or widgetName.startswith('v'):
+					if not widgetName=='mainWindow':
 						widget.grabMouse() #set widget to receive mouse events.
 						self.__mouseGrabber = widget
 
@@ -200,7 +200,7 @@ class EventFactoryFilter(QtCore.QObject):
 				self.__mouseMovePos = globalPos
 
 		elif self.widgetType=='QComboBox':
-			if self.widget.rect().contains(self.widget.mapFromGlobal(QtGui.QCursor.pos())):
+			if self.widget in self.__mouseOver:
 				self.widget.setStyleSheet(StyleSheet.QComboBox_alt)
 				index = self.widget.currentIndex()
 				self.widget.blockSignals(True)
@@ -243,8 +243,9 @@ class EventFactoryFilter(QtCore.QObject):
 						self.sb.getClassInstance('hotBox').hide_()
 
 		elif self.widgetType=='QComboBox':
-			if self.widget.rect().contains(self.widget.mapFromGlobal(QtGui.QCursor.pos())):
+			if self.widget in self.__mouseOver:
 				self.widget.setStyleSheet(StyleSheet.QComboBox_popup)
+				print 'QComboBox MouseButtonRelease --', self.widgetName
 				self.widget.showPopup()
 
 
