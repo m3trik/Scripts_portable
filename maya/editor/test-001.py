@@ -10,8 +10,11 @@ import tk_switchboard as sb
 
 
 
+panel =  [p for p in pm.getPanel(type='modelPanel')]
+panel = pm.getPanel(withFocus=1)
+import inspect
 
-
+print inspect.getmembers(pm.modelEditor(panel, edit=1, pluginObjects=['gpuCache', True]) )
 
 
 
@@ -80,8 +83,8 @@ class embedWidget(QtWidgets.QMainWindow):
 		# self.setCentralWidget(func.convertToWidget(widget))
 
 
-w = embedWidget()
-w.show()
+# w = embedWidget()
+# w.show()
 # w.resize(w.sizeHint())
 
 
