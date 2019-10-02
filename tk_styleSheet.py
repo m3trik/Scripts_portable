@@ -74,18 +74,6 @@ class StyleSheet():
 			border-color: navy; /* make the default button prominent */
 		}'''
 
-	QPushButton_pin='''
-		QPushButton {
-			border: none;
-			background: rgba(100,100,100,50);
-
-		}
-
-		QPushButton::checked {
-			border: none;
-			background-color: rgba(82,133,166,200);
-		}'''
-
 	QAbstractButton='''
 		QAbstractButton:hover {
 			background: #353535;
@@ -122,22 +110,10 @@ class StyleSheet():
 			background: #353535;
 		}'''
 
-	QComboBox_alt='''
-		QComboBox {
-			background-color: rgba(82,133,166,200);
-			color: white;
-		}'''
-
-	QComboBox_popup='''
-		QComboBox {
-			background-color: rgba(100,100,100,200);
-			color: white;
-		}'''
-
-	QComboBox_cmb='''
-		QComboBox {
-			background: rgba(100,100,100,50);
-		}'''
+	# QComboBox_cmb='''
+	# 	QComboBox {
+	# 		background: rgba(100,100,100,50);
+	# 	}'''
 
 	QSpinBox='''
 		QSpinBox {

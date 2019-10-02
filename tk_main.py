@@ -33,7 +33,7 @@ class HotBox(QtWidgets.QStackedWidget):
 		super(HotBox, self).__init__(parent)
 
 		#set window style
-		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint) #QtCore.Qt.X11BypassWindowManagerHint|QtCore.Qt.WindowStaysOnTopHint
+		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint|QtCore.Qt.WindowStaysOnTopHint)
 		self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 		# self.setStyle(QtWidgets.QStyleFactory.create('plastique'))
 
@@ -255,13 +255,12 @@ def createInstance():
 
 
 if __name__ == "__main__":
-	qApp = QtWidgets.QApplication.instance() #get the qApp instance if it exists.
-	if not qApp:
-		qApp = QtWidgets.QApplication(sys.argv)
-	
-	createInstance().show()
-	sys.exit(qApp.exec_())
+	app = QtWidgets.QApplication.instance() #get the qApp instance if it exists.
+	if not app:
+		app = QtWidgets.QApplication(sys.argv)
 
+	createInstance().show()
+	sys.exit(app.exec_())
 
 
 

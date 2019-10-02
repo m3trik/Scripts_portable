@@ -9,15 +9,19 @@ import sys, os.path
 
 
 
+
 # ------------------------------------------------
 #	Manage Ui elements
 # ------------------------------------------------
-class Switchboard():
+class Switchboard(object):
 	'''
 	Get/set elements across modules from a single dictionary.
 	
 	ui name/corresponding class name - should always be the same. (case insensitive)
-	widget name/corresponding method name - also need to be the same.
+	ui files are looked for in a sub dir named 'ui'.
+
+	widget name/corresponding method name - need to be the same.
+	custom widget modules are looked for in a sub directory named 'widgets'. The module name and custom widget class name need to be identical.
 
 	structure:
 	_sbDict = {	
@@ -28,38 +32,50 @@ class Switchboard():
 					'widgetDict' : {
 								'<widget name>':{
 											'widget':<widget>,
-											'widgetWithSignal':<widget.signal>, 
+											'widgetWithSignal':<widget.signal>,
+											'widgetType':'<widgetClassName>',
+											'derivedType':'<derivedClassName>',
+											'widgetClassInstance':<Class>,
 											'method':<method>,
-											'docString':'', 
-											'widgetClass':<Class>, widgetType':'Class'
+											'docString':'method docString'
 								}
 					}
 		}
 		'name' : [string list]} Tracks the order in which the uis are called. A new ui is placed at element[-1]. ie. ['previousName2', 'previousName1', 'currentName']
 		'prevCommand' : [list of 2 element lists] ie. [history of commands, last used method at element[-1]]. [[method,'methodNameString']]  ie. [{b00, 'multi-cut tool'}]
-		'app' : parent application. ie. <maya Window object>
+		'mainAppWindow' : parent application. ie. <maya Window object>
 		'gcProtect' : [items protected from garbage collection]
 	}
 
 	the widgetDict is built a'la carte for each class when addSignal (or any other dependant method) is called.
 	'''
 
+	app = QApplication.instance() #get the app instance if it exists (required by the QUiLoader)
+	if not app:
+		app = QApplication(sys.argv)
+
+
+	global uiLoader, widgetPath, uiPath
+	uiLoader = QUiLoader()
+
+	#get path to the directory containing the custom widgets.
+	widgetPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'widgets')
+	#register any custom widgets
+	widgetNames = [file_.replace('.py','',-1) for file_ in os.listdir(widgetPath) if file_.endswith('.py') and not file_.startswith('__')]
+	[uiLoader.registerCustomWidget(locate('widgets.'+m+'.'+m)) for m in widgetNames]
+
+
 	#set path to the directory containing the ui files.
-	global path
-	path = os.path.join(os.path.dirname(__file__), 'ui') #get absolute path from dir of this module + relative path to directory
 
-	qApp = QApplication.instance() #get the qApp instance if it exists (for the QUiLoader)
-	if not qApp:
-		qApp = QApplication(sys.argv)
-
+	uiPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ui') #get absolute path from dir of this module + relative path to directory
 	#initialize _sbDict
-	_sbDict = {file_.replace('.ui',''):{'ui':QUiLoader().load(path+'/'+file_)} for file_ in os.listdir(path) if file_.endswith('.ui')}
+	_sbDict = {file_.replace('.ui',''):{'ui':uiLoader.load(uiPath+'/'+file_)} for file_ in os.listdir(uiPath) if file_.endswith('.ui')}
 
 
 
 	def __init__(self, parent=None):
-		if parent: #check for parent, so that if another instance of switchboard is called without arguments, it doesn't overwrite setApp to None.
-			self.setApp(parent)
+		if parent: #check for parent, so that if another instance of switchboard is called without arguments, it doesn't overwrite setMainAppWindow to None.
+			self.setMainAppWindow(parent)
 
 
 
@@ -69,13 +85,17 @@ class Switchboard():
 	def buildWidgetDict(self, name):
 		'''
 		Add the signal/slot connections for each widget in a given ui.
+
+		The signalType dict establishes what type widgets will be added to the widgetDict, and what associated signal to apply.
+		Following that, the items in the ui are looped over, and the widgets' method resolution order is checked against the signalType keys
+		to determine the correct derived class type (used in the case of a custom widget).
 		args:
 			name='string' - name of the ui to construct connections for.
 		returns:
-			dict - 'widgetName':{'widget':<widget>,'widgetWithSignal':<widgetWithSignal>,'method':<method>,'docString':'docString','widgetClass':<class object>,'widgetClassName':'class name'}
+			dict - 'widgetName':{'widget':<widget>,'widgetWithSignal':<widgetWithSignal>,'method':<method>,'docString':'docString','widgetClassInstance':<class object>,'widgetClassName':'class name'}
 		'''
 		ui = self.getUi(name)
-		pathToSlots = 'tk_slots_'+self.getApp(objectName=True)+'_'+name+'.'+name[0].upper()+name[1:] #ie. tk_slots_maya_init.Init
+		pathToSlots = 'tk_slots_'+self.getMainAppWindow(objectName=True)+'_'+name+'.'+name[0].upper()+name[1:] #ie. tk_slots_maya_init.Init
 		class_ = self.setClassInstance(pathToSlots)
 
 
@@ -90,9 +110,13 @@ class Switchboard():
 					'QLineEdit':'returnPressed',
 					'QTextEdit':'textChanged'}
 
-		for widgetName, widget in ui.__dict__.iteritems(): #for each object in the ui:
-			for widgetType, signal in signalType.iteritems():
-				if widgetType==widget.__class__.__name__: #if it is a type listed in the signalType dict, construct with the associated signal.
+
+		for widgetName, widget in ui.__dict__.items(): #for each object in the ui:
+			for d in widget.__class__.__mro__:
+				if d.__name__ in signalType:
+					derivedType = d.__name__
+					signal = signalType[derivedType]
+
 
 					widgetWithSignal = getattr(widget, signal, None) #add signal to widget
 					method = getattr(class_, widgetName, None) #use 'widgetName' (ie. b006) to get the corresponding method of the same name.
@@ -102,10 +126,13 @@ class Switchboard():
 					self.widgetDict(name).update(
 								{widgetName:{'widget':widget, 
 											'widgetWithSignal':widgetWithSignal,
-											'widgetType':widgetType,
-											'widgetClass':widget.__class__,
+											'widgetType':widget.__class__.__name__,
+											'derivedType':derivedType,
+											'widgetClassInstance':widget.__class__(),
 											'method':method,
 											'docString':docString}})
+
+					break #stop looping up the chain of mro types found in signalType once a type match is found.
 
 		# print self.widgetDict(name)
 		return self.widgetDict(name)
@@ -293,7 +320,7 @@ class Switchboard():
 
 
 
-	def setApp(self, app):
+	def setMainAppWindow(self, app):
 		'''
 		Set parent application.
 		args:
@@ -301,24 +328,24 @@ class Switchboard():
 		returns:
 			string name of app
 		'''
-		self._sbDict['app'] = app
+		self._sbDict['mainAppWindow'] = app
 
-		return self._sbDict['app']
+		return self._sbDict['mainAppWindow']
 
 
 
-	def getApp(self, objectName=False):
+	def getMainAppWindow(self, objectName=False):
 		'''
 		Get parent application if any.
 		args:
-			objectName=bool - get string name of app. (by default getApp returns app object)
+			objectName=bool - get string name of app. (by default getMainAppWindow returns app object)
 		returns:
 			app object or string name
 		'''
-		if not 'app' in self._sbDict:
-			self._sbDict['app'] = None
+		if not 'mainAppWindow' in self._sbDict:
+			self._sbDict['mainAppWindow'] = None
 		
-		app = self._sbDict['app']
+		app = self._sbDict['mainAppWindow']
 
 		if objectName:
 			if not app: #if app is None, return an empty string value.
@@ -382,8 +409,8 @@ class Switchboard():
 		'''
 		Case insensitive. Class string keys are stored lowercase regardless of how they are recieved.
 		args:
-			class_='string' *or <class object> - module name and class to import and store class. 
-					ie. 'tk_slots_max_polygons.Polygons'
+			class_='string' *or <class object> - module name.class to import and store class. 
+					ie.  ie. 'polygons', 'tk_slots_max_polygons.Polygons', or <tk_slots_max_polygons.Polygons>
 		returns:
 			class object.
 		'''
@@ -407,16 +434,22 @@ class Switchboard():
 
 
 
-	def getClassInstance(self, name):
+	def getClassInstance(self, class_):
 		'''
 		Case insensitive. (Class string keys are lowercase and any given string will be converted automatically)
 		If class is not in self._sbDict, getClassInstance will attempt to use setClassInstance() to first store the class.
 		args:
-			name='string' name of class. ie. 'polygons'
+			class_='string' name of class *or <class object>
+				ie. 'polygons', 'tk_slots_max_polygons.Polygons', or <tk_slots_max_polygons.Polygons>
 		returns:
 			class object.
 		'''
-		name = name.lower()
+		if type(class_)==str or type(class_)==unicode: #if arg given as string or unicode:
+			name = class_.lower()
+		else: #if arg as <object>:
+			if not callable(class_):
+				return None
+			name = class_.__class__.__name__.lower();
 
 		if not 'class' in self._sbDict[name]:
 			return self.setClassInstance(name) #construct the signals and slots for the ui
@@ -445,33 +478,38 @@ class Switchboard():
 
 
 
-	def getWidgetClass(self, widget, name=None):
+	def getWidgetClassInstance(self, widget, name=None):
 		'''
+		ie. returns <type 'PySide2.QtWidgets.QPushButton'> or, <class 'widgets.QComboBox_Popup.QComboBox_Popup'>
 		args:
-			widget='string'  - name of widget/widget
-				*or <object> -widget
+			widget='string'  - name of widget
+					*or <object> - widget
 			name='string' - name of dynamic ui (else use current ui)
 		returns:
 			<class object> - the corresponding widget class
 		'''
 		if not type(widget)==str:
-			try:
-				return widget.__class__
-			except:
-				widget = widget.objectName()
+			widget = widget.objectName()
 
 		if not name:
 			name = self.getUiName()
 
-		if not 'widgetDict' in self._sbDict[name]:
-			self.widgetDict(name) #construct the signals and slots for the ui
+		try:
+			if not 'widgetDict' in self._sbDict[name]:
+				self.widgetDict(name) #construct the signals and slots for the ui
+		except Exception as error:
+			if not type(error)==KeyError:
+				raise error
+			return widget.__class__()
 
-		return self._sbDict[name]['widgetDict'][widget]['widgetClass']
+		return self._sbDict[name]['widgetDict'][widget]['widgetClassInstance']
 
 
 
 	def getWidgetType(self, widget, name=None):
 		'''
+		Get widget type class name as a string.
+		ie. 'QPushButton' from pushbutton type widget.
 		args:
 			widget='string'  - name of widget/widget
 				*or <object> -widget
@@ -480,10 +518,7 @@ class Switchboard():
 			'string' - the corresponding widget class name
 		'''
 		if not type(widget)==str:
-			try:
-				return widget.__class__.__name__
-			except:
-				widget = widget.objectName() #use the objectName to get a string key for 'widget'
+			widget = widget.objectName() #use the objectName to get a string key for 'widget'
 
 		if not name:
 			name = self.getUiName()
@@ -492,6 +527,30 @@ class Switchboard():
 			self.widgetDict(name) #construct the signals and slots for the ui
 
 		return self._sbDict[name]['widgetDict'][widget]['widgetType']
+
+
+
+	def getDerivedType(self, widget, name=None):
+		'''
+		Get widget derived type class name as a string.
+		ie. 'QPushButton' from a custom subclassed pushbutton.
+		args:
+			widget='string'  - name of widget/widget
+				*or <object> -widget
+			name='string' - name of dynamic ui (else use current ui)
+		returns:
+			'string' - the corresponding widget derived class name
+		'''
+		if not type(widget)==str:
+			widget = widget.objectName() #use the objectName to get a string key for 'widget'
+
+		if not name:
+			name = self.getUiName()
+
+		if not 'widgetDict' in self._sbDict[name]:
+			self.widgetDict(name) #construct the signals and slots for the ui
+
+		return self._sbDict[name]['widgetDict'][widget]['derivedType']
 
 
 
@@ -708,6 +767,7 @@ class Switchboard():
 
 	def hasKey(self, *args): #check if key exists in switchboard dict.
 		'''
+		ie. hasKey('polygons', 'widgetDict', 'widgetName')
 		args:
 			'string' dict keys in order of hierarchy.  ie. 'polygons', 'widgetDict', 'b001', 'method'
 		returns:
@@ -787,8 +847,8 @@ _sbDict={
 	'polygons':{'class': '<Polygons>',
 				'ui': '<polygons ui object>', 
 				'size': [295, 234],
-				'widgetDict': {'b001':{'widget':'<b001>', 'widgetWithSignal':'<b001.connect>', 'method':'<main.b001>', 'docString':'Multi-Cut Tool', 'widgetClass':'<QPushButton>', 'widgetType':'QPushButton'}}},
-	'app': None,
+				'widgetDict': {'b001':{'widget':'<b001>', 'widgetWithSignal':'<b001.connect>', 'method':'<main.b001>', 'docString':'Multi-Cut Tool', 'widgetClassInstance':'<QPushButton>', 'widgetType':'QPushButton'}}},
+	'mainAppWindow': None,
 	'name': ['polygons'],
 	'prevCommand': [['b000', 'multi-cut tool']],
 	'gcProtect': ['<protected object>']}

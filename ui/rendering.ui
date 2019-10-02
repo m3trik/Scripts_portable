@@ -55,7 +55,7 @@
       <number>0</number>
      </property>
      <item row="1" column="1">
-      <widget class="QPushButton" name="pin">
+      <widget class="QPushButton_Draggable" name="pin">
        <property name="minimumSize">
         <size>
          <width>19</width>
@@ -149,7 +149,7 @@
              <rect>
               <x>0</x>
               <y>12</y>
-              <width>109</width>
+              <width>102</width>
               <height>20</height>
              </rect>
             </property>
@@ -344,6 +344,13 @@
    </widget>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QPushButton_Draggable</class>
+   <extends>QPushButton</extends>
+   <header>widgets.qpushbutton_draggable.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
  <designerdata>

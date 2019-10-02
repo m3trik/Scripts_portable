@@ -26,10 +26,45 @@ class Preferences(Init):
 
 
 
+	def cmb(self):
+		'''
+		Editors
+		'''
+		cmb = self.ui.cmb
+		
+		files = ['']
+		contents = self.comboBox(cmb, files, '::')
+
+		index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				pass
+			cmb.setCurrentIndex(0)
+
+
+	def cmb000(self, index=None, init=False):
+		'''
+		Preferences:Ui - Set main ui style using QStyleFactory
+		'''
+		cmb = self.ui.cmb000
+
+		from Pyside2 import QtGui, QtCore
+		list_ = QtGui.QStyleFactory.keys() #get styles from QStyleFactory
+		contents = self.comboBox(cmb, list_)
+
+		if init: #temp.  move main function to shared Slots class
+			index = self.styleComboBox.findText(QtGui.qApp.style().objectName(), QtCore.Qt.MatchFixedString)
+			cmb.setCurrentIndex(index)
+		else:
+			index = self.styleComboBox.findText(QtGui.qApp.style().objectName(), QtCore.Qt.MatchFixedString)
+			cmb.setCurrentIndex(index)
+
+			QtGui.qApp.setStyle(style)
+
 
 	def cmb001(self, index=None, init=False):
 		'''
-		Set Working Units: Linear
+		Preferences:App - Set Working Units: Linear
 		'''
 		cmb = self.ui.cmb001
 
@@ -45,7 +80,7 @@ class Preferences(Init):
 
 	def cmb002(self, index=None, init=False):
 		'''
-		Set Working Units: Time
+		Preferences:App - Set Working Units: Time
 		'''
 		cmb = self.ui.cmb002
 
@@ -65,18 +100,27 @@ class Preferences(Init):
 
 	def cmb003(self):
 		'''
-		Editors
+		Preferences:Ui - Menu Set
 		'''
 		cmb = self.ui.cmb003
 		
-		files = ['']
-		contents = self.comboBox(cmb, files, '::')
+		list_ = ['Modeling', 'Normals', 'Materials', 'UV']
+		contents = self.comboBox(cmb, list_)
 
 		index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index(''):
-				pass
-			cmb.setCurrentIndex(0)
+		buttons = self.getObject(self.sb.getUi('main'), 'v000-11')
+		for i, button in enumerate(buttons):
+			if index==0:
+				button.setText(['Extrude','Bridge','Cut','Slice','Delete','Collapse','Insert Loop','Select Loop','Detach','Attach','Chamfer','Target Weld'][i])
+
+			if index==1:
+				button.setText(['','','','','','','','','','','',''][i])
+
+			if index==2:
+				button.setText(['','','','','','','','','','','',''][i])
+
+			if index==3:
+				button.setText(['','','','','','','','','','','',''][i])
 
 
 	def b000(self):
