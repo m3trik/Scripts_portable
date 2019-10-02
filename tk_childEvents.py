@@ -32,9 +32,6 @@ class EventFactoryFilter(QtCore.QObject):
 
 
 
-
-
-
 	def init(self, name):
 		'''
 		Set Initial widget states.

@@ -170,8 +170,8 @@ class QComboBox_Popup(QtWidgets.QComboBox):
 
 
 if __name__ == "__main__":
-	qApp = QtWidgets.QApplication(sys.argv)
+	app = QtWidgets.QApplication(sys.argv)
 
 	w = QComboBox_Popup()
 	w.show()
-	sys.exit(qApp.exec_())
+	sys.exit(app.exec_())
