@@ -29,6 +29,9 @@ class Init(Slot):
 		'''
 		get current attributes. those with relevant values will be displayed.
 		'''
+		textEdit = self.ui.info
+		textEdit.clear()
+
 		infoDict={}
 		selection = pm.ls(selection=1)
 
@@ -48,19 +51,19 @@ class Init(Slot):
 			elif pm.selectMode(query=1, component=1): #component mode:
 				if pm.selectType(query=1, vertex=1): #get vertex selection info
 					selectedVerts = [v.split('[')[-1].rstrip(']') for v in pm.filterExpand(selectionMask=31)] #pm.polyEvaluate(vertexComponent=1);
-					collapsedList = self.collapseList(selectedVerts)
+					collapsedList = self.collapseList(selectedVerts, limit=6)
 					numVerts = pm.polyEvaluate (selection[0], vertex=1)
 					infoDict.update({'Vertices: '+str(len(selectedVerts))+'/'+str(numVerts):collapsedList}) #selected verts
 					
 				elif pm.selectType(query=1, edge=1): #get edge selection info
 					selectedEdges = [e.split('[')[-1].rstrip(']') for e in pm.filterExpand(selectionMask=32)] #pm.polyEvaluate(edgeComponent=1);
-					collapsedList = self.collapseList(selectedEdges)
+					collapsedList = self.collapseList(selectedEdges, limit=6)
 					numEdges = pm.polyEvaluate (selection[0], edge=1)
 					infoDict.update({'Edges: '+str(len(selectedEdges))+'/'+str(numEdges):collapsedList}) #selected edges
 					
 				elif pm.selectType(query=1, facet=1): #get face selection info
 					selectedFaces = [f.split('[')[-1].rstrip(']') for f in pm.filterExpand(selectionMask=34)] #pm.polyEvaluate(faceComponent=1);
-					collapsedList = self.collapseList(selectedFaces)
+					collapsedList = self.collapseList(selectedFaces, limit=6)
 					numFaces = pm.polyEvaluate (selection[0], face=1)
 					infoDict.update({'Faces: '+str(len(selectedFaces))+'/'+str(numFaces):collapsedList}) #selected faces
 
@@ -71,17 +74,15 @@ class Init(Slot):
 		prevCommand = self.sb.prevCommand(docString=True); infoDict.update({"Previous Command: ":prevCommand})  #get button text from last used command
 
 		#populate the textedit with any values
-		t = self.ui.info
-		t.clear()
 		for key, value in infoDict.iteritems():
 			if value:
 				highlight = QtGui.QColor(255, 255, 0)
 				baseColor = QtGui.QColor(185, 185, 185)
 
-				t.setTextColor(baseColor)
-				t.append(key) #t.append(key+str(value))
-				t.setTextColor(highlight)
-				t.insertPlainText(str(value))
+				textEdit.setTextColor(baseColor)
+				textEdit.append(key) #textEdit.append(key+str(value))
+				textEdit.setTextColor(highlight)
+				textEdit.insertPlainText(str(value))
 
 
 		#construct buttons for any previous commands.

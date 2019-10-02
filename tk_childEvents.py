@@ -156,10 +156,6 @@ class EventFactoryFilter(QtCore.QObject):
 		# print self.name, eventName, self.widgetType, self.widgetName
 
 
-		# #call the corresponding event method:
-		# if hasattr(self.widgetClass, eventName):
-		# 	getattr(self.widgetClass, eventName)(event) #forward the event to the widget. #ie. self.widgetClass.enterEvent(event)
-
 		if hasattr(self, eventName):
 			getattr(self, eventName)(event) #handle the event locally. #ie. self.enterEvent(event)
 			return super(EventFactoryFilter, self).eventFilter(widget, event)
@@ -194,7 +190,6 @@ class EventFactoryFilter(QtCore.QObject):
 		args:
 			event=<QEvent>
 		'''
-		print 'enterEvent'
 		self.__mouseHover.emit(True)
 
 		if self.widgetType=='QWidget':
@@ -208,7 +203,6 @@ class EventFactoryFilter(QtCore.QObject):
 		args:
 			event=<QEvent>
 		'''
-		print 'leaveEvent'
 		self.__mouseHover.emit(False)
 
 		if self.widget==self.__mouseGrabber: #self.widget.mouseGrabber():

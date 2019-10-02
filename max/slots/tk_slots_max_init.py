@@ -26,6 +26,9 @@ class Init(Slot):
 		'''
 		Get current scene attributes. Only those with relevant values will be displayed.
 		'''
+		textEdit = self.ui.info
+		textEdit.clear()
+
 		infoDict={}
 		selection = rt.selection
 
@@ -53,19 +56,19 @@ class Init(Slot):
 			if type_=='Editable_Poly' or type_=='Edit_Poly':
 				if level==1: #get vertex info
 					selectedVerts = Init.bitArrayToArray(rt.polyop.getVertSelection(obj))
-					collapsedList = self.collapseList(selectedVerts)
+					collapsedList = self.collapseList(selectedVerts, limit=6)
 					numVerts = rt.polyop.getNumVerts(obj)
 					infoDict.update({'Vertices: '+str(len(selectedVerts))+'/'+str(numVerts):collapsedList}) #selected verts
 
 				elif level==2: #get edge info
 					selectedEdges = Init.bitArrayToArray(rt.polyop.getEdgeSelection(obj))
-					collapsedList = self.collapseList(selectedEdges)
+					collapsedList = self.collapseList(selectedEdges, limit=6)
 					numEdges = rt.polyop.getNumEdges(obj)
 					infoDict.update({'Edges: '+str(len(selectedEdges))+'/'+str(numEdges):collapsedList}) #selected edges
 
 				elif level==4: #get face info
 					selectedFaces = Init.bitArrayToArray(rt.polyop.getFaceSelection(obj))
-					collapsedList = self.collapseList(selectedFaces)
+					collapsedList = self.collapseList(selectedFaces, limit=6)
 					numFaces = rt.polyop.getNumFaces(obj)
 					infoDict.update({'Faces: '+str(len(selectedFaces))+'/'+str(numFaces):collapsedList}) #selected faces
 
@@ -75,17 +78,15 @@ class Init(Slot):
 		prevCommand = self.sb.prevCommand(docString=True); infoDict.update({"Previous Command: ":prevCommand})  #get button text from last used command
 
 		#populate the textedit with any values
-		t = self.ui.info
-		t.clear()
 		for key, value in infoDict.iteritems():
 			if value:
 				highlight = QtGui.QColor(255, 255, 0)
 				baseColor = QtGui.QColor(185, 185, 185)
 
-				t.setTextColor(baseColor)
-				t.append(key) #t.append(key+str(value))
-				t.setTextColor(highlight)
-				t.insertPlainText(str(value))
+				textEdit.setTextColor(baseColor)
+				textEdit.append(key) #textEdit.append(key+str(value))
+				textEdit.setTextColor(highlight)
+				textEdit.insertPlainText(str(value))
 
 
 

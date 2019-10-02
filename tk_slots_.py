@@ -295,13 +295,13 @@ class Slot(object):
 
 
 	@staticmethod
-	def collapseList(list_):
+	def collapseList(list_, limit=None):
 		'''
 		args:
 			list_=list - of integers
 
 		returns:
-			list with sequencial integers collapsed in string format. ie. ['20', '22..28']
+			list with sequential integers collapsed in string format. ie. ['20', '22..28']
 		'''
 		list_ = [str(x) for x in list_] #make sure the list is made up of strings.
 		
@@ -316,7 +316,13 @@ class Slot(object):
 			prev_x = int(x)
 
 		collapsedList = ["..".join([r[0], r[-1]] if len(r) > 1 else r) for r in ranges]
-		return collapsedList
+
+		if limit:
+			l = collapsedList[:limit]
+			l.append('...')
+			return l
+		else:
+			return collapsedList
 	
 	
 
