@@ -197,59 +197,57 @@ class EventFactoryFilter(QtCore.QObject):
 				self.widget.setVisible(True) #set visibility
 
 		elif self.widgetType=='QPushButton':
-			# print self.widgetName, self.widgetName.startswith('tk')
 			if self.widgetName.startswith('i'): #set the stacked widget.
-				# try: #try to open a submenu on mouse enter.
-				p1 = self.widget.mapToGlobal(self.widget.rect().center())
+				try: #open a submenu on mouse enter (if it exists).
+					p1 = self.widget.mapToGlobal(self.widget.rect().center()) #widget position before submenu change.
 
-				submenu = self.widget.whatsThis()+'_submenu'
-				if not self.name==submenu: #do not reopen submenu on enter event if it is already open.
-					w = self.widget #store widget before changing the stacked widget ui.
-					name = self.hotBox.setWidget(submenu) #switch the stacked widget to the given submenu.
-					widget = getattr(self.hotBox.currentWidget(), w.objectName()) #get the widget of the same name in the new ui.
+					submenu = self.widget.whatsThis()+'_submenu'
+					if not self.name==submenu: #do not reopen submenu on enter event if it is already open.
+						w = self.widget #store widget before changing the stacked widget ui.
+						name = self.hotBox.setWidget(submenu) #switch the stacked widget to the given submenu.
+						widget = getattr(self.hotBox.currentWidget(), w.objectName()) #get the widget of the same name in the new ui.
+						#maintain the correct contents of the prevWidget and drawPath lists by removing elements when moving back up levels in the ui.
+						if len(self.sb.previousName(as_list=1, allowDuplicates=1))>2:
+							if name==self.sb.previousName(as_list=1, allowDuplicates=1)[-3]: #if index is that of the previous ui, remove the information associated with that ui from the lists so that any new list will draw with the correct contents.
+								del self.prevWidget[-2:]
+								if len(self.hotBox.drawPath)>2: #temp solution for removing drawPath points. works only when there are two levels of submenus to draw paths for.
+									del self.hotBox.drawPath[-2:]
 
-					if len(self.sb.previousName(as_list=1, allowDuplicates=1))>2: #remove the previous ui widgets from the prevWidget list.
-						if name==self.sb.previousName(as_list=1, allowDuplicates=1)[-3]: #if index is changed to the previous ui, remove the last widget.
-							print self.sb.previousName(as_list=1, allowDuplicates=1)[-4],self.sb.previousName(as_list=1, allowDuplicates=1)[-3], self.sb.previousName(as_list=1, allowDuplicates=1)[-2], name
-							del self.prevWidget[-2:]
-							if len(self.hotBox.drawPath)>2:
-								del self.hotBox.drawPath[-2:]
+						self.prevWidget.append([w, p1]) #add the widget that was initially entered to the prevWidget list so that it can be re-created in the new ui (in the same position).
+						self.hotBox.drawPath.append(QtGui.QCursor.pos()) #add the global cursor position to the drawPath list so that paint events can draw the path tangents.
 
-					self.prevWidget.append([w, p1])
-					self.hotBox.drawPath.append(QtGui.QCursor.pos()) #global cursor position
-
-					p2 = widget.mapToGlobal(widget.rect().center())
-					currentPos = self.hotBox.mapToGlobal(self.hotBox.pos())
-					self.hotBox.move(self.hotBox.mapFromGlobal(currentPos +(p1 - p2))) #currentPos + difference
+						p2 = widget.mapToGlobal(widget.rect().center()) #widget position after submenu change.
+						currentPos = self.hotBox.mapToGlobal(self.hotBox.pos())
+						self.hotBox.move(self.hotBox.mapFromGlobal(currentPos +(p1 - p2))) #currentPos + difference
 
 
-					if name not in self.sb.previousName(as_list=1, allowDuplicates=1)[:-1]: #if submenu ui called for the first time, construct widgets from the previous ui that fall along the plotted path.
-						w0 = QtWidgets.QPushButton('tk', self.sb.getUi(name))
-						w0 = self.sb.addWidget(name, w0, 'tk')
-						w0.resize(30, 30)
-						w0.move(w0.mapFromGlobal(self.hotBox.drawPath[0] - w0.rect().center())) #move and center
-						w0.show()
+						if name not in self.sb.previousName(as_list=1, allowDuplicates=1)[:-1]: #if submenu ui called for the first time, construct widgets from the previous ui that fall along the plotted path.
+							w0 = QtWidgets.QPushButton('<', self.sb.getUi(name))
+							w0 = self.sb.addWidget(name, w0, '<')
+							w0.resize(30, 30)
+							w0.move(w0.mapFromGlobal(self.hotBox.drawPath[0] - w0.rect().center())) #move and center
+							w0.show()
 
-						if '_submenu' in self.sb.previousName(): #recreate widget/s from the previous ui that are in the current path.
-							for index in range(2, len(self.prevWidget)+1): #for index starting at 2:
-								prevWidget = self.prevWidget[-index][0] #give index neg value.
-								prevWidgetLocation = self.prevWidget[-index][1]
+							if '_submenu' in self.sb.previousName(): #recreate widget/s from the previous ui that are in the current path.
+								for index in range(2, len(self.prevWidget)+1): #index starting at 2:
+									prevWidget = self.prevWidget[-index][0] #give index neg value.
+									prevWidgetLocation = self.prevWidget[-index][1]
 
-								w1 = QtWidgets.QPushButton(prevWidget.text(), self.sb.getUi(name))
-								w1 = self.sb.addWidget(name, w1, prevWidget.objectName())
-								w1.setWhatsThis(prevWidget.whatsThis())
-								w1.resize(prevWidget.size())
-								w1.move(w1.mapFromGlobal(prevWidgetLocation - w1.rect().center())) #move and center
-								w1.show()
-								index+=1
+									w1 = QtWidgets.QPushButton(prevWidget.text(), self.sb.getUi(name))
+									w1 = self.sb.addWidget(name, w1, prevWidget.objectName())
+									w1.setWhatsThis(prevWidget.whatsThis())
+									w1.resize(prevWidget.size())
+									w1.move(w1.mapFromGlobal(prevWidgetLocation - w1.rect().center())) #move and center
+									w1.show()
+									index+=1
 
-						self.init(name)
+							self.init(name) #re-initialize the widgets under this ui name to set things like the event filter and stylesheet for the newly added widgets. 
 
-				# except Exception as error:
-				# 	if not type(error)==ValueError: #if no submenu exists: ignore.
-				# 		raise error
+				except Exception as error:
+					if not type(error)==ValueError: #if no submenu exists: ignore.
+						raise error
 
-			elif self.widgetName=='tk':
+			elif self.widgetName=='<':
 				previous = [i for i in self.sb.previousName(as_list=1) if '_submenu' not in i][-1]
 				self.name = self.hotBox.setWidget(previous) #return the stacked widget to it's previous ui.
 				del self.hotBox.drawPath[1:] #clear the draw path, while leaving the starting point.
