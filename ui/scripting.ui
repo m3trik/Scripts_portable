@@ -168,7 +168,7 @@
       </widget>
      </item>
      <item row="1" column="2">
-      <widget class="QComboBox" name="cmb">
+      <widget class="QComboBox_" name="cmb">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
          <horstretch>0</horstretch>
@@ -364,7 +364,7 @@
       </layout>
      </item>
      <item row="3" column="1" colspan="2">
-      <widget class="QComboBox" name="comboBox">
+      <widget class="QComboBox_" name="comboBox">
        <property name="editable">
         <bool>false</bool>
        </property>
@@ -406,6 +406,11 @@
    <class>QPushButton_Draggable</class>
    <extends>QPushButton</extends>
    <header>widgets.qpushbutton_draggable.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QComboBox_</class>
+   <extends>QComboBox</extends>
+   <header>widgets.qcombobox_.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -26,6 +26,7 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 	'''
 
 	__mousePressPos = QtCore.QPoint()
+	__sb = None
 
 	def __init__(self, parent=None):
 		super(QPushButton_Draggable, self).__init__(parent)
@@ -49,8 +50,8 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 		args:
 			event=<QEvent>
 		'''
-		self.__mousePressPos = event.globalPos() #mouse positon at press
-		self.__mouseMovePos = event.globalPos() #mouse move position from last press
+		self.__mousePressPos = event.globalPos() #mouse positon at press.
+		self.__mouseMovePos = event.globalPos() #mouse move position from last press. (updated at move event) 
 
 		self.setChecked(True) #setChecked to prevent window from closing.
 
@@ -99,12 +100,13 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 		args:
 			event=<QEvent>
 		'''
-		try:
-			from tk_switchboard import Switchboard
-			self.sb = Switchboard()
-			self.hotBox = self.sb.getClassInstance('hotBox')
-		except Exception as error:
-			print error
+		if not self.__sb:
+			try:
+				from tk_switchboard import Switchboard
+				self.__sb = Switchboard()
+				self.hotBox = self.__sb.getClassInstance('hotBox')
+			except Exception as error:
+				print error
 
 		return QtWidgets.QPushButton.showEvent(self, event)
 

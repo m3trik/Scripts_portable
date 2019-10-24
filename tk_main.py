@@ -27,7 +27,7 @@ class HotBox(QtWidgets.QStackedWidget):
 	Gets and sets signal connections through the switchboard module.
 	Paint events are handled by the overlay module.
 	args:
-		parent=main application window object.
+		parent = main application window object.
 	'''
 	def __init__(self, parent=None):
 		super(HotBox, self).__init__(parent)
@@ -42,35 +42,32 @@ class HotBox(QtWidgets.QStackedWidget):
 
 		self.childEvents = EventFactoryFilter()
 
-		self.setWidget('init') #initialize layout
-
+		self.name = self.setWidget('init') #initialize layout
 
 
 	def setWidget(self, name):
 		'''
 		Set the stacked Widget's index.
 		args:
-			index='string' - name of qtui widget.
+			name = 'string' - name of qtui widget.
 		'''
 		if not name in self.sb.previousName(allowInit=1, as_list=1): #if ui(name) hasn't been set before, init the ui for the given name.
-			self.sb.setUiSize(name) #store size info for each ui
 			self.addWidget(self.sb.getUi(name)) #add each ui to the stackedLayout.
 			self.childEvents.init(name)
 
 		self.name = self.sb.setUiName(name) #set ui name.
-		self.ui = self.sb.getUi() #get the current dymanic ui.
+		self.ui = self.sb.getUi(name) #get the dymanic ui of the given name.
+		self.setCurrentWidget(self.ui) #set the stacked widget to the given ui.
 
-		self.setCurrentWidget(self.ui) #set the current ui.
+		self.resize(self.ui.frameGeometry().width(), self.ui.frameGeometry().height())
+		# self.move(QtGui.QCursor.pos() - self.rect().center()) #move window to cursor position and offset from left corner to center
 
-		self.point = QtCore.QPoint(self.sb.getUiSize(percentWidth=50), self.sb.getUiSize(percentHeight=50)) #set point to the middle of the layout
-		self.moveToMousePosition(self, -self.point.x(), -self.point.y()) #set initial positon on showEvent, and reposition here on index change.
-		self.resize(self.sb.getUiSize(width=1), self.sb.getUiSize(height=1)) #get ui size for current ui and resize window
-
-
-		if not any([self.name=='init', self.name==self.sb.previousName(allowDuplicates=1)]):
+		if not any([name=='init', name==self.sb.previousName(allowDuplicates=1)]):
 			if self.sb.previousName(): #if previous ui signals exist:
 				self.sb.removeSignal(self.sb.previousName()) #remove signals from the previous ui.
-			self.sb.addSignal(self.name)
+			self.sb.addSignal(name)
+
+		return self.name #return name so that in cases where switching ui in the middle of a process the name can be immediately updated. ie. self.name = self.hotBox.setWidget('main')
 
 
 
@@ -80,7 +77,7 @@ class HotBox(QtWidgets.QStackedWidget):
 	def keyPressEvent(self, event):
 		'''
 		args:
-			event=<QEvent>
+			event = <QEvent>
 		'''
 		if event.key()==QtCore.Qt.Key_F12 and not event.isAutoRepeat():
 			if self.name=='init':
@@ -91,7 +88,7 @@ class HotBox(QtWidgets.QStackedWidget):
 	def keyReleaseEvent(self, event):
 		'''
 		args:
-			event=<QEvent>
+			event = <QEvent>
 		'''
 		if event.key()==QtCore.Qt.Key_F12 and not event.isAutoRepeat():
 			self.hide_()
@@ -101,26 +98,31 @@ class HotBox(QtWidgets.QStackedWidget):
 	def mousePressEvent(self, event):
 		'''
 		args:
-			event=<QEvent>
+			event = <QEvent>
 		'''
+		self.move(QtGui.QCursor.pos() - self.rect().center()) #move window to cursor position and offset from left corner to center
+
 		if any([self.name=='init', self.name=='main', self.name=='editors', self.name=='viewport']):
+			self.drawPath=[]
+			self.drawPath.append(self.mapToGlobal(self.rect().center()))
+
 			if event.button()==QtCore.Qt.LeftButton:
-				self.setWidget('viewport')
+				self.name = self.setWidget('viewport')
 
 			elif event.button()==QtCore.Qt.MiddleButton:
-				self.setWidget('editors')
+				self.name = self.setWidget('editors')
 
 			elif event.button()==QtCore.Qt.RightButton:
-				self.setWidget('main')
+				self.name = self.setWidget('main')
 
 
 
 	def mouseMoveEvent(self, event):
 		'''
 		args:
-			event=<QEvent>
+			event = <QEvent>
 		'''
-		if any([self.name=='main', self.name=='editors', self.name=='viewport']):
+		if any([self.name=='main', self.name=='editors', self.name=='viewport', 'submenu' in self.name]):
 			self.childEvents.mouseTracking(self.name)
 
 
@@ -128,34 +130,34 @@ class HotBox(QtWidgets.QStackedWidget):
 	def mouseReleaseEvent(self, event):
 		'''
 		args:
-			event=<QEvent>
+			event = <QEvent>
 		'''
 		if any([self.name=='main', self.name=='editors', self.name=='viewport']):
 			if any([event.button()==QtCore.Qt.LeftButton,event.button()==QtCore.Qt.MiddleButton,event.button()==QtCore.Qt.RightButton]):
-				self.setWidget('init')
+				self.name = self.setWidget('init')
 
 
 
 	def mouseDoubleClickEvent(self, event):
 		'''
 		args:
-			event=<QEvent>
+			event = <QEvent>
 		'''
 		if event.button()==QtCore.Qt.RightButton:
 			if any([self.name=='init', self.name=='main']):
 				try: #show last used submenu on double mouseclick
-					self.setWidget(self.sb.previousName(previousIndex=True))
+					self.name = self.setWidget(self.sb.previousName(previousIndex=True))
 				except:
 					print "# Warning: No recent submenus in history. #"
 
-		if event.button()==QtCore.Qt.LeftButton:
+		elif event.button()==QtCore.Qt.LeftButton:
 			if any([self.name=='init', self.name=='viewport']):
 				try: #show last view
 					self.repeatLastView()
 				except: 
 					print "# Warning: No recent views in history. #"
 
-		if event.button()==QtCore.Qt.MiddleButton:
+		elif event.button()==QtCore.Qt.MiddleButton:
 			if any([self.name=='init', self.name=='editors']):
 				try: #repeat last command
 					self.repeatLastCommand()
@@ -179,40 +181,27 @@ class HotBox(QtWidgets.QStackedWidget):
 	def hideEvent(self, event):
 		'''
 		args:
-			event=<QEvent>
+			event = <QEvent>
 		'''
 		try: MaxPlus.CUI.EnableAccelerators()
 		except: pass
+
+		self.name = self.setWidget('init') #reset layout back to init on keyPressEvent
+
+		if __name__ == "__main__":
+			sys.exit()
 
 
 
 	def showEvent(self, event):
 		'''
 		args:
-			event=<QEvent>
+			event = <QEvent>
 		'''
 		try: MaxPlus.CUI.DisableAccelerators()
 		except: pass
 
-		self.setWidget('init') #reset layout back to init on keyPressEvent
-
-		self.moveToMousePosition(self, -self.point.x(), -self.point.y()) #move window to cursor position and offset from left corner to center
 		self.activateWindow()
-
-
-
-	def moveToMousePosition(self, window, xOffset=None, yOffset=None):
-		'''
-		Move window from it's current position to the mouse position.
-		args:
-			window=widget
-			xOffset=int - optional x coordinate offset amount
-			yOffset=int - optional y coordinate offset amount
-		'''
-		mousePosition = QtGui.QCursor.pos()
-		x = mousePosition.x()+xOffset
-		y = mousePosition.y()+yOffset
-		window.move(x, y)
 
 
 
@@ -261,9 +250,6 @@ if __name__ == "__main__":
 
 	createInstance().show()
 	sys.exit(app.exec_())
-
-
-
 
 
 

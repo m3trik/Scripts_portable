@@ -25,8 +25,7 @@ class QComboBox_(QtWidgets.QComboBox):
 	Under construction.
 	'''
 	def __init__(self, parent=None):
-		super(QComboBox_, self).__init__()
-
+		super(QComboBox_, self).__init__(parent)
 
 
 	def refreshContents(self):
@@ -42,9 +41,9 @@ class QComboBox_(QtWidgets.QComboBox):
 
 
 	# def showPopup(self):
-	# 	self.widget.setStyleSheet('''
+		# self.widget.setStyleSheet('''
 
-	# 		}''')
+		# 	}''')
 
 
 	# def hidePopup(self):
@@ -119,6 +118,8 @@ class QComboBox_(QtWidgets.QComboBox):
 				background-color: rgba(100,100,100,200);
 				color: white;
 			}''')
+
+		self.hidePopup()
 
 		return QtWidgets.QComboBox.leaveEvent(self, event)
 

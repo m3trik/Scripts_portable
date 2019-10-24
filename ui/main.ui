@@ -59,118 +59,6 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <widget class="QPushButton" name="i007">
-    <property name="geometry">
-     <rect>
-      <x>195</x>
-      <y>230</y>
-      <width>66</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="whatsThis">
-     <string>edit</string>
-    </property>
-    <property name="text">
-     <string>Edit</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="i010">
-    <property name="geometry">
-     <rect>
-      <x>265</x>
-      <y>230</y>
-      <width>66</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="whatsThis">
-     <string>polygons</string>
-    </property>
-    <property name="text">
-     <string>Polygons</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="i008">
-    <property name="geometry">
-     <rect>
-      <x>335</x>
-      <y>250</y>
-      <width>66</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="whatsThis">
-     <string>transform</string>
-    </property>
-    <property name="text">
-     <string>Transform</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="i009">
-    <property name="geometry">
-     <rect>
-      <x>335</x>
-      <y>230</y>
-      <width>66</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="whatsThis">
-     <string>selection</string>
-    </property>
-    <property name="text">
-     <string>Selection</string>
-    </property>
-   </widget>
    <widget class="QWidget" name="r001" native="true">
     <property name="geometry">
      <rect>
@@ -442,90 +330,6 @@
       <height>141</height>
      </rect>
     </property>
-    <widget class="QPushButton" name="v022">
-     <property name="geometry">
-      <rect>
-       <x>140</x>
-       <y>120</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string/>
-     </property>
-     <property name="text">
-      <string>Select Similar</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="v023">
-     <property name="geometry">
-      <rect>
-       <x>70</x>
-       <y>120</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string/>
-     </property>
-     <property name="text">
-      <string>Select Island</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="v007">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>120</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string/>
-     </property>
-     <property name="text">
-      <string>Select Loop</string>
-     </property>
-    </widget>
     <widget class="QPushButton" name="v030">
      <property name="geometry">
       <rect>
@@ -615,70 +419,11 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>0</y>
+      <y>30</y>
       <width>196</width>
-      <height>261</height>
+      <height>231</height>
      </rect>
     </property>
-    <widget class="QPushButton" name="i029">
-     <property name="geometry">
-      <rect>
-       <x>115</x>
-       <y>240</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string/>
-     </property>
-     <property name="whatsThis">
-      <string>pivot</string>
-     </property>
-     <property name="text">
-      <string>Pivot</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="i021">
-     <property name="geometry">
-      <rect>
-       <x>115</x>
-       <y>220</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="whatsThis">
-      <string>symmetry</string>
-     </property>
-     <property name="text">
-      <string>Symmetry</string>
-     </property>
-    </widget>
    </widget>
    <widget class="QWidget" name="r006" native="true">
     <property name="geometry">
@@ -689,115 +434,6 @@
       <height>241</height>
      </rect>
     </property>
-    <widget class="QPushButton" name="v021">
-     <property name="geometry">
-      <rect>
-       <x>100</x>
-       <y>60</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string/>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="v013">
-     <property name="geometry">
-      <rect>
-       <x>100</x>
-       <y>40</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string/>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="i003">
-     <property name="geometry">
-      <rect>
-       <x>100</x>
-       <y>0</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="whatsThis">
-      <string>scene</string>
-     </property>
-     <property name="text">
-      <string>Scene</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="i032">
-     <property name="geometry">
-      <rect>
-       <x>100</x>
-       <y>20</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="whatsThis">
-      <string>display</string>
-     </property>
-     <property name="text">
-      <string>Display</string>
-     </property>
-    </widget>
    </widget>
    <widget class="QWidget" name="r007" native="true">
     <property name="geometry">
@@ -989,93 +625,6 @@
     <property name="layoutDirection">
      <enum>Qt::RightToLeft</enum>
     </property>
-    <widget class="QPushButton" name="i016">
-     <property name="geometry">
-      <rect>
-       <x>100</x>
-       <y>30</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="whatsThis">
-      <string>rigging</string>
-     </property>
-     <property name="text">
-      <string>Rigging</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="i013">
-     <property name="geometry">
-      <rect>
-       <x>100</x>
-       <y>50</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="whatsThis">
-      <string>animation</string>
-     </property>
-     <property name="text">
-      <string>Animation</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="v020">
-     <property name="geometry">
-      <rect>
-       <x>100</x>
-       <y>10</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string/>
-     </property>
-     <property name="whatsThis">
-      <string>deformation</string>
-     </property>
-     <property name="text">
-      <string>Deformation</string>
-     </property>
-    </widget>
    </widget>
    <widget class="QWidget" name="r003" native="true">
     <property name="geometry">
@@ -1086,90 +635,6 @@
       <height>81</height>
      </rect>
     </property>
-    <widget class="QPushButton" name="i005">
-     <property name="geometry">
-      <rect>
-       <x>5</x>
-       <y>30</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="whatsThis">
-      <string>normals</string>
-     </property>
-     <property name="text">
-      <string>Normals</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="i018">
-     <property name="geometry">
-      <rect>
-       <x>5</x>
-       <y>10</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="whatsThis">
-      <string>uv</string>
-     </property>
-     <property name="text">
-      <string>UV</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="i012">
-     <property name="geometry">
-      <rect>
-       <x>5</x>
-       <y>50</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="whatsThis">
-      <string>materials</string>
-     </property>
-     <property name="text">
-      <string>Materials</string>
-     </property>
-    </widget>
    </widget>
    <widget class="QWidget" name="r000" native="true">
     <property name="geometry">
@@ -1180,362 +645,26 @@
       <height>61</height>
      </rect>
     </property>
-    <widget class="QPushButton" name="v006">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string/>
-     </property>
-     <property name="text">
-      <string>Insert Loop</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="v014">
-     <property name="geometry">
-      <rect>
-       <x>140</x>
-       <y>0</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string/>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="v003">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>20</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Delete</string>
-     </property>
-     <property name="text">
-      <string>Slice</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="v001">
-     <property name="geometry">
-      <rect>
-       <x>70</x>
-       <y>20</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Bridge</string>
-     </property>
-     <property name="text">
-      <string>Bridge</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="v002">
-     <property name="geometry">
-      <rect>
-       <x>140</x>
-       <y>20</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Multi-Cut</string>
-     </property>
-     <property name="text">
-      <string>Cut</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="v010">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>40</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string/>
-     </property>
-     <property name="text">
-      <string>Chamfer</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="v000">
-     <property name="geometry">
-      <rect>
-       <x>70</x>
-       <y>40</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Extrude</string>
-     </property>
-     <property name="text">
-      <string>Extrude</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="v011">
-     <property name="geometry">
-      <rect>
-       <x>140</x>
-       <y>40</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string/>
-     </property>
-     <property name="text">
-      <string>Target Weld</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="v012">
-     <property name="geometry">
-      <rect>
-       <x>70</x>
-       <y>0</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string/>
-     </property>
-    </widget>
    </widget>
    <widget class="QWidget" name="r008" native="true">
     <property name="geometry">
      <rect>
       <x>400</x>
-      <y>0</y>
+      <y>30</y>
       <width>201</width>
-      <height>261</height>
+      <height>231</height>
      </rect>
     </property>
-    <widget class="QPushButton" name="i014">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>220</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="whatsThis">
-      <string>lighting</string>
-     </property>
-     <property name="text">
-      <string>Lighting</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="i015">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>240</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="whatsThis">
-      <string>rendering</string>
-     </property>
-     <property name="text">
-      <string>Rendering</string>
-     </property>
-    </widget>
    </widget>
    <widget class="QWidget" name="r009" native="true">
     <property name="geometry">
      <rect>
-      <x>265</x>
+      <x>195</x>
       <y>450</y>
-      <width>156</width>
+      <width>206</width>
       <height>151</height>
      </rect>
     </property>
-    <widget class="QPushButton" name="i017">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>66</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>21</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string/>
-     </property>
-     <property name="whatsThis">
-      <string>file</string>
-     </property>
-     <property name="text">
-      <string>File</string>
-     </property>
-    </widget>
     <widget class="QPushButton" name="i022">
      <property name="geometry">
       <rect>
@@ -1570,8 +699,8 @@
     <widget class="QPushButton" name="i020">
      <property name="geometry">
       <rect>
-       <x>0</x>
-       <y>60</y>
+       <x>70</x>
+       <y>20</y>
        <width>66</width>
        <height>21</height>
       </rect>
@@ -1601,22 +730,22 @@
     <widget class="QComboBox_Popup" name="cmb001">
      <property name="geometry">
       <rect>
-       <x>0</x>
-       <y>40</y>
+       <x>140</x>
+       <y>20</y>
        <width>66</width>
-       <height>19</height>
+       <height>21</height>
       </rect>
      </property>
      <property name="minimumSize">
       <size>
        <width>66</width>
-       <height>0</height>
+       <height>21</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>121</width>
-       <height>19</height>
+       <width>66</width>
+       <height>21</height>
       </size>
      </property>
      <property name="maxVisibleItems">
@@ -1634,262 +763,433 @@
       </property>
      </item>
     </widget>
+    <widget class="QPushButton" name="v021">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>40</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="v013">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>40</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="v013_2">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>40</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
    </widget>
-   <widget class="QPushButton" name="i006">
+   <widget class="QWidget" name="widget" native="true">
     <property name="geometry">
      <rect>
-      <x>195</x>
-      <y>250</y>
-      <width>66</width>
-      <height>21</height>
+      <x>160</x>
+      <y>220</y>
+      <width>276</width>
+      <height>161</height>
      </rect>
     </property>
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="whatsThis">
-     <string>create</string>
-    </property>
-    <property name="text">
-     <string>Create</string>
-    </property>
+    <widget class="QPushButton" name="i010">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>10</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="whatsThis">
+      <string>polygons</string>
+     </property>
+     <property name="text">
+      <string>Polygons</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="i012">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>40</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="whatsThis">
+      <string>materials</string>
+     </property>
+     <property name="text">
+      <string>Materials</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="i013">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>40</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="whatsThis">
+      <string>animation</string>
+     </property>
+     <property name="text">
+      <string>Animation</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="i009">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>70</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="whatsThis">
+      <string>selection</string>
+     </property>
+     <property name="text">
+      <string>Selection</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="i008">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>70</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="whatsThis">
+      <string>transform</string>
+     </property>
+     <property name="text">
+      <string>Transform</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="i007">
+     <property name="geometry">
+      <rect>
+       <x>105</x>
+       <y>0</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="whatsThis">
+      <string>edit</string>
+     </property>
+     <property name="text">
+      <string>Edit</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="i011">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>10</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="whatsThis">
+      <string>nurbs</string>
+     </property>
+     <property name="text">
+      <string>Nurbs</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="i014">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>100</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="whatsThis">
+      <string>lighting</string>
+     </property>
+     <property name="text">
+      <string>Lighting</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="i015">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>100</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="whatsThis">
+      <string>rendering</string>
+     </property>
+     <property name="text">
+      <string>Rendering</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="i023">
+     <property name="geometry">
+      <rect>
+       <x>185</x>
+       <y>130</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="whatsThis">
+      <string>scripting</string>
+     </property>
+     <property name="text">
+      <string>Scripting</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="i003">
+     <property name="geometry">
+      <rect>
+       <x>25</x>
+       <y>130</y>
+       <width>66</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>21</height>
+      </size>
+     </property>
+     <property name="whatsThis">
+      <string>scene</string>
+     </property>
+     <property name="text">
+      <string>Scene</string>
+     </property>
+    </widget>
    </widget>
-   <widget class="QPushButton" name="i025">
+   <widget class="QStackedWidget" name="stackedWidget">
     <property name="geometry">
      <rect>
-      <x>180</x>
-      <y>290</y>
-      <width>66</width>
-      <height>21</height>
+      <x>0</x>
+      <y>0</y>
+      <width>596</width>
+      <height>601</height>
      </rect>
     </property>
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>21</height>
-     </size>
+    <property name="currentIndex">
+     <number>1</number>
     </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="toolTip">
-     <string/>
-    </property>
-    <property name="whatsThis">
-     <string>duplicate</string>
-    </property>
-    <property name="text">
-     <string>Duplicate</string>
-    </property>
+    <widget class="QWidget" name="page_5"/>
+    <widget class="QWidget" name="page_6"/>
    </widget>
-   <widget class="QPushButton" name="i019">
-    <property name="geometry">
-     <rect>
-      <x>190</x>
-      <y>320</y>
-      <width>66</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="toolTip">
-     <string/>
-    </property>
-    <property name="whatsThis">
-     <string>mirror</string>
-    </property>
-    <property name="text">
-     <string>Mirror</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="i004">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>290</y>
-      <width>66</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="whatsThis">
-     <string>subdivision</string>
-    </property>
-    <property name="text">
-     <string>Subdivision</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="i026">
-    <property name="geometry">
-     <rect>
-      <x>340</x>
-      <y>320</y>
-      <width>66</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="toolTip">
-     <string/>
-    </property>
-    <property name="whatsThis">
-     <string>crease</string>
-    </property>
-    <property name="text">
-     <string>Crease</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="i011">
-    <property name="geometry">
-     <rect>
-      <x>265</x>
-      <y>250</y>
-      <width>66</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="whatsThis">
-     <string>nurbs</string>
-    </property>
-    <property name="text">
-     <string>Nurbs</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="i024">
-    <property name="geometry">
-     <rect>
-      <x>230</x>
-      <y>350</y>
-      <width>66</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="whatsThis">
-     <string>fx</string>
-    </property>
-    <property name="text">
-     <string>Fx</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="i023">
-    <property name="geometry">
-     <rect>
-      <x>300</x>
-      <y>350</y>
-      <width>66</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="whatsThis">
-     <string>scripting</string>
-    </property>
-    <property name="text">
-     <string>Scripting</string>
-    </property>
-   </widget>
-   <zorder>i026</zorder>
-   <zorder>i004</zorder>
-   <zorder>i019</zorder>
-   <zorder>i025</zorder>
+   <zorder>stackedWidget</zorder>
+   <zorder>widget</zorder>
    <zorder>r000</zorder>
    <zorder>r006</zorder>
    <zorder>r007</zorder>
    <zorder>r004</zorder>
    <zorder>r005</zorder>
    <zorder>r003</zorder>
-   <zorder>i007</zorder>
-   <zorder>i010</zorder>
-   <zorder>i008</zorder>
-   <zorder>i009</zorder>
    <zorder>r001</zorder>
    <zorder>r002</zorder>
    <zorder>r008</zorder>
    <zorder>r009</zorder>
-   <zorder>i006</zorder>
-   <zorder>i011</zorder>
-   <zorder>i024</zorder>
-   <zorder>i023</zorder>
   </widget>
  </widget>
  <customwidgets>

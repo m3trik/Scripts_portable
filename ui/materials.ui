@@ -435,7 +435,7 @@
              </size>
             </property>
            </widget>
-           <widget class="QComboBox" name="cmb000">
+           <widget class="QComboBox_" name="cmb000">
             <property name="geometry">
              <rect>
               <x>0</x>
@@ -621,7 +621,7 @@
          <string>Rename:</string>
         </property>
        </widget>
-       <widget class="QComboBox" name="cmb002">
+       <widget class="QComboBox_" name="cmb002">
         <property name="geometry">
          <rect>
           <x>0</x>
@@ -677,6 +677,11 @@
    <class>QPushButton_Draggable</class>
    <extends>QPushButton</extends>
    <header>widgets.qpushbutton_draggable.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QComboBox_</class>
+   <extends>QComboBox</extends>
+   <header>widgets.qcombobox_.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -192,7 +192,7 @@
       </widget>
      </item>
      <item row="1" column="2">
-      <widget class="QComboBox" name="cmb">
+      <widget class="QComboBox_" name="cmb">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
          <horstretch>0</horstretch>
@@ -665,7 +665,7 @@
              <string>By Name:</string>
             </property>
            </widget>
-           <widget class="QComboBox" name="cmb002">
+           <widget class="QComboBox_" name="cmb002">
             <property name="geometry">
              <rect>
               <x>0</x>
@@ -777,7 +777,7 @@
            <property name="title">
             <string>Sets</string>
            </property>
-           <widget class="QComboBox" name="cmb000">
+           <widget class="QComboBox_" name="cmb000">
             <property name="geometry">
              <rect>
               <x>0</x>
@@ -899,45 +899,6 @@
            <property name="title">
             <string>Select Loop</string>
            </property>
-           <widget class="QComboBox" name="cmb003_2">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>90</y>
-              <width>120</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>120</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>120</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Convert selection to type</string>
-            </property>
-            <property name="maxCount">
-             <number>100</number>
-            </property>
-            <property name="sizeAdjustPolicy">
-             <enum>QComboBox::AdjustToContents</enum>
-            </property>
-            <property name="frame">
-             <bool>true</bool>
-            </property>
-            <item>
-             <property name="text">
-              <string>Convert to</string>
-             </property>
-            </item>
-           </widget>
            <widget class="QSpinBox" name="s003">
             <property name="geometry">
              <rect>
@@ -1142,7 +1103,7 @@
            <property name="title">
             <string>Component</string>
            </property>
-           <widget class="QComboBox" name="cmb003">
+           <widget class="QComboBox_" name="cmb003">
             <property name="geometry">
              <rect>
               <x>0</x>
@@ -1196,6 +1157,11 @@
    <class>QPushButton_Draggable</class>
    <extends>QPushButton</extends>
    <header>widgets.qpushbutton_draggable.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QComboBox_</class>
+   <extends>QComboBox</extends>
+   <header>widgets.qcombobox_.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

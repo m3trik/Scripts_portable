@@ -15,7 +15,7 @@ import sys, os.path
 # ------------------------------------------------
 class Switchboard(object):
 	'''
-	Get/set elements across modules from a single dictionary.
+	Get/set elements across modules using convenience methods.
 	
 	ui name/corresponding class name - should always be the same. (case insensitive)
 	ui files are looked for in a sub dir named 'ui'.
@@ -27,7 +27,6 @@ class Switchboard(object):
 	_sbDict = {	
 		'<ui name>' : {
 					'ui' : <ui object>,
-					'size' : [<width int>, <height int>],
 					'class' : <Class>,
 					'widgetDict' : {
 								'<widget name>':{
@@ -47,7 +46,7 @@ class Switchboard(object):
 		'gcProtect' : [items protected from garbage collection]
 	}
 
-	the widgetDict is built a'la carte for each class when addSignal (or any other dependant method) is called.
+	the widgetDict is built as needed for each class when addSignal (or any other dependant method) is called.
 	'''
 
 	app = QApplication.instance() #get the app instance if it exists (required by the QUiLoader)
@@ -60,10 +59,15 @@ class Switchboard(object):
 
 	#get path to the directory containing the custom widgets.
 	widgetPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'widgets')
-	#register any custom widgets
+	#format names using the files in path.
 	widgetNames = [file_.replace('.py','',-1) for file_ in os.listdir(widgetPath) if file_.endswith('.py') and not file_.startswith('__')]
-	[uiLoader.registerCustomWidget(locate('widgets.'+m+'.'+m)) for m in widgetNames]
-
+	#register any custom widgets using widgetNames.
+	for m in widgetNames:
+		widget = locate('widgets.'+m+'.'+m)
+		if widget:
+			uiLoader.registerCustomWidget(widget)
+		else:
+			raise ImportError, 'widgets.'+m+'.'+m
 
 	#set path to the directory containing the ui files.
 
@@ -76,9 +80,6 @@ class Switchboard(object):
 	def __init__(self, parent=None):
 		if parent: #check for parent, so that if another instance of switchboard is called without arguments, it doesn't overwrite setMainAppWindow to None.
 			self.setMainAppWindow(parent)
-
-
-
 
 
 
@@ -95,9 +96,32 @@ class Switchboard(object):
 			dict - 'widgetName':{'widget':<widget>,'widgetWithSignal':<widgetWithSignal>,'method':<method>,'docString':'docString','widgetClassInstance':<class object>,'widgetClassName':'class name'}
 		'''
 		ui = self.getUi(name)
-		pathToSlots = 'tk_slots_'+self.getMainAppWindow(objectName=True)+'_'+name+'.'+name[0].upper()+name[1:] #ie. tk_slots_maya_init.Init
-		class_ = self.setClassInstance(pathToSlots)
 
+		for widgetName, widget in ui.__dict__.items(): #for each object in the ui:
+			self.addWidget(name, widget, widgetName)
+
+		# print self.widgetDict(name)
+		return self.widgetDict(name)
+
+
+
+	def addWidget(self, name, widget, widgetName):
+		'''
+		Adds a widget to the widgetDict under the given (ui) name.
+
+		Decoupling this from 'buildWidgetDict' allows additional widgets to be added at any time.
+		args:
+			name='string' - name of the ui to construct connections for.
+			widget=<widget object> - widget to be added.
+			widgetName='string' - widget's objectName.
+		returns:
+			<widget object>
+		'''
+		widget.setObjectName(widgetName) #assure the widget has an object name.
+
+		n = name.split('_')[0] #get ie. 'polygons' from 'polygons_submenu' in cases where a submenu shares the same slot class of it's parent menu.
+		pathToSlots = 'tk_slots_'+self.getMainAppWindow(objectName=True)+'_'+n+'.'+n[0].upper()+n[1:] #ie. tk_slots_maya_init.Init
+		class_ = self.setClassInstance(pathToSlots)
 
 		signalType = {'QMainWindow':'',
 					'QWidget':'',
@@ -110,32 +134,28 @@ class Switchboard(object):
 					'QLineEdit':'returnPressed',
 					'QTextEdit':'textChanged'}
 
-
-		for widgetName, widget in ui.__dict__.items(): #for each object in the ui:
-			for d in widget.__class__.__mro__:
-				if d.__name__ in signalType:
-					derivedType = d.__name__
-					signal = signalType[derivedType]
+		for d in widget.__class__.__mro__:
+			if d.__name__ in signalType:
+				derivedType = d.__name__
+				signal = signalType[derivedType]
 
 
-					widgetWithSignal = getattr(widget, signal, None) #add signal to widget
-					method = getattr(class_, widgetName, None) #use 'widgetName' (ie. b006) to get the corresponding method of the same name.
-					docString = getattr(method, '__doc__', None)
+				widgetWithSignal = getattr(widget, signal, None) #add signal to widget
+				method = getattr(class_, widgetName, None) #use 'widgetName' (ie. b006) to get the corresponding method of the same name.
+				docString = getattr(method, '__doc__', None)
 
-					#add values to widgetDict
-					self.widgetDict(name).update(
-								{widgetName:{'widget':widget, 
-											'widgetWithSignal':widgetWithSignal,
-											'widgetType':widget.__class__.__name__,
-											'derivedType':derivedType,
-											'widgetClassInstance':widget.__class__(),
-											'method':method,
-											'docString':docString}})
+				#add values to widgetDict
+				self.widgetDict(name).update(
+							{widgetName:{'widget':widget, 
+										'widgetWithSignal':widgetWithSignal,
+										'widgetType':widget.__class__.__name__,
+										'derivedType':derivedType,
+										'widgetClassInstance':widget.__class__(),
+										'method':method,
+										'docString':docString}})
 
-					break #stop looping up the chain of mro types found in signalType once a type match is found.
-
-		# print self.widgetDict(name)
-		return self.widgetDict(name)
+				#break #stop looping up the chain of mro types found in signalType once a type match is found.
+				return self._sbDict[name]['widgetDict'][widgetName]['widget'] #return the stored widget.
 
 
 
@@ -357,54 +377,6 @@ class Switchboard(object):
 
 
 
-	def setUiSize(self, name=None, size=None): #store ui size.
-		'''
-		Set UI size. If no size is given, the minimum ui size needed to frame its
-		contents will be used. If no name is given, the current ui will be used.
-		args:
-			name='string' - optional ui name
-			size=[int, int] - optional width and height as an integer list. [width, height]
-		returns:
-			ui size info as integer values in a list. [width, hight]
-		'''
-		if not name:
-			name = self.getUiName()
-		if not size:
-			ui = self.getUi(name)
-			size = [ui.frameGeometry().width(), ui.frameGeometry().height()]
-
-		self._sbDict[name]['size'] = size
-		return self._sbDict[name]['size']
-
-
-
-	def getUiSize(self, width=None, percentWidth=None, height=None, percentHeight=None): #get current ui size info.
-		'''
-		args:
-			width=int 	returns width of current ui
-			height=int 	returns hight of current ui
-			percentWidth=int returns a percentage of the width
-			percentHeight=int returns a percentage of the height
-		returns:
-			if width: returns width as int
-			if height: returns height as int
-			if percentWidth: returns the percentage of the width as an int
-			if percentHeight: returns the percentage of the height as an int
-			else: ui size info as integer values in a list. [width, hight]
-		'''
-		if width:
-			return self._sbDict[self.getUiName()]['size'][0]
-		elif height:
-			return self._sbDict[self.getUiName()]['size'][1]
-		elif percentWidth:
-			return self._sbDict[self.getUiName()]['size'][0] *percentWidth /100
-		elif percentHeight:
-			return self._sbDict[self.getUiName()]['size'][1] *percentHeight /100
-		else:
-			return self._sbDict[self.getUiName()]['size']
-
-
-
 	def setClassInstance(self, class_):
 		'''
 		Case insensitive. Class string keys are stored lowercase regardless of how they are recieved.
@@ -458,16 +430,20 @@ class Switchboard(object):
 
 
 
-	def getWidget(self, name, widgetName=None):
+	def getWidget(self, widgetName=None, name=None):
 		'''
-		Case insensitive. Get the widget object from its name.
-		args:	
+		Case insensitive. Get the widget object/s from the given ui or widget name.
+		args:
 			name='string' - name of ui. ie. 'polygons'. If no name is given, the current ui will be used.
 			widgetName='string' - optional name of widget. ie. 'b000'
 		returns:
-			if widgetName: widget object with the given name.
-			else: all widgets from the given ui.
+			if widgetName:  widget object with the given name from the current ui.
+			if name and widgetName: widget object with the given name from the given ui name.
+			if name: all widgets from the given ui.
 		'''
+		if not name:
+			name = self.getUiName()
+
 		if not 'widgetDict' in self._sbDict[name]:
 			self.widgetDict(name) #construct the signals and slots for the ui
 
@@ -525,7 +501,7 @@ class Switchboard(object):
 
 		if not 'widgetDict' in self._sbDict[name]:
 			self.widgetDict(name) #construct the signals and slots for the ui
-
+		# print name, widget
 		return self._sbDict[name]['widgetDict'][widget]['widgetType']
 
 
@@ -625,14 +601,14 @@ class Switchboard(object):
 			allowInit=bool - keep instances of init. Default is Off.
 			as_list=bool - returns the full list of previously called names. By default duplicates are removed.
 		returns:
-			with no arguments given - string name of previously opened layout.
+			with no arguments given - string name of previously opened ui.
 			if previousIndex: int - index of previously opened ui
 			if as_list: returns [list of string names]
 		'''
 		if not 'name' in self._sbDict:
 			self._sbDict['name'] = []
 
-		self._sbDict['name'] = self._sbDict['name'][-50:] #keep original list length restricted to last fifty elements
+		self._sbDict['name'] = self._sbDict['name'][-250:] #keep original list length restricted to last 250 elements
 
 		if allowInit:
 			list_ = [i for i in self._sbDict['name']] #work on a copy of the list, keeping the original intact
@@ -647,11 +623,11 @@ class Switchboard(object):
 			return self.getUiIndex(validPrevious[-2])
 
 		elif as_list:
-			return list_
+			return list_ #return entire list after being modified by any flags such as 'allowDuplicates'.
 
 		else:
 			try:
-				return list_[-2]
+				return list_[-2] #return the previous ui name if one exists.
 			except:
 				return ''
 
@@ -846,10 +822,59 @@ test example:
 _sbDict={
 	'polygons':{'class': '<Polygons>',
 				'ui': '<polygons ui object>', 
-				'size': [295, 234],
 				'widgetDict': {'b001':{'widget':'<b001>', 'widgetWithSignal':'<b001.connect>', 'method':'<main.b001>', 'docString':'Multi-Cut Tool', 'widgetClassInstance':'<QPushButton>', 'widgetType':'QPushButton'}}},
 	'mainAppWindow': None,
 	'name': ['polygons'],
 	'prevCommand': [['b000', 'multi-cut tool']],
 	'gcProtect': ['<protected object>']}
 '''
+
+
+
+
+
+	# def setUiSize(self, name=None, size=None): #store ui size.
+	# 	'''
+	# 	Set UI size. If no size is given, the minimum ui size needed to frame its
+	# 	contents will be used. If no name is given, the current ui will be used.
+	# 	args:
+	# 		name='string' - optional ui name
+	# 		size=[int, int] - optional width and height as an integer list. [width, height]
+	# 	returns:
+	# 		ui size info as integer values in a list. [width, hight]
+	# 	'''
+	# 	if not name:
+	# 		name = self.getUiName()
+	# 	if not size:
+	# 		ui = self.getUi(name)
+	# 		size = [ui.frameGeometry().width(), ui.frameGeometry().height()]
+
+	# 	self._sbDict[name]['size'] = size
+	# 	return self._sbDict[name]['size']
+
+
+
+	# def getUiSize(self, width=None, percentWidth=None, height=None, percentHeight=None): #get current ui size info.
+	# 	'''
+	# 	args:
+	# 		width=int 	returns width of current ui
+	# 		height=int 	returns hight of current ui
+	# 		percentWidth=int returns a percentage of the width
+	# 		percentHeight=int returns a percentage of the height
+	# 	returns:
+	# 		if width: returns width as int
+	# 		if height: returns height as int
+	# 		if percentWidth: returns the percentage of the width as an int
+	# 		if percentHeight: returns the percentage of the height as an int
+	# 		else: ui size info as integer values in a list. [width, hight]
+	# 	'''
+	# 	if width:
+	# 		return self._sbDict[self.getUiName()]['size'][0]
+	# 	elif height:
+	# 		return self._sbDict[self.getUiName()]['size'][1]
+	# 	elif percentWidth:
+	# 		return self._sbDict[self.getUiName()]['size'][0] *percentWidth /100
+	# 	elif percentHeight:
+	# 		return self._sbDict[self.getUiName()]['size'][1] *percentHeight /100
+	# 	else:
+	# 		return self._sbDict[self.getUiName()]['size']

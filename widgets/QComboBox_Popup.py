@@ -20,29 +20,91 @@ Promoting a widget in designer to use a custom class:
 
 
 
-class ListView(QtWidgets.QListView):
+class View(QtWidgets.QListView):
 	'''
-	
+	Provides a list or icon view onto a model.
 	'''
+	__popupPreventHide = False
+
 	def __init__(self, parent=None):
-		super(ListView, self).__init__()
+		super(View, self).__init__(parent)
 
-		form = QtWidgets.QFormLayout(self)
-		form.addRow(QtWidgets.QLabel('message'))
-		form.addRow(self)
-		model = QtGui.QStandardItemModel(self)
+		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint|QtCore.Qt.WindowStaysOnTopHint)
 
-		# for item in items:
-		# # 	# create an item with a caption
-		# 	standardItem = QtGui.QStandardItem(item)
-		# 	standardItem.setCheckable(True)
-		# 	model.appendRow(standardItem)
-		self.setModel(model)
+		# self.setMouseTracking(True)
+		# print self.isSelectionRectVisible()
+		# self.setSelectionRectVisible(True)
+		# self.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus) #don't allow focusing of the view of the popup
+		# self.setAttribute(QtCore.Qt.WA_ShowWithoutActivating)
+		# QtWidgets.QStyle.styleHint(QtWidgets.QStyle.SH_ComboBox_Popup, self)
 
-		# buttonBox = QtGui.QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel, Qt.Horizontal, self)
-		# form.addRow(buttonBox)
-		# buttonBox.accepted.connect(self.accept)
-		# buttonBox.rejected.connect(self.reject)
+		self.parent = parent
+		if self.parent.parentWidget():
+			self.parent.parentWidget().installEventFilter(self)
+
+
+	def showPopup(self, pos=None):
+		'''
+		args:
+			pos=<QPoint> - Move to position.
+		'''
+		# self.setStyleSheet('''
+
+		# 	}''')
+		self.resize(115, self.minimumSizeHint().height()+5)
+
+		if pos:
+			self.move(pos)
+
+		self.show()
+		self.setFocus()
+
+
+	def hidePopup(self):
+		'''
+		'''
+		# self.setStyleSheet('''
+			
+		# 	}''')
+		if not self.__popupPreventHide:
+			self.hide()
+
+
+	def mouseMoveEvent(self, event):
+		print event
+
+
+	def mouseReleaseEvent(self, event):
+		print event
+
+
+	def eventFilter(self, widget, event):
+		'''
+		Handles mainWindow (top level parent) events relating to the view.
+		args:
+			widget=<event reciever>
+			event=QEvent
+		'''
+		# print event.__class__.__name__, widget
+		if event.__class__==QtGui.QMouseEvent:
+			# self.view.rect().setLeft(0)
+			if self.isVisible() and self.rect().contains(self.mapFromGlobal(QtGui.QCursor.pos())):# and not self.rect().contains(self.mapFromGlobal(QtGui.QCursor.pos())):
+				# print 'active'
+				self.__popupPreventHide = True
+				# self.activateWindow()
+				# self.raise_()
+				self.__mouseGrabber = self.mouseGrabber()
+				# print self.mouseGrabber().objectName()
+				# self.grabMouse()
+				# print self.mouseGrabber().objectName()
+				# self.setFocus()
+				self.event(event)
+			else:
+				self.__popupPreventHide = False
+				# print 'not rect'
+				# self.__mouseGrabber.grabMouse()
+
+		return super(View, self).eventFilter(widget, event)
 
 
 
@@ -52,10 +114,16 @@ class QComboBox_Popup(QtWidgets.QComboBox):
 	'''
 	def __init__(self, parent=None):
 		super(QComboBox_Popup, self).__init__(parent)
-	
-		# self.listView = ListView()
-		# self.setView(self.listView)
 
+		self.model = self.model()
+
+		self.view = View(self)
+		self.view.setModel(self.model)
+
+		# frame = self.findChild(QtWidgets.QFrame) #get frame from the comboBox (after calling showPopup the comboBox instance becomes a QFrame.)
+		# frame.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
+		# frame.setAttribute(QtCore.Qt.WA_NoMousePropagation)
+		# self.setAttribute(QtCore.Qt.WA_NoMouseReplay)#QtCore.Qt.WA_MouseNoMask)
 
 
 	def refreshContents(self):
@@ -69,20 +137,6 @@ class QComboBox_Popup(QtWidgets.QComboBox):
 		self.setCurrentIndex(index) #change index back to refresh contents
 
 
-
-	# def showPopup(self):
-	# 	self.widget.setStyleSheet('''
-
-	# 		}''')
-
-
-	# def hidePopup(self):
-	# 	self.widget.setStyleSheet('''
-			
-	# 		}''')
-
-
-
 	def showEvent(self, event):
 		'''
 		args:
@@ -90,46 +144,19 @@ class QComboBox_Popup(QtWidgets.QComboBox):
 		'''
 		# print '__showEvent'
 		self.refreshContents()
-		# # self.model()
-		# self.listView
-
-		# model = self.listView.model()
-
-		# # items = [self.itemText(i) for i in range(self.count())]
-		# items = ['1','2','3','4']
-		# [model.item(i) for i in items]
-
-		# model.item(0)
-		# model.item(0).checkState()
-		# model.item(0).text()
 
 		return QtWidgets.QComboBox.showEvent(self, event)
 
 
-
-	def mouseMoveEvent(self, event):
+	def hideEvent(self, event):
 		'''
 		args:
 			event=<QEvent>
 		'''
-		# print '__mouseMoveEvent_1'
-		# if not self.rect().contains(self.mapFromGlobal(QtGui.QCursor.pos())): #if mouse over widget:
-			# self.hidePopup()
+		# print '__hideEvent'
+		# self.view.hidePopup()
 
-		return QtWidgets.QComboBox.mouseMoveEvent(self, event)
-
-
-
-	def mouseReleaseEvent(self, event):
-		'''
-		args:
-			event=<QEvent>
-		'''
-		print '__mouseReleaseEvent_1'
-		self.showPopup()
-
-		return QtWidgets.QComboBox.mouseReleaseEvent(self, event)
-
+		return QtWidgets.QComboBox.hideEvent(self, event)
 
 
 	def enterEvent(self, event):
@@ -137,16 +164,17 @@ class QComboBox_Popup(QtWidgets.QComboBox):
 		args:
 			event=<QEvent>
 		'''
-		print '__enterEvent'
-		# self.showPopup()
+		# print '__enterEvent'
 		self.setStyleSheet('''
 			QComboBox {
 				background-color: rgba(82,133,166,200);
 				color: white;
 			}''')
 
-		return QtWidgets.QComboBox.enterEvent(self, event)
+		pos = self.mapToGlobal(self.rect().topRight())
+		self.view.showPopup(pos)
 
+		return QtWidgets.QComboBox.enterEvent(self, event)
 
 
 	def leaveEvent(self, event):
@@ -154,18 +182,29 @@ class QComboBox_Popup(QtWidgets.QComboBox):
 		args:
 			event=<QEvent>
 		'''
-		print '__leaveEvent'
-		# self.hidePopup()
+		# print '__leaveEvent'
 		self.setStyleSheet('''
 			QComboBox {
 				background-color: rgba(100,100,100,200);
 				color: white;
 			}''')
 
+		self.view.hidePopup()
+
 		return QtWidgets.QComboBox.leaveEvent(self, event)
 
 
+	def mouseMoveEvent(self, event):
+		'''
+		args:
+			event=<QEvent>
+		'''
+		# print '__mouseMoveEvent'
+		# if not self.rect().contains(self.mapFromGlobal(QtGui.QCursor.pos())):
+		# 	# self.view.hidePopup()
+		# 	print 'not rect'
 
+		return QtWidgets.QComboBox.mouseMoveEvent(self, event)
 
 
 
@@ -175,3 +214,113 @@ if __name__ == "__main__":
 	w = QComboBox_Popup()
 	w.show()
 	sys.exit(app.exec_())
+
+
+
+# class Model(QtGui.QStandardItemModel):
+# 	'''
+# 	Provides a generic model for storing custom data.
+# 	'''
+# 	def __init__(self, parent=None):
+# 		super(Model, self).__init__(parent)
+
+# 		self.nodes = ['node0', 'node1', 'node2']
+
+
+# 	def index(self, row, column, parent):
+# 		return self.createIndex(row, column, self.nodes[row])
+
+# 	def parent(self, index):
+# 		return QtCore.QModelIndex()
+
+# 	def rowCount(self, index):
+# 		if index.internalPointer() in self.nodes:
+# 			return 0
+# 		return len(self.nodes)
+
+# 	def columnCount(self, index):
+# 		return 1
+
+# 	def data(self, index, role):
+# 		if role == 0: 
+# 			return index.internalPointer()
+# 		else:
+# 			return None
+
+
+
+# class View(QtWidgets.QListView):
+# 	'''
+# 	Provides a list or icon view onto a model.
+# 	'''
+# 	__popupPreventHide = False
+
+# 	def __init__(self, parent=None):
+# 		super(View, self).__init__(parent)
+
+# 		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint|QtCore.Qt.WindowStaysOnTopHint)
+
+# 		self.setMouseTracking(True)
+# 		# self.setSelectionRectVisible(True)
+# 		# self.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus) #don't allow focusing of the view of the popup
+# 		# self.setAttribute(QtCore.Qt.WA_ShowWithoutActivating)
+
+# 		if parent.parentWidget():
+# 			parent.parentWidget().installEventFilter(self)
+
+
+# 	def showPopup(self, pos=None):
+# 		'''
+# 		args:
+# 			pos=<QPoint> - Move to position.
+# 		'''
+# 		# self.setStyleSheet('''
+
+# 		# 	}''')
+# 		self.resize(115, self.minimumSizeHint().height()+5)
+
+# 		if pos:
+# 			self.move(pos)
+
+# 		self.show()
+
+
+# 	def hidePopup(self):
+# 		'''
+# 		'''
+# 		# self.setStyleSheet('''
+			
+# 		# 	}''')
+# 		if not self.__popupPreventHide:
+# 			self.hide()
+
+
+# 	def mouseMoveEvent(self, event):
+# 		print event
+
+
+# 	def mouseReleaseEvent(self, event):
+# 		print event
+
+
+# 	def eventFilter(self, widget, event):
+# 		'''
+# 		Handles mainWindow (top level parent) events relating to the view.
+# 		args:
+# 			widget=<event reciever>
+# 			event=QEvent
+# 		'''
+# 		# print event.__class__.__name__, widget
+# 		if event.__class__==QtGui.QMouseEvent:
+# 			# self.view.rect().setLeft(0)
+# 			if self.rect().contains(self.mapFromGlobal(QtGui.QCursor.pos())):# and not self.rect().contains(self.mapFromGlobal(QtGui.QCursor.pos())):
+# 				print 'active'
+# 				self.__popupPreventHide = True
+# 				self.activateWindow()
+# 				self.setFocus()
+# 			else:
+# 				print 'not view rect'
+# 				self.__popupPreventHide = False
+# 				# self.hidePopup()
+
+# 		return super(View, self).eventFilter(widget, event)
