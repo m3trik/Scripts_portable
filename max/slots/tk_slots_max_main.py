@@ -21,140 +21,88 @@ class Main(Init):
 
 
 
-	def cmb001(self):
-		'''
-		Convert To
-		'''
-		cmb = self.ui.cmb001
-		
-		files = ['']
-		contents = self.comboBox(cmb, files, '::')
-
-		index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index(''):
-				mel.eval('')
-			cmb.setCurrentIndex(0)
-
-
 	def v000(self):
 		'''
 		
 		'''
-		index = self.ui.cmb000.currentIndex()
 		
-		if index==0: #modeling
-			self.sb.getMethod('polygons', 'b006')()
-
+		
 
 	def v001(self):
 		'''
 		
 		'''
-		index = self.ui.cmb000.currentIndex()
 		
-		if index==0: #modeling
-			self.sb.getMethod('polygons', 'b005')()
 
 
 	def v002(self):
 		'''
 		
 		'''
-		index = self.ui.cmb000.currentIndex()
 		
-		if index==0: #modeling
-			self.sb.getMethod('polygons', 'b012')()
 
 
 	def v003(self):
 		'''
 		
 		'''
-		index = self.ui.cmb000.currentIndex()
 		
-		if index==0: #modeling
-			self.sb.getMethod('polygons', 'b004')()
 
 
 	def v004(self):
 		'''
 		
 		'''
-		index = self.ui.cmb000.currentIndex()
 		
-		if index==0: #modeling
-			self.sb.getMethod('edit', 'b032')()
 
 
 	def v005(self):
 		'''
 		
 		'''
-		index = self.ui.cmb000.currentIndex()
 		
-		if index==0: #modeling
-			self.sb.getMethod('polygons', 'b009')()
 
 
 	def v006(self):
 		'''
 		
 		'''
-		index = self.ui.cmb000.currentIndex()
 		
-		if index==0: #modeling
-			self.sb.getMethod('polygons', 'b047')()
 
 
 	def v007(self):
 		'''
 		
 		'''
-		index = self.ui.cmb000.currentIndex()
 		
-		if index==0: #modeling
-			self.sb.getMethod('selection', 'b008')()
 
 
 	def v008(self):
 		'''
 		
 		'''
-		index = self.ui.cmb000.currentIndex()
 		
-		if index==0: #modeling
-			self.sb.getMethod('polygons', 'b044')()
-		
+
 
 	def v009(self):
 		'''
 		
 		'''
-		index = self.ui.cmb000.currentIndex()
 		
-		if index==0: #modeling
-			self.sb.getMethod('polygons', 'b022')()
 
 
 	def v010(self):
 		'''
 		
 		'''
-		index = self.ui.cmb000.currentIndex()
 		
-		if index==0: #modeling
-			self.sb.getMethod('polygons', 'b007')()
 
 
 	def v011(self):
 		'''
 		
 		'''
-		index = self.ui.cmb000.currentIndex()
 		
-		if index==0: #modeling
-			self.sb.getMethod('polygons', 'b043')()
 
 
 	def v012(self):
@@ -169,10 +117,21 @@ class Main(Init):
 		Minimize Main Application
 
 		'''
-		# text = 'Minimize'
-		# self.ui.v008.setText(text)
-
 		self.sb.getMethod('file', 'b005')()
+
+
+	def v022(self):
+		'''
+		
+		'''
+		
+
+
+	def v023(self):
+		'''
+		
+		'''
+		pass
 
 
 	def v024(self):

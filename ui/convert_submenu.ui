@@ -81,10 +81,10 @@
      </size>
     </property>
     <property name="toolTip">
-     <string>Preferences</string>
+     <string/>
     </property>
     <property name="whatsThis">
-     <string>preferences</string>
+     <string>convert</string>
     </property>
     <property name="text">
      <string>Convert</string>

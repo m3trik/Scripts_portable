@@ -87,6 +87,82 @@
      <string>Display</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="b001">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>260</y>
+      <width>97</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>19</height>
+     </size>
+    </property>
+    <property name="text">
+     <string>Toggle Visibility</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="b002">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>300</y>
+      <width>97</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>19</height>
+     </size>
+    </property>
+    <property name="text">
+     <string>Hide Selected</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="b004">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>360</y>
+      <width>97</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>19</height>
+     </size>
+    </property>
+    <property name="text">
+     <string>Show Geometry</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="b003">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>330</y>
+      <width>97</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>19</height>
+     </size>
+    </property>
+    <property name="text">
+     <string>Show Selected</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

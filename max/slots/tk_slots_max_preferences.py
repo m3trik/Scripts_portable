@@ -42,6 +42,25 @@ class Preferences(Init):
 			cmb.setCurrentIndex(0)
 
 
+	# def cmb000(self):
+	# 	'''
+	# 	Custom Menu Set
+	# 	'''
+	# 	cmb = self.ui.cmb000
+		
+	# 	list_ = ['Modeling', 'Normals', 'Materials', 'UV'] #combobox list menu corresponding to the button text sets.
+	# 	contents = self.comboBox(cmb, list_, 'Menu Sets')
+
+	# 	index = cmb.currentIndex()
+	# 	buttons = self.getObject(self.sb.getUi('main'), 'v000-11') #the ui in which the changes are to be made.
+	# 	for i, button in enumerate(buttons):
+	# 		if index==1: #set the text for each button.
+	# 			button.setText(['','','','','','','','','','','',''][i])
+
+	# 		if index==2:
+	# 			button.setText(['','','','','','','','','','','',''][i])
+
+
 	def cmb000(self, index=None, init=False):
 		'''
 		Preferences:Ui - Set main ui style using QStyleFactory
@@ -96,31 +115,6 @@ class Preferences(Init):
 			cmb.setCurrentIndex(index)
 		else:
 			pm.currentUnit(time=values[index]) #game | film | pal | ntsc | show | palf | ntscf
-
-
-	def cmb003(self):
-		'''
-		Preferences:Ui - Menu Set
-		'''
-		cmb = self.ui.cmb003
-		
-		list_ = ['Modeling', 'Normals', 'Materials', 'UV']
-		contents = self.comboBox(cmb, list_)
-
-		index = cmb.currentIndex()
-		buttons = self.getObject(self.sb.getUi('main'), 'v000-11')
-		for i, button in enumerate(buttons):
-			if index==0:
-				button.setText(['Extrude','Bridge','Cut','Slice','Delete','Collapse','Insert Loop','Select Loop','Detach','Attach','Chamfer','Target Weld'][i])
-
-			if index==1:
-				button.setText(['','','','','','','','','','','',''][i])
-
-			if index==2:
-				button.setText(['','','','','','','','','','','',''][i])
-
-			if index==3:
-				button.setText(['','','','','','','','','','','',''][i])
 
 
 	def b000(self):

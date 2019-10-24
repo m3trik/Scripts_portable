@@ -23,9 +23,11 @@ except: pass
 # ------------------------------------------------
 class HotBox(QtWidgets.QStackedWidget):
 	'''
-	Marking menu-style modal window.
-	Gets and sets signal connections through the switchboard module.
-	Paint events are handled by the overlay module.
+	Marking menu-style modal window based on a stacked widget.
+	Gets and sets signal connections (through the switchboard module).
+	Initializes events for child widgets in the childEvents module.
+	Plots points for paint events in the overlay module.
+	The various ui's are set by calling 'setWidget' with the intended ui name string. ex. HotBox().setWidget('polygons')
 	args:
 		parent = main application window object.
 	'''
@@ -45,11 +47,14 @@ class HotBox(QtWidgets.QStackedWidget):
 		self.name = self.setWidget('init') #initialize layout
 
 
+
 	def setWidget(self, name):
 		'''
 		Set the stacked Widget's index.
 		args:
-			name = 'string' - name of qtui widget.
+			name = 'string' - name of ui.
+		returns:
+			'string' - name of ui. ex. 'polygons'
 		'''
 		if not name in self.sb.previousName(allowInit=1, as_list=1): #if ui(name) hasn't been set before, init the ui for the given name.
 			self.addWidget(self.sb.getUi(name)) #add each ui to the stackedLayout.
@@ -60,14 +65,13 @@ class HotBox(QtWidgets.QStackedWidget):
 		self.setCurrentWidget(self.ui) #set the stacked widget to the given ui.
 
 		self.resize(self.ui.frameGeometry().width(), self.ui.frameGeometry().height())
-		# self.move(QtGui.QCursor.pos() - self.rect().center()) #move window to cursor position and offset from left corner to center
 
 		if not any([name=='init', name==self.sb.previousName(allowDuplicates=1)]):
 			if self.sb.previousName(): #if previous ui signals exist:
 				self.sb.removeSignal(self.sb.previousName()) #remove signals from the previous ui.
 			self.sb.addSignal(name)
 
-		return self.name #return name so that in cases where switching ui in the middle of a process the name can be immediately updated. ie. self.name = self.hotBox.setWidget('main')
+		return self.name #return name. useful in cases where switching ui in the middle of an event the name can be immediately updated. ie. self.name = self.hotBox.setWidget('main')
 
 
 
@@ -103,7 +107,7 @@ class HotBox(QtWidgets.QStackedWidget):
 		self.move(QtGui.QCursor.pos() - self.rect().center()) #move window to cursor position and offset from left corner to center
 
 		if any([self.name=='init', self.name=='main', self.name=='editors', self.name=='viewport']):
-			self.drawPath=[]
+			self.drawPath=[] #initiate the drawPath list that will contain points as the user moves along a hierarchical path.
 			self.drawPath.append(self.mapToGlobal(self.rect().center()))
 
 			if event.button()==QtCore.Qt.LeftButton:
@@ -189,7 +193,7 @@ class HotBox(QtWidgets.QStackedWidget):
 		self.name = self.setWidget('init') #reset layout back to init on keyPressEvent
 
 		if __name__ == "__main__":
-			sys.exit()
+			sys.exit() #assure that the sys processes are terminated.
 
 
 
@@ -237,7 +241,7 @@ def createInstance():
 		except: mainWindow = None
 
 	hotBox = HotBox(mainWindow)
-	hotBox.overlay = OverlayFactoryFilter(hotBox)
+	hotBox.overlay = OverlayFactoryFilter(hotBox) #Paint events are handled by the overlay module.
 
 	return hotBox
 

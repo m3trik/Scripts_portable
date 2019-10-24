@@ -538,6 +538,7 @@ class Switchboard(object):
 		returns:
 			if methodName: corresponding method object to given method name string.
 			else: all of the methods associated with the given name as a list.
+		ex. self.sb.getMethod('polygons', 'b022')() #call method 'b022' of the 'polygons' class
 		'''
 		if not 'widgetDict' in self._sbDict[name]:
 			self.widgetDict(name) #construct the signals and slots for the ui
