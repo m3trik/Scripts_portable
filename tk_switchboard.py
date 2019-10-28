@@ -28,6 +28,7 @@ class Switchboard(object):
 		'<ui name>' : {
 					'ui' : <ui object>,
 					'class' : <Class>,
+					'size' : [int, int]
 					'widgetDict' : {
 								'<widget name>':{
 											'widget':<widget>,
@@ -57,7 +58,7 @@ class Switchboard(object):
 	global uiLoader, widgetPath, uiPath
 	uiLoader = QUiLoader()
 
-	#get path to the directory containing the custom widgets.
+	#get path to the directory containing any custom widgets.
 	widgetPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'widgets')
 	#format names using the files in path.
 	widgetNames = [file_.replace('.py','',-1) for file_ in os.listdir(widgetPath) if file_.endswith('.py') and not file_.startswith('__')]
@@ -70,7 +71,6 @@ class Switchboard(object):
 			raise ImportError, 'widgets.'+m+'.'+m
 
 	#set path to the directory containing the ui files.
-
 	uiPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ui') #get absolute path from dir of this module + relative path to directory
 	#initialize _sbDict
 	_sbDict = {file_.replace('.ui',''):{'ui':uiLoader.load(uiPath+'/'+file_)} for file_ in os.listdir(uiPath) if file_.endswith('.ui')}
@@ -319,6 +319,54 @@ class Switchboard(object):
 
 
 
+	def setUiSize(self, name=None, size=None): #store ui size.
+		'''
+		Set UI size. If no size is given, the minimum ui size needed to frame its
+		contents will be used. If no name is given, the current ui will be used.
+		args:
+			name='string' - optional ui name
+			size=[int, int] - optional width and height as an integer list. [width, height]
+		returns:
+			ui size info as integer values in a list. [width, hight]
+		'''
+		if not name:
+			name = self.getUiName()
+		if not size:
+			ui = self.getUi(name)
+			size = [ui.frameGeometry().width(), ui.frameGeometry().height()]
+
+		self._sbDict[name]['size'] = size
+		return self._sbDict[name]['size']
+
+
+
+	def getUiSize(self, width=None, percentWidth=None, height=None, percentHeight=None): #get current ui size info.
+		'''
+		args:
+			width=int 	returns width of current ui
+			height=int 	returns hight of current ui
+			percentWidth=int returns a percentage of the width
+			percentHeight=int returns a percentage of the height
+		returns:
+			if width: returns width as int
+			if height: returns height as int
+			if percentWidth: returns the percentage of the width as an int
+			if percentHeight: returns the percentage of the height as an int
+			else: ui size info as integer values in a list. [width, hight]
+		'''
+		if width:
+			return self._sbDict[self.getUiName()]['size'][0]
+		elif height:
+			return self._sbDict[self.getUiName()]['size'][1]
+		elif percentWidth:
+			return self._sbDict[self.getUiName()]['size'][0] *percentWidth /100
+		elif percentHeight:
+			return self._sbDict[self.getUiName()]['size'][1] *percentHeight /100
+		else:
+			return self._sbDict[self.getUiName()]['size']
+
+
+
 	def getNameFrom(self, obj):
 		'''
 		Get the ui(class) name from any object existing in widgetDict.
@@ -326,9 +374,9 @@ class Switchboard(object):
 			obj=<object> - 
 		returns:
 			 'string' - the corresponding method name from the given object.
-			 ie. 'polygons' from <widget>
+			 ex. 'polygons' from <widget>
 		'''
-		for key, v in self._sbDict.iteritems():
+		for name, v in self._sbDict.iteritems():
 			if type(v)==dict:
 				for k, v in v.iteritems():
 					if type(v)==dict:
@@ -336,7 +384,7 @@ class Switchboard(object):
 							if type(v)==dict:
 								for k, v in v.iteritems():
 									if v==obj:
-										return key
+										return name
 
 
 
@@ -767,6 +815,49 @@ class Switchboard(object):
 				return True
 		else:
 			return False
+
+
+
+	@staticmethod
+	def getUiLevel(name, submenu_level=False):
+		'''
+		Get the hierarchy level of the given ui name.
+		A future rewrite is needed to auto-sort versus exlicitly stating any ui names.
+		args:
+			name = 'string' -  ui name to check level of.
+			submenuLevel = bool - placeholder - when True returns an int representing the hierarchical level of a submenu from 0.
+
+		returns:
+
+		'''
+		if '_submenu' in name:
+			return 2
+		if any([name=='main', name=='editors', name=='viewport']):
+			return 1
+		if name=='init':
+			return 0
+		else:
+			return 3
+
+
+
+	@staticmethod
+	def prefix(string, prefix):
+		'''
+		Checks if the given string startswith the given prefix, and is followed by three integers. ex. i000 (alphanum,int,int,int)
+		ex. prefix('i023', 'i')
+		args:
+			string = 'string' - string to check against.
+			prefix = 'string' - check if the given string startwith this prefix.
+		returns:
+			bool - True if correct format else, False.
+		'''
+		if string.startswith(prefix):
+			i = len(prefix)
+			integers = [c for c in string[i:i+3] if c.isdigit()]
+			if len(integers)>2 or len(string)==i:
+				return True
+		return False
 
 
 

@@ -37,7 +37,6 @@ class HotBox(QtWidgets.QStackedWidget):
 		#set window style
 		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint|QtCore.Qt.WindowStaysOnTopHint)
 		self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
-		# self.setStyle(QtWidgets.QStyleFactory.create('plastique'))
 
 		self.sb = Switchboard(parent)
 		self.sb.setClassInstance(self) #store this class instance.
@@ -45,6 +44,8 @@ class HotBox(QtWidgets.QStackedWidget):
 		self.childEvents = EventFactoryFilter()
 
 		self.name = self.setWidget('init') #initialize layout
+
+		self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor)) #CrossCursor
 
 
 
@@ -57,14 +58,16 @@ class HotBox(QtWidgets.QStackedWidget):
 			'string' - name of ui. ex. 'polygons'
 		'''
 		if not name in self.sb.previousName(allowInit=1, as_list=1): #if ui(name) hasn't been set before, init the ui for the given name.
+			self.sb.setUiSize(name) #store size info for each ui (allows for resizing a stacked widget where ordinarily resizing is limited to the largest widget in the stack)
 			self.addWidget(self.sb.getUi(name)) #add each ui to the stackedLayout.
 			self.childEvents.init(name)
 
 		self.name = self.sb.setUiName(name) #set ui name.
 		self.ui = self.sb.getUi(name) #get the dymanic ui of the given name.
+		self.uiLevel = self.sb.getUiLevel(name) #get the hierarchical level of the ui.
 		self.setCurrentWidget(self.ui) #set the stacked widget to the given ui.
 
-		self.resize(self.ui.frameGeometry().width(), self.ui.frameGeometry().height())
+		self.resize(self.sb.getUiSize(width=1), self.sb.getUiSize(height=1)) #get ui size for current ui and resize window
 
 		if not any([name=='init', name==self.sb.previousName(allowDuplicates=1)]):
 			if self.sb.previousName(): #if previous ui signals exist:
@@ -106,7 +109,7 @@ class HotBox(QtWidgets.QStackedWidget):
 		'''
 		self.move(QtGui.QCursor.pos() - self.rect().center()) #move window to cursor position and offset from left corner to center
 
-		if any([self.name=='init', self.name=='main', self.name=='editors', self.name=='viewport']):
+		if self.uiLevel<2:
 			self.drawPath=[] #initiate the drawPath list that will contain points as the user moves along a hierarchical path.
 			self.drawPath.append(self.mapToGlobal(self.rect().center()))
 
@@ -126,7 +129,7 @@ class HotBox(QtWidgets.QStackedWidget):
 		args:
 			event = <QEvent>
 		'''
-		if any([self.name=='main', self.name=='editors', self.name=='viewport', 'submenu' in self.name]):
+		if self.uiLevel>0 and self.uiLevel<3:
 			self.childEvents.mouseTracking(self.name)
 
 
@@ -136,7 +139,7 @@ class HotBox(QtWidgets.QStackedWidget):
 		args:
 			event = <QEvent>
 		'''
-		if any([self.name=='main', self.name=='editors', self.name=='viewport']):
+		if self.uiLevel>0 and self.uiLevel<2:
 			if any([event.button()==QtCore.Qt.LeftButton,event.button()==QtCore.Qt.MiddleButton,event.button()==QtCore.Qt.RightButton]):
 				self.name = self.setWidget('init')
 

@@ -34,11 +34,10 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 		self.setStyleSheet('''
 			QPushButton {
 				border: none;
-				background: rgba(100,100,100,50);
 			}
+
 			QPushButton::checked {
 				border: none;
-				background-color: rgba(82,133,166,200);
 			}''')
 
 		self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
@@ -51,7 +50,7 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 			event=<QEvent>
 		'''
 		self.__mousePressPos = event.globalPos() #mouse positon at press.
-		self.__mouseMovePos = event.globalPos() #mouse move position from last press. (updated at move event) 
+		self.__mouseMovePos = event.globalPos() #mouse move position from last press. (updated on move event) 
 
 		self.setChecked(True) #setChecked to prevent window from closing.
 
@@ -85,6 +84,7 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 		self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
 
 		moveAmount = event.globalPos() -self.__mousePressPos
+
 		if moveAmount.manhattanLength() >5: #if widget moved:
 			self.setChecked(True) #setChecked to prevent window from closing.
 		else:
