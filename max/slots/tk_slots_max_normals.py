@@ -66,7 +66,7 @@ class Normals(Init):
 		'''
 		Soften Edge Normal
 		'''
-		self.hotBox.hide()
+		self.tk.hide()
 		maxEval('$.EditablePoly.makeSmoothEdges 1')
 
 
@@ -74,7 +74,7 @@ class Normals(Init):
 		'''
 		Harden Edge Normal
 		'''
-		self.hotBox.hide()
+		self.tk.hide()
 		maxEval('$.EditablePoly.makeHardEdges 1')
 
 
@@ -113,7 +113,7 @@ class Normals(Init):
 				index = [mod for mod in obj.modifiers].index(mod)+1 #add one to convert index from python to maxscript
 				rt.maxOps.CollapseNodeTo(obj, index, False)
 
-		self.hotBox.hide()
+		self.tk.hide()
 
 
 	def b005(self):

@@ -16,7 +16,7 @@ class Preferences(Init):
 
 		self.ui = self.sb.getUi('preferences')
 
-		self.ui.b010.setText(self.hotBox.app.capitalize()+' Preferences')
+		self.ui.b010.setText(self.tk.app.capitalize()+' Preferences')
 
 		
 

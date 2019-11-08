@@ -140,14 +140,14 @@ class Materials(Init):
 		'''
 
 		'''
-		self.hotBox.ui.chk001.setChecked(False)
+		self.tk.ui.chk001.setChecked(False)
 
 
 	def chk001(self): #Select by material: shell
 		'''
 
 		'''
-		self.hotBox.ui.chk000.setChecked(False)
+		self.tk.ui.chk000.setChecked(False)
 
 
 	def chk002(self): #toggle stored material or ID map mode

@@ -45,7 +45,7 @@ class Polygons(Init):
 		'''
 		Header comboBox
 		'''
-		cmb = self.hotBox.header.cmb
+		cmb = self.tk.header.cmb
 		
 		files = ['Extrude Options','Bevel Options','Bridge Options','Combine Options','Merge Vertex Options','Offset Edgeloop','Edit Edgeflow Options','Extract Curve Options','Poke Options','Wedge Options','Assign Invisible Options']
 		contents = self.comboBox(cmb, files, '::')

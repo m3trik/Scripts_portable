@@ -28,20 +28,24 @@ class EventFactoryFilter(QtCore.QObject):
 	def __init__(self, parent=None):
 		super(EventFactoryFilter, self).__init__(parent)
 
+
 		self.sb = Switchboard()
-		self.hotBox = self.sb.getClassInstance('hotBox')
-
-		self.prevWidget=[]
+		self.tk = self.sb.getClassInstance('tk')
 
 
 
-	def init(self, name):
+	def init(self, name, widgets=None):
 		'''
 		Set Initial widget states.
 		args:
 			name = 'string' - ui name.
+			widgets = [list of <QWidgets>] - if no list is given, the operation will be performed on all widgets of the given ui name.
 		'''
-		for widget in self.sb.getWidget(name=name): #get all widgets for the given ui name.
+		if not widgets:
+			widgets = self.sb.getWidget(name=name)
+
+		for widget in widgets: #get all widgets for the given ui name.
+
 			widgetName = widget.objectName()
 			widgetType = self.sb.getWidgetType(widget, name) #get the class type as string.
 			derivedType = self.sb.getDerivedType(widget, name) #get the derived class type as string.
@@ -50,14 +54,15 @@ class EventFactoryFilter(QtCore.QObject):
 			widget.installEventFilter(self)
 
 
-			if widgetName=='info':
+			if widgetType=='QTextEdit':
 				widget.viewport().setAutoFillBackground(False)
 				widget.setTextBackgroundColor(QtGui.QColor(50, 50, 50))
+				widget.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
 
 			elif widgetType=='QProgressBar':
 				widget.setVisible(False)
 
-			if self.sb.prefix(widgetName, 'r'): #prefix returns True if widgetName startswith the given prefix, and is followed by three integers.
+			elif self.sb.prefix(widgetName, 'r'): #prefix returns True if widgetName startswith the given prefix, and is followed by three integers.
 				widget.setVisible(False)
 
 			elif name=='create':
@@ -149,8 +154,8 @@ class EventFactoryFilter(QtCore.QObject):
 		self.widget = widget
 		self.widgetName = self.widget.objectName()
 		self.widgetType = self.sb.getWidgetType(self.widget, self.name)
-		self.derivedType = self.sb.getDerivedType(self.widget, self.name)
-		self.widgetClass = self.sb.getWidgetClassInstance(self.widget, self.name)
+		# self.derivedType = self.sb.getDerivedType(self.widget, self.name)
+		# self.widgetClass = self.sb.getWidgetClassInstance(self.widget, self.name)
 
 		eventName = EventFactoryFilter.createEventName(event) #get 'mousePressEvent' from <QEvent>
 		# print self.name, eventName, self.widgetType, self.widgetName
@@ -172,7 +177,14 @@ class EventFactoryFilter(QtCore.QObject):
 		args:
 			event = <QEvent>
 		'''
-		pass
+		# #construct buttons for any previous commands.
+		# ui = self.sb.getUi('main')
+		# for num, w in enumerate(self.getObject(ui, 'v024-29'), 1): #num starting from 1
+		# 	try:
+		# 		w.setText(self.sb.prevCommand(docString=1, as_list=1)[-num]) #prevCommand docString
+		# 		self.resizeAndCenterWidget(w)
+		# 		w.show()
+		# 	except: pass
 
 
 
@@ -181,7 +193,6 @@ class EventFactoryFilter(QtCore.QObject):
 		args:
 			event = <QEvent>
 		'''
-		pass
 
 
 
@@ -200,10 +211,10 @@ class EventFactoryFilter(QtCore.QObject):
 			if self.sb.prefix(self.widgetName, 'i'): #set the stacked widget.
 				submenu = self.widget.whatsThis()+'_submenu'
 				if not self.name==submenu: #do not reopen the submenu if it is already open.
-					self.name = self.setSubmenu(self.widget, submenu)
+					self.name = self.tk.setSubUi(self.widget, submenu)
 
 			elif self.widgetName=='<':
-				self.name = self.setPrevMenu()
+				self.name = self.tk.setPrevUi()
 
 
 
@@ -254,12 +265,12 @@ class EventFactoryFilter(QtCore.QObject):
 		'''
 		if self.widgetType=='QPushButton':
 			if self.sb.prefix(self.widgetName, 'i'): #set the stacked widget.
-				self.name = self.hotBox.setWidget(self.widget.whatsThis()) #switch the stacked layout to the given ui.
-				self.hotBox.move(QtGui.QCursor.pos() - self.hotBox.ui.rect().center()) #move window to cursor position and offset from left corner to center
+				self.name = self.tk.setUi(self.widget.whatsThis()) #switch the stacked layout to the given ui.
+				self.tk.move(QtGui.QCursor.pos() - self.tk.ui.rect().center()) #move window to cursor position and offset from left corner to center
 
 				self.__mouseGrabber.releaseMouse()
 				self.__mouseGrabber = None
-				self.hotBox.activateWindow()
+				self.tk.activateWindow()
 
 			elif self.sb.prefix(self.widgetName, 'v'): #ie. 'v012'
 				self.sb.previousView(as_list=1).append(self.sb.getMethod(self.name, self.widgetName)) #store the camera view
@@ -270,82 +281,6 @@ class EventFactoryFilter(QtCore.QObject):
 					self.widget.click()
 				else: #add the buttons command to the prevCommand list.
 					self.sb.prevCommand(as_list=1).append([self.sb.getMethod(self.name, self.widgetName), self.sb.getDocString(self.name, self.widgetName)]) #store the command method object and it's docString (ie. 'Multi-cut tool')
-
-
-
-	def setPrevMenu(self):
-		'''
-		Return the stacked widget to it's previous ui.
-		'''
-		previous = [i for i in self.sb.previousName(as_list=1) if '_submenu' not in i][-1]
-		name = self.hotBox.setWidget(previous) #return the stacked widget to it's previous ui.
-		del self.hotBox.drawPath[1:] #clear the draw path, while leaving the starting point.
-		del self.prevWidget[:] #clear the list of previous widgets.
-		self.hotBox.move(self.hotBox.drawPath[0] - self.hotBox.rect().center())
-		return name
-
-
-
-	def setSubmenu(self, widget, submenu):
-		'''
-		Uses the meta info of the given widget to switch the ui to the associated submenu.
-		Moves the new ui to line up with the previous ui's children.
-		Re-constructs the relevant buttons from the previous ui for the new ui, and positions them.
-		Initializes the new buttons to recieve events through the childEvents filter.
-		args:
-			widget = <QWidget> - the widget that called this method.
-			submenu = 'string' - name of ui.
-		returns:
-			'string' - name of ui. ex. 'polygons_submenu'
-		'''
-		p1 = widget.mapToGlobal(widget.rect().center()) #widget position before submenu change.
-
-		# w = widget #store widget before changing the stacked widget ui.
-		
-		try: #open a submenu on mouse enter (if it exists).
-			name = self.hotBox.setWidget(submenu) #switch the stacked widget to the given submenu.
-		except Exception as error:
-			if not type(error)==ValueError: #if no submenu exists: ignore.
-				raise error
-				return None
-
-		w = getattr(self.hotBox.currentWidget(), widget.objectName()) #get the widget of the same name in the new ui.
-		#maintain the correct contents of the prevWidget and drawPath lists by removing elements when moving back up levels in the ui.
-		if len(self.sb.previousName(as_list=1, allowDuplicates=1))>2:
-			if name==self.sb.previousName(as_list=1, allowDuplicates=1)[-3]: #if index is that of the previous ui, remove the information associated with that ui from the lists so that any new list will draw with the correct contents.
-				del self.prevWidget[-2:]
-				if len(self.hotBox.drawPath)>2: #temp solution for removing drawPath points. works only when there are two levels of submenus to draw paths for.
-					del self.hotBox.drawPath[-2:]
-
-		self.prevWidget.append([widget, p1]) #add the widget that was initially entered to the prevWidget list so that it can be re-created in the new ui (in the same position).
-		self.hotBox.drawPath.append(QtGui.QCursor.pos()) #add the global cursor position to the drawPath list so that paint events can draw the path tangents.
-
-		p2 = w.mapToGlobal(w.rect().center()) #widget position after submenu change.
-		currentPos = self.hotBox.mapToGlobal(self.hotBox.pos())
-		self.hotBox.move(self.hotBox.mapFromGlobal(currentPos +(p1 - p2))) #currentPos + difference
-
-
-		if name not in self.sb.previousName(as_list=1, allowDuplicates=1)[:-1]: #if submenu ui called for the first time, construct widgets from the previous ui that fall along the plotted path.
-			w0 = QtWidgets.QPushButton('<', self.sb.getUi(name))
-			w0 = self.sb.addWidget(name, w0, '<')
-			w0.resize(45, 45)
-			w0.move(w0.mapFromGlobal(self.hotBox.drawPath[0] - w0.rect().center())) #move and center
-			w0.show()
-
-			if '_submenu' in self.sb.previousName(): #recreate widget/s from the previous ui that are in the current path.
-				for index in range(2, len(self.prevWidget)+1): #index starting at 2:
-					prevWidget = self.prevWidget[-index][0] #give index neg value.
-					prevWidgetLocation = self.prevWidget[-index][1]
-
-					w1 = QtWidgets.QPushButton(prevWidget.text(), self.sb.getUi(name))
-					w1 = self.sb.addWidget(name, w1, prevWidget.objectName())
-					w1.setWhatsThis(prevWidget.whatsThis())
-					w1.resize(prevWidget.size())
-					w1.move(w1.mapFromGlobal(prevWidgetLocation - w1.rect().center())) #move and center
-					w1.show()
-					index+=1
-
-			self.init(name) #re-initialize the widgets under this ui name to set things like the event filter and stylesheet for the newly added widgets.
 
 
 
@@ -363,16 +298,18 @@ print os.path.splitext(os.path.basename(__file__))[0]
 # 					submenu = self.widget.whatsThis()+'_submenu'
 # 					n = self.widgetName
 # 					if not self.name==submenu: #do not reopen submenu on enter event if it is already open.
-# 						self.name = self.hotBox.setWidget(submenu) #switch the stacked layout to the given submenu.
-# 						self.widget = getattr(self.hotBox.currentWidget(), n) #get the widget with the same name in the new ui.
+# 						self.name = self.tk.setUi(submenu) #switch the stacked layout to the given submenu.
+# 						self.widget = getattr(self.tk.currentWidget(), n) #get the widget with the same name in the new ui.
 
 
-# 						p3 = self.hotBox.mapToGlobal(self.hotBox.pos())
+# 						p3 = self.tk.mapToGlobal(self.tk.pos())
 # 						p2 = self.widget.mapToGlobal(self.widget.rect().center())
-# 						self.hotBox.move(self.hotBox.mapFromGlobal(p3 +(p1 - p2)))
+# 						self.tk.move(self.tk.mapFromGlobal(p3 +(p1 - p2)))
 
 
 
 # print name, self.sb.previousName(as_list=1)[-3]
 					# if name==self.sb.previousName(as_list=1, allowDuplicates=1)[-3]: #if index is changed to the previous ui, remove the last widget.
 						# del self.prevWidget[-1:]
+
+

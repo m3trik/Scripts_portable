@@ -390,15 +390,15 @@ if ($maskVertex==0 && $maskEdge==1)
 if 'tk' not in locals() or 'tk' not in globals(): import tk_main; tk = tk_main.createInstance()
 if not tk.isVisible(): tk.show()
 // import tk_main
-// if 'tk_hotBox_init' not in locals() or 'tk_hotBox_init' not in globals():
-// 	tk_hotBox_init = tk_main.createInstance()
-// tk_hotBox_init.hbShow()
+// if 'tk_tk_init' not in locals() or 'tk_tk_init' not in globals():
+// 	tk_tk_init = tk_main.createInstance()
+// tk_tk_init.hbShow()
 
 
 //Hk_hotbox_minimal_release
 //Close the hotbox
 //z (on release)
-// tk_hotBox_init.hbHide()
+// tk_tk_init.hbHide()
 
 
 
@@ -406,6 +406,6 @@ if not tk.isVisible(): tk.show()
 //Display the full version of the hotbox
 //shft + z
 {
-hotBox -displayHotbox -polygonsOnlyMenus;
-hotBox;
+tk -displayHotbox -polygonsOnlyMenus;
+tk;
 }

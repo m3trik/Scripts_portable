@@ -66,10 +66,10 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 		self.setCursor(QtGui.QCursor(QtCore.Qt.ClosedHandCursor))
 
 		#move window:
-		curPos = self.hotBox.mapToGlobal(self.hotBox.pos())
+		curPos = self.tk.mapToGlobal(self.tk.pos())
 		globalPos = event.globalPos()
 		diff = globalPos -self.__mouseMovePos
-		self.hotBox.move(self.hotBox.mapFromGlobal(curPos + diff))
+		self.tk.move(self.tk.mapFromGlobal(curPos + diff))
 		self.__mouseMovePos = globalPos
 
 		return QtWidgets.QPushButton.mouseMoveEvent(self, event)
@@ -89,7 +89,7 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 			self.setChecked(True) #setChecked to prevent window from closing.
 		else:
 			self.setChecked(not self.isChecked()) #toggle check state
-			self.hotBox.hide_()
+			self.tk.hide_()
 
 		return QtWidgets.QPushButton.mouseReleaseEvent(self, event)
 
@@ -104,7 +104,7 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 			try:
 				from tk_switchboard import Switchboard
 				self.__sb = Switchboard()
-				self.hotBox = self.__sb.getClassInstance('hotBox')
+				self.tk = self.__sb.getClassInstance('tk')
 			except Exception as error:
 				print error
 

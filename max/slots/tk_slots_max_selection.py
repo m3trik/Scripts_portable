@@ -9,15 +9,16 @@ from tk_slots_max_init import Init
 
 
 
+
 class Selection(Init):
 	def __init__(self, *args, **kwargs):
 		super(Selection, self).__init__(*args, **kwargs)
-		
-		
+
+
 		self.ui = self.sb.getUi('selection')
 
-		
-		
+
+
 		#set checked button states
 		#chk004 ignore backfacing (camera based selection)
 		# sel = rt.Filters.GetModOrObj()
@@ -85,9 +86,9 @@ class Selection(Init):
 		List Selection Sets
 		'''
 		cmb = self.ui.cmb000
-		
+
 		selectionSets = [set for set in rt.selectionSets]
-		contents = self.comboBox (cmb, [set.name for set in selectionSets], "Sets")
+		contents = self.comboBox(cmb, [set.name for set in selectionSets], "Sets")
 
 		index = cmb.currentIndex()
 		if index!=0:
@@ -100,7 +101,7 @@ class Selection(Init):
 		Editors
 		'''
 		cmb = self.ui.cmb001
-		
+
 		files = ['']
 		contents = self.comboBox(cmb, files, '::')
 
@@ -116,9 +117,9 @@ class Selection(Init):
 		Select All Of Type
 		'''
 		cmb = self.ui.cmb002
-		
+	
 		list_ = ['Geometry', 'Shapes', 'Lights', 'Cameras', 'Helpers', 'Space Warps', 'Particle Systems', 'Bone Objects']
-		contents = self.comboBox (cmb, list_, 'Select by Type:')
+		contents = self.comboBox(cmb, list_, 'Select by Type:')
 
 		index = cmb.currentIndex()
 		if index!=0:
@@ -149,7 +150,7 @@ class Selection(Init):
 		cmb = self.ui.cmb003
 
 		list_ = ['Vertex', 'Edge', 'Border', 'Face', 'Element']
-		contents = self.comboBox (cmb, list_, 'Convert To')
+		contents = self.comboBox(cmb, list_, 'Convert To')
 		
 		index = cmb.currentIndex()
 		if index!=0:

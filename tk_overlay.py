@@ -30,7 +30,7 @@ class Overlay(QtWidgets.QWidget):
 		self.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
 
 		self.sb = Switchboard()
-		self.hotBox = self.sb.getClassInstance('hotBox')
+		self.tk = self.sb.getClassInstance('tk')
 
 
 
@@ -44,9 +44,9 @@ class Overlay(QtWidgets.QWidget):
 
 			painter = QtGui.QPainter(self) #Initialize painter
 
-			for i, start_point in enumerate(self.hotBox.drawPath): #plot and draw the points in the drawPath list.
+			for i, start_point in enumerate(self.tk.drawPath): #plot and draw the points in the drawPath list.
 				try:
-					end_point = self.mapFromGlobal(self.hotBox.drawPath[i+1])
+					end_point = self.mapFromGlobal(self.tk.drawPath[i+1])
 				except:
 					end_point = self.mouseEventPos #after the list points are drawn, plot the current end_point, controlled by the mouse move event.
 
@@ -155,7 +155,7 @@ print os.path.splitext(os.path.basename(__file__))[0]
 # Notes
 # -----------------------------------------------
 
-		# self.hotBox.currentChanged.connect(self.currentChanged)
+		# self.tk.currentChanged.connect(self.currentChanged)
 
 
 	# def mousePressEvent(self, event):

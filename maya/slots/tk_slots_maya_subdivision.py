@@ -103,9 +103,9 @@ class Subdivision(Init):
 		#check shape for an existing output to a smoothProxy
 		attachedSmoothProxies = pm.listConnections (shape[0], type="polySmoothProxy", s=0, d=1)
 		if len(attachedSmoothProxies) == 0: #subdiv on
-			self.setButtons(self.hotBox.ui, enable='b000', checked='b009')
+			self.setButtons(self.tk.ui, enable='b000', checked='b009')
 		else:
-			self.setButtons(self.hotBox.ui, disable='b000', unchecked='b009')
+			self.setButtons(self.tk.ui, disable='b000', unchecked='b009')
 			mel.eval("smoothingDisplayToggle 0;")
 
 		#toggle performSmoothProxy

@@ -30,8 +30,8 @@ class Uv(Init):
 		contents = self.comboBox(cmb, ['UV Editor','UV Set Editor','UV Tool Kit','UV Linking: Texture-Centric','UV Linking: UV-Centric','UV Linking: Paint Effects/UV','UV Linking: Hair/UV','Flip UV'], '::')
 
 		index = cmb.currentIndex()
-		if index !=0: #hide hotBox then perform operation
-			self.hotBox.hide()
+		if index !=0: #hide tk then perform operation
+			self.tk.hide()
 			if index == 1: #UV Editor
 				mel.eval('TextureViewWindow;') 
 			if index == 2: #UV Set Editor

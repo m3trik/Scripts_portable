@@ -1,8 +1,7 @@
-## tk_hotBox
 ###### *PySide marking menu style layered ui and toolkit for maya and max.
 *work in progress..*
 
-![alt text](https://raw.githubusercontent.com/m3trik/tk_hotBox/master/docs/Screenshot-Camera_navigation.jpg)
+![alt text](https://raw.githubusercontent.com/m3trik/tk_tk/master/docs/Screenshot-Camera_navigation.jpg)
 *Example of camera navigation.
 
 

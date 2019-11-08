@@ -28,6 +28,7 @@ class QComboBox_(QtWidgets.QComboBox):
 		super(QComboBox_, self).__init__(parent)
 
 
+
 	def refreshContents(self):
 		'''
 		Change index to refresh contents.
@@ -41,14 +42,13 @@ class QComboBox_(QtWidgets.QComboBox):
 
 
 	# def showPopup(self):
-		# self.widget.setStyleSheet('''
+	# 	self.setStyleSheet('''
+	# 		}''')
 
-		# 	}''')
 
 
 	# def hidePopup(self):
-	# 	self.widget.setStyleSheet('''
-			
+	# 	self.setStyleSheet('''
 	# 		}''')
 
 
@@ -58,36 +58,9 @@ class QComboBox_(QtWidgets.QComboBox):
 		args:
 			event=<QEvent>
 		'''
-		# print '__showEvent'
 		self.refreshContents()
 
 		return QtWidgets.QComboBox.showEvent(self, event)
-
-
-
-	# def mouseMoveEvent(self, event):
-	# 	'''
-	# 	args:
-	# 		event=<QEvent>
-	# 	'''
-	# 	# print '__mouseMoveEvent_1'
-	# 	if not self.rect().contains(self.mapFromGlobal(QtGui.QCursor.pos())): #if mouse over widget:
-	# 		self.hidePopup()
-
-	# 	return QtWidgets.QComboBox.mouseMoveEvent(self, event)
-
-
-
-	# def mouseReleaseEvent(self, event):
-	# 	'''
-	# 	args:
-	# 		event=<QEvent>
-	# 	'''
-	# 	# print '__mouseReleaseEvent_1'
-	# 	if self.rect().contains(self.mapFromGlobal(QtGui.QCursor.pos())): #if mouse over widget:
-	# 		self.showPopup()
-
-	# 	return QtWidgets.QComboBox.mouseReleaseEvent(self, event)
 
 
 
@@ -119,7 +92,7 @@ class QComboBox_(QtWidgets.QComboBox):
 				color: white;
 			}''')
 
-		self.hidePopup()
+		# self.hidePopup()
 
 		return QtWidgets.QComboBox.leaveEvent(self, event)
 
@@ -134,3 +107,34 @@ if __name__ == "__main__":
 	w = QComboBox_()
 	w.show()
 	sys.exit(qApp.exec_())
+
+
+
+# -----------------------------------------------
+# Notes
+# -----------------------------------------------
+
+
+	# def mouseMoveEvent(self, event):
+	# 	'''
+	# 	args:
+	# 		event=<QEvent>
+	# 	'''
+	# 	# print '__mouseMoveEvent_1'
+	# 	if not self.rect().contains(self.mapFromGlobal(QtGui.QCursor.pos())): #if mouse over widget:
+	# 		self.hidePopup()
+
+	# 	return QtWidgets.QComboBox.mouseMoveEvent(self, event)
+
+
+
+	# def mouseReleaseEvent(self, event):
+	# 	'''
+	# 	args:
+	# 		event=<QEvent>
+	# 	'''
+	# 	# print '__mouseReleaseEvent_1'
+	# 	if self.rect().contains(self.mapFromGlobal(QtGui.QCursor.pos())): #if mouse over widget:
+	# 		self.showPopup()
+
+	# 	return QtWidgets.QComboBox.mouseReleaseEvent(self, event)

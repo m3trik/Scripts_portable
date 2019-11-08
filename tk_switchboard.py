@@ -32,7 +32,7 @@ class Switchboard(object):
 					'widgetDict' : {
 								'<widget name>':{
 											'widget':<widget>,
-											'widgetWithSignal':<widget.signal>,
+											'signalInstance':<widget.signal>,
 											'widgetType':'<widgetClassName>',
 											'derivedType':'<derivedClassName>',
 											'widgetClassInstance':<Class>,
@@ -87,13 +87,13 @@ class Switchboard(object):
 		'''
 		Add the signal/slot connections for each widget in a given ui.
 
-		The signalType dict establishes what type widgets will be added to the widgetDict, and what associated signal to apply.
-		Following that, the items in the ui are looped over, and the widgets' method resolution order is checked against the signalType keys
+		The signals dict establishes what type widgets will be added to the widgetDict, and what associated signal to apply.
+		Following that, the items in the ui are looped over, and the widgets' method resolution order is checked against the signals keys
 		to determine the correct derived class type (used in the case of a custom widget).
 		args:
 			name='string' - name of the ui to construct connections for.
 		returns:
-			dict - 'widgetName':{'widget':<widget>,'widgetWithSignal':<widgetWithSignal>,'method':<method>,'docString':'docString','widgetClassInstance':<class object>,'widgetClassName':'class name'}
+			dict - 'widgetName':{'widget':<widget>,'signalInstance':<signalInstance>,'method':<method>,'docString':'docString','widgetClassInstance':<class object>,'widgetClassName':'class name'}
 		'''
 		ui = self.getUi(name)
 
@@ -121,9 +121,10 @@ class Switchboard(object):
 
 		n = name.split('_')[0] #get ie. 'polygons' from 'polygons_submenu' in cases where a submenu shares the same slot class of it's parent menu.
 		pathToSlots = 'tk_slots_'+self.getMainAppWindow(objectName=True)+'_'+n+'.'+n[0].upper()+n[1:] #ie. tk_slots_maya_init.Init
-		class_ = self.setClassInstance(pathToSlots)
+		class_ = self.getClassInstance(pathToSlots)
 
-		signalType = {'QMainWindow':'',
+
+		signals = {'QMainWindow':'',
 					'QWidget':'',
 					'QProgressBar':'valueChanged',
 					'QPushButton':'released',
@@ -135,26 +136,25 @@ class Switchboard(object):
 					'QTextEdit':'textChanged'}
 
 		for d in widget.__class__.__mro__:
-			if d.__name__ in signalType:
+			if d.__name__ in signals:
 				derivedType = d.__name__
-				signal = signalType[derivedType]
+				signal = signals[derivedType]
 
-
-				widgetWithSignal = getattr(widget, signal, None) #add signal to widget
+				signalInstance = getattr(widget, signal, None) #add signal to widget
 				method = getattr(class_, widgetName, None) #use 'widgetName' (ie. b006) to get the corresponding method of the same name.
 				docString = getattr(method, '__doc__', None)
 
 				#add values to widgetDict
 				self.widgetDict(name).update(
 							{widgetName:{'widget':widget, 
-										'widgetWithSignal':widgetWithSignal,
+										'signalInstance':signalInstance,
 										'widgetType':widget.__class__.__name__,
 										'derivedType':derivedType,
-										'widgetClassInstance':widget.__class__(),
 										'method':method,
 										'docString':docString}})
 
-				#break #stop looping up the chain of mro types found in signalType once a type match is found.
+				#break #stop looping up the chain of mro types found in signals once a type match is found.
+				# print self.widgetDict(name)
 				return self._sbDict[name]['widgetDict'][widgetName]['widget'] #return the stored widget.
 
 
@@ -169,16 +169,31 @@ class Switchboard(object):
 			connection dict of given name with widget/method name string as key.
 		ex.
 		'widget':ui object.  ie. b001
-		'widgetWithSignal':ui object with signal attached. ie. b001.connect
+		'signalInstance':ui object with signal attached. ie. b001.connect
 		'method':class method object for the corresponding ui widget. ie. main.b001
 		'docString': string description of command from method docString.  ie. 'Multi-Cut Tool'}
-		#ie. {'b001':{'widget':b001, 'widgetWithSignal':b001.onPressed, 'method':main.b001, 'docString':'Multi-Cut Tool'}},
+		#ie. {'b001':{'widget':b001, 'signalInstance':b001.onPressed, 'method':main.b001, 'docString':'Multi-Cut Tool'}},
 		'''
 		if not 'widgetDict' in self._sbDict[name]:
 			self._sbDict[name]['widgetDict'] = {}
 			self.buildWidgetDict(name) #construct the signals and slots for the ui
 
 		return self._sbDict[name]['widgetDict']
+
+
+
+	def setSignals(self, name):
+		'''
+		Replace any old signals with the set from the given name.
+		'''
+		# if not name in self.previousName(allowInit=1, allowDuplicates=1): #ie. 'polygons' not in 'polygons_submenu' (as they both share the same connections).
+		# print 'not ',name,' in ',self.previousName(allowInit=1, allowDuplicates=1)
+		# print 'setSignals:', self.previousName(allowInit=1, allowDuplicates=1, as_list=1)
+		if self.previousName(allowInit=1, allowDuplicates=1):
+			# print 'removeSignal:', self.previousName(allowInit=1, allowDuplicates=1)
+			self.removeSignal(self.previousName(allowInit=1, allowDuplicates=1)) #remove signals from the previous ui.
+		self.addSignal(name)
+		# print 'addSignal:', name
 
 
 
@@ -191,15 +206,16 @@ class Switchboard(object):
 		for widgetName in self.widgetDict(name):
 			signal = self.getSignal(name, widgetName)
 			slot = self.getMethod(name, widgetName)
-			# print 'addSignal: ', signal, slot
-			try:
-				signal.connect(slot) #add single slot (main and viewport)
-			except:
+			# print 'addSignal: ', name, widgetName, signal, slot
+			if slot:
 				try:
-					map(signal.connect, slot) #add multiple slots from a list.
-				except Exception as error:
-					if slot:
-						print '# Error: addSignal '+name+' '+widgetName+str(signal)+str(slot)+' #' #, error
+					signal.connect(slot) #connect single slot (main and viewport)
+				except:
+					try:
+						map(signal.connect, slot) #connect multiple slots from a list.
+
+					except Exception as error:
+						print '# Error: addSignal:', name, widgetName, error, signal, slot,'#' #, error
 
 
 
@@ -212,15 +228,17 @@ class Switchboard(object):
 		for widgetName in self.widgetDict(name):
 			signal = self.getSignal(name, widgetName)
 			slot = self.getMethod(name, widgetName)
-			# print 'removeSignal: ', signal, slot
-			try:
-				signal.disconnect(slot) #add single slot (main and viewport)
-			except: 
+			# print 'removeSignal: ', name, widgetName, signal, slot
+			if slot:
 				try:
-					map(signal.disconnect, slot) #add multiple slots from a list.
-				except Exception as error:
-					if slot:
-						print '# Error: removeSignal '+name+' '+widgetName+str(signal)+str(slot)+' #' #, error
+					signal.disconnect(slot) #disconnect single slot (main and viewport)
+				except:
+					try:
+						signal.disconnect() #disconnect all
+						# map(signal.disconnect, slot) #disconnect multiple slots from a list.
+
+					except Exception as error:
+						print '# Error: removeSignal:', name, widgetName, error, signal, slot,'#' #, error
 
 
 
@@ -321,7 +339,8 @@ class Switchboard(object):
 
 	def setUiSize(self, name=None, size=None): #store ui size.
 		'''
-		Set UI size. If no size is given, the minimum ui size needed to frame its
+		Set UI size.
+		If no size is given, the minimum ui size needed to frame its
 		contents will be used. If no name is given, the current ui will be used.
 		args:
 			name='string' - optional ui name
@@ -331,6 +350,7 @@ class Switchboard(object):
 		'''
 		if not name:
 			name = self.getUiName()
+
 		if not size:
 			ui = self.getUi(name)
 			size = [ui.frameGeometry().width(), ui.frameGeometry().height()]
@@ -340,9 +360,11 @@ class Switchboard(object):
 
 
 
-	def getUiSize(self, width=None, percentWidth=None, height=None, percentHeight=None): #get current ui size info.
+	def getUiSize(self, name=None, width=None, percentWidth=None, height=None, percentHeight=None): #get current ui size info.
 		'''
+		Get the size info for each ui (allows for resizing a stacked widget where ordinarily resizing is constrained by the largest widget in the stack)
 		args:
+			name='string' - ui name to get size from.
 			width=int 	returns width of current ui
 			height=int 	returns hight of current ui
 			percentWidth=int returns a percentage of the width
@@ -354,16 +376,22 @@ class Switchboard(object):
 			if percentHeight: returns the percentage of the height as an int
 			else: ui size info as integer values in a list. [width, hight]
 		'''
+		if not name:
+			name = self.getUiName()
+
+		if not 'size' in self._sbDict[name]:
+			self.setUiSize(name)
+
 		if width:
-			return self._sbDict[self.getUiName()]['size'][0]
+			return self._sbDict[name]['size'][0]
 		elif height:
-			return self._sbDict[self.getUiName()]['size'][1]
+			return self._sbDict[name]['size'][1]
 		elif percentWidth:
-			return self._sbDict[self.getUiName()]['size'][0] *percentWidth /100
+			return self._sbDict[name]['size'][0] *percentWidth /100
 		elif percentHeight:
-			return self._sbDict[self.getUiName()]['size'][1] *percentHeight /100
+			return self._sbDict[name]['size'][1] *percentHeight /100
 		else:
-			return self._sbDict[self.getUiName()]['size']
+			return self._sbDict[name]['size']
 
 
 
@@ -435,9 +463,8 @@ class Switchboard(object):
 			class object.
 		'''
 		if type(class_)==str or type(class_)==unicode: #if arg given as string or unicode:
-			name = class_.split('_')[-1].split('.')[-1].lower(); #get key from class_ string ie. 'class' from 'module.Class'
+			name = class_.split('_')[-1].split('.')[-1].lower() #get key from class_ string ie. 'class' from 'module.Class'
 			class_ = locate(class_)
-
 		else: #if arg as <object>:
 			name = class_.__class__.__name__.lower();
 
@@ -459,20 +486,20 @@ class Switchboard(object):
 		Case insensitive. (Class string keys are lowercase and any given string will be converted automatically)
 		If class is not in self._sbDict, getClassInstance will attempt to use setClassInstance() to first store the class.
 		args:
-			class_='string' name of class *or <class object>
+			class_='string' *or <class object> - module name.class to import and store class.
 				ie. 'polygons', 'tk_slots_max_polygons.Polygons', or <tk_slots_max_polygons.Polygons>
 		returns:
 			class object.
 		'''
 		if type(class_)==str or type(class_)==unicode: #if arg given as string or unicode:
-			name = class_.lower()
+			name = class_.split('_')[-1].split('.')[-1].lower() #get key from class_ string ie. 'class' from 'module.Class'#class_.lower()
 		else: #if arg as <object>:
 			if not callable(class_):
 				return None
-			name = class_.__class__.__name__.lower();
+			name = class_.__class__.__name__.lower()
 
 		if not 'class' in self._sbDict[name]:
-			return self.setClassInstance(name) #construct the signals and slots for the ui
+			return self.setClassInstance(class_) #construct the signals and slots for the ui
 
 		return self._sbDict[name]['class']
 
@@ -499,34 +526,6 @@ class Switchboard(object):
 			return self._sbDict[name]['widgetDict'][widgetName]['widget']
 		else: #return all widgets:
 			return [self._sbDict[name]['widgetDict'][widgetName]['widget'] for widgetName in self._sbDict[name]['widgetDict']]
-
-
-
-	def getWidgetClassInstance(self, widget, name=None):
-		'''
-		ie. returns <type 'PySide2.QtWidgets.QPushButton'> or, <class 'widgets.QComboBox_Popup.QComboBox_Popup'>
-		args:
-			widget='string'  - name of widget
-					*or <object> - widget
-			name='string' - name of dynamic ui (else use current ui)
-		returns:
-			<class object> - the corresponding widget class
-		'''
-		if not type(widget)==str:
-			widget = widget.objectName()
-
-		if not name:
-			name = self.getUiName()
-
-		try:
-			if not 'widgetDict' in self._sbDict[name]:
-				self.widgetDict(name) #construct the signals and slots for the ui
-		except Exception as error:
-			if not type(error)==KeyError:
-				raise error
-			return widget.__class__()
-
-		return self._sbDict[name]['widgetDict'][widget]['widgetClassInstance']
 
 
 
@@ -614,9 +613,9 @@ class Switchboard(object):
 			self.widgetDict(name) #construct the signals and slots for the ui
 
 		if widgetName:
-			return self._sbDict[name]['widgetDict'][widgetName]['widgetWithSignal']
+			return self._sbDict[name]['widgetDict'][widgetName]['signalInstance']
 		else:
-			return [self._sbDict[name]['widgetDict'][widgetName]['widgetWithSignal'] for widgetName in self._sbDict[name]['widgetDict']]
+			return [self._sbDict[name]['widgetDict'][widgetName]['signalInstance'] for widgetName in self._sbDict[name]['widgetDict']]
 
 
 
@@ -830,7 +829,7 @@ class Switchboard(object):
 		returns:
 
 		'''
-		if '_submenu' in name:
+		if name and '_submenu' in name:
 			return 2
 		if any([name=='main', name=='editors', name=='viewport']):
 			return 1
@@ -913,8 +912,14 @@ print os.path.splitext(os.path.basename(__file__))[0]
 test example:
 _sbDict={
 	'polygons':{'class': '<Polygons>',
-				'ui': '<polygons ui object>', 
-				'widgetDict': {'b001':{'widget':'<b001>', 'widgetWithSignal':'<b001.connect>', 'method':'<main.b001>', 'docString':'Multi-Cut Tool', 'widgetClassInstance':'<QPushButton>', 'widgetType':'QPushButton'}}},
+				'ui': '<polygons ui object>',
+				'size': [210, 480] 
+				'widgetDict': {'cmb002': {'widget': '<widgets.QComboBox_.QComboBox_ object at 0x0000016B6C078908>', 
+									'widgetType': 'QComboBox_', 
+									'derivedType': 'QComboBox', 
+									'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000016B62BC5780>', 
+									'docString': '\n\t\tSelect All Of Type\n\t\t', 
+									'method': '<bound method Selection.cmb002 of <tk_slots_max_selection.Selection object at 0x0000016B6BC26470>>'}, }},
 	'mainAppWindow': None,
 	'name': ['polygons'],
 	'prevCommand': [['b000', 'multi-cut tool']],
@@ -923,50 +928,41 @@ _sbDict={
 
 
 
+# def getWidgetClassInstance(self, widget, name=None):
+# 		'''
+# 		ie. returns <type 'PySide2.QtWidgets.QPushButton'> or, <class 'widgets.QComboBox_Popup.QComboBox_Popup'>
+# 		args:
+# 			widget='string'  - name of widget
+# 					*or <object> - widget
+# 			name='string' - name of dynamic ui (else use current ui)
+# 		returns:
+# 			<class object> - the corresponding widget class
+# 		'''
+# 		if not type(widget)==str:
+# 			widget = widget.objectName()
+
+# 		if not name:
+# 			name = self.getUiName()
+
+# 		try:
+# 			if not 'widgetDict' in self._sbDict[name]:
+# 				self.widgetDict(name) #construct the signals and slots for the ui
+# 		except Exception as error:
+# 			if not type(error)==KeyError:
+# 				raise error
+# 			return widget.__class__()
+
+# 		return self._sbDict[name]['widgetDict'][widget]['widgetClassInstance']
 
 
-	# def setUiSize(self, name=None, size=None): #store ui size.
-	# 	'''
-	# 	Set UI size. If no size is given, the minimum ui size needed to frame its
-	# 	contents will be used. If no name is given, the current ui will be used.
-	# 	args:
-	# 		name='string' - optional ui name
-	# 		size=[int, int] - optional width and height as an integer list. [width, height]
-	# 	returns:
-	# 		ui size info as integer values in a list. [width, hight]
-	# 	'''
-	# 	if not name:
-	# 		name = self.getUiName()
-	# 	if not size:
-	# 		ui = self.getUi(name)
-	# 		size = [ui.frameGeometry().width(), ui.frameGeometry().height()]
-
-	# 	self._sbDict[name]['size'] = size
-	# 	return self._sbDict[name]['size']
-
-
-
-	# def getUiSize(self, width=None, percentWidth=None, height=None, percentHeight=None): #get current ui size info.
-	# 	'''
-	# 	args:
-	# 		width=int 	returns width of current ui
-	# 		height=int 	returns hight of current ui
-	# 		percentWidth=int returns a percentage of the width
-	# 		percentHeight=int returns a percentage of the height
-	# 	returns:
-	# 		if width: returns width as int
-	# 		if height: returns height as int
-	# 		if percentWidth: returns the percentage of the width as an int
-	# 		if percentHeight: returns the percentage of the height as an int
-	# 		else: ui size info as integer values in a list. [width, hight]
-	# 	'''
-	# 	if width:
-	# 		return self._sbDict[self.getUiName()]['size'][0]
-	# 	elif height:
-	# 		return self._sbDict[self.getUiName()]['size'][1]
-	# 	elif percentWidth:
-	# 		return self._sbDict[self.getUiName()]['size'][0] *percentWidth /100
-	# 	elif percentHeight:
-	# 		return self._sbDict[self.getUiName()]['size'][1] *percentHeight /100
-	# 	else:
-	# 		return self._sbDict[self.getUiName()]['size']
+# def connectSignal(signal, newhandler=None, oldhandler=None):
+# 		while True: #the loop is needed for safely disconnecting a specific handler, because it may have been connected multple times, and disconnect only removes one connection at a time.
+# 			try:
+# 				if oldhandler is not None:
+# 					signal.disconnect(oldhandler)
+# 				else:
+# 					signal.disconnect()
+# 			except TypeError:
+# 				break
+# 		if newhandler is not None:
+# 			signal.connect(newhandler)

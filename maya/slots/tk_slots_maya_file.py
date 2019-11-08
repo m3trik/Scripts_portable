@@ -87,8 +87,8 @@ class File(Init):
 		contents = self.comboBox(cmb,["Import file", "Import Options"], "Import")
 		
 		index = cmb.currentIndex()
-		if index!=0: #hide hotBox then perform operation
-			self.hotBox.hide()
+		if index!=0: #hide tk then perform operation
+			self.tk.hide()
 			if index == 1: #Import
 				mel.eval('Import;')
 			if index == 2: #Import options
@@ -108,8 +108,8 @@ class File(Init):
 		contents = self.comboBox(cmb, list_, "Export")
 
 		index = cmb.currentIndex()
-		if index !=0: #hide hotBox then perform operation
-			self.hotBox.hide()
+		if index !=0: #hide tk then perform operation
+			self.tk.hide()
 			if index==1: #Export selection
 				mel.eval('ExportSelection;')
 			if index==2: #Export options
@@ -282,7 +282,7 @@ class File(Init):
 
 		'''
 		mel.eval("minimizeApp;")
-		self.hotBox.hbHide()
+		self.tk.hbHide()
 
 
 	def b006(self):

@@ -28,7 +28,7 @@ class Test001(Slot):
 
 
 	def method(self):
-		classes = [locate('tk_slots_'+self.hotBox.app+'_'+name+'.'+name.capitalize())(self.hotBox) for name in self.hotBox.uiList]
+		classes = [locate('tk_slots_'+self.tk.app+'_'+name+'.'+name.capitalize())(self.tk) for name in self.tk.uiList]
 		for class_ in classes:
 			print str(class_), class_
 

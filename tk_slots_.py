@@ -317,14 +317,14 @@ class Slot(object):
 
 		collapsedList = ["..".join([r[0], r[-1]] if len(r) > 1 else r) for r in ranges]
 
-		if limit:
+		if limit and len(collapsedList)>limit:
 			l = collapsedList[:limit]
 			l.append('...')
 			return l
 		else:
 			return collapsedList
-	
-	
+
+
 
 
 

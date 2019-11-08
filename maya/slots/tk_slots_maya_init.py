@@ -28,10 +28,9 @@ class Init(Slot):
 	def info(self):
 		'''
 		get current attributes. those with relevant values will be displayed.
+		returns:
+				{dict} - app object values
 		'''
-		textEdit = self.ui.info
-		textEdit.clear()
-
 		infoDict={}
 		selection = pm.ls(selection=1)
 
@@ -73,29 +72,9 @@ class Init(Slot):
 
 		prevCommand = self.sb.prevCommand(docString=True); infoDict.update({"Previous Command: ":prevCommand})  #get button text from last used command
 
-		#populate the textedit with any values
-		for key, value in infoDict.iteritems():
-			if value:
-				highlight = QtGui.QColor(255, 255, 0)
-				baseColor = QtGui.QColor(185, 185, 185)
-
-				textEdit.setTextColor(baseColor)
-				textEdit.append(key) #textEdit.append(key+str(value))
-				textEdit.setTextColor(highlight)
-				textEdit.insertPlainText(str(value))
+		return infoDict
 
 
-		#construct buttons for any previous commands.
-		ui = self.sb.getUi('main')
-		for num, w in enumerate(self.getObject(ui, 'v024-29'), 1): #num starting from 1
-			try:
-				w.setText(self.sb.prevCommand(docString=1, as_list=1)[-num]) #prevCommand docString
-				self.resizeAndCenterWidget(w)
-				w.show()
-			except: pass
-
-
-	
 
 
 

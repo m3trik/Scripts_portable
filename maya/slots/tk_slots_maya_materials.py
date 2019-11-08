@@ -122,11 +122,11 @@ class Materials(Init):
 		
 
 	def chk000(self): #Select by material: invert
-		self.hotBox.ui.chk001.setChecked(False)
+		self.tk.ui.chk001.setChecked(False)
 
 
 	def chk001(self): #Select by material: shell
-		self.hotBox.ui.chk000.setChecked(False)
+		self.tk.ui.chk000.setChecked(False)
 
 
 	def chk002(self): #toggle stored material or ID map mode
@@ -138,8 +138,8 @@ class Materials(Init):
 		Select By Material Id
 
 		'''
-		shell = self.hotBox.ui.chk000.isChecked()
-		invert = self.hotBox.ui.chk001.isChecked()
+		shell = self.tk.ui.chk000.isChecked()
+		invert = self.tk.ui.chk001.isChecked()
 
 		selection = pm.ls(selection=1)
 

@@ -19,21 +19,17 @@ class Init(Slot):
 
 
 
-
-
-
 	def info(self):
 		'''
 		Get current scene attributes. Only those with relevant values will be displayed.
+		returns:
+				{dict} - app object values
 		'''
-		textEdit = self.ui.info
-		textEdit.clear()
-
 		infoDict={}
 		selection = rt.selection
 
-		level = rt.subObjectLevel
 
+		level = rt.subObjectLevel
 		if not level: #object level 0
 			selCount = len(selection) #number of selected objects
 			selectedObjects={}; [selectedObjects.setdefault(str(rt.classOf(s.baseObject)),[]).append(str(s.name)) for s in selection] #for any selected objects, set object type as key and append object names as value. if key doesn't exist, use setdefault to initialize an empty list and append. ie. {'joint': ['joint_root_0', 'joint_lower_L8', 'joint_lower_L3']}
@@ -77,27 +73,8 @@ class Init(Slot):
 
 		prevCommand = self.sb.prevCommand(docString=True); infoDict.update({"Previous Command: ":prevCommand})  #get button text from last used command
 
-		#populate the textedit with any values
-		for key, value in infoDict.iteritems():
-			if value:
-				highlight = QtGui.QColor(255, 255, 0)
-				baseColor = QtGui.QColor(185, 185, 185)
+		return infoDict
 
-				textEdit.setTextColor(baseColor)
-				textEdit.append(key) #textEdit.append(key+str(value))
-				textEdit.setTextColor(highlight)
-				textEdit.insertPlainText(str(value))
-
-
-
-		#construct buttons for any previous commands.
-		ui = self.sb.getUi('main')
-		for num, w in enumerate(self.getObject(ui, 'v024-29'), 1): #num starting from 1
-			try:
-				w.setText(self.sb.prevCommand(docString=1, as_list=1)[-num]) #prevCommand docString
-				self.resizeAndCenterWidget(w)
-				w.show()
-			except: pass
 
 
 

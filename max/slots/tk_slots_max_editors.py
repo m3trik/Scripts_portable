@@ -42,8 +42,8 @@ class Editors(Init):
 		self.stackedWidget.setCurrentWidget(name)
 		currentWidget = self.stackedWidget.currentWidget()
 		currentWidget.adjustSize()
-		# self.hotBox.resize(currentWidget.minimumSizeHint())
-		# self.hotBox.resize(currentWidget.sizeHint())
+		# self.tk.resize(currentWidget.minimumSizeHint())
+		# self.tk.resize(currentWidget.sizeHint())
 		return currentWidget
 
 

@@ -33,7 +33,7 @@ class Test001(Slot):
 
 
 	def method(self):
-		classes = [locate('tk_slots_'+self.hotBox.app+'_'+name+'.'+name.capitalize())(self.hotBox) for name in self.hotBox.uiList]
+		classes = [locate('tk_slots_'+self.tk.app+'_'+name+'.'+name.capitalize())(self.tk) for name in self.tk.uiList]
 		for class_ in classes:
 			print str(class_), class_
 
@@ -409,10 +409,10 @@ def clicked():
 
 
 # import tk_main
-# if 'tk_hotBox_init' not in locals() or 'tk_hotBox_init' not in globals():
-# 	tk_hotBox_init = tk_main.createInstance()
-# # tk_hotBox_init.hbShow()
-# tk_hotBox_init.hbHide()
+# if 'tk_tk_init' not in locals() or 'tk_tk_init' not in globals():
+# 	tk_tk_init = tk_main.createInstance()
+# # tk_tk_init.hbShow()
+# tk_tk_init.hbHide()
 
 
 # lambda: self.overlay.setVisible(False) if self.overlay.isVisible() else self.overlay.setVisible(True)

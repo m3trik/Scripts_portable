@@ -33,7 +33,7 @@ class Test001(Slot):
 
 
 	def method(self):
-		classes = [locate('tk_slots_'+self.hotBox.app+'_'+name+'.'+name.capitalize())(self.hotBox) for name in self.hotBox.uiList]
+		classes = [locate('tk_slots_'+self.tk.app+'_'+name+'.'+name.capitalize())(self.tk) for name in self.tk.uiList]
 		for class_ in classes:
 			print str(class_), class_
 
@@ -65,7 +65,7 @@ test=Test001()
 # 	#		 	 	showError_=bool - show attribute error if item doesnt exist
 # 	#				print_=bool - print unpacked objectNames to console.
 # 	#returns: list of corresponding objects
-# 	#ex. getObject(self.hotBox.ui, 's000,b002,cmb011-15') #get objects for s000,b002, and cmb011-cmb015
+# 	#ex. getObject(self.tk.ui, 's000,b002,cmb011-15') #get objects for s000,b002, and cmb011-cmb015
 
 # 	unpacked_names=[]
 # 	for name in [n.strip() for n in objectNames.split(',') if '-' in n]: #build list of all objectNames containing '-'
@@ -83,7 +83,7 @@ test=Test001()
 # 	# objects=[] #corresponding objects
 # 	# for name in names+unpacked_names:
 # 	# 	try:
-# 	# 		objects.append(getattr(class_, name)) #equivilent to:(self.hotBox.ui.m000)
+# 	# 		objects.append(getattr(class_, name)) #equivilent to:(self.tk.ui.m000)
 # 	# 	except: 
 # 	# 		if showError_:
 # 	# 			print "# Error:"+str(class_)+" has no attribute "+str(name)+" #"
@@ -96,7 +96,7 @@ test=Test001()
 # 	#				showError=bool - show attribute error if item doesnt exist
 # 	#				print_=bool - print unpacked objectNames to console.
 # 	#returns: list of corresponding objects
-# 	#ex. getObject(self.hotBox.ui, 's000,b002,cmb011-15') #get objects for s000,b002, and cmb011-cmb015
+# 	#ex. getObject(self.tk.ui, 's000,b002,cmb011-15') #get objects for s000,b002, and cmb011-cmb015
 # 	packed_names = [n.strip() for n in objectNames.split(',') if '-' in n] #build list of all objectNames passed in containing '-'
 
 # 	unpacked_names=[]
@@ -113,7 +113,7 @@ test=Test001()
 
 
 # # print getObject('c', 's100-121, s002-3, s022-23', print_=True)
-# print getObject('self.hotBox.ui', 'i003-25', print_=True)
+# print getObject('self.tk.ui', 'i003-25', print_=True)
 
 
 
@@ -130,7 +130,7 @@ test=Test001()
 	# 	#			 range_=[int list] - integers representing start, end of range. used with single string type objectName.  ie. [2,10]
 	# 	#		 	 showError=bool - show attribute error if item doesnt exist
 	# 	#returns: list of corresponding objects
-	# 	#ex. getObject(self.hotBox.ui, 's', [0,10])  or  getObject(self.hotBox.ui, ['s000,s002,s011'])
+	# 	#ex. getObject(self.tk.ui, 's', [0,10])  or  getObject(self.tk.ui, ['s000,s002,s011'])
 	# 	if range_: #if range is given; generate list within given range_
 	# 		start, stop = range_[0], range_[1] #add a numberical suffix to the object name within the given range.
 	# 		names = [str(objectNames)+'000'[:-len(str(num))]+str(num) for num in range(start,stop)] #build list of name strings within given range
@@ -140,7 +140,7 @@ test=Test001()
 	# 	for name in names:
 	# 		# if hasattr(class_, name):
 	# 		try:
-	# 			objects.append(getattr(class_, name)) #equivilent to:(self.hotBox.ui.m000)
+	# 			objects.append(getattr(class_, name)) #equivilent to:(self.tk.ui.m000)
 	# 		# elif showError_:
 	# 		except: 
 	# 			if showError_:

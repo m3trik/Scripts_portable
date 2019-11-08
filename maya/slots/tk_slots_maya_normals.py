@@ -41,7 +41,7 @@ class Normals(Init):
 		'''
 		Display Face Normals
 		'''
-		size = float(self.hotBox.ui.s001.value())
+		size = float(self.tk.ui.s001.value())
 		# state = pm.polyOptions (query=True, displayNormal=True)
 		state = self.cycle([1,2,3,0], 'displayNormals')
 		if state ==0: #off
@@ -87,7 +87,7 @@ class Normals(Init):
 		'''
 		Set Normal Angle
 		'''
-		normalAngle = str(self.hotBox.ui.s000.value())
+		normalAngle = str(self.tk.ui.s000.value())
 		pm.polySetToFaceNormal (setUserNormal=1) #reset to face
 		pm.polySoftEdge (angle=normalAngle) #smooth if angle is lower than specified amount. default 30
 
@@ -124,7 +124,7 @@ class Normals(Init):
 		pm.undoInfo (openChunk=1)
 		self.mainProgressBar (len(edges))
 
-		soften = self.hotBox.ui.chk000.isChecked()
+		soften = self.tk.ui.chk000.isChecked()
 
 		for edge in edges:
 			pm.progressBar ("tk_progressBar", edit=1, step=1)
@@ -193,8 +193,8 @@ class Normals(Init):
 		'''
 		Lock/Unlock Vertex Normals
 		'''
-		all_ = self.hotBox.ui.chk001.isChecked()
-		state = self.hotBox.ui.chk002.isChecked()#pm.polyNormalPerVertex(vertex, query=1, freezeNormal=1)
+		all_ = self.tk.ui.chk001.isChecked()
+		state = self.tk.ui.chk002.isChecked()#pm.polyNormalPerVertex(vertex, query=1, freezeNormal=1)
 		selection = pm.ls (selection=1, objectsOnly=1)
 		maskObject = pm.selectMode (query=1, object=1)
 		maskVertex = pm.selectType (query=1, vertex=1)

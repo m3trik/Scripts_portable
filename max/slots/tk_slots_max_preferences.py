@@ -18,7 +18,7 @@ class Preferences(Init):
 
 		
 
-		self.ui.b010.setText(self.hotBox.app.capitalize()+' Preferences')
+		self.ui.b010.setText(self.tk.app.capitalize()+' Preferences')
 
 
 		self.cmb001(init=1) #init cmb001

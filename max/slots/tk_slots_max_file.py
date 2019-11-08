@@ -61,7 +61,7 @@ class File(Init):
 		if index!=0:
 			# force=True; force if maxEval("maxFileName;") else not force #if sceneName prompt user to save; else force open.  also: checkForSave(); If the scene has been modified since the last file save (if any), calling this function displays the message box prompting the user that the scene has been modified and requests to save.
 			rt.loadMaxFile(str(contents[index]))
-			self.hotBox.hide()
+			self.tk.hide()
 			cmb.setCurrentIndex(0)
 
 
@@ -98,7 +98,7 @@ class File(Init):
 		index = cmb.currentIndex()
 		if index!=0:
 			rt.loadMaxFile(path+'\\'+str(files[index-1]))
-			self.hotBox.hide()
+			self.tk.hide()
 			cmb.setCurrentIndex(0)
 
 
@@ -111,8 +111,8 @@ class File(Init):
 		contents = self.comboBox(cmb, ["Import file", "Import Options"], "Import")
 		
 		index = cmb.currentIndex()
-		if index!=0: #hide hotBox then perform operation
-			self.hotBox.hide()
+		if index!=0: #hide tk then perform operation
+			self.tk.hide()
 			if index == 1: #Import
 				maxEval('Import;')
 			if index == 2: #Import options
@@ -131,8 +131,8 @@ class File(Init):
 		self.comboBox(cmb, list_, "Export")
 
 		index = cmb.currentIndex()
-		if index !=0: #hide hotBox then perform operation
-			self.hotBox.hide()
+		if index !=0: #hide tk then perform operation
+			self.tk.hide()
 			if index==1: #Export selection
 				maxEval('ExportSelection;')
 			if index==2: #Export options
@@ -266,7 +266,7 @@ class File(Init):
 		files = rt.getRecentfiles()
 		
 		rt.loadMaxFile(str(files[0]))
-		self.hotBox.hide()
+		self.tk.hide()
 
 
 	def b002(self):
@@ -302,7 +302,7 @@ class File(Init):
 		maxEval('minimizeAll app')
 		maxEval('undoMinimizeAll app')
 		rt.releaseOLEObject(app)
-		self.hotBox.hbHide()
+		self.tk.hbHide()
 
 
 	def b006(self):
