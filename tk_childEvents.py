@@ -193,6 +193,9 @@ class EventFactoryFilter(QtCore.QObject):
 		args:
 			event = <QEvent>
 		'''
+		if self.__mouseGrabber:
+			self.__mouseGrabber.releaseMouse()
+			self.__mouseGrabber = None
 
 
 

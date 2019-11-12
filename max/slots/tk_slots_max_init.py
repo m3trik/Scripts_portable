@@ -15,6 +15,7 @@ class Init(Slot):
 	def __init__(self, *args, **kwargs):
 		super(Init, self).__init__(*args, **kwargs)
 
+
 		self.ui = self.sb.getUi('init')
 
 

@@ -10,9 +10,6 @@ from tk_switchboard import Switchboard
 from tk_overlay import OverlayFactoryFilter
 from tk_childEvents import EventFactoryFilter
 
-try: import MaxPlus
-except: pass
-
 
 
 
@@ -160,9 +157,11 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		if event.key()==QtCore.Qt.Key_F12 and not event.isAutoRepeat():
 			#run once on launch. update the info textEdit.
+			print 'keyPressEvent', self.name
 			if self.name=='init': #self.uiLevel==0:
 				textEdit = self.sb.getUi('init').info
 				info = self.sb.getMethod('init', 'info')
+				print info
 				if callable(info):
 					infoDict = info()
 
@@ -281,7 +280,7 @@ class Tk(QtWidgets.QStackedWidget):
 		args:
 			event = <QEvent>
 		'''
-		try: MaxPlus.CUI.EnableAccelerators()
+		try: import MaxPlus; MaxPlus.CUI.EnableAccelerators()
 		except: pass
 
 		self.setUi('init') #reset layout back to init on keyPressEvent
@@ -296,7 +295,7 @@ class Tk(QtWidgets.QStackedWidget):
 		args:
 			event = <QEvent>
 		'''
-		try: MaxPlus.CUI.DisableAccelerators()
+		try: import MaxPlus; MaxPlus.CUI.DisableAccelerators()
 		except: pass
 
 		self.move(QtGui.QCursor.pos() - self.rect().center()) #move window to cursor position and offset from left corner to center
@@ -330,16 +329,7 @@ class Tk(QtWidgets.QStackedWidget):
 # ------------------------------------------------
 # 	Initialize
 # ------------------------------------------------
-def createInstance():
-
-	try:
-		mainWindow = [x for x in app.topLevelWidgets() if x.objectName()=='MayaWindow'][0]
-	except:
-		try:
-			mainWindow = MaxPlus.GetQMaxMainWindow(); mainWindow.setObjectName('MaxWindow')
-		except:
-			mainWindow = None
-
+def createInstance(mainWindow=None):
 	tk = Tk(mainWindow)
 	tk.overlay = OverlayFactoryFilter(tk) #Paint events are handled by the overlay module.
 
@@ -353,6 +343,7 @@ if __name__ == "__main__":
 		app = QtWidgets.QApplication(sys.argv)
 
 	createInstance().show()
+
 	sys.exit(app.exec_())
 
 

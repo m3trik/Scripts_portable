@@ -22,12 +22,9 @@ class Init(Slot):
 
 
 
-
-
-
 	def info(self):
 		'''
-		get current attributes. those with relevant values will be displayed.
+		Get current scene attributes. Only those with relevant values will be displayed.
 		returns:
 				{dict} - app object values
 		'''

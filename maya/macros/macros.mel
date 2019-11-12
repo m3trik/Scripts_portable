@@ -1,3 +1,102 @@
+'''
+runTimeCommand	-annotation string,
+				-category string,
+				-categoryArray,
+				-command script,
+				-commandArray,
+				-commandLanguage string,
+				-default boolean,
+				-defaultCommandArray,
+				-delete,
+				-exists,
+				-hotkeyCtx string,
+				-image string,
+				-keywords string,
+				-label string,
+				-longAnnotation string,
+				-numberOfCommands,
+				-numberOfDefaultCommands,
+				-numberOfUserCommands,
+				-plugin string,
+				-save,
+				-showInHotkeyEditor boolean,
+				-tags string,
+				-userCommandArray,
+				name;
+
+
+-annotation(-ann) string createqueryedit 
+		Description of the command.
+
+-category(-cat) string createqueryedit	
+		Category for the command.
+
+-categoryArray(-caa) query			
+		Return all the run time command categories.
+
+-command(-c) script createqueryedit		
+		Command to be executed when runTimeCommand is invoked.
+
+-commandArray(-ca) query				
+		Returns an string array containing the names of all the run time commands.
+
+-commandLanguage(-cl) string createqueryedit
+		In edit or create mode, this flag allows the caller to choose a scripting language for a command passed to the "-command" flag. If this flag is not specified, then the callback will be assumed to be in the language from which the runTimeCommand command was called. In query mode, the language for this runTimeCommand is returned. The possible values are "mel" or "python".
+
+-default(-d) boolean createquery 		
+		Indicate that this run time command is a default command. Default run time commands will not be saved to preferences.
+
+-defaultCommandArray(-dca) query				
+		Returns an string array containing the names of all the default run time commands.
+
+-delete(-del) edit 				
+		Delete the specified user run time command.
+
+-exists(-ex) create 				
+		Returns true|false depending upon whether the specified object exists. Other flags are ignored.
+
+-hotkeyCtx(-hc)	string createqueryedit 	
+		hotkey Context for the command.
+
+-image(-i) string createqueryedit 	
+		Image filename for the command.
+
+-keywords(-k) string createqueryedit		
+		Keywords for the command. Used for searching for commands in Type To Find. When multiple keywords, use ; as a separator. (Example: "keyword1;keyword2")
+
+-label(-l) string createqueryedit		
+		Label for the command.
+
+-longAnnotation(-la) string createqueryedit	
+		Extensive, multi-line description of the command. This will show up in Type To Finds more info page in addition to the annotation.
+
+-numberOfCommands(-nc) query			
+		Return the number of run time commands.
+
+-numberOfDefaultCommands(-ndc) query			
+		Return the number of default run time commands.
+
+-numberOfUserCommands(-nuc)	query			
+		Return the number of user run time commands.
+
+-plugin(-p)	string createqueryedit			
+		Name of the plugin this command requires to be loaded. This flag wraps the script provided into a safety check and automatically loads the plugin referenced on execution if it hasn't been loaded. If the plugin fails to load, the command won't be executed.
+
+-save(-s) edit 							
+		Save all the user run time commands.
+
+-showInHotkeyEditor(-she) boolean createqueryedit		
+		Indicate that this run time command should be shown in the Hotkey Editor. Default value is true.
+
+-tags(-t) string createqueryedit	
+		Tags for the command. Used for grouping commands in Type To Find. When more than one tag, use ; as a separator. (Example: "tag1;tag2")
+
+-userCommandArray(-uca)	query			
+		Returns an string array containing the names of all the user run time commands.
+'''
+
+
+
 //Display:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 //hk_back_face_culling
@@ -387,12 +486,14 @@ if ($maskVertex==0 && $maskEdge==1)
 //Hk_hotbox_init
 //Display hotbox zones only
 //f12
-if 'tk' not in locals() or 'tk' not in globals(): import tk_main; tk = tk_main.createInstance()
-if not tk.isVisible(): tk.show()
-// import tk_main
-// if 'tk_tk_init' not in locals() or 'tk_tk_init' not in globals():
-// 	tk_tk_init = tk_main.createInstance()
-// tk_tk_init.hbShow()
+if 'tk' not in locals() or 'tk' not in globals():
+	import tk_main;
+	mainWindow = [x for x in app.topLevelWidgets() if x.objectName()=='MayaWindow'][0];
+	tk = tk_main.createInstance(mainWindow)
+
+tk.hide(); tk.show()
+
+//#if not tk.isVisible(): tk.show()
 
 
 //Hk_hotbox_minimal_release
@@ -409,3 +510,10 @@ if not tk.isVisible(): tk.show()
 tk -displayHotbox -polygonsOnlyMenus;
 tk;
 }
+
+
+
+//# -----------------------------------------------
+//# Notes
+//# -----------------------------------------------
+
