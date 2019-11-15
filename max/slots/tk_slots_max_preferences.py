@@ -13,10 +13,8 @@ class Preferences(Init):
 	def __init__(self, *args, **kwargs):
 		super(Preferences, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('preferences')
 
-		
 
 		self.ui.b010.setText(self.tk.app.capitalize()+' Preferences')
 
@@ -31,7 +29,7 @@ class Preferences(Init):
 		Editors
 		'''
 		cmb = self.ui.cmb
-		
+
 		files = ['']
 		contents = self.comboBox(cmb, files, '::')
 

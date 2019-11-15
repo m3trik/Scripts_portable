@@ -13,11 +13,7 @@ class Nurbs(Init):
 	def __init__(self, *args, **kwargs):
 		super(Nurbs, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('nurbs')
-
-		
-
 
 
 
@@ -26,7 +22,7 @@ class Nurbs(Init):
 		Editors
 		'''
 		cmb = self.ui.cmb000
-		
+
 		files = ['']
 		contents = self.comboBox (cmb, files, '::')
 
@@ -42,7 +38,7 @@ class Nurbs(Init):
 		Create: Curve
 		'''
 		cmb = self.ui.cmb001
-		
+
 		files = ['']
 		contents = self.comboBox (cmb, files, 'Create Curve')
 

@@ -1,5 +1,5 @@
--- ||||||||||||||||||||||||||||||||||||||||||||||||
--- ||||||		 3ds max macros     		|||||||
+-- |||||||||||||||||||||||||||||||||||||||||||||||||
+-- |||				3ds max macros				||||
 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
@@ -31,7 +31,7 @@ category: "tk_macroScript.ui"
 silentErrors: false
 autoUndoEnabled: false
 (
-	python.Execute "if 'tk' not in locals() or 'tk' not in globals(): import tk_main; import MaxPlus; mainWindow = MaxPlus.GetQMaxMainWindow(); mainWindow.setObjectName('MaxWindow'); tk = tk_main.createInstance()"
+	python.Execute "if 'tk' not in locals() or 'tk' not in globals(): import tk_main; import MaxPlus; mainWindow = MaxPlus.GetQMaxMainWindow(); mainWindow.setObjectName('MaxWindow'); tk = tk_main.createInstance(mainWindow)"
 	python.Execute "tk.hide(); tk.show()"
 -- 	python.Execute "if not tk.isVisible(): tk.show()"
 )

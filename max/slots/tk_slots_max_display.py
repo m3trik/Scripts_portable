@@ -16,9 +16,6 @@ class Display(Init):
 
 		self.ui = self.sb.getUi('display')
 
-		
-
-
 
 
 	def cmb000(self):
@@ -26,7 +23,7 @@ class Display(Init):
 		Editors
 		'''
 		cmb = self.ui.cmb000
-		
+
 		files = ['']
 		contents = self.comboBox(cmb, files, '::')
 

@@ -13,11 +13,7 @@ class Edit(Init):
 	def __init__(self, *args, **kwargs):
 		super(Edit, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('edit')
-
-		
-
 
 
 
@@ -26,7 +22,7 @@ class Edit(Init):
 		Editors
 		'''
 		cmb = self.ui.cmb000
-		
+
 		files = ['Cleanup', 'Transfer: Attribute Values', 'Transfer: Shading Sets']
 		contents = self.comboBox (cmb, files, '::')
 
@@ -47,7 +43,6 @@ class Edit(Init):
 		Mesh Cleanup
 		'''
 		repair = self.ui.chk004.isChecked() #auto repair errors
-
 
 		#Select components for cleanup from all visible geometry in the scene
 		scene = pm.ls (visible=1, geometry=1)

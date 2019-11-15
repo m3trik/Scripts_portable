@@ -13,12 +13,11 @@ class Normals(Init):
 	def __init__(self, *args, **kwargs):
 		super(Normals, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('normals')
 
-		
 
 		self.ui.b003.setText('Hard Edge Display')
+
 
 
 	def cmb000(self):
@@ -26,7 +25,7 @@ class Normals(Init):
 		Editors
 		'''
 		cmb = self.ui.cmb000
-		
+
 		files = ['']
 		contents = self.comboBox (cmb, files, '::')
 

@@ -13,11 +13,7 @@ class Pivot(Init):
 	def __init__(self, *args, **kwargs):
 		super(Pivot, self).__init__(*args, **kwargs)
 
-		
 		self.ui = self.sb.getUi('pivot')
-
-		
-
 
 
 
@@ -26,7 +22,7 @@ class Pivot(Init):
 		Editors
 		'''
 		cmb = self.ui.cmb000
-		
+
 		files = ['']
 		contents = self.comboBox(cmb, files, '::')
 

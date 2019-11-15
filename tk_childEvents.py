@@ -156,6 +156,7 @@ class EventFactoryFilter(QtCore.QObject):
 		self.widgetType = self.sb.getWidgetType(self.widget, self.name)
 		# self.derivedType = self.sb.getDerivedType(self.widget, self.name)
 		# self.widgetClass = self.sb.getWidgetClassInstance(self.widget, self.name)
+		self.mainWindow = self.sb.getWidget('mainWindow', self.name)
 
 		eventName = EventFactoryFilter.createEventName(event) #get 'mousePressEvent' from <QEvent>
 		# print self.name, eventName, self.widgetType, self.widgetName
@@ -186,6 +187,9 @@ class EventFactoryFilter(QtCore.QObject):
 		# 		w.show()
 		# 	except: pass
 
+		if self.widgetName=='mainWindow':
+			self.widget.activateWindow()
+
 
 
 	def hideEvent(self, event):
@@ -193,9 +197,10 @@ class EventFactoryFilter(QtCore.QObject):
 		args:
 			event = <QEvent>
 		'''
-		if self.__mouseGrabber:
-			self.__mouseGrabber.releaseMouse()
-			self.__mouseGrabber = None
+		if self.widgetName=='mainWindow':
+			if self.__mouseGrabber:
+				self.__mouseGrabber.releaseMouse()
+				self.__mouseGrabber = None
 
 
 
@@ -229,10 +234,9 @@ class EventFactoryFilter(QtCore.QObject):
 		self.__mouseHover.emit(False)
 
 		if self.widget==self.__mouseGrabber: #self.widget.mouseGrabber():
-			mainWindow = self.sb.getWidget('mainWindow', self.name)
-			if mainWindow.isVisible():
-				mainWindow.grabMouse()
-				self.__mouseGrabber = mainWindow
+			if self.mainWindow.isVisible():
+				self.mainWindow.grabMouse()
+				self.__mouseGrabber = self.mainWindow
 
 		if self.widgetType=='QWidget':
 			if self.sb.prefix(self.widgetName, 'r'):
@@ -271,9 +275,9 @@ class EventFactoryFilter(QtCore.QObject):
 				self.name = self.tk.setUi(self.widget.whatsThis()) #switch the stacked layout to the given ui.
 				self.tk.move(QtGui.QCursor.pos() - self.tk.ui.rect().center()) #move window to cursor position and offset from left corner to center
 
-				self.__mouseGrabber.releaseMouse()
-				self.__mouseGrabber = None
-				self.tk.activateWindow()
+				# self.__mouseGrabber.releaseMouse()
+				# self.__mouseGrabber = None
+				# self.tk.activateWindow()
 
 			elif self.sb.prefix(self.widgetName, 'v'): #ie. 'v012'
 				self.sb.previousView(as_list=1).append(self.sb.getMethod(self.name, self.widgetName)) #store the camera view

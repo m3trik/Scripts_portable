@@ -16,9 +16,6 @@ class Animation(Init):
 
 		self.ui = self.sb.getUi('animation')
 
-		
-
-
 
 
 	def cmb000(self):
@@ -26,7 +23,7 @@ class Animation(Init):
 		Editors
 		'''
 		cmb = self.ui.cmb000
-		
+
 		files = ['']
 		contents = self.comboBox(cmb, files, '::')
 

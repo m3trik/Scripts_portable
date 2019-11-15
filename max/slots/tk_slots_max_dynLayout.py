@@ -9,15 +9,12 @@ from tk_slots_max_init import Init
 
 
 
+
 class DynLayout(Init):
 	def __init__(self, *args, **kwargs):
 		super(DynLayout, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('dynLayout')
-
-		
-
 
 
 

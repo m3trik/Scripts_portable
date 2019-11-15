@@ -47,9 +47,10 @@ class Create(Init):
 
 	def rotateAbsolute(self, axis):
 		'''
-		undo previous rotation and rotate on the specified axis.
+		Undo previous rotation and rotate on the specified axis.
 		uses an external rotation dictionary.
-		args:	axis='string' - axis to rotate on. ie. '-x'
+		args:
+			axis = 'string' - axis to rotate on. ie. '-x'
 		'''
 		angle = [a for a in self.rotation[axis] if a!=0][0] #get angle. ie. 90 or -90
 		axis = self.rotation[axis] #get axis list from string key. In 3ds max, the axis key is used as bool values, ie. [0, 90, 0] will essentially be used as [0,1,0]
@@ -65,8 +66,9 @@ class Create(Init):
 
 	def sXXX(self, index=None):
 		'''
-		set node attributes from multiple spinbox values.
-		args: index=int - optional index of the spinbox that called this function. ie. 5 from s005
+		Set node attributes from multiple spinbox values.
+		args:
+			index = int - optional index of the spinbox that called this function. ie. 5 from s005
 		'''
 		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.spinboxes} #current spinbox values. ie. from s000 get the value of six and add it to the list
 		# print spinboxValues
@@ -185,7 +187,7 @@ class Create(Init):
 		Editors
 		'''
 		cmb = self.ui.cmb002
-		
+
 		files = ['']
 		contents = self.comboBox(cmb, files, '::')
 
@@ -320,29 +322,49 @@ class Create(Init):
 		rt.redrawViews()
 
 
+	def create(self, catagory1, catagory2):
+		'''
+		ie. create('Polygons', 'Cube')
+		args:
+			type1 = 'string' - 
+			type2 = 'string' - 
+		'''
+		cmb000 = self.ui.cmb000
+		cmb001 = self.ui.cmb001
+
+		cmb000.setCurrentIndex(cmb000.findText(catagory1))
+		cmb001.setCurrentIndex(cmb001.findText(catagory2))
+		self.b000()
+
+
 	def b001(self):
 		'''
-		
+		Create poly cube
 		'''
-		pass
+		self.create('Polygon', 'Cube')
+
 
 	def b002(self):
 		'''
-		
+		Create poly sphere
 		'''
-		pass
+		self.create('Polygon', 'Sphere')
+
 
 	def b003(self):
 		'''
-		
+		Create poly cylinder
 		'''
-		pass
+		self.create('Polygon', 'Cylinder')
+
 
 	def b004(self):
 		'''
-		
+		Create poly plane
 		'''
-		pass
+		self.create('Polygon', 'Plane')
+
+
 
 
 

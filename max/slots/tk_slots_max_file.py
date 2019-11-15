@@ -9,10 +9,11 @@ from tk_slots_max_init import Init
 
 
 
+
+
 class File(Init):
 	def __init__(self, *args, **kwargs):
 		super(File, self).__init__(*args, **kwargs)
-
 
 		self.ui = self.sb.getUi('file')
 
@@ -53,7 +54,7 @@ class File(Init):
 		Recent Files
 		'''
 		cmb = self.ui.cmb000
-		
+
 		list_ = rt.getRecentfiles()
 		contents = self.comboBox(cmb, list_, "Recent Files")
 
@@ -70,7 +71,7 @@ class File(Init):
 		Recent Projects
 		'''
 		cmb = self.ui.cmb001
-		
+
 		path = ''
 		list_ = []#[f for f in os.listdir(path)]
 
@@ -87,12 +88,12 @@ class File(Init):
 		Recent Autosave
 		'''
 		cmb = self.ui.cmb002
-		
+
 		path = MaxPlus.PathManager.GetAutobackDir()
 		files = [f for f in os.listdir(path) if f.endswith('.max') or f.endswith('.bak')] #get list of max autosave files
 
 		list_ = [f+'  '+datetime.fromtimestamp(os.path.getmtime(path+'\\'+f)).strftime('%H:%M  %m-%d-%Y') for f in files] #attach modified timestamp
-		
+
 		contents = self.comboBox(cmb, sorted(list_, reverse=1), "Recent Autosave")
 
 		index = cmb.currentIndex()
@@ -107,9 +108,9 @@ class File(Init):
 		Import
 		'''
 		cmb = self.ui.cmb003
-		
+
 		contents = self.comboBox(cmb, ["Import file", "Import Options"], "Import")
-		
+
 		index = cmb.currentIndex()
 		if index!=0: #hide tk then perform operation
 			self.tk.hide()
@@ -125,7 +126,7 @@ class File(Init):
 		Export
 		'''
 		cmb = self.ui.cmb004
-		
+
 		list_ = ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ", "Send to Maya: New Scene", "Send to Maya: Update Scene", "Send to Maya: Add to Scene"]
 
 		self.comboBox(cmb, list_, "Export")
@@ -155,7 +156,7 @@ class File(Init):
 				maxEval('actionMan.executeAction 924213374 "1"  -- One Click Maya: Update Current Scene in Maya')
 			if index==8: #sent to maya: add to scene
 				maxEval('actionMan.executeAction 924213374 "2"  -- One Click Maya: Add to Current Scene in Maya')
-			
+
 			cmb.setCurrentIndex(0)
 
 
@@ -164,7 +165,7 @@ class File(Init):
 		Editors
 		'''
 		cmb = self.ui.cmb005
-		
+
 		files = ['Schematic View']
 		contents = self.comboBox(cmb, files, '::')
 
@@ -180,7 +181,7 @@ class File(Init):
 		Project Folder
 		'''
 		cmb = self.ui.cmb006
-		
+
 		path = MaxPlus.PathManager.GetProjectFolderDir() #current project path.
 		list_ = [f for f in os.listdir(path)]
 

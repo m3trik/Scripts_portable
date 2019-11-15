@@ -26,7 +26,7 @@ class Convert(Init):
 		Editors
 		'''
 		cmb = self.ui.cmb000
-		
+
 		files = ['']
 		contents = self.comboBox(cmb, files, '::')
 

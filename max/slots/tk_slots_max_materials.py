@@ -14,10 +14,9 @@ class Materials(Init):
 	def __init__(self, *args, **kwargs):
 		super(Materials, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('materials')
-		
-		
+
+
 		self.ui.t000.hide()
 
 		self.storedMaterial=None
@@ -41,7 +40,7 @@ class Materials(Init):
 		cmb = self.ui.cmb000
 
 		self.ui.chk002.setChecked(False) #put combobox cmb002 in stored material mode.
-		
+
 		# materials = [mat for mat in rt.sceneMaterials if 'Multimaterial' not in mat.name and 'BlendMtl' not in mat.name and not mat.name.startswith('Material')]
 		materials=[] #get any scene material that doesnt startswith 'Material'
 		for mat in rt.sceneMaterials:
@@ -72,7 +71,7 @@ class Materials(Init):
 		Editors
 		'''
 		cmb = self.ui.cmb001
-		
+
 		files = ['Material Editor']
 		contents = self.comboBox(cmb, files, '::')
 
@@ -88,7 +87,7 @@ class Materials(Init):
 		Stored Material
 		'''
 		cmb = self.ui.cmb002
-		
+
 		if self.ui.chk002.isChecked(): #ID map mode 
 			mats=[] #get any scene material that startswith 'matID'
 			for mat in rt.sceneMaterials:

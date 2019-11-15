@@ -13,11 +13,7 @@ class Mirror(Init):
 	def __init__(self, *args, **kwargs):
 		super(Mirror, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('mirror')
-
-		
-
 
 
 
@@ -78,7 +74,7 @@ class Mirror(Init):
 		Editors
 		'''
 		cmb = self.ui.cmb000
-		
+
 		files = ['']
 		contents = self.comboBox(cmb, files, '::')
 

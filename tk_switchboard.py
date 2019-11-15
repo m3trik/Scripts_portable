@@ -77,9 +77,17 @@ class Switchboard(object):
 
 
 
-	def __init__(self, parent=None):
-		if parent: #check for parent, so that if another instance of switchboard is called without arguments, it doesn't overwrite setMainAppWindow to None.
-			self.setMainAppWindow(parent)
+	def __init__(self, parent=None, mainWindow=None):
+		'''
+		args:
+			parent = <parent object> - parent widget
+			mainWindow = <mainWindow object> - top level window
+		'''
+		if parent:
+			self.setClassInstance(parent) #store the parents class instance.
+
+		if mainWindow: #check for parent, so that if another instance of switchboard is called without arguments, it doesn't overwrite setMainAppWindow to None.
+			self.setMainAppWindow(mainWindow)
 
 
 
@@ -549,8 +557,10 @@ class Switchboard(object):
 		if not 'widgetDict' in self._sbDict[name]:
 			self.widgetDict(name) #construct the signals and slots for the ui
 		# print name, widget
-		return self._sbDict[name]['widgetDict'][widget]['widgetType']
-
+		try:
+			return self._sbDict[name]['widgetDict'][widget]['widgetType']
+		except KeyError:
+			return None
 
 
 	def getDerivedType(self, widget, name=None):

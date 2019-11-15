@@ -488,6 +488,12 @@ if ($maskVertex==0 && $maskEdge==1)
 //f12
 if 'tk' not in locals() or 'tk' not in globals():
 	import tk_main;
+	from PySide2 import QtWidgets;
+
+	app = QtWidgets.QApplication.instance() #get the qApp instance if it exists.
+	if not app:
+		app = QtWidgets.QApplication(sys.argv)
+
 	mainWindow = [x for x in app.topLevelWidgets() if x.objectName()=='MayaWindow'][0];
 	tk = tk_main.createInstance(mainWindow)
 

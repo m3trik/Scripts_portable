@@ -80,7 +80,7 @@
       </widget>
      </item>
      <item row="1" column="2">
-      <widget class="QComboBox" name="cmb">
+      <widget class="QComboBox_" name="cmb001">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
          <horstretch>0</horstretch>

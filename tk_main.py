@@ -1,6 +1,5 @@
-# |||||||||||||||||||||||||||||||||||||||||||||||||
-# ||||||   	 	tookit marking menu			|||||||
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# ||||||||||||||||||||||||||||||||||||||||||||||||
+# |||||			tookit marking menu			||||||
 
 from PySide2 import QtCore, QtGui, QtWidgets
 
@@ -23,10 +22,10 @@ class Tk(QtWidgets.QStackedWidget):
 	Marking menu-style modal window based on a stacked widget.
 	Gets and sets signal connections (through the switchboard module).
 	Initializes events for child widgets in the childEvents module.
-	Plots points for paint events in the overlay module.
+	Plots points for paint events using the overlay module.
 	The various ui's are set by calling 'setUi' with the intended ui name string. ex. Tk().setUi('polygons')
 	args:
-		parent = main application window object.
+		parent = main application top level window object.
 	'''
 	def __init__(self, parent=None):
 		super(Tk, self).__init__(parent)
@@ -34,17 +33,16 @@ class Tk(QtWidgets.QStackedWidget):
 		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint|QtCore.Qt.WindowStaysOnTopHint)
 		self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
-		self.sb = Switchboard(parent)
-		self.sb.setClassInstance(self) #store this class instance.
+		self.sb = Switchboard(self, parent)
 
 		self.childEvents = EventFactoryFilter()
 
-		self.setUi('init') #initialize layout
-		self.prevWidget=[]
+		self.prevWidget=[] #maintain a list of the widgets and their location, as a path is plotted along the ui hierarchy. ie. [[<QPushButton object1>, QPoint(665, 396)], [<QPushButton object2>, QPoint(585, 356)]]
+		self.setUi() #initialize layout
 
 
 
-	def setUi(self, name):
+	def setUi(self, name='init'):
 		'''
 		Set the stacked Widget's index.
 		args:
@@ -157,11 +155,9 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		if event.key()==QtCore.Qt.Key_F12 and not event.isAutoRepeat():
 			#run once on launch. update the info textEdit.
-			print 'keyPressEvent', self.name
 			if self.name=='init': #self.uiLevel==0:
 				textEdit = self.sb.getUi('init').info
 				info = self.sb.getMethod('init', 'info')
-				print info
 				if callable(info):
 					infoDict = info()
 
@@ -317,9 +313,8 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		Show the previous view.
 		'''
-		print self.sb.previousView()
+		print self.sb.previousView(), self.sb.previousView(asList=1)
 		self.sb.previousView()()
-		print self.sb.previousView(asList=1)
 
 
 

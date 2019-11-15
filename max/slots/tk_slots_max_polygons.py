@@ -18,9 +18,6 @@ class Polygons(Init):
 
 
 
-
-
-
 	def chk008(self):
 		'''
 		Split U
@@ -47,7 +44,7 @@ class Polygons(Init):
 		Editors
 		'''
 		cmb = self.ui.cmb000
-		
+
 		files = ['Bridge','Extrude']
 		contents = self.comboBox (cmb, files, '::')
 

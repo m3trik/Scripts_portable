@@ -22,35 +22,28 @@ Promoting a widget in designer to use a custom class:
 
 class QComboBox_(QtWidgets.QComboBox):
 	'''
-	Under construction.
+	
 	'''
+	sb = None
+
 	def __init__(self, parent=None):
 		super(QComboBox_, self).__init__(parent)
 
 
 
-	def refreshContents(self):
-		'''
-		Change index to refresh contents.
-		'''
-		index = self.currentIndex()
-		self.blockSignals(True)
-		self.setCurrentIndex(-1) #switch the index before opening to initialize the contents of the comboBox
-		self.blockSignals(False)
-		self.setCurrentIndex(index) #change index back to refresh contents
+	def showPopup(self):
+		# self.setMaximumSize(999,999)
+
+		# width = self.minimumSizeHint().width()
+		# self.view().setMinimumWidth(width)
+
+		super(QComboBox_, self).showPopup()
 
 
+	def hidePopup(self):
+		# self.setMaximumSize(self.minimumSize())
 
-	# def showPopup(self):
-	# 	self.setStyleSheet('''
-	# 		}''')
-
-
-
-	# def hidePopup(self):
-	# 	self.setStyleSheet('''
-	# 		}''')
-
+		super(QComboBox_, self).hidePopup()
 
 
 	def showEvent(self, event):
@@ -58,10 +51,19 @@ class QComboBox_(QtWidgets.QComboBox):
 		args:
 			event=<QEvent>
 		'''
-		self.refreshContents()
+		if not self.sb:
+			try:
+				from tk_switchboard import Switchboard
+				self.sb = Switchboard()
+				# self.tk = self.sb.getClassInstance('tk')
+			except Exception as error:
+				print error
+
+		method = self.sb.getMethod(self.sb.getUiName(), self.objectName())
+		if callable(method):
+			method()
 
 		return QtWidgets.QComboBox.showEvent(self, event)
-
 
 
 	def enterEvent(self, event):
@@ -77,7 +79,6 @@ class QComboBox_(QtWidgets.QComboBox):
 			}''')
 
 		return QtWidgets.QComboBox.enterEvent(self, event)
-
 
 
 	def leaveEvent(self, event):

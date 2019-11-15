@@ -26,7 +26,7 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 	'''
 
 	__mousePressPos = QtCore.QPoint()
-	__sb = None
+	sb = None
 
 	def __init__(self, parent=None):
 		super(QPushButton_Draggable, self).__init__(parent)
@@ -100,11 +100,11 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 		args:
 			event=<QEvent>
 		'''
-		if not self.__sb:
+		if not self.sb:
 			try:
 				from tk_switchboard import Switchboard
-				self.__sb = Switchboard()
-				self.tk = self.__sb.getClassInstance('tk')
+				self.sb = Switchboard()
+				self.tk = self.sb.getClassInstance('tk')
 			except Exception as error:
 				print error
 

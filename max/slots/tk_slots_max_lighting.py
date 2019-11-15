@@ -13,11 +13,7 @@ class Lighting(Init):
 	def __init__(self, *args, **kwargs):
 		super(Lighting, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('lighting')
-
-		
-
 
 
 
@@ -26,7 +22,7 @@ class Lighting(Init):
 		Editors
 		'''
 		cmb = self.ui.cmb000
-		
+
 		files = ['']
 		contents = self.comboBox(cmb, files, '::')
 

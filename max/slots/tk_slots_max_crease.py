@@ -18,9 +18,6 @@ class Crease(Init):
 
 		
 
-
-
-
 	def chk002(self):
 		'''
 		Un-Crease

@@ -13,20 +13,16 @@ class Fx(Init):
 	def __init__(self, *args, **kwargs):
 		super(Fx, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('fx')
 
 		
-
-
-
 
 	def cmb000(self):
 		'''
 		Editors
 		'''
 		cmb = self.ui.cmb000
-		
+
 		files = ['']
 		contents = self.comboBox(cmb, files, '::')
 

@@ -325,7 +325,7 @@ class Duplicate(Init):
 		Editors
 		'''
 		cmb = self.ui.cmb001
-		
+
 		files = ['']
 		contents = self.comboBox(cmb, files, '::')
 

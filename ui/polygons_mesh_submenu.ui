@@ -59,10 +59,10 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <widget class="QPushButton" name="i013">
+   <widget class="QPushButton" name="i010">
     <property name="geometry">
      <rect>
-      <x>265</x>
+      <x>270</x>
       <y>290</y>
       <width>66</width>
       <height>21</height>
@@ -81,75 +81,109 @@
      </size>
     </property>
     <property name="whatsThis">
-     <string>animation</string>
+     <string>polygons</string>
     </property>
     <property name="text">
-     <string>Animation</string>
+     <string>Polygons</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="i024">
+   <widget class="QPushButton" name="b001">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>165</x>
-      <y>290</y>
-      <width>66</width>
-      <height>21</height>
+      <x>365</x>
+      <y>370</y>
+      <width>56</width>
+      <height>19</height>
      </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>21</height>
-     </size>
     </property>
     <property name="maximumSize">
      <size>
-      <width>16777215</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="whatsThis">
-     <string>fx</string>
-    </property>
-    <property name="text">
-     <string>Fx</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="i020">
-    <property name="geometry">
-     <rect>
-      <x>185</x>
-      <y>250</y>
-      <width>66</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>21</height>
+      <width>111</width>
+      <height>19</height>
      </size>
     </property>
     <property name="toolTip">
-     <string/>
-    </property>
-    <property name="whatsThis">
-     <string>deformation</string>
+     <string>Cap holes modifier</string>
     </property>
     <property name="text">
-     <string>Deformation</string>
+     <string>Fill Hole</string>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>18</width>
+      <height>18</height>
+     </size>
     </property>
    </widget>
-   <widget class="QPushButton" name="i016">
+   <widget class="QPushButton" name="b003">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>185</x>
+      <x>440</x>
+      <y>330</y>
+      <width>56</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>111</width>
+      <height>19</height>
+     </size>
+    </property>
+    <property name="toolTip">
+     <string>Combine the selected polygon objects into one single object to allow operations such as merges or face trims</string>
+    </property>
+    <property name="text">
+     <string>Combine</string>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>18</width>
+      <height>18</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="b002">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>370</y>
+      <width>56</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>111</width>
+      <height>19</height>
+     </size>
+    </property>
+    <property name="toolTip">
+     <string>Separates the selected polygonobject shells or the shells of any selected faces from the object into one object into distinct objects</string>
+    </property>
+    <property name="text">
+     <string>Separate</string>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>18</width>
+      <height>18</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="i004">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
       <y>330</y>
       <width>66</width>
       <height>21</height>
@@ -168,10 +202,10 @@
      </size>
     </property>
     <property name="whatsThis">
-     <string>rigging</string>
+     <string>polygons_mesh</string>
     </property>
     <property name="text">
-     <string>Rigging</string>
+     <string>Mesh</string>
     </property>
    </widget>
   </widget>

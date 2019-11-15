@@ -13,10 +13,7 @@ class Polygons(Init):
 	def __init__(self, *args, **kwargs):
 		super(Polygons, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('polygons')
-
-		
 
 
 
@@ -45,8 +42,8 @@ class Polygons(Init):
 		'''
 		Header comboBox
 		'''
-		cmb = self.tk.header.cmb
-		
+		cmb = self.ui.cmb000
+
 		files = ['Extrude Options','Bevel Options','Bridge Options','Combine Options','Merge Vertex Options','Offset Edgeloop','Edit Edgeflow Options','Extract Curve Options','Poke Options','Wedge Options','Assign Invisible Options']
 		contents = self.comboBox(cmb, files, '::')
 
