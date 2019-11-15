@@ -21,8 +21,9 @@ class Tk(QtWidgets.QStackedWidget):
 	'''
 	Marking menu-style modal window based on a stacked widget.
 	Gets and sets signal connections (through the switchboard module).
-	Initializes events for child widgets in the childEvents module.
-	Plots points for paint events using the overlay module.
+	Initializes events for child widgets using the childEvents module.
+	Plots points for paint events in the overlay module.
+
 	The various ui's are set by calling 'setUi' with the intended ui name string. ex. Tk().setUi('polygons')
 	args:
 		parent = main application top level window object.
