@@ -99,12 +99,12 @@ class Tk(QtWidgets.QStackedWidget):
 
 		# w = widget #store widget before changing the stacked widget ui.
 		
-		# try: #open a submenu on mouse enter (if it exists).
-		name = self.setUi(submenu) #switch the stacked widget to the given submenu.
-		# except Exception as error:
-		# 	if not type(error)==ValueError: #if no submenu exists: ignore.
-		# 		raise error
-		# 		return None
+		try: #open a submenu on mouse enter (if it exists).
+			name = self.setUi(submenu) #switch the stacked widget to the given submenu.
+		except Exception as error:
+			if not type(error)==ValueError: #if no submenu exists: ignore.
+				raise error
+				return None
 
 		w = getattr(self.currentWidget(), widget.objectName()) #get the widget of the same name in the new ui.
 		#maintain the correct contents of the prevWidget and drawPath lists by removing elements when moving back up levels in the ui.
