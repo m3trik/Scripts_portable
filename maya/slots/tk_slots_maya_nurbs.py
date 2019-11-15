@@ -28,7 +28,7 @@ class Nurbs(Init):
 		cmb = self.ui.cmb000
 		
 		files = ['Project Curve','Duplicate Curve','Create Curve from Poly','Bend Curve', 'Curl Curve','Modify Curve Curvature','Smooth Curve','Straighten Curves','Extrude Curves','Revolve Curves','Loft Curves','Planar Curves','Insert Isoparms','Insert Knot','Rebuild Curve','Extend Curve']
-		contents = self.comboBox (cmb, files, '::')
+		contents = self.comboBox (cmb, files, ' ')
 
 		index = cmb.currentIndex()
 		if index!=0:

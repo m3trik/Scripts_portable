@@ -80,7 +80,7 @@ class Mirror(Init):
 		cmb = self.ui.cmb000
 		
 		files = ['Mirror Options', 'Mirror Instance Mesh']
-		contents = self.comboBox(cmb, files, '::')
+		contents = self.comboBox(cmb, files, ' ')
 
 		index = cmb.currentIndex()
 		if index!=0:

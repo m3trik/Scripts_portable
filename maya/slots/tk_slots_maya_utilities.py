@@ -28,7 +28,7 @@ class Utilities(Init):
 		cmb = self.ui.cmb000
 		
 		files = ['']
-		contents = self.comboBox(cmb, files, '::')
+		contents = self.comboBox(cmb, files, ' ')
 
 		index = cmb.currentIndex()
 		if index!=0:

@@ -167,7 +167,7 @@ class File(Init):
 		cmb = self.ui.cmb005
 
 		files = ['Schematic View']
-		contents = self.comboBox(cmb, files, '::')
+		contents = self.comboBox(cmb, files, ' ')
 
 		index = cmb.currentIndex()
 		if index!=0:

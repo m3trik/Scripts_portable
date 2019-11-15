@@ -45,7 +45,7 @@ class Polygons(Init):
 		cmb = self.ui.cmb000
 
 		files = ['Extrude Options','Bevel Options','Bridge Options','Combine Options','Merge Vertex Options','Offset Edgeloop','Edit Edgeflow Options','Extract Curve Options','Poke Options','Wedge Options','Assign Invisible Options']
-		contents = self.comboBox(cmb, files, '::')
+		contents = self.comboBox(cmb, files, ' ')
 
 		index = cmb.currentIndex()
 		if index!=0:

@@ -189,7 +189,7 @@ class Create(Init):
 		cmb = self.ui.cmb002
 
 		files = ['']
-		contents = self.comboBox(cmb, files, '::')
+		contents = self.comboBox(cmb, files, ' ')
 
 		index = cmb.currentIndex()
 		if index!=0:

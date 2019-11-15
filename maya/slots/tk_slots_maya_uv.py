@@ -27,7 +27,7 @@ class Uv(Init):
 		'''
 		cmb = self.ui.cmb000
 		
-		contents = self.comboBox(cmb, ['UV Editor','UV Set Editor','UV Tool Kit','UV Linking: Texture-Centric','UV Linking: UV-Centric','UV Linking: Paint Effects/UV','UV Linking: Hair/UV','Flip UV'], '::')
+		contents = self.comboBox(cmb, ['UV Editor','UV Set Editor','UV Tool Kit','UV Linking: Texture-Centric','UV Linking: UV-Centric','UV Linking: Paint Effects/UV','UV Linking: Hair/UV','Flip UV'], ' ')
 
 		index = cmb.currentIndex()
 		if index !=0: #hide tk then perform operation

@@ -35,7 +35,7 @@ class Subdivision(Init):
 		cmb = self.ui.cmb000
 		
 		selectionSets = [set for set in rt.selectionSets]
-		contents = self.comboBox (cmb, ['TurboSmooth','TurboSmooth Pro','OpenSubDiv','Subdivide','Subdivide (WSM)','MeshSmooth','Optimize','Pro Optimizer','Add Divisions'], '::')
+		contents = self.comboBox (cmb, ['TurboSmooth','TurboSmooth Pro','OpenSubDiv','Subdivide','Subdivide (WSM)','MeshSmooth','Optimize','Pro Optimizer','Add Divisions'], ' ')
 
 		index = cmb.currentIndex()
 		if index!=0:

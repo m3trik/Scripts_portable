@@ -34,8 +34,8 @@ class QComboBox_(QtWidgets.QComboBox):
 	def showPopup(self):
 		# self.setMaximumSize(999,999)
 
-		# width = self.minimumSizeHint().width()
-		# self.view().setMinimumWidth(width)
+		width = self.minimumSizeHint().width()
+		self.view().setMinimumWidth(width)
 
 		super(QComboBox_, self).showPopup()
 

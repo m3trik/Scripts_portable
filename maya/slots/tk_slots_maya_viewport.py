@@ -29,7 +29,7 @@ class Viewport(Init):
 		cmb = self.ui.cmb000
 		
 		list_ = ['Camera Sequencer', 'Camera Set Editor']
-		contents = self.comboBox(cmb, list_, '::')
+		contents = self.comboBox(cmb, list_, ' ')
 
 		index = cmb.currentIndex()
 		if index!=0:

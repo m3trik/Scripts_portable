@@ -24,7 +24,7 @@ class Edit(Init):
 		cmb = self.ui.cmb000
 
 		files = ['Cleanup', 'Transfer: Attribute Values', 'Transfer: Shading Sets']
-		contents = self.comboBox (cmb, files, '::')
+		contents = self.comboBox (cmb, files, ' ')
 
 		index = cmb.currentIndex()
 		if index!=0:

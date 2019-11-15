@@ -64,7 +64,7 @@ class Crease(Init):
 		cmb = self.ui.cmb000
 		
 		files = ['Sets']
-		contents = self.comboBox (cmb, files, '::')
+		contents = self.comboBox (cmb, files, ' ')
 
 		index = cmb.currentIndex()
 		if index!=0:

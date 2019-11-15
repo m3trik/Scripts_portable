@@ -89,6 +89,7 @@ class Tk(QtWidgets.QStackedWidget):
 		Moves the new ui to line up with the previous ui's children.
 		Re-constructs the relevant buttons from the previous ui for the new ui, and positions them.
 		Initializes the new buttons to recieve events through the childEvents filter.
+
 		args:
 			widget = <QWidget> - the widget that called this method.
 			submenu = 'string' - name of ui.

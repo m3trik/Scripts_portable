@@ -28,7 +28,7 @@ class Subdivision(Init):
 		cmb = self.ui.cmb000
 		
 		files = ['Reduce Polygons','Add Divisions','Smooth','SubDiv Proxy']
-		contents = self.comboBox (cmb, files, '::')
+		contents = self.comboBox (cmb, files, ' ')
 
 		index = cmb.currentIndex()
 		if index!=0:

@@ -46,7 +46,7 @@ class Polygons(Init):
 		cmb = self.ui.cmb000
 
 		files = ['Bridge','Extrude']
-		contents = self.comboBox (cmb, files, '::')
+		contents = self.comboBox (cmb, files, ' ')
 
 		index = cmb.currentIndex()
 		if index!=0:
