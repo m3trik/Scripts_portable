@@ -110,11 +110,6 @@ class StyleSheet():
 			background: #353535;
 		}'''
 
-	# QComboBox_cmb='''
-	# 	QComboBox {
-	# 		background: rgba(100,100,100,50);
-	# 	}'''
-
 	QSpinBox='''
 		QSpinBox {
 

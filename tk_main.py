@@ -31,7 +31,7 @@ class Tk(QtWidgets.QStackedWidget):
 	def __init__(self, parent=None):
 		super(Tk, self).__init__(parent)
 
-		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint|QtCore.Qt.WindowStaysOnTopHint)
+		self.setWindowFlags(QtCore.Qt.FramelessWindowHint|QtCore.Qt.WindowStaysOnTopHint)
 		self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
 		self.sb = Switchboard(self, parent)
@@ -54,10 +54,10 @@ class Tk(QtWidgets.QStackedWidget):
 			self.childEvents.init(name)
 
 		self.name = self.sb.setUiName(name) #set ui name.
-		self.ui = self.sb.getUi(name) #get the dymanic ui of the given name.
-		self.uiLevel = self.sb.getUiLevel(name) #get the hierarchical level of the ui.
+		self.ui = self.sb.getUi(self.name) #get the dymanic ui of the given name.
+		self.uiLevel = self.sb.getUiLevel(self.name) #get the hierarchical level of the ui.
 
-		self.sb.setSignals(name) #connect new signals while disconnecting any previous.
+		self.sb.setSignals(self.name) #connect new signals while disconnecting any previous.
 
 		self.resize(self.sb.getUiSize(width=1), self.sb.getUiSize(height=1)) #get ui size for current ui and resize window
 
@@ -154,17 +154,7 @@ class Tk(QtWidgets.QStackedWidget):
 				info = self.sb.getMethod('init', 'info')
 				if callable(info):
 					infoDict = info()
-
-					#populate the textedit with any values
-					for key, value in infoDict.items():
-						if value:
-							highlight = QtGui.QColor(255, 255, 0)
-							baseColor = QtGui.QColor(185, 185, 185)
-
-							textEdit.setTextColor(baseColor)
-							textEdit.append(key) #textEdit.append(key+str(value))
-							textEdit.setTextColor(highlight)
-							textEdit.insertPlainText(str(value))
+					textEdit.addcontents(infoDict)
 
 
 
@@ -174,10 +164,6 @@ class Tk(QtWidgets.QStackedWidget):
 			event = <QEvent>
 		'''
 		if event.key()==QtCore.Qt.Key_F12 and not event.isAutoRepeat():
-			#clear the info textEdit on hide.
-			textEdit = self.sb.getUi('init').info
-			textEdit.clear()
-
 			self.hide_()
 
 
@@ -209,7 +195,7 @@ class Tk(QtWidgets.QStackedWidget):
 		args:
 			event = <QEvent>
 		'''
-		if self.uiLevel>0 and self.uiLevel<3:
+		if self.uiLevel<3:
 			self.childEvents.mouseTracking(self.name)
 
 
@@ -220,8 +206,7 @@ class Tk(QtWidgets.QStackedWidget):
 			event = <QEvent>
 		'''
 		if self.uiLevel>0 and self.uiLevel<2:
-			if any([event.button()==QtCore.Qt.LeftButton,event.button()==QtCore.Qt.MiddleButton,event.button()==QtCore.Qt.RightButton]):
-				self.setUi('init')
+			self.setUi('init')
 
 
 
@@ -264,7 +249,7 @@ class Tk(QtWidgets.QStackedWidget):
 		try: import MaxPlus; MaxPlus.CUI.EnableAccelerators()
 		except: pass
 
-		self.setUi('init') #reset layout back to init on keyPressEvent
+		self.setUi('init') #reset layout back to init
 
 		if __name__ == "__main__":
 			sys.exit() #assure that the sys processes are terminated.

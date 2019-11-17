@@ -20,7 +20,7 @@ Promoting a widget in designer to use a custom class:
 
 
 
-class QProgressBar_(QtWidgets.QComboBox):
+class QProgressBar_(QtWidgets.QProgressBar):
 	'''
 	ex. for n, i in enumerate(list_):
 			if not self.ui.progressBar.step(n, len(list_)): #register progress while checking for cancellation:
@@ -28,6 +28,8 @@ class QProgressBar_(QtWidgets.QComboBox):
 	'''
 	def __init__(self, parent=None):
 		super(QProgressBar_, self).__init__(parent)
+
+		self.setVisible(False)
 
 		self.isCanceled = False
 		# self.connect(QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Escape), self), self.cancel())
@@ -78,7 +80,7 @@ class QProgressBar_(QtWidgets.QComboBox):
 		self.isCanceled = False
 		self.setValue(0)
 
-		return QtWidgets.QComboBox.showEvent(self, event)
+		return QtWidgets.QProgressBar.showEvent(self, event)
 
 
 	def hideEvent(self, event):
@@ -87,7 +89,7 @@ class QProgressBar_(QtWidgets.QComboBox):
 			event=<QEvent>
 		'''
 
-		return QtWidgets.QComboBox.hideEvent(self, event)
+		return QtWidgets.QProgressBar.hideEvent(self, event)
 
 
 

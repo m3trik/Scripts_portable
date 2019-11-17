@@ -62,7 +62,7 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <widget class="QTextEdit" name="info">
+   <widget class="QTextEdit_" name="info">
     <property name="geometry">
      <rect>
       <x>105</x>
@@ -113,6 +113,13 @@
    </widget>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QTextEdit_</class>
+   <extends>QTextEdit</extends>
+   <header>widgets.qtextedit_.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
  <designerdata>

@@ -55,15 +55,7 @@ class EventFactoryFilter(QtCore.QObject):
 			widget.installEventFilter(self)
 
 
-			if widgetType=='QTextEdit':
-				widget.viewport().setAutoFillBackground(False)
-				widget.setTextBackgroundColor(QtGui.QColor(50, 50, 50))
-				widget.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
-
-			elif widgetType=='QProgressBar':
-				widget.setVisible(False)
-
-			elif self.sb.prefix(widgetName, 'r'): #prefix returns True if widgetName startswith the given prefix, and is followed by three integers.
+			if self.sb.prefix(widgetName, 'r'): #prefix returns True if widgetName startswith the given prefix, and is followed by three integers.
 				widget.setVisible(False)
 
 			elif name=='create':
