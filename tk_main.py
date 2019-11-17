@@ -100,14 +100,14 @@ class Tk(QtWidgets.QStackedWidget):
 				return None
 
 		w = getattr(self.currentWidget(), widget.objectName()) #get the widget of the same name in the new ui.
-		#maintain the correct contents of the prevWidget and drawPath lists by removing elements when moving back up levels in the ui.
+		#maintain the correct contents of the widgetPath and drawPath lists by removing elements when moving back up levels in the ui.
 		if len(self.sb.previousName(as_list=1, allowDuplicates=1))>2:
 			if name==self.sb.previousName(as_list=1, allowDuplicates=1)[-3]: #if index is that of the previous ui, remove the information associated with that ui from the lists so that any new list will draw with the correct contents.
 				del self.widgetPath[-2:]
 				if len(self.drawPath)>2: #temp solution for removing drawPath points. works only when there are two levels of submenus to draw paths for.
 					del self.drawPath[-2:]
 
-		self.widgetPath.append([widget, p1]) #add the widget that was initially entered to the prevWidget list so that it can be re-created in the new ui (in the same position).
+		self.widgetPath.append([widget, p1]) #add the widget that was initially entered to the widgetPath list so that it can be re-created in the new ui (in the same position).
 		self.drawPath.append(QtGui.QCursor.pos()) #add the global cursor position to the drawPath list so that paint events can draw the path tangents.
 
 		p2 = w.mapToGlobal(w.rect().center()) #widget position after submenu change.
