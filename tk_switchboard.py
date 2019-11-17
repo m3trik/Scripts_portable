@@ -62,7 +62,7 @@ class Switchboard(object):
 	widgetPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'widgets')
 	#format names using the files in path.
 	widgetNames = [file_.replace('.py','',-1) for file_ in os.listdir(widgetPath) if file_.endswith('.py') and not file_.startswith('__')]
-	#register any custom widgets using widgetNames.
+	#register any custom widgets using widgetNames. Must follow the convention ex. widgets.QComboBox_.QComboBox_ where the module and class share the same name.
 	for m in widgetNames:
 		widget = locate('widgets.'+m+'.'+m)
 		if widget:
@@ -192,7 +192,7 @@ class Switchboard(object):
 
 	def setSignals(self, name):
 		'''
-		Replace any old signals with the set from the given name.
+		Replace any old signals with the set for the given name.
 		'''
 		# if not name in self.previousName(allowInit=1, allowDuplicates=1): #ie. 'polygons' not in 'polygons_submenu' (as they both share the same connections).
 		# print 'not ',name,' in ',self.previousName(allowInit=1, allowDuplicates=1)

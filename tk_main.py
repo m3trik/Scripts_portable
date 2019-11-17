@@ -36,9 +36,9 @@ class Tk(QtWidgets.QStackedWidget):
 
 		self.sb = Switchboard(self, parent)
 
-		self.childEvents = EventFactoryFilter()
+		self.childEvents = EventFactoryFilter(self)
 
-		self.prevWidget=[] #maintain a list of the widgets and their location, as a path is plotted along the ui hierarchy. ie. [[<QPushButton object1>, QPoint(665, 396)], [<QPushButton object2>, QPoint(585, 356)]]
+		self.widgetPath=[] #maintain a list of widgets and their location, as a path is plotted along the ui hierarchy. ie. [[<QPushButton object1>, QPoint(665, 396)], [<QPushButton object2>, QPoint(585, 356)]]
 
 
 
@@ -47,6 +47,7 @@ class Tk(QtWidgets.QStackedWidget):
 		Set the stacked Widget's index.
 		args:
 			name = 'string' - name of ui.
+
 		returns:
 			'string' - name of ui. ex. 'polygons'
 		'''
@@ -76,7 +77,7 @@ class Tk(QtWidgets.QStackedWidget):
 		previous = [i for i in self.sb.previousName(as_list=1) if '_submenu' not in i][-1]
 		name = self.setUi(previous) #return the stacked widget to it's previous ui.
 		del self.drawPath[1:] #clear the draw path, while leaving the starting point.
-		del self.prevWidget[:] #clear the list of previous widgets.
+		del self.widgetPath[:] #clear the list of previous widgets.
 		self.move(self.drawPath[0] - self.rect().center())
 		return name
 
@@ -92,6 +93,7 @@ class Tk(QtWidgets.QStackedWidget):
 		args:
 			widget = <QWidget> - the widget that called this method.
 			submenu = 'string' - name of ui.
+
 		returns:
 			'string' - name of ui. ex. 'polygons_submenu'
 		'''
@@ -110,11 +112,11 @@ class Tk(QtWidgets.QStackedWidget):
 		#maintain the correct contents of the prevWidget and drawPath lists by removing elements when moving back up levels in the ui.
 		if len(self.sb.previousName(as_list=1, allowDuplicates=1))>2:
 			if name==self.sb.previousName(as_list=1, allowDuplicates=1)[-3]: #if index is that of the previous ui, remove the information associated with that ui from the lists so that any new list will draw with the correct contents.
-				del self.prevWidget[-2:]
+				del self.widgetPath[-2:]
 				if len(self.drawPath)>2: #temp solution for removing drawPath points. works only when there are two levels of submenus to draw paths for.
 					del self.drawPath[-2:]
 
-		self.prevWidget.append([widget, p1]) #add the widget that was initially entered to the prevWidget list so that it can be re-created in the new ui (in the same position).
+		self.widgetPath.append([widget, p1]) #add the widget that was initially entered to the prevWidget list so that it can be re-created in the new ui (in the same position).
 		self.drawPath.append(QtGui.QCursor.pos()) #add the global cursor position to the drawPath list so that paint events can draw the path tangents.
 
 		p2 = w.mapToGlobal(w.rect().center()) #widget position after submenu change.
@@ -131,9 +133,9 @@ class Tk(QtWidgets.QStackedWidget):
 			w0.show()
 
 			if '_submenu' in self.sb.previousName(): #recreate widget/s from the previous ui that are in the current path.
-				for index in range(2, len(self.prevWidget)+1): #index starting at 2:
-					prevWidget = self.prevWidget[-index][0] #give index neg value.
-					prevWidgetLocation = self.prevWidget[-index][1]
+				for index in range(2, len(self.widgetPath)+1): #index starting at 2:
+					prevWidget = self.widgetPath[-index][0] #give index neg value.
+					prevWidgetLocation = self.widgetPath[-index][1]
 
 					w1 = QtWidgets.QPushButton(prevWidget.text(), self.sb.getUi(name))
 					w1 = self.sb.addWidget(name, w1, prevWidget.objectName())
@@ -316,7 +318,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 	def repeatLastUi(self):
 		'''
-		Open the last used menu.
+		Open the last used valid menu.
 		'''
 		try:
 			print self.sb.previousUi()

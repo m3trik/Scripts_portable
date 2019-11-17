@@ -30,7 +30,8 @@ class EventFactoryFilter(QtCore.QObject):
 
 
 		self.sb = Switchboard()
-		self.tk = self.sb.getClassInstance('tk')
+		if parent:
+			self.tk = parent
 
 
 

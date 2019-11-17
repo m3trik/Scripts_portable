@@ -9,7 +9,7 @@ from tk_switchboard import Switchboard
 
 class Slot(object):
 	'''
-	Parent class for all app sepecfic slot type classes.
+	Parent class for all app specific slot type classes.
 	'''
 	def __init__(self):
 		super(Slot, self).__init__()
@@ -22,12 +22,13 @@ class Slot(object):
 		'''
 		Get a list of corresponding objects from a single string.
 		args:
-			class_=class object
-			objectNames='string' - names separated by ','. ie. 's000,b004-7'. b004-7 specifies buttons b004-b007.  
-			showError=bool - show attribute error if item doesnt exist
-		
+			class_ = class object
+			objectNames = 'string' - names separated by ','. ie. 's000,b004-7'. b004-7 specifies buttons b004-b007.  
+			showError = bool - show attribute error if item doesnt exist
+
 		returns:
 			list of corresponding objects
+
 		#ex. getObject(self.ui, 's000,b002,cmb011-15') #get objects for s000,b002, and cmb011-cmb015
 		'''
 		objects=[]
@@ -47,7 +48,8 @@ class Slot(object):
 		'''
 		Get a list of individual names from a single name string.
 		args:
-			nameString=string consisting of widget names separated by commas. ie. 'v000, b004-6'
+			nameString = string consisting of widget names separated by commas. ie. 'v000, b004-6'
+
 		returns:
 			unpacked names. ie. ['v000','b004','b005','b006']
 		'''
@@ -72,8 +74,8 @@ class Slot(object):
 		'''
 		Get existing node attributes.
 		args:
-			node=object
-			exclude='string list' - attributes to exclude from returned dictionay
+			node = object
+			exclude = 'string list' - attributes to exclude from returned dictionay
 
 		returns:
 			dictionary {'string attribute': value}
@@ -87,8 +89,8 @@ class Slot(object):
 		'''
 		Set node attributes.
 		args:
-			node=object
-			attributes=dictionary {'string attribute': value} - attributes and their correponding value to set
+			node = object
+			attributes = dictionary {'string attribute': value} - attributes and their correponding value to set
 		'''
 		[setattr(node, attr, value) for attr, value in attributes.iteritems() if attr and value]
 
@@ -98,8 +100,9 @@ class Slot(object):
 		'''
 		Set various states for multiple buttons at once.
 		args:
-			setButtons=dynamic ui object
-			checked/unchecked/enable/disable/visible/invisible=string - the names of buttons to modify separated by ','. ie. 'b000,b001,b022'
+			setButtons = dynamic ui object
+			checked/unchecked/enable/disable/visible/invisible = string - the names of buttons to modify separated by ','. ie. 'b000,b001,b022'
+
 		ex.	setButtons(self.ui, disable='b000', unchecked='chk009-12', invisible='b015')
 		'''
 		if checked:
@@ -132,9 +135,9 @@ class Slot(object):
 		'''
 		Set spinbox values.
 		args:
-			ui=<dynamic ui>
-			spinboxNames='string' - spinbox names. ie. 's001-4, s007'.
-			attributes={'string key':value}
+			ui = <dynamic ui>
+			spinboxNames = 'string' - spinbox names. ie. 's001-4, s007'.
+			attributes = {'string key':value}
 
 		ex. self.setSpinboxes (self.ui, spinboxNames='s000-15', attributes={'width':1, 'length ratio':1, 'patches U':1, 'patches V':1})
 		ex. self.setSpinboxes (self.ui, spinboxNames='s000', attributes={'size':5} #explicit;  set single s000 with a label 'size' and value of 5
@@ -168,8 +171,8 @@ class Slot(object):
 		'''
 		Set comboBox items.
 		args:
-			comboBox=QComboBox object - list of items to fill the comboBox with
-			title='string' - optional value for the first index of the comboBox's list
+			comboBox = QComboBox object - list of items to fill the comboBox with
+			title = 'string' - optional value for the first index of the comboBox's list
 
 		returns:
 			comboBox's current item list minus any title.
@@ -200,8 +203,8 @@ class Slot(object):
 		using the name string as an identifier key.
 		
 		args:
-			sequence=[list] - sequence to cycle through. ie. [1,2,3].
-			name='string' - identifier. used as a key to get the sequence value from the dict.
+			sequence = [list] - sequence to cycle through. ie. [1,2,3].
+			name = 'string' - identifier. used as a key to get the sequence value from the dict.
 			
 		ex. cycle([0,1,2,3,4], 'componentID')
 		'''
@@ -224,7 +227,7 @@ class Slot(object):
 	def collapseList(list_, limit=None):
 		'''
 		args:
-			list_=list - of integers
+			list_ = list - of integers
 
 		returns:
 			list with sequential integers collapsed in string format. ie. ['20', '22..28']
