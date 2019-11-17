@@ -746,7 +746,7 @@ class Switchboard(object):
 
 
 
-	def previousView(self, previousIndex=False, allowDuplicates=False, as_list=False):
+	def previousUi(self, previousIndex=False, allowDuplicates=False, as_list=False):
 		'''
 		args:
 			previousIndex=bool 	return the index of the last valid previously opened ui name.

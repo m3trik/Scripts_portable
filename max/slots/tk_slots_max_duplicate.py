@@ -126,8 +126,12 @@ class Duplicate(Init):
 			selection = pm.ls (selection=1, type="transform", flatten=1)
 			if selection:
 				if radialArrayObjList:
-					self.try_ ('pm.delete(arg1)', showError_=False, arg1=radialArrayObjList) #delete all the geometry in the list
+					try:
+						pm.delete(radialArrayObjList) #delete all the geometry in the list
+					except:
+						pass
 					del radialArrayObjList[:] #clear the list
+
 				for object_ in selection:
 					pm.select (object_)
 					objectName = str(object_)
@@ -176,8 +180,12 @@ class Duplicate(Init):
 				print "# Result: "+str(radialArrayObjList)+" #"
 				pm.delete (radialArrayObjList); del radialArrayObjList[:] #delete all geometry and clear the list
 				return
-			self.try_ ('pm.delete(arg1)', showError_=False, arg1=radialArrayObjList) #delete all the geometry in the list
+			try:
+				pm.delete(radialArrayObjList) #delete all the geometry in the list
+			except:
+				pass
 			del radialArrayObjList[:] #clear the list
+
 			self.setButtons(self.ui, disable='b003')
 
 

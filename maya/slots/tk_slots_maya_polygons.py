@@ -281,9 +281,10 @@ class Polygons(Init):
 					mel.eval("MergeToCenter;")
 
 			else: #if object mode. merge all vertices on the selected object.
-				self.progressBar(init=1) #initialize the progress bar
-				for obj in selection:
-					self.progressBar(len(selection)) #register progress
+				for n, obj in enumerate(selection):
+					if not self.ui.progressBar.step(n, len(selection)): #register progress while checking for cancellation:
+						break
+
 					# get number of vertices
 					count = pm.polyEvaluate(obj, vertex=1)
 					vertices = str(obj) + ".vtx [0:" + str(count) + "]" # mel expression: select -r geometry.vtx[0:1135];
@@ -291,6 +292,7 @@ class Polygons(Init):
 
 				#return to original state
 				pm.select(clear=1)
+
 				for obj in selection:
 					pm.select(obj, add=1)
 		else:

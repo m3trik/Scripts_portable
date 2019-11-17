@@ -39,7 +39,6 @@ class Tk(QtWidgets.QStackedWidget):
 		self.childEvents = EventFactoryFilter()
 
 		self.prevWidget=[] #maintain a list of the widgets and their location, as a path is plotted along the ui hierarchy. ie. [[<QPushButton object1>, QPoint(665, 396)], [<QPushButton object2>, QPoint(585, 356)]]
-		self.setUi() #initialize layout
 
 
 
@@ -240,24 +239,15 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		if event.button()==QtCore.Qt.RightButton:
 			if any([self.name=='init', self.name=='main']):
-				try: #show last used submenu on double mouseclick
-					self.setUi(self.sb.previousName(previousIndex=True))
-				except:
-					print "# Warning: No recent submenus in history. #"
+				self.repeatLastCameraView()
 
 		elif event.button()==QtCore.Qt.LeftButton:
 			if any([self.name=='init', self.name=='viewport']):
-				try: #show last view
-					self.repeatLastView()
-				except: 
-					print "# Warning: No recent views in history. #"
+				self.repeatLastUi()
 
 		elif event.button()==QtCore.Qt.MiddleButton:
 			if any([self.name=='init', self.name=='editors']):
-				try: #repeat last command
-					self.repeatLastCommand()
-				except:
-					print "# Warning: No recent commands in history. #"
+				self.repeatLastCommand()
 
 
 
@@ -305,18 +295,35 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		Repeat the last used command.
 		'''
-		print self.sb.prevCommand()
-		self.sb.prevCommand()()
-		print self.sb.prevCommand(docString=1) #print command name string
+		try:
+			print self.sb.prevCommand(), self.sb.prevCommand(docString=1) #print command name string
+			self.sb.prevCommand()()
+		except:
+			print "# Warning: No recent commands in history. #"
+
+
+
+	def repeatLastCameraView(self):
+		'''
+		Show the previous orthographic view.
+		'''
+		try:
+			pass
+		except:
+			print "# Warning: No recent camera views in history. #"
+
+
+
+	def repeatLastUi(self):
+		'''
+		Open the last used menu.
+		'''
+		try:
+			print self.sb.previousUi()
+			self.sb.previousUi()()
+		except: 
+			print "# Warning: No recent menus in history. #"
 		
-
-
-	def repeatLastView(self):
-		'''
-		Show the previous view.
-		'''
-		print self.sb.previousView(), self.sb.previousView(asList=1)
-		self.sb.previousView()()
 
 
 
@@ -329,6 +336,7 @@ class Tk(QtWidgets.QStackedWidget):
 def createInstance(mainWindow=None):
 	tk = Tk(mainWindow)
 	tk.overlay = OverlayFactoryFilter(tk) #Paint events are handled by the overlay module.
+	tk.setUi() #initialize layout
 
 	return tk
 

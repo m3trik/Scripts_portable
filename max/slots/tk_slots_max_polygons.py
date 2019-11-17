@@ -320,10 +320,11 @@ class Polygons(Init):
 		tolerance = float(self.ui.s002.value())
 		selection = rt.selection
 
-		self.progressBar(init=1) #initialize the progress bar
 		if selection:
-			for obj in selection:
-				self.progressBar(len(selection)) #register progress
+			for n, obj in enumerate(selection):
+				if not self.ui.progressBar.step(n, len(selection)): #register progress while checking for cancellation:
+					break
+
 				vertSelection = rt.getVertSelection(obj)
 				if rt.subObjectLevel==1 and vertSelection>1: #merge selected components.
 					obj.weldThreshold = tolerance

@@ -197,8 +197,9 @@ class Uv(Init):
 		'''
 		Align Uv Shells
 		'''
-		self.try_('from AlignUVShells import *; AlignUVShellsWindow()')
-		
+		from AlignUVShells import *
+		AlignUVShellsWindow()
+
 
 	def b018(self):
 		'''

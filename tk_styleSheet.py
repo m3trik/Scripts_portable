@@ -399,6 +399,10 @@ print os.path.splitext(os.path.basename(__file__))[0]
 # Notes
 # -----------------------------------------------
 
+# testWidget.setObjectName("myWidget")
+# testWidget.setStyleSheet("#myWidget {background-color:red;}") 
+
+
 # background-color: #ABABAB; /* sets background of the menu */
 # border: 1px solid black;
 

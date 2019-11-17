@@ -239,7 +239,10 @@ class File(Init):
 					for root, directories, files in os.walk(dir_):
 						for filename in files:
 							if all([filename==oldName+ext for ext in ('.ma','.ma.swatches','.mb','.mb.swatches')]):
-								self.try_('os.remove(filename)')
+								try:
+									os.remove(filename)
+								except:
+									pass
 				except OSError:
 					print "# Warning: could not delete "+currentPath+oldName+" #"
 					pass

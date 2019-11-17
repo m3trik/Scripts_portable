@@ -178,14 +178,11 @@ class EventFactoryFilter(QtCore.QObject):
 		args:
 			event = <QEvent>
 		'''
-		# #construct buttons for any previous commands.
-		# ui = self.sb.getUi('main')
-		# for num, w in enumerate(self.getObject(ui, 'v024-29'), 1): #num starting from 1
-		# 	try:
-		# 		w.setText(self.sb.prevCommand(docString=1, as_list=1)[-num]) #prevCommand docString
-		# 		self.resizeAndCenterWidget(w)
-		# 		w.show()
-		# 	except: pass
+		#show button for any previous commands.
+		# if self.sb.prefix(self.widgetName, 'v') and self.name=='main': #'v024-29'
+		# 	self.widget.setText(self.sb.prevCommand(docString=1, as_list=1)[-num]) #prevCommand docString
+		#  	#self.resizeAndCenterWidget(self.widget)
+		# 	self.widget.show()
 
 		if self.widgetName=='mainWindow':
 			self.widget.activateWindow()
@@ -275,12 +272,8 @@ class EventFactoryFilter(QtCore.QObject):
 				self.name = self.tk.setUi(self.widget.whatsThis()) #switch the stacked layout to the given ui.
 				self.tk.move(QtGui.QCursor.pos() - self.tk.ui.rect().center()) #move window to cursor position and offset from left corner to center
 
-				# self.__mouseGrabber.releaseMouse()
-				# self.__mouseGrabber = None
-				# self.tk.activateWindow()
-
 			elif self.sb.prefix(self.widgetName, 'v'): #ie. 'v012'
-				self.sb.previousView(as_list=1).append(self.sb.getMethod(self.name, self.widgetName)) #store the camera view
+				self.sb.previousUi(as_list=1).append(self.sb.getMethod(self.name, self.widgetName)) #store the camera view
 				self.widget.click()
 
 			elif self.sb.prefix(self.widgetName, 'b'): #ie. 'b012'
@@ -320,3 +313,25 @@ print os.path.splitext(os.path.basename(__file__))[0]
 						# del self.prevWidget[-1:]
 
 
+# def resizeAndCenterWidget(self, widget):
+	# 	'''
+	# 	adjust the given widget to fix contents and re-center.
+	# 	args:
+	# 		widget=<ui object> - 
+	# 	'''
+	# 	# x = widget.parentWidget().rect().center().x()
+	# 	# x1 = widget.rect().center().x()
+	# 	widget.adjustSize()
+	# 	# x2 = widget.rect().center().x()
+	# 	# print x1, x2
+	# 	# size1 = widget.frameGeometry().width()
+	# 	# x = abs(x1-x2)/2
+	# 	# print x
+	# 	# widget.move(widget.x()-x, widget.y())
+	# 	# size2 = widget.frameGeometry().width()
+	# 	# print 'size', size1, size2
+	# 	# difference = abs(size1-size2)/2
+	# 	# print difference, widget.x()
+	# 	# widget.move(widget.x()-difference, widget.y())
+	# 	# widget.resize.width(size2+difference)
+	# 	# widget.setText(str(widget.text())+' '*difference)

@@ -79,7 +79,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QWidget" name="r000" native="true">
+   <widget class="QWidget" name="main" native="true">
     <property name="geometry">
      <rect>
       <x>155</x>
@@ -369,7 +369,7 @@
      </property>
     </widget>
    </widget>
-   <zorder>r000</zorder>
+   <zorder>main</zorder>
    <zorder>r002</zorder>
    <zorder>r001</zorder>
   </widget>

@@ -18,9 +18,6 @@ class Slot(object):
 
 
 
-
-
-
 	def getObject(self, class_, objectNames, showError_=False):
 		'''
 		Get a list of corresponding objects from a single string.
@@ -192,40 +189,6 @@ class Slot(object):
 
 
 
-	progress=0
-	def progressBar(self, length=100, init=False):
-		'''
-		args:
-			ui=dynamic ui object
-			length=int - total length of procedure
-
-		returns:
-			current percentage
-		ie.
-		self.progressBar(init=1) #initialize the progress bar
-		for obj in selection:
-			self.progressBar(len(selection)) #register progress
-		'''
-		ui=self.sb.getUi()
-		global progress
-
-		if init:
-			progress=0
-			ui.progressBar.setVisible(True)
-			return
-
-		progress+=1
-		value = 100*progress/length
-		ui.progressBar.setValue(value)
-		# QtGui.qApp.processEvents() #ensure that any pending events are processed sufficiently often for the GUI to remain responsive
-		if value>=100:
-			ui.progressBar.setVisible(False)
-			ui.progressBar.setValue(0)
-		print value
-		return value
-
-
-
 	global cycleDict
 	cycleDict={}
 	@staticmethod
@@ -258,43 +221,6 @@ class Slot(object):
 
 
 	@staticmethod
-	def try_(expressions, exceptions='pass', showError_=True, print_=False, **kwargs):
-		'''
-		args:
-			expressions='string' - expression separated by ';'
-			exceptions='string' - separated by ';'
-			showError_=bool - hide or show any errors
-			printCommand=bool - print expression/s to console
-			*kwargs=any additional arguments used by expressions.
-		
-		returns:
-			True if no errors occured, else: False
-		ex. self.try_('pm.delete(arg1)', arg1=radialArrayObjList) #pass in radialArrayObjList as a **kwarg.
-		ex. self.try_('pm.ls(selection=1, objectsOnly=1)[0]; <additional command>, exceptions=" ERROR: Nothing selected."')
-		'''
-		try: import pymel.core as pm; #used when expressions are passed into the try_ method
-		except: pass
-
-		didCodeExecWithoutError=True
-
-		for key,value in kwargs.iteritems():
-			locals()[key]=value #create variables for any kwargs passed in
-
-		for expression in expressions.split(';'): #split string arg at ';'
-			try:
-				expression = expression.lstrip(" ") #strip any leading whitespace
-				if print_: print expression
-				exec (expression)
-			except Exception as err:
-				didCodeExecWithoutError=False #if any errors occur return False
-				if showError_:
-					print "# Error in try_(): "+str(err)+" #"
-				exec (exceptions)
-		return didCodeExecWithoutError
-
-
-
-	@staticmethod
 	def collapseList(list_, limit=None):
 		'''
 		args:
@@ -323,53 +249,6 @@ class Slot(object):
 			return l
 		else:
 			return collapsedList
-
-
-
-
-
-
-
-
-
-
-
-	# ------------------------------------------------
-	#' Set widget state and style overrides'
-	# ------------------------------------------------
-
-
-
-	# def resizeAndCenterWidget(self, widget):
-	# 	'''
-	# 	adjust the given widget to fix contents and re-center.
-	# 	args:
-	# 		widget=<ui object> - 
-	# 	'''
-	# 	# x = widget.parentWidget().rect().center().x()
-	# 	# x1 = widget.rect().center().x()
-	# 	widget.adjustSize()
-	# 	# x2 = widget.rect().center().x()
-	# 	# print x1, x2
-	# 	# size1 = widget.frameGeometry().width()
-	# 	# x = abs(x1-x2)/2
-	# 	# print x
-	# 	# widget.move(widget.x()-x, widget.y())
-	# 	# size2 = widget.frameGeometry().width()
-	# 	# print 'size', size1, size2
-	# 	# difference = abs(size1-size2)/2
-	# 	# print difference, widget.x()
-	# 	# widget.move(widget.x()-difference, widget.y())
-	# 	# widget.resize.width(size2+difference)
-	# 	# widget.setText(str(widget.text())+' '*difference)
-
-
-
-
-
-
-
-
 
 
 

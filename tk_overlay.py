@@ -22,15 +22,17 @@ class Overlay(QtWidgets.QWidget):
 	blackPen = QtGui.QPen(QtGui.QColor(0, 0, 0), 1, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
 
 
-	def __init__(self):
-		super(Overlay, self).__init__()
+	def __init__(self, parent=None):
+		super(Overlay, self).__init__(parent)
 
-		self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
-		self.setAttribute(QtCore.Qt.WA_NoSystemBackground) #takes a single arg
-		self.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
+		if parent:
+			self.tk = parent
 
-		self.sb = Switchboard()
-		self.tk = self.sb.getClassInstance('tk')
+			self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+			self.setAttribute(QtCore.Qt.WA_NoSystemBackground) #takes a single arg
+			self.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
+
+			self.painter = QtGui.QPainter() #Initialize self.painter
 
 
 
@@ -39,10 +41,9 @@ class Overlay(QtWidgets.QWidget):
 		args:
 			event=<QEvent>
 		'''
-		uiName = self.sb.getUiName()
-		if any([uiName=='main', uiName=='viewport', uiName=='editors', 'submenu' in uiName]):
+		if self.tk.uiLevel>0 and self.tk.uiLevel<3:
 
-			painter = QtGui.QPainter(self) #Initialize painter
+			self.painter.begin(self)
 
 			for i, start_point in enumerate(self.tk.drawPath): #plot and draw the points in the drawPath list.
 				try:
@@ -50,27 +51,29 @@ class Overlay(QtWidgets.QWidget):
 				except:
 					end_point = self.mouseEventPos #after the list points are drawn, plot the current end_point, controlled by the mouse move event.
 
-				self.drawTangent(painter, self.mapFromGlobal(start_point), end_point)
+				self.drawTangent(self.mapFromGlobal(start_point), end_point)
+
+			self.painter.end()
 
 
 
-	def drawTangent(self, painter, start_point, end_point):
+	def drawTangent(self, start_point, end_point):
 		'''
-		draw a segment between two points with the given painter.
+		draw a segment between two points with the given self.painter.
 		'''
 		path = QtGui.QPainterPath()
 		path.addEllipse(QtCore.QPointF(start_point), 7, 7)
 
-		painter.fillRect(self.rect(), QtGui.QColor(127, 127, 127, 0)) #transparent overlay background.
-		painter.setRenderHint(QtGui.QPainter.Antialiasing, True)
-		painter.setBrush(QtGui.QColor(115, 115, 115))
-		painter.fillPath(path, QtGui.QColor(115, 115, 115))
-		painter.setPen(self.blackPen)
-		painter.drawPath(path) #stroke
+		self.painter.fillRect(self.rect(), QtGui.QColor(127, 127, 127, 0)) #transparent overlay background.
+		self.painter.setRenderHint(QtGui.QPainter.Antialiasing, True)
+		self.painter.setBrush(QtGui.QColor(115, 115, 115))
+		self.painter.fillPath(path, QtGui.QColor(115, 115, 115))
+		self.painter.setPen(self.blackPen)
+		self.painter.drawPath(path) #stroke
 		if not end_point.isNull():
-			painter.setPen(self.greyPen)
-			painter.drawLine(start_point, end_point)
-			# painter.drawEllipse(end_point, 5, 5)
+			self.painter.setPen(self.greyPen)
+			self.painter.drawLine(start_point, end_point)
+			# self.painter.drawEllipse(end_point, 5, 5)
 
 
 
@@ -79,6 +82,7 @@ class Overlay(QtWidgets.QWidget):
 		args:
 			event=<QEvent>
 		'''
+		# self.painter.eraseRect(self.rect())
 		self.mouseEventPos = event.pos()
 		self.update()
 
@@ -104,8 +108,7 @@ class OverlayFactoryFilter(QtCore.QObject):
 	def __init__(self, parent=None):
 		super(OverlayFactoryFilter, self).__init__(parent)
 
-		self.overlay = Overlay()
-		self.overlay.setParent(parent)
+		self.overlay = Overlay(parent)
 
 		if parent:
 			parent.installEventFilter(self)
@@ -154,171 +157,3 @@ print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
-
-		# self.tk.currentChanged.connect(self.currentChanged)
-
-
-	# def mousePressEvent(self, event):
-	# 	'''
-	# 	args:
-	# 		event=<QEvent>
-	# 	'''
-	# 	self.drawPath.append(self.rect().center()) #append as startPoint
-	# 	self.mouseEventPos = event.pos()
-	# 	self.update()
-
-
-
-	# def mouseMoveEvent(self, event):
-	# 	'''
-	# 	args:
-	# 		event=<QEvent>
-	# 	'''
-	# 	# switch/case
-	# 	if self.flag==2 or self.flag==3:
-	# 		w = self.sb.getWidget('tk')
-
-	# 		if self.flag==2:
-	# 			print '2'
-	# 			p = w.mapFromGlobal(self.globalCenter)
-	# 			w.move(p.x() - w.width()/2, p.y() - w.height()/2) #move and center
-
-	# 		startPoint = w.mapToGlobal(w.rect().center())
-	# 		self.drawPath[0] = self.mapFromGlobal(startPoint) #replace the startPoint
-	# 		self.drawPath.append(self.mapFromGlobal(QtGui.QCursor.pos()))
-	# 		self.flag = None #run once
-
-	# 	elif self.flag==1:
-	# 		self.globalCenter = self.mapToGlobal(self.rect().center())
-	# 		del self.drawPath[:]
-	# 		self.drawPath.append(self.rect().center())
-	# 		self.flag = None #run once
-
-	# 	self.mouseEventPos = event.pos()
-	# 	self.update()
-
-
-
-	# def mouseReleaseEvent(self, event):
-	# 	'''
-	# 	args:
-	# 		event=<QEvent>
-	# 	'''
-	# 	del self.drawPath[:]
-	# 	self.update()
-
-
-
-	# def currentChanged(self):
-	# 	'''
-	# 	On stackedWidget index change, set flag value to allow the overlay to plot points accordingly.
-
-	# 	1 = Main menu
-	# 	2 = Submenu called for the first time.
-	# 	3 = Submenu called.
-	# 	'''
-	# 	name = self.sb.getUiName()
-
-	# 	if name:
-	# 		if '_submenu' in name:
-	# 			if name not in self.sb.previousName(as_list=1, allowDuplicates=1)[:-1]:
-	# 				self.flag = 2
-	# 			else:
-	# 				self.flag = 3
-	# 		else:
-	# 			self.flag = 1
-
-
-
-	# def currentChanged(self):
-	# 	'''
-	# 	On stackedWidget index change, set flag value to allow the overlay to plot points accordingly.
-	# 	'''
-	# 	name = self.sb.getUiName()
-
-	# 	if name:
-	# 		if '_submenu' in name: #Submenu
-	# 			w = self.sb.getWidget('tk')
-
-	# 			if name not in self.sb.previousName(as_list=1, allowDuplicates=1)[:-1]: #if Submenu called for the first time:
-	# 				p = w.mapFromGlobal(self.globalCenter)
-	# 				w.move(p.x() - w.width()/2, p.y() - w.height()/2) #move and center
-
-	# 			# if '_submenu' in self.sb.previousName():
-	# 			# 	q = QtWidgets.QPushButton(self.q, self.sb.getUi(name))
-	# 			# 	p = q.mapFromGlobal(self.globalCenter)
-	# 			# 	q.move(p.x() - q.width()/2, p.y() - q.height()/2) #move and center
-
-	# 			# for widget in self.sb.getWidget(name=self.sb.getUiName()): #get all widgets from the current ui.
-	# 			# 	if widget.objectName().startswith('i') and widget.rect().contains(widget.mapFromGlobal(QtGui.QCursor.pos())): #if mouse over widget:
-	# 			# 		self.q = widget.objectName()
-
-	# 			startPoint = w.mapToGlobal(w.rect().center())
-	# 			self.drawPath[0] = self.mapFromGlobal(startPoint) #replace the startPoint
-	# 			self.drawPath.append(self.mapFromGlobal(QtGui.QCursor.pos()))
-	# 			# print self.drawPath
-
-	# 		else: #Main menu
-	# 			self.globalCenter = self.mapToGlobal(self.rect().center())
-
-	# 			del self.drawPath[:]
-	# 			self.drawPath.append(self.rect().center())
-
-
-	# def currentChanged(self):
-	# 	'''
-	# 	On stackedWidget index change, set a point for .
-	# 	'''
-	# 	name = self.sb.getUiName()
-
-	# 	if name and '_submenu' in name: #Submenu
-	# 		self.drawPath.append(QtGui.QCursor.pos()) #global cursor position
-
-	# 	else: #Main menu
-	# 		if not self.globalCenter:
-	# 			self.drawPath=[]
-	# 			self.globalCenter = self.mapToGlobal(self.rect().center())
-	# 			self.drawPath.append(self.globalCenter)
-	# 		else:
-	# 			del self.drawPath[1:] #clear the draw path
-
-
-			# for widget in self.sb.getWidget(name=self.sb.getUiName()): #get all widgets from the current ui.
-			# 	if widget.objectName().startswith('i') and widget.rect().contains(widget.mapFromGlobal(QtGui.QCursor.pos())): #if mouse over widget:
-			# 		self.q = widget.objectName()
-
-
-
-	# def currentChanged(self):
-	# 	'''
-	# 	On stackedWidget index change, set flag value to allow the overlay to plot points accordingly.
-	# 	'''
-	# 	name = self.sb.getUiName()
-
-	# 	if name:
-	# 		if '_submenu' in name: #Submenu
-	# 			w = self.sb.getWidget('tk')
-
-	# 			if name not in self.sb.previousName(as_list=1, allowDuplicates=1)[:-1]: #if Submenu called for the first time:
-	# 				p = w.mapFromGlobal(self.globalCenter)
-	# 				w.move(p.x() - w.width()/2, p.y() - w.height()/2) #move and center
-
-	# 			# if '_submenu' in self.sb.previousName():
-	# 			# 	q = QtWidgets.QPushButton(self.q, self.sb.getUi(name))
-	# 			# 	p = q.mapFromGlobal(self.globalCenter)
-	# 			# 	q.move(p.x() - q.width()/2, p.y() - q.height()/2) #move and center
-
-	# 			# for widget in self.sb.getWidget(name=self.sb.getUiName()): #get all widgets from the current ui.
-	# 			# 	if widget.objectName().startswith('i') and widget.rect().contains(widget.mapFromGlobal(QtGui.QCursor.pos())): #if mouse over widget:
-	# 			# 		self.q = widget.objectName()
-
-	# 			startPoint = w.mapToGlobal(w.rect().center())
-	# 			self.drawPath[0] = self.mapFromGlobal(startPoint) #replace the startPoint
-	# 			self.drawPath.append(self.mapFromGlobal(QtGui.QCursor.pos()))
-	# 			# print self.drawPath
-
-	# 		else: #Main menu
-	# 			self.globalCenter = self.mapToGlobal(self.rect().center())
-
-	# 			del self.drawPath[:]
-	# 			self.drawPath.append(self.rect().center())
