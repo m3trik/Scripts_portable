@@ -47,9 +47,6 @@ class Tk(QtWidgets.QStackedWidget):
 		Set the stacked Widget's index.
 		args:
 			name = 'string' - name of ui.
-
-		returns:
-			'string' - name of ui. ex. 'polygons'
 		'''
 		if not name in self.sb.previousName(allowInit=1, as_list=1): #if ui(name) hasn't been set before, init the ui for the given name.
 			self.sb.setUiSize(name) #Set the size info for each ui (allows for resizing a stacked widget where ordinarily resizing is constrained by the largest widget in the stack)
@@ -66,8 +63,6 @@ class Tk(QtWidgets.QStackedWidget):
 
 		self.setCurrentWidget(self.ui) #set the stacked widget to the given ui.
 
-		return self.name #return name. useful in cases where switching ui in the middle of an event the name can be immediately updated. ie. self.name = self.tk.setUi('main')
-
 
 
 	def setPrevUi(self):
@@ -75,34 +70,30 @@ class Tk(QtWidgets.QStackedWidget):
 		Return the stacked widget to it's previous ui.
 		'''
 		previous = [i for i in self.sb.previousName(as_list=1) if '_submenu' not in i][-1]
-		name = self.setUi(previous) #return the stacked widget to it's previous ui.
+		self.setUi(previous) #return the stacked widget to it's previous ui.
+
 		del self.drawPath[1:] #clear the draw path, while leaving the starting point.
 		del self.widgetPath[:] #clear the list of previous widgets.
+
 		self.move(self.drawPath[0] - self.rect().center())
-		return name
 
 
 
-	def setSubUi(self, widget, submenu):
+	def setSubUi(self, widget, name):
 		'''
 		Uses the meta info of the given widget to switch the ui to the associated submenu.
 		Moves the new ui to line up with the previous ui's children.
 		Re-constructs the relevant buttons from the previous ui for the new ui, and positions them.
-		Initializes the new buttons to recieve events through the childEvents filter.
+		Initializes the new buttons to receive events through the childEvents filter.
 
 		args:
 			widget = <QWidget> - the widget that called this method.
-			submenu = 'string' - name of ui.
-
-		returns:
-			'string' - name of ui. ex. 'polygons_submenu'
+			name = 'string' - name of ui.
 		'''
 		p1 = widget.mapToGlobal(widget.rect().center()) #widget position before submenu change.
 
-		# w = widget #store widget before changing the stacked widget ui.
-		
 		try: #open a submenu on mouse enter (if it exists).
-			name = self.setUi(submenu) #switch the stacked widget to the given submenu.
+			self.setUi(name) #switch the stacked widget to the given submenu.
 		except Exception as error:
 			if not type(error)==ValueError: #if no submenu exists: ignore.
 				raise error

@@ -270,7 +270,7 @@ class EventFactoryFilter(QtCore.QObject):
 		'''
 		if self.widgetType=='QPushButton':
 			if self.sb.prefix(self.widgetName, 'i'): #set the stacked widget.
-				self.name = self.tk.setUi(self.widget.whatsThis()) #switch the stacked layout to the given ui.
+				self.tk.setUi(self.widget.whatsThis()) #switch the stacked layout to the given ui.
 				self.tk.move(QtGui.QCursor.pos() - self.tk.ui.rect().center()) #move window to cursor position and offset from left corner to center
 
 			elif self.sb.prefix(self.widgetName, 'v'): #ie. 'v012'
