@@ -75,8 +75,9 @@ class EventFactoryFilter(QtCore.QObject):
 		args:
 			widget=<ui object> - 
 		'''
+		spacing = 25
 		x1 = widget.rect().center().x()
-		widget.resize(widget.sizeHint().width()+20, widget.height())
+		widget.resize(widget.sizeHint().width()+spacing, widget.height())
 		x2 = widget.rect().center().x()
 		# print x1, x2, x1-x2
 		diff = x1-x2
