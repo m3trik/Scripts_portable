@@ -80,9 +80,6 @@
       <height>21</height>
      </size>
     </property>
-    <property name="toolTip">
-     <string/>
-    </property>
     <property name="whatsThis">
      <string>duplicate</string>
     </property>
@@ -93,8 +90,8 @@
    <widget class="QPushButton" name="b004">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>260</y>
+      <x>360</x>
+      <y>270</y>
       <width>111</width>
       <height>19</height>
      </rect>
@@ -133,8 +130,8 @@
    <widget class="QPushButton" name="b005">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>320</y>
+      <x>360</x>
+      <y>310</y>
       <width>111</width>
       <height>19</height>
      </rect>
@@ -190,9 +187,6 @@
       <width>16777215</width>
       <height>21</height>
      </size>
-    </property>
-    <property name="toolTip">
-     <string/>
     </property>
     <property name="whatsThis">
      <string>mirror</string>

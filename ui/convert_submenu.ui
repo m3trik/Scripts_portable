@@ -90,6 +90,130 @@
      <string>Convert</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="b000">
+    <property name="geometry">
+     <rect>
+      <x>155</x>
+      <y>260</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>21</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>999</width>
+      <height>21</height>
+     </size>
+    </property>
+    <property name="toolTip">
+     <string/>
+    </property>
+    <property name="whatsThis">
+     <string>convert</string>
+    </property>
+    <property name="text">
+     <string>Edges to Curve</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="b001">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>230</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>21</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>999</width>
+      <height>21</height>
+     </size>
+    </property>
+    <property name="toolTip">
+     <string/>
+    </property>
+    <property name="whatsThis">
+     <string>convert</string>
+    </property>
+    <property name="text">
+     <string>Instance to Obj</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="b002">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>300</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>21</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>999</width>
+      <height>21</height>
+     </size>
+    </property>
+    <property name="toolTip">
+     <string/>
+    </property>
+    <property name="whatsThis">
+     <string>convert</string>
+    </property>
+    <property name="text">
+     <string>NURBs to Poly</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="b003">
+    <property name="geometry">
+     <rect>
+      <x>165</x>
+      <y>340</y>
+      <width>116</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>21</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>999</width>
+      <height>21</height>
+     </size>
+    </property>
+    <property name="toolTip">
+     <string/>
+    </property>
+    <property name="whatsThis">
+     <string>convert</string>
+    </property>
+    <property name="text">
+     <string>Smooth Prev to Poly</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

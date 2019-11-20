@@ -96,30 +96,34 @@ class Convert(Init):
 
 	def b000(self):
 		'''
-		
+		Polygon Edges to Curve
 		'''
-		pass
+		cmb = self.ui.cmb001
+		cmb.setCurrentIndex(cmb.findText('Polygon Edges to Curve'))
 
 
 	def b001(self):
 		'''
-		
+		Instance to Object
 		'''
-		pass
+		cmb = self.ui.cmb001
+		cmb.setCurrentIndex(cmb.findText('Instance to Object'))
 
 
 	def b002(self):
 		'''
-		
+		NURBS to Polygons
 		'''
-		pass
+		cmb = self.ui.cmb001
+		cmb.setCurrentIndex(cmb.findText('NURBS to Polygons'))
 
 
 	def b003(self):
 		'''
-		
+		Smooth Mesh Preview to Polygons
 		'''
-		pass
+		cmb = self.ui.cmb001
+		cmb.setCurrentIndex(cmb.findText('Smooth Mesh Preview to Polygons'))
 
 
 	def b004(self):

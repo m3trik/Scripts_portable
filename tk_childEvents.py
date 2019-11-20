@@ -51,7 +51,7 @@ class EventFactoryFilter(QtCore.QObject):
 			widgetType = self.sb.getWidgetType(widget, name) #get the class type as string.
 			derivedType = self.sb.getDerivedType(widget, name) #get the derived class type as string.
 
-			widget.setStyleSheet(getattr(StyleSheet, derivedType, '')) #add StyleSheet
+			widget.setStyleSheet(getattr(StyleSheet, derivedType, ''))
 			widget.installEventFilter(self)
 
 
@@ -212,7 +212,7 @@ class EventFactoryFilter(QtCore.QObject):
 					self.name = self.tk.setSubUi(self.widget, submenu)
 
 			elif self.widgetName=='<':
-				self.name = self.tk.setPrevUi()
+				self.tk.setPrevUi()
 
 
 
@@ -261,15 +261,15 @@ class EventFactoryFilter(QtCore.QObject):
 			event = <QEvent>
 		'''
 		if self.widgetType=='QPushButton':
-			if self.sb.prefix(self.widgetName, 'i'): #set the stacked widget.
+			if self.sb.prefix(self.widgetName, 'i'): #ie. 'i012'
 				self.tk.setUi(self.widget.whatsThis()) #switch the stacked layout to the given ui.
 				self.tk.move(QtGui.QCursor.pos() - self.tk.ui.rect().center()) #move window to cursor position and offset from left corner to center
 
-			elif self.sb.prefix(self.widgetName, 'v'): #ie. 'v012'
+			elif self.sb.prefix(self.widgetName, 'v'):
 				self.sb.previousUi(as_list=1).append(self.sb.getMethod(self.name, self.widgetName)) #store the camera view
 				self.widget.click()
 
-			elif self.sb.prefix(self.widgetName, 'b'): #ie. 'b012'
+			elif self.sb.prefix(self.widgetName, 'b'):
 				if '_submenu' in self.name:
 					self.widget.click()
 				else: #add the buttons command to the prevCommand list.

@@ -282,7 +282,7 @@ class Switchboard(object):
 		if not name:
 			name = self.getUiName()
 
-		return self.uiList(ui=True)[self.getUiIndex(name)]
+		return self.uiList(ui=True)[self.getUiIndex(name.lower())]
 
 
 
@@ -338,6 +338,7 @@ class Switchboard(object):
 			if name: index of given name from the key 'uiList'.
 			else: index of current ui
 		'''
+		
 		if name:
 			return self.uiList(name=True).index(name)
 		else:

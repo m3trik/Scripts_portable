@@ -67,7 +67,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 	def setPrevUi(self):
 		'''
-		Return the stacked widget to it's previous ui.
+		Return the stacked widget to it's starting index.
 		'''
 		previous = [i for i in self.sb.previousName(as_list=1) if '_submenu' not in i][-1]
 		self.setUi(previous) #return the stacked widget to it's previous ui.
@@ -81,7 +81,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 	def setSubUi(self, widget, name):
 		'''
-		Uses the meta info of the given widget to switch the ui to the associated submenu.
+		Set the stacked widgets index to the submenu associated with the given widget.
 		Moves the new ui to line up with the previous ui's children.
 		Re-constructs the relevant buttons from the previous ui for the new ui, and positions them.
 		Initializes the new buttons to receive events through the childEvents filter.
@@ -95,19 +95,22 @@ class Tk(QtWidgets.QStackedWidget):
 		try: #open a submenu on mouse enter (if it exists).
 			self.setUi(name) #switch the stacked widget to the given submenu.
 		except Exception as error:
-			if not type(error)==ValueError: #if no submenu exists: ignore.
-				raise error
+			if type(error)==ValueError: #if no submenu exists: ignore and return.
 				return None
+			else:
+				raise error
 
 		w = getattr(self.currentWidget(), widget.objectName()) #get the widget of the same name in the new ui.
 		#maintain the correct contents of the widgetPath and drawPath lists by removing elements when moving back up levels in the ui.
 		if len(self.sb.previousName(as_list=1, allowDuplicates=1))>2:
-			if name==self.sb.previousName(as_list=1, allowDuplicates=1)[-3]: #if index is that of the previous ui, remove the information associated with that ui from the lists so that any new list will draw with the correct contents.
-				del self.widgetPath[-2:]
-				if len(self.drawPath)>2: #temp solution for removing drawPath points. works only when there are two levels of submenus to draw paths for.
-					del self.drawPath[-2:]
+			if name in self.sb.previousName(as_list=1, allowDuplicates=1)[:-1]: #if index is that of the previous ui, remove the information associated with that ui from the list.
+				widgets = [i[2] for i in self.widgetPath] #get the names associated with the widgets in widgetPath. ie. 'edit_submenu'
+				if name in widgets:
+					index = widgets[::-1].index(name) #reverse the list and get the index of the last occurrence of name.
+					del self.drawPath[-index-1:]
+					del self.widgetPath[-2:]
 
-		self.widgetPath.append([widget, p1]) #add the widget that was initially entered to the widgetPath list so that it can be re-created in the new ui (in the same position).
+		self.widgetPath.append([widget, p1, name]) #add the widget (and its position) from the old ui to the widgetPath list so that it can be re-created in the new ui (in the same position).
 		self.drawPath.append(QtGui.QCursor.pos()) #add the global cursor position to the drawPath list so that paint events can draw the path tangents.
 
 		p2 = w.mapToGlobal(w.rect().center()) #widget position after submenu change.
@@ -115,13 +118,14 @@ class Tk(QtWidgets.QStackedWidget):
 		self.move(self.mapFromGlobal(currentPos +(p1 - p2))) #currentPos + difference
 
 
+		#recreate any relevant buttons from the previous ui on first show.
 		if name not in self.sb.previousName(as_list=1, allowDuplicates=1)[:-1]: #if submenu ui called for the first time, construct widgets from the previous ui that fall along the plotted path.
-			w0 = QtWidgets.QPushButton('<', self.sb.getUi(name))
+			w0 = QtWidgets.QPushButton('', self.sb.getUi(name))
 			w0 = self.sb.addWidget(name, w0, '<')
 			self.childEvents.init(name, [w0]) #initialize the widget to set things like the event filter and stylesheet.
 			w0.resize(45, 45)
 			w0.move(w0.mapFromGlobal(self.drawPath[0] - w0.rect().center())) #move and center
-			w0.show()
+			# w0.show()
 
 			if '_submenu' in self.sb.previousName(): #recreate widget/s from the previous ui that are in the current path.
 				for index in range(2, len(self.widgetPath)+1): #index starting at 2:
