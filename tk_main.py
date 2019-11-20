@@ -31,7 +31,7 @@ class Tk(QtWidgets.QStackedWidget):
 	def __init__(self, parent=None):
 		super(Tk, self).__init__(parent)
 
-		self.setWindowFlags(QtCore.Qt.FramelessWindowHint|QtCore.Qt.WindowStaysOnTopHint)
+		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint|QtCore.Qt.WindowStaysOnTopHint)
 		self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
 		self.sb = Switchboard(self, parent)
@@ -122,9 +122,9 @@ class Tk(QtWidgets.QStackedWidget):
 		if name not in self.sb.previousName(as_list=1, allowDuplicates=1)[:-1]: #if submenu ui called for the first time, construct widgets from the previous ui that fall along the plotted path.
 			w0 = QtWidgets.QPushButton('', self.sb.getUi(name))
 			w0 = self.sb.addWidget(name, w0, '<')
-			self.childEvents.init(name, [w0]) #initialize the widget to set things like the event filter and stylesheet.
 			w0.resize(45, 45)
 			w0.move(w0.mapFromGlobal(self.drawPath[0] - w0.rect().center())) #move and center
+			self.childEvents.init(name, [w0]) #initialize the widget to set things like the event filter and stylesheet.
 			# w0.show()
 
 			if '_submenu' in self.sb.previousName(): #recreate widget/s from the previous ui that are in the current path.
@@ -134,10 +134,10 @@ class Tk(QtWidgets.QStackedWidget):
 
 					w1 = QtWidgets.QPushButton(prevWidget.text(), self.sb.getUi(name))
 					w1 = self.sb.addWidget(name, w1, prevWidget.objectName())
-					self.childEvents.init(name, [w1]) #initialize the widget to set things like the event filter and stylesheet.
 					w1.setWhatsThis(prevWidget.whatsThis())
 					w1.resize(prevWidget.size())
 					w1.move(w1.mapFromGlobal(prevWidgetLocation - w1.rect().center())) #move and center
+					self.childEvents.init(name, [w1]) #initialize the widget to set things like the event filter and stylesheet.
 					w1.show()
 					index+=1
 

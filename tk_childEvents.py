@@ -51,16 +51,36 @@ class EventFactoryFilter(QtCore.QObject):
 			widgetType = self.sb.getWidgetType(widget, name) #get the class type as string.
 			derivedType = self.sb.getDerivedType(widget, name) #get the derived class type as string.
 
+			uiLevel = self.sb.getUiLevel(name)
+
 			widget.setStyleSheet(getattr(StyleSheet, derivedType, ''))
 			widget.installEventFilter(self)
 
 
-			if self.sb.prefix(widgetName, 'r'): #prefix returns True if widgetName startswith the given prefix, and is followed by three integers.
+			if widgetType=='QPushButton' and uiLevel<3:
+				self.resizeAndCenterWidget(widget)
+
+			elif self.sb.prefix(widgetName, 'r'): #prefix returns True if widgetName startswith the given prefix, and is followed by three integers.
 				widget.setVisible(False)
 
 			elif name=='create':
 				if self.sb.prefix(widgetName, 's'):
 					widget.setVisible(False)
+
+
+
+	def resizeAndCenterWidget(self, widget):
+		'''
+		adjust the given widget to fix contents and re-center.
+		args:
+			widget=<ui object> - 
+		'''
+		x1 = widget.rect().center().x()
+		widget.resize(widget.sizeHint().width()+20, widget.height())
+		x2 = widget.rect().center().x()
+		# print x1, x2, x1-x2
+		diff = x1-x2
+		widget.move(widget.x()+diff, widget.y())
 
 
 
@@ -306,25 +326,3 @@ print os.path.splitext(os.path.basename(__file__))[0]
 						# del self.prevWidget[-1:]
 
 
-# def resizeAndCenterWidget(self, widget):
-	# 	'''
-	# 	adjust the given widget to fix contents and re-center.
-	# 	args:
-	# 		widget=<ui object> - 
-	# 	'''
-	# 	# x = widget.parentWidget().rect().center().x()
-	# 	# x1 = widget.rect().center().x()
-	# 	widget.adjustSize()
-	# 	# x2 = widget.rect().center().x()
-	# 	# print x1, x2
-	# 	# size1 = widget.frameGeometry().width()
-	# 	# x = abs(x1-x2)/2
-	# 	# print x
-	# 	# widget.move(widget.x()-x, widget.y())
-	# 	# size2 = widget.frameGeometry().width()
-	# 	# print 'size', size1, size2
-	# 	# difference = abs(size1-size2)/2
-	# 	# print difference, widget.x()
-	# 	# widget.move(widget.x()-difference, widget.y())
-	# 	# widget.resize.width(size2+difference)
-	# 	# widget.setText(str(widget.text())+' '*difference)
