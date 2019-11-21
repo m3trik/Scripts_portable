@@ -69,17 +69,16 @@ class EventFactoryFilter(QtCore.QObject):
 
 
 
-	def resizeAndCenterWidget(self, widget):
+	def resizeAndCenterWidget(self, widget, padding=30):
 		'''
-		adjust the given widget to fix contents and re-center.
+		Adjust the given widget's width to fit contents and re-center.
 		args:
-			widget=<ui object> - 
+			widget = <widget object> - 
+			padding = int - additional width to be applied at both ends.
 		'''
-		spacing = 25
 		x1 = widget.rect().center().x()
-		widget.resize(widget.sizeHint().width()+spacing, widget.height())
+		widget.resize(widget.sizeHint().width()+padding, widget.height())
 		x2 = widget.rect().center().x()
-		# print x1, x2, x1-x2
 		diff = x1-x2
 		widget.move(widget.x()+diff, widget.y())
 

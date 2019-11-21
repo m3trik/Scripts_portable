@@ -62,7 +62,7 @@ class File(Init):
 		if index!=0:
 			# force=True; force if maxEval("maxFileName;") else not force #if sceneName prompt user to save; else force open.  also: checkForSave(); If the scene has been modified since the last file save (if any), calling this function displays the message box prompting the user that the scene has been modified and requests to save.
 			rt.loadMaxFile(str(contents[index]))
-			self.tk.hide()
+			self.tk.hide_()
 			cmb.setCurrentIndex(0)
 
 
@@ -99,7 +99,7 @@ class File(Init):
 		index = cmb.currentIndex()
 		if index!=0:
 			rt.loadMaxFile(path+'\\'+str(files[index-1]))
-			self.tk.hide()
+			self.tk.hide_()
 			cmb.setCurrentIndex(0)
 
 
@@ -109,15 +109,25 @@ class File(Init):
 		'''
 		cmb = self.ui.cmb003
 
-		contents = self.comboBox(cmb, ["Import file", "Import Options"], "Import")
+		contents = self.comboBox(cmb, ['Import file', 'Import Options', 'Merge', 'Replace', 'Link Revit', 'Link FBX', 'Link AutoCAD'], 'Import')
 
 		index = cmb.currentIndex()
 		if index!=0: #hide tk then perform operation
-			self.tk.hide()
+			self.tk.hide_()
 			if index == 1: #Import
-				maxEval('Import;')
+				maxEval('max file import')
 			if index == 2: #Import options
-				maxEval('ImportOptions;')
+				maxEval('')
+			if index == 3: #Merge
+				maxEval('max file merge')
+			if index == 4: #Replace
+				maxEval('max file replace')
+			if index == 5: #Manage Links: Link Revit File
+				maxEval('actionMan.executeAction 769996349 "108"')
+			if index == 6: #Manage Links: Link FBX File
+				maxEval('actionMan.executeAction 769996349 "109"')
+			if index == 7: #Manage Links: Link AutoCAD File
+				maxEval('actionMan.executeAction 769996349 "110"')
 			cmb.setCurrentIndex(0)
 
 
@@ -133,15 +143,15 @@ class File(Init):
 
 		index = cmb.currentIndex()
 		if index !=0: #hide tk then perform operation
-			self.tk.hide()
+			self.tk.hide_()
 			if index==1: #Export selection
-				maxEval('ExportSelection;')
+				maxEval('max file export')
 			if index==2: #Export options
-				maxEval('ExportSelectionOptions;')
-			if index==3: #Unreal
-				maxEval('SendToUnrealSelection;')
-			if index==4: #Unity 
-				maxEval('SendToUnitySelection;')
+				maxEval('')
+			if index==3: #Unreal: File: Game Exporter
+				maxEval('actionMan.executeAction 0 "40488"')
+			if index==4: #Unity: File: Game Exporter
+				maxEval('actionMan.executeAction 0 "40488"')
 			if index==5: #GoZ
 				print 'GoZ'
 				maxEval(''' 
@@ -150,12 +160,12 @@ class File(Init):
 						local result = s_gozServer.GoToZBrush()
 						) catch ();
 					''')
-			if index==6: #sent to maya: new scene
-				maxEval('actionMan.executeAction 924213374 "0"  -- One Click Maya: Send as New Scene to Maya')
-			if index==7: #sent to maya: update scene
-				maxEval('actionMan.executeAction 924213374 "1"  -- One Click Maya: Update Current Scene in Maya')
-			if index==8: #sent to maya: add to scene
-				maxEval('actionMan.executeAction 924213374 "2"  -- One Click Maya: Add to Current Scene in Maya')
+			if index==6: #One Click Maya: Send as New Scene to Maya
+				maxEval('actionMan.executeAction 924213374 "0"')
+			if index==7: #One Click Maya: Update Current Scene in Maya
+				maxEval('actionMan.executeAction 924213374 "1"')
+			if index==8: #One Click Maya: Add to Current Scene in Maya
+				maxEval('actionMan.executeAction 924213374 "2"')
 
 			cmb.setCurrentIndex(0)
 
@@ -270,7 +280,7 @@ class File(Init):
 		files = rt.getRecentfiles()
 		
 		rt.loadMaxFile(str(files[0]))
-		self.tk.hide()
+		self.tk.hide_()
 
 
 	def b002(self):
@@ -318,9 +328,19 @@ class File(Init):
 
 	def b007(self):
 		'''
-		
+		Import file
 		'''
-		pass
+		print 'Import file'
+		cmb = self.ui.cmb003
+		cmb.setCurrentIndex(cmb.findText('Import file'))
+
+
+	def b008(self):
+		'''
+		Export Selection
+		'''
+		cmb = self.ui.cmb004
+		cmb.setCurrentIndex(cmb.findText('Export Selection'))
 
 
 	def b015(self):
@@ -346,13 +366,6 @@ class File(Init):
 			if replace:
 				newName = obj.replace(from_, to)
 			pm.rename(obj, newName) #Rename the object with the new name
-
-
-	def b016(self):
-		'''
-		
-		'''
-		pass
 
 
 	def b017(self):

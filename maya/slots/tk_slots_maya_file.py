@@ -88,7 +88,7 @@ class File(Init):
 		
 		index = cmb.currentIndex()
 		if index!=0: #hide tk then perform operation
-			self.tk.hide()
+			self.tk.hide_()
 			if index == 1: #Import
 				mel.eval('Import;')
 			if index == 2: #Import options
@@ -109,7 +109,7 @@ class File(Init):
 
 		index = cmb.currentIndex()
 		if index !=0: #hide tk then perform operation
-			self.tk.hide()
+			self.tk.hide_()
 			if index==1: #Export selection
 				mel.eval('ExportSelection;')
 			if index==2: #Export options
@@ -299,25 +299,43 @@ class File(Init):
 
 	def b007(self):
 		'''
-		
-
+		Import file
 		'''
-		pass
+		cmb = self.ui.cmb003
+		cmb.setCurrentIndex(cmb.findText('Import file'))
+
+
+	def b008(self):
+		'''
+		Export Selection
+		'''
+		cmb = self.ui.cmb004
+		cmb.setCurrentIndex(cmb.findText('Export Selection'))
 
 
 	def b015(self):
 		'''
-
+		Remove String From Object Names.
 		'''
-		pass
+		from_ = str(self.ui.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
+		to = str(self.ui.t001.text())
+		replace = self.ui.chk004.isChecked()
+		selected = self.ui.chk005.isChecked()
 
+		objects = pm.ls (from_) #Stores a list of all objects starting with 'from_'
+		if selected:
+			objects = pm.ls (selection=1) #if use selection option; get user selected objects instead
+		from_ = from_.strip('*') #strip modifier asterisk from user input
 
-	def b016(self):
-		'''
-		
+		for obj in objects:
+			relatives = pm.listRelatives(obj, parent=1) #Get a list of it's direct parent
+			if 'group*' in relatives: #If that parent starts with group, it came in root level and is pasted in a group, so ungroup it
+				relatives[0].ungroup()
 
-		'''
-		pass
+			newName = to
+			if replace:
+				newName = obj.replace(from_, to)
+			pm.rename(obj, newName) #Rename the object with the new name
 
 
 	def b017(self):

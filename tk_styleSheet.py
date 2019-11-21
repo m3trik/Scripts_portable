@@ -19,7 +19,7 @@ class StyleSheet():
 	COLOR_MEDIUM   = #353535
 	COLOR_MEDLIGHT = #5A5A5A
 	COLOR_LIGHT    = #DDDDDD
-	COLOR_ACCENT   = rgba(82,133,166,200)
+	COLOR_ACCENT   = rgba(82,133,166,225)
 	'''
 	QMainWindow='''
 		QMainWindow {
@@ -29,40 +29,40 @@ class StyleSheet():
 
 	QWidget='''
 		QWidget::item:selected {
-			background: rgba(82,133,166,200);
+			background: rgba(82,133,166,225);
 		}'''
 
 	QPushButton='''
 		QPushButton {
 			border: 1px solid black;
-			background-color: rgba(100,100,100,200);
+			background-color: rgba(100,100,100,225);
 		}
 
 		QPushButton::checked {
 			border: 1px solid black;
-			background-color: rgba(82,133,166,200);
+			background-color: rgba(82,133,166,225);
 			color: black;
 		}
 
 		QPushButton::hover {   
 			border: 1px solid black;
-			background-color: rgba(82,133,166,200);
+			background-color: rgba(82,133,166,225);
 			color: white;
 		}
 
 		QPushButton::unchecked::hover {
 			background-color: rgba(0,0,0,0);
-			color: rgba(82,133,166,200);
+			color: rgba(82,133,166,225);
 		}
 
 		QPushButton::checked::hover {
 			background-color: rgba(0,0,0,0);
-			color: rgba(82,133,166,200);
+			color: rgba(82,133,166,225);
 		}
 
 		QPushButton::pressed {   
 			border: 1px solid black;
-			background-color: rgba(82,133,166,200);
+			background-color: rgba(82,133,166,225);
 			color: white;
 		}
 
@@ -85,16 +85,16 @@ class StyleSheet():
 
 	QComboBox='''
 		QComboBox {
-			background-color: rgba(100,100,100,200);
+			background-color: rgba(100,100,100,225);
 			color: white;
-			selection-background-color: rgba(82,133,166,200);
+			selection-background-color: rgba(82,133,166,225);
 			/*selection-color: black;*/
 		}
 
 		QComboBox:open {
-			background-color: rgba(100,100,100,200);
+			background-color: rgba(100,100,100,225);
 			color: white;
-			selection-background-color: rgba(82,133,166,200);
+			selection-background-color: rgba(82,133,166,225);
 		}
 
 		QComboBox::down-arrow {
@@ -172,7 +172,7 @@ class StyleSheet():
 	QAbstractItemView='''
 		QAbstractItemView {
 			show-decoration-selected: 1;
-			selection-background-color: rgba(82,133,166,200);
+			selection-background-color: rgba(82,133,166,225);
 			selection-color: #DDDDDD;
 			alternate-background-color: #353535;
 		}'''
@@ -238,7 +238,7 @@ class StyleSheet():
 		}
 
 		QSlider::add-page:vertical, QSlider::sub-page:horizontal {
-			background: rgba(82,133,166,200);
+			background: rgba(82,133,166,225);
 		}
 
 		QSlider::sub-page:vertical, QSlider::add-page:horizontal {
@@ -370,7 +370,7 @@ class StyleSheet():
 
 		QProgressBar::chunk {
 			width: 1px;
-			background-color: rgba(82,133,166,200);
+			background-color: rgba(82,133,166,225);
 		}'''
 
 

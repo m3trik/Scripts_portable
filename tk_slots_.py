@@ -15,6 +15,7 @@ class Slot(object):
 		super(Slot, self).__init__()
 
 		self.sb = Switchboard()
+		self.tk = self.sb.getClassInstance('tk')
 
 
 

@@ -158,6 +158,7 @@ class Tk(QtWidgets.QStackedWidget):
 				info = self.sb.getMethod('init', 'info')
 				if callable(info):
 					infoDict = info()
+					print infoDict
 					textEdit.addcontents(infoDict)
 
 

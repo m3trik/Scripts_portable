@@ -59,16 +59,6 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <widget class="QWidget" name="r002" native="true">
-    <property name="geometry">
-     <rect>
-      <x>155</x>
-      <y>0</y>
-      <width>286</width>
-      <height>211</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QWidget" name="r001" native="true">
     <property name="geometry">
      <rect>
@@ -91,7 +81,7 @@
     <widget class="QPushButton" name="i010">
      <property name="geometry">
       <rect>
-       <x>170</x>
+       <x>145</x>
        <y>0</y>
        <width>66</width>
        <height>21</height>
@@ -175,7 +165,7 @@
     <widget class="QPushButton" name="i009">
      <property name="geometry">
       <rect>
-       <x>205</x>
+       <x>200</x>
        <y>30</y>
        <width>66</width>
        <height>21</height>
@@ -203,7 +193,7 @@
     <widget class="QPushButton" name="i008">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>25</x>
        <y>30</y>
        <width>66</width>
        <height>21</height>
@@ -231,7 +221,7 @@
     <widget class="QPushButton" name="i007">
      <property name="geometry">
       <rect>
-       <x>50</x>
+       <x>75</x>
        <y>0</y>
        <width>66</width>
        <height>21</height>
@@ -287,7 +277,7 @@
     <widget class="QPushButton" name="i014">
      <property name="geometry">
       <rect>
-       <x>200</x>
+       <x>210</x>
        <y>110</y>
        <width>66</width>
        <height>21</height>
@@ -370,7 +360,6 @@
     </widget>
    </widget>
    <zorder>main</zorder>
-   <zorder>r002</zorder>
    <zorder>r001</zorder>
   </widget>
  </widget>
