@@ -55,9 +55,6 @@ class Tk(QtWidgets.QStackedWidget):
 		self.ui = self.sb.getUi(self.name) #get the dymanic ui of the given name.
 		self.uiLevel = self.sb.getUiLevel(self.name) #get the hierarchical level of the ui.
 
-		if self.uiLevel<2:
-			self.resetPath()
-
 		self.sb.setSignals(self.name) #connect new signals while disconnecting any previous.
 
 		self.resize(self.sb.getUiSize(width=1), self.sb.getUiSize(height=1)) #get ui size for current ui and resize window
@@ -72,6 +69,8 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		previous = [i for i in self.sb.previousName(as_list=1) if '_submenu' not in i][-1]
 		self.setUi(previous) #return the stacked widget to it's previous ui.
+
+		self.resetPath()
 
 		self.move(self.drawPath[0] - self.rect().center())
 
@@ -139,14 +138,11 @@ class Tk(QtWidgets.QStackedWidget):
 			event = <QEvent>
 		'''
 		if event.key()==QtCore.Qt.Key_F12 and not event.isAutoRepeat():
-			#run once on launch. update the info textEdit.
-			if self.uiLevel is 0:
+			if self.uiLevel is 0: #run once on launch. update the info textEdit.
 				textEdit = self.sb.getUi('init').info
-				info = self.sb.getMethod('init', 'info')
-				print textEdit, info
-				if callable(info):
-					print infoDict
-					textEdit.addcontents(infoDict)
+				method = self.sb.getMethod('init', 'info')
+				if callable(method):
+					textEdit.addcontents(method())
 
 
 
@@ -168,6 +164,7 @@ class Tk(QtWidgets.QStackedWidget):
 		self.move(QtGui.QCursor.pos() - self.rect().center()) #move window to cursor position and offset from left corner to center
 
 		if self.uiLevel<2:
+			self.resetPath()
 			self.drawPath.append(self.mapToGlobal(self.rect().center()))
 
 			if event.button()==QtCore.Qt.LeftButton:
@@ -239,8 +236,6 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		try: import MaxPlus; MaxPlus.CUI.EnableAccelerators()
 		except: pass
-
-		self.setUi('init') #reset layout back to init
 
 		if __name__ == "__main__":
 			sys.exit() #assure that the sys processes are terminated.
