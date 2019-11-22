@@ -331,6 +331,7 @@ class File(Init):
 		Import file
 		'''
 		cmb = self.ui.cmb003
+		self.cmb003()
 		cmb.setCurrentIndex(cmb.findText('Import file'))
 
 
@@ -339,6 +340,7 @@ class File(Init):
 		Export Selection
 		'''
 		cmb = self.ui.cmb004
+		self.cmb004()
 		cmb.setCurrentIndex(cmb.findText('Export Selection'))
 
 

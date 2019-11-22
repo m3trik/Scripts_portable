@@ -132,16 +132,18 @@ class Switchboard(object):
 		class_ = self.getClassInstance(pathToSlots)
 
 
-		signals = {'QMainWindow':'',
-					'QWidget':'',
-					'QProgressBar':'valueChanged',
-					'QPushButton':'released',
-					'QSpinBox':'valueChanged',
-					'QDoubleSpinBox':'valueChanged',
-					'QCheckBox':'released',
-					'QComboBox':'currentIndexChanged',
-					'QLineEdit':'returnPressed',
-					'QTextEdit':'textChanged'}
+		signals = { #the default type of signal to be associated with each widget type.
+			'QMainWindow':'',
+			'QWidget':'',
+			'QProgressBar':'valueChanged',
+			'QPushButton':'released',
+			'QSpinBox':'valueChanged',
+			'QDoubleSpinBox':'valueChanged',
+			'QCheckBox':'released',
+			'QComboBox':'currentIndexChanged',
+			'QLineEdit':'returnPressed',
+			'QTextEdit':'textChanged',
+		}
 
 		for d in widget.__class__.__mro__:
 			if d.__name__ in signals:

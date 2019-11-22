@@ -12,7 +12,7 @@ from tk_styleSheet import StyleSheet
 
 class EventFactoryFilter(QtCore.QObject):
 	'''
-	Event filter for dynamic ui widgets.
+	Event filter for dynamic ui objects.
 	args:
 		parent=<parent>
 	'''
@@ -60,41 +60,44 @@ class EventFactoryFilter(QtCore.QObject):
 			if widgetType=='QPushButton' and uiLevel<3:
 				self.resizeAndCenterWidget(widget)
 
-			elif self.sb.prefix(widgetName, 'r'): #prefix returns True if widgetName startswith the given prefix, and is followed by three integers.
-				widget.setVisible(False)
-
-			elif name=='create':
-				if self.sb.prefix(widgetName, 's'):
+			elif widgetType=='QWidget':
+				if self.sb.prefix(widgetName, 'r'): #prefix returns True if widgetName startswith the given prefix, and is followed by three integers.
 					widget.setVisible(False)
 
+			elif widgetType=='QDoubleSpinBox':
+				if name=='create':
+					if self.sb.prefix(widgetName, 's'):
+						widget.setVisible(False)
 
 
-	def createPushButton(self, name, objectName, size=None, location=None, text='', show=True):
+
+	def createPushButton(self, name, objectName, size=None, location=None, text='', whatsThis='', show=True):
 		'''
 		Create a pushbutton object.
 		args:
-			name = 'string' - 
-			objectName = 'string' - 
-			size = [int, int] or <QSize> -   
-			location = <QPoint> - global location
-			text = 'string' - 
-			show = bool - 
+			name = 'string' - name of the ui where the button is to be placed.
+			objectName = 'string' - set button's object name.
+			size = [int, int] or <QSize> - button size.
+			location = <QPoint> - desired global location.
+			text = 'string' - set button text.
+			whatsThis = 'string' - set button whatsThis tag.
+			show = bool - set button visibility.
 		returns:
 			the created button.
 		'''
 		w = QtWidgets.QPushButton(text, self.sb.getUi(name))
-		w = self.sb.addWidget(name, w, objectName)
 
 		if size:
-			try:
-				w.resize(size[0], size[1])
-			except:
-				w.resize(size)
+			try: w.resize(size[0], size[1])
+			except:	w.resize(size)
 		if location:
 			w.move(w.mapFromGlobal(location - w.rect().center())) #move and center
 		if show:
 			w.show()
+		if whatsThis:
+			w.setWhatsThis(whatsThis)
 
+		self.sb.addWidget(name, w, objectName)
 		self.init(name, [w]) #initialize the widget to set things like the event filter and stylesheet.
 
 		return w
@@ -130,9 +133,9 @@ class EventFactoryFilter(QtCore.QObject):
 					QtWidgets.QApplication.sendEvent(widget, self.enterEvent_)
 					self.__mouseOver.append(widget)
 
-					# if not widgetName=='mainWindow':
-					widget.grabMouse() #set widget to receive mouse events.
-					self.__mouseGrabber = widget
+					if not widgetName=='mainWindow':
+						widget.grabMouse() #set widget to receive mouse events.
+						self.__mouseGrabber = widget
 
 			else:
 				if widget in self.__mouseOver: #if widget is in the mouseOver list, but the mouse is no longer over the widget:
@@ -199,8 +202,7 @@ class EventFactoryFilter(QtCore.QObject):
 		self.widget = widget
 		self.widgetName = self.widget.objectName()
 		self.widgetType = self.sb.getWidgetType(self.widget, self.name)
-		# self.derivedType = self.sb.getDerivedType(self.widget, self.name)
-		# self.widgetClass = self.sb.getWidgetClassInstance(self.widget, self.name)
+		self.derivedType = self.sb.getDerivedType(self.widget, self.name)
 		self.mainWindow = self.sb.getWidget('mainWindow', self.name)
 
 		eventName = EventFactoryFilter.createEventName(event) #get 'mousePressEvent' from <QEvent>
@@ -223,16 +225,10 @@ class EventFactoryFilter(QtCore.QObject):
 		args:
 			event = <QEvent>
 		'''
-		#show button for any previous commands.
-		# if self.sb.prefix(self.widgetName, 'v') and self.name=='main': #'v024-29'
-		# 	self.widget.setText(self.sb.prevCommand(docString=1, as_list=1)[-num]) #prevCommand docString
-		#  	#self.resizeAndCenterWidget(self.widget)
-		# 	self.widget.show()
-
 		if self.widgetName=='mainWindow':
 			self.widget.activateWindow()
 
-		if self.widgetType=='QComboBox':
+		if self.derivedType=='QComboBox':
 			method = self.sb.getMethod(self.name, self.widgetName)
 			if callable(method):
 				method()
@@ -363,3 +359,8 @@ print os.path.splitext(os.path.basename(__file__))[0]
 						# del self.prevWidget[-1:]
 
 
+#show button for any previous commands.
+		# if self.sb.prefix(self.widgetName, 'v') and self.name=='main': #'v024-29'
+		# 	self.widget.setText(self.sb.prevCommand(docString=1, as_list=1)[-num]) #prevCommand docString
+		#  	#self.resizeAndCenterWidget(self.widget)
+		# 	self.widget.show()
