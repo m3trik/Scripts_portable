@@ -17,7 +17,6 @@ class File(Init):
 
 		self.ui = self.sb.getUi('file')
 
-		
 
 		self.cmb006() #refresh cmb006 contents to reflect the current project folder
 
@@ -107,6 +106,7 @@ class File(Init):
 		'''
 		Import
 		'''
+		print 'cmb003'
 		cmb = self.ui.cmb003
 
 		contents = self.comboBox(cmb, ['Import file', 'Import Options', 'Merge', 'Replace', 'Link Revit', 'Link FBX', 'Link AutoCAD'], 'Import')
@@ -330,7 +330,6 @@ class File(Init):
 		'''
 		Import file
 		'''
-		print 'Import file'
 		cmb = self.ui.cmb003
 		cmb.setCurrentIndex(cmb.findText('Import file'))
 

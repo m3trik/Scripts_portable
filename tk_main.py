@@ -38,8 +38,6 @@ class Tk(QtWidgets.QStackedWidget):
 
 		self.childEvents = EventFactoryFilter(self)
 
-		self.widgetPath=[] #maintain a list of widgets and their location, as a path is plotted along the ui hierarchy. ie. [[<QPushButton object1>, QPoint(665, 396)], [<QPushButton object2>, QPoint(585, 356)]]
-
 
 
 	def setUi(self, name='init'):
@@ -57,6 +55,9 @@ class Tk(QtWidgets.QStackedWidget):
 		self.ui = self.sb.getUi(self.name) #get the dymanic ui of the given name.
 		self.uiLevel = self.sb.getUiLevel(self.name) #get the hierarchical level of the ui.
 
+		if self.uiLevel<2:
+			self.resetPath()
+
 		self.sb.setSignals(self.name) #connect new signals while disconnecting any previous.
 
 		self.resize(self.sb.getUiSize(width=1), self.sb.getUiSize(height=1)) #get ui size for current ui and resize window
@@ -71,9 +72,6 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		previous = [i for i in self.sb.previousName(as_list=1) if '_submenu' not in i][-1]
 		self.setUi(previous) #return the stacked widget to it's previous ui.
-
-		del self.drawPath[1:] #clear the draw path, while leaving the starting point.
-		del self.widgetPath[:] #clear the list of previous widgets.
 
 		self.move(self.drawPath[0] - self.rect().center())
 
@@ -120,25 +118,14 @@ class Tk(QtWidgets.QStackedWidget):
 
 		#recreate any relevant buttons from the previous ui on first show.
 		if name not in self.sb.previousName(as_list=1, allowDuplicates=1)[:-1]: #if submenu ui called for the first time, construct widgets from the previous ui that fall along the plotted path.
-			w0 = QtWidgets.QPushButton('', self.sb.getUi(name))
-			w0 = self.sb.addWidget(name, w0, '<')
-			w0.resize(45, 45)
-			w0.move(w0.mapFromGlobal(self.drawPath[0] - w0.rect().center())) #move and center
-			self.childEvents.init(name, [w0]) #initialize the widget to set things like the event filter and stylesheet.
-			# w0.show()
+			w0 = self.childEvents.createPushButton(name=name, objectName='<', size=[45, 45], location=self.drawPath[0], show=False) #create an invisible return button at the start point.
 
 			if '_submenu' in self.sb.previousName(): #recreate widget/s from the previous ui that are in the current path.
 				for index in range(2, len(self.widgetPath)+1): #index starting at 2:
 					prevWidget = self.widgetPath[-index][0] #give index neg value.
-					prevWidgetLocation = self.widgetPath[-index][1]
 
-					w1 = QtWidgets.QPushButton(prevWidget.text(), self.sb.getUi(name))
-					w1 = self.sb.addWidget(name, w1, prevWidget.objectName())
+					w1 = self.childEvents.createPushButton(name=name, objectName=prevWidget.objectName(), size=prevWidget.size(), location=self.widgetPath[-index][1], text=prevWidget.text())
 					w1.setWhatsThis(prevWidget.whatsThis())
-					w1.resize(prevWidget.size())
-					w1.move(w1.mapFromGlobal(prevWidgetLocation - w1.rect().center())) #move and center
-					self.childEvents.init(name, [w1]) #initialize the widget to set things like the event filter and stylesheet.
-					w1.show()
 					index+=1
 
 
@@ -153,11 +140,11 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		if event.key()==QtCore.Qt.Key_F12 and not event.isAutoRepeat():
 			#run once on launch. update the info textEdit.
-			if self.name=='init': #self.uiLevel==0:
+			if self.uiLevel is 0:
 				textEdit = self.sb.getUi('init').info
 				info = self.sb.getMethod('init', 'info')
+				print textEdit, info
 				if callable(info):
-					infoDict = info()
 					print infoDict
 					textEdit.addcontents(infoDict)
 
@@ -181,7 +168,6 @@ class Tk(QtWidgets.QStackedWidget):
 		self.move(QtGui.QCursor.pos() - self.rect().center()) #move window to cursor position and offset from left corner to center
 
 		if self.uiLevel<2:
-			self.drawPath=[] #initiate the drawPath list that will contain points as the user moves along a hierarchical path.
 			self.drawPath.append(self.mapToGlobal(self.rect().center()))
 
 			if event.button()==QtCore.Qt.LeftButton:
@@ -272,6 +258,18 @@ class Tk(QtWidgets.QStackedWidget):
 		self.move(QtGui.QCursor.pos() - self.rect().center()) #move window to cursor position and offset from left corner to center
 		self.activateWindow()
 
+
+
+	def resetPath(self):
+		'''
+		Reset the lists that make up the draw and widget paths.
+		'''
+		try:
+			del self.drawPath[1:] #clear the draw path, while leaving the starting point.
+			del self.widgetPath[:] #clear the list of previous widgets.
+		except:
+			self.drawPath=[] #initiate the drawPath list that will contain points as the user moves along a hierarchical path.
+			self.widgetPath=[] #maintain a list of widgets and their location, as a path is plotted along the ui hierarchy. ie. [[<QPushButton object1>, QPoint(665, 396)], [<QPushButton object2>, QPoint(585, 356)]]
 
 
 	def repeatLastCommand(self):

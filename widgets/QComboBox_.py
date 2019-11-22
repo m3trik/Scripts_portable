@@ -51,17 +51,6 @@ class QComboBox_(QtWidgets.QComboBox):
 		args:
 			event=<QEvent>
 		'''
-		if not self.sb:
-			try:
-				from tk_switchboard import Switchboard
-				self.sb = Switchboard()
-				# self.tk = self.sb.getClassInstance('tk')
-			except Exception as error:
-				print error
-
-		method = self.sb.getMethod(self.sb.getUiName(), self.objectName())
-		if callable(method):
-			method()
 
 		return QtWidgets.QComboBox.showEvent(self, event)
 
@@ -97,6 +86,25 @@ class QComboBox_(QtWidgets.QComboBox):
 
 		return QtWidgets.QComboBox.leaveEvent(self, event)
 
+
+	# def construct(self, name=None):
+	# 	'''
+
+	# 	'''
+	# 	if not self.sb:
+	# 		try:
+	# 			from tk_switchboard import Switchboard
+	# 			self.sb = Switchboard()
+	# 			# self.tk = self.sb.getClassInstance('tk')
+	# 		except Exception as error:
+	# 			print error
+
+	# 	if not name:
+	# 		name = self.sb.getUiName()
+
+	# 	method = self.sb.getMethod(name, self.objectName())
+	# 	if callable(method):
+	# 		method()
 
 
 

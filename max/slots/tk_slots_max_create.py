@@ -13,7 +13,6 @@ class Create(Init):
 	def __init__(self, *args, **kwargs):
 		super(Create, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('create')
 
 
@@ -326,8 +325,8 @@ class Create(Init):
 		'''
 		ie. create('Polygons', 'Cube')
 		args:
-			type1 = 'string' - 
-			type2 = 'string' - 
+			catagory1 = 'string' - type
+			catagory2 = 'string' - type
 		'''
 		cmb000 = self.ui.cmb000
 		cmb001 = self.ui.cmb001

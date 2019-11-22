@@ -69,11 +69,43 @@ class EventFactoryFilter(QtCore.QObject):
 
 
 
+	def createPushButton(self, name, objectName, size=None, location=None, text='', show=True):
+		'''
+		Create a pushbutton object.
+		args:
+			name = 'string' - 
+			objectName = 'string' - 
+			size = [int, int] or <QSize> -   
+			location = <QPoint> - global location
+			text = 'string' - 
+			show = bool - 
+		returns:
+			the created button.
+		'''
+		w = QtWidgets.QPushButton(text, self.sb.getUi(name))
+		w = self.sb.addWidget(name, w, objectName)
+
+		if size:
+			try:
+				w.resize(size[0], size[1])
+			except:
+				w.resize(size)
+		if location:
+			w.move(w.mapFromGlobal(location - w.rect().center())) #move and center
+		if show:
+			w.show()
+
+		self.init(name, [w]) #initialize the widget to set things like the event filter and stylesheet.
+
+		return w
+
+
+
 	def resizeAndCenterWidget(self, widget, padding=30):
 		'''
 		Adjust the given widget's width to fit contents and re-center.
 		args:
-			widget = <widget object> - 
+			widget = <widget object> - widget to resize.
 			padding = int - additional width to be applied at both ends.
 		'''
 		x1 = widget.rect().center().x()
@@ -98,9 +130,9 @@ class EventFactoryFilter(QtCore.QObject):
 					QtWidgets.QApplication.sendEvent(widget, self.enterEvent_)
 					self.__mouseOver.append(widget)
 
-					if not widgetName=='mainWindow':
-						widget.grabMouse() #set widget to receive mouse events.
-						self.__mouseGrabber = widget
+					# if not widgetName=='mainWindow':
+					widget.grabMouse() #set widget to receive mouse events.
+					self.__mouseGrabber = widget
 
 			else:
 				if widget in self.__mouseOver: #if widget is in the mouseOver list, but the mouse is no longer over the widget:
@@ -199,6 +231,11 @@ class EventFactoryFilter(QtCore.QObject):
 
 		if self.widgetName=='mainWindow':
 			self.widget.activateWindow()
+
+		if self.widgetType=='QComboBox':
+			method = self.sb.getMethod(self.name, self.widgetName)
+			if callable(method):
+				method()
 
 
 

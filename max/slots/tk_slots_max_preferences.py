@@ -88,11 +88,11 @@ class Preferences(Init):
 		list_ = ['millimeter','centimeter','meter','kilometer','inch','foot','yard','mile']
 		contents = self.comboBox(cmb, list_)
 
-		if init:
-			index = contents.index(pm.currentUnit(query=1, fullName=1, linear=1)) #get/set current linear value
-			cmb.setCurrentIndex(index)
-		else:
-			pm.currentUnit(linear=contents[index]) #millimeter | centimeter | meter | kilometer | inch | foot | yard | mile
+		# if init:
+		# 	index = contents.index(pm.currentUnit(query=1, fullName=1, linear=1)) #get/set current linear value
+		# 	cmb.setCurrentIndex(index)
+		# else:
+		# 	pm.currentUnit(linear=contents[index]) #millimeter | centimeter | meter | kilometer | inch | foot | yard | mile
 
 
 	def cmb002(self, index=None, init=False):
@@ -108,11 +108,11 @@ class Preferences(Init):
 
 		contents = self.comboBox(cmb, list_)
 
-		if init:
-			index = values.index(pm.currentUnit(query=1, fullName=1, time=1)) #get/set current time value
-			cmb.setCurrentIndex(index)
-		else:
-			pm.currentUnit(time=values[index]) #game | film | pal | ntsc | show | palf | ntscf
+		# if init:
+		# 	index = values.index(pm.currentUnit(query=1, fullName=1, time=1)) #get/set current time value
+		# 	cmb.setCurrentIndex(index)
+		# else:
+		# 	pm.currentUnit(time=values[index]) #game | film | pal | ntsc | show | palf | ntscf
 
 
 	def b000(self):
