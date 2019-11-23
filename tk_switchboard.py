@@ -108,7 +108,7 @@ class Switchboard(object):
 		for widgetName, widget in ui.__dict__.items(): #for each object in the ui:
 			self.addWidget(name, widget, widgetName)
 
-		# print self.widgetDict(name)
+		print self.widgetDict(name)
 		return self.widgetDict(name)
 
 
@@ -572,7 +572,7 @@ class Switchboard(object):
 		ie. 'QPushButton' from a custom subclassed pushbutton.
 		args:
 			widget='string'  - name of widget/widget
-				*or <object> -widget
+				*or <object> - widget
 			name='string' - name of dynamic ui (else use current ui)
 		returns:
 			'string' - the corresponding widget derived class name

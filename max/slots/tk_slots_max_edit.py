@@ -29,8 +29,8 @@ class Edit(Init):
 
 		index = cmb.currentIndex()
 		if index!=0:
-			if index==contents.index(''):
-				pass
+			# if index==contents.index(''):
+			# 	pass
 			cmb.setCurrentIndex(0)
 
 

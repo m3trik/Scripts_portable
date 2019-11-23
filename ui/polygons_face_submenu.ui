@@ -59,42 +59,14 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <widget class="QPushButton" name="i010">
-    <property name="geometry">
-     <rect>
-      <x>270</x>
-      <y>290</y>
-      <width>66</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>21</height>
-     </size>
-    </property>
-    <property name="whatsThis">
-     <string>polygons</string>
-    </property>
-    <property name="text">
-     <string>Polygons</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="b009">
     <property name="enabled">
      <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
-      <x>515</x>
-      <y>250</y>
+      <x>430</x>
+      <y>290</y>
       <width>56</width>
       <height>19</height>
      </rect>
@@ -133,8 +105,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>410</x>
-      <y>210</y>
+      <x>325</x>
+      <y>250</y>
       <width>56</width>
       <height>19</height>
      </rect>
@@ -201,8 +173,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>515</x>
-      <y>290</y>
+      <x>430</x>
+      <y>330</y>
       <width>56</width>
       <height>19</height>
      </rect>
@@ -269,8 +241,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>480</x>
-      <y>210</y>
+      <x>395</x>
+      <y>250</y>
       <width>56</width>
       <height>19</height>
      </rect>
@@ -300,8 +272,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>445</x>
-      <y>250</y>
+      <x>360</x>
+      <y>290</y>
       <width>56</width>
       <height>19</height>
      </rect>
@@ -331,8 +303,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>385</x>
-      <y>290</y>
+      <x>300</x>
+      <y>330</y>
       <width>56</width>
       <height>19</height>
      </rect>
@@ -399,8 +371,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>340</x>
-      <y>210</y>
+      <x>255</x>
+      <y>250</y>
       <width>56</width>
       <height>19</height>
      </rect>
@@ -430,8 +402,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>450</x>
-      <y>320</y>
+      <x>365</x>
+      <y>360</y>
       <width>56</width>
       <height>19</height>
      </rect>
@@ -461,8 +433,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>450</x>
-      <y>290</y>
+      <x>365</x>
+      <y>330</y>
       <width>56</width>
       <height>19</height>
      </rect>
@@ -498,8 +470,8 @@
    <widget class="QPushButton" name="i003">
     <property name="geometry">
      <rect>
-      <x>350</x>
-      <y>250</y>
+      <x>265</x>
+      <y>290</y>
       <width>66</width>
       <height>21</height>
      </rect>

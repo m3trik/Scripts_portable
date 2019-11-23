@@ -196,14 +196,13 @@ class EventFactoryFilter(QtCore.QObject):
 		# print event.__class__.__name__
 
 
-		self.name = self.sb.getNameFrom(widget) #get the ui name corresponding to the given widget.
-		self.uiLevel = self.sb.getUiLevel(self.name)
-
 		self.widget = widget
+		self.name = self.sb.getNameFrom(self.widget) #get the ui name corresponding to the given widget.
 		self.widgetName = self.widget.objectName()
 		self.widgetType = self.sb.getWidgetType(self.widget, self.name)
 		self.derivedType = self.sb.getDerivedType(self.widget, self.name)
 		self.mainWindow = self.sb.getWidget('mainWindow', self.name)
+		self.uiLevel = self.sb.getUiLevel(self.name)
 
 		eventName = EventFactoryFilter.createEventName(event) #get 'mousePressEvent' from <QEvent>
 		# print self.name, eventName, self.widgetType, self.widgetName
