@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>176</width>
-    <height>502</height>
+    <height>189</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -83,14 +83,14 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>18</width>
-         <height>15</height>
+         <width>17</width>
+         <height>17</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>18</width>
-         <height>15</height>
+         <width>17</width>
+         <height>17</height>
         </size>
        </property>
       </widget>
@@ -152,20 +152,20 @@
              <rect>
               <x>50</x>
               <y>10</y>
-              <width>96</width>
+              <width>86</width>
               <height>19</height>
              </rect>
             </property>
             <property name="minimumSize">
              <size>
-              <width>71</width>
+              <width>86</width>
               <height>0</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>999</width>
-              <height>19</height>
+              <width>86</width>
+              <height>999</height>
              </size>
             </property>
             <property name="toolTip">
@@ -252,20 +252,20 @@
              <rect>
               <x>0</x>
               <y>10</y>
-              <width>67</width>
+              <width>136</width>
               <height>19</height>
              </rect>
             </property>
             <property name="minimumSize">
              <size>
-              <width>51</width>
+              <width>67</width>
               <height>0</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>999</width>
-              <height>19</height>
+              <width>136</width>
+              <height>999</height>
              </size>
             </property>
             <property name="toolTip">

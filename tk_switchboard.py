@@ -99,7 +99,7 @@ class Switchboard(object):
 		Following that, the items in the ui are looped over, and the widgets' method resolution order is checked against the signals keys
 		to determine the correct derived class type (used in the case of a custom widget).
 		args:
-			name='string' - name of the ui to construct connections for.
+			name = 'string' - name of the ui to construct connections for.
 		returns:
 			dict - 'widgetName':{'widget':<widget>,'signalInstance':<signalInstance>,'method':<method>,'docString':'docString','widgetClassInstance':<class object>,'widgetClassName':'class name'}
 		'''
@@ -108,7 +108,7 @@ class Switchboard(object):
 		for widgetName, widget in ui.__dict__.items(): #for each object in the ui:
 			self.addWidget(name, widget, widgetName)
 
-		print self.widgetDict(name)
+		# print self.widgetDict(name)
 		return self.widgetDict(name)
 
 
@@ -119,9 +119,9 @@ class Switchboard(object):
 
 		Decoupling this from 'buildWidgetDict' allows additional widgets to be added at any time.
 		args:
-			name='string' - name of the ui to construct connections for.
-			widget=<widget object> - widget to be added.
-			widgetName='string' - widget's objectName.
+			name = 'string' - name of the ui to construct connections for.
+			widget = <widget object> - widget to be added.
+			widgetName = 'string' - widget's objectName.
 		returns:
 			<widget object>
 		'''
@@ -135,6 +135,7 @@ class Switchboard(object):
 		signals = { #the default type of signal to be associated with each widget type.
 			'QMainWindow':'',
 			'QWidget':'',
+			'QGroupBox':'',
 			'QProgressBar':'valueChanged',
 			'QPushButton':'released',
 			'QSpinBox':'valueChanged',
@@ -174,7 +175,7 @@ class Switchboard(object):
 		Dictionary holding widget information.
 		Used primarily by 'buildWidgetDict' method to construct signal and slot connections that can later be connected and disconnected by the add/removeSignal methods. 
 		args:
-			name='string' name of ui/class. ie. 'polygons'
+			name = 'string' name of ui/class. ie. 'polygons'
 		returns:
 			connection dict of given name with widget/method name string as key.
 		ex.
@@ -199,11 +200,10 @@ class Switchboard(object):
 		# if not name in self.previousName(allowInit=1, allowDuplicates=1): #ie. 'polygons' not in 'polygons_submenu' (as they both share the same connections).
 		# print 'not ',name,' in ',self.previousName(allowInit=1, allowDuplicates=1)
 		# print 'setSignals:', self.previousName(allowInit=1, allowDuplicates=1, as_list=1)
-		if self.previousName(allowInit=1, allowDuplicates=1):
-			# print 'removeSignal:', self.previousName(allowInit=1, allowDuplicates=1)
-			self.removeSignal(self.previousName(allowInit=1, allowDuplicates=1)) #remove signals from the previous ui.
+		previousName = self.previousName(allowInit=1, allowDuplicates=1)
+		if previousName:
+			self.removeSignal(previousName) #remove signals from the previous ui.
 		self.addSignal(name)
-		# print 'addSignal:', name
 
 
 
@@ -211,7 +211,7 @@ class Switchboard(object):
 		'''
 		Connects signals/slots from the widgetDict for the given ui. Works with both single slots or multiple slots given as a list.
 		args:
-			name='string' - ui name
+			name = 'string' - ui name
 		'''
 		for widgetName in self.widgetDict(name):
 			signal = self.getSignal(name, widgetName)
@@ -233,7 +233,7 @@ class Switchboard(object):
 		'''
 		Disconnects signals/slots from the widgetDict for the given ui. Works with both single slots or multiple slots given as a list.
 		args:
-			name='string' - ui name
+			name = 'string' - ui name
 		'''
 		for widgetName in self.widgetDict(name):
 			signal = self.getSignal(name, widgetName)
@@ -256,8 +256,8 @@ class Switchboard(object):
 		'''
 		Get a list of either all ui names, all ui object's, or both as key/value pairs in a dict.
 		args:
-			name=bool 	return string ui list
-			ui=bool 	return dynamic ui list
+			name = bool 	return string ui list
+			ui = bool 	return dynamic ui list
 		returns:
 			if name: return list of ui names
 			if ui: return list of dynamic ui objects
@@ -276,7 +276,7 @@ class Switchboard(object):
 		'''
 		Get the dynamic ui using its string name, or if no argument is given, return the current ui.
 		args:
-			name='string' name of class. ie. 'polygons' (by default getUi returns the current ui)
+			name = 'string' name of class. ie. 'polygons' (by default getUi returns the current ui)
 		returns:
 			if name: corresponding dynamic ui object of given name from the key 'uiList'.
 			else: current dynamic ui object
@@ -292,7 +292,7 @@ class Switchboard(object):
 		'''
 		The 'name' list is used for various things such as; maintaining a history of ui's that have been called previously.
 		args:
-			index='string' - name
+			index = 'string' - name
 				*or int - index of ui name
 		returns:
 			corresponding ui name as string
@@ -314,7 +314,7 @@ class Switchboard(object):
 		Get the ui name as a string.
 		If no argument is given, the name for the current ui will be returned.
 		args:
-			ui=<ui object> - (optional) use ui object to get its corresponding name. (the default behavior is to return the current ui name)
+			ui = <ui object> - (optional) use ui object to get its corresponding name. (the default behavior is to return the current ui name)
 		returns:
 			'string' - ui name.
 		'''
@@ -335,7 +335,7 @@ class Switchboard(object):
 		'''
 		Get the index of the given ui name in the uiList.
 		args:
-			name='string' name of class. ie. 'polygons'
+			name = 'string' name of class. ie. 'polygons'
 		returns:
 			if name: index of given name from the key 'uiList'.
 			else: index of current ui
@@ -354,8 +354,8 @@ class Switchboard(object):
 		If no size is given, the minimum ui size needed to frame its
 		contents will be used. If no name is given, the current ui will be used.
 		args:
-			name='string' - optional ui name
-			size=[int, int] - optional width and height as an integer list. [width, height]
+			name = 'string' - optional ui name
+			size = [int, int] - optional width and height as an integer list. [width, height]
 		returns:
 			ui size info as integer values in a list. [width, hight]
 		'''
@@ -375,11 +375,11 @@ class Switchboard(object):
 		'''
 		Get the size info for each ui (allows for resizing a stacked widget where ordinarily resizing is constrained by the largest widget in the stack)
 		args:
-			name='string' - ui name to get size from.
-			width=int 	returns width of current ui
-			height=int 	returns hight of current ui
-			percentWidth=int returns a percentage of the width
-			percentHeight=int returns a percentage of the height
+			name = 'string' - ui name to get size from.
+			width = int 	returns width of current ui
+			height = int 	returns hight of current ui
+			percentWidth = int returns a percentage of the width
+			percentHeight = int returns a percentage of the height
 		returns:
 			if width: returns width as int
 			if height: returns height as int
@@ -410,7 +410,7 @@ class Switchboard(object):
 		'''
 		Get the ui(class) name from any object existing in widgetDict.
 		args:
-			obj=<object> - 
+			obj = <object> - 
 		returns:
 			 'string' - the corresponding method name from the given object.
 			 ex. 'polygons' from <widget>
@@ -431,7 +431,7 @@ class Switchboard(object):
 		'''
 		Set parent application.
 		args:
-			app=app object.
+			app = app object.
 		returns:
 			string name of app
 		'''
@@ -445,7 +445,7 @@ class Switchboard(object):
 		'''
 		Get parent application if any.
 		args:
-			objectName=bool - get string name of app. (by default getMainAppWindow returns app object)
+			objectName = bool - get string name of app. (by default getMainAppWindow returns app object)
 		returns:
 			app object or string name
 		'''
@@ -468,7 +468,7 @@ class Switchboard(object):
 		'''
 		Case insensitive. Class string keys are stored lowercase regardless of how they are recieved.
 		args:
-			class_='string' *or <class object> - module name.class to import and store class. 
+			class_ = 'string' *or <class object> - module name.class to import and store class. 
 					ie.  ie. 'polygons', 'tk_slots_max_polygons.Polygons', or <tk_slots_max_polygons.Polygons>
 		returns:
 			class object.
@@ -497,7 +497,7 @@ class Switchboard(object):
 		Case insensitive. (Class string keys are lowercase and any given string will be converted automatically)
 		If class is not in self._sbDict, getClassInstance will attempt to use setClassInstance() to first store the class.
 		args:
-			class_='string' *or <class object> - module name.class to import and store class.
+			class_ = 'string' *or <class object> - module name.class to import and store class.
 				ie. 'polygons', 'tk_slots_max_polygons.Polygons', or <tk_slots_max_polygons.Polygons>
 		returns:
 			class object.
@@ -520,8 +520,8 @@ class Switchboard(object):
 		'''
 		Case insensitive. Get the widget object/s from the given ui or widget name.
 		args:
-			name='string' - name of ui. ie. 'polygons'. If no name is given, the current ui will be used.
-			widgetName='string' - optional name of widget. ie. 'b000'
+			name = 'string' - name of ui. ie. 'polygons'. If no name is given, the current ui will be used.
+			widgetName = 'string' - optional name of widget. ie. 'b000'
 		returns:
 			if widgetName:  widget object with the given name from the current ui.
 			if name and widgetName: widget object with the given name from the given ui name.
@@ -545,9 +545,9 @@ class Switchboard(object):
 		Get widget type class name as a string.
 		ie. 'QPushButton' from pushbutton type widget.
 		args:
-			widget='string'  - name of widget/widget
+			widget = 'string'  - name of widget/widget
 				*or <object> -widget
-			name='string' - name of dynamic ui (else use current ui)
+			name = 'string' - name of dynamic ui (else use current ui)
 		returns:
 			'string' - the corresponding widget class name
 		'''
@@ -571,9 +571,9 @@ class Switchboard(object):
 		Get widget derived type class name as a string.
 		ie. 'QPushButton' from a custom subclassed pushbutton.
 		args:
-			widget='string'  - name of widget/widget
+			widget = 'string'  - name of widget/widget
 				*or <object> - widget
-			name='string' - name of dynamic ui (else use current ui)
+			name = 'string' - name of dynamic ui (else use current ui)
 		returns:
 			'string' - the corresponding widget derived class name
 		'''
@@ -593,8 +593,8 @@ class Switchboard(object):
 	def getMethod(self, name, methodName=None):
 		'''
 		args:
-			name='string' name of class. ie. 'polygons'
-			methodName='string' optional name of method. ie. 'b001'
+			name = 'string' name of class. ie. 'polygons'
+			methodName = 'string' optional name of method. ie. 'b001'
 		returns:
 			if methodName: corresponding method object to given method name string.
 			else: all of the methods associated with the given name as a list.
@@ -616,8 +616,8 @@ class Switchboard(object):
 	def getSignal(self, name, widgetName=None):
 		'''
 		args:
-			name='string' name of ui. ie. 'polygons'
-			widgetName='string' optional widget name. ie. 'b001'
+			name = 'string' name of ui. ie. 'polygons'
+			widgetName = 'string' optional widget name. ie. 'b001'
 		returns:
 			if widgetName: the corresponding widget object with attached signal (ie. b001.onPressed) of the given widget name.
 			else: all of the signals associated with the given name as a list.
@@ -635,9 +635,9 @@ class Switchboard(object):
 	def getDocString(self, name, methodName, full=False):
 		'''
 		args:
-			name='string' optional name of class. ie. 'polygons'. else, use current name.
-			methodName='string' name of method. ie. 'b001'
-			full=bool return full unedited docString
+			name = 'string' optional name of class. ie. 'polygons'. else, use current name.
+			methodName = 'string' name of method. ie. 'b001'
+			full = bool return full unedited docString
 		returns:
 			if full: full stored docString
 			else: edited docString; name of method
@@ -657,10 +657,10 @@ class Switchboard(object):
 		'''
 		Get the previously called ui name string, or a list of ui name strings ordered by use. ie. ['previousName2', 'previousName1', 'currentName']
 		args:
-			previousIndex=bool - return the index of the last valid previously opened ui name.
-			allowDuplicates=bool - applicable when returning as_list. Returns the list allowing for duplicate names.
-			allowInit=bool - keep instances of init. Default is Off.
-			as_list=bool - returns the full list of previously called names. By default duplicates are removed.
+			previousIndex = bool - return the index of the last valid previously opened ui name.
+			allowDuplicates = bool - applicable when returning as_list. Returns the list allowing for duplicate names.
+			allowInit = bool - keep instances of init. Default is Off.
+			as_list = bool - returns the full list of previously called names. By default duplicates are removed.
 		returns:
 			with no arguments given - string name of previously opened ui.
 			if previousIndex: int - index of previously opened ui
@@ -697,8 +697,8 @@ class Switchboard(object):
 	def prevCommand(self, docString=False, method=False, as_list=False):
 		'''
 		args:
-			docString=bool 		return docString of last command
-			methodList=bool 	return method of last command
+			docString = bool 		return docString of last command
+			methodList = bool 	return method of last command
 		returns:
 			if docString: 'string' description (derived from the last used command method's docString)
 			if docString AND as_list: [string list] all docStrings, in order of use, as a list
@@ -752,7 +752,7 @@ class Switchboard(object):
 	def previousUi(self, previousIndex=False, allowDuplicates=False, as_list=False):
 		'''
 		args:
-			previousIndex=bool 	return the index of the last valid previously opened ui name.
+			previousIndex = bool 	return the index of the last valid previously opened ui name.
 		returns:
 			if previousIndex: int index of previously opened ui
 			else: string name of previously opened layout.
@@ -785,7 +785,7 @@ class Switchboard(object):
 		'''
 		Protect given object from garbage collection.
 		args:
-			obj=<object>
+			obj = <object>
 		'''
 		if not 'gcProtect' in self._sbDict:
 			self._sbDict['gcProtect']=[]
@@ -878,7 +878,7 @@ class Switchboard(object):
 		'''
 		Get Qt window/s
 		args:
-			name='string' - optional name of window (widget.objectName)
+			name = 'string' - optional name of window (widget.objectName)
 		returns:
 			if name: corresponding <window object>
 			else: return a dictionary of all windows {windowName:window}
@@ -896,7 +896,7 @@ class Switchboard(object):
 		'''
 		Get Qt widget/s
 		args:
-			name='string' - optional name of widget (widget.objectName)
+			name = 'string' - optional name of widget (widget.objectName)
 		returns:
 			if name: corresponding <widget object>
 			else: return a dictionary of all widgets {widgetName:widget}

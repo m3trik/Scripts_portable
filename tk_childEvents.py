@@ -312,20 +312,21 @@ class EventFactoryFilter(QtCore.QObject):
 		args:
 			event = <QEvent>
 		'''
-		if self.widgetType=='QPushButton':
-			if self.sb.prefix(self.widgetName, 'i'): #ie. 'i012'
-				self.tk.setUi(self.widget.whatsThis()) #switch the stacked layout to the given ui.
-				self.tk.move(QtGui.QCursor.pos() - self.tk.ui.rect().center()) #move window to cursor position and offset from left corner to center
+		if self.widget.rect().contains(self.widget.mapFromGlobal(QtGui.QCursor.pos())): #if mouse over widget:
+			if self.widgetType=='QPushButton':
+				if self.sb.prefix(self.widgetName, 'i'): #ie. 'i012'
+					self.tk.setUi(self.widget.whatsThis()) #switch the stacked layout to the given ui.
+					self.tk.move(QtGui.QCursor.pos() - self.tk.ui.rect().center()) #move window to cursor position and offset from left corner to center
 
-			elif self.sb.prefix(self.widgetName, 'v'):
-				self.sb.previousUi(as_list=1).append(self.sb.getMethod(self.name, self.widgetName)) #store the camera view
-				self.widget.click()
-
-			elif self.sb.prefix(self.widgetName, 'b'):
-				if '_submenu' in self.name:
+				elif self.sb.prefix(self.widgetName, 'v'):
+					self.sb.previousUi(as_list=1).append(self.sb.getMethod(self.name, self.widgetName)) #store the camera view
 					self.widget.click()
-				else: #add the buttons command to the prevCommand list.
-					self.sb.prevCommand(as_list=1).append([self.sb.getMethod(self.name, self.widgetName), self.sb.getDocString(self.name, self.widgetName)]) #store the command method object and it's docString (ie. 'Multi-cut tool')
+
+				elif self.sb.prefix(self.widgetName, 'b'):
+					if '_submenu' in self.name:
+						self.widget.click()
+					else: #add the buttons command to the prevCommand list.
+						self.sb.prevCommand(as_list=1).append([self.sb.getMethod(self.name, self.widgetName), self.sb.getDocString(self.name, self.widgetName)]) #store the command method object and it's docString (ie. 'Multi-cut tool')
 
 
 

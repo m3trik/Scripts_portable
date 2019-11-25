@@ -297,20 +297,31 @@ class File(Init):
 		pass
 
 
+	def setComboBox(self, comboBox, text):
+		'''
+		Set the given comboBox's index using a text string.
+		args:
+			comboBox = 'string' - comboBox name (will also be used as the methods name).
+			text = 'string' - text of the index to switch to.
+		'''
+		cmb = getattr(self.ui, comboBox)
+		method = getattr(self, comboBox)
+		cmb.currentIndexChanged.connect(method)
+		cmb.setCurrentIndex(cmb.findText(text))
+
+
 	def b007(self):
 		'''
 		Import file
 		'''
-		cmb = self.ui.cmb003
-		cmb.setCurrentIndex(cmb.findText('Import file'))
+		self.setComboBox('cmb003','Import file')
 
 
 	def b008(self):
 		'''
 		Export Selection
 		'''
-		cmb = self.ui.cmb004
-		cmb.setCurrentIndex(cmb.findText('Export Selection'))
+		self.setComboBox('cmb004','Export Selection')
 
 
 	def b015(self):

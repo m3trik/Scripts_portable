@@ -61,14 +61,14 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>18</width>
-         <height>15</height>
+         <width>17</width>
+         <height>17</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>18</width>
-         <height>15</height>
+         <width>17</width>
+         <height>17</height>
         </size>
        </property>
       </widget>
@@ -78,7 +78,7 @@
        <property name="maximumSize">
         <size>
          <width>41</width>
-         <height>19</height>
+         <height>17</height>
         </size>
        </property>
        <property name="toolTip">
@@ -100,7 +100,7 @@
        <property name="maximumSize">
         <size>
          <width>16</width>
-         <height>19</height>
+         <height>17</height>
         </size>
        </property>
        <property name="font">
@@ -222,7 +222,7 @@
        <property name="maximumSize">
         <size>
          <width>16</width>
-         <height>19</height>
+         <height>17</height>
         </size>
        </property>
        <property name="font">
@@ -243,7 +243,7 @@
        <property name="maximumSize">
         <size>
          <width>111</width>
-         <height>19</height>
+         <height>17</height>
         </size>
        </property>
        <property name="editable">

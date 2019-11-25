@@ -31,6 +31,9 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 	def __init__(self, parent=None):
 		super(QPushButton_Draggable, self).__init__(parent)
 
+		if parent:
+			self.parent = parent
+
 		self.setStyleSheet('''
 			QPushButton {
 				border: none;
@@ -40,7 +43,7 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 				border: none;
 			}''')
 
-		# self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
+		self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
 
 
 
@@ -63,12 +66,13 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 		args:
 			event=<QEvent>
 		'''
-		# self.setCursor(QtGui.QCursor(QtCore.Qt.ClosedHandCursor))
+		self.setCursor(QtGui.QCursor(QtCore.Qt.ClosedHandCursor))
 
 		#move window:
 		curPos = self.tk.mapToGlobal(self.tk.pos())
 		globalPos = event.globalPos()
 		diff = globalPos -self.__mouseMovePos
+
 		self.tk.move(self.tk.mapFromGlobal(curPos + diff))
 		self.__mouseMovePos = globalPos
 
@@ -81,7 +85,7 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 		args:
 			event=<QEvent>
 		'''
-		# self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
+		self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
 
 		moveAmount = event.globalPos() -self.__mousePressPos
 

@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>260</width>
-    <height>412</height>
+    <width>259</width>
+    <height>389</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -147,36 +147,14 @@
      <rect>
       <x>10</x>
       <y>0</y>
-      <width>231</width>
-      <height>371</height>
+      <width>236</width>
+      <height>378</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
      <property name="spacing">
       <number>0</number>
      </property>
-     <item row="1" column="2">
-      <widget class="QComboBox_" name="cmb000">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>18</width>
-         <height>15</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>18</width>
-         <height>15</height>
-        </size>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="1" colspan="2">
       <widget class="QProgressBar_" name="progressBar">
        <property name="sizePolicy">
@@ -202,6 +180,28 @@
        </property>
        <property name="textVisible">
         <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QComboBox_" name="cmb000">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>17</width>
+         <height>17</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>17</width>
+         <height>17</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -236,10 +236,16 @@
          </property>
          <item>
           <widget class="QGroupBox" name="Mesh">
+           <property name="minimumSize">
+            <size>
+             <width>111</width>
+             <height>131</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
-             <width>999</width>
-             <height>131</height>
+             <width>111</width>
+             <height>999</height>
             </size>
            </property>
            <property name="title">
@@ -253,7 +259,7 @@
              <rect>
               <x>55</x>
               <y>10</y>
-              <width>51</width>
+              <width>56</width>
               <height>19</height>
              </rect>
             </property>
@@ -346,7 +352,7 @@
              <rect>
               <x>0</x>
               <y>110</y>
-              <width>106</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -377,7 +383,7 @@
              <rect>
               <x>0</x>
               <y>50</y>
-              <width>106</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -408,7 +414,7 @@
              <rect>
               <x>0</x>
               <y>70</y>
-              <width>106</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -543,9 +549,15 @@
          </item>
          <item>
           <widget class="QGroupBox" name="Component">
+           <property name="minimumSize">
+            <size>
+             <width>111</width>
+             <height>131</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
-             <width>999</width>
+             <width>111</width>
              <height>999</height>
             </size>
            </property>
@@ -662,7 +674,7 @@
              <rect>
               <x>55</x>
               <y>70</y>
-              <width>51</width>
+              <width>56</width>
               <height>19</height>
              </rect>
             </property>
@@ -835,7 +847,7 @@
              <rect>
               <x>0</x>
               <y>110</y>
-              <width>106</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -977,7 +989,7 @@
              <rect>
               <x>0</x>
               <y>50</y>
-              <width>106</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -1039,6 +1051,19 @@
            </widget>
           </widget>
          </item>
+         <item>
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
         </layout>
        </item>
        <item>
@@ -1054,10 +1079,16 @@
          </property>
          <item>
           <widget class="QGroupBox" name="Vertex">
+           <property name="minimumSize">
+            <size>
+             <width>111</width>
+             <height>51</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
-             <width>999</width>
-             <height>51</height>
+             <width>111</width>
+             <height>999</height>
             </size>
            </property>
            <property name="title">
@@ -1255,10 +1286,16 @@
          </item>
          <item>
           <widget class="QGroupBox" name="Edge">
+           <property name="minimumSize">
+            <size>
+             <width>111</width>
+             <height>150</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
-             <width>999</width>
-             <height>150</height>
+             <width>111</width>
+             <height>999</height>
             </size>
            </property>
            <property name="title">
@@ -1272,7 +1309,7 @@
              <rect>
               <x>0</x>
               <y>70</y>
-              <width>106</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -1343,7 +1380,7 @@
              <rect>
               <x>0</x>
               <y>30</y>
-              <width>51</width>
+              <width>56</width>
               <height>19</height>
              </rect>
             </property>
@@ -1418,7 +1455,7 @@
             </property>
             <property name="geometry">
              <rect>
-              <x>50</x>
+              <x>55</x>
               <y>30</y>
               <width>56</width>
               <height>19</height>
@@ -1488,7 +1525,7 @@
              <rect>
               <x>0</x>
               <y>50</y>
-              <width>106</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -1556,7 +1593,7 @@
              <rect>
               <x>0</x>
               <y>130</y>
-              <width>106</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -1627,7 +1664,7 @@
              <rect>
               <x>0</x>
               <y>10</y>
-              <width>106</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -1695,7 +1732,7 @@
              <rect>
               <x>0</x>
               <y>110</y>
-              <width>106</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -1772,7 +1809,7 @@
              <rect>
               <x>0</x>
               <y>90</y>
-              <width>106</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -1845,10 +1882,16 @@
          </item>
          <item>
           <widget class="QGroupBox" name="Face">
+           <property name="minimumSize">
+            <size>
+             <width>111</width>
+             <height>108</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
-             <width>999</width>
-             <height>108</height>
+             <width>111</width>
+             <height>999</height>
             </size>
            </property>
            <property name="baseSize">
@@ -1936,7 +1979,7 @@
              <rect>
               <x>0</x>
               <y>50</y>
-              <width>106</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -2004,7 +2047,7 @@
              <rect>
               <x>0</x>
               <y>70</y>
-              <width>106</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -2072,7 +2115,7 @@
              <rect>
               <x>0</x>
               <y>90</y>
-              <width>106</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -2448,6 +2491,19 @@
             </property>
            </widget>
           </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
          </item>
         </layout>
        </item>

@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>270</width>
-    <height>315</height>
+    <width>255</width>
+    <height>291</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -46,7 +46,7 @@
      <rect>
       <x>8</x>
       <y>6</y>
-      <width>249</width>
+      <width>237</width>
       <height>265</height>
      </rect>
     </property>
@@ -86,14 +86,14 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>18</width>
-         <height>15</height>
+         <width>17</width>
+         <height>17</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>18</width>
-         <height>15</height>
+         <width>17</width>
+         <height>17</height>
         </size>
        </property>
       </widget>
@@ -155,8 +155,8 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>113</width>
-              <height>0</height>
+              <width>111</width>
+              <height>19</height>
              </size>
             </property>
             <property name="maximumSize">
@@ -405,6 +405,12 @@
               <width>111</width>
               <height>19</height>
              </rect>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>111</width>
+              <height>19</height>
+             </size>
             </property>
             <property name="toolTip">
              <string>Toggle local rotation axis visiblitiy for all joint objects.</string>
