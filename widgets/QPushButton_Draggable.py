@@ -34,15 +34,6 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 		if parent:
 			self.parent = parent
 
-		self.setStyleSheet('''
-			QPushButton {
-				border: none;
-			}
-
-			QPushButton::checked {
-				border: none;
-			}''')
-
 		self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
 
 
@@ -95,6 +86,8 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 			self.setChecked(not self.isChecked()) #toggle check state
 			self.tk.hide_()
 
+		self.update()
+
 		return QtWidgets.QPushButton.mouseReleaseEvent(self, event)
 
 
@@ -112,6 +105,13 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 			except Exception as error:
 				print error
 
+		self.setStyleSheet('''
+			QPushButton {
+			border: 1px solid black;
+			background-color: rgba(127,127,127,25);
+		}
+		''')
+
 		return QtWidgets.QPushButton.showEvent(self, event)
 
 
@@ -122,6 +122,6 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 if __name__ == "__main__":
 	app = QtWidgets.QApplication(sys.argv)
 		
-	w = QPushButton_Draggable()
-	w.show()
+	QPushButton_Draggable().show()
+
 	sys.exit(app.exec_())

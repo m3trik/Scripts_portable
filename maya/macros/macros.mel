@@ -1,29 +1,30 @@
-'''
-runTimeCommand	-annotation string,
-				-category string,
-				-categoryArray,
-				-command script,
-				-commandArray,
-				-commandLanguage string,
-				-default boolean,
-				-defaultCommandArray,
-				-delete,
-				-exists,
-				-hotkeyCtx string,
-				-image string,
-				-keywords string,
-				-label string,
-				-longAnnotation string,
-				-numberOfCommands,
-				-numberOfDefaultCommands,
-				-numberOfUserCommands,
-				-plugin string,
-				-save,
-				-showInHotkeyEditor boolean,
-				-tags string,
-				-userCommandArray,
-				name;
-
+/*
+runTimeCommand(
+			'name',
+			annotation=string,
+			category=string,
+			categoryArray,
+			command=script,
+			commandArray,
+			commandLanguage=string,
+			default=boolean,
+			defaultCommandArray,
+			delete,
+			exists,
+			hotkeyCtx=string,
+			image=string,
+			keywords=string,
+			label=string,
+			longAnnotation=string,
+			numberOfCommands,
+			numberOfDefaultCommands,
+			numberOfUserCommands,
+			plugin=string,
+			save,
+			showInHotkeyEditor=boolean,
+			tags=string,
+			userCommandArray,
+)
 
 -annotation(-ann) string createqueryedit 
 		Description of the command.
@@ -93,7 +94,7 @@ runTimeCommand	-annotation string,
 
 -userCommandArray(-uca)	query			
 		Returns an string array containing the names of all the user run time commands.
-'''
+*/
 
 
 
@@ -487,15 +488,8 @@ if ($maskVertex==0 && $maskEdge==1)
 //Display hotbox zones only
 //f12
 if 'tk' not in locals() or 'tk' not in globals():
-	import tk_main;
-	from PySide2 import QtWidgets;
-
-	app = QtWidgets.QApplication.instance() #get the qApp instance if it exists.
-	if not app:
-		app = QtWidgets.QApplication(sys.argv)
-
-	mainWindow = [x for x in app.topLevelWidgets() if x.objectName()=='MayaWindow'][0];
-	tk = tk_main.createInstance(mainWindow)
+	import tk_maya
+	tk = tk_maya.createInstance()
 
 tk.hide(); tk.show()
 

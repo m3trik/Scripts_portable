@@ -35,7 +35,7 @@ class QTextEdit_(QtWidgets.QTextEdit):
 
 
 
-	def addcontents(self, dict_):
+	def insertText(self, dict_):
 		'''
 		args:
 			dict_ = {dict} - contents to add.  for each key if there is a value, the key and value pair will be added.

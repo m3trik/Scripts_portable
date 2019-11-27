@@ -437,7 +437,7 @@
              <string>Select similar tolerance</string>
             </property>
             <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::PlusMinus</enum>
+             <enum>QAbstractSpinBox::NoButtons</enum>
             </property>
             <property name="decimals">
              <number>3</number>
@@ -575,7 +575,7 @@
              <string>Select face island: normal X range</string>
             </property>
             <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::PlusMinus</enum>
+             <enum>QAbstractSpinBox::NoButtons</enum>
             </property>
             <property name="prefix">
              <string/>

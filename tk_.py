@@ -35,8 +35,11 @@ class Tk(QtWidgets.QStackedWidget):
 		self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
 		self.sb = Switchboard(self, parent)
-
+		self.sb.setClassInstance(self, 'tk')
 		self.childEvents = EventFactoryFilter(self)
+		self.overlay = OverlayFactoryFilter(self) #Paint events are handled by the overlay module.
+
+		self.key_show = QtCore.Qt.Key_F12
 
 
 
@@ -134,12 +137,12 @@ class Tk(QtWidgets.QStackedWidget):
 		args:
 			event = <QEvent>
 		'''
-		if event.key()==QtCore.Qt.Key_F12 and not event.isAutoRepeat():
+		if event.key()==self.key_show and not event.isAutoRepeat():
 			#run once on launch. update the info textEdit.
 			if self.uiLevel is 0:
 				method = self.sb.getMethod('init', 'info')
 				if callable(method):
-					self.ui.info.addcontents(method())
+					self.ui.info.insertText(method())
 
 
 
@@ -148,9 +151,8 @@ class Tk(QtWidgets.QStackedWidget):
 		args:
 			event = <QEvent>
 		'''
-		if event.key()==QtCore.Qt.Key_F12 and not event.isAutoRepeat():
+		if event.key()==self.key_show and not event.isAutoRepeat():
 			self.hide_()
-			self.setUi('init')
 
 
 
@@ -203,16 +205,13 @@ class Tk(QtWidgets.QStackedWidget):
 			event = <QEvent>
 		'''
 		if event.button()==QtCore.Qt.RightButton:
-			if any([self.name=='init', self.name=='main']):
-				self.repeatLastCameraView()
+			self.repeatLastCameraView()
 
 		elif event.button()==QtCore.Qt.LeftButton:
-			if any([self.name=='init', self.name=='viewport']):
-				self.repeatLastUi()
+			self.repeatLastUi()
 
 		elif event.button()==QtCore.Qt.MiddleButton:
-			if any([self.name=='init', self.name=='editors']):
-				self.repeatLastCommand()
+			self.repeatLastCommand()
 
 
 
@@ -222,6 +221,7 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		try: #if pin is unchecked: hide
 			if not self.ui.pin.isChecked():
+				self.setUi('init')
 				self.hide()
 		except: #if ui doesn't have pin: hide
 			self.hide()
@@ -233,9 +233,6 @@ class Tk(QtWidgets.QStackedWidget):
 		args:
 			event = <QEvent>
 		'''
-		try: import MaxPlus; MaxPlus.CUI.EnableAccelerators()
-		except: pass
-
 		if __name__ == "__main__":
 			sys.exit() #assure that the sys processes are terminated.
 
@@ -246,8 +243,7 @@ class Tk(QtWidgets.QStackedWidget):
 		args:
 			event = <QEvent>
 		'''
-		try: import MaxPlus; MaxPlus.CUI.DisableAccelerators()
-		except: pass
+		self.setUi('init')
 
 		self.move(QtGui.QCursor.pos() - self.rect().center()) #move window to cursor position and offset from left corner to center
 		self.activateWindow()
@@ -302,16 +298,6 @@ class Tk(QtWidgets.QStackedWidget):
 
 
 
-# ------------------------------------------------
-# 	Initialize
-# ------------------------------------------------
-def createInstance(mainWindow=None):
-	tk = Tk(mainWindow)
-	tk.overlay = OverlayFactoryFilter(tk) #Paint events are handled by the overlay module.
-	tk.setUi() #initialize layout
-
-	return tk
-
 
 
 if __name__ == "__main__":
@@ -319,7 +305,7 @@ if __name__ == "__main__":
 	if not app:
 		app = QtWidgets.QApplication(sys.argv)
 
-	createInstance().show()
+	Tk().show()
 
 	sys.exit(app.exec_())
 

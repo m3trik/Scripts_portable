@@ -83,10 +83,7 @@ class Switchboard(object):
 			parent = <parent object> - parent widget
 			mainWindow = <mainWindow object> - top level window
 		'''
-		if parent:
-			self.setClassInstance(parent) #store the parents class instance.
-
-		if mainWindow: #check for parent, so that if another instance of switchboard is called without arguments, it doesn't overwrite setMainAppWindow to None.
+		if mainWindow:
 			self.setMainAppWindow(mainWindow)
 
 
@@ -464,20 +461,23 @@ class Switchboard(object):
 
 
 
-	def setClassInstance(self, class_):
+	def setClassInstance(self, class_, name=None):
 		'''
 		Case insensitive. Class string keys are stored lowercase regardless of how they are recieved.
 		args:
 			class_ = 'string' *or <class object> - module name.class to import and store class. 
 					ie.  ie. 'polygons', 'tk_slots_max_polygons.Polygons', or <tk_slots_max_polygons.Polygons>
+			name = 'string' - optional name key to store the class under (else the class name will be used).
 		returns:
 			class object.
 		'''
 		if type(class_)==str or type(class_)==unicode: #if arg given as string or unicode:
 			name = class_.split('_')[-1].split('.')[-1].lower() #get key from class_ string ie. 'class' from 'module.Class'
 			class_ = locate(class_)
-		else: #if arg as <object>:
-			name = class_.__class__.__name__.lower();
+		elif not name:
+			name = class_.__class__.__name__.lower() #if arg as <object>:
+		else:
+			name = name.lower() #if arg as <object> and alt name given.
 
 		if not name in self._sbDict:
 			self._sbDict[name] = {}
