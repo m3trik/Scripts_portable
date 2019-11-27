@@ -37,7 +37,10 @@ class StyleSheet():
 
 	QPushButton='''
 		QPushButton {
+			border-style: outset;
+			border-radius: 1px;
 			border: 1px solid black;
+			padding: 0px;
 			background-color: '''+COLOR_MEDIUM+''';
 			color: white;
 		}
@@ -115,9 +118,23 @@ class StyleSheet():
 			background: '''+COLOR_MEDIUM+''';
 		}
 
+		QComboBox:on { /* shift the text when the popup opens */
+			padding-top: 3px;
+			padding-left: 4px;
+		}
+
 		QComboBox::drop-down {
 			border: transparent;
 			background: '''+COLOR_MEDIUM+''';
+			subcontrol-origin: padding;
+			subcontrol-position: top right;
+			width: 0px;
+
+			border-left-width: 1px;
+			border-left-color: black;
+			border-left-style: solid; /* just a single line */
+			border-top-right-radius: 3px; /* same radius as the QComboBox */
+			border-bottom-right-radius: 3px;
 
 		}'''
 
@@ -224,9 +241,24 @@ class StyleSheet():
 			gridline-color: '''+COLOR_MEDLIGHT+''';
 		}'''
 
+	QLineEdit='''
+		QLineEdit {
+			background-color: '''+COLOR_MEDIUM+''';
+			color: white;
+			selection-background-color: '''+COLOR_ACCENT+''';
+			selection-color: white;
+		}'''
+
 	QTextEdit='''
 		QTextEdit {
+			background: '''+COLOR_MEDIUM+''';
+			color: white;
+			selection-background-color: '''+COLOR_ACCENT+''';
+			selection-color: white;
+		}
 
+		QTextEdit#info {
+			background-color: transparent;
 		}'''
 
 	QAbstractSpinBox='''
@@ -397,11 +429,14 @@ class StyleSheet():
 
 	QProgressBar='''
 		QProgressBar {
+			border: 0px solid black;
+			border-radius: 5px;
 			text-align: center;
 		}
 
 		QProgressBar::chunk {
 			width: 1px;
+			margin: 0px;
 			background-color: '''+COLOR_ACCENT+''';
 		}'''
 
@@ -426,14 +461,25 @@ print os.path.splitext(os.path.basename(__file__))[0]
 # Notes
 # -----------------------------------------------
 
-# testWidget.setObjectName("myWidget")
-# testWidget.setStyleSheet("#myWidget {background-color:red;}") 
+# qApp.setStyleSheet("QLineEdit#objectName {background-color:red;}") 
 
 # background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #E0E0E0, stop: 1 #FFFFFF);
 
 
 
+# QComboBox:editable {
+# 	background: '''+COLOR_MEDIUM+''';
+# }
 
+# QComboBox:!editable, QComboBox::drop-down:editable {
+# 	background: '''+COLOR_MEDIUM+''';
+# }
+
+# /* QComboBox gets the "on" state when the popup is open */
+# QComboBox:!editable:on, QComboBox::drop-down:editable:on {
+# 	background: '''+COLOR_MEDIUM+''';
+# }
+		
 # background-color: #ABABAB; /* sets background of the menu */
 # border: 1px solid black;
 

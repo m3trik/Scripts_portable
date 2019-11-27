@@ -140,7 +140,7 @@ class Tk(QtWidgets.QStackedWidget):
 		if event.key()==self.key_show and not event.isAutoRepeat():
 			#run once on launch. update the info textEdit.
 			if self.uiLevel is 0:
-				method = self.sb.getMethod('init', 'info')
+				method = self.sb.getMethod(self.name, 'info')
 				if callable(method):
 					self.ui.info.insertText(method())
 

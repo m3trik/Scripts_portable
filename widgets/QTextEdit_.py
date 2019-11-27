@@ -27,11 +27,10 @@ class QTextEdit_(QtWidgets.QTextEdit):
 	def __init__(self, parent=None):
 		super(QTextEdit_, self).__init__(parent)
 
-		# self.viewport().setStyleSheet("background-color: rgba(227, 227, 227, 2)")
-
-		self.viewport().setAutoFillBackground(False)
-		self.setTextBackgroundColor(QtGui.QColor(50, 50, 50))
 		self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
+
+		# self.viewport().setAutoFillBackground(False)
+		self.setTextBackgroundColor(QtGui.QColor(50, 50, 50))
 
 
 
@@ -56,7 +55,7 @@ class QTextEdit_(QtWidgets.QTextEdit):
 		'''
 		args:
 			event=<QEvent>
-		'''		
+		'''
 
 		return QtWidgets.QTextEdit.showEvent(self, event)
 

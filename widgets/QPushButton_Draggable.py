@@ -84,9 +84,9 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 			self.setChecked(True) #setChecked to prevent window from closing.
 		else:
 			self.setChecked(not self.isChecked()) #toggle check state
-			self.tk.hide_()
-
+		
 		self.update()
+		self.tk.hide_()
 
 		return QtWidgets.QPushButton.mouseReleaseEvent(self, event)
 
