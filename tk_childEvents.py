@@ -53,7 +53,9 @@ class EventFactoryFilter(QtCore.QObject):
 
 			uiLevel = self.sb.getUiLevel(name)
 
-			widget.setStyleSheet(getattr(StyleSheet, derivedType, ''))
+			if not widget.styleSheet(): #if the widget doesn't already have a styleSheet.
+				widget.setStyleSheet(getattr(StyleSheet, derivedType, ''))
+
 			widget.installEventFilter(self)
 
 
@@ -98,7 +100,7 @@ class EventFactoryFilter(QtCore.QObject):
 			w.setWhatsThis(whatsThis)
 
 		self.sb.addWidget(name, w, objectName)
-		self.init(name, [w]) #initialize the widget to set things like the event filter and stylesheet.
+		self.init(name, [w]) #initialize the widget to set things like the event filter and styleSheet.
 
 		return w
 

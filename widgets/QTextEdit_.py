@@ -29,7 +29,16 @@ class QTextEdit_(QtWidgets.QTextEdit):
 
 		self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
 
-		# self.viewport().setAutoFillBackground(False)
+		self.setStyleSheet('''
+			QTextEdit {
+				background-color: transparent';
+				color: white;
+				selection-background-color: grey;
+				selection-color: white;
+				background-attachment: fixed; /* fixed, scroll */
+		}''')
+		
+		self.viewport().setAutoFillBackground(False)
 		self.setTextBackgroundColor(QtGui.QColor(50, 50, 50))
 
 

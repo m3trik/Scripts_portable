@@ -73,7 +73,9 @@ class Tk(QtWidgets.QStackedWidget):
 		previous = [i for i in self.sb.previousName(as_list=1) if '_submenu' not in i][-1]
 		self.setUi(previous) #return the stacked widget to it's previous ui.
 
-		self.resetPath()
+		#Reset the lists that make up the draw and widget paths.
+		del self.drawPath[1:] #clear the draw path, while leaving the starting point.
+		del self.widgetPath[:] #clear the list of previous widgets.
 
 		self.move(self.drawPath[0] - self.rect().center())
 
@@ -247,15 +249,6 @@ class Tk(QtWidgets.QStackedWidget):
 
 		self.move(QtGui.QCursor.pos() - self.rect().center()) #move window to cursor position and offset from left corner to center
 		self.activateWindow()
-
-
-
-	def resetPath(self):
-		'''
-		Reset the lists that make up the draw and widget paths.
-		'''
-		del self.drawPath[1:] #clear the draw path, while leaving the starting point.
-		del self.widgetPath[:] #clear the list of previous widgets.
 
 
 
