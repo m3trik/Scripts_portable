@@ -40,6 +40,7 @@ class Tk(QtWidgets.QStackedWidget):
 		self.overlay = OverlayFactoryFilter(self) #Paint events are handled by the overlay module.
 
 		self.key_show = QtCore.Qt.Key_F12
+		self.preventHide = False
 
 
 
@@ -154,7 +155,7 @@ class Tk(QtWidgets.QStackedWidget):
 			event = <QEvent>
 		'''
 		if event.key()==self.key_show and not event.isAutoRepeat():
-			self.hide_()
+			self.hide()
 
 
 
@@ -217,16 +218,13 @@ class Tk(QtWidgets.QStackedWidget):
 
 
 
-	def hide_(self):
+	def hide(self):
 		'''
 		Prevents hide event under certain circumstances.
 		'''
-		try: #if pin is unchecked: hide
-			if not self.ui.pin.isChecked():
-				self.setUi('init')
-				self.hide()
-		except: #if ui doesn't have pin: hide
-			self.hide()
+		if not self.preventHide:
+			self.setUi('init')
+			super(Tk, self).hide()
 
 
 

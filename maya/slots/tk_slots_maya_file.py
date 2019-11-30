@@ -9,17 +9,15 @@ from tk_slots_maya_init import Init
 
 
 
+
 class File(Init):
 	def __init__(self, *args, **kwargs):
 		super(File, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('file')
 
-		
 
 		self.cmb006() #refresh cmb006 contents to reflect the current project folder
-
 
 
 
@@ -88,7 +86,7 @@ class File(Init):
 		
 		index = cmb.currentIndex()
 		if index!=0: #hide tk then perform operation
-			self.tk.hide_()
+			self.tk.hide()
 			if index == 1: #Import
 				mel.eval('Import;')
 			if index == 2: #Import options
@@ -109,7 +107,7 @@ class File(Init):
 
 		index = cmb.currentIndex()
 		if index !=0: #hide tk then perform operation
-			self.tk.hide_()
+			self.tk.hide()
 			if index==1: #Export selection
 				mel.eval('ExportSelection;')
 			if index==2: #Export options

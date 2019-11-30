@@ -61,7 +61,7 @@ class File(Init):
 		if index!=0:
 			# force=True; force if maxEval("maxFileName;") else not force #if sceneName prompt user to save; else force open.  also: checkForSave(); If the scene has been modified since the last file save (if any), calling this function displays the message box prompting the user that the scene has been modified and requests to save.
 			rt.loadMaxFile(str(contents[index]))
-			self.tk.hide_()
+			self.tk.hide()
 			cmb.setCurrentIndex(0)
 
 
@@ -98,7 +98,7 @@ class File(Init):
 		index = cmb.currentIndex()
 		if index!=0:
 			rt.loadMaxFile(path+'\\'+str(files[index-1]))
-			self.tk.hide_()
+			self.tk.hide()
 			cmb.setCurrentIndex(0)
 
 
@@ -114,7 +114,7 @@ class File(Init):
 		index = cmb.currentIndex()
 		if index!=0: #hide tk then perform operation
 			print index
-			self.tk.hide_()
+			self.tk.hide()
 			if index == 1: #Import
 				maxEval('max file import')
 			if index == 2: #Import options
@@ -144,7 +144,7 @@ class File(Init):
 
 		index = cmb.currentIndex()
 		if index !=0: #hide tk then perform operation
-			self.tk.hide_()
+			self.tk.hide()
 			if index==1: #Export selection
 				maxEval('max file export')
 			if index==2: #Export options
@@ -281,7 +281,7 @@ class File(Init):
 		files = rt.getRecentfiles()
 		
 		rt.loadMaxFile(str(files[0]))
-		self.tk.hide_()
+		self.tk.hide()
 
 
 	def b002(self):

@@ -34,6 +34,28 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 		if parent:
 			self.parent = parent
 
+		self.setCheckable(True)
+
+		self.setStyleSheet('''
+			QPushButton {
+				border: 1px solid black;
+				background-color: rgba(127,127,127,25);
+			}
+
+			QPushButton::checked {
+				border: 1px solid black;
+				background-color: rgba(82,133,166,225);
+				color: black;
+			}
+
+			QPushButton::hover {   
+				border: 1px solid black;
+				background-color: rgba(82,133,166,225);
+				color: white;
+			}
+
+		''')
+
 		self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
 
 
@@ -47,6 +69,7 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 		self.__mouseMovePos = event.globalPos() #mouse move position from last press. (updated on move event) 
 
 		self.setChecked(True) #setChecked to prevent window from closing.
+		self.tk.preventHide = True
 
 		return QtWidgets.QPushButton.mousePressEvent(self, event)
 
@@ -82,11 +105,13 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 
 		if moveAmount.manhattanLength() >5: #if widget moved:
 			self.setChecked(True) #setChecked to prevent window from closing.
+			self.tk.preventHide = True
 		else:
 			self.setChecked(not self.isChecked()) #toggle check state
-		
-		self.update()
-		self.tk.hide_()
+
+		self.tk.preventHide = self.isChecked()
+		print 'move', self.tk.preventHide
+		self.tk.hide()
 
 		return QtWidgets.QPushButton.mouseReleaseEvent(self, event)
 
@@ -104,13 +129,6 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 				self.tk = self.sb.getClassInstance('tk')
 			except Exception as error:
 				print error
-
-		self.setStyleSheet('''
-			QPushButton {
-			border: 1px solid black;
-			background-color: rgba(127,127,127,25);
-		}
-		''')
 
 		return QtWidgets.QPushButton.showEvent(self, event)
 
