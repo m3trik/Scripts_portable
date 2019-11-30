@@ -30,8 +30,8 @@ category: "tk_macroScript.ui"
 silentErrors: false
 autoUndoEnabled: false
 (
-	python.Execute "if 'tk' not in locals() or 'tk' not in globals(): import tk_max; tk = tk_max.createInstance()" --create instance
-	python.Execute "tk.hide(); tk.show()"
+	python.Execute "if 'tk' not in locals() or 'tk' not in globals(): import tk_max; tk = tk_max.Tk_max();" --create instance
+	python.Execute "tk.hide(); tk.show();"
 -- 	python.Execute "if not tk.isVisible(): tk.show()"
 )
 

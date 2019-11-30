@@ -17,17 +17,24 @@ class StyleSheet():
 	COLOR_MEDLIGHT 	= 'rgb(125,125,125)'
 	COLOR_LIGHT 	= 'rgb(225,225,225)'
 	COLOR_ACCENT 	= 'rgba(82,133,166,225)'
+	COLOR_TEXT1		= 'white'
+	COLOR_TEXT2		= 'black'
 
 
 	QMainWindow='''
 		QMainWindow {
-			background-color: transparent; 
+			background-color: rgba(127,127,127,2);
 			color: +'''+COLOR_LIGHT+''';
 		}'''
 
 	QWidget='''
 		QWidget::item:selected {
 			background: '''+COLOR_ACCENT+''';
+		}'''
+
+	QStackedWidget='''
+		QStackedWidget {
+			background-color: rgba(127,127,127,2);
 		}'''
 
 	QPushButton='''
@@ -37,35 +44,35 @@ class StyleSheet():
 			border: 1px solid black;
 			padding: 0px;
 			background-color: '''+COLOR_MEDIUM+''';
-			color: white;
+			color: '''+COLOR_TEXT1+''';
 		}
 
 		QPushButton::checked {
 			border: 1px solid black;
 			background-color: '''+COLOR_ACCENT+''';
-			color: black;
+			color: '''+COLOR_TEXT2+''';
 		}
 
 		QPushButton::hover {   
 			border: 1px solid black;
 			background-color: '''+COLOR_ACCENT+''';
-			color: white;
+			color: '''+COLOR_TEXT1+''';
 		}
 
 		QPushButton::unchecked::hover {
 			background-color: '''+COLOR_ACCENT+''';
-			color: white;
+			color: '''+COLOR_TEXT1+''';
 		}
 
 		QPushButton::checked::hover {
 			background-color: '''+COLOR_ACCENT+''';
-			color: black;
+			color: '''+COLOR_TEXT2+''';
 		}
 
 		QPushButton::pressed {   
 			border: 1px solid black;
 			background-color: '''+COLOR_MEDLIGHT+''';
-			color: white;
+			color: '''+COLOR_TEXT1+''';
 		}
 
 		QPushButton:flat {
@@ -88,22 +95,27 @@ class StyleSheet():
 	QComboBox='''
 		QComboBox {
 			background-color: '''+COLOR_MEDIUM+''';
-			color: white;
+			color: '''+COLOR_TEXT1+''';
 			border: 1px solid black;
 		}
 
 		QComboBox::hover {
 			background-color: '''+COLOR_ACCENT+''';
-			color: white;
+			color: '''+COLOR_TEXT1+''';
 			border: 1px solid black;
 		}
 
 		QComboBox::open {
 			background-color: '''+COLOR_MEDIUM+''';
-			color: white;
+			color: '''+COLOR_TEXT1+''';
 			border: 1px solid black;
 			selection-background-color: '''+COLOR_ACCENT+''';
-			selection-color: black;
+			selection-color: '''+COLOR_TEXT2+''';
+		}
+
+		QComboBox:on { /* shift the text when the popup opens */
+			padding-top: 3px;
+			padding-left: 4px;
 		}
 
 		QComboBox::down-arrow {
@@ -111,11 +123,6 @@ class StyleSheet():
 			height: 0px;
 			border: transparent;
 			background: '''+COLOR_MEDIUM+''';
-		}
-
-		QComboBox:on { /* shift the text when the popup opens */
-			padding-top: 3px;
-			padding-left: 4px;
 		}
 
 		QComboBox::drop-down {
@@ -126,36 +133,35 @@ class StyleSheet():
 			width: 0px;
 
 			border-left-width: 1px;
-			border-left-color: black;
+			border-left-color: '''+COLOR_TEXT2+''';
 			border-left-style: solid; /* just a single line */
 			border-top-right-radius: 3px; /* same radius as the QComboBox */
 			border-bottom-right-radius: 3px;
-
 		}'''
 
 	QSpinBox='''
 		QSpinBox {
 		background: '''+COLOR_MEDIUM+''';
-		color: white;
+		color: '''+COLOR_TEXT1+''';
 		border: 1px solid black;
 		}
 
 		QSpinBox::hover {
 			background-color: '''+COLOR_ACCENT+''';
-			color: white;
+			color: '''+COLOR_TEXT1+''';
 			border: 1px solid black;
 		}'''
 
 	QDoubleSpinBox='''
 		QDoubleSpinBox {
 		background: '''+COLOR_MEDIUM+''';
-		color: white;
+		color: '''+COLOR_TEXT1+''';
 		border: 1px solid black;
 		}
 
 		QDoubleSpinBox::hover {
 			background-color: '''+COLOR_ACCENT+''';
-			color: white;
+			color: '''+COLOR_TEXT1+''';
 			border: 1px solid black;
 		}'''
 
@@ -242,9 +248,9 @@ class StyleSheet():
 			border-radius: 10px;
 			padding: 0 8px;
 			background-color: '''+COLOR_MEDIUM+''';
-			color: white;
+			color: '''+COLOR_TEXT1+''';
 			selection-background-color: '''+COLOR_ACCENT+''';
-			selection-color: white;
+			selection-color: '''+COLOR_TEXT1+''';
 		}
 
 		QLineEdit:read-only {
@@ -254,16 +260,16 @@ class StyleSheet():
 	QTextEdit='''
 		QTextEdit {
 			background-color: '''+COLOR_MEDIUM+''';
-			color: white;
+			color: '''+COLOR_TEXT1+''';
 			selection-background-color: '''+COLOR_ACCENT+''';
-			selection-color: white;
+			selection-color: '''+COLOR_TEXT1+''';
 			background-attachment: fixed; /* fixed, scroll */
 		}'''
 
 	QListView='''
 		QListView {
 			background-color: '''+COLOR_MEDIUM+''';
-			color: white;
+			color: '''+COLOR_TEXT1+''';
 			alternate-background-color: '''+COLOR_MEDIUM+''';
 			background-attachment: fixed; /* fixed, scroll */
 		}
@@ -283,12 +289,12 @@ class StyleSheet():
 
 		QListView::item:selected:active {
 			background: '''+COLOR_ACCENT+''';
-			color: black;
+			color: '''+COLOR_TEXT2+''';
 		}
 
 		QListView::item:hover {
 			background: '''+COLOR_ACCENT+''';
-			color: white;
+			color: '''+COLOR_TEXT1+''';
 		}'''
 
 	QAbstractSpinBox='''
@@ -411,7 +417,7 @@ class StyleSheet():
 		QGroupBox {
 			margin-top: 4px; /* leave space at the top for the title */
 			background-color: rgbs(127,127,127,2);
-			color: black;
+			color: '''+COLOR_TEXT2+''';
 			border: 1px '''+COLOR_MEDLIGHT+''';
 			border-radius: 5px;
 		}
@@ -453,7 +459,7 @@ class StyleSheet():
 	QToolTip='''
 		QToolTip {
 			background-color: transparent;
-			color: white;
+			color: '''+COLOR_TEXT1+''';
 			border: 0px solid transparent;
 		}'''
 

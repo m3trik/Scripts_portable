@@ -30,6 +30,7 @@ class View(QtWidgets.QListWidget):
 		print parent.size()
 		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint|QtCore.Qt.WindowStaysOnTopHint)
 
+
 	def addItems(self, items):
 		for text in items:
 			widget = QtWidgets.QPushButton(text, parent=self)
@@ -153,12 +154,6 @@ class QPushButton_Popup(QtWidgets.QPushButton):
 
 		# self.rect().setRect(rect.x(), rect.y(), rect.width(), rect.height())
 
-		self.setStyleSheet('''
-			QComboBox {
-				background-color: rgba(82,133,166,200);
-				color: white;
-			}''')
-
 		return QtWidgets.QPushButton.enterEvent(self, event)
 
 
@@ -171,12 +166,6 @@ class QPushButton_Popup(QtWidgets.QPushButton):
 		if not self.view.rect().contains(self.mapFromGlobal(QtGui.QCursor.pos())):
 			self.hidePopup()
 
-		self.setStyleSheet('''
-			QComboBox {
-				background-color: rgba(100,100,100,200);
-				color: white;
-			}''')
-
 		return QtWidgets.QPushButton.leaveEvent(self, event)
 
 
@@ -184,9 +173,7 @@ class QPushButton_Popup(QtWidgets.QPushButton):
 if __name__ == "__main__":
 	app = QtWidgets.QApplication(sys.argv)
 
-	w = QPushButton_Popup()
-	# w.view.addItems(['node0', 'node1', 'node2'])
-	w.show()
+	QPushButton_Popup().show()
 	sys.exit(app.exec_())
 
 

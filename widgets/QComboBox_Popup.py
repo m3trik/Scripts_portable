@@ -165,11 +165,6 @@ class QComboBox_Popup(QtWidgets.QComboBox):
 			event=<QEvent>
 		'''
 		# print '__enterEvent'
-		self.setStyleSheet('''
-			QComboBox {
-				background-color: rgba(82,133,166,200);
-				color: white;
-			}''')
 
 		pos = self.mapToGlobal(self.rect().topRight())
 		self.view.showPopup(pos)
@@ -183,11 +178,6 @@ class QComboBox_Popup(QtWidgets.QComboBox):
 			event=<QEvent>
 		'''
 		# print '__leaveEvent'
-		self.setStyleSheet('''
-			QComboBox {
-				background-color: rgba(100,100,100,200);
-				color: white;
-			}''')
 
 		self.view.hidePopup()
 
@@ -211,8 +201,7 @@ class QComboBox_Popup(QtWidgets.QComboBox):
 if __name__ == "__main__":
 	app = QtWidgets.QApplication(sys.argv)
 
-	w = QComboBox_Popup()
-	w.show()
+	QComboBox_Popup().show()
 	sys.exit(app.exec_())
 
 

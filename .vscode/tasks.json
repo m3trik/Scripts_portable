@@ -7,7 +7,7 @@
         {
             "label": "Execute Script in 3ds Max",
             "type": "shell",
-            "command": "%CLOUD%\\_Code\\Maxscript\\MXSPyCOM\\MXSPyCOM.exe",
+            "command": "O:\\Cloud\\_Code\\Maxscript\\MXSPyCOM\\MXSPyCOM.exe",
             "args": [
                 "-s",
                 "${file}"

@@ -488,8 +488,8 @@ if ($maskVertex==0 && $maskEdge==1)
 //Display hotbox zones only
 //f12
 if 'tk' not in locals() or 'tk' not in globals():
-	import tk_maya
-	tk = tk_maya.createInstance()
+	import tk_maya;
+	tk = tk_maya.Tk_maya()
 
 tk.hide(); tk.show()
 

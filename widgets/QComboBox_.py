@@ -61,11 +61,6 @@ class QComboBox_(QtWidgets.QComboBox):
 			event=<QEvent>
 		'''
 		# print '__enterEvent'
-		# self.setStyleSheet('''
-		# 	QComboBox {
-		# 		background-color: rgba(82,133,166,200);
-		# 		color: white;
-		# 	}''')
 
 		return QtWidgets.QComboBox.enterEvent(self, event)
 
@@ -76,11 +71,6 @@ class QComboBox_(QtWidgets.QComboBox):
 			event=<QEvent>
 		'''
 		# print '__leaveEvent'
-		# self.setStyleSheet('''
-		# 	QComboBox {
-		# 		background-color: rgba(100,100,100,200);
-		# 		color: white;
-		# 	}''')
 
 		# self.hidePopup()
 
@@ -111,11 +101,10 @@ class QComboBox_(QtWidgets.QComboBox):
 
 
 if __name__ == "__main__":
-	qApp = QtWidgets.QApplication(sys.argv)
-		
-	w = QComboBox_()
-	w.show()
-	sys.exit(qApp.exec_())
+	app = QtWidgets.QApplication(sys.argv)
+
+	QComboBox_().show()
+	sys.exit(app.exec_())
 
 
 

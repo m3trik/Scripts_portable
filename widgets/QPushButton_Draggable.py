@@ -40,21 +40,7 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 			QPushButton {
 				border: 1px solid black;
 				background-color: rgba(127,127,127,25);
-			}
-
-			QPushButton::checked {
-				border: 1px solid black;
-				background-color: rgba(82,133,166,225);
-				color: black;
-			}
-
-			QPushButton::hover {   
-				border: 1px solid black;
-				background-color: rgba(82,133,166,225);
-				color: white;
-			}
-
-		''')
+			}''')
 
 		self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
 
@@ -110,7 +96,6 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 			self.setChecked(not self.isChecked()) #toggle check state
 
 		self.tk.preventHide = self.isChecked()
-		print 'move', self.tk.preventHide
 		self.tk.hide()
 
 		return QtWidgets.QPushButton.mouseReleaseEvent(self, event)
@@ -141,5 +126,4 @@ if __name__ == "__main__":
 	app = QtWidgets.QApplication(sys.argv)
 		
 	QPushButton_Draggable().show()
-
 	sys.exit(app.exec_())

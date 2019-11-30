@@ -1,5 +1,9 @@
 from tk_ import Tk
-from PySide2 import QtWidgets
+from PySide2.QtWidgets import QApplication
+
+app = QApplication.instance() #get the qApp instance if it exists.
+if not app:
+	app = QApplication(sys.argv)
 
 
 
@@ -13,10 +17,17 @@ class Tk_maya(Tk):
 		parent = main application top level window object.
 	'''
 	def __init__(self, parent=None):
-		super(Tk_maya, self).__init__(parent)
+
+		if not parent:
+			global app
+			parent = [x for x in app.topLevelWidgets() if x.objectName()=='MayaWindow']
+			if parent:
+				super(Tk_maya, self).__init__(parent[0])
+			else:
+				super(Tk_maya, self).__init__(None)
+				print '# Error: "MayaWindow" object not found in app.topLevelWidgets() #'
 
 		self.setUi()
-
 
 
 	def showEvent(self, event):
@@ -42,22 +53,22 @@ class Tk_maya(Tk):
 
 
 
-def createInstance():
-	'''
-	Return an instance parented to the app mainWindow.
-	'''
-	app = QtWidgets.QApplication.instance() #get the qApp instance if it exists.
-	if not app:
-		app = QtWidgets.QApplication(sys.argv)
 
-	mainWindow = [x for x in app.topLevelWidgets() if x.objectName()=='MayaWindow']
 
-	if mainWindow:
-		return Tk_maya(mainWindow[0])
-	else:
-		print '# Error: "MayaWindow" object not found in app.topLevelWidgets() #'
-		return Tk_maya()
 
+if __name__ == "__main__":
+	import sys
+	global app
+
+	Tk_maya().show()
+
+	sys.exit(app.exec_())
+
+
+
+# -----------------------------------------------
+# Notes
+# -----------------------------------------------
 
 
 # if not pm.runTimeCommand('Hk_tk', exists=1):
@@ -69,8 +80,3 @@ def createInstance():
 # 		command=if 'tk' not in locals() or 'tk' not in globals(): tk = tk_maya.createInstance(); tk.hide(); tk.show(),
 # 		hotkeyCtx='',
 # 	)
-
-
-
-if __name__=='__main__':
-	createInstance().show()

@@ -43,7 +43,6 @@
   <property name="styleSheet">
    <string notr="true">QMainWindow {
 			background-color: rgba(127,127,127,2); 
-			color: rgb(225, 225, 225);
 }</string>
   </property>
   <property name="tabShape">
