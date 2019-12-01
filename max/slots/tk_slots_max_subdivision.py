@@ -13,10 +13,7 @@ class Subdivision(Init):
 	def __init__(self, *args, **kwargs):
 		super(Subdivision, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('subdivision')
-
-		
 
 		#Set 3ds Max specific naming
 		self.ui.gb000.setTitle('TurboSmooth')
@@ -27,8 +24,7 @@ class Subdivision(Init):
 
 
 
-
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
@@ -37,7 +33,8 @@ class Subdivision(Init):
 		selectionSets = [set for set in rt.selectionSets]
 		contents = self.comboBox (cmb, ['TurboSmooth','TurboSmooth Pro','OpenSubDiv','Subdivide','Subdivide (WSM)','MeshSmooth','Optimize','Pro Optimizer','Add Divisions'], ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==1: #TurboSmooth
 				mod = rt.TurboSmooth()

@@ -55,13 +55,13 @@
       <widget class="QPushButton_Draggable" name="pin">
        <property name="minimumSize">
         <size>
-         <width>19</width>
+         <width>227</width>
          <height>17</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>999</width>
+         <width>227</width>
          <height>17</height>
         </size>
        </property>

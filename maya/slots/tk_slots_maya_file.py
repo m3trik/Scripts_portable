@@ -16,12 +16,11 @@ class File(Init):
 
 		self.ui = self.sb.getUi('file')
 
-
 		self.cmb006() #refresh cmb006 contents to reflect the current project folder
 
 
 
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		Recent Files
 
@@ -31,14 +30,15 @@ class File(Init):
 		files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in file_]
 		contents = self.comboBox(cmb, files, "Recent Files")
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			force=True; force if str(mel.eval("file -query -sceneName -shortName;")) else not force #if sceneName prompt user to save; else force open
 			pm.openFile(contents[index], open=1, force=force)
 			cmb.setCurrentIndex(0)
 
 
-	def cmb001(self):
+	def cmb001(self, index=None):
 		'''
 		Recent Projects
 
@@ -48,13 +48,14 @@ class File(Init):
 		files = (list(reversed(mel.eval("optionVar -query RecentProjectsList;"))))
 		contents = self.comboBox(cmb, files, "Recent Projects")
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			mel.eval('setProject "'+contents[index]+'"')
 			cmb.setCurrentIndex(0)
 
 
-	def cmb002(self):
+	def cmb002(self, index=None):
 		'''
 		Recent Autosave
 
@@ -65,7 +66,8 @@ class File(Init):
 		files = [f for f in os.listdir(path) if f.endswith('.mb') or f.endswith('.ma')] #[file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" in file_]
 		contents = self.comboBox(cmb, files, "Recent Autosave")
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			force=True
 			if str(mel.eval("file -query -sceneName -shortName;")):
@@ -75,7 +77,7 @@ class File(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def cmb003(self):
+	def cmb003(self, index=None):
 		'''
 		Import
 
@@ -84,7 +86,8 @@ class File(Init):
 		
 		contents = self.comboBox(cmb,["Import file", "Import Options"], "Import")
 		
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0: #hide then perform operation
 			self.tk.hide(force=1)
 			if index == 1: #Import
@@ -94,7 +97,7 @@ class File(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def cmb004(self):
+	def cmb004(self, index=None):
 		'''
 		Export
 
@@ -105,7 +108,8 @@ class File(Init):
 
 		contents = self.comboBox(cmb, list_, "Export")
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index !=0: #hide then perform operation
 			self.tk.hide(force=1)
 			if index==1: #Export selection
@@ -127,7 +131,7 @@ class File(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def cmb005(self):
+	def cmb005(self, index=None):
 		'''
 		Editors
 
@@ -137,7 +141,8 @@ class File(Init):
 		files = ['Node Editor', 'Outlinder', 'Content Browser']
 		contents = self.comboBox(cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index('Node Editor'):
 				mel.eval('NodeEditorWindow;') #
@@ -148,7 +153,7 @@ class File(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def cmb006(self):
+	def cmb006(self, index=None):
 		'''
 		Project Folder
 
@@ -162,7 +167,8 @@ class File(Init):
 
 		contents = self.comboBox(cmb, list_, project)
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			dir_= path+list_[index-1]
 			os.startfile(dir_)
@@ -242,12 +248,15 @@ class File(Init):
 		'''
 		Recent Files: Open Last
 		'''
-		files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in file_]
+		# files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in file_]
 
-		force=True
-		if str(mel.eval("file -query -sceneName -shortName;")):
-			force=False #if sceneName, prompt user to save; else force open
-		pm.openFile(files[0], open=1, force=force)
+		# force=True
+		# if str(mel.eval("file -query -sceneName -shortName;")):
+		# 	force=False #if sceneName, prompt user to save; else force open
+		# pm.openFile(files[0], open=1, force=force)
+
+		self.tk.hide(force=1)
+		self.cmb000(index=1)
 
 
 	def b002(self):
@@ -312,14 +321,14 @@ class File(Init):
 		'''
 		Import file
 		'''
-		self.setComboBox('cmb003','Import file')
+		self.cmb003(index=1)
 
 
 	def b008(self):
 		'''
 		Export Selection
 		'''
-		self.setComboBox('cmb004','Export Selection')
+		self.cmb004(index=1)
 
 
 	def b015(self):

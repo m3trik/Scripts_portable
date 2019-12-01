@@ -16,9 +16,8 @@ class Edit(Init):
 		self.ui = self.sb.getUi('edit')
 
 
-		
 
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
@@ -27,7 +26,8 @@ class Edit(Init):
 		files = ['']
 		contents = self.comboBox(cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			# if index==contents.index(''):
 			# 	pass

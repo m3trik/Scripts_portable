@@ -13,15 +13,11 @@ class Utilities(Init):
 	def __init__(self, *args, **kwargs):
 		super(Utilities, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('utilities')
 
-		
 
 
-
-
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
@@ -30,7 +26,8 @@ class Utilities(Init):
 		files = ['']
 		contents = self.comboBox(cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index(''):
 				pass

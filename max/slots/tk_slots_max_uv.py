@@ -13,15 +13,11 @@ class Uv(Init):
 	def __init__(self, *args, **kwargs):
 		super(Uv, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('uv')
 
 
 
-
-
-
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
@@ -29,7 +25,8 @@ class Uv(Init):
 
 		contents = self.comboBox (cmb, ["UV Editor", "UV Set Editor", "UV Tool Kit", "UV Linking: Texture-Centric", "UV Linking: UV-Centric", "UV Linking: Paint Effects/UV", "UV Linking: Hair/UV"], ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index !=0: #hide hotbox then perform operation
 			self.tk.hide()
 			if index == 1: #UV Editor

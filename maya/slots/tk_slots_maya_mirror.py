@@ -13,11 +13,7 @@ class Mirror(Init):
 	def __init__(self, *args, **kwargs):
 		super(Mirror, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('mirror')
-
-		
-
 
 
 
@@ -73,7 +69,7 @@ class Mirror(Init):
 		self.ui.b008.setText('Delete '+axis)
 
 
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
@@ -82,7 +78,8 @@ class Mirror(Init):
 		files = ['Mirror Options', 'Mirror Instance Mesh']
 		contents = self.comboBox(cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index('Mirror Options'):
 				mel.eval('MirrorPolygonGeometryOptions;')

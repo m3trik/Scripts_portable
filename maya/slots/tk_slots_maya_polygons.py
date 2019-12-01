@@ -38,7 +38,7 @@ class Polygons(Init):
 		self.setButtons(self.ui, unchecked='chk008-9')
 
 
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		Header comboBox
 		'''
@@ -47,7 +47,8 @@ class Polygons(Init):
 		files = ['Extrude Options','Bevel Options','Bridge Options','Combine Options','Merge Vertex Options','Offset Edgeloop','Edit Edgeflow Options','Extract Curve Options','Poke Options','Wedge Options','Assign Invisible Options']
 		contents = self.comboBox(cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index('Extrude Options'):
 				mel.eval("PolyExtrudeOptions;")

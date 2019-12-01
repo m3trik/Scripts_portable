@@ -202,7 +202,7 @@ class EventFactoryFilter(QtCore.QObject):
 		self.widgetName = self.widget.objectName()
 		self.widgetType = self.sb.getWidgetType(self.widget, self.name)
 		self.derivedType = self.sb.getDerivedType(self.widget, self.name)
-		self.mainWindow = self.sb.getWidget('mainWindow', self.name)
+		self.ui = self.sb.getUi(self.name)
 		self.uiLevel = self.sb.getUiLevel(self.name)
 
 		eventName = EventFactoryFilter.createEventName(event) #get 'mousePressEvent' from <QEvent>
@@ -277,9 +277,9 @@ class EventFactoryFilter(QtCore.QObject):
 		self.__mouseHover.emit(False)
 
 		if self.widget==self.__mouseGrabber: #self.widget.mouseGrabber():
-			if self.mainWindow.isVisible():
-				self.mainWindow.grabMouse()
-				self.__mouseGrabber = self.mainWindow
+			if self.ui.mainWindow.isVisible():
+				self.ui.mainWindow.grabMouse()
+				self.__mouseGrabber = self.ui.mainWindow
 
 		if self.widgetType=='QWidget':
 			if self.sb.prefix(self.widgetName, 'r'):

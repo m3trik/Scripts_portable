@@ -13,13 +13,9 @@ class Rigging(Init):
 	def __init__(self, *args, **kwargs):
 		super(Rigging, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('rigging')
 
-		
-
 		self.chk000() #init scale joint value
-
 
 
 
@@ -61,7 +57,7 @@ class Rigging(Init):
 			pm.jointDisplayScale(value, ikfk=1) #set global IKFK display size
 
 
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
@@ -70,7 +66,8 @@ class Rigging(Init):
 		files = ['Quick Rig','HumanIK','Expression Editor','Shape Editor','Connection Editor','Channel Control Editor','Set Driven Key']
 		contents = self.comboBox(cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index('Quick Rig'):
 				mel.eval('QuickRigEditor;') #Quick Rig
@@ -89,7 +86,7 @@ class Rigging(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def cmb001(self):
+	def cmb001(self, index=None):
 		'''
 		Create
 		'''
@@ -98,7 +95,8 @@ class Rigging(Init):
 		files = ['Joints','Locator','IK Handle', 'Lattice', 'Cluster']
 		contents = self.comboBox(cmb, files, "Create")
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index('Joints'):
 				pm.setToolTo('jointContext') #create joint tool

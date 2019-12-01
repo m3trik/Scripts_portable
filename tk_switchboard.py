@@ -130,7 +130,6 @@ class Switchboard(object):
 
 
 		signals = { #the default type of signal to be associated with each widget type.
-			'QMainWindow':'',
 			'QWidget':'',
 			'QGroupBox':'',
 			'QProgressBar':'valueChanged',

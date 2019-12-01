@@ -15,32 +15,14 @@ class Preferences(Init):
 
 		self.ui = self.sb.getUi('preferences')
 
-
 		self.ui.b010.setText(self.sb.getMainAppWindow(objectName=1).capitalize()+' Preferences')
-
 
 		self.cmb001(init=1) #init cmb001
 		self.cmb002(init=1) #init cmb002
 
 
 
-	def cmb(self):
-		'''
-		Editors
-		'''
-		cmb = self.ui.cmb
-
-		files = ['']
-		contents = self.comboBox(cmb, files, ' ')
-
-		index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index(''):
-				pass
-			cmb.setCurrentIndex(0)
-
-
-	# def cmb000(self):
+	# def cmb000(self, index=None):
 	# 	'''
 	# 	Custom Menu Set
 	# 	'''
@@ -49,7 +31,8 @@ class Preferences(Init):
 	# 	list_ = ['Modeling', 'Normals', 'Materials', 'UV'] #combobox list menu corresponding to the button text sets.
 	# 	contents = self.comboBox(cmb, list_, 'Menu Sets')
 
-	# 	index = cmb.currentIndex()
+	# 	if not index:
+			# index = cmb.currentIndex()
 	# 	buttons = self.getObject(self.sb.getUi('main'), 'v000-11') #the ui in which the changes are to be made.
 	# 	for i, button in enumerate(buttons):
 	# 		if index==1: #set the text for each button.
@@ -113,6 +96,23 @@ class Preferences(Init):
 		# 	cmb.setCurrentIndex(index)
 		# else:
 		# 	pm.currentUnit(time=values[index]) #game | film | pal | ntsc | show | palf | ntscf
+
+
+	def cmb003(self, index=None):
+		'''
+		Editors
+		'''
+		cmb = self.ui.cmb003
+
+		files = ['']
+		contents = self.comboBox(cmb, files, ' ')
+
+		if not index:
+			index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				pass
+			cmb.setCurrentIndex(0)
 
 
 	def b000(self):

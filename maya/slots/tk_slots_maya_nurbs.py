@@ -13,15 +13,11 @@ class Nurbs(Init):
 	def __init__(self, *args, **kwargs):
 		super(Nurbs, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('nurbs')
 
-		
 
 
-
-
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
@@ -30,7 +26,8 @@ class Nurbs(Init):
 		files = ['Project Curve','Duplicate Curve','Create Curve from Poly','Bend Curve', 'Curl Curve','Modify Curve Curvature','Smooth Curve','Straighten Curves','Extrude Curves','Revolve Curves','Loft Curves','Planar Curves','Insert Isoparms','Insert Knot','Rebuild Curve','Extend Curve']
 		contents = self.comboBox (cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index('Project Curve'):
 				mel.eval("ProjectCurveOnSurfaceOptions;")
@@ -69,7 +66,7 @@ class Nurbs(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def cmb001(self):
+	def cmb001(self, index=None):
 		'''
 		Create: Curve
 		'''
@@ -78,7 +75,8 @@ class Nurbs(Init):
 		files = ['Ep Curve Tool','CV Curve Tool','Bezier Curve Tool','Pencil Curve Tool','2 Point Circular Arc','3 Point Circular Arc']
 		contents = self.comboBox(cmb, files, 'Create Curve')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index('Ep Curve Tool'):
 				mel.eval('EPCurveToolOptions;') #mel.eval('EPCurveTool;')

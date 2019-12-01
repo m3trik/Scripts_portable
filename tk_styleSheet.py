@@ -90,9 +90,9 @@ class StyleSheet():
 			background: '''+COLOR_MEDIUM+''';
 			color: '''+COLOR_TEXT1+''';
 			border: 1px solid black;
-			border-radius: 3px;
 			padding: 1px 18px 1px 3px;
-			min-width: 6em;
+			/* border-radius: 1px; */
+			/* min-width: 0em; */
 		}
 
 		QComboBox::hover {
@@ -131,8 +131,8 @@ class StyleSheet():
 			border-left-width: 1px;
 			border-left-color: '''+COLOR_TEXT2+''';
 			border-left-style: solid; /* just a single line */
-			border-top-right-radius: 3px; /* same radius as the QComboBox */
-			border-bottom-right-radius: 3px;
+			border-top-right-radius: 1px; /* same radius as the QComboBox */
+			border-bottom-right-radius: 1px;
 		}'''
 
 	QSpinBox='''
@@ -243,10 +243,18 @@ class StyleSheet():
 			border: 1px solid black;
 			border-radius: 10px;
 			padding: 0 8px;
-			background-color: '''+COLOR_MEDIUM+''';
+			background: '''+COLOR_MEDIUM+''';
 			color: '''+COLOR_TEXT1+''';
 			selection-background-color: '''+COLOR_ACCENT+''';
 			selection-color: '''+COLOR_TEXT1+''';
+		}
+
+		QLineEdit::disabled {
+			color: '''+COLOR_MEDIUM+''';
+		}
+
+		QLineEdit::enabled {
+			color: '''+COLOR_TEXT1+''';
 		}
 
 		QLineEdit:read-only {

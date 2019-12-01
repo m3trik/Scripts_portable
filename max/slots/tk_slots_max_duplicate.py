@@ -328,7 +328,7 @@ class Duplicate(Init):
 			self.setButtons(self.ui, disable='b002')
 
 
-	def cmb001(self):
+	def cmb001(self, index=None):
 		'''
 		Editors
 		'''
@@ -337,7 +337,8 @@ class Duplicate(Init):
 		files = ['']
 		contents = self.comboBox(cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index(''):
 				pass

@@ -18,9 +18,6 @@ class File(Init):
 		self.ui = self.sb.getUi('file')
 
 
-		self.cmb006() #refresh cmb006 contents to reflect the current project folder
-
-
 
 		#get recent file list. #convert to python
 		maxEval('''
@@ -48,7 +45,7 @@ class File(Init):
 			''')
 
 
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		Recent Files
 		'''
@@ -57,14 +54,15 @@ class File(Init):
 		list_ = rt.getRecentfiles()
 		contents = self.comboBox(cmb, list_, "Recent Files")
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			# force=True; force if maxEval("maxFileName;") else not force #if sceneName prompt user to save; else force open.  also: checkForSave(); If the scene has been modified since the last file save (if any), calling this function displays the message box prompting the user that the scene has been modified and requests to save.
 			rt.loadMaxFile(str(contents[index]))
 			cmb.setCurrentIndex(0)
 
 
-	def cmb001(self):
+	def cmb001(self, index=None):
 		'''
 		Recent Projects
 		'''
@@ -75,13 +73,14 @@ class File(Init):
 
 		contents = self.comboBox(cmb, list_, "Recent Projects")
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			maxEval('setProject "'+contents[index]+'"')
 			cmb.setCurrentIndex(0)
 
 
-	def cmb002(self):
+	def cmb002(self, index=None):
 		'''
 		Recent Autosave
 		'''
@@ -94,22 +93,23 @@ class File(Init):
 
 		contents = self.comboBox(cmb, sorted(list_, reverse=1), "Recent Autosave")
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			rt.loadMaxFile(path+'\\'+str(files[index-1]))
 			cmb.setCurrentIndex(0)
 
 
-	def cmb003(self):
+	def cmb003(self, index=None):
 		'''
 		Import
 		'''
-		print 'cmb003'
 		cmb = self.ui.cmb003
 
 		contents = self.comboBox(cmb, ['Import file', 'Import Options', 'Merge', 'Replace', 'Link Revit', 'Link FBX', 'Link AutoCAD'], 'Import')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0: #hide then perform operation
 			print index
 			self.tk.hide(force=1)
@@ -130,7 +130,7 @@ class File(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def cmb004(self):
+	def cmb004(self, index=None):
 		'''
 		Export
 		'''
@@ -140,7 +140,8 @@ class File(Init):
 
 		self.comboBox(cmb, list_, "Export")
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index !=0: #hide then perform operation
 			self.tk.hide(force=1)
 			if index==1: #Export selection
@@ -169,7 +170,7 @@ class File(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def cmb005(self):
+	def cmb005(self, index=None):
 		'''
 		Editors
 		'''
@@ -178,14 +179,15 @@ class File(Init):
 		files = ['Schematic View']
 		contents = self.comboBox(cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index('Schematic View'):
 				maxEval('schematicView.Open "Schematic View 1"')
 			cmb.setCurrentIndex(0)
 
 
-	def cmb006(self):
+	def cmb006(self, index=None):
 		'''
 		Project Folder
 		'''
@@ -198,7 +200,8 @@ class File(Init):
 
 		contents = self.comboBox(cmb, list_, project)
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			dir_= path+list_[index-1]
 			os.startfile(dir_)
@@ -276,10 +279,11 @@ class File(Init):
 		'''
 		Recent Files: Open Last
 		'''
-		files = rt.getRecentfiles()
-		
-		rt.loadMaxFile(str(files[0]))
+		# files = rt.getRecentfiles()
+		# rt.loadMaxFile(str(files[0]))
+
 		self.tk.hide(force=1)
+		self.cmb000(index=1)
 
 
 	def b002(self):
@@ -325,31 +329,18 @@ class File(Init):
 		pass
 
 
-	def setComboBox(self, comboBox, text):
-		'''
-		Set the given comboBox's index using a text string.
-		args:
-			comboBox = 'string' - comboBox name (will also be used as the methods name).
-			text = 'string' - text of the index to switch to.
-		'''
-		cmb = getattr(self.ui, comboBox)
-		method = getattr(self, comboBox)
-		cmb.currentIndexChanged.connect(method)
-		cmb.setCurrentIndex(cmb.findText(text))
-
-
 	def b007(self):
 		'''
 		Import file
 		'''
-		self.setComboBox('cmb003','Import file')
+		self.cmb003(index=1)
 
 
 	def b008(self):
 		'''
 		Export Selection
 		'''
-		self.setComboBox('cmb004','Export Selection')
+		self.cmb004(index=1)
 
 
 	def b015(self):

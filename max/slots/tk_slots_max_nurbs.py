@@ -17,7 +17,7 @@ class Nurbs(Init):
 
 
 
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
@@ -26,14 +26,15 @@ class Nurbs(Init):
 		files = ['']
 		contents = self.comboBox (cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index(''):
 				mel.eval('')
 			cmb.setCurrentIndex(0)
 
 
-	def cmb001(self):
+	def cmb001(self, index=None):
 		'''
 		Create: Curve
 		'''
@@ -42,7 +43,8 @@ class Nurbs(Init):
 		files = ['']
 		contents = self.comboBox (cmb, files, 'Create Curve')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index(''):
 				mel.eval('')

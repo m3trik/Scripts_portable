@@ -13,10 +13,7 @@ class Symmetry(Init):
 	def __init__(self, *args, **kwargs):
 		super(Symmetry, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('symmetry')
-
-		
 
 		#symmetry: set initial checked state
 		# state = pm.symmetricModelling(query=True, symmetry=True) #application symmetry state
@@ -27,7 +24,6 @@ class Symmetry(Init):
 		# 	self.ui.chk001.setChecked(state)
 		# if axis == "z":
 		# 	self.ui.chk002.setChecked(state)
-
 
 
 
@@ -112,7 +108,7 @@ class Symmetry(Init):
 			print "# Warning: First select a seam edge and then check the symmetry button to enable topographic symmetry #"
 
 
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
@@ -121,7 +117,8 @@ class Symmetry(Init):
 		files = ['']
 		contents = self.comboBox(cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index(''):
 				mel.eval('')

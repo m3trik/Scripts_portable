@@ -13,15 +13,11 @@ class Utilities(Init):
 	def __init__(self, *args, **kwargs):
 		super(Utilities, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('utilities')
 
-		
 
 
-
-
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
@@ -30,7 +26,8 @@ class Utilities(Init):
 		files = ['']
 		contents = self.comboBox(cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index(''):
 				mel.eval('')
@@ -44,12 +41,14 @@ class Utilities(Init):
 		'''
 		mel.eval("DistanceTool;")
 
+
 	def b001(self):
 		'''
 		Annotation
 
 		'''
 		mel.eval('CreateAnnotateNode;')
+
 
 	def b002(self):
 		'''
@@ -58,12 +57,14 @@ class Utilities(Init):
 		'''
 		mel.eval('calculator;')
 
+
 	def b003(self):
 		'''
 		Grease Pencil
 
 		'''
 		mel.eval('greasePencilCtx;')
+
 
 	def b004(self):
 		'''
@@ -72,12 +73,14 @@ class Utilities(Init):
 		'''
 		mel.eval('')
 
+
 	def b005(self):
 		'''
 		
 
 		'''
 		mel.eval('')
+
 
 	def b006(self):
 		'''
@@ -86,6 +89,7 @@ class Utilities(Init):
 		'''
 		mel.eval('')
 
+
 	def b007(self):
 		'''
 		
@@ -93,12 +97,14 @@ class Utilities(Init):
 		'''
 		mel.eval('')
 
+
 	def b008(self):
 		'''
 		
 
 		'''
 		mel.eval("")
+
 
 	def b009(self):
 		'''

@@ -13,15 +13,11 @@ class Rigging(Init):
 	def __init__(self, *args, **kwargs):
 		super(Rigging, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('rigging')
 
-		
 
 
-
-
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
@@ -30,7 +26,8 @@ class Rigging(Init):
 		files = ['']
 		contents = self.comboBox(cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index(''):
 				pass

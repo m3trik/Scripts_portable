@@ -13,10 +13,7 @@ class Selection(Init):
 	def __init__(self, *args, **kwargs):
 		super(Selection, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('selection')
-
-		
 
 		#set checked button states
 		#chk004 ignore backfacing (camera based selection)
@@ -25,7 +22,6 @@ class Selection(Init):
 
 		#on click event
 		self.ui.chk003.clicked.connect(self.b001) #un-paint
-
 
 
 
@@ -79,7 +75,7 @@ class Selection(Init):
 			self.viewPortMessage("Camera-based selection <hl>Off</hl>.")
 
 
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		List Selection Sets
 		'''
@@ -87,13 +83,14 @@ class Selection(Init):
 
 		contents = self.comboBox (cmb, [str(set_) for set_ in pm.ls (et="objectSet", flatten=1)], "Sets")
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			pm.select (contents[index])
 			cmb.setCurrentIndex(0)
 
 
-	def cmb001(self):
+	def cmb001(self, index=None):
 		'''
 		Editors
 		'''
@@ -102,14 +99,15 @@ class Selection(Init):
 		files = ['Selection Constraints']
 		contents = self.comboBox(cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index('Selection Constraints'):
 				mel.eval('PolygonSelectionConstraints;')
 			cmb.setCurrentIndex(0)
 
 
-	def cmb002(self):
+	def cmb002(self, index=None):
 		'''
 		Select by Type
 		'''
@@ -118,7 +116,8 @@ class Selection(Init):
 		list_ = ['IK Handles','Joints','Clusters','Lattices','Sculpt Objects','Wires','Transforms','Geometry','NURBS Curves','NURBS Surfaces','Polygon Geometry','Cameras','Lights','Image Planes','Assets','Fluids','Particles','Rigid Bodies','Rigid Constraints','Brushes','Strokes','Dynamic Constraints','Follicles','nCloths','nParticles','nRigids']
 		contents = self.comboBox(cmb, list_, 'By Type')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index('IK Handles'): #
 				type_ = pm.ls(type=['ikHandle', 'hikEffector'])
@@ -178,7 +177,7 @@ class Selection(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def cmb003(self):
+	def cmb003(self, index=None):
 		'''
 		Convert To
 		'''
@@ -188,7 +187,8 @@ class Selection(Init):
 
 		contents = self.comboBox (cmb, list_, 'Convert To')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index('Verts'): #Convert Selection To Vertices
 				mel.eval('PolySelectConvert 3;')

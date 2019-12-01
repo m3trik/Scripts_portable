@@ -13,15 +13,11 @@ class Viewport(Init):
 	def __init__(self, *args, **kwargs):
 		super(Viewport, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('viewport')
 
 
 
-
-
-		
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		Camera Editors
 
@@ -31,7 +27,8 @@ class Viewport(Init):
 		list_ = ['Camera Sequencer', 'Camera Set Editor']
 		contents = self.comboBox(cmb, list_, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==1:
 				mel.eval('SequenceEditor;')
@@ -40,7 +37,7 @@ class Viewport(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def cmb001(self):
+	def cmb001(self, index=None):
 		'''
 		Additional Cameras
 
@@ -61,13 +58,14 @@ class Viewport(Init):
 		
 		contents = self.comboBox (cmb, non_startup_cameras, "Cameras")
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			pm.select (contents[index])
 			cmb.setCurrentIndex(0)
 
 
-	def cmb002(self):
+	def cmb002(self, index=None):
 		'''
 		Create
 
@@ -77,7 +75,8 @@ class Viewport(Init):
 		list_ = ['Custom Camera', 'Set Custom Camera', 'Camera From View']
 		contents = self.comboBox (cmb, list_, "Create")
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==1:
 				mel.eval('cameraView -edit -camera persp -setCamera $homeName;')
@@ -88,7 +87,7 @@ class Viewport(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def cmb003(self):
+	def cmb003(self, index=None):
 		'''
 		Options
 
@@ -98,7 +97,8 @@ class Viewport(Init):
 		list_ = ['Group Cameras']
 		contents = self.comboBox (cmb, list_, "Options")
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==1:
 				mel.eval('''

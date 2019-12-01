@@ -14,7 +14,6 @@ class Selection(Init):
 	def __init__(self, *args, **kwargs):
 		super(Selection, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('selection')
 
 
@@ -81,7 +80,7 @@ class Selection(Init):
 				# self.viewPortMessage("Camera-based selection <hl>Off</hl>.")
 
 
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		List Selection Sets
 		'''
@@ -90,13 +89,14 @@ class Selection(Init):
 		selectionSets = [set for set in rt.selectionSets]
 		contents = self.comboBox(cmb, [set.name for set in selectionSets], "Sets")
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			rt.select(contents[index])
 			cmb.setCurrentIndex(0)
 
 
-	def cmb001(self):
+	def cmb001(self, index=None):
 		'''
 		Editors
 		'''
@@ -105,14 +105,15 @@ class Selection(Init):
 		files = ['']
 		contents = self.comboBox(cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index(''):
 				pass
 			cmb.setCurrentIndex(0)
 
 
-	def cmb002(self):
+	def cmb002(self, index=None):
 		'''
 		Select All Of Type
 		'''
@@ -121,7 +122,8 @@ class Selection(Init):
 		list_ = ['Geometry', 'Shapes', 'Lights', 'Cameras', 'Helpers', 'Space Warps', 'Particle Systems', 'Bone Objects']
 		contents = self.comboBox(cmb, list_, 'Select by Type:')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index('Geometry'): #Select all Geometry
 				rt.select(rt.geometry)
@@ -143,7 +145,7 @@ class Selection(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def cmb003(self):
+	def cmb003(self, index=None):
 		'''
 		Convert To
 		'''
@@ -152,7 +154,8 @@ class Selection(Init):
 		list_ = ['Vertex', 'Edge', 'Border', 'Face', 'Element']
 		contents = self.comboBox(cmb, list_, 'Convert To')
 		
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			for obj in rt.selection:
 				for i in list_:

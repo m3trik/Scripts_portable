@@ -16,7 +16,6 @@ class Materials(Init):
 
 		self.ui = self.sb.getUi('materials')
 
-
 		self.ui.t000.hide()
 
 		self.storedMaterial=None
@@ -30,10 +29,10 @@ class Materials(Init):
 		Rename Stored Material textfield
 		'''
 		self.ui.b008.setChecked(False)
-		self.b008()
+		self.renameMaterial()
 
 
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		Existing Materials
 		'''
@@ -44,19 +43,24 @@ class Materials(Init):
 		# materials = [mat for mat in rt.sceneMaterials if 'Multimaterial' not in mat.name and 'BlendMtl' not in mat.name and not mat.name.startswith('Material')]
 		materials=[] #get any scene material that doesnt startswith 'Material'
 		for mat in rt.sceneMaterials:
-			if rt.getNumSubMtls(mat): #if material is a submaterial; search submaterials
-				for i in range(1, rt.getNumSubMtls(mat)+1):
-					subMat = rt.getSubMtl(mat, i)
-					if not subMat.name.startswith('Material'):
-						materials.append(subMat)
-			elif not mat.name.startswith('Material'):
-				materials.append(mat)
+			try:
+				if rt.getNumSubMtls(mat): #if material is a submaterial; search submaterials
+					for i in range(1, rt.getNumSubMtls(mat)+1):
+						subMat = rt.getSubMtl(mat, i)
+						if subMat and not subMat.name.startswith('Material'):
+							materials.append(subMat)
+				elif not mat.name.startswith('Material'):
+					materials.append(mat)
+
+			except Exception as error:
+				print error
 
 		materialNames = sorted([mat.name for mat in materials])
 		
 		contents = self.comboBox(cmb, materialNames, 'Scene Materials:')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			mat = [m for m in materials if m.name==contents[index]][0]
 
@@ -66,7 +70,7 @@ class Materials(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def cmb001(self):
+	def cmb001(self, index=None):
 		'''
 		Editors
 		'''
@@ -75,14 +79,15 @@ class Materials(Init):
 		files = ['Material Editor']
 		contents = self.comboBox(cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index('Material Editor'):
 				maxEval('max mtledit')
 			cmb.setCurrentIndex(0)
 
 
-	def cmb002(self):
+	def cmb002(self, index=None):
 		'''
 		Stored Material
 		'''
@@ -128,6 +133,7 @@ class Materials(Init):
 			
 			contents = self.comboBox(cmb, subMatNames, matName)
 
+			if not index:
 			index = cmb.currentIndex()
 			if index!=0:
 				self.storedMaterial = subMaterials[index-1]
@@ -391,7 +397,6 @@ class Materials(Init):
 					self.storedMaterial.name = self.ui.t000.text()
 
 			self.cmb002() #refresh combobox
-			self.ui.t000.hide()
 
 
 	def b009(self):

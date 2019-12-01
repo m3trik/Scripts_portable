@@ -14,10 +14,8 @@ class Materials(Init):
 	def __init__(self, *args, **kwargs):
 		super(Materials, self).__init__(*args, **kwargs)
 
-		
 		self.ui = self.sb.getUi('materials')
 		
-
 		self.ui.t000.hide()
 
 		self.storedMaterial=None
@@ -34,7 +32,7 @@ class Materials(Init):
 		self.b008()
 
 
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		Existing Materials
 
@@ -46,7 +44,8 @@ class Materials(Init):
 
 		contents = self.comboBox (cmb, matNames, "Scene Materials")
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			print contents[index]
 			
@@ -56,7 +55,7 @@ class Materials(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def cmb001(self):
+	def cmb001(self, index=None):
 		'''
 		Editors
 
@@ -66,14 +65,15 @@ class Materials(Init):
 		files = ['Hypershade']
 		contents = self.comboBox (cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index('Hypershade'):
 				mel.eval('HypershadeWindow;')
 			cmb.setCurrentIndex(0)
 
 
-	def cmb002(self):
+	def cmb002(self, index=None):
 		'''
 		Stored Material
 		'''
@@ -114,6 +114,7 @@ class Materials(Init):
 
 			contents = self.comboBox(cmb, subMatNames, matName)
 
+			if not index:
 			index = cmb.currentIndex()
 			if index!=0:
 				self.storedMaterial = subMaterials[index-1]
@@ -324,7 +325,6 @@ class Materials(Init):
 					pm.rename(self.storedMaterial.name(), self.ui.t000.text())
 
 			self.cmb002() #refresh combobox
-			self.ui.t000.hide()
 
 
 	def b009(self):

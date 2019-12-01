@@ -13,15 +13,11 @@ class Convert(Init):
 	def __init__(self, *args, **kwargs):
 		super(Convert, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('convert')
 
-		
 
 
-
-
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
@@ -30,14 +26,15 @@ class Convert(Init):
 		files = ['']
 		contents = self.comboBox(cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index(''):
 				pass
 			cmb.setCurrentIndex(0)
 
 
-	def cmb001(self):
+	def cmb001(self, index=None):
 		'''
 		Convert To
 		'''
@@ -47,47 +44,48 @@ class Convert(Init):
 
 		contents = self.comboBox (cmb, list_, 'Convert To')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
-			if index==contents.index('NURBS to Polygons'): #
+			if index==contents.index('NURBS to Polygons'): #1
 				mel.eval('performnurbsToPoly 0;')
-			if index==contents.index('NURBS to Subdiv'): #
+			elif index==contents.index('NURBS to Subdiv'): #2
 				mel.eval('performSubdivCreate 0;')
-			if index==contents.index('Polygons to Subdiv'): #
+			elif index==contents.index('Polygons to Subdiv'): #3
 				mel.eval('performSubdivCreate 0;')
-			if index==contents.index('Smooth Mesh Preview to Polygons'): #
+			elif index==contents.index('Smooth Mesh Preview to Polygons'): #4
 				mel.eval('performSmoothMeshPreviewToPolygon;')
-			if index==contents.index('Polygon Edges to Curve'): #
+			elif index==contents.index('Polygon Edges to Curve'): #5
 				mel.eval('polyToCurve -form 2 -degree 3 -conformToSmoothMeshPreview 1;')
-			if index==contents.index('Type to Curves'): #
+			elif index==contents.index('Type to Curves'): #6
 				mel.eval('convertTypeCapsToCurves;')
-			if index==contents.index('Subdiv to Polygons'): #
+			elif index==contents.index('Subdiv to Polygons'): #7
 				mel.eval('performSubdivTessellate  false;')
-			if index==contents.index('Subdiv to NURBS'): #
+			elif index==contents.index('Subdiv to NURBS'): #8
 				mel.eval('performSubdToNurbs 0;')
-			if index==contents.index('NURBS Curve to Bezier'): #
+			elif index==contents.index('NURBS Curve to Bezier'): #9
 				mel.eval('nurbsCurveToBezier;')
-			if index==contents.index('Bezier Curve to NURBS'): #
+			elif index==contents.index('Bezier Curve to NURBS'): #10
 				mel.eval('bezierCurveToNurbs;')
-			if index==contents.index('Paint Effects to NURBS'): #
+			elif index==contents.index('Paint Effects to NURBS'): #11
 				mel.eval('performPaintEffectsToNurbs  false;')
-			if index==contents.index('Paint Effects to Curves'): #
+			elif index==contents.index('Paint Effects to Curves'): #12
 				mel.eval('performPaintEffectsToCurve  false;')
-			if index==contents.index('Texture to Geometry'): #
+			elif index==contents.index('Texture to Geometry'): #13
 				mel.eval('performTextureToGeom 0;')
-			if index==contents.index('Displacement to Polygons'): #
+			elif index==contents.index('Displacement to Polygons'): #14
 				mel.eval('displacementToPoly;')
-			if index==contents.index('Displacement to Polygons with History'): #
+			elif index==contents.index('Displacement to Polygons with History'): #15
 				mel.eval('setupAnimatedDisplacement;')
-			if index==contents.index('Fluid to Polygons'): #
+			elif index==contents.index('Fluid to Polygons'): #16
 				mel.eval('fluidToPoly;')
-			if index==contents.index('nParticle to Polygons'): #
+			elif index==contents.index('nParticle to Polygons'): #17
 				mel.eval('particleToPoly;')
-			if index==contents.index('Instance to Object'): #
+			elif index==contents.index('Instance to Object'): #18
 				mel.eval('convertInstanceToObject;')
-			if index==contents.index('Geometry to Bounding Box'): #
+			elif index==contents.index('Geometry to Bounding Box'): #19
 				mel.eval('performGeomToBBox 0;')
-			if index==contents.index('Convert XGen Primitives to Polygons'): #
+			elif index==contents.index('Convert XGen Primitives to Polygons'): #20
 				import xgenm.xmaya.xgmConvertPrimToPolygon as cpp
 				cpp.convertPrimToPolygon(False)
 
@@ -98,32 +96,28 @@ class Convert(Init):
 		'''
 		Polygon Edges to Curve
 		'''
-		cmb = self.ui.cmb001
-		cmb.setCurrentIndex(cmb.findText('Polygon Edges to Curve'))
+		self.cmb001(index=5)
 
 
 	def b001(self):
 		'''
 		Instance to Object
 		'''
-		cmb = self.ui.cmb001
-		cmb.setCurrentIndex(cmb.findText('Instance to Object'))
+		self.cmb001(index=18)
 
 
 	def b002(self):
 		'''
 		NURBS to Polygons
 		'''
-		cmb = self.ui.cmb001
-		cmb.setCurrentIndex(cmb.findText('NURBS to Polygons'))
+		self.cmb001(index=1)
 
 
 	def b003(self):
 		'''
 		Smooth Mesh Preview to Polygons
 		'''
-		cmb = self.ui.cmb001
-		cmb.setCurrentIndex(cmb.findText('Smooth Mesh Preview to Polygons'))
+		self.cmb001(index=4)
 
 
 	def b004(self):

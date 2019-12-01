@@ -13,10 +13,7 @@ class Scripting(Init):
 	def __init__(self, *args, **kwargs):
 		super(Scripting, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('scripting')
-
-		
 
 		# tk_cmdScrollFieldReporter = pm.cmdScrollFieldReporter (
 		# 														height=35,
@@ -26,6 +23,7 @@ class Scripting(Init):
 		# 														filterSourceType="")
 
 		# self.ui.plainTextEdit.appendPlainText(tk_cmdScrollFieldReporter)
+
 
 
 	def chk000(self):
@@ -39,7 +37,7 @@ class Scripting(Init):
 			self.ui.chk000.setText("MEL")
 
 
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
@@ -48,7 +46,8 @@ class Scripting(Init):
 		files = ['']
 		contents = self.comboBox(cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index(''):
 				mel.eval('')

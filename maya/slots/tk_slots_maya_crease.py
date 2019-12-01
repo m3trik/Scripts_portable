@@ -13,11 +13,7 @@ class Crease(Init):
 	def __init__(self, *args, **kwargs):
 		super(Crease, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('crease')
-
-		
-
 
 
 
@@ -57,7 +53,7 @@ class Crease(Init):
 			self.setButtons(self.ui, disable='s005,s006')
 
 
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
@@ -66,7 +62,8 @@ class Crease(Init):
 		files = ['Sets']
 		contents = self.comboBox (cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index('Crease Set Editor'):
 				from maya.app.general import creaseSetEditor

@@ -25,7 +25,7 @@ class Init(Slot):
 		'''
 		Get current scene attributes. Only those with relevant values will be displayed.
 		returns:
-				{dict} - app object values
+				{dict} - current object attributes.
 		'''
 		infoDict={}
 		selection = pm.ls(selection=1)

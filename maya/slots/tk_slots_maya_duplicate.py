@@ -13,11 +13,8 @@ class Duplicate(Init):
 	def __init__(self, *args, **kwargs):
 		super(Duplicate, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('duplicate')
 
-		
-		
 		self.ui.s000.valueChanged.connect(self.radialArray) #update radial array
 		self.ui.s001.valueChanged.connect(self.radialArray) 
 
@@ -279,7 +276,7 @@ class Duplicate(Init):
 			self.setButtons(self.ui, disable='b002')
 
 
-	def cmb001(self):
+	def cmb001(self, index=None):
 		'''
 		Editors
 		'''
@@ -288,7 +285,8 @@ class Duplicate(Init):
 		files = ['Duplicate Special']
 		contents = self.comboBox (cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index('Duplicate Special'):
 				mel.eval('DuplicateSpecialOptions;')

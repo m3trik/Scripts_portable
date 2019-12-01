@@ -17,10 +17,7 @@ class Viewport(Init):
 
 
 
-
-
-
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
@@ -29,14 +26,15 @@ class Viewport(Init):
 		files = ['']
 		contents = self.comboBox(cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index(''):
 				pass
 			cmb.setCurrentIndex(0)
 
 
-	def cmb001(self):
+	def cmb001(self, index=None):
 		'''
 		Cameras
 		'''
@@ -45,7 +43,8 @@ class Viewport(Init):
 		cameras = [cam.name for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
 		contents = self.comboBox(cmb, cameras, "Cameras:")
 		
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			cam = rt.getNodeByName(contents[index])
 			rt.select (cam) #select the camera
@@ -54,7 +53,7 @@ class Viewport(Init):
 			rt.redrawViews()
 
 
-	def cmb002(self):
+	def cmb002(self, index=None):
 		'''
 		Create
 		'''
@@ -63,7 +62,8 @@ class Viewport(Init):
 		list_ = ['Custom Camera','Set Custom Camera','Camera From View']
 		contents = self.comboBox(cmb, list_, "Create")
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==1:
 				rt.StartObjectCreation(rt.Physical_Camera)
@@ -74,7 +74,7 @@ class Viewport(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def cmb003(self):
+	def cmb003(self, index=None):
 		'''
 		Options
 		'''
@@ -83,7 +83,8 @@ class Viewport(Init):
 		list_ = ['Group Cameras']
 		contents = self.comboBox(cmb, list_, "Options")
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==1:
 				cameras = [cam for cam in rt.cameras] #List scene Cameras

@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>249</width>
-    <height>189</height>
+    <width>255</width>
+    <height>165</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -43,7 +43,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>226</width>
+      <width>236</width>
       <height>131</height>
      </rect>
     </property>
@@ -51,6 +51,28 @@
      <property name="spacing">
       <number>0</number>
      </property>
+     <item row="1" column="1">
+      <widget class="QPushButton_Draggable" name="pin">
+       <property name="minimumSize">
+        <size>
+         <width>19</width>
+         <height>17</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>999</width>
+         <height>17</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
      <item row="0" column="1" colspan="2">
       <widget class="QProgressBar_" name="progressBar">
        <property name="sizePolicy">
@@ -76,50 +98,6 @@
        </property>
        <property name="textVisible">
         <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QComboBox_" name="cmb001">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>17</width>
-         <height>17</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>17</width>
-         <height>15</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QPushButton_Draggable" name="pin">
-       <property name="minimumSize">
-        <size>
-         <width>19</width>
-         <height>17</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>999</width>
-         <height>17</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -149,7 +127,7 @@
              <rect>
               <x>45</x>
               <y>10</y>
-              <width>41</width>
+              <width>46</width>
               <height>19</height>
              </rect>
             </property>
@@ -251,7 +229,7 @@
              <rect>
               <x>80</x>
               <y>30</y>
-              <width>14</width>
+              <width>16</width>
               <height>19</height>
              </rect>
             </property>
@@ -286,9 +264,9 @@
             </property>
             <property name="geometry">
              <rect>
-              <x>93</x>
+              <x>95</x>
               <y>30</y>
-              <width>14</width>
+              <width>16</width>
               <height>19</height>
              </rect>
             </property>
@@ -351,9 +329,9 @@
             </property>
             <property name="geometry">
              <rect>
-              <x>85</x>
+              <x>90</x>
               <y>10</y>
-              <width>26</width>
+              <width>21</width>
               <height>19</height>
              </rect>
             </property>
@@ -410,7 +388,7 @@
             </property>
             <property name="geometry">
              <rect>
-              <x>25</x>
+              <x>30</x>
               <y>30</y>
               <width>81</width>
               <height>19</height>
@@ -440,19 +418,19 @@
              <rect>
               <x>0</x>
               <y>10</y>
-              <width>106</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
             <property name="minimumSize">
              <size>
-              <width>106</width>
-              <height>0</height>
+              <width>111</width>
+              <height>19</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>16777215</width>
+              <width>999</width>
               <height>19</height>
              </size>
             </property>
@@ -488,7 +466,7 @@
              <rect>
               <x>0</x>
               <y>30</y>
-              <width>26</width>
+              <width>31</width>
               <height>19</height>
              </rect>
             </property>
@@ -521,7 +499,7 @@
       <widget class="QGroupBox" name="groupBox">
        <property name="maximumSize">
         <size>
-         <width>224</width>
+         <width>999</width>
          <height>40</height>
         </size>
        </property>
@@ -534,9 +512,9 @@
         </property>
         <property name="geometry">
          <rect>
-          <x>210</x>
-          <y>0</y>
-          <width>16</width>
+          <x>215</x>
+          <y>20</y>
+          <width>19</width>
           <height>19</height>
          </rect>
         </property>
@@ -568,9 +546,9 @@
         </property>
         <property name="geometry">
          <rect>
-          <x>195</x>
-          <y>0</y>
-          <width>16</width>
+          <x>197</x>
+          <y>20</y>
+          <width>19</width>
           <height>19</height>
          </rect>
         </property>
@@ -596,37 +574,12 @@
          <bool>true</bool>
         </property>
        </widget>
-       <widget class="QLineEdit" name="t000">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>196</width>
-          <height>20</height>
-         </rect>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>19</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>Rename: textfield</string>
-        </property>
-        <property name="placeholderText">
-         <string>Rename:</string>
-        </property>
-       </widget>
        <widget class="QComboBox_" name="cmb002">
         <property name="geometry">
          <rect>
           <x>0</x>
           <y>20</y>
-          <width>224</width>
+          <width>231</width>
           <height>19</height>
          </rect>
         </property>
@@ -666,6 +619,60 @@
          </property>
         </item>
        </widget>
+       <widget class="QLineEdit" name="t000">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>231</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>196</width>
+          <height>19</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>999</width>
+          <height>19</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Rename: textfield</string>
+        </property>
+        <property name="placeholderText">
+         <string>Rename:</string>
+        </property>
+       </widget>
+       <zorder>cmb002</zorder>
+       <zorder>b008</zorder>
+       <zorder>chk002</zorder>
+       <zorder>t000</zorder>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QComboBox_" name="cmb001">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>17</width>
+         <height>17</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>17</width>
+         <height>17</height>
+        </size>
+       </property>
       </widget>
      </item>
     </layout>

@@ -13,10 +13,7 @@ class Transform(Init):
 	def __init__(self, *args, **kwargs):
 		super(Transform, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('transform')
-
-		
 
 		#set input masks for text fields
 		# self.ui.t000.setInputMask("00.00") #change to allow for neg values
@@ -32,6 +29,7 @@ class Transform(Init):
 			self.ui.chk013.setChecked(True)
 		else:
 			self.ui.chk013.setChecked(False)
+
 
 
 	def chk005(self):
@@ -103,7 +101,7 @@ class Transform(Init):
 			pm.xformConstraint(type='none')
 
 
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
@@ -112,7 +110,8 @@ class Transform(Init):
 		files = ['']
 		contents = self.comboBox(cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index(''):
 				mel.eval('')

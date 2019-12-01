@@ -32,7 +32,6 @@ class Rendering(Init):
 		Render: camera
 		'''
 		cmb = self.ui.cmb000
-		
 
 		self.cams = [cam for cam in rt.cameras if 'Target' not in str(cam)]
 		if self.cams:
@@ -40,7 +39,7 @@ class Rendering(Init):
 			self.comboBox (cmb, list_)
 
 
-	def cmb001(self):
+	def cmb001(self, index=None):
 		'''
 		Editors
 		'''
@@ -49,7 +48,8 @@ class Rendering(Init):
 		files = ['']
 		contents = self.comboBox(cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index(''):
 				pass
@@ -63,8 +63,10 @@ class Rendering(Init):
 		cmb = self.ui.cmb000
 		index = cmb.currentIndex()
 
-		try: rt.render (camera=self.cams[index]) #render with selected camera
-		except: rt.render()
+		try:
+			rt.render (camera=self.cams[index]) #render with selected camera
+		except:
+			rt.render()
 
 
 	def b001(self):

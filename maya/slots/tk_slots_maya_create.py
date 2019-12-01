@@ -13,15 +13,12 @@ class Create(Init):
 	def __init__(self, *args, **kwargs):
 		super(Create, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('create')
-		
 
 		self.node=None
 		self.rotation = {'x':[90,0,0], 'y':[0,90,0], 'z':[0,0,90], '-x':[-90,0,0], '-y':[0,-90,0], '-z':[0,0,-90], 'last':[]}
 		self.point=[0,0,0]
 		self.history=[]
-
 
 		#spinboxes on valueChanged; connect to sXXX method with index as arg
 		self.spinboxes = self.getObject(self.ui, 's000-13')
@@ -173,7 +170,7 @@ class Create(Init):
 			self.ui.cmb001.addItems(lights)
 
 
-	def cmb002(self):
+	def cmb002(self, index=None):
 		'''
 		Editors
 		'''
@@ -182,7 +179,8 @@ class Create(Init):
 		files = ['']
 		contents = self.comboBox(cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index(''):
 				mel.eval('')

@@ -23,7 +23,7 @@ class Init(Slot):
 		'''
 		Get current scene attributes. Only those with relevant values will be displayed.
 		returns:
-				{dict} - app object values
+				{dict} - current object attributes.
 		'''
 		infoDict={}
 		selection = rt.selection
@@ -786,3 +786,19 @@ print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
+
+
+
+	# def setComboBox(self, comboBox, index):
+	# 	'''
+	# 	Set the given comboBox's index using a text string.
+	# 	args:
+	# 		comboBox = 'string' - comboBox name (will also be used as the methods name).
+	# 		index = int or 'string' - text of the index to switch to.
+	# 	'''
+	# 	cmb = getattr(self.ui, comboBox)
+	# 	method = getattr(self, comboBox)
+	# 	cmb.currentIndexChanged.connect(method)
+	# 	if not type(index)==int:
+	# 		index = cmb.findText(index)
+	# 	cmb.setCurrentIndex(index)

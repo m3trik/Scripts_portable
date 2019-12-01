@@ -141,11 +141,7 @@ class Tk(QtWidgets.QStackedWidget):
 			event = <QEvent>
 		'''
 		if event.key()==self.key_show and not event.isAutoRepeat():
-			#run once on launch. update the info textEdit.
-			if self.uiLevel is 0:
-				method = self.sb.getMethod(self.name, 'info')
-				if callable(method):
-					self.ui.info.insertText(method())
+			pass
 
 
 
@@ -164,9 +160,9 @@ class Tk(QtWidgets.QStackedWidget):
 		args:
 			event = <QEvent>
 		'''
-		self.move(QtGui.QCursor.pos() - self.rect().center()) #move window to cursor position and offset from left corner to center
-
 		if self.uiLevel<3:
+			self.move(QtGui.QCursor.pos() - self.rect().center()) #move window to cursor position and offset from left corner to center
+			
 			self.widgetPath=[] #maintain a list of widgets and their location, as a path is plotted along the ui hierarchy. ie. [[<QPushButton object1>, QPoint(665, 396)], [<QPushButton object2>, QPoint(585, 356)]]
 			self.drawPath=[] #initiate the drawPath list that will contain points as the user moves along a hierarchical path.
 			self.drawPath.append(self.mapToGlobal(self.rect().center()))
@@ -244,6 +240,10 @@ class Tk(QtWidgets.QStackedWidget):
 			event = <QEvent>
 		'''
 		self.setUi('init')
+		#run once on launch. update the info textEdit.
+		method = self.sb.getMethod(self.name, 'info')
+		if callable(method):
+			self.ui.info.insertText(method())
 
 		self.move(QtGui.QCursor.pos() - self.rect().center()) #move window to cursor position and offset from left corner to center
 		self.activateWindow()

@@ -181,7 +181,7 @@ class Create(Init):
 			self.ui.cmb001.addItems(lights)
 
 
-	def cmb002(self):
+	def cmb002(self, index=None):
 		'''
 		Editors
 		'''
@@ -190,7 +190,8 @@ class Create(Init):
 		files = ['']
 		contents = self.comboBox(cmb, files, ' ')
 
-		index = cmb.currentIndex()
+		if not index:
+			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index(''):
 				pass
