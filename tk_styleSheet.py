@@ -21,20 +21,13 @@ class StyleSheet():
 	COLOR_TEXT2		= 'black'
 
 
-	QMainWindow='''
-		QMainWindow {
-			background-color: rgba(127,127,127,2);
-			color: +'''+COLOR_LIGHT+''';
-		}'''
-
 	QWidget='''
 		QWidget::item:selected {
 			background: '''+COLOR_ACCENT+''';
-		}'''
+		}
 
-	QStackedWidget='''
-		QStackedWidget {
-			background-color: rgba(127,127,127,2);
+		QWidget#mainWindow {
+			background: transparent;
 		}'''
 
 	QPushButton='''
@@ -94,19 +87,22 @@ class StyleSheet():
 
 	QComboBox='''
 		QComboBox {
-			background-color: '''+COLOR_MEDIUM+''';
+			background: '''+COLOR_MEDIUM+''';
 			color: '''+COLOR_TEXT1+''';
 			border: 1px solid black;
+			border-radius: 3px;
+			padding: 1px 18px 1px 3px;
+			min-width: 6em;
 		}
 
 		QComboBox::hover {
-			background-color: '''+COLOR_ACCENT+''';
+			background: '''+COLOR_ACCENT+''';
 			color: '''+COLOR_TEXT1+''';
 			border: 1px solid black;
 		}
 
 		QComboBox::open {
-			background-color: '''+COLOR_MEDIUM+''';
+			background: '''+COLOR_MEDIUM+''';
 			color: '''+COLOR_TEXT1+''';
 			border: 1px solid black;
 			selection-background-color: '''+COLOR_ACCENT+''';

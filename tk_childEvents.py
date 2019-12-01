@@ -28,7 +28,6 @@ class EventFactoryFilter(QtCore.QObject):
 	def __init__(self, parent=None):
 		super(EventFactoryFilter, self).__init__(parent)
 
-
 		self.sb = Switchboard()
 		if parent:
 			self.tk = parent
