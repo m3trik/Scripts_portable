@@ -268,6 +268,10 @@ class EventFactoryFilter(QtCore.QObject):
 			elif self.widgetName=='<':
 				self.tk.setPrevUi()
 
+			elif self.sb.prefix(self.widgetName, 'chk'):
+				if '_submenu' in self.name:
+					self.widget.setChecked(not self.widget.isChecked())
+
 
 
 	def leaveEvent(self, event):

@@ -217,8 +217,11 @@ class Tk(QtWidgets.QStackedWidget):
 	def hide(self, force=False):
 		'''
 		Prevents hide event under certain circumstances.
+
+		args:
+			force = bool - override preventHide.
 		'''
-		if not self.preventHide or force:
+		if force or not self.preventHide:
 			self.setUi('init')
 			super(Tk, self).hide()
 
