@@ -115,7 +115,7 @@ class Materials(Init):
 			contents = self.comboBox(cmb, subMatNames, matName)
 
 			if not index:
-			index = cmb.currentIndex()
+				index = cmb.currentIndex()
 			if index!=0:
 				self.storedMaterial = subMaterials[index-1]
 			else:

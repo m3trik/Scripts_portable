@@ -244,6 +244,7 @@ class Tk(QtWidgets.QStackedWidget):
 		method = self.sb.getMethod(self.name, 'info')
 		if callable(method):
 			self.ui.info.insertText(method())
+			self.childEvents.resizeAndCenterWidget(self.ui.info)
 
 		self.move(QtGui.QCursor.pos() - self.rect().center()) #move window to cursor position and offset from left corner to center
 		self.activateWindow()

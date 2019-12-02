@@ -59,7 +59,8 @@ class EventFactoryFilter(QtCore.QObject):
 
 
 			if widgetType=='QPushButton' and uiLevel<3:
-				self.resizeAndCenterWidget(widget)
+				if not widgetName=='<':
+					self.resizeAndCenterWidget(widget)
 
 			elif widgetType=='QWidget':
 				if self.sb.prefix(widgetName, 'r'): #prefix returns True if widgetName startswith the given prefix, and is followed by three integers.
@@ -105,18 +106,18 @@ class EventFactoryFilter(QtCore.QObject):
 
 
 
-	def resizeAndCenterWidget(self, widget, padding=30):
+	def resizeAndCenterWidget(self, widget, paddingX=30, paddingY=6):
 		'''
-		Adjust the given widget's width to fit contents and re-center.
+		Adjust the given widget's size to fit contents and re-center.
 		args:
 			widget = <widget object> - widget to resize.
 			padding = int - additional width to be applied at both ends.
 		'''
-		x1 = widget.rect().center().x()
-		widget.resize(widget.sizeHint().width()+padding, widget.height())
-		x2 = widget.rect().center().x()
-		diff = x1-x2
-		widget.move(widget.x()+diff, widget.y())
+		p1 = widget.rect().center()
+		widget.resize(widget.sizeHint().width()+paddingX, widget.sizeHint().height()+paddingY)
+		p2 = widget.rect().center()
+		diff = p1-p2
+		widget.move(widget.pos()+diff)
 
 
 
