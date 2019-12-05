@@ -52,8 +52,8 @@ class Materials(Init):
 				elif not mat.name.startswith('Material'):
 					materials.append(mat)
 
-			except Exception as error:
-				print error
+			except RuntimeError:
+				pass
 
 		materialNames = sorted([mat.name for mat in materials])
 		

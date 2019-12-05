@@ -99,6 +99,7 @@ class EventFactoryFilter(QtCore.QObject):
 		if whatsThis:
 			w.setWhatsThis(whatsThis)
 
+		# print name, objectName
 		self.sb.addWidget(name, w, objectName)
 		self.init(name, [w]) #initialize the widget to set things like the event filter and styleSheet.
 
@@ -111,7 +112,8 @@ class EventFactoryFilter(QtCore.QObject):
 		Adjust the given widget's size to fit contents and re-center.
 		args:
 			widget = <widget object> - widget to resize.
-			padding = int - additional width to be applied at both ends.
+			paddingX = int - additional width to be applied.
+			paddingY = int - additional height to be applied.
 		'''
 		p1 = widget.rect().center()
 		widget.resize(widget.sizeHint().width()+paddingX, widget.sizeHint().height()+paddingY)
@@ -281,10 +283,10 @@ class EventFactoryFilter(QtCore.QObject):
 		'''
 		self.__mouseHover.emit(False)
 
-		if self.widget==self.__mouseGrabber: #self.widget.mouseGrabber():
-			if self.ui.mainWindow.isVisible():
-				self.ui.mainWindow.grabMouse()
-				self.__mouseGrabber = self.ui.mainWindow
+		# if self.widget==self.__mouseGrabber: #self.widget.mouseGrabber():
+		# 	if self.ui.mainWindow.isVisible():
+		# 		self.ui.mainWindow.grabMouse()
+		# 		self.__mouseGrabber = self.ui.mainWindow
 
 		if self.widgetType=='QWidget':
 			if self.sb.prefix(self.widgetName, 'r'):
@@ -331,8 +333,8 @@ class EventFactoryFilter(QtCore.QObject):
 				elif self.sb.prefix(self.widgetName, 'b'):
 					if '_submenu' in self.name:
 						self.widget.click()
-					else: #add the buttons command to the prevCommand list.
-						self.sb.prevCommand(as_list=1).append([self.sb.getMethod(self.name, self.widgetName), self.sb.getDocString(self.name, self.widgetName)]) #store the command method object and it's docString (ie. 'Multi-cut tool')
+					#add the buttons command to the prevCommand list.
+					self.sb.prevCommand(as_list=1).append([self.sb.getMethod(self.name, self.widgetName), self.sb.getDocString(self.name, self.widgetName)]) #store the command method object and it's docString (ie. 'Multi-cut tool')
 
 
 
