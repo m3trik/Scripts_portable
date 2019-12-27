@@ -92,10 +92,19 @@ class Uv(Init):
 
 	def b006(self):
 		'''
-		
+		Pack UV's
 		'''
-		pass
+		rotate = self.ui.chk001.isChecked() #rotate uv's
+		obj = rt.selection[0]
 
+		uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv modifier.
+		uv.pack(method=1, spacing=0.2, normalize=True, rotate=rotate, fillholes=True) #Lets you pack the texture vertex elements so that they fit within a square space.
+		# --method - 0 is a linear packing algorithm fast but not that efficient, 1 is a recursive algorithm slower but more efficient.
+		# --spacing - the gap between cluster in percentage of the edge distance of the square
+		# --normalize - determines whether the clusters will be fit to 0 to 1 space.
+		# --rotate - determines whether a cluster will be rotated so it takes up less space.
+		# --fillholes - determines whether smaller clusters will be put in the holes of the larger cluster.
+		
 
 	def b007(self):
 		'''
@@ -152,19 +161,18 @@ class Uv(Init):
 		Auto Unwrap
 		'''
 		scaleMode = self.ui.chk000.isChecked() #0 No scale is applied. 1 Uniform scale to fit in unit square. 2 Non proportional scale to fit in unit square.
-		createNewMap = self.ui.chk001.isChecked() #Create a new UV set, as opposed to editing the current one, or the one given by the -uvSetName flag.
 		objects = pm.ls(selection=1, objectsOnly=1, flatten=1) #get shape nodes
 
 		for obj in objects:
 			try:
-				pm.polyAutoProjection (obj, layoutMethod=0, optimize=1, insertBeforeDeformers=1, scaleMode=scaleMode, createNewMap=createNewMap,
+				pm.polyAutoProjection (obj, layoutMethod=0, optimize=1, insertBeforeDeformers=1, scaleMode=scaleMode, createNewMap=False, #Create a new UV set, as opposed to editing the current one, or the one given by the -uvSetName flag.
 					projectBothDirections=0, #If "on" : projections are mirrored on directly opposite faces. If "off" : projections are not mirrored on opposite faces. 
 					layout=2, #0 UV pieces are set to no layout. 1 UV pieces are aligned along the U axis. 2 UV pieces are moved in a square shape.
 					planes=6, #intermediate projections used. Valid numbers are 4, 5, 6, 8, and 12
 					percentageSpace=0.2, #percentage of the texture area which is added around each UV piece.
 					worldSpace=0) #1=world reference. 0=object reference.
-			except:
-				pass
+			except Exception as error:
+				print error
  
 
 	def b013(self):

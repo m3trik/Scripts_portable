@@ -87,6 +87,7 @@ class QComboBox_Checkable(QtWidgets.QComboBox):
 
 
 if __name__ == "__main__":
+	import sys
 	qApp = QtWidgets.QApplication(sys.argv)
 		
 	w = QComboBox_Checkable()

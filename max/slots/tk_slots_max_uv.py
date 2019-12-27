@@ -50,21 +50,32 @@ class Uv(Init):
 		'''
 		Cut Uv Hard Edges
 		'''
-		mel.eval("tk_cutUvHardEdge ();")
 
 
 	def b001(self):
 		'''
-		Flip Uv
+		Flip UV
 		'''
-		mel.eval("performPolyForceUV flip 0;")
+		u = 1
+		v = 0
+		w = 0
+
+		objects = rt.selection
+
+		for obj in objects:
+			try:
+				uv = self.getModifier(obj, 'UVW_Xform', -1) #get/set the uv xform modifier.
+				uv.U_Flip = u
+				uv.V_Flip = v
+				uv.W_Flip = w
+			except Exception as error:
+				print error
 
 
 	def b002(self):
 		'''
 		
 		'''
-		pass
 
 
 	def b003(self):
@@ -85,14 +96,26 @@ class Uv(Init):
 		'''
 		Cut Uv'S
 		'''
-		pm.polyMapCut()
+		obj = rt.selection[0]
+
+		uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv modifier.
+		uv.breakSelected()
 
 
 	def b006(self):
 		'''
-		
+		Pack UV's
 		'''
-		pass
+		rotate = self.ui.chk001.isChecked() #rotate uv's
+		obj = rt.selection[0]
+
+		uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv modifier.
+		uv.pack(1, 0.01, True, rotate, True) #Lets you pack the texture vertex elements so that they fit within a square space.
+		# --method - 0 is a linear packing algorithm fast but not that efficient, 1 is a recursive algorithm slower but more efficient.
+		# --spacing - the gap between cluster in percentage of the edge distance of the square
+		# --normalize - determines whether the clusters will be fit to 0 to 1 space.
+		# --rotate - determines whether a cluster will be rotated so it takes up less space.
+		# --fillholes - determines whether smaller clusters will be put in the holes of the larger cluster.
 
 
 	def b007(self):
@@ -106,40 +129,42 @@ class Uv(Init):
 		'''
 		Adjust Checkered Size
 		'''
-		mel.eval("bt_textureEditorCheckerSize;")
 
 
 	def b009(self):
 		'''
 		Borders
 		'''
-		maxEval('''
+		'''
 		textureWindowCreatePopupContextMenu "polyTexturePlacementPanel1popupMenusShift";
 		int $borders[] = `polyOptions -query -displayMapBorder`;
 		float $borderWidth[] = `optionVar -query displayPolyBorderEdgeSize`;
 		polyOptions -displayMapBorder (!$borders[0]) -sizeBorder $borderWidth[1];
-		''')
+		'''
 
 
 	def b010(self):
 		'''
 		Distortion
 		'''
-		maxEval('''
-		string $winName[] = `getPanel -scriptType polyTexturePlacementPanel`;
-		int $state = `textureWindow -query -displayDistortion $winName[0]`;
-		if ($state != 1)
-			textureWindow -edit -displayDistortion 1 $winName[0];
-		else
-			textureWindow -edit -displayDistortion 0 $winName[0];
-		''')
+		# actionMan.executeAction 2077580866 "40177"  -- Unwrap UVW: Show Edge Distortion
+		obj = rt.selection[0]
+
+		uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv modifier.
+
+		state = uv.localDistortion
+		uv.localDistortion = not state
+		print 'localDistortion:', not state
 
 
 	def b011(self):
 		'''
 		Sew Uv'S
 		'''
-		pm.polyMapSew()
+		obj = rt.selection[0]
+
+		uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv modifier.
+		uv.stitchVerts(True, 1.0) #(align, bias) --Bias of 0.0 the vertices will move to the source and 1.0 they will move to the target. 
 
 
 	def b012(self):
@@ -147,69 +172,60 @@ class Uv(Init):
 		Auto Unwrap
 		'''
 		scaleMode = self.ui.chk000.isChecked() #0 No scale is applied. 1 Uniform scale to fit in unit square. 2 Non proportional scale to fit in unit square.
-		createNewMap = self.ui.chk001.isChecked() #Create a new UV set, as opposed to editing the current one, or the one given by the -uvSetName flag.
-		objects = pm.ls(selection=1, objectsOnly=1, flatten=1) #get shape nodes
+		objects = rt.selection
 
 		for obj in objects:
 			try:
-				pm.polyAutoProjection (obj, layoutMethod=0, optimize=1, insertBeforeDeformers=1, scaleMode=scaleMode, createNewMap=createNewMap,
-					projectBothDirections=0, #If "on" : projections are mirrored on directly opposite faces. If "off" : projections are not mirrored on opposite faces. 
-					layout=2, #0 UV pieces are set to no layout. 1 UV pieces are aligned along the U axis. 2 UV pieces are moved in a square shape.
-					planes=6, #intermediate projections used. Valid numbers are 4, 5, 6, 8, and 12
-					percentageSpace=0.2, #percentage of the texture area which is added around each UV piece.
-					worldSpace=0) #1=world reference. 0=object reference.
-			except:
-				pass
- 
+				uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv modifier.
+				uv.FlattenBySmoothingGroup(scaleMode, False, 0.2)
+			except Exception as error:
+				print error
+
 
 	def b013(self):
 		'''
 		Auto Map Multiple
 		'''
-		maxEval('bt_autoMapMultipleMeshes;')
 
 
 	def b014(self):
 		'''
 		Rotate On Last
 		'''
-		maxEval('bt_checkSelectionOrderPref; bt_rotateUVsAroundLastWin;')
 
 
 	def b015(self):
 		'''
 		Flip Horizontally On Last
 		'''
-		maxEval('bt_checkSelectionOrderPref; bt_polyflipUVsAcrossLast 0;')
 
 
 	def b016(self):
 		'''
 		Flip Vertically On Last
 		'''
-		maxEval('bt_checkSelectionOrderPref; bt_polyflipUVsAcrossLast 1;')
 
 
 	def b017(self):
 		'''
 		Align Uv Shells
 		'''
-		from AlignUVShells import *
-		AlignUVShellsWindow()
 
 
 	def b018(self):
 		'''
 		Unfold Uv'S
 		'''
-		maxEval('performUnfold 0;')
+		obj = rt.selection[0]
+
+		uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv xform modifier.
+		uv.relax(1, 0.01, True, True)
 
 
 	def b019(self):
 		'''
 		Optimize Uv'S
 		'''
-		maxEval('performPolyOptimizeUV 0;')
 
 
 	def b020(self):
@@ -219,21 +235,24 @@ class Uv(Init):
 		u = str(self.ui.s000.value())
 		v = str(self.ui.s001.value())
 
-		pm.polyEditUV (u=u, v=v)
+		pm.polyEditUV(u=u, v=v)
 
 
 	def b021(self):
 		'''
 		Straighten Uv
 		'''
-		maxEval('texStraightenUVs "UV" 30;')
+		obj = rt.selection[0]
+
+		uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv xform modifier.
+		uv.Straighten()
 
 
 	def b022(self):
 		'''
 		Stack Similar
 		'''
-		pm.polyUVStackSimilarShells (to=0.1)
+
 
 
 
