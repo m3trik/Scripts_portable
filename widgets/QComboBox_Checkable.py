@@ -34,6 +34,7 @@ class QComboBox_Checkable(QtWidgets.QComboBox):
 	'''
 	def __init__(self, parent=None):
 		super(QComboBox_Checkable, self).__init__(parent)
+
 		self.view().pressed.connect(self.handleItemPressed)
 		self._changed = False
 
@@ -44,10 +45,12 @@ class QComboBox_Checkable(QtWidgets.QComboBox):
 
 		'''
 		item = self.model().itemFromIndex(index)
+
 		if item.checkState() == QtCore.Qt.Checked:
 			item.setCheckState(QtCore.Qt.Unchecked)
 		else:
 			item.setCheckState(QtCore.Qt.Checked)
+
 		self._changed = True
 
 
@@ -58,6 +61,7 @@ class QComboBox_Checkable(QtWidgets.QComboBox):
 		'''
 		if not self._changed:
 			super(CheckableComboBox, self).hidePopup()
+
 		self._changed = False
 
 
@@ -76,6 +80,7 @@ class QComboBox_Checkable(QtWidgets.QComboBox):
 
 		'''
 		item = self.model().item(index, self.modelColumn())
+
 		if checked:
 			item.setCheckState(QtCore.Qt.Checked)
 		else:
