@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>265</width>
-    <height>322</height>
+    <height>307</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -44,7 +44,7 @@
       <x>5</x>
       <y>10</y>
       <width>246</width>
-      <height>271</height>
+      <height>283</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
@@ -134,6 +134,12 @@
           <widget class="QGroupBox" name="groupBox_2">
            <property name="enabled">
             <bool>true</bool>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>111</width>
+             <height>71</height>
+            </size>
            </property>
            <property name="maximumSize">
             <size>
@@ -284,6 +290,12 @@
          </item>
          <item>
           <widget class="QGroupBox" name="groupBox_7">
+           <property name="minimumSize">
+            <size>
+             <width>111</width>
+             <height>30</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
              <width>111</width>
@@ -365,58 +377,21 @@
          </item>
          <item>
           <widget class="QGroupBox" name="groupBox_6">
-           <property name="maximumSize">
+           <property name="minimumSize">
             <size>
              <width>111</width>
              <height>111</height>
             </size>
            </property>
+           <property name="maximumSize">
+            <size>
+             <width>111</width>
+             <height>999</height>
+            </size>
+           </property>
            <property name="title">
             <string>Edit</string>
            </property>
-           <widget class="QPushButton" name="chk001">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>95</x>
-              <y>50</y>
-              <width>14</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Auto Unwrap: create new UV map</string>
-            </property>
-            <property name="text">
-             <string>m</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
-           </widget>
            <widget class="QPushButton" name="b012">
             <property name="enabled">
              <bool>true</bool>
@@ -425,7 +400,7 @@
              <rect>
               <x>0</x>
               <y>50</y>
-              <width>81</width>
+              <width>96</width>
               <height>19</height>
              </rect>
             </property>
@@ -460,9 +435,9 @@
             </property>
             <property name="geometry">
              <rect>
-              <x>80</x>
+              <x>95</x>
               <y>50</y>
-              <width>14</width>
+              <width>16</width>
               <height>19</height>
              </rect>
             </property>
@@ -479,7 +454,7 @@
              </size>
             </property>
             <property name="toolTip">
-             <string>Auto Unwrap: uniform scale</string>
+             <string>Auto Unwrap: scale</string>
             </property>
             <property name="text">
              <string>s</string>
@@ -494,7 +469,7 @@
              <bool>true</bool>
             </property>
             <property name="checked">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
            </widget>
            <widget class="QPushButton" name="b013">
@@ -704,7 +679,6 @@
              <bool>false</bool>
             </property>
            </widget>
-           <zorder>chk001</zorder>
            <zorder>b012</zorder>
            <zorder>b013</zorder>
            <zorder>b005</zorder>
@@ -715,6 +689,19 @@
            <zorder>chk000</zorder>
           </widget>
          </item>
+         <item>
+          <spacer name="verticalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
         </layout>
        </item>
        <item>
@@ -724,6 +711,12 @@
          </property>
          <item>
           <widget class="QGroupBox" name="groupBox_3">
+           <property name="minimumSize">
+            <size>
+             <width>111</width>
+             <height>170</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
              <width>111</width>
@@ -777,7 +770,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>30</y>
+              <y>70</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -814,7 +807,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>50</y>
+              <y>90</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -851,7 +844,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>70</y>
+              <y>110</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -888,7 +881,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>90</y>
+              <y>50</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -925,7 +918,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>110</y>
+              <y>30</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -1083,6 +1076,115 @@
             </property>
            </widget>
           </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox_8">
+           <property name="minimumSize">
+            <size>
+             <width>111</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>111</width>
+             <height>31</height>
+            </size>
+           </property>
+           <property name="title">
+            <string>Pack</string>
+           </property>
+           <widget class="QPushButton" name="b006">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>10</y>
+              <width>96</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>111</width>
+              <height>19</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>Pack UV's</string>
+            </property>
+            <property name="text">
+             <string>Pack</string>
+            </property>
+            <property name="autoDefault">
+             <bool>true</bool>
+            </property>
+            <property name="default">
+             <bool>false</bool>
+            </property>
+            <property name="flat">
+             <bool>false</bool>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="chk001">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="geometry">
+             <rect>
+              <x>95</x>
+              <y>10</y>
+              <width>16</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>111</width>
+              <height>19</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>Pack: rotate</string>
+            </property>
+            <property name="text">
+             <string>r</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>18</width>
+              <height>18</height>
+             </size>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
          </item>
         </layout>
        </item>

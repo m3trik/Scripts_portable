@@ -15,7 +15,7 @@ class Preferences(Init):
 
 		self.ui = self.sb.getUi('preferences')
 
-		self.ui.b010.setText(self.sb.getMainAppWindow(objectName=1).capitalize()+' Preferences')
+		self.ui.b010.setText('3dsMax Preferences')
 
 		self.cmb001(init=1) #init cmb001
 		self.cmb002(init=1) #init cmb002

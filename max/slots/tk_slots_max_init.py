@@ -651,12 +651,38 @@ class Init(Slot):
 					except: rt.modPanel.setCurrentObject(obj.baseObject) #if index error
 
 
+	@staticmethod
+	def getModifier(obj, modifier, index=0):
+		'''
+		Gets (and sets (if needed)) the given modifer for the given object at the given index.
+		
+		args:
+			obj = <object> - the object to add or retrieve the modifier from.
+			modifier = 'string' - modifier name.
+			index = int - place modifier before given index. default is at the top of the stack.
+						Negative indices place the modifier from the bottom of the stack.
+		returns:
+			modifier
+		'''
+		m = obj.modifiers[modifier] #check the stack for the given modifier.
+		
+		if not m:
+			m = getattr(rt, modifier)()
+			if index<0:
+				index = index+len(obj.modifiers)+1 #place from the bottom index.
+			rt.addModifier(obj, m, before=index)
+		
+		if not rt.modPanel.getCurrentObject()==m:
+			rt.modPanel.setCurrentObject(m) #set modifier in stack (if it is not currently active).
+
+		return m
+
 
 	@staticmethod
 	def meshCleanup(isolatedVerts=False, edgeAngle=10, nGons=False, repair=False):
 		'''
-		find mesh artifacts
-		#args:
+		Find mesh artifacts.
+		args:
 			isolatedVerts=bool - find vertices with two edges which fall below a specified angle.
 			edgeAngle=int - used with isolatedVerts argument to specify the angle tolerance
 			nGons=bool - search for n sided polygon faces.
@@ -743,10 +769,10 @@ class Init(Slot):
 	@staticmethod
 	def maxUiSetChecked(id, table, item, state=True, query=False):
 		'''
-		#args:
-			id='string' - actionMan ID
-			table=int - actionMan table
-			item=int - actionMan item number
+		args:
+			id = 'string' - actionMan ID
+			table = int - actionMan table
+			item = int - actionMan item number
 		'''
 		atbl = rt.actionMan.getActionTable(table)
 		if atbl:
@@ -767,9 +793,12 @@ class Init(Slot):
 
 	@staticmethod
 	def viewPortMessage (message='', statusMessage='', assistMessage='', position='topCenter'):
-		#args: statusMessage='string' - message to display (accepts html formatting).
-		#			position='string' - position on screen. possible values are: topCenter","topRight","midLeft","midCenter","midCenterTop","midCenterBot","midRight","botLeft","botCenter","botRight"
-		#ex. self.viewPortMessage("shutting down:<hl>"+str(timer)+"</hl>")
+		'''
+		args:
+			statusMessage='string' - message to display (accepts html formatting).
+			position='string' - position on screen. possible values are: topCenter","topRight","midLeft","midCenter","midCenterTop","midCenterBot","midRight","botLeft","botCenter","botRight"
+		ex. self.viewPortMessage("shutting down:<hl>"+str(timer)+"</hl>")
+		'''
 		message=statusMessage; statusMessage=''
 		pm.inViewMessage(message=message, statusMessage=statusMessage, assistMessage=assistMessage, position=position, fontSize=10, fade=1, fadeInTime=0, fadeStayTime=1000, fadeOutTime=500, alpha=75) #1000ms = 1 sec
 

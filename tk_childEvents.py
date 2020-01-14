@@ -53,7 +53,10 @@ class EventFactoryFilter(QtCore.QObject):
 			uiLevel = self.sb.getUiLevel(name)
 
 			if not widget.styleSheet(): #if the widget doesn't already have a styleSheet.
-				widget.setStyleSheet(getattr(StyleSheet, derivedType, ''))
+				if 'submenu' in name and not self.sb.prefix(widgetName, 'i'):
+					widget.setStyleSheet(getattr(StyleSheet, 'submenu', ''))
+				else:
+					widget.setStyleSheet(getattr(StyleSheet, derivedType, ''))			
 
 			widget.installEventFilter(self)
 

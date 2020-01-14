@@ -375,16 +375,16 @@
    <widget class="QWidget" name="viewport" native="true">
     <property name="geometry">
      <rect>
-      <x>160</x>
+      <x>150</x>
       <y>220</y>
-      <width>276</width>
+      <width>296</width>
       <height>161</height>
      </rect>
     </property>
     <widget class="QPushButton" name="v004">
      <property name="geometry">
       <rect>
-       <x>105</x>
+       <x>115</x>
        <y>0</y>
        <width>66</width>
        <height>21</height>
@@ -409,7 +409,7 @@
     <widget class="QPushButton" name="v005">
      <property name="geometry">
       <rect>
-       <x>185</x>
+       <x>195</x>
        <y>30</y>
        <width>66</width>
        <height>21</height>
@@ -434,7 +434,7 @@
     <widget class="QPushButton" name="v002">
      <property name="geometry">
       <rect>
-       <x>210</x>
+       <x>220</x>
        <y>70</y>
        <width>66</width>
        <height>21</height>
@@ -459,7 +459,7 @@
     <widget class="QPushButton" name="v003">
      <property name="geometry">
       <rect>
-       <x>0</x>
+       <x>10</x>
        <y>70</y>
        <width>66</width>
        <height>21</height>
@@ -484,7 +484,7 @@
     <widget class="QPushButton" name="v000">
      <property name="geometry">
       <rect>
-       <x>185</x>
+       <x>195</x>
        <y>110</y>
        <width>66</width>
        <height>21</height>
@@ -503,13 +503,13 @@
       </size>
      </property>
      <property name="text">
-      <string>Back   Z</string>
+      <string>Rear   Z</string>
      </property>
     </widget>
     <widget class="QPushButton" name="v006">
      <property name="geometry">
       <rect>
-       <x>25</x>
+       <x>35</x>
        <y>110</y>
        <width>66</width>
        <height>21</height>
@@ -534,7 +534,7 @@
     <widget class="QPushButton" name="v007">
      <property name="geometry">
       <rect>
-       <x>105</x>
+       <x>115</x>
        <y>140</y>
        <width>66</width>
        <height>21</height>
@@ -559,7 +559,7 @@
     <widget class="QPushButton" name="v001">
      <property name="geometry">
       <rect>
-       <x>25</x>
+       <x>35</x>
        <y>30</y>
        <width>66</width>
        <height>21</height>

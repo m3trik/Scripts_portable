@@ -15,7 +15,7 @@ class Preferences(Init):
 
 		self.ui = self.sb.getUi('preferences')
 
-		self.ui.b010.setText(self.tk.app.capitalize()+' Preferences')
+		self.ui.b010.setText('Maya Preferences')
 
 		self.cmb001(init=1) #init cmb001
 		self.cmb002(init=1) #init cmb002

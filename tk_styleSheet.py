@@ -76,6 +76,52 @@ class StyleSheet():
 			border-color: navy; /* make the default button prominent */
 		}'''
 
+	submenu='''
+		QPushButton {
+			border-style: outset;
+			border-radius: 1px;
+			border: 1px solid black;
+			padding: 0px;
+			background-color: rgb(50,50,50);
+			color: grey;
+		}
+
+		QPushButton::checked {
+			border: 1px solid black;
+			background-color: '''+COLOR_ACCENT+''';
+			color: '''+COLOR_TEXT2+''';
+		}
+
+		QPushButton::hover {   
+			border: 1px solid black;
+			background-color: '''+COLOR_ACCENT+''';
+			color: '''+COLOR_TEXT1+''';
+		}
+
+		QPushButton::unchecked::hover {
+			background-color: '''+COLOR_ACCENT+''';
+			color: '''+COLOR_TEXT1+''';
+		}
+
+		QPushButton::checked::hover {
+			background-color: '''+COLOR_ACCENT+''';
+			color: '''+COLOR_TEXT2+''';
+		}
+
+		QPushButton::pressed {   
+			border: 1px solid black;
+			background-color: '''+COLOR_MEDLIGHT+''';
+			color: '''+COLOR_TEXT1+''';
+		}
+
+		QPushButton:flat {
+			border: none; /* no border for a flat push button */
+		}
+
+		QPushButton:default {
+			border-color: navy; /* make the default button prominent */
+		}'''
+
 	QAbstractButton='''
 		QAbstractButton:hover {
 			background: '''+COLOR_MEDIUM+''';
