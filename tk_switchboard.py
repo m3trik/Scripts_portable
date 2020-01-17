@@ -37,6 +37,7 @@ class Switchboard(object):
 											'derivedType':'<derivedClassName>',
 											'widgetClassInstance':<Class>,
 											'method':<method>,
+											'prefix':'alphanumeric prefix',
 											'docString':'method docString'
 								}
 					}
@@ -153,6 +154,7 @@ class Switchboard(object):
 				signalInstance = getattr(widget, signal, None) #add signal to widget
 				method = getattr(class_, objectName, None) #use 'objectName' (ie. b006) to get the corresponding method of the same name.
 				docString = getattr(method, '__doc__', None)
+				prefix = self.prefix(objectName) #returns an alphanumberic prefix if objectName startswith a series of alphanumberic chars, and is followed by three integers.
 
 				#add values to widgetDict
 				self.widgetDict(name).update(
@@ -161,6 +163,7 @@ class Switchboard(object):
 										'widgetType':widget.__class__.__name__,
 										'derivedType':derivedType,
 										'method':method,
+										'prefix':prefix,
 										'docString':docString}})
 
 				#break #stop looping up the chain of mro types found in signals once a type match is found.
@@ -859,23 +862,49 @@ class Switchboard(object):
 
 
 
-	@staticmethod
-	def prefix(string, prefix):
+	def prefix(self, objectName, prefix=None):
 		'''
-		Checks if the given string startswith the given prefix, and is followed by three integers. ex. i000 (alphanum,int,int,int)
-		ex. prefix('i023', 'i')
+		Checks if the given objectName startswith an alphanumeric prefix, followed by three integers. ex. i000 (alphanum,int,int,int)
+		and if so, returns the alphanumberic prefix.
+		ex. prefix('i023') returns 'i'
+		if second prefix arg is given, then the method checks if the given objectName has the prefix, and the return value is bool.
 		args:
-			string = 'string' - string to check against.
-			prefix = 'string' - check if the given string startwith this prefix.
+			objectName = 'string' - string to check against.
+			prefix = 'string' - optional; check if the given objectName startwith this prefix.
 		returns:
-			bool - True if correct format else, False.
+			if prefix arg given:
+				bool - True if correct format else, False.
+			else:
+				alphanumeric 'string' 
 		'''
-		if string.startswith(prefix):
+		if prefix: #check the actual prefix against the given prefix and return bool.
+			name = self.getUiName()
+			try:
+				prefix1 = self._sbDict[name]['widgetDict'][objectName]['prefix']
+				if prefix1==prefix:
+					return True
+
+			except KeyError:
+				if objectName.startswith(prefix):
+					i = len(prefix)
+					integers = [c for c in objectName[i:i+3] if c.isdigit()]
+					if len(integers)>2 or len(objectName)==i:
+						return True
+			
+			return False
+
+		else: #return prefix.
+			prefix=''
+			for char in objectName:
+				if not char.isdigit():
+					prefix = prefix+char
+				else:
+					break
+
 			i = len(prefix)
-			integers = [c for c in string[i:i+3] if c.isdigit()]
-			if len(integers)>2 or len(string)==i:
-				return True
-		return False
+			integers = [c for c in objectName[i:i+3] if c.isdigit()]
+			if len(integers)>2 or len(objectName)==i:
+				return prefix
 
 
 
@@ -945,6 +974,24 @@ _sbDict={
 	'gcProtect': ['<protected object>']}
 '''
 
+
+	# @staticmethod
+	# def prefix(string, prefix):
+	# 	'''
+	# 	Checks if the given string startswith the given prefix, and is followed by three integers. ex. i000 (alphanum,int,int,int)
+	# 	ex. prefix('i023', 'i')
+	# 	args:
+	# 		string = 'string' - string to check against.
+	# 		prefix = 'string' - check if the given string startwith this prefix.
+	# 	returns:
+	# 		bool - True if correct format else, False.
+	# 	'''
+	# 	if string.startswith(prefix):
+	# 		i = len(prefix)
+	# 		integers = [c for c in string[i:i+3] if c.isdigit()]
+	# 		if len(integers)>2 or len(string)==i:
+	# 			return True
+	# 	return False
 
 
 # def getWidgetClassInstance(self, widget, name=None):

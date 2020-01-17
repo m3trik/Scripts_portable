@@ -235,37 +235,6 @@
      </palette>
     </property>
    </widget>
-   <widget class="QPushButton" name="b007">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>395</x>
-      <y>250</y>
-      <width>56</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>111</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="toolTip">
-     <string>Bevel modifier</string>
-    </property>
-    <property name="text">
-     <string>Bevel</string>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>18</width>
-      <height>18</height>
-     </size>
-    </property>
-   </widget>
    <widget class="QPushButton" name="b006">
     <property name="enabled">
      <bool>true</bool>
@@ -363,37 +332,6 @@
        </colorrole>
       </disabled>
      </palette>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="b005">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>255</x>
-      <y>250</y>
-      <width>56</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>111</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="toolTip">
-     <string>Create a bridge between two sets of edges or faces</string>
-    </property>
-    <property name="text">
-     <string>Bridge</string>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>18</width>
-      <height>18</height>
-     </size>
     </property>
    </widget>
    <widget class="QPushButton" name="b044">
