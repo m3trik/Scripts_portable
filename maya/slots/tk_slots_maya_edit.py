@@ -14,6 +14,7 @@ class Edit(Init):
 		super(Edit, self).__init__(*args, **kwargs)
 
 		self.ui = self.sb.getUi('edit')
+		self.submenu = self.sb.getUi('edit_submenu')
 
 
 
@@ -154,9 +155,9 @@ class Edit(Init):
 				self.ui.b043.setText(newObject)
 			else:
 				self.ui.b043.setText("must select obj first")
-				self.setButtons(self.ui, unchecked='b043')
+				self.setWidgets(self.ui, setChecked_False='b043')
 			if self.ui.b042.isChecked():
-				self.setButtons(self.ui, enable='b052')
+				self.setWidgets(self.ui, setEnabled='b052')
 		else:
 			self.ui.b043.setText("Object")
 
@@ -176,9 +177,9 @@ class Edit(Init):
 				self.ui.b042.setText(creaseSet)
 			else:
 				self.ui.b042.setText("must select set first")
-				self.setButtons(self.ui, unchecked='b042')
+				self.setWidgets(self.ui, setChecked_False='b042')
 			if self.ui.b043.isChecked():
-				self.setButtons(self.ui, enable='b052')
+				self.setWidgets(self.ui, setEnabled='b052')
 		else:
 			self.ui.b042.setText("Crease Set")
 
@@ -213,7 +214,7 @@ class Edit(Init):
 			# print "crease:", name
 		pm.undoInfo (closeChunk=1)
 
-		self.setButtons(self.ui, disable='b052', unchecked='b042')#,self.ui.b043])
+		self.setWidgets(self.ui, setDisabled='b052', setChecked_False='b042')#,self.ui.b043])
 		self.ui.b042.setText("Crease Set")
 		# self.ui.b043.setText("Object")
 

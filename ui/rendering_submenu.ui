@@ -87,27 +87,11 @@
      <string>Rendering</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="b006">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>370</y>
-      <width>109</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string/>
-    </property>
-    <property name="text">
-     <string>Load VRay</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="b002">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>290</y>
+      <x>180</x>
+      <y>280</y>
       <width>49</width>
       <height>19</height>
      </rect>
@@ -119,33 +103,11 @@
      <string>Redo</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="b001">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>330</y>
-      <width>109</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>Open global rendering settings window</string>
-    </property>
-    <property name="text">
-     <string>Global Settings</string>
-    </property>
-    <property name="checkable">
-     <bool>false</bool>
-    </property>
-    <property name="checked">
-     <bool>false</bool>
-    </property>
-   </widget>
    <widget class="QPushButton" name="b000">
     <property name="geometry">
      <rect>
-      <x>185</x>
-      <y>290</y>
+      <x>180</x>
+      <y>320</y>
       <width>61</width>
       <height>19</height>
      </rect>
@@ -155,22 +117,6 @@
     </property>
     <property name="text">
      <string>Render</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="b003">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>350</y>
-      <width>109</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>Render Setup window</string>
-    </property>
-    <property name="text">
-     <string>Render Setup</string>
     </property>
    </widget>
   </widget>

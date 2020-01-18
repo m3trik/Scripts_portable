@@ -14,7 +14,7 @@ class Create(Init):
 		super(Create, self).__init__(*args, **kwargs)
 
 		self.ui = self.sb.getUi('create')
-
+		self.submenu = self.sb.getUi('create_submenu')
 
 		self.node=None
 		self.rotation = {'x':[90,0,0], 'y':[0,90,0], 'z':[0,0,90], '-x':[-90,0,0], '-y':[0,-90,0], '-z':[0,0,-90], 'last':[]}
@@ -110,7 +110,7 @@ class Create(Init):
 		'''
 		Rotate X Axis
 		'''
-		self.setButtons(self.ui, checked='chk000',unchecked='chk001,chk002')
+		self.setWidgets(self.ui, setChecked='chk000', setChecked_False='chk001,chk002')
 		if self.node:
 			self.rotateAbsolute(self.getAxis())
 			
@@ -119,7 +119,7 @@ class Create(Init):
 		'''
 		Rotate Y Axis
 		'''
-		self.setButtons(self.ui, checked='chk001',unchecked='chk000,chk002')
+		self.setWidgets(self.ui, setChecked='chk001', setChecked_False='chk000,chk002')
 		if self.node:
 			self.rotateAbsolute(self.getAxis())
 
@@ -128,7 +128,7 @@ class Create(Init):
 		'''
 		Rotate Z Axis
 		'''
-		self.setButtons(self.ui, checked='chk002',unchecked='chk001,chk000')
+		self.setWidgets(self.ui, setChecked='chk002', setChecked_False='chk001,chk000')
 		if self.node:
 			self.rotateAbsolute(self.getAxis())
 

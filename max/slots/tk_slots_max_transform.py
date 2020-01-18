@@ -14,6 +14,7 @@ class Transform(Init):
 		super(Transform, self).__init__(*args, **kwargs)
 
 		self.ui = self.sb.getUi('transform')
+		self.submenu = self.sb.getUi('transform_submenu')
 
 		#set input masks for text fields
 		# self.ui.t000.setInputMask("00.00") #change to allow for neg values
@@ -35,7 +36,7 @@ class Transform(Init):
 		'''
 		Transform: Scale
 		'''
-		self.setButtons(self.ui, unchecked='chk008,chk009',checked='chk000,chk001,chk002')
+		self.setWidgets(self.ui, setChecked_False='chk008,chk009', setChecked='chk000,chk001,chk002')
 		self.ui.s000.setValue(2)
 		self.ui.s000.setSingleStep(1)
 
@@ -44,7 +45,7 @@ class Transform(Init):
 		'''
 		Transform: Move
 		'''
-		self.setButtons(self.ui, unchecked='chk005,chk009,chk000,chk001,chk002')
+		self.setWidgets(self.ui, setChecked_False='chk005,chk009,chk000,chk001,chk002')
 		self.ui.s000.setValue(0.1)
 		self.ui.s000.setSingleStep(0.1)
 
@@ -53,7 +54,7 @@ class Transform(Init):
 		'''
 		Transform: Rotate
 		'''
-		self.setButtons(self.ui, unchecked='chk005,chk008,chk000,chk001,chk002')
+		self.setWidgets(self.ui, setChecked_False='chk005,chk008,chk000,chk001,chk002')
 		self.ui.s000.setValue(45)
 		self.ui.s000.setSingleStep(5)
 
@@ -63,9 +64,9 @@ class Transform(Init):
 		Align: Auto Align
 		'''
 		if self.ui.chk010.isChecked():
-			self.setButtons(self.ui, disable='b029,b030,b031')
+			self.setWidgets(self.ui, setDisabled='b029,b030,b031')
 		else:
-			self.setButtons(self.ui, enable='b029,b030,b031')
+			self.setWidgets(self.ui, setEnabled='b029,b030,b031')
 
 
 	def chk012(self):
@@ -240,18 +241,18 @@ class Transform(Init):
 
 				if self.ui.chk011.isChecked():
 					if axis == x: #"yz"
-						self.setButtons(self.ui, checked='b030,b031', unchecked='b029')
+						self.setWidgets(self.ui, setChecked='b030,b031', setChecked_False='b029')
 					if axis == y: #"xz"
-						self.setButtons(self.ui, checked='b029,b031', unchecked='b030')
+						self.setWidgets(self.ui, setChecked='b029,b031', setChecked_False='b030')
 					if axis == z: #"xy"
-						self.setButtons(self.ui, checked='b029,b030', unchecked='b031')
+						self.setWidgets(self.ui, setChecked='b029,b030', setChecked_False='b031')
 				else:
 					if any ([axis == x and tangent == ty, axis == y and tangent == tx]): #"z"
-						self.setButtons(self.ui, checked='b031', unchecked='b029,b030')
+						self.setWidgets(self.ui, setChecked='b031', setChecked_False='b029,b030')
 					if any ([axis == x and tangent == tz, axis == z and tangent == tx]): #"y"
-						self.setButtons(self.ui, checked='b030', unchecked='b029,b031')
+						self.setWidgets(self.ui, setChecked='b030', setChecked_False='b029,b031')
 					if any ([axis == y and tangent == tz, axis == z and tangent == ty]): #"x"
-						self.setButtons(self.ui, checked='b029', unchecked='b030,b031')
+						self.setWidgets(self.ui, setChecked='b029', setChecked_False='b030,b031')
 			else:
 				print "// Warning: An edge must be selected. //"
 				return

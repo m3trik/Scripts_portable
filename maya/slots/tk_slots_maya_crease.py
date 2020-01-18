@@ -14,6 +14,7 @@ class Crease(Init):
 		super(Crease, self).__init__(*args, **kwargs)
 
 		self.ui = self.sb.getUi('crease')
+		self.submenu = self.sb.getUi('crease_submenu')
 
 
 
@@ -24,7 +25,7 @@ class Crease(Init):
 		if self.ui.chk002.isChecked():
 			self.ui.s003.setValue(0) #crease value
 			self.ui.s004.setValue(180) #normal angle
-			self.setButtons(self.ui, unchecked='chk003')
+			self.setWidgets(self.ui, setChecked_False='chk003')
 		else:
 			self.ui.s003.setValue(7.5) #crease value
 			self.ui.s004.setValue(30) #normal angle
@@ -37,7 +38,7 @@ class Crease(Init):
 		if self.ui.chk003.isChecked():
 			self.ui.s003.setValue(10) #crease value
 			self.ui.s004.setValue(30) #normal angle
-			self.setButtons(self.ui, unchecked='chk002')
+			self.setWidgets(self.ui, setChecked_False='chk002')
 		else:
 			self.ui.s003.setValue(7.5) #crease value
 			self.ui.s004.setValue(60) #normal angle
@@ -48,9 +49,9 @@ class Crease(Init):
 		Crease: Auto
 		'''
 		if self.ui.chk011.isChecked():
-			self.setButtons(self.ui, enable='s005,s006')
+			self.setWidgets(self.ui, setEnabled='s005,s006')
 		else:
-			self.setButtons(self.ui, disable='s005,s006')
+			self.setWidgets(self.ui, setDisabled='s005,s006')
 
 
 	def cmb000(self, index=None):

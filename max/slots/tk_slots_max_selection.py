@@ -15,7 +15,7 @@ class Selection(Init):
 		super(Selection, self).__init__(*args, **kwargs)
 
 		self.ui = self.sb.getUi('selection')
-
+		self.submenu = self.sb.getUi('selection_submenu')
 
 
 		#set checked button states
@@ -50,21 +50,21 @@ class Selection(Init):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.setButtons(self.ui, unchecked='chk001-2')
+		self.setWidgets(self.ui, setChecked_False='chk001-2')
 
 
 	def chk001(self):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.setButtons(self.ui, unchecked='chk000,chk002')
+		self.setWidgets(self.ui, setChecked_False='chk000,chk002')
 
 
 	def chk002(self):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.setButtons(self.ui, unchecked='chk000-1')
+		self.setWidgets(self.ui, setChecked_False='chk000-1')
 
 
 	def chk004(self):

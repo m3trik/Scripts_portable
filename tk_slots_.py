@@ -97,38 +97,35 @@ class Slot(object):
 
 
 
-	def setButtons(self, ui, checked=None, unchecked=None, enable=None, disable=None, visible=None, invisible=None):
+	def setWidgets(self, *args, **kwargs):
 		'''
-		Set various states for multiple buttons at once.
+		Set multiple Qt object boolean properties, for multiple widgets, on multiple ui's at once.
+		If the ui has a submenu with the same widget, then the value will be set there as well. It can be set on additional ui's by passing them in explicitly in *args.
 		args:
-			setButtons = dynamic ui object
-			checked/unchecked/enable/disable/visible/invisible = string - the names of buttons to modify separated by ','. ie. 'b000,b001,b022'
+			*args = dynamic ui object
+			*kwargs = keyword: - the property to modify. ex. setChecked, setChecked_False, setEnabled, setDisabled, setVisible, setHidden
+								Optionally appending '_False' or '_True' to the attribute name, will set the attribute accordingly. (The default state is True)
+					argument: string of objectNames - objectNames separated by ',' ie. 'b000-12,b022'
 
-		ex.	setButtons(self.ui, disable='b000', unchecked='chk009-12', invisible='b015')
+		ex.	setWidgets(self.ui1, self.ui2, setDisabled='b000', setChecked_False='chk009-12', setVisible='b015,b017')
 		'''
-		if checked:
-			checked = self.getObject(ui,checked)
-			[button.setChecked(True) for button in checked]
-			
-		if unchecked:
-			unchecked = self.getObject(ui,unchecked)
-			[button.setChecked(False) for button in unchecked]
-			
-		if enable:
-			enable = self.getObject(ui,enable)
-			[button.setEnabled(True) for button in enable]
-			
-		if disable:
-			disable = self.getObject(ui,disable)
-			[button.setDisabled(True) for button in disable]
-			
-		if visible:
-			visible = self.getObject(ui,visible)
-			[button.setVisible(True) for button in visible]
-			
-		if invisible:
-			invisible = self.getObject(ui,invisible)
-			[button.setVisible(False) for button in invisible]
+		args = [a for a in args] #make args mutable so that any submenus can be appended.
+		for ui in args:
+			submenu = self.sb.getSubmenu(ui)
+			if submenu:
+				args.append(submenu) #append submenu to args if one exists.
+
+			for property_ in kwargs: #ie. property_ could be setChecked_False
+				widgets = self.getObject(ui, kwargs[property_]) #getObject returns a widget list from a string of objectNames.
+
+				if '_False' in property_: #set state to False if '_False' is appended to the keyword.
+					property_ = property_.rstrip('_False')
+					state = False
+				else:
+					property_ = property_.rstrip('_True')
+					state = True
+
+				[getattr(w, property_)(state) for w in widgets] #set the property state for each widget in the list.
 
 
 
@@ -284,6 +281,43 @@ print os.path.splitext(os.path.basename(__file__))[0]
 	# 			objects.append(w)
 	# 		except: pass
 	# 	return objects
+
+
+
+
+
+	# def setButtons(self, ui, checked=None, unchecked=None, enable=None, disable=None, visible=None, invisible=None):
+	# 	'''
+	# 	Set various states for multiple buttons at once.
+	# 	args:
+	# 		setButtons = dynamic ui object
+	# 		checked/unchecked/enable/disable/visible/invisible = string - the names of buttons to modify separated by ','. ie. 'b000,b001,b022'
+
+	# 	ex.	setButtons(self.ui, disable='b000', unchecked='chk009-12', invisible='b015')
+	# 	'''
+	# 	if checked:
+	# 		checked = self.getObject(ui, checked)
+	# 		[button.setChecked(True) for button in checked]
+			
+	# 	if unchecked:
+	# 		unchecked = self.getObject(ui, unchecked)
+	# 		[button.setChecked(False) for button in unchecked]
+			
+	# 	if enable:
+	# 		enable = self.getObject(ui, enable)
+	# 		[button.setEnabled(True) for button in enable]
+			
+	# 	if disable:
+	# 		disable = self.getObject(ui, disable)
+	# 		[button.setDisabled(True) for button in disable]
+			
+	# 	if visible:
+	# 		visible = self.getObject(ui, visible)
+	# 		[button.setVisible(True) for button in visible]
+			
+	# 	if invisible:
+	# 		invisible = self.getObject(ui, invisible)
+	# 		[button.setVisible(False) for button in invisible]
 
 
 

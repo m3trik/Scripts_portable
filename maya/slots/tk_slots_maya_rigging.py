@@ -14,6 +14,7 @@ class Rigging(Init):
 		super(Rigging, self).__init__(*args, **kwargs)
 
 		self.ui = self.sb.getUi('rigging')
+		self.submenu = self.sb.getUi('rigging_submenu')
 
 		self.chk000() #init scale joint value
 
@@ -23,7 +24,7 @@ class Rigging(Init):
 		'''
 		Scale Joint
 		'''
-		self.setButtons(self.ui, unchecked='chk001-2')
+		self.setWidgets(self.ui, setChecked_False='chk001-2')
 		self.ui.s000.setValue(pm.jointDisplayScale(query=1)) #init global joint display size
 
 
@@ -31,7 +32,7 @@ class Rigging(Init):
 		'''
 		Scale IK
 		'''
-		self.setButtons(self.ui, unchecked='chk000, chk002')
+		self.setWidgets(self.ui, setChecked_False='chk000, chk002')
 		self.ui.s000.setValue(pm.ikHandleDisplayScale(query=1)) #init IK handle display size
 		
 
@@ -39,7 +40,7 @@ class Rigging(Init):
 		'''
 		Scale IK/FK
 		'''
-		self.setButtons(self.ui, unchecked='chk000-1')
+		self.setWidgets(self.ui, setChecked_False='chk000-1')
 		self.ui.s000.setValue(pm.jointDisplayScale(query=1, ikfk=1)) #init IKFK display size
 
 

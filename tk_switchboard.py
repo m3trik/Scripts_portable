@@ -141,6 +141,7 @@ class Switchboard(object):
 			'QSpinBox':'valueChanged',
 			'QDoubleSpinBox':'valueChanged',
 			'QCheckBox':'released',
+			'QRadioButton':'released',
 			'QComboBox':'currentIndexChanged',
 			'QLineEdit':'returnPressed',
 			'QTextEdit':'textChanged',
@@ -287,7 +288,10 @@ class Switchboard(object):
 			name = self.getUiName()
 			name = name[0].lower()+name[1:] #lowercase the first letter of name.
 
-		return self.uiList(ui=True)[self.getUiIndex(name)]
+		try:
+			return self.uiList(ui=True)[self.getUiIndex(name)]
+		except ValueError:
+			return None
 
 
 
@@ -836,6 +840,22 @@ class Switchboard(object):
 				return True
 		else:
 			return False
+
+
+
+	def getSubmenu(self, ui):
+		'''
+		Get the submenu object of the given ui using it's name string, or the parent ui object.
+		args:
+			ui = 'string' - ui name.
+				<ui object> - dynamic ui.
+		'''
+		if type(ui)==str: #get name using string.
+			name = ui+'_submenu'
+		else: #get name using ui object.
+			name = self.getUiName(ui)+'_submenu'
+
+		return self.getUi(name)
 
 
 

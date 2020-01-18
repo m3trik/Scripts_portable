@@ -14,6 +14,7 @@ class Mirror(Init):
 		super(Mirror, self).__init__(*args, **kwargs)
 
 		self.ui = self.sb.getUi('mirror')
+		self.submenu = self.sb.getUi('mirror_submenu')
 
 
 
@@ -37,7 +38,7 @@ class Mirror(Init):
 		'''
 		Delete: X Axis
 		'''
-		self.setButtons(self.ui, unchecked='chk002,chk003')
+		self.setWidgets(self.ui, setChecked_False='chk002,chk003')
 		axis = "X"
 		if self.ui.chk000.isChecked():
 			axis = '-'+axis
@@ -49,7 +50,7 @@ class Mirror(Init):
 		'''
 		Delete: Y Axis
 		'''
-		self.setButtons(self.ui, unchecked='chk001,chk003')
+		self.setWidgets(self.ui, setChecked_False='chk001,chk003')
 		axis = "Y"
 		if self.ui.chk000.isChecked():
 			axis = '-'+axis
@@ -61,12 +62,23 @@ class Mirror(Init):
 		'''
 		Delete: Z Axis
 		'''
-		self.setButtons(self.ui, unchecked='chk001,chk002')
+		self.setWidgets(self.ui, setChecked_False='chk001,chk002')
 		axis = "Z"
 		if self.ui.chk000.isChecked():
 			axis = '-'+axis
 		self.ui.b000.setText('Mirror '+axis)
 		self.ui.b008.setText('Delete '+axis)
+
+
+	def chk005(self):
+		'''
+		Mirror: Cut
+		'''
+		#keep menu and submenu in sync:
+		# if self.submenu.chk005.isChecked():
+		# 	self.setWidgets(self.ui, setChecked='chk005')
+		# else:
+		# 	self.setWidgets(self.ui, setChecked_False='chk005')
 
 
 	def cmb000(self, index=None):

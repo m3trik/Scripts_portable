@@ -30,7 +30,7 @@ class EventFactoryFilter(QtCore.QObject):
 
 		self.sb = Switchboard()
 		if parent:
-			self.tk = parent
+			self.parent = parent
 
 
 
@@ -53,7 +53,7 @@ class EventFactoryFilter(QtCore.QObject):
 			uiLevel = self.sb.getUiLevel(name)
 
 			if not widget.styleSheet(): #if the widget doesn't already have a styleSheet.
-				if 'submenu' in name and not self.sb.prefix(widgetName, 'i'):
+				if '_submenu' in name and not self.sb.prefix(widgetName, 'i'):
 					widget.setStyleSheet(getattr(StyleSheet, 'submenu', ''))
 				else:
 					widget.setStyleSheet(getattr(StyleSheet, derivedType, ''))			
@@ -268,14 +268,14 @@ class EventFactoryFilter(QtCore.QObject):
 			if self.sb.prefix(self.widgetName, 'i'): #set the stacked widget.
 				submenu = self.widget.whatsThis()+'_submenu'
 				if not self.name==submenu: #do not reopen the submenu if it is already open.
-					self.name = self.tk.setSubUi(self.widget, submenu)
+					self.name = self.parent.setSubUi(self.widget, submenu)
 
 			elif self.widgetName=='<':
-				self.tk.setPrevUi()
+				self.parent.setPrevUi()
 
 			elif self.sb.prefix(self.widgetName, 'chk'):
 				if '_submenu' in self.name:
-					self.widget.setChecked(not self.widget.isChecked())
+					self.widget.click()
 
 
 
@@ -326,8 +326,8 @@ class EventFactoryFilter(QtCore.QObject):
 		if self.widget.rect().contains(self.widget.mapFromGlobal(QtGui.QCursor.pos())): #if mouse over widget:
 			if self.widgetType=='QPushButton':
 				if self.sb.prefix(self.widgetName, 'i'): #ie. 'i012'
-					self.tk.setUi(self.widget.whatsThis()) #switch the stacked layout to the given ui.
-					self.tk.move(QtGui.QCursor.pos() - self.tk.ui.rect().center()) #move window to cursor position and offset from left corner to center
+					self.parent.setUi(self.widget.whatsThis()) #switch the stacked layout to the given ui.
+					self.parent.move(QtGui.QCursor.pos() - self.parent.ui.rect().center()) #move window to cursor position and offset from left corner to center
 
 				elif self.sb.prefix(self.widgetName, 'v'):
 					self.sb.previousUi(as_list=1).append(self.sb.getMethod(self.name, self.widgetName)) #store the camera view
@@ -355,13 +355,13 @@ print os.path.splitext(os.path.basename(__file__))[0]
 # 					submenu = self.widget.whatsThis()+'_submenu'
 # 					n = self.widgetName
 # 					if not self.name==submenu: #do not reopen submenu on enter event if it is already open.
-# 						self.name = self.tk.setUi(submenu) #switch the stacked layout to the given submenu.
-# 						self.widget = getattr(self.tk.currentWidget(), n) #get the widget with the same name in the new ui.
+# 						self.name = self.parent.setUi(submenu) #switch the stacked layout to the given submenu.
+# 						self.widget = getattr(self.parent.currentWidget(), n) #get the widget with the same name in the new ui.
 
 
-# 						p3 = self.tk.mapToGlobal(self.tk.pos())
+# 						p3 = self.parent.mapToGlobal(self.parent.pos())
 # 						p2 = self.widget.mapToGlobal(self.widget.rect().center())
-# 						self.tk.move(self.tk.mapFromGlobal(p3 +(p1 - p2)))
+# 						self.parent.move(self.parent.mapFromGlobal(p3 +(p1 - p2)))
 
 
 

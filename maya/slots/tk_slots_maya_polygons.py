@@ -14,6 +14,7 @@ class Polygons(Init):
 		super(Polygons, self).__init__(*args, **kwargs)
 
 		self.ui = self.sb.getUi('polygons')
+		self.submenu = self.sb.getUi('polygons_submenu')
 
 
 
@@ -21,21 +22,21 @@ class Polygons(Init):
 		'''
 		Split U
 		'''
-		self.setButtons(self.ui, unchecked='chk010')
+		self.setWidgets(self.ui, setChecked_False='chk010')
 
 
 	def chk009(self):
 		'''
 		Split V
 		'''
-		self.setButtons(self.ui, unchecked='chk010')
+		self.setWidgets(self.ui, setChecked_False='chk010')
 
 
 	def chk010(self):
 		'''
 		Tris
 		'''
-		self.setButtons(self.ui, unchecked='chk008-9')
+		self.setWidgets(self.ui, setChecked_False='chk008-9')
 
 
 	def cmb000(self, index=None):
