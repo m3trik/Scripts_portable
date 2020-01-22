@@ -3,32 +3,45 @@ except: pass
 
 
 
-def getModifier(obj, modifier, index=0):
-	'''
-	Gets (and sets (if needed)) the given modifer for the given object at the given index.
+for obj in rt.selection:		
+	rt.modPanel.setCurrentObject(obj.baseObject)
 	
-	args:
-		obj = <object> - the object to add or retrieve the modifier from.
-		modifier = 'string' - modifier name.
-		index = int - place modifier before given index. default is at the top of the stack.
-					Negative indices place the modifier from the bottom of the stack.
-	returns:
-		modifier
-	'''
-	m = obj.modifiers[modifier]
-	if not m:
-		m = getattr(rt, modifier)()
-		if index<0:
-			index = index+len(obj.modifiers)+1 #
-		rt.addModifier(obj, m, before=index)
-	if not rt.modPanel.getCurrentObject()==m:
-		print rt.modPanel.getCurrentObject(), m
-		rt.modPanel.setCurrentObject(m)
-	return m
+	mod = rt.Normalmodifier()
+	print mod
+	mod.flip = True
+	
+	rt.modpanel.addModToSelection(mod)
+	
+	index = rt.modPanel.getModifierIndex(obj, mod)
+	rt.maxOps.CollapseNodeTo(obj, index, False) #maxOps.CollapseNodeTo $ 1 off
 
 
-obj = rt.selection[0]
-uv = getModifier(obj, 'Unwrap_UVW', -1)
+# def getModifier(obj, modifier, index=0):
+# 	'''
+# 	Gets (and sets (if needed)) the given modifer for the given object at the given index.
+	
+# 	args:
+# 		obj = <object> - the object to add or retrieve the modifier from.
+# 		modifier = 'string' - modifier name.
+# 		index = int - place modifier before given index. default is at the top of the stack.
+# 					Negative indices place the modifier from the bottom of the stack.
+# 	returns:
+# 		modifier
+# 	'''
+# 	m = obj.modifiers[modifier]
+# 	if not m:
+# 		m = getattr(rt, modifier)()
+# 		if index<0:
+# 			index = index+len(obj.modifiers)+1 #
+# 		rt.addModifier(obj, m, before=index)
+# 	if not rt.modPanel.getCurrentObject()==m:
+# 		print rt.modPanel.getCurrentObject(), m
+# 		rt.modPanel.setCurrentObject(m)
+# 	return m
+
+
+# obj = rt.selection[0]
+# uv = getModifier(obj, 'Unwrap_UVW', -1)
 # uv.breakSelected()
 # uv.detachEdgeVertices()
 # uv.weldSelected()

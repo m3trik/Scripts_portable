@@ -211,7 +211,7 @@ class Normals(Init):
 		Reverse Normals
 		'''
 		for obj in rt.selection:		
-			rt.modPanel.setCurrentObject (obj.baseObject)
+			rt.modPanel.setCurrentObject(obj.baseObject)
 			
 			mod = rt.Normalmodifier()
 			mod.flip = True

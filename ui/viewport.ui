@@ -503,7 +503,7 @@
       </size>
      </property>
      <property name="text">
-      <string>Rear   Z</string>
+      <string>Back   Z</string>
      </property>
     </widget>
     <widget class="QPushButton" name="v006">

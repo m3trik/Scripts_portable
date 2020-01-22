@@ -35,15 +35,15 @@ class Switchboard(object):
 											'signalInstance':<widget.signal>,
 											'widgetType':'<widgetClassName>',
 											'derivedType':'<derivedClassName>',
-											'widgetClassInstance':<Class>,
 											'method':<method>,
 											'prefix':'alphanumeric prefix',
 											'docString':'method docString'
 								}
 					}
 		}
-		'name' : [string list]} Tracks the order in which the uis are called. A new ui is placed at element[-1]. ie. ['previousName2', 'previousName1', 'currentName']
-		'prevCommand' : [list of 2 element lists] ie. [history of commands, last used method at element[-1]]. [[method,'methodNameString']]  ie. [{b00, 'multi-cut tool'}]
+		'name' : [string list]} Ui history. Tracks the order in which the uis are called. A new ui is placed at element[-1]. ie. ['previousName2', 'previousName1', 'currentName']
+		'prevCommand' : [list of 2 element lists] - Command history. ie. [[<b000>, 'multi-cut tool']]
+		'prevCamera'  : [list of 2 element lists] - Camera history. ie. [[<v000>, 'camera: persp']]
 		'mainAppWindow' : parent application. ie. <maya Window object>
 		'gcProtect' : [items protected from garbage collection]
 	}
@@ -114,8 +114,8 @@ class Switchboard(object):
 	def addWidget(self, name, widget, objectName=None):
 		'''
 		Adds a widget to the widgetDict under the given (ui) name.
-
 		Decoupling this from 'buildWidgetDict' allows additional widgets to be added at any time.
+		The signals dictionary provides both a way to set a default signal for a widget type.
 		args:
 			name = 'string' - name of the ui to construct connections for.
 			widget = <widget object> - widget to be added.
@@ -123,6 +123,7 @@ class Switchboard(object):
 		returns:
 			<widget object>
 		'''
+		name = str(name) #prevent unicode
 		if objectName:
 			widget.setObjectName(objectName) #assure the widget has an object name.
 		else:
@@ -133,9 +134,7 @@ class Switchboard(object):
 		class_ = self.getClassInstance(pathToSlots)
 
 
-		signals = { #the default type of signal to be associated with each widget type.
-			'QWidget':'',
-			'QGroupBox':'',
+		signals = { #the default signal to be associated with each widget type.
 			'QProgressBar':'valueChanged',
 			'QPushButton':'released',
 			'QSpinBox':'valueChanged',
@@ -146,30 +145,33 @@ class Switchboard(object):
 			'QLineEdit':'returnPressed',
 			'QTextEdit':'textChanged',
 		}
-
-		for d in widget.__class__.__mro__:
-			if d.__name__ in signals:
+		# print widget.__class__.__mro__
+		for d in widget.__class__.__mro__: #get the directly derived class for any custom widgets.
+			if d.__module__=='PySide2.QtWidgets': #check for the first built-in class. Then use it as the derived class.
 				derivedType = d.__name__
-				signal = signals[derivedType]
+				break
+		try:
+			signal = signals[derivedType]
+		except:
+			signal = ''
 
-				signalInstance = getattr(widget, signal, None) #add signal to widget
-				method = getattr(class_, objectName, None) #use 'objectName' (ie. b006) to get the corresponding method of the same name.
-				docString = getattr(method, '__doc__', None)
-				prefix = self.prefix(objectName) #returns an alphanumberic prefix if objectName startswith a series of alphanumberic chars, and is followed by three integers.
+		signalInstance = getattr(widget, signal, None) #add signal to widget
+		method = getattr(class_, objectName, None) #use 'objectName' (ie. b006) to get the corresponding method of the same name.
+		docString = getattr(method, '__doc__', None)
+		prefix = self.prefix(objectName) #returns an alphanumberic prefix if objectName startswith a series of alphanumberic chars, and is followed by three integers.
 
-				#add values to widgetDict
-				self.widgetDict(name).update(
-							{objectName:{'widget':widget, 
-										'signalInstance':signalInstance,
-										'widgetType':widget.__class__.__name__,
-										'derivedType':derivedType,
-										'method':method,
-										'prefix':prefix,
-										'docString':docString}})
+		#add values to widgetDict
+		self.widgetDict(name).update(
+					{objectName:{'widget':widget, 
+								'signalInstance':signalInstance,
+								'widgetType':widget.__class__.__name__,
+								'derivedType':derivedType,
+								'method':method,
+								'prefix':prefix,
+								'docString':docString}})
 
-				#break #stop looping up the chain of mro types found in signals once a type match is found.
-				# print self.widgetDict(name)
-				return self._sbDict[name]['widgetDict'][objectName]['widget'] #return the stored widget.
+		# print self._sbDict[name]['widgetDict'][objectName]['widget']
+		return self._sbDict[name]['widgetDict'][objectName]['widget'] #return the stored widget.
 
 
 
@@ -200,10 +202,10 @@ class Switchboard(object):
 		'''
 		Replace any old signals with the set for the given name.
 		'''
-		# if not name in self.previousName(allowInit=1, allowDuplicates=1): #ie. 'polygons' not in 'polygons_submenu' (as they both share the same connections).
-		# print 'not ',name,' in ',self.previousName(allowInit=1, allowDuplicates=1)
-		# print 'setSignals:', self.previousName(allowInit=1, allowDuplicates=1, as_list=1)
-		previousName = self.previousName(allowInit=1, allowDuplicates=1)
+		# if not name in self.previousName(allowLevel0=True, allowDuplicates=1): #ie. 'polygons' not in 'polygons_submenu' (as they both share the same connections).
+		# print 'not ',name,' in ',self.previousName(allowLevel0=True, allowDuplicates=1)
+		# print 'setSignals:', self.previousName(allowLevel0=True, allowDuplicates=1, as_list=1)
+		previousName = self.previousName(allowLevel0=True, allowDuplicates=1)
 		if previousName:
 			self.removeSignal(previousName) #remove signals from the previous ui.
 		self.addSignal(name)
@@ -220,7 +222,7 @@ class Switchboard(object):
 			signal = self.getSignal(name, objectName)
 			slot = self.getMethod(name, objectName)
 			# print 'addSignal: ', name, objectName, signal, slot
-			if slot:
+			if slot and signal:
 				try:
 					signal.connect(slot) #connect single slot (main and viewport)
 				except:
@@ -242,7 +244,7 @@ class Switchboard(object):
 			signal = self.getSignal(name, objectName)
 			slot = self.getMethod(name, objectName)
 			# print 'removeSignal: ', name, objectName, signal, slot
-			if slot:
+			if slot and signal:
 				try:
 					signal.disconnect(slot) #disconnect single slot (main and viewport)
 				except:
@@ -415,7 +417,7 @@ class Switchboard(object):
 
 	def getNameFrom(self, obj):
 		'''
-		Get the ui(class) name from any object existing in widgetDict.
+		Get the ui name from any object existing in widgetDict.
 		args:
 			obj = <object> - 
 		returns:
@@ -660,19 +662,23 @@ class Switchboard(object):
 
 		docString = self._sbDict[name]['widgetDict'][methodName]['docString']
 		if docString and not full:
-			docString.strip('\n\t') #return formatted docString
+			return docString.strip('\n\t') #return formatted docString
 		else:
-			return docString #return entire unformatted docString. In some cases 'None'.
+			return docString #return entire unformatted docString, or 'None' is docString==None.
 
 
 
-	def previousName(self, previousIndex=False, allowDuplicates=False, allowInit=False, as_list=False):
+	def previousName(self, previousIndex=False, allowDuplicates=False, allowLevel0=False, allowLevel1=True, allowLevel2=True, allowCurrent=False, as_list=False):
 		'''
-		Get the previously called ui name string, or a list of ui name strings ordered by use. ie. ['previousName2', 'previousName1', 'currentName']
+		Get the previously called ui name string, or a list of ui name strings ordered by use.
+		It does so by pulling from the 'name' list which keeps a list of the ui names as they are called. ie. ['previousName2', 'previousName1', 'currentName']
 		args:
 			previousIndex = bool - return the index of the last valid previously opened ui name.
 			allowDuplicates = bool - applicable when returning as_list. Returns the list allowing for duplicate names.
-			allowInit = bool - keep instances of init. Default is Off.
+			allowLevel0 = bool - allow instances of init menu in the results. Default is Off.
+			allowLevel1 = bool - allow instances of base level menus in the results. Default is On.
+			allowLevel2 = bool - allow instances of submenu's in the results. Default is On.
+			allowCurrent = bool - allow the currentName. Default is off.
 			as_list = bool - returns the full list of previously called names. By default duplicates are removed.
 		returns:
 			with no arguments given - string name of previously opened ui.
@@ -682,13 +688,22 @@ class Switchboard(object):
 		if not 'name' in self._sbDict:
 			self._sbDict['name'] = []
 
-		self._sbDict['name'] = self._sbDict['name'][-250:] #keep original list length restricted to last 250 elements
+		self._sbDict['name'] = self._sbDict['name'][-200:] #keep original list length restricted to last 200 elements
 
-		if allowInit:
-			list_ = [i for i in self._sbDict['name']] #work on a copy of the list, keeping the original intact
-		else:	
-			list_ = [i for i in self._sbDict['name'] if 'init' not in i] #work on a copy of the list, removing any instances of 'init', keeping the original intact
-		
+		list_ = self._sbDict['name'] #work on a copy of the list, keeping the original intact
+
+		if not allowCurrent:
+			list_ = list_[:-1] #remove the last index. (currentName)
+
+		if not allowLevel0:
+			list_ = [i for i in list_ if not self.getUiLevel(i)==0] #remove 'init' menu.
+
+		if not allowLevel1:
+			list_ = [i for i in list_ if not self.getUiLevel(i)==1] #remove base level menus.
+
+		if not allowLevel2:
+			list_ = [i for i in list_ if not self.getUiLevel(i)==2] #remove any submenus.
+
 		if not allowDuplicates:
 			[list_.remove(l) for l in list_[:] if list_.count(l)>1] #remove any previous duplicates if they exist; keeping the last added element.
 
@@ -701,7 +716,7 @@ class Switchboard(object):
 
 		else:
 			try:
-				return list_[-2] #return the previous ui name if one exists.
+				return list_[-1] #return the previous ui name if one exists.
 			except:
 				return ''
 
@@ -710,28 +725,35 @@ class Switchboard(object):
 	def prevCommand(self, docString=False, method=False, as_list=False):
 		'''
 		args:
-			docString = bool 		return docString of last command
-			methodList = bool 	return method of last command
+			docString = bool - return the docString of last command. Default is off.
+			method = bool - return the method of last command. Default is off.
 		returns:
-			if docString: 'string' description (derived from the last used command method's docString)
-			if docString AND as_list: [string list] all docStrings, in order of use, as a list
-			if method: method of last used command.
-			if method AND as_list: [<method object> list} all methods, in order of use, as a list
-			if as_list: list of lists with <method object> as first element and <docString> as second. 'prevCommand':[[b001, 'multi-cut tool']] }
+			if docString: 'string' description (derived from the last used command method's docString) (as_list: [string list] all docStrings, in order of use)
+			if method: method of last used command. (as_list: [<method object> list} all methods, in order of use)
+			if as_list: list of lists with <method object> as first element and <docString> as second. ie. [[b001, 'multi-cut tool']]
 			else : <method object> of the last used command
 		'''
-		if not 'prevCommand' in self._sbDict: self._sbDict['prevCommand'] = [] #initialize list
+		if not 'prevCommand' in self._sbDict:
+			self._sbDict['prevCommand'] = [] #initialize list
 
 		self._sbDict['prevCommand'] = self._sbDict['prevCommand'][-20:] #keep original list length restricted to last 20 elements
 
 		list_ = self._sbDict['prevCommand']
 		[list_.remove(l) for l in list_[:] if list_.count(l)>1] #remove any previous duplicates if they exist; keeping the last added element.
 
-		if docString and as_list:
-			try:
-				return [i[1] for i in list_]
-			except:
-				return None
+		if as_list:
+			if docString and not method:
+				try:
+					return [i[1] for i in list_]
+				except:
+					return None
+			elif method and not docString:
+				try:
+					return [i[0] for i in list_]
+				except:
+					return ['# No commands in history. #']
+			else:
+				return list_
 
 		elif docString:
 			try:
@@ -739,21 +761,6 @@ class Switchboard(object):
 			except:
 				return ''
 
-		elif method and as_list:
-			try:
-				return [i[0] for i in list_]
-			except:
-				return ['# No commands in history. #']
-
-		elif method:
-			try:
-				return list_[-1][0]
-			except:
-				return ''
-		
-		elif as_list:
-			return list_
-
 		else:
 			try:
 				return list_[-1][0]
@@ -762,35 +769,54 @@ class Switchboard(object):
 
 
 
-	def previousUi(self, previousIndex=False, allowDuplicates=False, as_list=False):
+	def prevCamera(self, docString=False, method=False, allowCurrent=False, as_list=False):
 		'''
 		args:
-			previousIndex = bool 	return the index of the last valid previously opened ui name.
+			docString = bool - return the docString of last camera command. Default is off.
+			method = bool - return the method of last camera command. Default is off.
+			allowCurrent = bool - allow the current camera. Default is off.
 		returns:
-			if previousIndex: int index of previously opened ui
-			else: string name of previously opened layout.
+			if docString: 'string' description (derived from the last used camera command's docString) (as_list: [string list] all docStrings, in order of use)
+			if method: method of last used camera command. (as_list: [<method object> list} all methods, in order of use)
+			if as_list: list of lists with <method object> as first element and <docString> as second. ie. [[<v001>, 'camera: persp']]
+			else : <method object> of the last used command
 		'''
-		if not 'name' in self._sbDict:
-			self._sbDict['name'] = []
+		if not 'prevCamera' in self._sbDict:
+			self._sbDict['prevCamera'] = [] #initialize list
 
-		self._sbDict['name'] = self._sbDict['name'][-10:] #keep original list length restricted to last ten elements
+		self._sbDict['prevCamera'] = self._sbDict['prevCamera'][-20:] #keep original list length restricted to last 20 elements
 
-		list_ = [i for i in self._sbDict['name'] if 'init' not in i] #work on a copy of the list, removing any instances of 'init', keeping the original intact
-		if not allowDuplicates:
-			[list_.remove(l) for l in list_[:] if list_.count(l)>1] #remove any previous duplicates if they exist; keeping the last added element.
+		list_ = self._sbDict['prevCamera']
+		[list_.remove(l) for l in list_[:] if list_.count(l)>1] #remove any previous duplicates if they exist; keeping the last added element.
 
-		if previousIndex:
-			validPrevious = [i for i in list_ if all(['viewport' not in i, 'main' not in i])]
-			return self.getUiIndex(validPrevious[-2])
+		if not allowCurrent:
+			list_ = list_[:-1] #remove the last index. (currentName)
 
-		elif as_list:
-			return list_
+		if as_list:
+			if docString and not method:
+				try:
+					return [i[1] for i in list_]
+				except:
+					return None
+			elif method and not docString:
+				try:
+					return [i[0] for i in list_]
+				except:
+					return ['# No commands in history. #']
+			else:
+				return list_
+
+		elif docString:
+			try:
+				return list_[-1][1]
+			except:
+				return ''
 
 		else:
 			try:
-				return list_[-2]
+				return list_[-1][0]
 			except:
-				return ''
+				return None
 
 
 
@@ -860,23 +886,25 @@ class Switchboard(object):
 
 
 	@staticmethod
-	def getUiLevel(name, submenu_level=False):
+	def getUiLevel(name):
 		'''
 		Get the hierarchy level of the given ui name.
 		A future rewrite is needed to auto-sort versus exlicitly stating any ui names.
+		level 0: init
+		level 1: base menus
+		level 2: submenus
+		level 3: menus
 		args:
 			name = 'string' -  ui name to check level of.
-			submenuLevel = bool - placeholder - when True returns an int representing the hierarchical level of a submenu from 0.
-
 		returns:
-
+			int - ui level
 		'''
-		if name and '_submenu' in name:
-			return 2
-		if any([name=='main', name=='editors', name=='viewport']):
-			return 1
 		if name=='init':
 			return 0
+		if any([name=='main', name=='editors', name=='viewport']):
+			return 1
+		if '_submenu' in name:
+			return 2
 		else:
 			return 3
 
@@ -981,16 +1009,18 @@ test example:
 _sbDict={
 	'polygons':{'class': '<Polygons>',
 				'ui': '<polygons ui object>',
-				'size': [210, 480] 
+				'size': [210, 480],
 				'widgetDict': {'cmb002': {'widget': '<widgets.QComboBox_.QComboBox_ object at 0x0000016B6C078908>', 
 									'widgetType': 'QComboBox_', 
 									'derivedType': 'QComboBox', 
-									'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000016B62BC5780>', 
-									'docString': '\n\t\tSelect All Of Type\n\t\t', 
+									'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000016B62BC5780>',
+									'prefix':'cmb', 
+									'docString': '\n\t\tSelect All Of Type\n\t\t',
 									'method': '<bound method Selection.cmb002 of <tk_slots_max_selection.Selection object at 0x0000016B6BC26470>>'}, }},
 	'mainAppWindow': None,
 	'name': ['polygons'],
 	'prevCommand': [['b000', 'multi-cut tool']],
+	'prevCamera:': [['v000', 'Viewport: Persp']],
 	'gcProtect': ['<protected object>']}
 '''
 
@@ -1052,3 +1082,37 @@ _sbDict={
 # 				break
 # 		if newhandler is not None:
 # 			signal.connect(newhandler)
+
+
+
+
+
+	# def previousUi(self, previousIndex=False, allowDuplicates=False, as_list=False):
+	# 	'''
+	# 	args:
+	# 		previousIndex = bool - return the index of the last valid previously opened ui name.
+	# 	returns:
+	# 		if previousIndex: int index of previously opened ui
+	# 		else: string name of previously opened layout.
+	# 	'''
+	# 	if not 'name' in self._sbDict:
+	# 		self._sbDict['name'] = []
+
+	# 	self._sbDict['name'] = self._sbDict['name'][-10:] #keep original list length restricted to last ten elements
+
+	# 	list_ = [i for i in self._sbDict['name'] if 'init' not in i] #work on a copy of the list, removing any instances of 'init', keeping the original intact
+	# 	if not allowDuplicates:
+	# 		[list_.remove(l) for l in list_[:] if list_.count(l)>1] #remove any previous duplicates if they exist; keeping the last added element.
+
+	# 	if previousIndex:
+	# 		validPrevious = [i for i in list_ if all(['viewport' not in i, 'main' not in i])]
+	# 		return self.getUiIndex(validPrevious[-2])
+
+	# 	elif as_list:
+	# 		return list_
+
+	# 	else:
+	# 		try:
+	# 			return list_[-2]
+	# 		except:
+	# 			return ''

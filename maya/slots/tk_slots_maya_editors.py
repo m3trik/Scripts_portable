@@ -28,8 +28,8 @@ class Editors(Init):
 		# self.sb.getUi('dynLayout').addWidget(self.stackedWidget)
 
 		print pm.lsUI(
-				numWidgets=True,	//#[bool, create]  Reports the number of QT widgets used by Maya.
-				dumpWidgets=True	//#[bool, create]  Dump all QT widgets used by Maya.
+				numWidgets=True,	#[bool, create]  Reports the number of QT widgets used by Maya.
+				dumpWidgets=True	#[bool, create]  Dump all QT widgets used by Maya.
 				)
 
 

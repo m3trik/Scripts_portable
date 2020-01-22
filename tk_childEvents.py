@@ -52,7 +52,7 @@ class EventFactoryFilter(QtCore.QObject):
 
 			uiLevel = self.sb.getUiLevel(name)
 
-			if not widget.styleSheet(): #if the widget doesn't already have a styleSheet.
+			if hasattr(widget,'styleSheet') and not widget.styleSheet(): #if the widget can be assigned a stylesheet, and doesn't already have one:
 				if '_submenu' in name and not self.sb.prefix(widgetName, 'i'):
 					widget.setStyleSheet(getattr(StyleSheet, 'submenu', ''))
 				else:
@@ -204,7 +204,10 @@ class EventFactoryFilter(QtCore.QObject):
 
 
 		self.widget = widget
-		self.name = self.sb.getNameFrom(self.widget) #get the ui name corresponding to the given widget.
+		self.name = self.sb.getNameFrom(self.widget) #get the name of the ui containing the given widget.
+		if not self.name:
+			print 'Failed name lookup:', self.name, self.widget.objectName(), event
+			return False
 		self.widgetName = self.widget.objectName()
 		self.widgetType = self.sb.getWidgetType(self.widget, self.name)
 		self.derivedType = self.sb.getDerivedType(self.widget, self.name)
@@ -233,6 +236,9 @@ class EventFactoryFilter(QtCore.QObject):
 		'''
 		if self.widgetName=='mainWindow':
 			self.widget.activateWindow()
+
+		if self.widgetName=='info':
+			self.resizeAndCenterWidget(self.widget)
 
 		if self.derivedType=='QComboBox':
 			method = self.sb.getMethod(self.name, self.widgetName)
@@ -330,14 +336,21 @@ class EventFactoryFilter(QtCore.QObject):
 					self.parent.move(QtGui.QCursor.pos() - self.parent.ui.rect().center()) #move window to cursor position and offset from left corner to center
 
 				elif self.sb.prefix(self.widgetName, 'v'):
-					self.sb.previousUi(as_list=1).append(self.sb.getMethod(self.name, self.widgetName)) #store the camera view
+					#add the buttons command info to the prevCamera list.
+					method = self.sb.getMethod(self.name, self.widgetName)
+					docString = self.sb.getDocString(self.name, self.widgetName)
+					self.sb.prevCamera(allowCurrent=True, as_list=1).append([method, docString]) #store the camera view
+					#send click signal on mouseRelease.
 					self.widget.click()
 
 				elif self.sb.prefix(self.widgetName, 'b'):
 					if '_submenu' in self.name:
 						self.widget.click()
-					#add the buttons command to the prevCommand list.
-					self.sb.prevCommand(as_list=1).append([self.sb.getMethod(self.name, self.widgetName), self.sb.getDocString(self.name, self.widgetName)]) #store the command method object and it's docString (ie. 'Multi-cut tool')
+
+					#add the buttons command info to the prevCommand list.
+					method = self.sb.getMethod(self.name, self.widgetName)
+					docString = self.sb.getDocString(self.name, self.widgetName)
+					self.sb.prevCommand(as_list=1).append([method, docString]) #store the command method object and it's docString (ie. 'Multi-cut tool')
 
 
 

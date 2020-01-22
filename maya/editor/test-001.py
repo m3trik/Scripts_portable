@@ -4,8 +4,16 @@ try: tk_scrollFieldReporter = pm.melGlobals['tk_scrollFieldReporter']; pm.scroll
 except: pass
 
 from pydoc import locate
-from tk_slots_maya_init import Init as func #inherits from Slot
+from tk_slots_maya_init import Init #inherits from Slots_
 import tk_switchboard as sb
+
+
+
+
+
+
+_sbDict = sb.dict_()
+
 
 
 
@@ -18,10 +26,9 @@ print inspect.getmembers(pm.modelEditor(panel, edit=1, pluginObjects=['gpuCache'
 
 
 
-class Test001(func):
+class Test001(Init):
 	def __init__(self, *args, **kwargs):
 		super(Test001, self).__init__(*args, **kwargs)
-
 
 		''' Start Code '''
 		selection = pm.ls(selection=1)
@@ -64,7 +71,7 @@ class embedWidget(QtWidgets.QMainWindow):
 	'''
 
 	'''
-	def __init__(self, parent=func.getMayaMainWindow()):
+	def __init__(self, parent=Init.getMayaMainWindow()):
 		super(embedWidget, self).__init__(parent)
 
 
@@ -75,12 +82,12 @@ class embedWidget(QtWidgets.QMainWindow):
 		# 	print widget
 
 
-		widget = func.getMayaWidget('ToggledOutlinerLayout') #DisplayLayerTab
+		widget = Init.getMayaWidget('ToggledOutlinerLayout') #DisplayLayerTab
 		layout = widget.layout()
 		# print widget, layout
 		self.setLayout(layout)
 		self.setCentralWidget(widget)
-		# self.setCentralWidget(func.convertToWidget(widget))
+		# self.setCentralWidget(Init.convertToWidget(widget))
 
 
 # w = embedWidget()

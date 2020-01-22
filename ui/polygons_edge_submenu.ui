@@ -59,54 +59,14 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <widget class="QPushButton" name="b009">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>375</x>
-      <y>260</y>
-      <width>56</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>111</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="toolTip">
-     <string>Collapse the selected edges or faces</string>
-    </property>
-    <property name="text">
-     <string>Collapse</string>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>18</width>
-      <height>18</height>
-     </size>
-    </property>
-    <property name="autoDefault">
-     <bool>false</bool>
-    </property>
-    <property name="default">
-     <bool>false</bool>
-    </property>
-    <property name="flat">
-     <bool>false</bool>
-    </property>
-   </widget>
    <widget class="QPushButton" name="b047">
     <property name="enabled">
      <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
-      <x>255</x>
-      <y>250</y>
+      <x>155</x>
+      <y>280</y>
       <width>91</width>
       <height>19</height>
      </rect>
@@ -167,46 +127,6 @@
      </palette>
     </property>
    </widget>
-   <widget class="QPushButton" name="b046">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>185</x>
-      <y>260</y>
-      <width>56</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>111</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="toolTip">
-     <string>Split selected components resulting in a edge ring around them</string>
-    </property>
-    <property name="text">
-     <string>Split</string>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>18</width>
-      <height>18</height>
-     </size>
-    </property>
-    <property name="autoDefault">
-     <bool>false</bool>
-    </property>
-    <property name="default">
-     <bool>false</bool>
-    </property>
-    <property name="flat">
-     <bool>false</bool>
-    </property>
-   </widget>
    <widget class="QPushButton" name="i002">
     <property name="geometry">
      <rect>
@@ -241,8 +161,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>210</y>
+      <x>230</x>
+      <y>250</y>
       <width>56</width>
       <height>19</height>
      </rect>

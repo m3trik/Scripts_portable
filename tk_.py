@@ -50,7 +50,7 @@ class Tk(QtWidgets.QStackedWidget):
 		args:
 			name = 'string' - name of ui.
 		'''
-		if not name in self.sb.previousName(allowInit=1, as_list=1): #if ui(name) hasn't been set before, init the ui for the given name.
+		if not name in self.sb.previousName(allowLevel0=1, as_list=1): #if ui(name) hasn't been set before, init the ui for the given name.
 			self.sb.setUiSize(name) #Set the size info for each ui (allows for resizing a stacked widget where ordinarily resizing is constrained by the largest widget in the stack)
 			self.addWidget(self.sb.getUi(name)) #add each ui to the stackedLayout.
 			self.childEvents.init(name)
@@ -71,7 +71,7 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		Return the stacked widget to it's starting index.
 		'''
-		previous = [i for i in self.sb.previousName(as_list=1) if '_submenu' not in i][-1]
+		previous = self.sb.previousName(allowLevel2=False)
 		self.setUi(previous) #return the stacked widget to it's previous ui.
 
 		#Reset the lists that make up the draw and widget paths.
@@ -162,7 +162,7 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		if self.uiLevel<3:
 			self.move(QtGui.QCursor.pos() - self.rect().center()) #move window to cursor position and offset from left corner to center
-			
+
 			self.widgetPath=[] #maintain a list of widgets and their location, as a path is plotted along the ui hierarchy. ie. [[<QPushButton object1>, QPoint(665, 396)], [<QPushButton object2>, QPoint(585, 356)]]
 			self.drawPath=[] #initiate the drawPath list that will contain points as the user moves along a hierarchical path.
 			self.drawPath.append(self.mapToGlobal(self.rect().center()))
@@ -207,10 +207,10 @@ class Tk(QtWidgets.QStackedWidget):
 			self.repeatLastCameraView()
 
 		elif event.button()==QtCore.Qt.LeftButton:
-			self.repeatLastUi()
+			self.repeatLastCommand()
 
 		elif event.button()==QtCore.Qt.MiddleButton:
-			self.repeatLastCommand()
+			self.repeatLastUi()
 
 
 
@@ -247,7 +247,6 @@ class Tk(QtWidgets.QStackedWidget):
 		method = self.sb.getMethod(self.name, 'info')
 		if callable(method):
 			self.ui.info.insertText(method())
-			self.childEvents.resizeAndCenterWidget(self.ui.info)
 
 		self.move(QtGui.QCursor.pos() - self.rect().center()) #move window to cursor position and offset from left corner to center
 		self.activateWindow()
@@ -259,7 +258,6 @@ class Tk(QtWidgets.QStackedWidget):
 		Repeat the last used command.
 		'''
 		try:
-			print self.sb.prevCommand(), self.sb.prevCommand(docString=1) #print command name string
 			self.sb.prevCommand()()
 		except:
 			print "# Warning: No recent commands in history. #"
@@ -268,10 +266,12 @@ class Tk(QtWidgets.QStackedWidget):
 
 	def repeatLastCameraView(self):
 		'''
-		Show the previous orthographic view.
+		Show the previous camera view.
 		'''
 		try:
-			pass
+			self.sb.prevCamera()()
+			cam = self.sb.prevCamera(allowCurrent=True, as_list=1)[-2]
+			self.sb.prevCamera(allowCurrent=True, as_list=1).append(cam) #store the camera view
 		except:
 			print "# Warning: No recent camera views in history. #"
 
@@ -281,12 +281,12 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		Open the last used valid menu.
 		'''
-		try:
-			print self.sb.previousUi()
-			self.sb.previousUi()()
-		except: 
+		previousName = self.sb.previousName(allowLevel1=False, allowLevel2=False)
+		if previousName:
+			self.setUi(previousName)
+		else:
 			print "# Warning: No recent menus in history. #"
-		
+
 
 
 
