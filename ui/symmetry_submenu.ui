@@ -109,7 +109,7 @@
      <string>Symmetry: X axis</string>
     </property>
     <property name="text">
-     <string>X</string>
+     <string>X ±</string>
     </property>
     <property name="iconSize">
      <size>
@@ -155,7 +155,7 @@
      <string>Symmetry: Y axis</string>
     </property>
     <property name="text">
-     <string>Y</string>
+     <string>Y ±</string>
     </property>
     <property name="iconSize">
      <size>
@@ -201,7 +201,7 @@
      <string>Symmetry: Z axis</string>
     </property>
     <property name="text">
-     <string>Z</string>
+     <string>Z ±</string>
     </property>
     <property name="iconSize">
      <size>

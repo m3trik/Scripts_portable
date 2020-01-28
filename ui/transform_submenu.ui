@@ -174,7 +174,7 @@
      <bool>true</bool>
     </property>
     <property name="text">
-     <string>Constrain: Edge</string>
+     <string>Constrain: Edge ±</string>
     </property>
     <property name="iconSize">
      <size>
@@ -331,7 +331,7 @@
      <bool>true</bool>
     </property>
     <property name="text">
-     <string>Constrain:Surface</string>
+     <string>Constrain:Surface ±</string>
     </property>
     <property name="iconSize">
      <size>

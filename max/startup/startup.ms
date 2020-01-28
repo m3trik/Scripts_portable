@@ -78,7 +78,7 @@ function PerformDelayedTasks sender evt=
 	-- commands --
 
 	-- user macros:
-	FileIn (dir_+"/max/macros/macros.ms")
+	FileIn (dir_+"/max/macros.ms")
 
 	-- hide statusPanel
 	statusPanel.visible = true

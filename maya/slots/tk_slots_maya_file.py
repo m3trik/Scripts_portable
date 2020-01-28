@@ -171,6 +171,8 @@ class File(Init):
 			index = cmb.currentIndex()
 		if index!=0:
 			dir_= path+list_[index-1]
+			if dir_.startswith('//'): #reformat for server address
+				dir_ = dir_.replace('/', '\\')
 			os.startfile(dir_)
 			cmb.setCurrentIndex(0)
 

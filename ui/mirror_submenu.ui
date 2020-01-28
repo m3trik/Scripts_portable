@@ -192,7 +192,7 @@
      <enum>Qt::RightToLeft</enum>
     </property>
     <property name="text">
-     <string>Cut</string>
+     <string>Cut ±</string>
     </property>
     <property name="checkable">
      <bool>true</bool>

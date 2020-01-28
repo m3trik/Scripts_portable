@@ -280,7 +280,7 @@
      <enum>Qt::LeftToRight</enum>
     </property>
     <property name="text">
-     <string>Delete Loop</string>
+     <string>Delete Loop ±</string>
     </property>
     <property name="iconSize">
      <size>

@@ -175,7 +175,7 @@
      <rect>
       <x>340</x>
       <y>240</y>
-      <width>31</width>
+      <width>41</width>
       <height>19</height>
      </rect>
     </property>
@@ -189,7 +189,7 @@
      <string>Auto crease selected object(s) within set angle tolerance.</string>
     </property>
     <property name="text">
-     <string>Auto</string>
+     <string>Auto ±</string>
     </property>
     <property name="iconSize">
      <size>
@@ -258,7 +258,7 @@
      <rect>
       <x>340</x>
       <y>340</y>
-      <width>21</width>
+      <width>31</width>
       <height>19</height>
      </rect>
     </property>
@@ -272,7 +272,7 @@
      <string>Un-crease selected components or If in object mode, uncrease all.</string>
     </property>
     <property name="text">
-     <string>Un</string>
+     <string>Un ±</string>
     </property>
     <property name="iconSize">
      <size>

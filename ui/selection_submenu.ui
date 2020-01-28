@@ -121,8 +121,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>260</y>
+      <x>455</x>
+      <y>210</y>
       <width>111</width>
       <height>19</height>
      </rect>
@@ -143,7 +143,7 @@
      <bool>true</bool>
     </property>
     <property name="text">
-     <string>ignore Backfacing</string>
+     <string>ignore Backfacing ±</string>
     </property>
     <property name="iconSize">
      <size>
@@ -158,15 +158,15 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="b013">
+   <widget class="QPushButton" name="chk006">
     <property name="enabled">
      <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>340</y>
-      <width>31</width>
+      <x>485</x>
+      <y>270</y>
+      <width>51</width>
       <height>19</height>
      </rect>
     </property>
@@ -177,16 +177,19 @@
      </size>
     </property>
     <property name="toolTip">
-     <string>Lasso Select</string>
+     <string>Select Style: Lasso</string>
     </property>
     <property name="text">
-     <string>Lasso</string>
+     <string>Lasso ±</string>
     </property>
     <property name="iconSize">
      <size>
       <width>18</width>
       <height>18</height>
      </size>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
     </property>
     <property name="autoDefault">
      <bool>false</bool>
@@ -307,6 +310,92 @@
       <width>18</width>
       <height>18</height>
      </size>
+    </property>
+    <property name="autoDefault">
+     <bool>false</bool>
+    </property>
+    <property name="default">
+     <bool>false</bool>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="chk005">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>475</x>
+      <y>240</y>
+      <width>76</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>104</width>
+      <height>19</height>
+     </size>
+    </property>
+    <property name="toolTip">
+     <string>Select Style: Marquee</string>
+    </property>
+    <property name="text">
+     <string>Marquee ±</string>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>18</width>
+      <height>18</height>
+     </size>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="autoDefault">
+     <bool>false</bool>
+    </property>
+    <property name="default">
+     <bool>false</bool>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="chk007">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>485</x>
+      <y>300</y>
+      <width>51</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>104</width>
+      <height>19</height>
+     </size>
+    </property>
+    <property name="toolTip">
+     <string>Select Style: Paint</string>
+    </property>
+    <property name="text">
+     <string>Paint ±</string>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>18</width>
+      <height>18</height>
+     </size>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
     </property>
     <property name="autoDefault">
      <bool>false</bool>

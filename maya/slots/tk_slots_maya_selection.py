@@ -21,9 +21,17 @@ class Selection(Init):
 		state = pm.selectPref(query=True, useDepth=True)
 		self.ui.chk004.setChecked(state)
 
-		#on click event
-		self.ui.chk003.clicked.connect(self.b001) #un-paint
-
+		#selection style: set initial checked state
+		ctx = pm.currentCtx() #flags (ctx, c=True) get the context's class.
+		if ctx == 'lassoContext':
+			self.cmb004(index=1)
+			self.submenu.chk006.setChecked(True)
+		elif ctx == 'paintContext':
+			self.cmb004(index=2)
+			self.submenu.chk007.setChecked(True)
+		else: #selectContext
+			self.cmb004(index=0)
+			self.submenu.chk005.setChecked(True)
 
 
 	def t000(self):
@@ -76,13 +84,60 @@ class Selection(Init):
 			self.viewPortMessage("Camera-based selection <hl>Off</hl>.")
 
 
+	def chk005(self):
+		'''
+		Select Style: Marquee
+		'''
+		self.setSelectionStyle('selectContext')
+		self.setWidgets(self.ui, setChecked='chk005', setChecked_False='chk006-7')
+		self.ui.cmb004.setCurrentIndex(0)
+
+
+	def chk006(self):
+		'''
+		Select Style: Lasso
+		'''
+		self.setSelectionStyle('lassoContext')
+		self.setWidgets(self.ui, setChecked='chk006', setChecked_False='chk005,chk007')
+		self.ui.cmb004.setCurrentIndex(1)
+
+
+	def chk007(self):
+		'''
+		Select Style: Paint
+		'''
+		self.setSelectionStyle('paintContext')
+		self.setWidgets(self.ui, setChecked='chk007', setChecked_False='chk005-6')
+		self.ui.cmb004.setCurrentIndex(2)
+
+
+	def setSelectionStyle(self, ctx):
+		'''
+		Set the selection style context.
+		args:
+			ctx = 'string' - Selection style context. Possible values include: 'marquee', 'lasso', 'drag'.
+		'''
+		if pm.contextInfo(ctx, exists=True):
+			pm.deleteUI(ctx)
+
+		if ctx=='selectContext':
+			ctx = pm.selectContext(ctx)
+		elif ctx=='lassoContext':
+			ctx = pm.lassoContext(ctx)
+		elif ctx=='paintContext':
+			ctx = pm.artSelectCtx(ctx)
+
+		pm.setToolTo(ctx)
+		self.viewPortMessage('Select Style: <hl>'+ctx+'</hl>')
+
+
 	def cmb000(self, index=None):
 		'''
 		List Selection Sets
 		'''
 		cmb = self.ui.cmb000
 
-		contents = self.comboBox (cmb, [str(set_) for set_ in pm.ls (et="objectSet", flatten=1)], "Sets")
+		contents = self.comboBox(cmb, [str(set_) for set_ in pm.ls (et="objectSet", flatten=1)], "Sets")
 
 		if not index:
 			index = cmb.currentIndex()
@@ -186,7 +241,7 @@ class Selection(Init):
 
 		list_ = ['Verts', 'Vertex Faces', 'Vertex Perimeter', 'Edges', 'Edge Loop', 'Edge Ring', 'Contained Edges', 'Edge Perimeter', 'Border Edges', 'Faces', 'Face Path', 'Contained Faces', 'Face Perimeter', 'UV\'s', 'UV Shell', 'UV Shell Border', 'UV Perimeter', 'UV Edge Loop', 'Shell', 'Shell Border'] 
 
-		contents = self.comboBox (cmb, list_, 'Convert To')
+		contents = self.comboBox(cmb, list_, 'Convert To')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -234,6 +289,27 @@ class Selection(Init):
 			cmb.setCurrentIndex(0)
 
 
+	def cmb004(self, index=None):
+		'''
+		Select Style: Set Context
+		'''
+		cmb = self.ui.cmb004
+
+		list_ = ['Marquee', 'Lasso', 'Paint'] 
+
+		contents = self.comboBox (cmb, list_)
+
+		if not index:
+			index = cmb.currentIndex()
+
+		if index==contents.index('Marquee'): #
+			self.chk005()
+		if index==contents.index('Lasso'): #
+			self.chk006()
+		if index==contents.index('Paint'): #
+			self.chk007()
+
+
 	def b000(self):
 		'''
 		Create Selection Set
@@ -249,19 +325,7 @@ class Selection(Init):
 
 	def b001(self):
 		'''
-		Paint Select
 		'''
-		if pm.contextInfo ("paintSelect", exists=True):
-			pm.deleteUI ("paintSelect")
-
-		radius = float(self.ui.s001.value()) #Sets the size of the brush. C: Default is 1.0 cm. Q: When queried, it returns a float.
-		lowerradius = 2.5 #Sets the lower size of the brush (only apply on tablet).
-		selectop = "select"
-		if self.ui.chk003.isChecked():
-			selectop = "unselect"
-
-		pm.artSelectCtx ("paintSelect", selectop=selectop, radius=radius, lowerradius=lowerradius)#, beforeStrokeCmd=beforeStrokeCmd())
-		pm.setToolTo ("paintSelect")
 
 
 	def b002(self):
@@ -362,9 +426,7 @@ class Selection(Init):
 
 	def b013(self):
 		'''
-		Lasso Select
 		'''
-		mel.eval("LassoTool;")
 
 
 	def b014(self):
