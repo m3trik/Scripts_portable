@@ -41,7 +41,7 @@ class Init(Slot):
 			if pm.selectMode(query=1, object=1): #object mode:
 				if pm.selectType(query=1, allObjects=1): #get object/s
 					selectedObjects={}; [selectedObjects.setdefault(str(pm.objectType(s)),[]).append(str(s)) for s in pm.ls(selection=1, objectsOnly=1)] #for any selected objects, set object type as key and append object names as value. if key doesn't exist, use setdefault to initialize an empty list and append. ie. {'joint': ['joint_root_0', 'joint_lower_L8', 'joint_lower_L3']}
-					infoDict.update({'Objects: ':selectedObjects}) #currently selected objects
+					infoDict.update({'Selection: ':selectedObjects}) #currently selected objects
 
 			elif pm.selectMode(query=1, component=1): #component mode:
 				if pm.selectType(query=1, vertex=1): #get vertex selection info
@@ -66,9 +66,9 @@ class Init(Slot):
 			# selectedUVs = pm.polyEvaluate(uvComponent=1); 
 			# if type(selectedUvs)==int: infoDict.update({"Selected UV's: ":selectedUVs}) #selected uv's
 
-		prevCommand = self.sb.prevCommand(docString=True); infoDict.update({"Previous Command: ":prevCommand})  #get button text from last used command
-		prevUi = self.sb.previousName(allowLevel1=False, allowLevel2=False); infoDict.update({"Previous UI: ":prevUi.replace('_', ' ').title()})  #get the last level 3 ui name string.
-		prevCamera = self.sb.prevCamera(docString=True); infoDict.update({"Previous Camera: ":prevCamera})  #get the previously used camera.
+		prevCommand = self.sb.prevCommand(docString=True); infoDict.update({"Prev Command: ":prevCommand})  #get button text from last used command
+		prevUi = self.sb.previousName(allowLevel1=False, allowLevel2=False); infoDict.update({"Prev UI: ":prevUi.replace('_', ' ').title()})  #get the last level 3 ui name string.
+		prevCamera = self.sb.prevCamera(docString=True); infoDict.update({"Prev Camera: ":prevCamera})  #get the previously used camera.
 
 		return infoDict
 

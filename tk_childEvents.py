@@ -16,10 +16,10 @@ class EventFactoryFilter(QtCore.QObject):
 	args:
 		parent=<parent>
 	'''
-	__mouseOver = [] #list of widgets currently under the mouse cursor.
-	__mouseGrabber = None
-	__mouseHover = QtCore.Signal(bool)
-	__mousePressPos = QtCore.QPoint()
+	_mouseOver = [] #list of widgets currently under the mouse cursor.
+	_mouseGrabber = None
+	_mouseHover = QtCore.Signal(bool)
+	_mousePressPos = QtCore.QPoint()
 
 	enterEvent_ = QtCore.QEvent(QtCore.QEvent.Enter)
 	leaveEvent_ = QtCore.QEvent(QtCore.QEvent.Leave)
@@ -129,6 +129,7 @@ class EventFactoryFilter(QtCore.QObject):
 	def mouseTracking(self, name):
 		'''
 		Get widget/s currently under cursor. Grab mouse, and send events accordingly.
+		Send Enter event and grab mouse. (used to trigger widgets entered while in the mouse button down state)
 		args:
 			name = 'string' - ui name.
 		'''
@@ -136,18 +137,20 @@ class EventFactoryFilter(QtCore.QObject):
 			widgetName = widget.objectName()
 
 			if widget.rect().contains(widget.mapFromGlobal(QtGui.QCursor.pos())): #if mouse over widget:
-				if not widget in self.__mouseOver: #if widget is already in the mouseOver list, no need to re-process the events.
+				if not widget in self._mouseOver: #if widget is already in the mouseOver list, no need to re-process the events.
 					QtWidgets.QApplication.sendEvent(widget, self.enterEvent_)
-					self.__mouseOver.append(widget)
+					self._mouseOver.append(widget)
 
 					if not widgetName=='mainWindow':
 						widget.grabMouse() #set widget to receive mouse events.
-						self.__mouseGrabber = widget
-
+						self._mouseGrabber = widget
 			else:
-				if widget in self.__mouseOver: #if widget is in the mouseOver list, but the mouse is no longer over the widget:
+				if widget in self._mouseOver: #if widget is in the mouseOver list, but the mouse is no longer over the widget:
 					QtWidgets.QApplication.sendEvent(widget, self.leaveEvent_)
-					self.__mouseOver.remove(widget)
+					self._mouseOver.remove(widget)
+					if self.ui.mainWindow.isVisible():
+						self.ui.mainWindow.grabMouse()
+						self._mouseGrabber = self.ui.mainWindow
 
 
 
@@ -253,9 +256,9 @@ class EventFactoryFilter(QtCore.QObject):
 			event = <QEvent>
 		'''
 		if self.widgetName=='mainWindow':
-			if self.__mouseGrabber:
-				self.__mouseGrabber.releaseMouse()
-				self.__mouseGrabber = None
+			if self._mouseGrabber:
+				self._mouseGrabber.releaseMouse()
+				self._mouseGrabber = None
 
 
 
@@ -264,7 +267,7 @@ class EventFactoryFilter(QtCore.QObject):
 		args:
 			event = <QEvent>
 		'''
-		self.__mouseHover.emit(True)
+		self._mouseHover.emit(True)
 
 		if self.widgetType=='QWidget':
 			if self.sb.prefix(self.widgetName, 'r'):
@@ -290,12 +293,7 @@ class EventFactoryFilter(QtCore.QObject):
 		args:
 			event = <QEvent>
 		'''
-		self.__mouseHover.emit(False)
-
-		# if self.widget==self.__mouseGrabber: #self.widget.mouseGrabber():
-		# 	if self.ui.mainWindow.isVisible():
-		# 		self.ui.mainWindow.grabMouse()
-		# 		self.__mouseGrabber = self.ui.mainWindow
+		self._mouseHover.emit(False)
 
 		if self.widgetType=='QWidget':
 			if self.sb.prefix(self.widgetName, 'r'):
@@ -308,7 +306,7 @@ class EventFactoryFilter(QtCore.QObject):
 		args:
 			event = <QEvent>
 		'''
-		self.__mousePressPos = event.globalPos() #mouse positon at press
+		self._mousePressPos = event.globalPos() #mouse positon at press
 		self.__mouseMovePos = event.globalPos() #mouse move position from last press
 
 
@@ -329,7 +327,7 @@ class EventFactoryFilter(QtCore.QObject):
 		args:
 			event = <QEvent>
 		'''
-		if self.widget.rect().contains(self.widget.mapFromGlobal(QtGui.QCursor.pos())): #if mouse over widget:
+		if self.widget.underMouse(): #if self.widget.rect().contains(event.pos()): #if mouse over widget:
 			if self.widgetType=='QPushButton':
 				if self.sb.prefix(self.widgetName, 'i'): #ie. 'i012'
 					self.parent.setUi(self.widget.whatsThis()) #switch the stacked layout to the given ui.
@@ -346,7 +344,6 @@ class EventFactoryFilter(QtCore.QObject):
 				elif self.sb.prefix(self.widgetName, 'b'):
 					if '_submenu' in self.name:
 						self.widget.click()
-
 					#add the buttons command info to the prevCommand list.
 					method = self.sb.getMethod(self.name, self.widgetName)
 					docString = self.sb.getDocString(self.name, self.widgetName)

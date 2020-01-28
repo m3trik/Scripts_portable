@@ -1,6 +1,3 @@
-# ||||||||||||||||||||||||||||||||||||||||||||||||
-# |||||			tookit marking menu			||||||
-
 from PySide2 import QtCore, QtGui, QtWidgets
 
 import sys, os.path
@@ -129,7 +126,10 @@ class Tk(QtWidgets.QStackedWidget):
 				for index in range(2, len(self.widgetPath)+1): #index starting at 2:
 					prevWidget = self.widgetPath[-index][0] #give index neg value.
 					w1 = self.childEvents.createPushButton(name=name, objectName=prevWidget.objectName(), size=prevWidget.size(), location=self.widgetPath[-index][1], text=prevWidget.text(), whatsThis=prevWidget.whatsThis())
-
+					# QtWidgets.QApplication.sendEvent(w1, self.childEvents.enterEvent_)
+					self.childEvents._mouseOver.append(w1)
+					w1.grabMouse() #set widget to receive mouse events.
+					self.childEvents._mouseGrabber = w1
 
 
 	# ------------------------------------------------
@@ -279,11 +279,12 @@ class Tk(QtWidgets.QStackedWidget):
 
 	def repeatLastUi(self):
 		'''
-		Open the last used valid menu.
+		Open the last used level 3 menu.
 		'''
 		previousName = self.sb.previousName(allowLevel1=False, allowLevel2=False)
 		if previousName:
 			self.setUi(previousName)
+			self.move(self.drawPath[0] - self.rect().center())
 		else:
 			print "# Warning: No recent menus in history. #"
 
@@ -295,7 +296,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 	app = QtWidgets.QApplication.instance() #get the qApp instance if it exists.
 	if not app:
 		app = QtWidgets.QApplication(sys.argv)

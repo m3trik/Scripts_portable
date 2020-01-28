@@ -33,7 +33,7 @@ class Init(Slot):
 		if not level: #object level 0
 			selCount = len(selection) #number of selected objects
 			selectedObjects={}; [selectedObjects.setdefault(str(rt.classOf(s.baseObject)),[]).append(str(s.name)) for s in selection] #for any selected objects, set object type as key and append object names as value. if key doesn't exist, use setdefault to initialize an empty list and append. ie. {'joint': ['joint_root_0', 'joint_lower_L8', 'joint_lower_L3']}
-			infoDict.update({'Objects: ':selectedObjects}) #currently selected objects
+			infoDict.update({'Selection: ':selectedObjects}) #currently selected objects
 
 		for obj in rt.selection:
 			type_ = str(rt.classOf(obj))
@@ -71,9 +71,9 @@ class Init(Slot):
 
 			# selectedUVs = ; infoDict.update({"Selected UV's: ":selectedUVs}) #selected uv's
 
-		prevCommand = self.sb.prevCommand(docString=True); infoDict.update({"Previous Command: ":prevCommand})  #get button text from last used command
-		prevUi = self.sb.previousName(allowLevel1=False, allowLevel2=False); infoDict.update({"Previous UI: ":prevUi.replace('_', ' ').title()})  #get the last level 3 ui name string.
-		prevCamera = self.sb.prevCamera(docString=True); infoDict.update({"Previous Camera: ":prevCamera})  #get the previously used camera.
+		prevCommand = self.sb.prevCommand(docString=True); infoDict.update({"Prev Command: ":prevCommand})  #get button text from last used command
+		prevUi = self.sb.previousName(allowLevel1=False, allowLevel2=False); infoDict.update({"Prev UI: ":prevUi.replace('_', ' ').title()})  #get the last level 3 ui name string.
+		prevCamera = self.sb.prevCamera(docString=True); infoDict.update({"Prev Camera: ":prevCamera})  #get the previously used camera.
 
 		return infoDict
 

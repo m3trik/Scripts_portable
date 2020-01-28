@@ -25,15 +25,15 @@ class Scene(Init):
 		'''
 		cmb = self.ui.cmb000
 		
-		files = ['']
-		contents = self.comboBox(cmb, files, ' ')
+		# files = ['']
+		# contents = self.comboBox(cmb, files, ' ')
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index(''):
-				mel.eval('')
-			cmb.setCurrentIndex(0)
+		# if not index:
+		# 	index = cmb.currentIndex()
+		# if index!=0:
+		# 	if index==contents.index(''):
+		# 		mel.eval('')
+		# 	cmb.setCurrentIndex(0)
 
 
 	def getTrailingIntegers(self, string, increment=0):

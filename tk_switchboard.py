@@ -65,11 +65,12 @@ class Switchboard(object):
 	objectNames = [file_.replace('.py','',-1) for file_ in os.listdir(widgetPath) if file_.endswith('.py') and not file_.startswith('__')]
 	#register any custom widgets using objectNames. Must follow the convention ex. widgets.QComboBox_.QComboBox_ where the module and class share the same name.
 	for m in objectNames:
-		widget = locate('widgets.'+m+'.'+m)
+		class_ = 'widgets.{0}.{0}'.format(m)
+		widget = locate(class_)
 		if widget:
 			uiLoader.registerCustomWidget(widget)
 		else:
-			raise ImportError, 'widgets.'+m+'.'+m
+			raise ImportError, class_
 
 	#set path to the directory containing the ui files.
 	uiPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ui') #get absolute path from dir of this module + relative path to directory
@@ -130,7 +131,8 @@ class Switchboard(object):
 			objectName = widget.objectName()
 
 		n = name.split('_')[0] #get ie. 'polygons' from 'polygons_submenu' in cases where a submenu shares the same slot class of it's parent menu.
-		pathToSlots = 'tk_slots_'+self.getMainAppWindow(objectName=True)+'_'+n+'.'+n[0].upper()+n[1:] #ie. tk_slots_maya_init.Init
+		pathToSlots = 'tk_slots_{0}_{1}.{2}'.format(self.getMainAppWindow(objectName=True), n, n[0].upper()+n[1:]) #ie. tk_slots_maya_init.Init
+		# pathToSlots = 'tk_slots_'+self.getMainAppWindow(objectName=True)+'_'+n+'.'+n[0].upper()+n[1:] #ie. tk_slots_maya_init.Init
 		class_ = self.getClassInstance(pathToSlots)
 
 
@@ -820,15 +822,21 @@ class Switchboard(object):
 
 
 
-	def gcProtect(self, obj):
+	def gcProtect(self, obj=None):
 		'''
 		Protect given object from garbage collection.
 		args:
 			obj = <object>
+		returns:
+			list of protected objects.
 		'''
 		if not 'gcProtect' in self._sbDict:
 			self._sbDict['gcProtect']=[]
-		self._sbDict['gcProtect'].append(obj)
+
+		if obj and obj not in self._sbDict['gcProtect']:
+				self._sbDict['gcProtect'].append(obj)
+
+		return self._sbDict['gcProtect']
 
 
 
@@ -938,7 +946,7 @@ class Switchboard(object):
 					integers = [c for c in objectName[i:i+3] if c.isdigit()]
 					if len(integers)>2 or len(objectName)==i:
 						return True
-			
+
 			return False
 
 		else: #return prefix.

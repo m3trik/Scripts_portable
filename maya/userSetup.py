@@ -8,7 +8,6 @@ version = versions.current()
 
 
 
-
 #maya python path----------------------------------------------------
 #get %MAYA_SCRIPT_PATH% directories
 dir_ = [s for s in os.environ['MAYA_SCRIPT_PATH'].split(';') if '__portable/_scripts/' in s][0]
@@ -24,7 +23,7 @@ paths = [
 	dir_,
 	dir_+"/ui",
 	dir_+"/maya",
-	dir_+"/maya/slots"
+	dir_+"/maya/slots",
 	]
 
 for path in paths:
@@ -32,48 +31,40 @@ for path in paths:
 
 
 
+#macros--------------------------------------------------------------
+from macros import Macros
+Macros().setMacros()
+
+
+
 #script editor in/output---------------------------------------------
-import commandPort #commandPort.py -opens ports 7001/7002 for external script editor
+import commandPort #opens ports 7001/7002 for external script editor
+import scriptEditorOutputTextHighlighting #syntax highlighting
 
+mel.eval('source "tk_scriptEditorOutput.mel";')
+mel.eval('evalDeferred -lowPriority ("tk_initScriptEditorOutputWin");')
 
-mel.eval ('source "tk_scriptEditorOutput.mel";')
-mel.eval ('evalDeferred -lowPriority ("tk_initScriptEditorOutputWin");')
-
-
-if 'scriptEditorOutputTextHighlighting' not in sys.modules:
-	import scriptEditorOutputTextHighlighting #syntax highlighting for script editor output window
-else:
-	print "reload: scriptEditorOutputTextHighlighting"
-	reload(scriptEditorOutputTextHighlighting)
-
-pm.evalDeferred ("scriptEditorOutputTextHighlighting.wrap()", lowestPriority=1)
+pm.evalDeferred("scriptEditorOutputTextHighlighting.wrap()", lowestPriority=1)
 
 
 
 #--------------------------------------------------------------------
 
 #Set the initial state of the tool settings.
-pm.workspaceControl ("ToolSettings", edit=1, minimumWidth=False)
+pm.workspaceControl("ToolSettings", edit=1, minimumWidth=False)
 #Set the initial state of the attribute editor.
-pm.workspaceControl ("AttributeEditor", edit=1, minimumWidth=False)
+pm.workspaceControl("AttributeEditor", edit=1, minimumWidth=False)
 
 
 
 
-# ------------------------------------------------
-#tk_main------------------------------------------
-# if 'tk_main' not in sys.modules:
-# 	import tk_main #tk_maya_main.py -qt hotbox menus and controls
-# else:
-# 	print "reload: tk_main"
-# 	reload(tk_main)
+
 
 
 # ------------------------------------------------
 # Get the main Maya window as a QtGui.QMainWindow instance.
 # ------------------------------------------------
 
-#not currently used
 # import maya.OpenMayaUI as omui
 # Main_Window_ptr = omui.MQtUtil.mainWindow()
 # if Main_Window_ptr is not None:
