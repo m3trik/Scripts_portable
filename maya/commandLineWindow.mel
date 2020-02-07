@@ -324,7 +324,7 @@ proc run (string $command)
 
 
 
-global proc tk_batchAttrRouter (string $i)
+global proc batchAttrRouter (string $i)
 	{
 	string $command = `textField -query -text commandtextField`;
 
@@ -422,7 +422,7 @@ global proc tk_batchAttrRouter (string $i)
 
 global proc commandLineWindow()
 	{
-	python ("from tk_maya_func import currentCtx,sourceScript,commandRef,globalVars,listUiObjects,convertMelToPy,commandHelp,keywordSearch,queryRuntime,searchMEL,searchPymel,searchPython");
+	python ("from maya_func import currentCtx,sourceScript,commandRef,globalVars,listUiObjects,convertMelToPy,commandHelp,keywordSearch,queryRuntime,searchMEL,searchPymel,searchPython");
 	python ("import pymel.core as pm");
 	python ("import maya.mel as mel");
 
@@ -436,20 +436,20 @@ global proc commandLineWindow()
 			frameLayout -label "Command Line" -labelAlign "top" -width 400 -collapsable false -collapse false f1;
 				textField -annotation ""
 									-alwaysInvokeEnterCommandOnReturn true
-									-enterCommand "tk_batchAttrRouter(\"run command\")"
+									-enterCommand "batchAttrRouter(\"run command\")"
 									commandtextField;
 
 				gridLayout -numberOfColumns 3 -cellWidthHeight 135 20 g1;
 					button 		-label "Source Script"
-										-command "tk_batchAttrRouter(\"source script\")"
+										-command "batchAttrRouter(\"source script\")"
 										-annotation "";
 
 					button 		-label "CommandShell"
-										-command "tk_batchAttrRouter(\"command shell\")"
+										-command "batchAttrRouter(\"command shell\")"
 										-annotation "";
 
 					button 		-label "Run"
-										-command "tk_batchAttrRouter(\"run command\")"
+										-command "batchAttrRouter(\"run command\")"
 										-annotation "";
 				setParent ..;
 			setParent ..;
@@ -458,73 +458,73 @@ global proc commandLineWindow()
 				gridLayout -numberOfColumns 2 -cellWidthHeight 200 20 g1;
 					checkBox	-label "MEL"
 										-value true
-										-changeCommand "tk_batchAttrRouter(\"set to mel\")"
+										-changeCommand "batchAttrRouter(\"set to mel\")"
 										-annotation "run MEL script"
 										mel_checkBox;
 
 					checkBox	-label "search MEL Docs"
 										-value false
-										-changeCommand "tk_batchAttrRouter(\"search mel\")"
+										-changeCommand "batchAttrRouter(\"search mel\")"
 										-annotation "search mel documentation"
 										searchMEL_checkBox;
 
 					checkBox	-label "Python"
 										-value false
-										-changeCommand "tk_batchAttrRouter(\"set to python\")"
+										-changeCommand "batchAttrRouter(\"set to python\")"
 										-annotation "run Python script"
 										python_checkBox;
 
 					checkBox	-label "search Python Docs"
 										-value false
-										-changeCommand "tk_batchAttrRouter(\"search python\")"
+										-changeCommand "batchAttrRouter(\"search python\")"
 										-annotation "search python documentation"
 										searchPython_checkBox;
 
 					checkBox	-label "PyMEL"
 										-value false
-										-changeCommand "tk_batchAttrRouter(\"set to pymel\")"
+										-changeCommand "batchAttrRouter(\"set to pymel\")"
 										-annotation "import pymel and automatically append 'pm.' to commands"
 										pymel_checkBox;
 
 					checkBox	-label "search PyMEL Docs"
 										-value false
-										-changeCommand "tk_batchAttrRouter(\"search pymel\")"
+										-changeCommand "batchAttrRouter(\"search pymel\")"
 										-annotation "search PyMEL documentation"
 										searchPymel_checkBox;
 
 					checkBox	-label "Batch"
 										-value false
-										-changeCommand "tk_batchAttrRouter(\"batch\")"
+										-changeCommand "batchAttrRouter(\"batch\")"
 										-annotation "attempt to run script on all selected items"
 										batch_checkBox;
 
 					checkBox	-label "Query Runtime Command"
 										-value false
-										-changeCommand "tk_batchAttrRouter(\"query runtime\")"
+										-changeCommand "batchAttrRouter(\"query runtime\")"
 										-annotation "enter a runtime command"
 										query_checkBox;
 
 					checkBox	-label "Help"
 										-value false
-										-changeCommand "tk_batchAttrRouter(\"help\")"
+										-changeCommand "batchAttrRouter(\"help\")"
 										-annotation "print help for a command"
 										help_checkBox;
 
 					checkBox	-label "Convert to PyMEL"
 										-value false
-										-changeCommand "tk_batchAttrRouter(\"convert to pymel\")"
+										-changeCommand "batchAttrRouter(\"convert to pymel\")"
 										-annotation "convert MEL syntax to PyMEL"
 										convert_checkBox;
 
 					checkBox	-label "Keyword Search"
 										-value false
-										-changeCommand "tk_batchAttrRouter(\"keyword search\")"
+										-changeCommand "batchAttrRouter(\"keyword search\")"
 										-annotation "open a web browser and search keyword/s"
 										keyword_checkBox;
 
 					// checkBox	-label ""
 					// 					-value false
-					// 					-changeCommand "tk_batchAttrRouter(\"\")"
+					// 					-changeCommand "batchAttrRouter(\"\")"
 					// 					-annotation ""
 					// 					_checkBox;
 					setParent ..;
@@ -533,19 +533,19 @@ global proc commandLineWindow()
 				frameLayout -label "Query"	-labelAlign "top" -width 400 -collapsable true -collapse true f3;
 					gridLayout -numberOfColumns 3 -cellWidthHeight 135 20 g1;
 						button 	-label "currentCtx"
-										-command "tk_batchAttrRouter(\"current context\")"
+										-command "batchAttrRouter(\"current context\")"
 										-annotation "";
 
 						button 	-label "command reference"
-										-command "tk_batchAttrRouter(\"command reference\")"
+										-command "batchAttrRouter(\"command reference\")"
 										-annotation "";
 
 						button 	-label "list global variables"
-										-command "tk_batchAttrRouter(\"global variables\")"
+										-command "batchAttrRouter(\"global variables\")"
 										-annotation "";
 
 						button 	-label "list Ui Objects"
-										-command "tk_batchAttrRouter(\"list ui\")"
+										-command "batchAttrRouter(\"list ui\")"
 										-annotation "";
 						setParent ..;
 					setParent..;

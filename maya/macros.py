@@ -2,8 +2,7 @@ import pymel.core as pm
 import maya.mel as mel
 
 
-import tk_maya
-tk = tk_maya.Tk_maya()
+
 
 
 
@@ -57,14 +56,7 @@ class Macros(object):
 							Tab (Will only work when modifiers are specified)
 							Delete, Backspace (Will only work when modifiers are specified)
 		'''
-		command = "from macros import Macros; Macros.{0}();".format(name)
-
-		#set command
-		nameCommand = pm.nameCommand(
-				'{0}Command'.format(name),
-				annotation=ann,
-				command='python("{0}")'.format(command),
-		)
+		command = self.formatSource(name, removeTabs=2)
 
 		#set runTimeCommand
 		pm.runTimeCommand(
@@ -73,6 +65,13 @@ class Macros(object):
 				category=cat,
 				command=command,
 				default=True,
+		)
+
+		#set command
+		nameCommand = pm.nameCommand(
+				'{0}Command'.format(name),
+				annotation=ann,
+				command=name,
 		)
 
 		#set hotkey
@@ -89,32 +88,69 @@ class Macros(object):
 				key = char
 
 		# print name, char, ctl, alt, sht
-		pm.hotkey(keyShortcut=key, name=name, ctl=ctl, alt=alt, sht=sht) #set only the key press.
+		pm.hotkey(keyShortcut=key, name=nameCommand, ctl=ctl, alt=alt, sht=sht) #set only the key press.
+
+
+	def formatSource(self, cmd, removeTabs=0):
+		'''
+		Return the text of the source code for an object.
+		The source code is returned as a single string.
+		Removes lines containing '@' or 'def ' ie. @staticmethod.
+		args:
+			cmd = module, class, method, function, traceback, frame, or code object.
+			removeTabs = int - remove x instances of '\t' from each line.
+		returns:
+			A Multi-line string.
+		'''
+		from inspect import getsource
+		source = getsource(getattr(Macros, cmd))
+
+		l = [s.replace('\t', '', removeTabs) for s in source.split('\n') if s and not '@' in s and not 'def ' in s]
+		return '\n'.join(l)
 
 
 
 	# Display --------------------------------------------------------------------------------------------------------------------------------
 
 	@staticmethod
+	def setWireframeOnShadedOption(editor, state):
+		'''
+		Set Wireframe On Shaded.
+		args:
+			editor = 'string' - The panel name.
+			state = bool - The desired on or off state.
+		'''
+		modeIsShaded = pm.modelEditor(editor, query=True, displayAppearance=True) #True if "smoothShaded", "flatShaded".
+
+		if state and not modeIsShaded:
+			pm.modelEditor(editor, edit=True, displayAppearance='smoothShaded', activeOnly=False, wireframeOnShaded=1)
+		else:
+			pm.modelEditor(editor, edit=True, wireframeOnShaded=0)
+
+
+
+	@staticmethod
 	def hk_back_face_culling():
 		'''
 		hk_back_face_culling
 		Toggle Back-Face Culling
-		1
 		'''
-		mel.eval('''
-		string $selection[] = `ls -selection`;//-transforms (all transform objects)
-		int $query[] = `polyOptions -query -wireBackCulling`;
-		if ($query[0] != 1){
-				polyOptions -global -wireBackCulling;
-				setWireframeOnShadedOption 1 (`getPanel -withFocus`);
-				inViewMessage -statusMessage "Back-Face Culling is now <hl>OFF</hl>.\\n<hl>1</hl>"  -fade -position topCenter;
-			}else{
-				polyOptions -global -backCulling;
-				setWireframeOnShadedOption 0 (`getPanel -withFocus`);
-				inViewMessage -statusMessage "Back-Face Culling is now <hl>ON</hl>.\\n<hl>1</hl>"  -fade -position topCenter;
-			}
-		''')
+		sel = pm.ls(selection=True)
+		if sel:
+			currentPanel = pm.getPanel(withFocus=True)
+			state = pm.polyOptions(sel, query=True, wireBackCulling=True)[0]
+
+			if not state:
+				pm.polyOptions(sel, gl=True, wireBackCulling=True)
+				Macros.setWireframeOnShadedOption(currentPanel, 0)
+				pm.inViewMessage(statusMessage="Back-Face Culling is now <hl>OFF</hl>.\\n<hl>1</hl>", pos='topCenter', fade=True)
+			else:
+				pm.polyOptions(sel, gl=True, backCulling=True)
+				Macros.setWireframeOnShadedOption(currentPanel, 1)
+				pm.inViewMessage(statusMessage="Back-Face Culling is now <hl>ON</hl>.\\n<hl>1</hl>", pos='topCenter', fade=True)
+		else:
+			print '# Warning: Nothing selected. #'
+
 
 
 	@staticmethod
@@ -122,57 +158,52 @@ class Macros(object):
 		'''
 		hk_smooth_preview
 		Toggle smooth mesh preview
-		2
 		'''
-		mel.eval('''
-		string $selection[] = `ls -selection`;
-		string $scene[] = `ls -geometry`;
+		selection=pm.ls(selection=1)
+		scene=pm.ls(geometry=1)
+		#if no object selected smooth all geometry
+		if len(selection) == 0:
+			for object in scene:
+				if pm.getAttr(str(object) + ".displaySmoothMesh") != 2:
+					pm.setAttr((str(object) + ".displaySmoothMesh"), 2)
+					#smooth preview on
+					pm.displayPref(wireframeOnShadedActive="none")
+					#selection wireframe off
+					pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview is now <hl>ON</hl>.\n<hl>2</hl>")
+					
+				
+				else:
+					pm.setAttr((str(object) + ".displaySmoothMesh"), 0)
+					#smooth preview off
+					pm.displayPref(wireframeOnShadedActive="full")
+					#selection wireframe on
+					pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview is now <hl>OFF</hl>.\n<hl>2</hl>")
+					
+				if pm.getAttr(str(object) + ".smoothLevel") != 1:
+					pm.setAttr((str(object) + ".smoothLevel"), 1)
+					
+				
+			
+		#smooth selection only
+		for object in selection:
+			if pm.getAttr(str(object) + ".displaySmoothMesh") != 2:
+				pm.setAttr((str(object) + ".displaySmoothMesh"), 2)
+				#smooth preview on
+				pm.displayPref(wireframeOnShadedActive="none")
+				#selection wireframe off
+				pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview is now <hl>ON</hl>.\n<hl>2</hl>")
+				
+			
+			else:
+				pm.setAttr((str(object) + ".displaySmoothMesh"), 0)
+				#smooth preview off
+				pm.displayPref(wireframeOnShadedActive="full")
+				#selection wireframe on
+				pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview is now <hl>OFF</hl>.\n<hl>2</hl>")
+				
+			if pm.getAttr(str(object) + ".smoothLevel") != 1:
+				pm.setAttr((str(object) + ".smoothLevel"), 1)
 
-		//if no object selected smooth all geometry
-		if (size($selection)==0)
-			{
-			for ($object in $scene)
-			{
-			if (`getAttr ($object+".displaySmoothMesh")` != 2)
-				{
-				setAttr  ($object+".displaySmoothMesh") 2;//smooth preview on
-				displayPref -wireframeOnShadedActive "none";//selection wireframe off
-				inViewMessage -statusMessage "S-Div Preview is now <hl>ON</hl>.\\n<hl>2</hl>"  -fade -position topCenter;
-				}
-			else
-				{
-				setAttr  ($object+".displaySmoothMesh") 0;//smooth preview off
-				displayPref -wireframeOnShadedActive "full";//selection wireframe on
-				inViewMessage -statusMessage "S-Div Preview is now <hl>OFF</hl>.\\n<hl>2</hl>"  -fade -position topCenter;
-				}
-			if (`getAttr ($object+".smoothLevel")` != 1)
-				{
-				setAttr  ($object+".smoothLevel") 1;
-				}
-			}
-			}
-
-		//smooth selection only
-		for ($object in $selection)
-			{
-			if (`getAttr ($object+".displaySmoothMesh")` != 2)
-				{
-				setAttr  ($object+".displaySmoothMesh") 2;//smooth preview on
-				displayPref -wireframeOnShadedActive "none";//selection wireframe off
-				inViewMessage -statusMessage "S-Div Preview is now <hl>ON</hl>.\\n<hl>2</hl>"  -fade -position topCenter;
-				}
-			else
-				{
-				setAttr  ($object+".displaySmoothMesh") 0;//smooth preview off
-				displayPref -wireframeOnShadedActive "full";//selection wireframe on
-				inViewMessage -statusMessage "S-Div Preview is now <hl>OFF</hl>.\\n<hl>2</hl>"  -fade -position topCenter;
-				}
-			if (`getAttr ($object+".smoothLevel")` != 1)
-				{
-				setAttr  ($object+".smoothLevel") 1;
-				}
-			}
-		''')
 
 
 	@staticmethod
@@ -180,7 +211,6 @@ class Macros(object):
 		'''
 		hk_isolate_selected
 		Isolate current selection
-		F2
 		Isolate selected
 		'''
 		currentPanel = pm.getPanel(withFocus=1)
@@ -193,27 +223,26 @@ class Macros(object):
 			pm.isolateSelect(currentPanel, addSelected=1)
 
 
+
 	@staticmethod
 	def hk_grid_and_image_planes():
 		'''
 		hk_grid_and_image_planes
 		Toggle grid and image plane visibility
-		F1
 		'''
-		mel.eval('''
-		string $image_plane[] = `ls -exactType imagePlane`;
-		for ($object in $image_plane){
-			if (`getAttr ($object+".displayMode")` != 2){
-				setAttr ($object+".displayMode") 2;
-				grid -toggle 1;
-				inViewMessage -statusMessage "Grid is now <hl>ON</hl>.\\n<hl>F1</hl>"  -fade -position topCenter;
-			}else{
-				setAttr ($object+".displayMode") 0;
-				grid -toggle 0;
-				inViewMessage -statusMessage "Grid is now <hl>OFF</hl>.\\n<hl>F1</hl>"  -fade -position topCenter;
-			}
-		}
-		''')
+		image_plane = pm.ls(exactType='imagePlane')
+
+		for obj in image_plane:
+			attr = obj+'.displayMode'
+			if not pm.getAttr(attr)==2:
+				pm.setAttr(attr, 2)
+				pm.grid(toggle=1)
+				pm.inViewMessage(statusMessage="Grid is now <hl>ON</hl>.\\n<hl>F1</hl>", pos='topCenter', fade=True)
+			else:
+				pm.setAttr(attr, 0)
+				pm.grid(toggle=0)
+				pm.inViewMessage(statusMessage="Grid is now <hl>OFF</hl>.\\n<hl>F1</hl>", pos='topCenter', fade=True)
+
 
 
 	@staticmethod
@@ -221,107 +250,87 @@ class Macros(object):
 		'''
 		hk_frame_selected
 		Frame selected by a set amount
-		F
 		'''
-		mel.eval('''
-		global int $tk_toggleFrame;
-
-		string $selection[] = `ls -selection`;
-
-		$mode = `selectMode -query -component`;
-		$maskVertex = `selectType -query -vertex`;
-		$maskEdge = `selectType -query -edge`;
-		$maskFacet = `selectType -query -facet`;
-
-		if (size($selection)==0)
-			{
-			viewFit -allObjects;
-			}
+		pm.melGlobals.initVar('int', 'tk_toggleFrame')
+		selection = pm.ls(selection=1)
+		mode = pm.selectMode(query=1, component=1)
+		maskVertex = pm.selectType(query=1, vertex=1)
+		maskEdge = pm.selectType(query=1, edge=1)
+		maskFacet = pm.selectType(facet=1, query=1)
+		if len(selection) == 0:
+			pm.viewFit(allObjects=1)
 			
-		if ($mode==1 && $maskVertex==1 && size($selection)!=0)
-			{
-			if (size($selection)>1)
-				{
-				if ($tk_toggleFrame == !1)
-					{
-					viewFit -fitFactor .65;
-					$tk_toggleFrame = 1;
-					print ("frame vertices "+$tk_toggleFrame+"\\n");
-					}
-				else
-					{
-					viewFit -fitFactor .10;
-					//viewSet -previousView;
-					$tk_toggleFrame = 0;
-					print ("frame vertices "+$tk_toggleFrame+"\\n");
-					}
-				}
-			else
-				{
-				if ($tk_toggleFrame == !1)
-					{
-					viewFit -fitFactor .15;
-					$tk_toggleFrame = 1;
-					print ("frame vertex "+$tk_toggleFrame+"\\n");
-					}
-				else
-					{
-					viewFit -fitFactor .01;
-					//viewSet -previousView;
-					$tk_toggleFrame = 0;
-					print ("frame vertex "+$tk_toggleFrame+"\\n");
-					}
-				}
-			}
-		if ($mode==1 && $maskEdge==1 && size($selection)!=0)
-			{
-			if ($tk_toggleFrame == !1)
-				{
-				viewFit -fitFactor .3;
-				$tk_toggleFrame = 1;
-				print ("frame edge "+$tk_toggleFrame+"\\n");
-				}
-			else
-				{
-				viewFit -fitFactor .9;
-				//viewSet -previousView;
-				$tk_toggleFrame = 0;
-				print ("frame edge "+$tk_toggleFrame+"\\n");
-				}
-			}
-		if ($mode==1 && $maskFacet==1)
-			{
-			if ($tk_toggleFrame == !1)
-				{
-				viewFit -fitFactor .9;
-				$tk_toggleFrame = 1;
-				print ("frame facet "+$tk_toggleFrame+"\\n");
-				}
-			else
-				{
-				viewFit -fitFactor .45;
-				//viewSet -previousView;
-				$tk_toggleFrame = 0;
-				print ("frame facet "+$tk_toggleFrame+"\\n");
-				}
-			}
-		else if ($mode==0  && size($selection)!=0)
-			{
-			if ($tk_toggleFrame == !1)
-				{
-				viewFit -fitFactor .99;
-				$tk_toggleFrame = 1;
-				print ("frame object "+$tk_toggleFrame+"\\n");
-				}
-			else
-				{
-				viewFit -fitFactor .65;
-				//viewSet -previousView;
-				$tk_toggleFrame = 0;
-				print ("frame object "+$tk_toggleFrame+"\\n");
-				}
-			}
-		''')
+		if mode == 1 and maskVertex == 1 and len(selection) != 0:
+			if len(selection)>1:
+				if not pm.melGlobals['tk_toggleFrame'] == 1:
+					pm.viewFit(fitFactor=.65)
+					pm.melGlobals['tk_toggleFrame']=1
+					print "frame vertices " + str(pm.melGlobals['tk_toggleFrame']) + "\n"
+					
+				
+				else:
+					pm.viewFit(fitFactor=.10)
+					#viewSet -previousView;
+					pm.melGlobals['tk_toggleFrame']=0
+					print "frame vertices " + str(pm.melGlobals['tk_toggleFrame']) + "\n"
+					
+				
+			
+			elif not pm.melGlobals['tk_toggleFrame'] == 1:
+				pm.viewFit(fitFactor=.15)
+				pm.melGlobals['tk_toggleFrame']=1
+				print "frame vertex " + str(pm.melGlobals['tk_toggleFrame']) + "\n"
+				
+			
+			else:
+				pm.viewFit(fitFactor=.01)
+				#viewSet -previousView;
+				pm.melGlobals['tk_toggleFrame']=0
+				print "frame vertex " + str(pm.melGlobals['tk_toggleFrame']) + "\n"
+				
+			
+		if mode == 1 and maskEdge == 1 and len(selection) != 0:
+			if not pm.melGlobals['tk_toggleFrame'] == 1:
+				pm.viewFit(fitFactor=.3)
+				pm.melGlobals['tk_toggleFrame']=1
+				print "frame edge " + str(pm.melGlobals['tk_toggleFrame']) + "\n"
+				
+			
+			else:
+				pm.viewFit(fitFactor=.9)
+				#viewSet -previousView;
+				pm.melGlobals['tk_toggleFrame']=0
+				print "frame edge " + str(pm.melGlobals['tk_toggleFrame']) + "\n"
+				
+			
+		if mode == 1 and maskFacet == 1:
+			if not pm.melGlobals['tk_toggleFrame'] == 1:
+				pm.viewFit(fitFactor=.9)
+				pm.melGlobals['tk_toggleFrame']=1
+				print "frame facet " + str(pm.melGlobals['tk_toggleFrame']) + "\n"
+				
+			
+			else:
+				pm.viewFit(fitFactor=.45)
+				#viewSet -previousView;
+				pm.melGlobals['tk_toggleFrame']=0
+				print "frame facet " + str(pm.melGlobals['tk_toggleFrame']) + "\n"
+				
+			
+
+		elif mode == 0 and len(selection) != 0:
+			if not pm.melGlobals['tk_toggleFrame'] == 1:
+				pm.viewFit(fitFactor=.99)
+				pm.melGlobals['tk_toggleFrame']=1
+				print "frame object " + str(pm.melGlobals['tk_toggleFrame']) + "\n"
+				
+			
+			else:
+				pm.viewFit(fitFactor=.65)
+				#viewSet -previousView;
+				pm.melGlobals['tk_toggleFrame']=0
+				print "frame object " + str(pm.melGlobals['tk_toggleFrame']) + "\n"
+				
 
 
 	@staticmethod
@@ -329,31 +338,25 @@ class Macros(object):
 		'''
 		hk_wireframe_on_shaded
 		Toggle wireframe on shaded
-		3
 		'''
-		mel.eval('''
-		string $current_panel = `getPanel -withFocus`;
-		$mode = `displayPref -query -wireframeOnShadedActive`;
+		currentPanel = pm.getPanel(withFocus=True)
+		mode = pm.displayPref(query=True, wireframeOnShadedActive=True)
 
-		if ($mode=="none")
-			{
-			displayPref -wireframeOnShadedActive "reduced";
-			setWireframeOnShadedOption 1 $current_panel;
-			inViewMessage -statusMessage "<hl>Wireframe-on-selection</hl> is now <hl>Full</hl>.\\n<hl>3</hl>"  -fade -position topCenter;
-			}
-		if ($mode=="reduced")
-			{
-				displayPref -wireframeOnShadedActive "full";
-			setWireframeOnShadedOption 0 $current_panel;
-			inViewMessage -statusMessage "<hl>Wireframe-on-selection</hl> is now <hl>Reduced</hl>.\\n<hl>3</hl>"  -fade -position topCenter;
-			}
-		if ($mode=="full")
-			{
-			displayPref -wireframeOnShadedActive "none";
-			setWireframeOnShadedOption 0 $current_panel;
-			inViewMessage -statusMessage "<hl>Wireframe-on-selection</hl> is now <hl>OFF</hl>.\\n<hl>3</hl>" -fade -position topCenter;
-			}
-		''')
+		if mode=='none':
+			pm.displayPref(wireframeOnShadedActive='reduced')
+			Macros.setWireframeOnShadedOption(currentPanel, 1)
+			pm.inViewMessage(statusMessage="<hl>Wireframe-on-selection</hl> is now <hl>Full</hl>.\\n<hl>3</hl>", pos='topCenter', fade=True)
+
+		if mode=='reduced':
+			pm.displayPref(wireframeOnShadedActive='full')
+			Macros.setWireframeOnShadedOption(currentPanel, 0)
+			pm.inViewMessage(statusMessage="<hl>Wireframe-on-selection</hl> is now <hl>Reduced</hl>.\\n<hl>3</hl>", pos='topCenter', fade=True)
+
+		if mode=='full':
+			pm.displayPref(wireframeOnShadedActive='none')
+			Macros.setWireframeOnShadedOption(currentPanel, 0)
+			pm.inViewMessage(statusMessage="<hl>Wireframe-on-selection</hl> is now <hl>OFF</hl>.\\n<hl>3</hl>", pos='topCenter', fade=True)
+
 
 
 	@staticmethod
@@ -361,22 +364,16 @@ class Macros(object):
 		'''
 		hk_xray
 		Toggle xray mode
-		F3
 		Toggle xRay all
 		'''
-		mel.eval('''
-		//xray all except selected
-		string $scene[] = `ls -visible -flatten -dag -noIntermediate -type surfaceShape`;
-		string $selection[] = `ls -selection -dagObjects -shapes`;
-		for ($object in $scene)
-			{
-			if (!stringArrayContains ($object, $selection))
-				{
-				int $state[] = `displaySurface -query -xRay $object`;
-				displaySurface -xRay ( !$state[0] ) $object;
-				}
-			}
-		''')
+		#xray all except selected
+		scene = pm.ls(visible=1, dag=1, noIntermediate=1, flatten=1, type='surfaceShape')
+		selection = pm.ls(shapes=1, selection=1, dagObjects=1)
+		for obj in scene:
+			if not obj in selection:
+				state = pm.displaySurface(obj, xRay=1, query=1)
+				pm.displaySurface(obj, xRay=(not state[0]))
+
 
 
 	@staticmethod
@@ -384,31 +381,24 @@ class Macros(object):
 		'''
 		hk_wireframe
 		Toggle wireframe/shaded/shaded w/texture display
-		5
 		'''
-		mel.eval('''
-		string $current_panel = `getPanel -withFocus`;
-		string $state = `modelEditor -query -displayAppearance $current_panel`;
-		string $displayTextures = `modelEditor -query -displayTextures $current_panel`;
-		if(`modelEditor -exists $current_panel`)
-		  {
-			if($state != "wireframe" && $displayTextures == false)
-			  {
-				modelEditor -edit -displayAppearance smoothShaded -activeOnly false -displayTextures true $current_panel;
-				inViewMessage -statusMessage "modelEditor -smoothShaded <hl>true</hl> -displayTextures <hl>true</hl>.\\n<hl>5</hl>"  -fade -position topCenter;
-				}
-			if($state == "wireframe" && $displayTextures == true)
-			  {
-				modelEditor -edit -displayAppearance smoothShaded -activeOnly false -displayTextures false $current_panel;
-				inViewMessage -statusMessage "modelEditor -smoothShaded <hl>true</hl> -displayTextures <hl>false</hl>.\\n<hl>5</hl>"  -fade -position topCenter;
-				}
-			if($state != "wireframe" && $displayTextures == true)
-			  {
-				modelEditor -edit -displayAppearance wireframe -activeOnly false $current_panel;
-				inViewMessage -statusMessage "modelEditor -wireframe <hl>true</hl>.\\n<hl>5</hl>"  -fade -position topCenter;
-				}
-			}
-		''')
+		currentPanel = pm.getPanel(withFocus=1)
+		state = pm.modelEditor(currentPanel, query=1, displayAppearance=1)
+		displayTextures = pm.modelEditor(currentPanel, query=1, displayTextures=1)
+
+		if pm.modelEditor(currentPanel, exists=True):
+			if not state=="wireframe" and displayTextures==False:
+				pm.modelEditor(currentPanel, edit=1, displayAppearance='smoothShaded', activeOnly=False, displayTextures=True)
+				pm.inViewMessage(statusMessage="modelEditor smoothShaded <hl>True</hl> displayTextures <hl>True</hl>.\\n<hl>5</hl>", pos='topCenter', fade=True)
+
+			if state=="wireframe" and displayTextures==True:
+				pm.modelEditor(currentPanel, edit=1, displayAppearance='smoothShaded', activeOnly=False, displayTextures=False)
+				pm.inViewMessage(statusMessage="modelEditor smoothShaded <hl>True</hl> displayTextures <hl>False</hl>.\\n<hl>5</hl>", pos='topCenter', fade=True)
+
+			if not state=="wireframe" and displayTextures==True:
+				pm.modelEditor(currentPanel, edit=1, displayAppearance='wireframe', activeOnly=False)
+				pm.inViewMessage(statusMessage="modelEditor Wireframe <hl>True</hl>.\\n<hl>5</hl>", pos='topCenter', fade=True)
+
 
 
 	@staticmethod
@@ -416,26 +406,25 @@ class Macros(object):
 		'''
 		hk_shading
 		Toggle viewport shading
-		6
 		'''
-		current_panel = pm.getPanel (withFocus=1)
-		displayAppearance = pm.modelEditor (current_panel, query=1, displayAppearance=1)
-		displayTextures = pm.modelEditor (current_panel, query=1, displayTextures=1)
-		displayLights = pm.modelEditor (current_panel, query=1, displayLights=1)
+		currentPanel = pm.getPanel (withFocus=1)
+		displayAppearance = pm.modelEditor (currentPanel, query=1, displayAppearance=1)
+		displayTextures = pm.modelEditor (currentPanel, query=1, displayTextures=1)
+		displayLights = pm.modelEditor (currentPanel, query=1, displayLights=1)
 
 		#print displayAppearance, displayTextures, displayLights
-		if pm.modelEditor (current_panel, exists=1):
+		if pm.modelEditor (currentPanel, exists=1):
 			if all ([displayAppearance=="wireframe", displayTextures==False, displayLights=="default"]):
-				pm.modelEditor (current_panel, edit=1, displayAppearance="smoothShaded", displayTextures=False, displayLights="default") #textures off
+				pm.modelEditor (currentPanel, edit=1, displayAppearance="smoothShaded", displayTextures=False, displayLights="default") #textures off
 				pm.inViewMessage (statusMessage="modelEditor -smoothShaded <hl>true</hl> -displayTextures <hl>false</hl>.\n<hl>4</hl>", fade=True, position="topCenter")
 			elif all ([displayAppearance=="smoothShaded", displayTextures==False, displayLights=="default"]):
-				pm.modelEditor (current_panel, edit=1, displayAppearance="smoothShaded", displayTextures=True, displayLights="default") #textures on
+				pm.modelEditor (currentPanel, edit=1, displayAppearance="smoothShaded", displayTextures=True, displayLights="default") #textures on
 				pm.inViewMessage (statusMessage="modelEditor -smoothShaded <hl>true</hl> -displayTextures <hl>true</hl>.\n<hl>4</hl>", fade=True, position="topCenter")	
 			elif all ([displayAppearance=="smoothShaded", displayTextures==True, displayLights=="default"]):
-				pm.modelEditor (current_panel, edit=1, displayAppearance="smoothShaded", displayTextures=True, displayLights="active") #lighting on
+				pm.modelEditor (currentPanel, edit=1, displayAppearance="smoothShaded", displayTextures=True, displayLights="active") #lighting on
 				pm.inViewMessage (statusMessage="modelEditor -smoothShaded <hl>true</hl> -displayLights <hl>true</hl>.\n<hl>4</hl>", fade=True, position="topCenter")	
 			else: #use else for starting condition in case settings are changed elsewhere and none of the conditions are met:
-				pm.modelEditor (current_panel, edit=1, displayAppearance="wireframe", displayTextures=False, displayLights="default") #wireframe
+				pm.modelEditor (currentPanel, edit=1, displayAppearance="wireframe", displayTextures=False, displayLights="default") #wireframe
 				pm.inViewMessage (statusMessage="modelEditor -wireframe <hl>true</hl>.\n<hl>4</hl>", fade=True, position="topCenter")
 
 
@@ -447,9 +436,12 @@ class Macros(object):
 		'''
 		hk_selection_mode
 		Toggle between object selection & last component selection
-		sht+q
 		'''
-		mel.eval('toggleSelMode;')
+		objectMode = pm.selectMode(query=True, object=True)
+		if objectMode:
+			pm.selectMode(component=True)
+		else:
+			pm.selectMode(object=True)
 
 
 	@staticmethod
@@ -457,38 +449,28 @@ class Macros(object):
 		'''
 		hk_paste_and_rename
 		Paste and rename removing keyword 'paste'
-		ctrl+v
 		'''
-		mel.eval('''
-		//paste and then re-name object removing keyword 'pasted'
-		cutCopyPaste "paste";
-		{
-		string $pasted[] = `ls "pasted__*"`;
-		string $object;
-		for ( $object in $pasted )
-		{
-		string $elements[];
-		// The values returned by ls may be full or partial dag
-		// paths - when renaming we only want the actual
-		// object name so strip off the leading dag path.
-		//
-		tokenize( $object, "|", $elements );
-		string $stripped = $elements[ `size $elements` - 1 ];
-		// Remove the 'pasted__' suffix from the name
-		//
-		$stripped = `substitute "pasted__" $stripped ""`;
-		// When renaming a transform its shape will automatically be
-		// be renamed as well. Use catchQuiet here to ignore errors
-		// when trying to rename the child shape a second time.
-		// 
-		catchQuiet(`evalEcho("rename " + $object + " " + $stripped)`);
-		}
-		};
-		//alternative: edit the cutCopyPaste.mel
-		//REMOVE the line "-renameAll" so the sub-nodes won't get renamed at all
-		//REMOVE the -renamingPrefix "paste_" line
-		//and instead write the line -defaultNamespace
-		''')
+		pm.mel.cutCopyPaste("paste")
+		#paste and then re-name object removing keyword 'pasted'
+		pasted=pm.ls("pasted__*")
+		object = ""
+		for object in pasted:
+			elements = []
+			# The values returned by ls may be full or partial dag
+			# paths - when renaming we only want the actual
+			# object name so strip off the leading dag path.
+			#
+			elements=object.split("|")
+			stripped=elements[- 1]
+			# Remove the 'pasted__' suffix from the name
+			#
+			stripped=stripped.replace("pasted__","")
+			# When renaming a transform its shape will automatically be
+			# be renamed as well. Use catchQuiet here to ignore errors
+			# when trying to rename the child shape a second time.
+			# 
+			pm.catch(lambda: pm.evalEcho("rename " + str(object) + " " + stripped))
+
 
 
 	@staticmethod
@@ -496,12 +478,10 @@ class Macros(object):
 		'''
 		hk_multi_component
 		Multi-Component Selection
-		f5
 		'''
-		mel.eval('''
-		SelectMultiComponentMask;
-		inViewMessage -statusMessage "<hl>Multi-Component Selection Mode</hl>\\n Mask is now <hl>ON</hl>.\\n<hl>F4</hl>"  -fade -position topCenter;
-		''')
+		pm.SelectMultiComponentMask()
+		pm.inViewMessage(statusMessage="<hl>Multi-Component Selection Mode</hl>\\n Mask is now <hl>ON</hl>.\\n<hl>F4</hl>", fade=True, position="topCenter")
+
 
 
 	@staticmethod
@@ -509,35 +489,26 @@ class Macros(object):
 		'''
 		hk_toggle_component_mask
 		Toggle Component Selection Mask
-		f4
 		'''
-		mel.eval('''
-		$mode = `selectMode -query -component`;
-		if ($mode==0)
-		  {
-			changeSelectMode -component;
-			}
+		mode=pm.selectMode(query=1, component=1)
+		if mode == 0:
+			pm.mel.changeSelectMode('-component')
+			
+		maskVertex=pm.selectType(query=1, vertex=1)
+		maskEdge=pm.selectType(query=1, edge=1)
+		maskFacet=pm.selectType(facet=1, query=1)
+		if maskEdge == 0 and maskFacet == 1:
+			pm.selectType(vertex=True)
+			pm.inViewMessage(position='topCenter', fade=1, statusMessage="<hl>Vertex</hl> Mask is now <hl>ON</hl>.\n<hl>F4</hl>")
+			
+		if maskVertex == 1 and maskFacet == 0:
+			pm.selectType(edge=True)
+			pm.inViewMessage(position='topCenter', fade=1, statusMessage="<hl>Edge</hl> Mask is now <hl>ON</hl>.\n<hl>F4</hl>")
+			
+		if maskVertex == 0 and maskEdge == 1:
+			pm.selectType(facet=True)
+			pm.inViewMessage(position='topCenter', fade=1, statusMessage="<hl>Facet</hl> Mask is now <hl>ON</hl>.\n<hl>F4</hl>")
 
-		$maskVertex = `selectType -query -vertex`;
-		$maskEdge = `selectType -query -edge`;
-		$maskFacet = `selectType -query -facet`;
-
-		if ($maskEdge==0 && $maskFacet==1)
-			{
-			selectType -vertex true;
-			inViewMessage -statusMessage "<hl>Vertex</hl> Mask is now <hl>ON</hl>.\\n<hl>F4</hl>"  -fade -position topCenter;
-			}
-		if ($maskVertex==1 && $maskFacet==0)
-			{
-			selectType -edge true;
-			inViewMessage -statusMessage "<hl>Edge</hl> Mask is now <hl>ON</hl>.\\n<hl>F4</hl>"  -fade -position topCenter;
-			}
-		if ($maskVertex==0 && $maskEdge==1)
-			{
-			selectType -facet true;
-			inViewMessage -statusMessage "<hl>Facet</hl> Mask is now <hl>ON</hl>.\\n<hl>F4</hl>"  -fade -position topCenter;
-			}
-		''')
 
 
 
@@ -548,13 +519,10 @@ class Macros(object):
 		'''
 		hk_tk_show
 		Display tk marking menu
-		f12
 		'''
-		global tk
-
-		# if 'tk' not in locals() or 'tk' not in globals():
-		# 	import tk_maya
-		# 	tk = tk_maya.Tk_maya()
+		if 'tk' not in locals() or 'tk' not in globals():
+			import tk_maya
+			tk = tk_maya.Tk_maya()
 
 		# elif tk.isVisible():
 		# 	tk = tk_maya.Tk_maya()
@@ -565,17 +533,16 @@ class Macros(object):
 		#isActiveWindow ()
 
 
+
 	@staticmethod
 	def hk_hotbox_full():
 		'''
 		hk_hotbox_full
 		Display the full version of the hotbox
-		shft + z
 		'''
-		mel.eval('''
-		hotBox -displayHotbox -polygonsOnlyMenus;
-		hotBox;
-		''')
+		pm.hotBox(polygonsOnlyMenus=1, displayHotbox=1)
+		pm.hotBox()
+
 
 
 	@staticmethod
@@ -583,52 +550,44 @@ class Macros(object):
 		'''
 		hk_toggle_panels
 		Toggle UI toolbars
-		9
 		'''
-		mel.eval('''
-		// added this expression to fix 'toggleMainMenubar function not found' error
-		if (`menu -q -ni MayaWindow|HotBoxControlsMenu` == 0) {setParent -m MayaWindow|HotBoxControlsMenu;source HotboxControlsMenu;};
+		if pm.menu('MayaWindow|HotBoxControlsMenu', q=1, ni=1) == 0:
+			pm.setParent('MayaWindow|HotBoxControlsMenu', m=1)
+			# added this expression to fix 'toggleMainMenubar function not found' error
+			pm.mel.source('HotboxControlsMenu')
 
-		//toggle panel menus
-		string $panels[] = `getPanel -allPanels`;
-		int $state = `panel -query -menuBarVisible $panels[0]`;
-		for ($panel in $panels)
-		{
-			// int $state = `panel -query -menuBarVisible $panel`;
-			panel -edit -menuBarVisible (!$state) $panel;
-		}
-		//toggle main menubar
-		toggleMainMenubar (!$state);
+		#toggle panel menus
+		panels=pm.getPanel(allPanels=1)
+		state=int(pm.panel(panels[0], menuBarVisible=1, query=1))
+		for panel in panels:
+			pm.panel(panel, edit=1, menuBarVisible=(not state))
+			# int $state = `panel -query -menuBarVisible $panel`;
+			
+		pm.mel.toggleMainMenubar(not state)
+		#toggle main menubar
+		#toggle titlebar
+		pm.window(gMainWindow, edit=1, titleBar=(not state))
 
-		//toggle titlebar
-		window -edit -titleBar (!$state) $gMainWindow;
-
-		// //toggle fullscreen mode //working but issues with windows resizing on toggle
-		// int $inFullScreenMode = `optionVar -q "workspacesInFullScreenUIMode"`;
-		// int $inZoomInMode = `optionVar -q "workspacesInZoomInUIMode"`;
-		// // enter full screen mode only if the zoom-in mode is not active.
-		// if(!$inZoomInMode) 
-		// {
-		// 	string $panelWithFocus = `getPanel -withFocus`;
-		// 	string $parentControl = `workspaceLayoutManager -parentWorkspaceControl $panelWithFocus`;
-		// 	int $isFloatingPanel = `workspaceControl -q -floating $parentControl`;
-						
-		// 	if(!$isFloatingPanel) 
-		// 	{
-		// 		if($inFullScreenMode) 
-		// 		{
-		// 		//come out of fullscreen mode
-		// 		workspaceLayoutManager -restoreMainWindowControls;
-		// 		}
-		// 		else 
-		// 		{
-		// 			// enter fullscreen mode
-		// 			workspaceLayoutManager -collapseMainWindowControls $parentControl true;
-		// 		}
-		// 	optionVar -iv "workspacesInFullScreenUIMode" (!$inFullScreenMode);
-		// 	}
-		// }
-		''')
+		# //toggle fullscreen mode //working but issues with windows resizing on toggle
+		# inFullScreenMode=int(pm.optionVar(q="workspacesInFullScreenUIMode"))
+		# inZoomInMode=int(pm.optionVar(q="workspacesInZoomInUIMode"))
+		# # enter full screen mode only if the zoom-in mode is not active.
+		# if not inZoomInMode:
+		# 	panelWithFocus=str(pm.getPanel(withFocus=1))
+		# 	parentControl=str(pm.workspaceLayoutManager(parentWorkspaceControl=panelWithFocus))
+		# 	isFloatingPanel=int(pm.workspaceControl(parentControl, q=1, floating=1))
+		# 	if not isFloatingPanel:
+		# 		if inFullScreenMode:
+		# 			pm.workspaceLayoutManager(restoreMainWindowControls=1)
+		# 			#come out of fullscreen mode
+					
+				
+		# 		else:
+		# 			pm.workspaceLayoutManager(collapseMainWindowControls=(parentControl, True))
+		# 			# enter fullscreen mode
+					
+		# 		pm.optionVar(iv=("workspacesInFullScreenUIMode", (not inFullScreenMode)))
+				
 
 
 
@@ -763,69 +722,285 @@ pm.runTimeCommand(
 # Depricated: -------------------------------------------------------------------------------------------------------
 
 
-# hk_toggle_outliner
-	# OutlinerWindow;
+
+
+		# string $image_plane[] = `ls -exactType imagePlane`;
+		# for ($object in $image_plane){
+		# 	if (`getAttr ($object+".displayMode")` != 2){
+		# 		setAttr ($object+".displayMode") 2;
+		# 		grid -toggle 1;
+		# 		inViewMessage -statusMessage "Grid is now <hl>ON</hl>.\\n<hl>F1</hl>"  -fade -position topCenter;
+		# 	}else{
+		# 		setAttr ($object+".displayMode") 0;
+		# 		grid -toggle 0;
+		# 		inViewMessage -statusMessage "Grid is now <hl>OFF</hl>.\\n<hl>F1</hl>"  -fade -position topCenter;
+		# 	}
+		# }
+
+
+# 		global int $tk_toggleFrame;
+
+# 		string $selection[] = `ls -selection`;
+
+# 		$mode = `selectMode -query -component`;
+# 		$maskVertex = `selectType -query -vertex`;
+# 		$maskEdge = `selectType -query -edge`;
+# 		$maskFacet = `selectType -query -facet`;
+
+# 		if (size($selection)==0)
+# 			{
+# 			viewFit -allObjects;
+# 			}
+			
+# 		if ($mode==1 && $maskVertex==1 && size($selection)!=0)
+# 			{
+# 			if (size($selection)>1)
+# 				{
+# 				if ($tk_toggleFrame == !1)
+# 					{
+# 					viewFit -fitFactor .65;
+# 					$tk_toggleFrame = 1;
+# 					print ("frame vertices "+$tk_toggleFrame+"\\n");
+# 					}
+# 				else
+# 					{
+# 					viewFit -fitFactor .10;
+# 					//viewSet -previousView;
+# 					$tk_toggleFrame = 0;
+# 					print ("frame vertices "+$tk_toggleFrame+"\\n");
+# 					}
+# 				}
+# 			else
+# 				{
+# 				if ($tk_toggleFrame == !1)
+# 					{
+# 					viewFit -fitFactor .15;
+# 					$tk_toggleFrame = 1;
+# 					print ("frame vertex "+$tk_toggleFrame+"\\n");
+# 					}
+# 				else
+# 					{
+# 					viewFit -fitFactor .01;
+# 					//viewSet -previousView;
+# 					$tk_toggleFrame = 0;
+# 					print ("frame vertex "+$tk_toggleFrame+"\\n");
+# 					}
+# 				}
+# 			}
+# 		if ($mode==1 && $maskEdge==1 && size($selection)!=0)
+# 			{
+# 			if ($tk_toggleFrame == !1)
+# 				{
+# 				viewFit -fitFactor .3;
+# 				$tk_toggleFrame = 1;
+# 				print ("frame edge "+$tk_toggleFrame+"\\n");
+# 				}
+# 			else
+# 				{
+# 				viewFit -fitFactor .9;
+# 				//viewSet -previousView;
+# 				$tk_toggleFrame = 0;
+# 				print ("frame edge "+$tk_toggleFrame+"\\n");
+# 				}
+# 			}
+# 		if ($mode==1 && $maskFacet==1)
+# 			{
+# 			if ($tk_toggleFrame == !1)
+# 				{
+# 				viewFit -fitFactor .9;
+# 				$tk_toggleFrame = 1;
+# 				print ("frame facet "+$tk_toggleFrame+"\\n");
+# 				}
+# 			else
+# 				{
+# 				viewFit -fitFactor .45;
+# 				//viewSet -previousView;
+# 				$tk_toggleFrame = 0;
+# 				print ("frame facet "+$tk_toggleFrame+"\\n");
+# 				}
+# 			}
+# 		else if ($mode==0  && size($selection)!=0)
+# 			{
+# 			if ($tk_toggleFrame == !1)
+# 				{
+# 				viewFit -fitFactor .99;
+# 				$tk_toggleFrame = 1;
+# 				print ("frame object "+$tk_toggleFrame+"\\n");
+# 				}
+# 			else
+# 				{
+# 				viewFit -fitFactor .65;
+# 				//viewSet -previousView;
+# 				$tk_toggleFrame = 0;
+# 				print ("frame object "+$tk_toggleFrame+"\\n");
+# 				}
+# 			}
 
 
 
-		# command = "from macros import Macros; Macros.{0}();".format(name)
 
-		# #set runTimeCommand
-		# pm.runTimeCommand(
-		# 		name,
-		# 		annotation=ann,
-		# 		category=cat,
-		# 		command=command,
-		# 		default=True,
-		# )
+		# string $currentPanel = `getPanel -withFocus`;
+		# $mode = `displayPref -query -wireframeOnShadedActive`;
 
-		# #set hotkey
-		# #modifiers
-		# ctl=False; alt=False; sht=False
-		# for char in k.split('+'):
-		# 	if char=='ctl':
-		# 		ctl = True
-		# 	elif char=='alt':
-		# 		alt = True
-		# 	elif char=='sht':
-		# 		sht = True
-		# 	else:
-		# 		key = char
-
-		# print name, char, ctl, alt, sht
-		# pm.hotkey(keyShortcut=key, name=name, ctl=ctl, alt=alt, sht=sht) #set only the key press.
+		# if ($mode=="none")
+		# 	{
+		# 	displayPref -wireframeOnShadedActive "reduced";
+		# 	setWireframeOnShadedOption 1 $currentPanel;
+		# 	inViewMessage -statusMessage "<hl>Wireframe-on-selection</hl> is now <hl>Full</hl>.\\n<hl>3</hl>"  -fade -position topCenter;
+		# 	}
+		# if ($mode=="reduced")
+		# 	{
+		# 	displayPref -wireframeOnShadedActive "full";
+		# 	setWireframeOnShadedOption 0 $currentPanel;
+		# 	inViewMessage -statusMessage "<hl>Wireframe-on-selection</hl> is now <hl>Reduced</hl>.\\n<hl>3</hl>"  -fade -position topCenter;
+		# 	}
+		# if ($mode=="full")
+		# 	{
+		# 	displayPref -wireframeOnShadedActive "none";
+		# 	setWireframeOnShadedOption 0 $currentPanel;
+		# 	inViewMessage -statusMessage "<hl>Wireframe-on-selection</hl> is now <hl>OFF</hl>.\\n<hl>3</hl>" -fade -position topCenter;
+		# 	}
 
 
-		# command = 'python("from macros import Macros; Macros.{0}();")'.format(name)
+	# //xray all except selected
+	# string $scene[] = `ls -visible -flatten -dag -noIntermediate -type surfaceShape`;
+	# string $selection[] = `ls -selection -dagObjects -shapes`;
+	# for ($object in $scene)
+	# 	{
+	# 	if (!stringArrayContains ($object, $selection))
+	# 		{
+	# 		int $state[] = `displaySurface -query -xRay $object`;
+	# 		displaySurface -xRay ( !$state[0] ) $object;
+	# 		}
+	# 	}
 
-		# #set command
-		# nameCommand = pm.nameCommand(
-		# 		'{0}Command'.format(name),
-		# 		annotation=ann,
-		# 		command=command,
-		# )
 
-		# #set runTimeCommand
-		# pm.runTimeCommand(
-		# 		name,
-		# 		annotation=ann,
-		# 		category=cat,
-		# 		command=nameCommand,
-		# 		commandLanguage='mel',
-		# 		default=True,
-		# )
+		# mel.eval('''
+		# string $currentPanel = `getPanel -withFocus`;
+		# string $state = `modelEditor -query -displayAppearance $currentPanel`;
+		# string $displayTextures = `modelEditor -query -displayTextures $currentPanel`;
+		# if(`modelEditor -exists $currentPanel`)
+		#   {
+		# 	if($state != "wireframe" && $displayTextures == false)
+		# 	  {
+		# 		modelEditor -edit -displayAppearance smoothShaded -activeOnly false -displayTextures true $currentPanel;
+		# 		inViewMessage -statusMessage "modelEditor -smoothShaded <hl>true</hl> -displayTextures <hl>true</hl>.\\n<hl>5</hl>"  -fade -position topCenter;
+		# 		}
+		# 	if($state == "wireframe" && $displayTextures == true)
+		# 	  {
+		# 		modelEditor -edit -displayAppearance smoothShaded -activeOnly false -displayTextures false $currentPanel;
+		# 		inViewMessage -statusMessage "modelEditor -smoothShaded <hl>true</hl> -displayTextures <hl>false</hl>.\\n<hl>5</hl>"  -fade -position topCenter;
+		# 		}
+		# 	if($state != "wireframe" && $displayTextures == true)
+		# 	  {
+		# 		modelEditor -edit -displayAppearance wireframe -activeOnly false $currentPanel;
+		# 		inViewMessage -statusMessage "modelEditor -wireframe <hl>true</hl>.\\n<hl>5</hl>"  -fade -position topCenter;
+		# 		}
+		# 	}
+		# ''')
 
-		# #set hotkey
-		# #modifiers
-		# ctl=False; alt=False; sht=False
-		# for char in k.split('+'):
-		# 	if char=='ctl':
-		# 		ctl = True
-		# 	elif char=='alt':
-		# 		alt = True
-		# 	elif char=='sht':
-		# 		sht = True
-		# 	else:
-		# 		key = char
 
-		# pm.hotkey(keyShortcut=key, name=name, ctl=ctl, alt=alt, sht=sht) #set only the key press.
+# SelectMultiComponentMask;
+# inViewMessage -statusMessage "<hl>Multi-Component Selection Mode</hl>\\n Mask is now <hl>ON</hl>.\\n<hl>F4</hl>"  -fade -position topCenter;
+
+
+
+		# //paste and then re-name object removing keyword 'pasted'
+		# cutCopyPaste "paste";
+		# {
+		# string $pasted[] = `ls "pasted__*"`;
+		# string $object;
+		# for ( $object in $pasted )
+		# {
+		# string $elements[];
+		# // The values returned by ls may be full or partial dag
+		# // paths - when renaming we only want the actual
+		# // object name so strip off the leading dag path.
+		# //
+		# tokenize( $object, "|", $elements );
+		# string $stripped = $elements[ `size $elements` - 1 ];
+		# // Remove the 'pasted__' suffix from the name
+		# //
+		# $stripped = `substitute "pasted__" $stripped ""`;
+		# // When renaming a transform its shape will automatically be
+		# // be renamed as well. Use catchQuiet here to ignore errors
+		# // when trying to rename the child shape a second time.
+		# // 
+		# catchQuiet(`evalEcho("rename " + $object + " " + $stripped)`);
+		# }
+		# };
+		# //alternative: edit the cutCopyPaste.mel
+		# //REMOVE the line "-renameAll" so the sub-nodes won't get renamed at all
+		# //REMOVE the -renamingPrefix "paste_" line
+		# //and instead write the line -defaultNamespace
+
+
+# $mode = `selectMode -query -component`;
+# if ($mode==0)
+#   {
+# 	changeSelectMode -component;
+# 	}
+
+# $maskVertex = `selectType -query -vertex`;
+# $maskEdge = `selectType -query -edge`;
+# $maskFacet = `selectType -query -facet`;
+
+# if ($maskEdge==0 && $maskFacet==1)
+# 	{
+# 	selectType -vertex true;
+# 	inViewMessage -statusMessage "<hl>Vertex</hl> Mask is now <hl>ON</hl>.\\n<hl>F4</hl>"  -fade -position topCenter;
+# 	}
+# if ($maskVertex==1 && $maskFacet==0)
+# 	{
+# 	selectType -edge true;
+# 	inViewMessage -statusMessage "<hl>Edge</hl> Mask is now <hl>ON</hl>.\\n<hl>F4</hl>"  -fade -position topCenter;
+# 	}
+# if ($maskVertex==0 && $maskEdge==1)
+# 	{
+# 	selectType -facet true;
+# 	inViewMessage -statusMessage "<hl>Facet</hl> Mask is now <hl>ON</hl>.\\n<hl>F4</hl>"  -fade -position topCenter;
+# 	}
+
+
+		# // added this expression to fix 'toggleMainMenubar function not found' error
+		# if (`menu -q -ni MayaWindow|HotBoxControlsMenu` == 0) {setParent -m MayaWindow|HotBoxControlsMenu;source HotboxControlsMenu;};
+
+		# //toggle panel menus
+		# string $panels[] = `getPanel -allPanels`;
+		# int $state = `panel -query -menuBarVisible $panels[0]`;
+		# for ($panel in $panels)
+		# {
+		# 	// int $state = `panel -query -menuBarVisible $panel`;
+		# 	panel -edit -menuBarVisible (!$state) $panel;
+		# }
+		# //toggle main menubar
+		# toggleMainMenubar (!$state);
+
+		# //toggle titlebar
+		# window -edit -titleBar (!$state) $gMainWindow;
+
+		# // //toggle fullscreen mode //working but issues with windows resizing on toggle
+		# // int $inFullScreenMode = `optionVar -q "workspacesInFullScreenUIMode"`;
+		# // int $inZoomInMode = `optionVar -q "workspacesInZoomInUIMode"`;
+		# // // enter full screen mode only if the zoom-in mode is not active.
+		# // if(!$inZoomInMode) 
+		# // {
+		# // 	string $panelWithFocus = `getPanel -withFocus`;
+		# // 	string $parentControl = `workspaceLayoutManager -parentWorkspaceControl $panelWithFocus`;
+		# // 	int $isFloatingPanel = `workspaceControl -q -floating $parentControl`;
+						
+		# // 	if(!$isFloatingPanel) 
+		# // 	{
+		# // 		if($inFullScreenMode) 
+		# // 		{
+		# // 		//come out of fullscreen mode
+		# // 		workspaceLayoutManager -restoreMainWindowControls;
+		# // 		}
+		# // 		else 
+		# // 		{
+		# // 			// enter fullscreen mode
+		# // 			workspaceLayoutManager -collapseMainWindowControls $parentControl true;
+		# // 		}
+		# // 	optionVar -iv "workspacesInFullScreenUIMode" (!$inFullScreenMode);
+		# // 	}
+		# // }

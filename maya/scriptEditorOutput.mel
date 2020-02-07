@@ -3,26 +3,26 @@
 //   RMB context menu
 
 
-global proc tk_scriptEditorOutput()
+global proc scriptEditorOutput()
     {
 
     formLayout -numberOfDivisions 100 -width 50 mainLayout;
-        global string $tk_cmdScrollFieldReporter;
+        global string $cmdScrollFieldReporter;
         //create script editor output
-        $tk_cmdScrollFieldReporter = `cmdScrollFieldReporter //-height 35
+        $cmdScrollFieldReporter = `cmdScrollFieldReporter //-height 35
                                                             //-backgroundColor 0 0 0
                                                             //-highlightColor 0 0 0
                                                             -echoAllCommands off
                                                             -filterSourceType ""
                                                             `;
-        // print $tk_cmdScrollFieldReporter;
+        // print $cmdScrollFieldReporter;
         
         // create RMB context menu
         // end multi-line strings in continuation character '\' or maya will throw an unterminated string error
-        $contextMenu = `popupMenu -parent $tk_cmdScrollFieldReporter`;
+        $contextMenu = `popupMenu -parent $cmdScrollFieldReporter`;
 
         menuItem -label "Clear Output" 
-                 -command ("cmdScrollFieldReporter -edit -clear "+$tk_cmdScrollFieldReporter);
+                 -command ("cmdScrollFieldReporter -edit -clear "+$cmdScrollFieldReporter);
 
         menuItem -divider true;
 
@@ -48,8 +48,8 @@ global proc tk_scriptEditorOutput()
             menuItem -label "Info"
                     -checkBox on
                     -command ("\
-                        $state = `cmdScrollFieldReporter -query -suppressInfo "+$tk_cmdScrollFieldReporter+"`;\
-                        cmdScrollFieldReporter -edit -suppressInfo (!$state) "+$tk_cmdScrollFieldReporter+";\
+                        $state = `cmdScrollFieldReporter -query -suppressInfo "+$cmdScrollFieldReporter+"`;\
+                        cmdScrollFieldReporter -edit -suppressInfo (!$state) "+$cmdScrollFieldReporter+";\
                         if ($state == 0)\
                             {\
                             print (\"** Info Messages Off **\");\
@@ -64,8 +64,8 @@ global proc tk_scriptEditorOutput()
             menuItem -label "Warning Messages"
                     -checkBox on
                     -command ("\
-                        $state = `cmdScrollFieldReporter -query -suppressWarnings "+$tk_cmdScrollFieldReporter+"`;\
-                        cmdScrollFieldReporter -edit -suppressWarnings (!$state) "+$tk_cmdScrollFieldReporter+";\
+                        $state = `cmdScrollFieldReporter -query -suppressWarnings "+$cmdScrollFieldReporter+"`;\
+                        cmdScrollFieldReporter -edit -suppressWarnings (!$state) "+$cmdScrollFieldReporter+";\
                         if ($state == 0)\
                             {\
                             print (\"** Warning Messages Off **\");\
@@ -80,8 +80,8 @@ global proc tk_scriptEditorOutput()
             menuItem -label "Error Messages"
                     -checkBox on
                     -command ("\
-                        $state = `cmdScrollFieldReporter -query -suppressErrors "+$tk_cmdScrollFieldReporter+"`;\
-                        cmdScrollFieldReporter -edit -suppressErrors (!$state) "+$tk_cmdScrollFieldReporter+";\
+                        $state = `cmdScrollFieldReporter -query -suppressErrors "+$cmdScrollFieldReporter+"`;\
+                        cmdScrollFieldReporter -edit -suppressErrors (!$state) "+$cmdScrollFieldReporter+";\
                         if ($state == 0)\
                             {\
                             print (\"** Error Messages Off **\");\
@@ -123,35 +123,35 @@ global proc tk_scriptEditorOutput()
                     ");
 
         menuItem -label "Copy"//copy selected text to clipboard -saveSelection -saveSelectionToShelf
-                 -command ("cmdScrollFieldReporter -edit -copySelection "+$tk_cmdScrollFieldReporter);
+                 -command ("cmdScrollFieldReporter -edit -copySelection "+$cmdScrollFieldReporter);
 
         // menuItem -label "Save"//save selected text to file  
-        //          -command ("cmdScrollFieldReporter -edit -saveSelection $tk_cmdScrollFieldReporter");
+        //          -command ("cmdScrollFieldReporter -edit -saveSelection $cmdScrollFieldReporter");
 
         menuItem -label "Save to Shelf"//save selected text to shelf
-                 -command ("cmdScrollFieldReporter -edit -saveSelectionToShelf "+$tk_cmdScrollFieldReporter);
+                 -command ("cmdScrollFieldReporter -edit -saveSelectionToShelf "+$cmdScrollFieldReporter);
 
         menuItem -label "Search Web"//copy selected text to clipboard and preform a web search
                  -command ("\
-                    string $text = `cmdScrollFieldReporter -edit -copySelection "+$tk_cmdScrollFieldReporter+"`\
+                    string $text = `cmdScrollFieldReporter -edit -copySelection "+$cmdScrollFieldReporter+"`\
                     print $text\
                     ");
 
     formLayout -edit 
-        -attachForm $tk_cmdScrollFieldReporter "top"     0
-        -attachForm $tk_cmdScrollFieldReporter "bottom"  0
-        -attachForm $tk_cmdScrollFieldReporter "left"    0
-        -attachForm $tk_cmdScrollFieldReporter "right"   0 
+        -attachForm $cmdScrollFieldReporter "top"     0
+        -attachForm $cmdScrollFieldReporter "bottom"  0
+        -attachForm $cmdScrollFieldReporter "left"    0
+        -attachForm $cmdScrollFieldReporter "right"   0 
         mainLayout;
     }
 
 
 
-global proc tk_initScriptEditorOutputWin()
+global proc initScriptEditorOutputWin()
     {
 
     string $workspaceName  = "scriptEditorOutputWorkspace";
-    string $uiScript       = "tk_scriptEditorOutput()";
+    string $uiScript       = "scriptEditorOutput()";
 
     if (`workspaceControl -exists $workspaceName`)
         deleteUI $workspaceName;
@@ -170,8 +170,8 @@ global proc tk_initScriptEditorOutputWin()
     }
 
 
-// python version of tk_initScriptEditorOutputWin:
-// uiScript       = "$tk_scriptEditorOutput()"
+// python version of initScriptEditorOutputWin:
+// uiScript       = "$scriptEditorOutput()"
 // workspaceName  = "scriptEditorOutputWorkspace"
 
 // if pm.workspaceControl (workspaceName, exists=1):
@@ -192,8 +192,8 @@ global proc tk_initScriptEditorOutputWin()
 
 
 
-// tk_scriptEditorOutput();
-// tk_initScriptEditorOutputWin();
+// scriptEditorOutput();
+// initScriptEditorOutputWin();
 
 
 

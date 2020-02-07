@@ -55,8 +55,8 @@ def wrap():
 			i+=1
 	syntax_highlighter = SyntaxHighlighter(se_edit)
 
-	#untested.  send to $tk_cmdScrollFieldReporter explicitly. used in place of above code.
-	# cmdScrollFieldReporter = "$tk_cmdScrollFieldReporter"
+	#untested.  send to $cmdScrollFieldReporter explicitly. used in place of above code.
+	# cmdScrollFieldReporter = "$cmdScrollFieldReporter"
 	# se_edit = wrapInstance(long(MQtUtil.findControl(cmdScrollFieldReporter)), QtWidgets.QTextEdit)
 	# syntax_highlighter = SyntaxHighlighter(se_edit)
   

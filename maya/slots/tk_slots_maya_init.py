@@ -75,6 +75,36 @@ class Init(Slot):
 
 
 
+	@staticmethod
+	def melCommandFromPy(python):
+		'''
+		Create a MEL command from a python function or class.
+
+		def makeName( first, last, middle=''):
+		    if middle:
+		        return first + ' ' + middle + ' ' + last
+		    return first + ' ' + last
+
+		import pymel as pm
+		from pymel.tools.py2mel import py2melCmd
+		cmd = py2melCmd( makeName, 'makeNameCmd' )
+		pm.makeNameCmd( 'Homer', 'Simpson')
+		# Result: Homer Simpson #
+		pm.makeNameCmd( 'Homer', 'Simpson', middle='J.')
+		# Result: Homer J. Simpson #
+		Of course, the real advantage of this tool is that now your python function is available from within MEL as a command:
+
+		makeNameCmd "Homer" "Simpson";
+		// Result: Homer Simpson //
+		makeNameCmd "Homer" "Simpson" -middle "J.";
+		// Result: Homer J. Simpson //
+
+		To remove the command, call the deregister method of the class returned by py2melCmd:
+		cmd.deregister()
+		'''
+		from pymel.tools.py2mel import py2melCmd
+
+
 
 
 	# ------------------------------------------------
@@ -83,11 +113,22 @@ class Init(Slot):
 
 
 
+	@staticmethod
+	def getContiguousFaces(faces):
+		'''
+		Get any faces attached to the given faces.
+		'''
+		adjEdges=pm.polyListComponentConversion(faces, fromFace=1, toEdge=1)
+		adjFaces=pm.polyListComponentConversion(adjEdges, toFace=1, fromEdge=1)
+		return adjFaces
 
-	#returns all faces on a specified axis
+
+
 	@staticmethod
 	def getAllFacesOnAxis(obj, axis="-x", localspace=False):
 		'''
+		Get all faces on a specified axis
+
 		args:
 			obj=<geometry> - object to perform the operation on. 
 			axis='string' - representing axis ie. "x"
@@ -110,7 +151,8 @@ class Init(Slot):
 	@staticmethod
 	def getBorderEdgeFromFace(faces=None):
 		'''
-		get border edges from faces.
+		Get border edges from faces.
+
 		args:
 			faces='string'/unicode or list of faces. ie. 'poly.f[696]' or 'polyShape.f[696]'
 		returns:
@@ -138,9 +180,11 @@ class Init(Slot):
 
 
 
-	#select shortest edge path between (two or more) selected edges
 	@staticmethod
 	def shortestEdgePath():
+		'''
+		Select shortest edge path between (two or more) selected edges.
+		'''
 		#returns: list of lists. each containing an edge paths components
 		selectTypeEdge = pm.filterExpand (selectionMask=32) #returns True if selectionMask=Edges
 		if (selectTypeEdge): #if selection is polygon edges, convert to vertices.
@@ -170,10 +214,12 @@ class Init(Slot):
 		return paths
 
 
-	#align vertices
+
 	@staticmethod
 	def alignVertices (mode, average=False, edgeloop=False):
 		'''
+		Align vertices.
+
 		args:
 			mode=int - possible values are align: 0-YZ, 1-XZ, 2-XY, 3-X, 4-Y, 5-Z, 6-XYZ 
 			average=bool - align to average of all selected vertices. else, align to last selected
@@ -246,7 +292,8 @@ class Init(Slot):
 	@staticmethod
 	def getComponentPoint(component, alignToNormal=False):
 		'''
-		get the center point from the given component.
+		Get the center point from the given component.
+
 		args: alignToNormal=bool - 
 
 		returns: [float list] - x, y, z  coordinate values.
@@ -294,6 +341,8 @@ class Init(Slot):
 	@staticmethod
 	def createCircle(axis='y', numPoints=5, radius=5, center=[0,0,0], mode=0):
 		'''
+		Create a circular polygon plane.
+
 		args:
 			axis='string' - 'x','y','z' 
 			numPoints=int - number of outer points
@@ -341,6 +390,132 @@ class Init(Slot):
 
 
 
+	# -----------------------------------------------
+	' Normals'
+	# -----------------------------------------------
+
+
+	@staticmethod
+	def getNormalVector(name=None):
+		'''
+		Get the normal vectors from the given poly object.
+		If no argument is given the normals for the current selection will be returned.
+		args:
+			name = polygon mesh or component.
+		returns:
+			list - [int, float, float, float] face id & vector xyz.
+		'''
+		type_ = pm.objectType(name)
+
+		if type_=='mesh': #get face normals
+			normals = pm.polyInfo(name, faceNormals=1)
+
+		elif type_=='transform': #get all normals for the given obj
+			numFaces = pm.polyEvaluate(name, face=1) #returns number of faces as an integer
+			normals=[]
+			for n in range(0, numFaces): #for (number of faces):
+				array = pm.polyInfo('{0}[{1}]'.format(name, n) , faceNormals=1) #get normal info from the rest of the object's faces
+				string = ' '.join(array)
+				n.append(str(string))
+
+		else: #get face normals from the user component selection.
+			normals = pm.polyInfo(faceNormals=1) #returns the face normals of selected faces
+
+		regex = "[A-Z]*_[A-Z]* *[0-9]*: "
+
+		dict_={}
+		for n in normals:
+			l = [s.replace(regex,"") for s in n.split(' ') if s] #[u'FACE_NORMAL', u'150:', u'0.935741', u'0.110496', u'0.334931\n']
+
+			key = int(l[1].strip(':')) #int face number as key ie. 150
+			value = [float(i) for i in l[-3:]]  #vector list as value. ie. [[0.935741, 0.110496, 0.334931]]
+			dict_[key] = value
+
+		return dict_
+
+
+
+	@staticmethod
+	def getFacesWithSimilarNormals(faces, shapeNodes=[], similarFaces=[], rangeX=0.1, rangeY=0.1, rangeZ=0.1):
+		'''
+		Get normals that fall within an X,Y,Z tolerance.
+		args:
+			faces = list ['polygon faces'] - faces to find similar normals for.
+			similarFaces = list - optional ability to add faces from previous calls to the return value.
+			shapeNodes = list [<shape nodes>] - objects to check faces on. If none are given the objects containing the given faces will be used.
+			rangeX = float - x axis tolerance
+			rangeY = float - y axis tolerance
+			rangeZ = float - z axis tolerance
+		'''
+		normals = Init.getNormalVector(faces)
+
+		for k, v in normals.items():
+			sX = v[0]
+			sY = v[1]
+			sZ = v[2]
+
+			if not shapeNodes:
+				shapeNodes = pm.listRelatives(faces, parent=1)
+				print ' -'
+			print shapeNodes
+			for shapeNode in shapeNodes:
+				numFaces = pm.polyEvaluate(shapeNode, face=1)
+				for faceNum in range(0, numFaces):
+					face = '{0}.f[{1}]'.format(shapeNode, str(faceNum)) #assemble component name
+
+					n = Init.getNormalVector(face)
+					for k, v in n.items():
+						nX = v[0]
+						nY = v[1]
+						nZ = v[2]
+
+						if sX<=nX + rangeX and sX>=nX - rangeX and sY<=nY + rangeY and sY>=nY - rangeY and sZ<=nZ + rangeZ and sZ>=nZ - rangeZ:
+							similarFaces.append(str(face))
+
+		return similarFaces
+
+
+
+	@staticmethod
+	def getPolyFaceIsland(faces):
+		'''
+		Get adjacent polygon faces.
+		args:
+			faces = list - polygon faces to be filtered for adjacent.
+		returns:
+			list of adjacent faces.
+		'''
+		pm.undoInfo(openChunk=1)
+		userSelection = pm.ls(selection=True)
+		name = userSelection[0].replace('[[0-9]*]', '')
+		pm.melGlobals.initVar('string', 'gMainProgressBar')
+
+		finalSelection=[]
+		numFaces = len(faces)
+		count = (numFaces / (numFaces * .02))
+		pm.mainProgressBar(pm.melGlobals['gMainProgressBar'], numFaces, count)
+		for num in range(0,count):
+			if pm.mainProgressBar(pm.melGlobals['gMainProgressBar'], query=1, isCancelled=1):
+				break
+	
+			pm.mainProgressBar(pm.melGlobals['gMainProgressBar'], edit=1, step=1)
+			selection = pm.ls(selection=1) #List objects that are currently selected.
+			userSelection = pm.filterExpand(selection, expand=True, selectionMask=34) #essentially, do not combine component names within the array.
+			adjFaces = Init.getContiguousFaces(userSelection)
+			adjFaces = pm.filterExpand(adjFaces, expand=True, selectionMask=34) #list each component in a separate string
+			for face in adjFaces:
+				if face in faces:
+					if not face in finalSelection:
+						finalSelection.append(str(face))
+						size = len(finalSelection)
+						pm.select(finalSelection[size - 1], add=1) #last item added to array which is equivalent to: select -add $face;
+			adjFaces=[]
+
+		pm.mainProgressBar(pm.melGlobals['gMainProgressBar'], edit=1, endProgress=1)
+		pm.undoInfo(closeChunk=1)
+
+		return finalSelection
+
 
 
 	# ------------------------------------------------
@@ -352,7 +527,8 @@ class Init(Slot):
 	@staticmethod
 	def getAttributesMEL(node, exclude=None):
 		'''
-		get history node attributes:values using the transform node. 
+		Get history node attributes:values using the transform node. 
+
 		args:
 			node=transform node
 			exclude='string or unicode list' - attributes to exclude from the returned dictionay
@@ -373,7 +549,8 @@ class Init(Slot):
 	@staticmethod
 	def setAttributesMEL(node, attributes):
 		'''
-		sets given attributes for the history node using the transform node.
+		Set history node attributes using the transform node.
+
 		args:
 			node=transform node
 			attributes=dictionary {'string attribute': value} - attributes and their correponding value to set
@@ -407,7 +584,6 @@ class Init(Slot):
 
 
 
-
 	# ------------------------------------------------
 	' Ui'
 	# ------------------------------------------------
@@ -418,6 +594,7 @@ class Init(Slot):
 	def getMayaMainWindow():
 		'''
 		Get the main Maya window as a QtGui.QMainWindow instance
+
 		returns:
 			QtGui.QMainWindow instance of the top level Maya windows
 		'''
@@ -475,6 +652,21 @@ class Init(Slot):
 		# 	if pm.progressBar ("tk_progressBar", query=1, isCancelled=1):
 		# 		break
 		# pm.progressBar ("tk_progressBar", edit=1, endProgress=1)
+
+
+	@staticmethod
+	def mainProgressBar(gMainProgressBar, numFaces, count):
+		'''
+
+		'''
+		num=str(numFaces)
+		status="iterating through " + num + " faces"
+		pm.progressBar(gMainProgressBar, 
+			edit=1, 
+			status=status, 
+			isInterruptable=True, 
+			maxValue=count, 
+			beginProgress=1)
 
 
 
@@ -551,7 +743,7 @@ class Init(Slot):
 	@staticmethod
 	def outputscrollField (text, window_title, width, height):
 		'''
-		output scroll layout
+		Create an output scroll layout.
 		'''
 		window_width  = width  * 300
 		window_height = height * 600
@@ -579,7 +771,7 @@ class Init(Slot):
 	@staticmethod
 	def outputTextField (array, window_title):
 		'''
-		output text field
+		Create an output text field.
 		'''
 		window = str(pm.window(	widthHeight=(250, 650), 
 								topLeftCorner=(65,275),
@@ -610,22 +802,38 @@ class Init(Slot):
 
 
 	@staticmethod
-	def convertMelToPy(melScript):
+	def convertMelToPy(mel, excludeFromInput=[], excludeFromOutput=['from pymel.all import *','s pm']):
 		'''
-		convert mel to python
+		Convert a string representing mel code into a string representing python code.
+
 		args:
-			melScript='string' - mel script to convert
-		returns:
-			converted script as a string
+			mel = string - string containing mel code.
+			excludeFromInput = list - list of strings specifying series of chars to strip from the Input.
+			excludeFromOutput = list - list of strings specifying series of chars to strip from the Output.
+		
+		mel2PyStr Parameters:
+			currentModule = 'string' - The name of the module that the hypothetical code is executing in. In most cases you will leave it at its default, the __main__ namespace.
+			pymelNamespace = 'string' - The namespace into which pymel will be imported. the default is '', which means from pymel.all import *
+			forceCompatibility = bool - If True, the translator will attempt to use non-standard python types in order to produce python code which more exactly reproduces the behavior of the original mel file, but which will produce 'uglier' code. Use this option if you wish to produce the most reliable code without any manual cleanup.
+			verbosity = int - Set to non-zero for a lot of feedback.
 		'''
 		from pymel.tools import mel2py
-		# convert to single line
-		translation = [mel2py.mel2pyStr(e+';') for e in melScript.split(';')] #get list of python commands from a mel string
-		pythonScript = [s.lstrip('from pymel.all import *') for s in translation] #strip import string from each index
-		print " ".join(pythonScript) #get single string from list
-		return pythonScript #list of python commands
-		#print to outputscrollField
-		# outputscrollField (python_script, "mel2py", 1.0, 1.0) #text, window_title, width, height
+		import re
+
+		l = filter(None, re.split('[\n][;]', mel))
+
+		python=[]
+		for e in l:
+			if not e in excludeFromInput:
+				try:
+					py = mel2py.mel2pyStr(e, pymelNamespace='pm')
+					for _ in excludeFromOutput:
+						py = py.strip(_)
+				except:
+					py = e
+				python.append(py)
+
+		return ''.join(python)
 
 
 	@staticmethod

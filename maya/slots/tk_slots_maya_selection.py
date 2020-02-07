@@ -323,6 +323,7 @@ class Selection(Init):
 			self.ui.t000.clear()
 
 
+
 	def b001(self):
 		'''
 		'''
@@ -361,6 +362,7 @@ class Selection(Init):
 		Select Similar
 		'''
 		tolerance = str(self.ui.s000.value()) #string value because mel.eval is sending a command string
+
 		mel.eval("doSelectSimilar 1 {\""+ tolerance +"\"}")
 
 
@@ -369,8 +371,12 @@ class Selection(Init):
 		Select Polygon Face Island
 		'''
 		rangeX=rangeY=rangeZ = float(self.ui.s002.value())
+		selectedFaces = pm.filterExpand(sm=34)
 
-		mel.eval("selectPolyFaceIsland("+str(rangeX)+","+str(rangeY)+","+str(rangeZ)+")")
+		similarFaces = self.getFacesWithSimilarNormals(selectedFaces, rangeX=rangeX, rangeY=rangeY, rangeZ=rangeZ)
+		adjacentFaces = self.getPolyFaceIsland(similarFaces)
+
+		pm.select(adjacentFaces, replace=1)
 
 
 	def b008(self):

@@ -41,8 +41,8 @@ Macros().setMacros()
 import commandPort #opens ports 7001/7002 for external script editor
 import scriptEditorOutputTextHighlighting #syntax highlighting
 
-mel.eval('source "tk_scriptEditorOutput.mel";')
-mel.eval('evalDeferred -lowPriority ("tk_initScriptEditorOutputWin");')
+mel.eval('source "scriptEditorOutput.mel";')
+mel.eval('evalDeferred -lowPriority ("initScriptEditorOutputWin");')
 
 pm.evalDeferred("scriptEditorOutputTextHighlighting.wrap()", lowestPriority=1)
 
