@@ -38,7 +38,7 @@ class Scene(Init):
 
 	def getTrailingIntegers(self, string, increment=0):
 		'''
-		args: increment=int - optional step amount
+		args: increment(int) = optional step amount
 
 		Returns 'string' - any integers from the end of the given string.
 		'''

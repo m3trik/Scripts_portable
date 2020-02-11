@@ -98,7 +98,7 @@ class Switchboard(object):
 		Following that, the items in the ui are looped over, and the widgets' method resolution order is checked against the signals keys
 		to determine the correct derived class type (used in the case of a custom widget).
 		args:
-			name = 'string' - name of the ui to construct connections for.
+			name (str) = name of the ui to construct connections for.
 		returns:
 			dict - 'objectName':{'widget':<widget>,'signalInstance':<signalInstance>,'method':<method>,'docString':'docString','widgetClassInstance':<class object>,'widgetClassName':'class name'}
 		'''
@@ -118,9 +118,9 @@ class Switchboard(object):
 		Decoupling this from 'buildWidgetDict' allows additional widgets to be added at any time.
 		The signals dictionary provides both a way to set a default signal for a widget type.
 		args:
-			name = 'string' - name of the ui to construct connections for.
+			name (str) = name of the ui to construct connections for.
 			widget = <widget object> - widget to be added.
-			objectName = 'string' - widget's name.
+			objectName (str) = widget's name.
 		returns:
 			<widget object>
 		'''
@@ -218,7 +218,7 @@ class Switchboard(object):
 		'''
 		Connects signals/slots from the widgetDict for the given ui. Works with both single slots or multiple slots given as a list.
 		args:
-			name = 'string' - ui name
+			name (str) = ui name
 		'''
 		for objectName in self.widgetDict(name):
 			signal = self.getSignal(name, objectName)
@@ -240,7 +240,7 @@ class Switchboard(object):
 		'''
 		Disconnects signals/slots from the widgetDict for the given ui. Works with both single slots or multiple slots given as a list.
 		args:
-			name = 'string' - ui name
+			name (str) = ui name
 		'''
 		for objectName in self.widgetDict(name):
 			signal = self.getSignal(name, objectName)
@@ -303,7 +303,7 @@ class Switchboard(object):
 		'''
 		The 'name' list is used for various things such as; maintaining a history of ui's that have been called previously.
 		args:
-			index = 'string' - name
+			index (str) = name
 				*or int - index of ui name
 		returns:
 			corresponding ui name as string
@@ -365,7 +365,7 @@ class Switchboard(object):
 		If no size is given, the minimum ui size needed to frame its
 		contents will be used. If no name is given, the current ui will be used.
 		args:
-			name = 'string' - optional ui name
+			name (str) = optional ui name
 			size = [int, int] - optional width and height as an integer list. [width, height]
 		returns:
 			ui size info as integer values in a list. [width, hight]
@@ -386,7 +386,7 @@ class Switchboard(object):
 		'''
 		Get the size info for each ui (allows for resizing a stacked widget where ordinarily resizing is constrained by the largest widget in the stack)
 		args:
-			name = 'string' - ui name to get size from.
+			name (str) = ui name to get size from.
 			width = int 	returns width of current ui
 			height = int 	returns hight of current ui
 			percentWidth = int returns a percentage of the width
@@ -456,7 +456,7 @@ class Switchboard(object):
 		'''
 		Get parent application if any.
 		args:
-			objectName = bool - get string name of app. (by default getMainAppWindow returns app object)
+			objectName (bool) = get string name of app. (by default getMainAppWindow returns app object)
 		returns:
 			app object or string name
 		'''
@@ -482,7 +482,7 @@ class Switchboard(object):
 		args:
 			class_ = 'string' *or <class object> - module name.class to import and store class. 
 					ie.  ie. 'polygons', 'tk_slots_max_polygons.Polygons', or <tk_slots_max_polygons.Polygons>
-			name = 'string' - optional name key to store the class under (else the class name will be used).
+			name (str) = optional name key to store the class under (else the class name will be used).
 		returns:
 			class object.
 		'''
@@ -537,8 +537,8 @@ class Switchboard(object):
 		'''
 		Case insensitive. Get the widget object/s from the given ui or widget name.
 		args:
-			name = 'string' - name of ui. ie. 'polygons'. If no name is given, the current ui will be used.
-			objectName = 'string' - optional name of widget. ie. 'b000'
+			name (str) = name of ui. ie. 'polygons'. If no name is given, the current ui will be used.
+			objectName (str) = optional name of widget. ie. 'b000'
 		returns:
 			if objectName:  widget object with the given name from the current ui.
 			if name and objectName: widget object with the given name from the given ui name.
@@ -564,7 +564,7 @@ class Switchboard(object):
 		args:
 			widget = 'string'  - name of widget/widget
 				*or <object> -widget
-			name = 'string' - name of dynamic ui (else use current ui)
+			name (str) = name of dynamic ui (else use current ui)
 		returns:
 			'string' - the corresponding widget class name
 		'''
@@ -590,7 +590,7 @@ class Switchboard(object):
 		args:
 			widget = 'string'  - name of widget/widget
 				*or <object> - widget
-			name = 'string' - name of dynamic ui (else use current ui)
+			name (str) = name of dynamic ui (else use current ui)
 		returns:
 			'string' - the corresponding widget derived class name
 		'''
@@ -675,13 +675,13 @@ class Switchboard(object):
 		Get the previously called ui name string, or a list of ui name strings ordered by use.
 		It does so by pulling from the 'name' list which keeps a list of the ui names as they are called. ie. ['previousName2', 'previousName1', 'currentName']
 		args:
-			previousIndex = bool - return the index of the last valid previously opened ui name.
-			allowDuplicates = bool - applicable when returning as_list. Returns the list allowing for duplicate names.
-			allowLevel0 = bool - allow instances of init menu in the results. Default is Off.
-			allowLevel1 = bool - allow instances of base level menus in the results. Default is On.
-			allowLevel2 = bool - allow instances of submenu's in the results. Default is On.
-			allowCurrent = bool - allow the currentName. Default is off.
-			as_list = bool - returns the full list of previously called names. By default duplicates are removed.
+			previousIndex (bool) = return the index of the last valid previously opened ui name.
+			allowDuplicates (bool) = applicable when returning as_list. Returns the list allowing for duplicate names.
+			allowLevel0 (bool) = allow instances of init menu in the results. Default is Off.
+			allowLevel1 (bool) = allow instances of base level menus in the results. Default is On.
+			allowLevel2 (bool) = allow instances of submenu's in the results. Default is On.
+			allowCurrent (bool) = allow the currentName. Default is off.
+			as_list (bool) = returns the full list of previously called names. By default duplicates are removed.
 		returns:
 			with no arguments given - string name of previously opened ui.
 			if previousIndex: int - index of previously opened ui
@@ -727,8 +727,8 @@ class Switchboard(object):
 	def prevCommand(self, docString=False, method=False, as_list=False):
 		'''
 		args:
-			docString = bool - return the docString of last command. Default is off.
-			method = bool - return the method of last command. Default is off.
+			docString (bool) = return the docString of last command. Default is off.
+			method (bool) = return the method of last command. Default is off.
 		returns:
 			if docString: 'string' description (derived from the last used command method's docString) (as_list: [string list] all docStrings, in order of use)
 			if method: method of last used command. (as_list: [<method object> list} all methods, in order of use)
@@ -774,9 +774,9 @@ class Switchboard(object):
 	def prevCamera(self, docString=False, method=False, allowCurrent=False, as_list=False):
 		'''
 		args:
-			docString = bool - return the docString of last camera command. Default is off.
-			method = bool - return the method of last camera command. Default is off.
-			allowCurrent = bool - allow the current camera. Default is off.
+			docString (bool) = return the docString of last camera command. Default is off.
+			method (bool) = return the method of last camera command. Default is off.
+			allowCurrent (bool) = allow the current camera. Default is off.
 		returns:
 			if docString: 'string' description (derived from the last used camera command's docString) (as_list: [string list] all docStrings, in order of use)
 			if method: method of last used camera command. (as_list: [<method object> list} all methods, in order of use)
@@ -881,7 +881,7 @@ class Switchboard(object):
 		'''
 		Get the submenu object of the given ui using it's name string, or the parent ui object.
 		args:
-			ui = 'string' - ui name.
+			ui (str) = ui name.
 				<ui object> - dynamic ui.
 		'''
 		if type(ui)==str: #get name using string.
@@ -903,7 +903,7 @@ class Switchboard(object):
 		level 2: submenus
 		level 3: menus
 		args:
-			name = 'string' -  ui name to check level of.
+			name (str) =  ui name to check level of.
 		returns:
 			int - ui level
 		'''
@@ -925,8 +925,8 @@ class Switchboard(object):
 		ex. prefix('i023') returns 'i'
 		if second prefix arg is given, then the method checks if the given objectName has the prefix, and the return value is bool.
 		args:
-			objectName = 'string' - string to check against.
-			prefix = 'string' - optional; check if the given objectName startwith this prefix.
+			objectName (str) = string to check against.
+			prefix (str) = optional; check if the given objectName startwith this prefix.
 		returns:
 			if prefix arg given:
 				bool - True if correct format else, False.
@@ -969,7 +969,7 @@ class Switchboard(object):
 		'''
 		Get Qt window/s
 		args:
-			name = 'string' - optional name of window (widget.objectName)
+			name (str) = optional name of window (widget.objectName)
 		returns:
 			if name: corresponding <window object>
 			else: return a dictionary of all windows {windowName:window}
@@ -987,7 +987,7 @@ class Switchboard(object):
 		'''
 		Get Qt widget/s
 		args:
-			name = 'string' - optional name of widget (widget.objectName)
+			name (str) = optional name of widget (widget.objectName)
 		returns:
 			if name: corresponding <widget object>
 			else: return a dictionary of all widgets {objectName:widget}
@@ -1039,8 +1039,8 @@ _sbDict={
 	# 	Checks if the given string startswith the given prefix, and is followed by three integers. ex. i000 (alphanum,int,int,int)
 	# 	ex. prefix('i023', 'i')
 	# 	args:
-	# 		string = 'string' - string to check against.
-	# 		prefix = 'string' - check if the given string startwith this prefix.
+	# 		string (str) = string to check against.
+	# 		prefix (str) = check if the given string startwith this prefix.
 	# 	returns:
 	# 		bool - True if correct format else, False.
 	# 	'''
@@ -1058,7 +1058,7 @@ _sbDict={
 # 		args:
 # 			widget='string'  - name of widget
 # 					*or <object> - widget
-# 			name='string' - name of dynamic ui (else use current ui)
+# 			name (str) = name of dynamic ui (else use current ui)
 # 		returns:
 # 			<class object> - the corresponding widget class
 # 		'''
@@ -1098,7 +1098,7 @@ _sbDict={
 	# def previousUi(self, previousIndex=False, allowDuplicates=False, as_list=False):
 	# 	'''
 	# 	args:
-	# 		previousIndex = bool - return the index of the last valid previously opened ui name.
+	# 		previousIndex (bool) = return the index of the last valid previously opened ui name.
 	# 	returns:
 	# 		if previousIndex: int index of previously opened ui
 	# 		else: string name of previously opened layout.

@@ -33,7 +33,7 @@ class Editors(Init):
 		'''
 		Set the active widget in the dynLayout ui.
 		args:
-			name='string' - name of widget
+			name (str) = name of widget
 		returns:
 			the current widget object from the stacked widget.
 		'''

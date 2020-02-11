@@ -115,7 +115,7 @@ class Selection(Init):
 		'''
 		Set the selection style context.
 		args:
-			ctx = 'string' - Selection style context. Possible values include: 'marquee', 'lasso', 'drag'.
+			ctx (str) = Selection style context. Possible values include: 'marquee', 'lasso', 'drag'.
 		'''
 		if pm.contextInfo(ctx, exists=True):
 			pm.deleteUI(ctx)
@@ -371,21 +371,18 @@ class Selection(Init):
 		Select Polygon Face Island
 		'''
 		rangeX=rangeY=rangeZ = float(self.ui.s002.value())
-
-		pm.undoInfo(openChunk=1)
 		selectedFaces = pm.filterExpand(sm=34)
 
+		pm.undoInfo(openChunk=1)
 		if selectedFaces:
-			transforms = self.getObjectFromComponent(selectedFaces)
-			for faces in transforms.values(): #for the selected faces on each selected object:
-				similarFaces = self.getFacesWithSimilarNormals(faces, rangeX=rangeX, rangeY=rangeY, rangeZ=rangeZ)
-				islands = self.getContigiousIslands(similarFaces)
+			similarFaces = self.getFacesWithSimilarNormals(selectedFaces, rangeX=rangeX, rangeY=rangeY, rangeZ=rangeZ)
+			islands = self.getContigiousIslands(similarFaces)
 
-				for island in islands:
-					for face in selectedFaces:
-						if face in island:
-							pm.select(island, add=1)
-							break
+			for island in islands: #select the islands that contain faces from the original selection.
+				for face in selectedFaces:
+					if face in island:
+						pm.select(island, add=1)
+						break
 		else:
 			print '# Warning: No faces selected. #'
 		pm.undoInfo(closeChunk=1)

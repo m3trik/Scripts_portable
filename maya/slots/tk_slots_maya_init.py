@@ -75,56 +75,30 @@ class Init(Slot):
 
 
 
-	@staticmethod
-	def melCommandFromPy(python):
-		'''
-		Create a MEL command from a python function or class.
-
-		def makeName( first, last, middle=''):
-		    if middle:
-		        return first + ' ' + middle + ' ' + last
-		    return first + ' ' + last
-
-		import pymel as pm
-		from pymel.tools.py2mel import py2melCmd
-		cmd = py2melCmd( makeName, 'makeNameCmd' )
-		pm.makeNameCmd( 'Homer', 'Simpson')
-		# Result: Homer Simpson #
-		pm.makeNameCmd( 'Homer', 'Simpson', middle='J.')
-		# Result: Homer J. Simpson #
-		Of course, the real advantage of this tool is that now your python function is available from within MEL as a command:
-
-		makeNameCmd "Homer" "Simpson";
-		// Result: Homer Simpson //
-		makeNameCmd "Homer" "Simpson" -middle "J.";
-		// Result: Homer J. Simpson //
-
-		To remove the command, call the deregister method of the class returned by py2melCmd:
-		cmd.deregister()
-		'''
-		from pymel.tools.py2mel import py2melCmd
-
-
-
 
 	# ------------------------------------------------
 	' Geometry'
 	# ------------------------------------------------
 
 
-
 	@staticmethod
-	def getBorderFaces(faces):
+	def getBorderFaces(faces, includeBordered=False):
 		'''
 		Get any faces attached to the given faces.
+		args:
+			faces (unicode, str, list) = faces to get bordering faces for.
+			includeBordered (bool) = optional. return the bordered face with the results.
 		returns:
-			list - border faces of the given faces (excluding the original faces).
+			list - the border faces of the given faces.
 		'''
 		adjEdges = pm.polyListComponentConversion(faces, fromFace=1, toEdge=1)
 		adjFaces = pm.polyListComponentConversion(adjEdges, toFace=1, fromEdge=1)
 		expanded = pm.filterExpand(adjFaces, expand=True, selectionMask=34) #keep faces as individual elements.
 
-		return [str(f) for f in expanded if f not in faces] #convert unicode to str and exclude the original faces.
+		if includeBordered:
+			return list(str(f) for f in expanded) #convert unicode to str.
+		else:
+			return list(str(f) for f in expanded if f not in faces) #convert unicode to str and exclude the original faces.
 
 
 	@staticmethod
@@ -132,38 +106,34 @@ class Init(Slot):
 		'''
 		Get a list containing sets of adjacent polygon faces grouped by islands.
 		args:
-			faces = list - polygon faces to be filtered for adjacent.
-			faceIslands = list of sets - optional ability to add faces from previous calls to the return value.
+			faces (list) = polygon faces to be filtered for adjacent.
+			faceIslands (list) = optional. list of sets. ability to add faces from previous calls to the return value.
 		returns:
 			list of sets of adjacent faces.
 		'''
-		face=None
-		prevFaces=[]
-		for _ in range(len(faces)):
-			# print ''
-			if not face:
-				try:
-					face = faces[0]
-					island=set([face])
-				except:
-					break
+		l=[]
+		for face in faces:
+			borderFaces = Init.getBorderFaces(face, includeBordered=1)
+			l.append(set(f for f in borderFaces if f in faces))
 
-			adjFaces = [f for f in Init.getBorderFaces(face) if not f in prevFaces and f in faces]
-			prevFaces.append(face)
-			# print '-face     ','   *',face
-			# print '-adjFaces ','  **',adjFaces
-			# print '-prevFaces','    ',prevFaces
+		while len(l)>0: #combine sets in 'l' that share common elements.
+			first, rest = l[0], l[1:] #python 3: first, *rest = l
+			first = set(first)
 
-			try: #add face to current island if it hasn't already been added, and is one of the faces specified by the faces argument.
-				island.add(adjFaces[0])
-				face = faces[faces.index(adjFaces[0])]
+			lf = -1
+			while len(first)>lf:
+				lf = len(first)
 
-			except: #if there are no adjacent faces, start a new island set.
-				faceIslands.append(island)
-				face = None
-				faces = [f for f in faces if f not in prevFaces]
-				# print '-island   ','   $',island
-				# print '\n',40*'-'
+				rest2 = []
+				for r in rest:
+					if len(first.intersection(set(r)))>0:
+						first |= set(r)
+					else:
+						rest2.append(r)     
+				rest = rest2
+
+			faceIslands.append(first)
+			l = rest
 
 		return faceIslands
 
@@ -175,7 +145,7 @@ class Init(Slot):
 
 		args:
 			obj=<geometry> - object to perform the operation on. 
-			axis='string' - representing axis ie. "x"
+			axis (str) = representing axis ie. "x"
 			localspace=bool - specify world or local space
 		ex. self.getAllFacesOnAxis(polyObject, 'y')
 		'''
@@ -186,9 +156,9 @@ class Init(Slot):
 			i=2
 
 		if axis.startswith('-'): #any([axis=="-x", axis=="-y", axis=="-z"]):
-			return [face for face in pm.filterExpand(obj+'.f[*]', sm=34) if pm.exactWorldBoundingBox(face)[i] < -0.00001]
+			return list(face for face in pm.filterExpand(obj+'.f[*]', sm=34) if pm.exactWorldBoundingBox(face)[i] < -0.00001)
 		else:
-			return [face for face in pm.filterExpand(obj+'.f[*]', sm=34) if pm.exactWorldBoundingBox(face)[i] > -0.00001]
+			return list(face for face in pm.filterExpand(obj+'.f[*]', sm=34) if pm.exactWorldBoundingBox(face)[i] > -0.00001)
 
 
 
@@ -198,20 +168,19 @@ class Init(Slot):
 		Get border edges from faces. (edges not shared by any other face)
 
 		args:
-			faces='string'/unicode or list of faces. ie. 'poly.f[696]' or 'polyShape.f[696]'
-					If no arguement is given, the current selection will be used.
+			faces (str, unicode, list) = ie. 'poly.f[696]' or ['polyShape.f[696]']. If no arguement is given, the current selection will be used.
 		returns:
 			list of border edges.
 		ex. getBorderEdgeFromFace(['poly.f[696]', 'poly.f[705:708]'])
 		'''
 		if not faces: #if no faces passed in as arg, get current face selection
-			faces = [str(f) for f in pm.filterExpand(selectionMask=34)]
+			faces = list(str(f) for f in pm.filterExpand(selectionMask=34))
 
-		edges = [str(i).replace('Shape.', '.', -1).split('|')[-1] for i in pm.ls(pm.polyListComponentConversion(faces, ff=1, te=1), flatten=1)] #get edges from the faces
+		edges = list(str(i).replace('Shape.', '.', -1).split('|')[-1] for i in pm.ls(pm.polyListComponentConversion(faces, ff=1, te=1), flatten=1)) #get edges from the faces
 
 		borderEdges=[]
 		for edge in edges:
-			edgeFaces = [str(i).replace('Shape.', '.', -1).split('|')[-1] for i in pm.ls(pm.polyListComponentConversion(edge, fe=1, tf=1), flatten=1)] #get faces that share the edge.
+			edgeFaces = list(str(i).replace('Shape.', '.', -1).split('|')[-1] for i in pm.ls(pm.polyListComponentConversion(edge, fe=1, tf=1), flatten=1)) #get faces that share the edge.
 
 			if len(edgeFaces)<2: #if the edge has only one shared face, it is a border edge.
 				borderEdges.append(edge)
@@ -266,7 +235,7 @@ class Init(Slot):
 		Align vertices.
 
 		args:
-			mode=int - possible values are align: 0-YZ, 1-XZ, 2-XY, 3-X, 4-Y, 5-Z, 6-XYZ 
+			mode(int) = possible values are align: 0-YZ, 1-XZ, 2-XY, 3-X, 4-Y, 5-Z, 6-XYZ 
 			average=bool - align to average of all selected vertices. else, align to last selected
 			edgeloop=bool - align vertices in edgeloop from a selected edge
 		ex. self.alignVertices(mode=3,average=True,edgeloop=True)
@@ -379,7 +348,7 @@ class Init(Slot):
 		y = vertexPoint [1::3]
 		z = vertexPoint [2::3]
 
-		return [round(sum(x) / float(len(x)),4), round(sum(y) / float(len(y)),4), round(sum(z) / float(len(z)),4)]
+		return list(round(sum(x) / float(len(x)),4), round(sum(y) / float(len(y)),4), round(sum(z) / float(len(z)),4))
 
 
 
@@ -389,11 +358,11 @@ class Init(Slot):
 		Create a circular polygon plane.
 
 		args:
-			axis='string' - 'x','y','z' 
-			numPoints=int - number of outer points
+			axis (str) = 'x','y','z' 
+			numPoints(int) = number of outer points
 			radius=int
 			center=[float3 list] - point location of circle center
-			mode=int - 0 -no subdivisions, 1 -subdivide tris, 2 -subdivide quads
+			mode(int) = 0 -no subdivisions, 1 -subdivide tris, 2 -subdivide quads
 		ex. self.createCircle(axis='x', numPoints=20, radius=8, mode='tri')
 		'''
 		import math
@@ -446,9 +415,9 @@ class Init(Slot):
 		Get the normal vectors from the given poly object.
 		If no argument is given the normals for the current selection will be returned.
 		args:
-			name = polygon mesh or component.
+			name (str) = polygon mesh or component.
 		returns:
-			list - [int, float, float, float] face id & vector xyz.
+			dict - {int:[float, float, float]} face id & vector xyz.
 		'''
 		type_ = pm.objectType(name)
 
@@ -470,10 +439,10 @@ class Init(Slot):
 
 		dict_={}
 		for n in normals:
-			l = [s.replace(regex,"") for s in n.split(' ') if s] #[u'FACE_NORMAL', u'150:', u'0.935741', u'0.110496', u'0.334931\n']
+			l = list(s.replace(regex,'') for s in n.split(' ') if s) #[u'FACE_NORMAL', u'150:', u'0.935741', u'0.110496', u'0.334931\n']
 
 			key = int(l[1].strip(':')) #int face number as key ie. 150
-			value = [float(i) for i in l[-3:]]  #vector list as value. ie. [[0.935741, 0.110496, 0.334931]]
+			value = list(float(i) for i in l[-3:])  #vector list as value. ie. [[0.935741, 0.110496, 0.334931]]
 			dict_[key] = value
 
 		return dict_
@@ -485,13 +454,16 @@ class Init(Slot):
 		'''
 		Get normals that fall within an X,Y,Z tolerance.
 		args:
-			faces = list ['polygon faces'] - faces to find similar normals for.
-			similarFaces = list - optional ability to add faces from previous calls to the return value.
-			transforms = list [<shape nodes>] - objects to check faces on. If none are given the objects containing the given faces will be used.
+			faces (list) = ['polygon faces'] - faces to find similar normals for.
+			similarFaces (list) = optional ability to add faces from previous calls to the return value.
+			transforms (list) = [<shape nodes>] - objects to check faces on. If none are given the objects containing the given faces will be used.
 			rangeX = float - x axis tolerance
 			rangeY = float - y axis tolerance
 			rangeZ = float - z axis tolerance
+		returns:
+			list - list of faces that fall within the normal range.
 		'''
+		faces = list(str(f) for f in faces) #work on a copy of the argument so that removal of elements doesn't effect the passed in list.
 		for face in faces:
 			normals = Init.getNormalVector(face)
 
@@ -500,9 +472,7 @@ class Init(Slot):
 				sY = v[1]
 				sZ = v[2]
 
-				if not transforms:
-					shapeNodes = pm.listRelatives(faces, parent=1)
-					transforms = pm.listRelatives(shapeNodes, parent=1)
+				transforms = Init.getObjectFromComponent(face)
 
 				for node in transforms:
 					numFaces = pm.polyEvaluate(node, face=1)
@@ -517,7 +487,7 @@ class Init(Slot):
 
 							if sX<=nX + rangeX and sX>=nX - rangeX and sY<=nY + rangeY and sY>=nY - rangeY and sZ<=nZ + rangeZ and sZ>=nZ - rangeZ:
 								similarFaces.append(face)
-								if face in faces: #If the face is in the loop que, remove it, as it is already evaluated.
+								if face in faces: #If the face is in the loop que, remove it, as has already been evaluated.
 									faces.remove(face)
 
 		return similarFaces
@@ -538,11 +508,14 @@ class Init(Slot):
 		'''
 		Get the object's transform node from the given components.
 		args:
-			components = list -
+			components (str, list) = component name(s)
 		returns:
 			dict - {transform node: [components of that node]}
 			ie. {'pCube2': ['pCube2.f[21]', 'pCube2.f[22]', 'pCube2.f[25]'], 'pCube1': ['pCube1.f[21]', 'pCube1.f[26]']}
 		'''
+		if type(components) in [str,unicode]:
+			components = [components]
+
 		transforms={}
 		for component in components:
 			component = str(component)
@@ -603,8 +576,8 @@ class Init(Slot):
 	def setAttributesOnSelected(attribute=None, value=None):
 		'''
 		args:
-			obj='string' - attribute to modify
-			value=int - new attribute value
+			obj (str) = attribute to modify
+			value (int) = new attribute value
 		ex. self.setAttributesOnSelected (attribute=".smoothLevel", value=1)
 		'''
 		selection = pm.ls (selection=1, objectsOnly=1)
@@ -642,8 +615,8 @@ class Init(Slot):
 	def convertToWidget(name):
 		'''
 		args:
-			name='string' - name of a Maya UI element of any type.
-			type_=<qt object type> - default is QWidget
+			name (str) = name of a Maya UI element of any type.
+			type_ = <qt object type> - default is QWidget
 		returns:
 			the corresponding QWidget or QAction.
 			If the object does not exist, returns None
@@ -662,9 +635,9 @@ class Init(Slot):
 	def mainProgressBar (size, name="tk_progressBar", stepAmount=1):
 		'''
 		args:
-			size=int - total amount
-			name='string' - name of progress bar created
-	  		stepAmount=int - increment amount
+			size (int) = total amount
+			name (str) = name of progress bar created
+	  		stepAmount(int) = increment amount
 	  	to use main progressBar: name=string $gMainProgressBar
 	  	'''
 		status = "processing: "+str(size)+"."
@@ -708,10 +681,10 @@ class Init(Slot):
 	def viewPortMessage(message='', statusMessage='', assistMessage='', position='topCenter'):
 		'''
 		args:
-			message='string' - The message to be displayed, (accepts html formatting). General message, inherited by -amg/assistMessage and -smg/statusMessage.
-			statusMessage='string' - The status info message to be displayed (accepts html formatting).
-			assistMessage='string' - The user assistance message to be displayed, (accepts html formatting).
-			position='string' - position on screen. possible values are: topCenter","topRight","midLeft","midCenter","midCenterTop","midCenterBot","midRight","botLeft","botCenter","botRight"
+			message (str) = The message to be displayed, (accepts html formatting). General message, inherited by -amg/assistMessage and -smg/statusMessage.
+			statusMessage (str) = The status info message to be displayed (accepts html formatting).
+			assistMessage (str) = The user assistance message to be displayed, (accepts html formatting).
+			position (str) = position on screen. possible values are: topCenter","topRight","midLeft","midCenter","midCenterTop","midCenterBot","midRight","botLeft","botCenter","botRight"
 		ex. self.viewPortMessage("shutting down:<hl>"+str(timer)+"</hl>")
 		'''
 		fontSize=10
@@ -841,15 +814,15 @@ class Init(Slot):
 		Convert a string representing mel code into a string representing python code.
 
 		args:
-			mel = string - string containing mel code.
-			excludeFromInput = list - list of strings specifying series of chars to strip from the Input.
-			excludeFromOutput = list - list of strings specifying series of chars to strip from the Output.
+			mel (str) = string containing mel code.
+			excludeFromInput (list) (list) = of strings specifying series of chars to strip from the Input.
+			excludeFromOutput (list) (list) = of strings specifying series of chars to strip from the Output.
 		
 		mel2PyStr Parameters:
-			currentModule = 'string' - The name of the module that the hypothetical code is executing in. In most cases you will leave it at its default, the __main__ namespace.
-			pymelNamespace = 'string' - The namespace into which pymel will be imported. the default is '', which means from pymel.all import *
-			forceCompatibility = bool - If True, the translator will attempt to use non-standard python types in order to produce python code which more exactly reproduces the behavior of the original mel file, but which will produce 'uglier' code. Use this option if you wish to produce the most reliable code without any manual cleanup.
-			verbosity = int - Set to non-zero for a lot of feedback.
+			currentModule (str) = The name of the module that the hypothetical code is executing in. In most cases you will leave it at its default, the __main__ namespace.
+			pymelNamespace (str) = The namespace into which pymel will be imported. the default is '', which means from pymel.all import *
+			forceCompatibility (bool) = If True, the translator will attempt to use non-standard python types in order to produce python code which more exactly reproduces the behavior of the original mel file, but which will produce 'uglier' code. Use this option if you wish to produce the most reliable code without any manual cleanup.
+			verbosity (int) = Set to non-zero for a lot of feedback.
 		'''
 		from pymel.tools import mel2py
 		import re
@@ -872,7 +845,7 @@ class Init(Slot):
 
 	@staticmethod
 	def commandHelp(command): #mel command help
-		#args: command='string' - mel command
+		#args: command (str) = mel command
 		command = ('help ' + command)
 		modtext = (mel.eval(command))
 		outputscrollField (modtext, "command help", 1.0, 1.0) #text, window_title, width, height
@@ -880,7 +853,7 @@ class Init(Slot):
 
 	@staticmethod
 	def keywordSearch (keyword): #keyword command search
-		#args: keyword='string' - 
+		#args: keyword (str) = 
 		keyword = ('help -list' + '"*' + keyword + '*"')
 		array = sorted(mel.eval(keyword))
 		outputTextField(array, "keyword search")
@@ -973,3 +946,50 @@ print os.path.splitext(os.path.basename(__file__))[0]
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
+
+
+
+
+
+#deprecated -------------------------------------
+
+# def getContigiousIslands(faces, faceIslands=[]):
+# 	'''
+# 	Get a list containing sets of adjacent polygon faces grouped by islands.
+# 	args:
+# 		faces (list) = polygon faces to be filtered for adjacent.
+# 		faceIslands (list) = optional. list of sets. ability to add faces from previous calls to the return value.
+# 	returns:
+# 		list of sets of adjacent faces.
+# 	'''
+# 	face=None
+# 	faces = list(str(f) for f in faces) #work on a copy of the argument so that removal of elements doesn't effect the passed in list.
+# 	prevFaces=[]
+
+# 	for _ in range(len(faces)):
+# 		# print ''
+# 		if not face:
+# 			try:
+# 				face = faces[0]
+# 				island=set([face])
+# 			except:
+# 				break
+
+# 		adjFaces = [f for f in Init.getBorderFaces(face) if not f in prevFaces and f in faces]
+# 		prevFaces.append(face)
+# 		# print '-face     ','   *',face
+# 		# print '-adjFaces ','  **',adjFaces
+# 		# print '-prevFaces','    ',prevFaces
+
+# 		try: #add face to current island if it hasn't already been added, and is one of the faces specified by the faces argument.
+# 			island.add(adjFaces[0])
+# 			face = adjFaces[0]
+
+# 		except: #if there are no adjacent faces, start a new island set.
+# 			faceIslands.append(island)
+# 			face = None
+# 			# print '-island   ','   $',island
+# 			# print '\n',40*'-'
+# 		faces.remove(prevFaces[-1])
+
+# 	return faceIslands

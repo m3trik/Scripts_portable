@@ -119,7 +119,7 @@ class Selection(Init):
 		'''
 		Set the selection style context.
 		args:
-			ctx = 'string' - Selection style context. Possible values include: 'marquee', 'lasso', 'drag'.
+			ctx (str) = Selection style context. Possible values include: 'marquee', 'lasso', 'drag'.
 		'''
 		if pm.contextInfo(ctx, exists=True):
 			pm.deleteUI(ctx)

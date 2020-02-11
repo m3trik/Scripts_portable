@@ -47,7 +47,7 @@ class Create(Init):
 		'''
 		undo previous rotation and rotate on the specified axis.
 		uses an external rotation dictionary.
-		args:	axis='string' - axis to rotate on. ie. '-x'
+		args:	axis (str) = axis to rotate on. ie. '-x'
 		'''
 		axis = self.rotation[axis]
 
@@ -59,7 +59,7 @@ class Create(Init):
 	def sXXX(self, index=None):
 		'''
 		set node attributes from multiple spinbox values.
-		args: index=int - optional index of the spinbox that called this function. ie. 5 from s005
+		args: index(int) = optional index of the spinbox that called this function. ie. 5 from s005
 		'''
 		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.spinboxes} #current spinbox values. ie. from s000 get the value of six and add it to the list
 		self.setAttributesMEL(self.node, spinboxValues) #set attributes for the history node
@@ -310,8 +310,8 @@ class Create(Init):
 		'''
 		ie. create('Polygons', 'Cube')
 		args:
-			type1 = 'string' - 
-			type2 = 'string' - 
+			type1 (str) = 
+			type2 (str) = 
 		'''
 		cmb000 = self.ui.cmb000
 		cmb001 = self.ui.cmb001

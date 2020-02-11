@@ -45,7 +45,7 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		Set the stacked Widget's index.
 		args:
-			name = 'string' - name of ui.
+			name (str) = name of ui.
 		'''
 		if not name in self.sb.previousName(allowLevel0=1, as_list=1): #if ui(name) hasn't been set before, init the ui for the given name.
 			self.sb.setUiSize(name) #Set the size info for each ui (allows for resizing a stacked widget where ordinarily resizing is constrained by the largest widget in the stack)
@@ -88,7 +88,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 		args:
 			widget = <QWidget> - the widget that called this method.
-			name = 'string' - name of ui.
+			name (str) = name of ui.
 		'''
 		p1 = widget.mapToGlobal(widget.rect().center()) #widget position before submenu change.
 
@@ -219,7 +219,7 @@ class Tk(QtWidgets.QStackedWidget):
 		Prevents hide event under certain circumstances.
 
 		args:
-			force = bool - override preventHide.
+			force (bool) = override preventHide.
 		'''
 		if force or not self.preventHide:
 			self.setUi('init')

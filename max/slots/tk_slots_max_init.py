@@ -660,8 +660,8 @@ class Init(Slot):
 		
 		args:
 			obj = <object> - the object to add or retrieve the modifier from.
-			modifier = 'string' - modifier name.
-			index = int - place modifier before given index. default is at the top of the stack.
+			modifier (str) = modifier name.
+			index (int) = place modifier before given index. default is at the top of the stack.
 						Negative indices place the modifier from the bottom of the stack.
 		returns:
 			modifier
@@ -686,7 +686,7 @@ class Init(Slot):
 		Find mesh artifacts.
 		args:
 			isolatedVerts=bool - find vertices with two edges which fall below a specified angle.
-			edgeAngle=int - used with isolatedVerts argument to specify the angle tolerance
+			edgeAngle(int) = used with isolatedVerts argument to specify the angle tolerance
 			nGons=bool - search for n sided polygon faces.
 			repair=bool - delete or auto repair any of the specified artifacts 
 		'''
@@ -772,9 +772,9 @@ class Init(Slot):
 	def maxUiSetChecked(id, table, item, state=True, query=False):
 		'''
 		args:
-			id = 'string' - actionMan ID
-			table = int - actionMan table
-			item = int - actionMan item number
+			id (str) = actionMan ID
+			table (int) = actionMan table
+			item (int) = actionMan item number
 		'''
 		atbl = rt.actionMan.getActionTable(table)
 		if atbl:
@@ -797,8 +797,8 @@ class Init(Slot):
 	def viewPortMessage (message='', statusMessage='', assistMessage='', position='topCenter'):
 		'''
 		args:
-			statusMessage='string' - message to display (accepts html formatting).
-			position='string' - position on screen. possible values are: topCenter","topRight","midLeft","midCenter","midCenterTop","midCenterBot","midRight","botLeft","botCenter","botRight"
+			statusMessage (str) = message to display (accepts html formatting).
+			position (str) = position on screen. possible values are: topCenter","topRight","midLeft","midCenter","midCenterTop","midCenterBot","midRight","botLeft","botCenter","botRight"
 		ex. self.viewPortMessage("shutting down:<hl>"+str(timer)+"</hl>")
 		'''
 		message=statusMessage; statusMessage=''
@@ -824,7 +824,7 @@ print os.path.splitext(os.path.basename(__file__))[0]
 	# 	'''
 	# 	Set the given comboBox's index using a text string.
 	# 	args:
-	# 		comboBox = 'string' - comboBox name (will also be used as the methods name).
+	# 		comboBox (str) = comboBox name (will also be used as the methods name).
 	# 		index = int or 'string' - text of the index to switch to.
 	# 	'''
 	# 	cmb = getattr(self.ui, comboBox)

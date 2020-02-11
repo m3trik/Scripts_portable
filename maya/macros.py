@@ -41,10 +41,10 @@ class Macros(object):
 		'''
 		Sets a default runtime command with a keyboard shotcut.
 		args:
-			name = 'string' - The command name you provide must be unique. The name itself must begin with an alphabetic character or underscore followed by alphanumeric characters or underscores.
-			cat = 'string' - catagory - Category for the command.
-			ann = 'string' - annotation - Description of the command.
-			k = 'string' - keyShortcut - Specify what key is being set.
+			name (str) = The command name you provide must be unique. The name itself must begin with an alphabetic character or underscore followed by alphanumeric characters or underscores.
+			cat (str) = catagory - Category for the command.
+			ann (str) = annotation - Description of the command.
+			k (str) = keyShortcut - Specify what key is being set.
 						key modifier values are set by adding a '+' between chars. ie. 'sht+z'.
 						modifiers:
 							alt, ctl, sht
@@ -98,7 +98,7 @@ class Macros(object):
 		Removes lines containing '@' or 'def ' ie. @staticmethod.
 		args:
 			cmd = module, class, method, function, traceback, frame, or code object.
-			removeTabs = int - remove x instances of '\t' from each line.
+			removeTabs (int) = remove x instances of '\t' from each line.
 		returns:
 			A Multi-line string.
 		'''
@@ -117,8 +117,8 @@ class Macros(object):
 		'''
 		Set Wireframe On Shaded.
 		args:
-			editor = 'string' - The panel name.
-			state = bool - The desired on or off state.
+			editor (str) = The panel name.
+			state (bool) = The desired on or off state.
 		'''
 		modeIsShaded = pm.modelEditor(editor, query=True, displayAppearance=True) #True if "smoothShaded", "flatShaded".
 

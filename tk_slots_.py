@@ -24,8 +24,8 @@ class Slot(object):
 		Get a list of corresponding objects from a single string.
 		args:
 			class_ = class object
-			objectNames = 'string' - names separated by ','. ie. 's000,b004-7'. b004-7 specifies buttons b004-b007.  
-			showError = bool - show attribute error if item doesnt exist
+			objectNames (str) = names separated by ','. ie. 's000,b004-7'. b004-7 specifies buttons b004-b007.  
+			showError (bool) = show attribute error if item doesnt exist
 
 		returns:
 			list of corresponding objects
@@ -134,7 +134,7 @@ class Slot(object):
 		Set spinbox values.
 		args:
 			ui = <dynamic ui>
-			spinboxNames = 'string' - spinbox names. ie. 's001-4, s007'.
+			spinboxNames (str) = spinbox names. ie. 's001-4, s007'.
 			attributes = {'string key':value}
 
 		ex. self.setSpinboxes (self.ui, spinboxNames='s000-15', attributes={'width':1, 'length ratio':1, 'patches U':1, 'patches V':1})
@@ -170,7 +170,7 @@ class Slot(object):
 		Set comboBox items.
 		args:
 			comboBox = QComboBox object - list of items to fill the comboBox with
-			title = 'string' - optional value for the first index of the comboBox's list
+			title (str) = optional value for the first index of the comboBox's list
 
 		returns:
 			comboBox's current item list minus any title.
@@ -201,8 +201,8 @@ class Slot(object):
 		using the name string as an identifier key.
 		
 		args:
-			sequence = [list] - sequence to cycle through. ie. [1,2,3].
-			name = 'string' - identifier. used as a key to get the sequence value from the dict.
+			sequence (list) = sequence to cycle through. ie. [1,2,3].
+			name (str) = identifier. used as a key to get the sequence value from the dict.
 			
 		ex. cycle([0,1,2,3,4], 'componentID')
 		'''
@@ -225,7 +225,7 @@ class Slot(object):
 	def collapseList(list_, limit=None):
 		'''
 		args:
-			list_ = list - of integers
+			list_ (list) = of integers
 
 		returns:
 			list with sequential integers collapsed in string format. ie. ['20', '22..28']
@@ -270,7 +270,7 @@ print os.path.splitext(os.path.basename(__file__))[0]
 	# 	'''
 	# 	Get ui objects from name strings.
 	# 	args:
-	# 		widgets='string' - ui object names
+	# 		widgets (str) = ui object names
 	# 	returns:
 	# 		list of corresponding ui objects	
 	# 	'''
@@ -291,7 +291,7 @@ print os.path.splitext(os.path.basename(__file__))[0]
 	# 	Set various states for multiple buttons at once.
 	# 	args:
 	# 		setButtons = dynamic ui object
-	# 		checked/unchecked/enable/disable/visible/invisible = string - the names of buttons to modify separated by ','. ie. 'b000,b001,b022'
+	# 		checked/unchecked/enable/disable/visible/invisible (str) = the names of buttons to modify separated by ','. ie. 'b000,b001,b022'
 
 	# 	ex.	setButtons(self.ui, disable='b000', unchecked='chk009-12', invisible='b015')
 	# 	'''
@@ -325,7 +325,7 @@ print os.path.splitext(os.path.basename(__file__))[0]
 # def setSpinboxes(ui, spinboxNames='s000-15', values=[]):
 # 	'''
 # 	args:	 ui=<dynamic ui>
-# 			 spinboxNames='string' - spinbox string object names (used in place of the range argument). ie. 's001-4, s007'.  
+# 			 spinboxNames (str) = spinbox string object names (used in place of the range argument). ie. 's001-4, s007'.  
 # 						  default value will try to add values to spinboxes starting at s000 and add values in order skipping any spinboxes not found in the ui.
 # 			 values=int or [(tuple) list] - tuple representing a string prefix label and value, and/or just a value. [(string prefix,int value)] ie. [("size",5), 20, ("width",8)]
 	

@@ -310,8 +310,8 @@ class File(Init):
 		'''
 		Set the given comboBox's index using a text string.
 		args:
-			comboBox = 'string' - comboBox name (will also be used as the methods name).
-			text = 'string' - text of the index to switch to.
+			comboBox (str) = comboBox name (will also be used as the methods name).
+			text (str) = text of the index to switch to.
 		'''
 		cmb = getattr(self.ui, comboBox)
 		method = getattr(self, comboBox)

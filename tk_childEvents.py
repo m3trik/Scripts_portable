@@ -38,7 +38,7 @@ class EventFactoryFilter(QtCore.QObject):
 		'''
 		Set Initial widget states.
 		args:
-			name = 'string' - ui name.
+			name (str) = ui name.
 			widgets = [list of <QWidgets>] - if no list is given, the operation will be performed on all widgets of the given ui name.
 		'''
 		if not widgets:
@@ -80,13 +80,13 @@ class EventFactoryFilter(QtCore.QObject):
 		'''
 		Create a pushbutton object.
 		args:
-			name = 'string' - name of the ui where the button is to be placed.
-			objectName = 'string' - set button's object name.
+			name (str) = name of the ui where the button is to be placed.
+			objectName (str) = set button's object name.
 			size = [int, int] or <QSize> - button size.
 			location = <QPoint> - desired global location.
-			text = 'string' - set button text.
-			whatsThis = 'string' - set button whatsThis tag.
-			show = bool - set button visibility.
+			text (str) = set button text.
+			whatsThis (str) = set button whatsThis tag.
+			show (bool) = set button visibility.
 		returns:
 			the created button.
 		'''
@@ -115,8 +115,8 @@ class EventFactoryFilter(QtCore.QObject):
 		Adjust the given widget's size to fit contents and re-center.
 		args:
 			widget = <widget object> - widget to resize.
-			paddingX = int - additional width to be applied.
-			paddingY = int - additional height to be applied.
+			paddingX (int) = additional width to be applied.
+			paddingY (int) = additional height to be applied.
 		'''
 		p1 = widget.rect().center()
 		widget.resize(widget.sizeHint().width()+paddingX, widget.sizeHint().height()+paddingY)
@@ -131,7 +131,7 @@ class EventFactoryFilter(QtCore.QObject):
 		Get widget/s currently under cursor. Grab mouse, and send events accordingly.
 		Send Enter event and grab mouse. (used to trigger widgets entered while in the mouse button down state)
 		args:
-			name = 'string' - ui name.
+			name (str) = ui name.
 		'''
 		for widget in self.sb.getWidget(name=name): #get all widgets from the current ui.
 			widgetName = widget.objectName()

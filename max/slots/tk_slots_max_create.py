@@ -49,7 +49,7 @@ class Create(Init):
 		Undo previous rotation and rotate on the specified axis.
 		uses an external rotation dictionary.
 		args:
-			axis = 'string' - axis to rotate on. ie. '-x'
+			axis (str) = axis to rotate on. ie. '-x'
 		'''
 		angle = [a for a in self.rotation[axis] if a!=0][0] #get angle. ie. 90 or -90
 		axis = self.rotation[axis] #get axis list from string key. In 3ds max, the axis key is used as bool values, ie. [0, 90, 0] will essentially be used as [0,1,0]
@@ -67,7 +67,7 @@ class Create(Init):
 		'''
 		Set node attributes from multiple spinbox values.
 		args:
-			index = int - optional index of the spinbox that called this function. ie. 5 from s005
+			index (int) = optional index of the spinbox that called this function. ie. 5 from s005
 		'''
 		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.spinboxes} #current spinbox values. ie. from s000 get the value of six and add it to the list
 		# print spinboxValues
@@ -326,8 +326,8 @@ class Create(Init):
 		'''
 		ie. create('Polygons', 'Cube')
 		args:
-			catagory1 = 'string' - type
-			catagory2 = 'string' - type
+			catagory1 (str) = type
+			catagory2 (str) = type
 		'''
 		cmb000 = self.ui.cmb000
 		cmb001 = self.ui.cmb001

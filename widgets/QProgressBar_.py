@@ -46,8 +46,8 @@ class QProgressBar_(QtWidgets.QProgressBar):
 	def step(self, progress, length=100):
 		'''
 		args:
-			progress = int - current value
-			length = int - total value
+			progress (int) = current value
+			length (int) = total value
 
 		returns:
 			current percentage
