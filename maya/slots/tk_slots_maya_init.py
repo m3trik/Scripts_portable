@@ -114,14 +114,58 @@ class Init(Slot):
 
 
 	@staticmethod
-	def getContiguousFaces(faces):
+	def getBorderFaces(faces):
 		'''
 		Get any faces attached to the given faces.
+		returns:
+			list - border faces of the given faces (excluding the original faces).
 		'''
-		adjEdges=pm.polyListComponentConversion(faces, fromFace=1, toEdge=1)
-		adjFaces=pm.polyListComponentConversion(adjEdges, toFace=1, fromEdge=1)
-		return adjFaces
+		adjEdges = pm.polyListComponentConversion(faces, fromFace=1, toEdge=1)
+		adjFaces = pm.polyListComponentConversion(adjEdges, toFace=1, fromEdge=1)
+		expanded = pm.filterExpand(adjFaces, expand=True, selectionMask=34) #keep faces as individual elements.
 
+		return [str(f) for f in expanded if f not in faces] #convert unicode to str and exclude the original faces.
+
+
+	@staticmethod
+	def getContigiousIslands(faces, faceIslands=[]):
+		'''
+		Get a list containing sets of adjacent polygon faces grouped by islands.
+		args:
+			faces = list - polygon faces to be filtered for adjacent.
+			faceIslands = list of sets - optional ability to add faces from previous calls to the return value.
+		returns:
+			list of sets of adjacent faces.
+		'''
+		face=None
+		prevFaces=[]
+		for _ in range(len(faces)):
+			# print ''
+			if not face:
+				try:
+					face = faces[0]
+					island=set([face])
+				except:
+					break
+
+			adjFaces = [f for f in Init.getBorderFaces(face) if not f in prevFaces and f in faces]
+			prevFaces.append(face)
+			# print '-face     ','   *',face
+			# print '-adjFaces ','  **',adjFaces
+			# print '-prevFaces','    ',prevFaces
+
+			try: #add face to current island if it hasn't already been added, and is one of the faces specified by the faces argument.
+				island.add(adjFaces[0])
+				face = faces[faces.index(adjFaces[0])]
+
+			except: #if there are no adjacent faces, start a new island set.
+				faceIslands.append(island)
+				face = None
+				faces = [f for f in faces if f not in prevFaces]
+				# print '-island   ','   $',island
+				# print '\n',40*'-'
+
+		return faceIslands
 
 
 	@staticmethod
@@ -151,10 +195,11 @@ class Init(Slot):
 	@staticmethod
 	def getBorderEdgeFromFace(faces=None):
 		'''
-		Get border edges from faces.
+		Get border edges from faces. (edges not shared by any other face)
 
 		args:
 			faces='string'/unicode or list of faces. ie. 'poly.f[696]' or 'polyShape.f[696]'
+					If no arguement is given, the current selection will be used.
 		returns:
 			list of border edges.
 		ex. getBorderEdgeFromFace(['poly.f[696]', 'poly.f[705:708]'])
@@ -436,91 +481,80 @@ class Init(Slot):
 
 
 	@staticmethod
-	def getFacesWithSimilarNormals(faces, shapeNodes=[], similarFaces=[], rangeX=0.1, rangeY=0.1, rangeZ=0.1):
+	def getFacesWithSimilarNormals(faces, transforms=[], similarFaces=[], rangeX=0.1, rangeY=0.1, rangeZ=0.1):
 		'''
 		Get normals that fall within an X,Y,Z tolerance.
 		args:
 			faces = list ['polygon faces'] - faces to find similar normals for.
 			similarFaces = list - optional ability to add faces from previous calls to the return value.
-			shapeNodes = list [<shape nodes>] - objects to check faces on. If none are given the objects containing the given faces will be used.
+			transforms = list [<shape nodes>] - objects to check faces on. If none are given the objects containing the given faces will be used.
 			rangeX = float - x axis tolerance
 			rangeY = float - y axis tolerance
 			rangeZ = float - z axis tolerance
 		'''
-		normals = Init.getNormalVector(faces)
+		for face in faces:
+			normals = Init.getNormalVector(face)
 
-		for k, v in normals.items():
-			sX = v[0]
-			sY = v[1]
-			sZ = v[2]
+			for k, v in normals.items():
+				sX = v[0]
+				sY = v[1]
+				sZ = v[2]
 
-			if not shapeNodes:
-				shapeNodes = pm.listRelatives(faces, parent=1)
-				print ' -'
-			print shapeNodes
-			for shapeNode in shapeNodes:
-				numFaces = pm.polyEvaluate(shapeNode, face=1)
-				for faceNum in range(0, numFaces):
-					face = '{0}.f[{1}]'.format(shapeNode, str(faceNum)) #assemble component name
+				if not transforms:
+					shapeNodes = pm.listRelatives(faces, parent=1)
+					transforms = pm.listRelatives(shapeNodes, parent=1)
 
-					n = Init.getNormalVector(face)
-					for k, v in n.items():
-						nX = v[0]
-						nY = v[1]
-						nZ = v[2]
+				for node in transforms:
+					numFaces = pm.polyEvaluate(node, face=1)
+					for faceNum in range(0, numFaces):
+						face = '{0}.f[{1}]'.format(node, str(faceNum)) #assemble component name
 
-						if sX<=nX + rangeX and sX>=nX - rangeX and sY<=nY + rangeY and sY>=nY - rangeY and sZ<=nZ + rangeZ and sZ>=nZ - rangeZ:
-							similarFaces.append(str(face))
+						n = Init.getNormalVector(face)
+						for k, v in n.items():
+							nX = v[0]
+							nY = v[1]
+							nZ = v[2]
+
+							if sX<=nX + rangeX and sX>=nX - rangeX and sY<=nY + rangeY and sY>=nY - rangeY and sZ<=nZ + rangeZ and sZ>=nZ - rangeZ:
+								similarFaces.append(face)
+								if face in faces: #If the face is in the loop que, remove it, as it is already evaluated.
+									faces.remove(face)
 
 		return similarFaces
 
 
 
-	@staticmethod
-	def getPolyFaceIsland(faces):
-		'''
-		Get adjacent polygon faces.
-		args:
-			faces = list - polygon faces to be filtered for adjacent.
-		returns:
-			list of adjacent faces.
-		'''
-		pm.undoInfo(openChunk=1)
-		userSelection = pm.ls(selection=True)
-		name = userSelection[0].replace('[[0-9]*]', '')
-		pm.melGlobals.initVar('string', 'gMainProgressBar')
 
-		finalSelection=[]
-		numFaces = len(faces)
-		count = (numFaces / (numFaces * .02))
-		pm.mainProgressBar(pm.melGlobals['gMainProgressBar'], numFaces, count)
-		for num in range(0,count):
-			if pm.mainProgressBar(pm.melGlobals['gMainProgressBar'], query=1, isCancelled=1):
-				break
-	
-			pm.mainProgressBar(pm.melGlobals['gMainProgressBar'], edit=1, step=1)
-			selection = pm.ls(selection=1) #List objects that are currently selected.
-			userSelection = pm.filterExpand(selection, expand=True, selectionMask=34) #essentially, do not combine component names within the array.
-			adjFaces = Init.getContiguousFaces(userSelection)
-			adjFaces = pm.filterExpand(adjFaces, expand=True, selectionMask=34) #list each component in a separate string
-			for face in adjFaces:
-				if face in faces:
-					if not face in finalSelection:
-						finalSelection.append(str(face))
-						size = len(finalSelection)
-						pm.select(finalSelection[size - 1], add=1) #last item added to array which is equivalent to: select -add $face;
-			adjFaces=[]
-
-		pm.mainProgressBar(pm.melGlobals['gMainProgressBar'], edit=1, endProgress=1)
-		pm.undoInfo(closeChunk=1)
-
-		return finalSelection
 
 
 
 	# ------------------------------------------------
 	' DAG objects'
 	# ------------------------------------------------
+
+
+	@staticmethod
+	def getObjectFromComponent(components):
+		'''
+		Get the object's transform node from the given components.
+		args:
+			components = list -
+		returns:
+			dict - {transform node: [components of that node]}
+			ie. {'pCube2': ['pCube2.f[21]', 'pCube2.f[22]', 'pCube2.f[25]'], 'pCube1': ['pCube1.f[21]', 'pCube1.f[26]']}
+		'''
+		transforms={}
+		for component in components:
+			component = str(component)
+			shapeNode = str(pm.listRelatives(component, parent=1)[0])
+			transform = str(pm.listRelatives(shapeNode, parent=1)[0])
+
+			try:
+				transforms[transform].append(component)
+			except:
+				transforms[transform] = [component]
+
+		return transforms
 
 
 

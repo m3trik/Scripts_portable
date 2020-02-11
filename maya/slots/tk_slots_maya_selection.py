@@ -371,12 +371,24 @@ class Selection(Init):
 		Select Polygon Face Island
 		'''
 		rangeX=rangeY=rangeZ = float(self.ui.s002.value())
+
+		pm.undoInfo(openChunk=1)
 		selectedFaces = pm.filterExpand(sm=34)
 
-		similarFaces = self.getFacesWithSimilarNormals(selectedFaces, rangeX=rangeX, rangeY=rangeY, rangeZ=rangeZ)
-		adjacentFaces = self.getPolyFaceIsland(similarFaces)
+		if selectedFaces:
+			transforms = self.getObjectFromComponent(selectedFaces)
+			for faces in transforms.values(): #for the selected faces on each selected object:
+				similarFaces = self.getFacesWithSimilarNormals(faces, rangeX=rangeX, rangeY=rangeY, rangeZ=rangeZ)
+				islands = self.getContigiousIslands(similarFaces)
 
-		pm.select(adjacentFaces, replace=1)
+				for island in islands:
+					for face in selectedFaces:
+						if face in island:
+							pm.select(island, add=1)
+							break
+		else:
+			print '# Warning: No faces selected. #'
+		pm.undoInfo(closeChunk=1)
 
 
 	def b008(self):
@@ -384,7 +396,6 @@ class Selection(Init):
 		Select Nth
 		'''
 		step = self.ui.s003.value()
-
 
 		if self.ui.chk000.isChecked(): #Select Ring
 			print "# Warning: add correct arguments for this tool #" 
