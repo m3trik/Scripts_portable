@@ -282,7 +282,7 @@
              <rect>
               <x>0</x>
               <y>110</y>
-              <width>61</width>
+              <width>76</width>
               <height>19</height>
              </rect>
             </property>
@@ -322,7 +322,7 @@
              <rect>
               <x>0</x>
               <y>130</y>
-              <width>61</width>
+              <width>36</width>
               <height>19</height>
              </rect>
             </property>
@@ -333,7 +333,7 @@
              </size>
             </property>
             <property name="toolTip">
-             <string>Select contiguous faces within a normal range</string>
+             <string>Select Island: Select contiguous faces within a normal range</string>
             </property>
             <property name="text">
              <string>Island</string>
@@ -357,9 +357,9 @@
            <widget class="QDoubleSpinBox" name="s000">
             <property name="geometry">
              <rect>
-              <x>60</x>
+              <x>75</x>
               <y>110</y>
-              <width>51</width>
+              <width>36</width>
               <height>19</height>
              </rect>
             </property>
@@ -474,9 +474,9 @@
            <widget class="QDoubleSpinBox" name="s002">
             <property name="geometry">
              <rect>
-              <x>60</x>
+              <x>50</x>
               <y>130</y>
-              <width>51</width>
+              <width>21</width>
               <height>19</height>
              </rect>
             </property>
@@ -493,7 +493,7 @@
              </size>
             </property>
             <property name="toolTip">
-             <string>Select face island: normal X range</string>
+             <string>Select Island: normal X range</string>
             </property>
             <property name="buttonSymbols">
              <enum>QAbstractSpinBox::NoButtons</enum>
@@ -511,7 +511,7 @@
              <double>0.100000000000000</double>
             </property>
             <property name="value">
-             <double>0.500000000000000</double>
+             <double>0.300000000000000</double>
             </property>
            </widget>
            <widget class="QLineEdit" name="t001">
@@ -651,6 +651,138 @@
              </property>
             </item>
            </widget>
+           <widget class="QDoubleSpinBox" name="s004">
+            <property name="geometry">
+             <rect>
+              <x>70</x>
+              <y>130</y>
+              <width>21</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>10</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>19</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>Select Island: normal X range</string>
+            </property>
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::NoButtons</enum>
+            </property>
+            <property name="prefix">
+             <string/>
+            </property>
+            <property name="suffix">
+             <string/>
+            </property>
+            <property name="decimals">
+             <number>1</number>
+            </property>
+            <property name="singleStep">
+             <double>0.100000000000000</double>
+            </property>
+            <property name="value">
+             <double>0.300000000000000</double>
+            </property>
+           </widget>
+           <widget class="QDoubleSpinBox" name="s005">
+            <property name="geometry">
+             <rect>
+              <x>90</x>
+              <y>130</y>
+              <width>21</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>10</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>19</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>Select Island: normal X range</string>
+            </property>
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::NoButtons</enum>
+            </property>
+            <property name="prefix">
+             <string/>
+            </property>
+            <property name="suffix">
+             <string/>
+            </property>
+            <property name="decimals">
+             <number>1</number>
+            </property>
+            <property name="singleStep">
+             <double>0.100000000000000</double>
+            </property>
+            <property name="value">
+             <double>0.300000000000000</double>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="chk003">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="geometry">
+             <rect>
+              <x>35</x>
+              <y>130</y>
+              <width>16</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>111</width>
+              <height>19</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>Select Island: Lock Values</string>
+            </property>
+            <property name="text">
+             <string>L</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>18</width>
+              <height>18</height>
+             </size>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+            <property name="autoDefault">
+             <bool>false</bool>
+            </property>
+            <property name="default">
+             <bool>false</bool>
+            </property>
+            <property name="flat">
+             <bool>false</bool>
+            </property>
+           </widget>
            <zorder>t001</zorder>
            <zorder>b006</zorder>
            <zorder>b007</zorder>
@@ -661,6 +793,9 @@
            <zorder>cmb002</zorder>
            <zorder>chk004</zorder>
            <zorder>cmb004</zorder>
+           <zorder>s004</zorder>
+           <zorder>s005</zorder>
+           <zorder>chk003</zorder>
           </widget>
          </item>
         </layout>

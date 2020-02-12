@@ -51,6 +51,36 @@ class Selection(Init):
 			selection = pm.select (pm.ls (searchStr))
 
 
+	def s002(self):
+		'''
+		Select Island: tolerance x
+		'''
+		if self.ui.chk003.isChecked():
+			text = self.ui.s002.value()
+			self.ui.s004.setValue(text)
+			self.ui.s005.setValue(text)
+
+
+	def s004(self):
+		'''
+		Select Island: tolerance y
+		'''
+		if self.ui.chk003.isChecked():
+			text = self.ui.s004.value()
+			self.ui.s002.setValue(text)
+			self.ui.s005.setValue(text)
+
+
+	def s005(self):
+		'''
+		Select Island: tolerance z
+		'''
+		if self.ui.chk003.isChecked():
+			text = self.ui.s005.value()
+			self.ui.s002.setValue(text)
+			self.ui.s004.setValue(text)
+
+
 	def chk000(self):
 		'''
 		Select Nth: uncheck other checkboxes
@@ -368,9 +398,11 @@ class Selection(Init):
 
 	def b007(self):
 		'''
-		Select Polygon Face Island
+		Select Island: Select Polygon Face Island
 		'''
-		rangeX=rangeY=rangeZ = float(self.ui.s002.value())
+		rangeX = float(self.ui.s002.value())
+		rangeY = float(self.ui.s004.value())
+		rangeZ = float(self.ui.s005.value())
 		selectedFaces = pm.filterExpand(sm=34)
 
 		pm.undoInfo(openChunk=1)
