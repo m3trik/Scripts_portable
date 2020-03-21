@@ -1,6 +1,6 @@
 import os.path
 
-from tk_switchboard import Switchboard
+import tk_switchboard
 
 
 
@@ -12,9 +12,8 @@ class Slot(object):
 	Parent class for all app specific slot type classes.
 	'''
 	def __init__(self):
-		super(Slot, self).__init__()
 
-		self.sb = Switchboard()
+		self.sb = tk_switchboard.sb
 		self.tk = self.sb.getClassInstance('tk')
 
 
@@ -97,9 +96,9 @@ class Slot(object):
 
 
 
-	def setWidgets(self, *args, **kwargs):
+	def toggleWidgets(self, *args, **kwargs):
 		'''
-		Set multiple Qt object boolean properties, for multiple widgets, on multiple ui's at once.
+		Set multiple boolean properties, for multiple widgets, on multiple ui's at once.
 		If the ui has a submenu with the same widget, then the value will be set there as well. It can be set on additional ui's by passing them in explicitly in *args.
 		args:
 			*args = dynamic ui object
@@ -107,7 +106,7 @@ class Slot(object):
 								Optionally appending '_False' or '_True' to the attribute name, will set the attribute accordingly. (The default state is True)
 					argument: string of objectNames - objectNames separated by ',' ie. 'b000-12,b022'
 
-		ex.	setWidgets(self.ui1, self.ui2, setDisabled='b000', setChecked_False='chk009-12', setVisible='b015,b017')
+		ex.	toggleWidgets(self.ui1, self.ui2, setDisabled='b000', setChecked_False='chk009-12', setVisible='b015,b017')
 		'''
 		args = [a for a in args] #make args mutable so that any submenus can be appended.
 		for ui in args:
@@ -161,32 +160,6 @@ class Slot(object):
 				spinboxes[index].setValue(value)
 				spinboxes[index].setSuffix('')
 				spinboxes[index].blockSignals(False)
-
-
-
-	@staticmethod
-	def comboBox(comboBox, items, title=None):
-		'''
-		Set comboBox items.
-		args:
-			comboBox = QComboBox object - list of items to fill the comboBox with
-			title (str) = optional value for the first index of the comboBox's list
-
-		returns:
-			comboBox's current item list minus any title.
-		ex. comboBox (self.ui.cmb003, ["Import file", "Import Options"], "Import")
-		'''
-		comboBox.blockSignals(True) #to keep clear from triggering currentIndexChanged
-		index = comboBox.currentIndex() #get current index before refreshing list
-		comboBox.clear()
-		
-		items_ = [str(i) for i in [title]+items if i]
-		comboBox.addItems(items_) 
-
-		comboBox.setCurrentIndex(index)
-		comboBox.blockSignals(False)
-
-		return items_
 
 
 
@@ -372,3 +345,31 @@ print os.path.splitext(os.path.basename(__file__))[0]
 
 # 		names = [n.strip() for n in objectNames.split(',') if '-' not in n] #all objectNames passed in not containing '-'
 # 		if print_: print names+unpacked_names #used for debugging
+
+
+
+
+
+	# @staticmethod
+	# def comboBox(comboBox, items, title=None):
+	# 	'''
+	# 	Set comboBox items.
+	# 	args:
+	# 		comboBox = QComboBox object - list of items to fill the comboBox with
+	# 		title (str) = optional value for the first index of the comboBox's list
+
+	# 	returns:
+	# 		comboBox's current item list minus any title.
+	# 	ex. comboBox (self.ui.cmb003, ["Import file", "Import Options"], "Import")
+	# 	'''
+	# 	comboBox.blockSignals(True) #to keep clear from triggering currentIndexChanged
+	# 	index = comboBox.currentIndex() #get current index before refreshing list
+	# 	comboBox.clear()
+		
+	# 	items_ = [str(i) for i in [title]+items if i]
+	# 	comboBox.addItems(items_) 
+
+	# 	comboBox.setCurrentIndex(index)
+	# 	comboBox.blockSignals(False)
+
+	# 	return items_

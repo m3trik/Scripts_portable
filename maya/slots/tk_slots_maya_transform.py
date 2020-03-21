@@ -1,11 +1,6 @@
-import maya.mel as mel
-import pymel.core as pm
-
-import os.path
-
 from tk_slots_maya_init import Init
 
-
+import os.path
 
 
 
@@ -38,7 +33,7 @@ class Transform(Init):
 		Transform: Scale
 
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk008-9', setChecked='chk000-2')
+		self.toggleWidgets(self.ui, setChecked_False='chk008-9', setChecked='chk000-2')
 		self.ui.s000.setValue(2)
 		self.ui.s000.setSingleStep(1)
 
@@ -48,7 +43,7 @@ class Transform(Init):
 		Transform: Move
 
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk005,chk009,chk000-2')
+		self.toggleWidgets(self.ui, setChecked_False='chk005,chk009,chk000-2')
 		self.ui.s000.setValue(0.1)
 		self.ui.s000.setSingleStep(0.1)
 
@@ -58,7 +53,7 @@ class Transform(Init):
 		Transform: Rotate
 
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk005,chk008,chk000-2')
+		self.toggleWidgets(self.ui, setChecked_False='chk005,chk008,chk000-2')
 		self.ui.s000.setValue(45)
 		self.ui.s000.setSingleStep(5)
 
@@ -69,9 +64,9 @@ class Transform(Init):
 
 		'''
 		if self.ui.chk010.isChecked():
-			self.setWidgets(self.ui, setDisabled='b029-31')
+			self.toggleWidgets(self.ui, setDisabled='b029-31')
 		else:
-			self.setWidgets(self.ui, setEnabled='b029-31')
+			self.toggleWidgets(self.ui, setEnabled='b029-31')
 
 
 	def chk012(self):
@@ -109,7 +104,7 @@ class Transform(Init):
 		cmb = self.ui.cmb000
 		
 		files = ['']
-		contents = self.comboBox(cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -191,6 +186,7 @@ class Transform(Init):
 			self.ui.s000.setValue(newText)
 		self.transform()
 
+
 	def b002(self):
 		'''
 		Freeze Transformations
@@ -199,14 +195,16 @@ class Transform(Init):
 		# mel.eval("performFreezeTransformations(0);")
 		pm.makeIdentity(apply=True) #freeze transforms
 		# pm.makeIdentity (obj, apply=1, t=1, r=1, s=1, n=0, pn=1)
-		
+
+
 	def b003(self):
 		'''
 		Center Pivot Object
 
 		'''
 		mel.eval("CenterPivot;")
-		
+
+
 	def b004(self):
 		'''
 		Align Vertices
@@ -244,18 +242,18 @@ class Transform(Init):
 
 				if self.ui.chk011.isChecked():
 					if axis == x: #"yz"
-						self.setWidgets(self.ui, setChecked='b030,b031', setChecked_False='b029')
+						self.toggleWidgets(self.ui, setChecked='b030,b031', setChecked_False='b029')
 					if axis == y: #"xz"
-						self.setWidgets(self.ui, setChecked='b029,b031', setChecked_False='b030')
+						self.toggleWidgets(self.ui, setChecked='b029,b031', setChecked_False='b030')
 					if axis == z: #"xy"
-						self.setWidgets(self.ui, setChecked='b029,b030', setChecked_False='b031')
+						self.toggleWidgets(self.ui, setChecked='b029,b030', setChecked_False='b031')
 				else:
 					if any ([axis == x and tangent == ty, axis == y and tangent == tx]): #"z"
-						self.setWidgets(self.ui, setChecked='b031', setChecked_False='b029,b030')
+						self.toggleWidgets(self.ui, setChecked='b031', setChecked_False='b029,b030')
 					if any ([axis == x and tangent == tz, axis == z and tangent == tx]): #"y"
-						self.setWidgets(self.ui, setChecked='b030', setChecked_False='b029,b031')
+						self.toggleWidgets(self.ui, setChecked='b030', setChecked_False='b029,b031')
 					if any ([axis == y and tangent == tz, axis == z and tangent == ty]): #"x"
-						self.setWidgets(self.ui, setChecked='b029', setChecked_False='b030,b031')
+						self.toggleWidgets(self.ui, setChecked='b029', setChecked_False='b030,b031')
 			else:
 				print "// Warning: An edge must be selected. //"
 				return
@@ -288,6 +286,7 @@ class Transform(Init):
 		if all ([x, y, z]): #align xyz
 			self.alignVertices(mode=6,average=avg,edgeloop=loop)
 
+
 	def b005(self):
 		'''
 		Move To
@@ -300,12 +299,14 @@ class Transform(Init):
 		#move object to center of the last selected items bounding box
 		source.center = target.center
 
+
 	def b006(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b007(self):
 		'''
@@ -314,12 +315,14 @@ class Transform(Init):
 		'''
 		pass
 
+
 	def b008(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b009(self):
 		'''
@@ -328,12 +331,14 @@ class Transform(Init):
 		'''
 		pass
 
+
 	def b010(self):
 		'''
 		
 
 		'''
 		pass
+
 
 	def b011(self):
 		'''
@@ -342,14 +347,26 @@ class Transform(Init):
 		'''
 		pass
 
+
 	def b012(self):
 		'''
-		Make Live
+		Toggle: Make Live
 
 		'''
-		objects = pm.ls (sl=1)[0] #construction planes, nurbs surfaces and polygon meshes can be made live. makeLive supports one live object at a time.
-		pm.makeLive(obj)
-		print str(obj)+'is live.' 
+		state = self.cycle([1,0], 'toggleMakeLive')
+
+		obj = pm.ls(sl=1)[0]
+		if not obj:
+			print '# Error: Nothing Selected. #'
+			return
+
+		if state:
+			pm.makeLive(obj)  #construction planes, nurbs surfaces and polygon meshes can be made live. makeLive supports one live object at a time.
+			self.viewPortMessage('{0}:<hl>makeLive: On</hl>'.format(obj))
+		else:
+			pm.makeLive(none=True)
+			self.viewPortMessage('{0}:<hl>makeLive: Off</hl>'.format(obj))
+
 
 	def b013(self):
 		'''
@@ -401,6 +418,7 @@ class Transform(Init):
 					pm.xform (obj, rotatePivot=osPivot, objectSpace=1) #return pivot to orig position
 				pm.select(selection) #retore the original selection
 
+
 	def b014(self):
 		'''
 		Center Pivot Component
@@ -409,12 +427,14 @@ class Transform(Init):
 		[pm.xform (s, centerPivot=1) for s in pm.ls (sl=1, objectsOnly=1, flatten=1)]
 		# mel.eval("moveObjectPivotToComponentCentre;")
 
+
 	def b015(self):
 		'''
 		Center Pivot World
 
 		'''
 		mel.eval("xform -worldSpace -pivots 0 0 0;")
+
 
 	def b016(self):
 		'''
@@ -423,12 +443,14 @@ class Transform(Init):
 		'''
 		mel.eval("bt_alignPivotToBoundingBoxWin;")
 
+
 	def b017(self):
 		'''
 		Bake Pivot
 
 		'''
 		mel.eval("BakeCustomPivot;")
+
 
 	def b018(self):
 		'''
@@ -437,12 +459,14 @@ class Transform(Init):
 		'''
 		mel.eval("performAlignObjects 1;")
 
+
 	def b019(self):
 		'''
 		Align 1 Points
 
 		'''
 		mel.eval("SnapPointToPointOptions;")
+
 
 	def b020(self):
 		'''
@@ -451,12 +475,14 @@ class Transform(Init):
 		'''
 		mel.eval("Snap2PointsTo2PointsOptions;")
 
+
 	def b021(self):
 		'''
 		Align 3 Points
 
 		'''
 		mel.eval("Snap3PointsTo3PointsOptions;")
+
 
 	def b022(self):
 		'''
@@ -465,12 +491,14 @@ class Transform(Init):
 		'''
 		mel.eval("setToolTo alignToolCtx;")
 
+
 	def b023(self):
 		'''
 		Orient To Vertex/Edge
 
 		'''
 		mel.eval("orientToTool;")
+
 
 	def b024(self):
 		'''
@@ -479,12 +507,14 @@ class Transform(Init):
 		'''
 		mel.eval("bt_snapAlignObjectToComponent;")
 
+
 	def b025(self):
 		'''
 		Snap Together
 
 		'''
 		mel.eval("setToolTo snapTogetherToolCtx;")
+
 
 	def b026(self):
 		'''
@@ -493,12 +523,14 @@ class Transform(Init):
 		'''
 		mel.eval("bt_snapAlignObjectToComponentOptions;")
 
+
 	def b027(self):
 		'''
 		
 
 		'''
 		mel.eval("")
+
 
 	def b028(self):
 		'''
@@ -507,12 +539,14 @@ class Transform(Init):
 		'''
 		mel.eval("")
 
+
 	def b029(self):
 		'''
 		
 
 		'''
 		mel.eval("")
+
 
 	def b030(self):
 		'''
@@ -521,12 +555,14 @@ class Transform(Init):
 		'''
 		mel.eval("")
 
+
 	def b031(self):
 		'''
 		
 
 		'''
 		mel.eval("")
+
 
 	def b032(self):
 		'''

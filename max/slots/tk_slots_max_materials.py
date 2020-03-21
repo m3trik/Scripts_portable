@@ -1,12 +1,7 @@
-import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
-from pymxs import runtime as rt
+from tk_slots_max_init import Init
+maxEval = Init.maxEval
 
 import os.path
-
-from tk_slots_max_init import Init
-
-from PySide2 import QtGui
-
 
 
 
@@ -57,7 +52,7 @@ class Materials(Init):
 
 		materialNames = sorted([mat.name for mat in materials])
 		
-		contents = self.comboBox(cmb, materialNames, 'Scene Materials:')
+		contents = cmb.addItems_(materialNames, 'Scene Materials:')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -77,7 +72,7 @@ class Materials(Init):
 		cmb = self.ui.cmb001
 
 		files = ['Material Editor']
-		contents = self.comboBox(cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -108,7 +103,7 @@ class Materials(Init):
 			if not matNames: 
 				matNames = ['ID Map: None']
 
-			contents = self.comboBox(cmb, matNames)
+			contents = cmb.addItems_(matNames)
 
 			if matNames[0]!='ID Map: None': #add mat objects to storedID_mats dictionary. 'mat name'=key, <mat object>=value
 				self.storedID_mats = {n:mats[i] for i, n in enumerate(matNames)}
@@ -131,7 +126,7 @@ class Materials(Init):
 			subMaterials = [rt.getSubMtl(mat, i) for i in range(1, rt.getNumSubMtls(mat)+1)] #get the material using the matID index. modify index range for index starting at 1.
 			subMatNames = [s.name for s in subMaterials if s is not None]
 			
-			contents = self.comboBox(cmb, subMatNames, matName)
+			contents = cmb.addItems_(subMatNames, matName)
 
 			if not index:
 				index = cmb.currentIndex()

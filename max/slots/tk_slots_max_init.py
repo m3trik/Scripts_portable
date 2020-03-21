@@ -1,17 +1,29 @@
-import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
-from pymxs import runtime as rt
-
 from PySide2 import QtGui
 
-import os.path
+import os
 
 from tk_slots_ import Slot
 
 
+#3ds Max dependancies
+try:
+	import MaxPlus
+	from pymxs import runtime as rt
+
+except ImportError as error:
+	print error
 
 
 
 class Init(Slot):
+
+	try:
+		maxEval = MaxPlus.Core.EvalMAXScript
+	except:
+		@staticmethod
+		def p(s): pass
+		maxEval = p
+
 	def __init__(self, *args, **kwargs):
 		super(Init, self).__init__(*args, **kwargs)
 
@@ -26,8 +38,11 @@ class Init(Slot):
 				{dict} - current object attributes.
 		'''
 		infoDict={}
-		selection = rt.selection
+		if __name__ is not "__main__":
+			return infoDict
 
+
+		selection = rt.selection
 
 		level = rt.subObjectLevel
 		if not level: #object level 0
@@ -477,19 +492,6 @@ class Init(Slot):
 
 
 
-	#alternate bitArray to array function.
-	'''
-	#args:
-		bitArray=bit array
-	
-	ie. rt.bitArrayToArray(bitArray)
-	'''
-	MaxPlus.Core.EvalMAXScript('''
-		fn bitArrayToArray bitArray = 
-			(return bitArray as Array)
-		''')
-
-
 	@staticmethod
 	def bitArrayToArray(bitArray):
 		'''
@@ -508,6 +510,22 @@ class Init(Slot):
 				return [bit for array in list_ for bit in array]
 
 			return [i+1 for i, bit in enumerate(bitArray) if bit==1]
+
+
+
+	try: #alternate bitArray to array function.
+		'''
+		#args:
+			bitArray=bit array
+		
+		ie. rt.bitArrayToArray(bitArray)
+		'''
+		MaxPlus.Core.EvalMAXScript('''
+			fn bitArrayToArray bitArray = 
+				(return bitArray as Array)
+			''')
+	except Exception as error:
+		print error
 
 
 

@@ -1,11 +1,6 @@
-import maya.mel as mel
-import pymel.core as pm
-
-import os.path
-
 from tk_slots_maya_init import Init
 
-
+import os.path
 
 
 
@@ -24,7 +19,7 @@ class Fx(Init):
 		cmb = self.ui.cmb000
 		
 		files = ['']
-		contents = self.comboBox(cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()

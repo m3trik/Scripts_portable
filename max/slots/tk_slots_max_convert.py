@@ -1,11 +1,7 @@
-import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
-from pymxs import runtime as rt
+from tk_slots_max_init import Init
+maxEval = Init.maxEval
 
 import os.path
-
-from tk_slots_max_init import Init
-
-
 
 
 
@@ -24,7 +20,7 @@ class Convert(Init):
 		cmb = self.ui.cmb000
 
 		files = ['']
-		contents = self.comboBox(cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -42,7 +38,7 @@ class Convert(Init):
 
 		list_ = ['NURBS to Polygons', 'NURBS to Subdiv', 'Polygons to Subdiv', 'Smooth Mesh Preview to Polygons', 'Polygon Edges to Curve', 'Type to Curves', 'Subdiv to Polygons', 'Subdiv to NURBS', 'NURBS Curve to Bezier', 'Bezier Curve to NURBS', 'Paint Effects to NURBS', 'Paint Effects to Curves', 'Texture to Geometry', 'Displacement to Polygons', 'Displacement to Polygons with History', 'Fluid to Polygons', 'nParticle to Polygons', 'Instance to Object', 'Geometry to Bounding Box', 'Convert XGen Primitives to Polygons'] 
 
-		contents = self.comboBox (cmb, list_, 'Convert To')
+		contents = cmb.addItems_(list_, 'Convert To')
 
 		if not index:
 			index = cmb.currentIndex()

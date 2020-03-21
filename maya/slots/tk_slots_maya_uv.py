@@ -1,11 +1,6 @@
-import maya.mel as mel
-import pymel.core as pm
-
-import os.path
-
 from tk_slots_maya_init import Init
 
-
+import os.path
 
 
 
@@ -23,7 +18,7 @@ class Uv(Init):
 		'''
 		cmb = self.ui.cmb000
 		
-		contents = self.comboBox(cmb, ['UV Editor','UV Set Editor','UV Tool Kit','UV Linking: Texture-Centric','UV Linking: UV-Centric','UV Linking: Paint Effects/UV','UV Linking: Hair/UV','Flip UV'], ' ')
+		contents = cmb.addItems_(['UV Editor','UV Set Editor','UV Tool Kit','UV Linking: Texture-Centric','UV Linking: UV-Centric','UV Linking: Paint Effects/UV','UV Linking: Hair/UV','Flip UV'], ' ')
 
 		if not index:
 			index = cmb.currentIndex()

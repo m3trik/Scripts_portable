@@ -1,12 +1,7 @@
-import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
-from pymxs import runtime as rt
+from tk_slots_max_init import Init
+maxEval = Init.maxEval
 
 import os.path
-
-from tk_slots_max_init import Init
-
-
-
 
 
 
@@ -88,21 +83,21 @@ class Selection(Init):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk001-2')
+		self.toggleWidgets(self.ui, setChecked_False='chk001-2')
 
 
 	def chk001(self):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk000,chk002')
+		self.toggleWidgets(self.ui, setChecked_False='chk000,chk002')
 
 
 	def chk002(self):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk000-1')
+		self.toggleWidgets(self.ui, setChecked_False='chk000-1')
 
 
 	def chk004(self):
@@ -123,7 +118,7 @@ class Selection(Init):
 		Select Style: Marquee
 		'''
 		self.setSelectionStyle('selectContext')
-		self.setWidgets(self.ui, setChecked='chk005', setChecked_False='chk006-7')
+		self.toggleWidgets(self.ui, setChecked='chk005', setChecked_False='chk006-7')
 		self.ui.cmb004.setCurrentIndex(0)
 
 
@@ -132,7 +127,7 @@ class Selection(Init):
 		Select Style: Lasso
 		'''
 		self.setSelectionStyle('lassoContext')
-		self.setWidgets(self.ui, setChecked='chk006', setChecked_False='chk005,chk007')
+		self.toggleWidgets(self.ui, setChecked='chk006', setChecked_False='chk005,chk007')
 		self.ui.cmb004.setCurrentIndex(1)
 
 
@@ -141,7 +136,7 @@ class Selection(Init):
 		Select Style: Paint
 		'''
 		self.setSelectionStyle('paintContext')
-		self.setWidgets(self.ui, setChecked='chk007', setChecked_False='chk005-6')
+		self.toggleWidgets(self.ui, setChecked='chk007', setChecked_False='chk005-6')
 		self.ui.cmb004.setCurrentIndex(2)
 
 
@@ -172,7 +167,7 @@ class Selection(Init):
 		cmb = self.ui.cmb000
 
 		selectionSets = [set for set in rt.selectionSets]
-		contents = self.comboBox(cmb, [set.name for set in selectionSets], "Sets")
+		contents = cmb.addItems_([set.name for set in selectionSets], "Sets")
 
 		if not index:
 			index = cmb.currentIndex()
@@ -188,7 +183,7 @@ class Selection(Init):
 		cmb = self.ui.cmb001
 
 		files = ['']
-		contents = self.comboBox(cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -205,7 +200,7 @@ class Selection(Init):
 		cmb = self.ui.cmb002
 	
 		list_ = ['Geometry', 'Shapes', 'Lights', 'Cameras', 'Helpers', 'Space Warps', 'Particle Systems', 'Bone Objects']
-		contents = self.comboBox(cmb, list_, 'Select by Type:')
+		contents = cmb.addItems_(list_, 'Select by Type:')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -237,7 +232,7 @@ class Selection(Init):
 		cmb = self.ui.cmb003
 
 		list_ = ['Vertex', 'Edge', 'Border', 'Face', 'Element']
-		contents = self.comboBox(cmb, list_, 'Convert To')
+		contents = cmb.addItems_(list_, 'Convert To')
 		
 		if not index:
 			index = cmb.currentIndex()
@@ -259,7 +254,7 @@ class Selection(Init):
 
 		list_ = ['Marquee', 'Lasso', 'Paint'] 
 
-		contents = self.comboBox (cmb, list_)
+		contents = cmb.addItems_(list_)
 
 		if not index:
 			index = cmb.currentIndex()

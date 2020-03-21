@@ -1,3 +1,4 @@
+from __future__ import print_function
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtWidgets import QApplication
 
@@ -13,7 +14,7 @@ import sys, os.path
 # ------------------------------------------------
 #	Manage Ui elements
 # ------------------------------------------------
-class Switchboard(object):
+class __Switchboard(object):
 	'''
 	Get/set elements across modules using convenience methods.
 	
@@ -27,6 +28,7 @@ class Switchboard(object):
 	_sbDict = {	
 		'<ui name>' : {
 					'ui' : <ui object>,
+					'uiLevel' : int,
 					'class' : <Class>,
 					'size' : [int, int]
 					'widgetDict' : {
@@ -48,45 +50,14 @@ class Switchboard(object):
 		'gcProtect' : [items protected from garbage collection]
 	}
 
-	the widgetDict is built as needed for each class when addSignal (or any other dependant method) is called.
+	The widgetDict is built as needed for each class when addSignal (or any other dependant method) is called.
 	'''
-
-	app = QApplication.instance() #get the app instance if it exists (required by the QUiLoader)
-	if not app:
-		app = QApplication(sys.argv)
-
-
-	global uiLoader, widgetPath, uiPath
-	uiLoader = QUiLoader()
-
-	#get path to the directory containing any custom widgets.
-	widgetPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'widgets')
-	#format names using the files in path.
-	objectNames = [file_.replace('.py','',-1) for file_ in os.listdir(widgetPath) if file_.endswith('.py') and not file_.startswith('__')]
-	#register any custom widgets using objectNames. Must follow the convention ex. widgets.QComboBox_.QComboBox_ where the module and class share the same name.
-	for m in objectNames:
-		class_ = 'widgets.{0}.{0}'.format(m)
-		widget = locate(class_)
-		if widget:
-			uiLoader.registerCustomWidget(widget)
-		else:
-			raise ImportError, class_
-
-	#set path to the directory containing the ui files.
-	uiPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ui') #get absolute path from dir of this module + relative path to directory
-	#initialize _sbDict
-	_sbDict = {file_.replace('.ui',''):{'ui':uiLoader.load(uiPath+'/'+file_)} for file_ in os.listdir(uiPath) if file_.endswith('.ui')}
-
-
-
-	def __init__(self, parent=None, mainWindow=None):
+	def __init__(self, sbDict):
 		'''
 		args:
-			parent = <parent object> - parent widget
-			mainWindow = <mainWindow object> - top level window
+			sbDict = main dictionary object.
 		'''
-		if mainWindow:
-			self.setMainAppWindow(mainWindow)
+		self._sbDict = sbDict
 
 
 
@@ -97,6 +68,7 @@ class Switchboard(object):
 		The signals dict establishes what type widgets will be added to the widgetDict, and what associated signal to apply.
 		Following that, the items in the ui are looped over, and the widgets' method resolution order is checked against the signals keys
 		to determine the correct derived class type (used in the case of a custom widget).
+
 		args:
 			name (str) = name of the ui to construct connections for.
 		returns:
@@ -107,8 +79,28 @@ class Switchboard(object):
 		for objectName, widget in ui.__dict__.items(): #for each object in the ui:
 			self.addWidget(name, widget, objectName)
 
-		# print self.widgetDict(name)
+		# print(self.widgetDict(name))
 		return self.widgetDict(name)
+
+
+
+	def addWidgets(self, name, widgets, objectNames=[]):
+		'''
+		Extends the fuctionality of the 'addWidget' method to allow a list (of widgets) to be passed in.
+		
+		args:
+			name (str) = name of the parent ui to construct connections for.
+			widgets (list) = widget objects to be added.
+			objectName (list) = widget string names.
+		'''
+		if objectNames and not len(widgets)==len(objectNames):
+			raise Exception('# Error: The list of objectNames must be of equal length to that of the given widgets. #')
+
+		for i, widget in enumerate(widgets):
+			try:
+				self.addWidget(name, widget, objectNames[i])
+			except:
+				self.addWidget(name, widget)
 
 
 
@@ -117,28 +109,36 @@ class Switchboard(object):
 		Adds a widget to the widgetDict under the given (ui) name.
 		Decoupling this from 'buildWidgetDict' allows additional widgets to be added at any time.
 		The signals dictionary provides both a way to set a default signal for a widget type.
+
 		args:
-			name (str) = name of the ui to construct connections for.
-			widget = <widget object> - widget to be added.
+			name (str) = name of the parent ui to construct connections for.
+			widget (obj) = widget to be added.
 			objectName (str) = widget's name.
 		returns:
 			<widget object>
 		'''
 		name = str(name) #prevent unicode
+
 		if objectName:
 			widget.setObjectName(objectName) #assure the widget has an object name.
 		else:
 			objectName = widget.objectName()
 
+
 		n = name.split('_')[0] #get ie. 'polygons' from 'polygons_submenu' in cases where a submenu shares the same slot class of it's parent menu.
-		pathToSlots = 'tk_slots_{0}_{1}.{2}'.format(self.getMainAppWindow(objectName=True), n, n[0].upper()+n[1:]) #ie. tk_slots_maya_init.Init
-		# pathToSlots = 'tk_slots_'+self.getMainAppWindow(objectName=True)+'_'+n+'.'+n[0].upper()+n[1:] #ie. tk_slots_maya_init.Init
-		class_ = self.getClassInstance(pathToSlots)
+		# path = 'slots.{0}'.format(n[0].upper()+n[1:]) #ie. slots.Init
+		path = 'tk_slots_{0}_{1}.{2}'.format(self.getMainAppWindow(objectName=True), n, n[0].upper()+n[1:]) #ie. tk_slots_maya_init.Init
+		class_ = self.getClassInstance(path)
+
 
 
 		signals = { #the default signal to be associated with each widget type.
 			'QProgressBar':'valueChanged',
 			'QPushButton':'released',
+			'QToolButton':'triggered',
+			'QListWidget':'itemClicked',
+			'QTreeWidget':'itemClicked',
+			'QAction':'triggered',
 			'QSpinBox':'valueChanged',
 			'QDoubleSpinBox':'valueChanged',
 			'QCheckBox':'released',
@@ -147,20 +147,21 @@ class Switchboard(object):
 			'QLineEdit':'returnPressed',
 			'QTextEdit':'textChanged',
 		}
-		# print widget.__class__.__mro__
-		for d in widget.__class__.__mro__: #get the directly derived class for any custom widgets.
+		# print(widget.__class__.__mro__)
+		for d in widget.__class__.__mro__: #get the directly derived class if a custom widget.
 			if d.__module__=='PySide2.QtWidgets': #check for the first built-in class. Then use it as the derived class.
 				derivedType = d.__name__
 				break
-		try:
+
+		try: #if the widget type has a default signal assigned in the signals dict; get the signal.
 			signal = signals[derivedType]
 		except:
 			signal = ''
 
-		signalInstance = getattr(widget, signal, None) #add signal to widget
-		method = getattr(class_, objectName, None) #use 'objectName' (ie. b006) to get the corresponding method of the same name.
+		signalInstance = getattr(widget, signal, None) #add signal to widget. ie. signalInstance = widget.valueChanged
+		method = getattr(class_, objectName, None) #use 'objectName' to get the corresponding method of the same name. ie. get method <b006> from widget 'b006' else None
 		docString = getattr(method, '__doc__', None)
-		prefix = self.prefix(objectName) #returns an alphanumberic prefix if objectName startswith a series of alphanumberic chars, and is followed by three integers.
+		prefix = self.prefix(objectName) #returns an string alphanumberic prefix if objectName startswith a series of alphanumberic chars, and is followed by three integers. ie. 'cmb' from 'cmb015'
 
 		#add values to widgetDict
 		self.widgetDict(name).update(
@@ -172,7 +173,7 @@ class Switchboard(object):
 								'prefix':prefix,
 								'docString':docString}})
 
-		# print self._sbDict[name]['widgetDict'][objectName]['widget']
+		# print(self._sbDict[name]['widgetDict'][objectName]['widget'].objectName())
 		return self._sbDict[name]['widgetDict'][objectName]['widget'] #return the stored widget.
 
 
@@ -180,7 +181,8 @@ class Switchboard(object):
 	def widgetDict(self, name):
 		'''
 		Dictionary holding widget information.
-		Used primarily by 'buildWidgetDict' method to construct signal and slot connections that can later be connected and disconnected by the add/removeSignal methods. 
+		Used primarily by 'buildWidgetDict' method to construct signal and slot connections that can later be connected and disconnected by the add/removeSignal methods.
+
 		args:
 			name = 'string' name of ui/class. ie. 'polygons'
 		returns:
@@ -205,8 +207,8 @@ class Switchboard(object):
 		Replace any old signals with the set for the given name.
 		'''
 		# if not name in self.previousName(allowLevel0=True, allowDuplicates=1): #ie. 'polygons' not in 'polygons_submenu' (as they both share the same connections).
-		# print 'not ',name,' in ',self.previousName(allowLevel0=True, allowDuplicates=1)
-		# print 'setSignals:', self.previousName(allowLevel0=True, allowDuplicates=1, as_list=1)
+		# print('not ',name,' in ',self.previousName(allowLevel0=True, allowDuplicates=1))
+		# print('setSignals:', self.previousName(allowLevel0=True, allowDuplicates=1, as_list=1))
 		previousName = self.previousName(allowLevel0=True, allowDuplicates=1)
 		if previousName:
 			self.removeSignal(previousName) #remove signals from the previous ui.
@@ -217,54 +219,57 @@ class Switchboard(object):
 	def addSignal(self, name):
 		'''
 		Connects signals/slots from the widgetDict for the given ui. Works with both single slots or multiple slots given as a list.
+
 		args:
 			name (str) = ui name
 		'''
 		for objectName in self.widgetDict(name):
 			signal = self.getSignal(name, objectName)
 			slot = self.getMethod(name, objectName)
-			# print 'addSignal: ', name, objectName, signal, slot
+			# print('addSignal: ', name, objectName, signal, slot)
 			if slot and signal:
 				try:
-					signal.connect(slot) #connect single slot (main and viewport)
+					signal.connect(slot) #connect single slot (main and cameras)
 				except:
 					try:
 						map(signal.connect, slot) #connect multiple slots from a list.
 
 					except Exception as error:
-						print '# Error: addSignal:', name, objectName, error, signal, slot,'#' #, error
+						print('# Error: addSignal:', name, objectName, error, signal, slot,'#') #, error
 
 
 
 	def removeSignal(self, name):
 		'''
 		Disconnects signals/slots from the widgetDict for the given ui. Works with both single slots or multiple slots given as a list.
+
 		args:
 			name (str) = ui name
 		'''
 		for objectName in self.widgetDict(name):
 			signal = self.getSignal(name, objectName)
 			slot = self.getMethod(name, objectName)
-			# print 'removeSignal: ', name, objectName, signal, slot
+			# print('removeSignal: ', name, objectName, signal, slot)
 			if slot and signal:
 				try:
-					signal.disconnect(slot) #disconnect single slot (main and viewport)
+					signal.disconnect(slot) #disconnect single slot (main and cameras)
 				except:
 					try:
 						signal.disconnect() #disconnect all
 						# map(signal.disconnect, slot) #disconnect multiple slots from a list.
 
 					except Exception as error:
-						print '# Error: removeSignal:', name, objectName, error, signal, slot,'#' #, error
+						print('# Error: removeSignal:', name, objectName, error, signal, slot,'#') #, error
 
 
 
 	def uiList(self, name=False, ui=False):
 		'''
 		Get a list of either all ui names, all ui object's, or both as key/value pairs in a dict.
+
 		args:
-			name = bool 	return string ui list
-			ui = bool 	return dynamic ui list
+			name (bool) = return string ui list
+			ui (bool) =	return dynamic ui list
 		returns:
 			if name: return list of ui names
 			if ui: return list of dynamic ui objects
@@ -282,6 +287,7 @@ class Switchboard(object):
 	def getUi(self, name=False):
 		'''
 		Get the dynamic ui using its string name, or if no argument is given, return the current ui.
+
 		args:
 			name = 'string' name of class. ie. 'polygons' (by default getUi returns the current ui)
 		returns:
@@ -289,11 +295,11 @@ class Switchboard(object):
 			else: current dynamic ui object
 		'''
 		if not name:
-			name = self.getUiName()
-			name = name[0].lower()+name[1:] #lowercase the first letter of name.
+			n = self.getUiName()
+			name = n[0].lower()+n[1:] #lowercase the first letter of name.
 
 		try:
-			return self.uiList(ui=True)[self.getUiIndex(name)]
+			return self._sbDict[name]['ui'] #self.uiList(ui=True)[self.getUiIndex(name)]
 		except ValueError:
 			return None
 
@@ -302,6 +308,7 @@ class Switchboard(object):
 	def setUiName(self, index):
 		'''
 		The 'name' list is used for various things such as; maintaining a history of ui's that have been called previously.
+
 		args:
 			index (str) = name
 				*or int - index of ui name
@@ -324,6 +331,7 @@ class Switchboard(object):
 		'''
 		Get the ui name as a string.
 		If no argument is given, the name for the current ui will be returned.
+
 		args:
 			ui = <ui object> - (optional) use ui object to get its corresponding name. (the default behavior is to return the current ui name)
 		returns:
@@ -345,6 +353,7 @@ class Switchboard(object):
 	def getUiIndex(self, name=False):
 		'''
 		Get the index of the given ui name in the uiList.
+
 		args:
 			name = 'string' name of class. ie. 'polygons'
 		returns:
@@ -364,6 +373,7 @@ class Switchboard(object):
 		Set UI size.
 		If no size is given, the minimum ui size needed to frame its
 		contents will be used. If no name is given, the current ui will be used.
+
 		args:
 			name (str) = optional ui name
 			size = [int, int] - optional width and height as an integer list. [width, height]
@@ -382,14 +392,41 @@ class Switchboard(object):
 
 
 
+	def setUiSizeX(self, width, name=None):
+		'''
+		Set the X (width) value for the current ui.
+
+		args:
+			name (str) = the name of the ui to set the width for.
+			width (int) = X size as an int
+		'''
+		height = self.getUiSize(name=name, height=True) #get the hight value.
+		setUiSize(name=name, width=width, height=height)
+
+
+
+	def setUiSizeY(self, height, name=None):
+		'''
+		Set the Y (height) value for the current ui.
+
+		args:
+			name (str) = the name of the ui to set the height for.
+			height (int) = Y size as an int
+		'''
+		width = self.getUiSize(name=name, width=True) #get the width value.
+		setUiSize(name=name, height=height, width=width)
+
+
+
 	def getUiSize(self, name=None, width=None, percentWidth=None, height=None, percentHeight=None): #get current ui size info.
 		'''
 		Get the size info for each ui (allows for resizing a stacked widget where ordinarily resizing is constrained by the largest widget in the stack)
+
 		args:
 			name (str) = ui name to get size from.
-			width = int 	returns width of current ui
-			height = int 	returns hight of current ui
-			percentWidth = int returns a percentage of the width
+			width (int) = returns width of current ui
+			height (int) = returns hight of current ui
+			percentWidth (int) = returns a percentage of the width
 			percentHeight = int returns a percentage of the height
 		returns:
 			if width: returns width as int
@@ -417,9 +454,36 @@ class Switchboard(object):
 
 
 
+	def getUiSizeX(self, name=None):
+		'''
+		Get the X (width) value for the current ui.
+
+		args:
+			name (str) = ui name to get size from.
+		returns:
+			returns width as int
+		'''
+		return self.getUiSize(name=name, width=True)
+
+
+
+	def getUiSizeY(self, name=None):
+		'''
+		Get the Y (height) value for the current ui.
+
+		args:
+			name (str) = ui name to get size from.
+		returns:
+			returns width as int
+		'''
+		return self.getUiSize(name=name, height=True)
+
+
+
 	def getNameFrom(self, obj):
 		'''
 		Get the ui name from any object existing in widgetDict.
+
 		args:
 			obj = <object> - 
 		returns:
@@ -441,6 +505,7 @@ class Switchboard(object):
 	def setMainAppWindow(self, app):
 		'''
 		Set parent application.
+
 		args:
 			app = app object.
 		returns:
@@ -455,6 +520,7 @@ class Switchboard(object):
 	def getMainAppWindow(self, objectName=False):
 		'''
 		Get parent application if any.
+
 		args:
 			objectName (bool) = get string name of app. (by default getMainAppWindow returns app object)
 		returns:
@@ -479,6 +545,7 @@ class Switchboard(object):
 	def setClassInstance(self, class_, name=None):
 		'''
 		Case insensitive. Class string keys are stored lowercase regardless of how they are recieved.
+
 		args:
 			class_ = 'string' *or <class object> - module name.class to import and store class. 
 					ie.  ie. 'polygons', 'tk_slots_max_polygons.Polygons', or <tk_slots_max_polygons.Polygons>
@@ -487,7 +554,7 @@ class Switchboard(object):
 			class object.
 		'''
 		if type(class_)==str or type(class_)==unicode: #if arg given as string or unicode:
-			name = class_.split('_')[-1].split('.')[-1] #get key from class_ string ie. 'class' from 'module.Class'
+			name = class_.split('_')[-1].split('.')[-1] #get key from the class_ string ie. 'class' from 'module.Class'
 			class_ = locate(class_)
 		elif not name:
 			name = class_.__class__.__name__ #if arg as <object>:
@@ -511,6 +578,7 @@ class Switchboard(object):
 		'''
 		Case insensitive. (Class string keys are lowercase and any given string will be converted automatically)
 		If class is not in self._sbDict, getClassInstance will attempt to use setClassInstance() to first store the class.
+
 		args:
 			class_ = 'string' *or <class object> - module name.class to import and store class.
 				ie. 'polygons', 'tk_slots_max_polygons.Polygons', or <tk_slots_max_polygons.Polygons>
@@ -536,13 +604,14 @@ class Switchboard(object):
 	def getWidget(self, objectName=None, name=None):
 		'''
 		Case insensitive. Get the widget object/s from the given ui or widget name.
+
 		args:
 			name (str) = name of ui. ie. 'polygons'. If no name is given, the current ui will be used.
 			objectName (str) = optional name of widget. ie. 'b000'
 		returns:
 			if objectName:  widget object with the given name from the current ui.
 			if name and objectName: widget object with the given name from the given ui name.
-			if name: all widgets from the given ui.
+			if name: all widgets for the given ui.
 		'''
 		if not name:
 			name = self.getUiName()
@@ -557,10 +626,22 @@ class Switchboard(object):
 
 
 
+	def getWidgets(self, name=None):
+		'''
+		Get all widgets for a ui.
+
+		args:
+			name (str) = name of ui. ie. 'polygons'. If no name is given, the current ui will be used.
+		'''
+		self.getWidget(name=name)
+
+
+
 	def getWidgetType(self, widget, name=None):
 		'''
 		Get widget type class name as a string.
 		ie. 'QPushButton' from pushbutton type widget.
+
 		args:
 			widget = 'string'  - name of widget/widget
 				*or <object> -widget
@@ -576,17 +657,19 @@ class Switchboard(object):
 
 		if not 'widgetDict' in self._sbDict[name]:
 			self.widgetDict(name) #construct the signals and slots for the ui
-		# print name, widget
+		# print(name, widget)
 		try:
 			return self._sbDict[name]['widgetDict'][widget]['widgetType']
 		except KeyError:
 			return None
 
 
+
 	def getDerivedType(self, widget, name=None):
 		'''
 		Get widget derived type class name as a string.
 		ie. 'QPushButton' from a custom subclassed pushbutton.
+
 		args:
 			widget = 'string'  - name of widget/widget
 				*or <object> - widget
@@ -595,7 +678,11 @@ class Switchboard(object):
 			'string' - the corresponding widget derived class name
 		'''
 		if not type(widget)==str:
-			widget = widget.objectName() #use the objectName to get a string key for 'widget'
+			w = widget.objectName() #use the objectName to get a string key for 'widget'
+			if not w:
+				raise Exception('# Error: No object name found for '+str(widget)+' #')
+			else:
+				widget = w
 
 		if not name:
 			name = self.getUiName()
@@ -615,7 +702,7 @@ class Switchboard(object):
 		returns:
 			if methodName: corresponding method object to given method name string.
 			else: all of the methods associated with the given name as a list.
-		ex. self.sb.getMethod('polygons', 'b022')() #call method 'b022' of the 'polygons' class
+		ex. sb.getMethod('polygons', 'b022')() #call method 'b022' of the 'polygons' class
 		'''
 		if not 'widgetDict' in self._sbDict[name]:
 			self.widgetDict(name) #construct the signals and slots for the ui
@@ -674,6 +761,7 @@ class Switchboard(object):
 		'''
 		Get the previously called ui name string, or a list of ui name strings ordered by use.
 		It does so by pulling from the 'name' list which keeps a list of the ui names as they are called. ie. ['previousName2', 'previousName1', 'currentName']
+
 		args:
 			previousIndex (bool) = return the index of the last valid previously opened ui name.
 			allowDuplicates (bool) = applicable when returning as_list. Returns the list allowing for duplicate names.
@@ -710,7 +798,7 @@ class Switchboard(object):
 			[list_.remove(l) for l in list_[:] if list_.count(l)>1] #remove any previous duplicates if they exist; keeping the last added element.
 
 		if previousIndex:
-			validPrevious = [i for i in list_ if all(['viewport' not in i, 'main' not in i])]
+			validPrevious = [i for i in list_ if all(['cameras' not in i, 'main' not in i])]
 			return self.getUiIndex(validPrevious[-2])
 
 		elif as_list:
@@ -825,6 +913,7 @@ class Switchboard(object):
 	def gcProtect(self, obj=None):
 		'''
 		Protect given object from garbage collection.
+
 		args:
 			obj = <object>
 		returns:
@@ -852,6 +941,7 @@ class Switchboard(object):
 	def hasKey(self, *args): #check if key exists in switchboard dict.
 		'''
 		ie. hasKey('polygons', 'widgetDict', 'objectName')
+
 		args:
 			'string' dict keys in order of hierarchy.  ie. 'polygons', 'widgetDict', 'b001', 'method'
 		returns:
@@ -880,6 +970,7 @@ class Switchboard(object):
 	def getSubmenu(self, ui):
 		'''
 		Get the submenu object of the given ui using it's name string, or the parent ui object.
+
 		args:
 			ui (str) = ui name.
 				<ui object> - dynamic ui.
@@ -893,28 +984,29 @@ class Switchboard(object):
 
 
 
-	@staticmethod
-	def getUiLevel(name):
+	def getUiLevel(self, name=False):
 		'''
-		Get the hierarchy level of the given ui name.
-		A future rewrite is needed to auto-sort versus exlicitly stating any ui names.
-		level 0: init
-		level 1: base menus
-		level 2: submenus
-		level 3: menus
+		Get the hierarcical level of a ui from its string name.
+		If no argument is given, the level of current ui will be returned.
+
+		level 0: init (root) (parent class)
+		level 1: base_menus
+		level 2: sub_menus
+		level 3: main_menus
+
 		args:
-			name (str) =  ui name to check level of.
+			name (str) = ui name to get level of. ie. 'polygons'
 		returns:
-			int - ui level
+			ui level as an integer.
 		'''
-		if name=='init':
-			return 0
-		if any([name=='main', name=='editors', name=='viewport']):
-			return 1
-		if '_submenu' in name:
-			return 2
-		else:
-			return 3
+		if not name:
+			name = self.getUiName()
+			name = name[0].lower()+name[1:] #lowercase the first letter of name.
+
+		try:
+			return self._sbDict[name]['uiLevel']
+		except ValueError:
+			return None
 
 
 
@@ -924,6 +1016,7 @@ class Switchboard(object):
 		and if so, returns the alphanumberic prefix.
 		ex. prefix('i023') returns 'i'
 		if second prefix arg is given, then the method checks if the given objectName has the prefix, and the return value is bool.
+
 		args:
 			objectName (str) = string to check against.
 			prefix (str) = optional; check if the given objectName startwith this prefix.
@@ -968,6 +1061,7 @@ class Switchboard(object):
 	def qApp_getWindow(name=None):
 		'''
 		Get Qt window/s
+
 		args:
 			name (str) = optional name of window (widget.objectName)
 		returns:
@@ -986,6 +1080,7 @@ class Switchboard(object):
 	def qApp_getWidget(name=None):
 		'''
 		Get Qt widget/s
+
 		args:
 			name (str) = optional name of widget (widget.objectName)
 		returns:
@@ -1000,6 +1095,65 @@ class Switchboard(object):
 
 
 
+	#set properties
+	name = property(getUiName, setUiName)
+	prevName = property(previousName)
+	ui = property(getUi)
+	uiIndex = property(getUiIndex)
+	uiLevel = property(getUiLevel)
+	size = property(getUiSize, setUiSize)
+	sizeX = property(getUiSizeX, setUiSizeX)
+	sizeY = property(getUiSizeY, setUiSizeY)
+	class_ = property(getClassInstance, setClassInstance)
+	mainAppWindow = property(getMainAppWindow, setMainAppWindow)
+	getWidgets = property(getWidget)
+
+
+
+
+
+# ------------------------------------------------------------------------------------------
+
+
+#initialize and create a __Switchboard instance
+app = QApplication.instance() #get the app instance if it exists (required by the QUiLoader)
+if not app:
+	app = QApplication(sys.argv)
+
+
+global uiLoader, widgetPath, uiPath
+uiLoader = QUiLoader()
+
+# register any custom widgets.
+# get path to the widget directory.
+widgetPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'widgets')
+# format names using the files in path.
+moduleNames = [file_.replace('.py','',-1) for file_ in os.listdir(widgetPath) if file_.startswith('q') and file_.endswith('.py')]
+# register any custom widgets using the module names.
+for m in moduleNames:
+	className = m[:1].capitalize()+m[1:] #capitalize first letter of module name to convert to class name
+	path = 'widgets.{0}.{1}'.format(m, className)
+	class_ = locate(path)
+	if class_:
+		uiLoader.registerCustomWidget(class_)
+	else:
+		raise ImportError, path
+
+
+# set path to the directory containing the ui files.
+uiPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ui') #get absolute path from dir of this module + relative path to directory
+# initialize _sbDict by loading and setting keys for the ui files.
+_sbDict={}
+for dirpath, dirnames, filenames in os.walk(uiPath):
+	for filename in (f for f in filenames if f.endswith(".ui")):
+		path = os.path.join(dirpath, filename)
+		name = filename.replace('.ui','')
+		d = dirpath[dirpath.rfind('ui\\'):] #slice the absolute path from 'ui\' ie. ui\base_menus_1\sub_menus_2\main_menus_3 from fullpath\ui\base_menus_1\sub_menus_2\main_menus_3
+		_sbDict[filename.replace('.ui','')] = {'ui':uiLoader.load(path), 'uiLevel':len(d.split('\\'))-1} #ie. {'polygons':{'ui':<ui obj>, uiLevel:<int>}} (the ui level is it's hierarchy)
+
+
+sb = __Switchboard(_sbDict)
+
 
 
 
@@ -1007,7 +1161,7 @@ class Switchboard(object):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
@@ -1017,6 +1171,7 @@ test example:
 _sbDict={
 	'polygons':{'class': '<Polygons>',
 				'ui': '<polygons ui object>',
+				'uiLevel': 3,
 				'size': [210, 480],
 				'widgetDict': {'cmb002': {'widget': '<widgets.QComboBox_.QComboBox_ object at 0x0000016B6C078908>', 
 									'widgetType': 'QComboBox_', 
@@ -1033,94 +1188,27 @@ _sbDict={
 '''
 
 
-	# @staticmethod
-	# def prefix(string, prefix):
+
+
+# deprecated: -----------------------------------
+
+	
+	# def getPrevNameList_wDuplicates(self):
 	# 	'''
-	# 	Checks if the given string startswith the given prefix, and is followed by three integers. ex. i000 (alphanum,int,int,int)
-	# 	ex. prefix('i023', 'i')
-	# 	args:
-	# 		string (str) = string to check against.
-	# 		prefix (str) = check if the given string startwith this prefix.
+	# 	Get previous names as a list (containing duplicates).
+
 	# 	returns:
-	# 		bool - True if correct format else, False.
+	# 		list
 	# 	'''
-	# 	if string.startswith(prefix):
-	# 		i = len(prefix)
-	# 		integers = [c for c in string[i:i+3] if c.isdigit()]
-	# 		if len(integers)>2 or len(string)==i:
-	# 			return True
-	# 	return False
-
-
-# def getWidgetClassInstance(self, widget, name=None):
-# 		'''
-# 		ie. returns <type 'PySide2.QtWidgets.QPushButton'> or, <class 'widgets.QComboBox_Popup.QComboBox_Popup'>
-# 		args:
-# 			widget='string'  - name of widget
-# 					*or <object> - widget
-# 			name (str) = name of dynamic ui (else use current ui)
-# 		returns:
-# 			<class object> - the corresponding widget class
-# 		'''
-# 		if not type(widget)==str:
-# 			widget = widget.objectName()
-
-# 		if not name:
-# 			name = self.getUiName()
-
-# 		try:
-# 			if not 'widgetDict' in self._sbDict[name]:
-# 				self.widgetDict(name) #construct the signals and slots for the ui
-# 		except Exception as error:
-# 			if not type(error)==KeyError:
-# 				raise error
-# 			return widget.__class__()
-
-# 		return self._sbDict[name]['widgetDict'][widget]['widgetClassInstance']
-
-
-# def connectSignal(signal, newhandler=None, oldhandler=None):
-# 		while True: #the loop is needed for safely disconnecting a specific handler, because it may have been connected multple times, and disconnect only removes one connection at a time.
-# 			try:
-# 				if oldhandler is not None:
-# 					signal.disconnect(oldhandler)
-# 				else:
-# 					signal.disconnect()
-# 			except TypeError:
-# 				break
-# 		if newhandler is not None:
-# 			signal.connect(newhandler)
+	# 	return self.previousName(as_list=True, allowDuplicates=True)
 
 
 
-
-
-	# def previousUi(self, previousIndex=False, allowDuplicates=False, as_list=False):
+	# def getPrevNameList_woDuplicates(self):
 	# 	'''
-	# 	args:
-	# 		previousIndex (bool) = return the index of the last valid previously opened ui name.
+	# 	Get previous names as a list (duplicates removed).
+
 	# 	returns:
-	# 		if previousIndex: int index of previously opened ui
-	# 		else: string name of previously opened layout.
+	# 		list
 	# 	'''
-	# 	if not 'name' in self._sbDict:
-	# 		self._sbDict['name'] = []
-
-	# 	self._sbDict['name'] = self._sbDict['name'][-10:] #keep original list length restricted to last ten elements
-
-	# 	list_ = [i for i in self._sbDict['name'] if 'init' not in i] #work on a copy of the list, removing any instances of 'init', keeping the original intact
-	# 	if not allowDuplicates:
-	# 		[list_.remove(l) for l in list_[:] if list_.count(l)>1] #remove any previous duplicates if they exist; keeping the last added element.
-
-	# 	if previousIndex:
-	# 		validPrevious = [i for i in list_ if all(['viewport' not in i, 'main' not in i])]
-	# 		return self.getUiIndex(validPrevious[-2])
-
-	# 	elif as_list:
-	# 		return list_
-
-	# 	else:
-	# 		try:
-	# 			return list_[-2]
-	# 		except:
-	# 			return ''
+	# 	return self.previousName(allowLevel0=1, as_list=1)

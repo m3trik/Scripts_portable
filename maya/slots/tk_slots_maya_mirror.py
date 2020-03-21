@@ -1,9 +1,6 @@
-import maya.mel as mel
-import pymel.core as pm
-
-import os.path
-
 from tk_slots_maya_init import Init
+
+import traceback
 
 
 
@@ -38,7 +35,7 @@ class Mirror(Init):
 		'''
 		Delete: X Axis
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk002,chk003')
+		self.toggleWidgets(self.ui, setChecked_False='chk002,chk003')
 		axis = "X"
 		if self.ui.chk000.isChecked():
 			axis = '-'+axis
@@ -50,7 +47,7 @@ class Mirror(Init):
 		'''
 		Delete: Y Axis
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk001,chk003')
+		self.toggleWidgets(self.ui, setChecked_False='chk001,chk003')
 		axis = "Y"
 		if self.ui.chk000.isChecked():
 			axis = '-'+axis
@@ -62,7 +59,7 @@ class Mirror(Init):
 		'''
 		Delete: Z Axis
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk001,chk002')
+		self.toggleWidgets(self.ui, setChecked_False='chk001,chk002')
 		axis = "Z"
 		if self.ui.chk000.isChecked():
 			axis = '-'+axis
@@ -76,9 +73,9 @@ class Mirror(Init):
 		'''
 		#keep menu and submenu in sync:
 		# if self.submenu.chk005.isChecked():
-		# 	self.setWidgets(self.ui, setChecked='chk005')
+		# 	self.toggleWidgets(self.ui, setChecked='chk005')
 		# else:
-		# 	self.setWidgets(self.ui, setChecked_False='chk005')
+		# 	self.toggleWidgets(self.ui, setChecked_False='chk005')
 
 
 	def cmb000(self, index=None):
@@ -88,7 +85,7 @@ class Mirror(Init):
 		cmb = self.ui.cmb000
 		
 		files = ['Mirror Options', 'Mirror Instance Mesh']
-		contents = self.comboBox(cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()

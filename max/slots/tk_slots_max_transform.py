@@ -1,11 +1,7 @@
-import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
-from pymxs import runtime as rt
+from tk_slots_max_init import Init
+maxEval = Init.maxEval
 
 import os.path
-
-from tk_slots_max_init import Init
-
-
 
 
 
@@ -36,7 +32,7 @@ class Transform(Init):
 		'''
 		Transform: Scale
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk008,chk009', setChecked='chk000,chk001,chk002')
+		self.toggleWidgets(self.ui, setChecked_False='chk008,chk009', setChecked='chk000,chk001,chk002')
 		self.ui.s000.setValue(2)
 		self.ui.s000.setSingleStep(1)
 
@@ -45,7 +41,7 @@ class Transform(Init):
 		'''
 		Transform: Move
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk005,chk009,chk000,chk001,chk002')
+		self.toggleWidgets(self.ui, setChecked_False='chk005,chk009,chk000,chk001,chk002')
 		self.ui.s000.setValue(0.1)
 		self.ui.s000.setSingleStep(0.1)
 
@@ -54,7 +50,7 @@ class Transform(Init):
 		'''
 		Transform: Rotate
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk005,chk008,chk000,chk001,chk002')
+		self.toggleWidgets(self.ui, setChecked_False='chk005,chk008,chk000,chk001,chk002')
 		self.ui.s000.setValue(45)
 		self.ui.s000.setSingleStep(5)
 
@@ -64,9 +60,9 @@ class Transform(Init):
 		Align: Auto Align
 		'''
 		if self.ui.chk010.isChecked():
-			self.setWidgets(self.ui, setDisabled='b029,b030,b031')
+			self.toggleWidgets(self.ui, setDisabled='b029,b030,b031')
 		else:
-			self.setWidgets(self.ui, setEnabled='b029,b030,b031')
+			self.toggleWidgets(self.ui, setEnabled='b029,b030,b031')
 
 
 	def chk012(self):
@@ -102,7 +98,7 @@ class Transform(Init):
 		cmb = self.ui.cmb000
 		
 		files = ['']
-		contents = self.comboBox(cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -241,18 +237,18 @@ class Transform(Init):
 
 				if self.ui.chk011.isChecked():
 					if axis == x: #"yz"
-						self.setWidgets(self.ui, setChecked='b030,b031', setChecked_False='b029')
+						self.toggleWidgets(self.ui, setChecked='b030,b031', setChecked_False='b029')
 					if axis == y: #"xz"
-						self.setWidgets(self.ui, setChecked='b029,b031', setChecked_False='b030')
+						self.toggleWidgets(self.ui, setChecked='b029,b031', setChecked_False='b030')
 					if axis == z: #"xy"
-						self.setWidgets(self.ui, setChecked='b029,b030', setChecked_False='b031')
+						self.toggleWidgets(self.ui, setChecked='b029,b030', setChecked_False='b031')
 				else:
 					if any ([axis == x and tangent == ty, axis == y and tangent == tx]): #"z"
-						self.setWidgets(self.ui, setChecked='b031', setChecked_False='b029,b030')
+						self.toggleWidgets(self.ui, setChecked='b031', setChecked_False='b029,b030')
 					if any ([axis == x and tangent == tz, axis == z and tangent == tx]): #"y"
-						self.setWidgets(self.ui, setChecked='b030', setChecked_False='b029,b031')
+						self.toggleWidgets(self.ui, setChecked='b030', setChecked_False='b029,b031')
 					if any ([axis == y and tangent == tz, axis == z and tangent == ty]): #"x"
-						self.setWidgets(self.ui, setChecked='b029', setChecked_False='b030,b031')
+						self.toggleWidgets(self.ui, setChecked='b029', setChecked_False='b030,b031')
 			else:
 				print "// Warning: An edge must be selected. //"
 				return

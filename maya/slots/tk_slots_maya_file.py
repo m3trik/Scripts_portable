@@ -1,12 +1,6 @@
-import maya.mel as mel
-import pymel.core as pm
-
-import os
-
 from tk_slots_maya_init import Init
 
-
-
+import os.path
 
 
 
@@ -28,7 +22,7 @@ class File(Init):
 		cmb = self.ui.cmb000
 		
 		files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in file_]
-		contents = self.comboBox(cmb, files, "Recent Files")
+		contents = cmb.addItems_(files, "Recent Files")
 
 		if not index:
 			index = cmb.currentIndex()
@@ -46,7 +40,7 @@ class File(Init):
 		cmb = self.ui.cmb001
 		
 		files = (list(reversed(mel.eval("optionVar -query RecentProjectsList;"))))
-		contents = self.comboBox(cmb, files, "Recent Projects")
+		contents = cmb.addItems_(files, "Recent Projects")
 
 		if not index:
 			index = cmb.currentIndex()
@@ -64,7 +58,7 @@ class File(Init):
 
 		path = os.environ.get('MAYA_AUTOSAVE_FOLDER').split(';')[0] #get autosave dir path from env variable.
 		files = [f for f in os.listdir(path) if f.endswith('.mb') or f.endswith('.ma')] #[file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" in file_]
-		contents = self.comboBox(cmb, files, "Recent Autosave")
+		contents = cmb.addItems_(files, "Recent Autosave")
 
 		if not index:
 			index = cmb.currentIndex()
@@ -106,7 +100,7 @@ class File(Init):
 		
 		list_ = ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ", 'Send to 3dsMax: As New Scene', 'Send to 3dsMax: Update Current', 'Send to 3dsMax: Add to Current']
 
-		contents = self.comboBox(cmb, list_, "Export")
+		contents = cmb.addItems_(list_, "Export")
 
 		if not index:
 			index = cmb.currentIndex()
@@ -139,7 +133,7 @@ class File(Init):
 		cmb = self.ui.cmb005
 		
 		files = ['Node Editor', 'Outlinder', 'Content Browser']
-		contents = self.comboBox(cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -165,7 +159,7 @@ class File(Init):
 
 		project = pm.workspace(query=1, rd=1).split('/')[-2] #add current project path string to label. strip path and trailing '/'
 
-		contents = self.comboBox(cmb, list_, project)
+		contents = cmb.addItems_(list_, project)
 
 		if not index:
 			index = cmb.currentIndex()

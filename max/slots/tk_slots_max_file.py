@@ -1,14 +1,8 @@
-import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
-from pymxs import runtime as rt
-
-import os
-from datetime import datetime
-
 from tk_slots_max_init import Init
+maxEval = Init.maxEval
 
-
-
-
+from datetime import datetime
+import os.path
 
 
 class File(Init):
@@ -52,7 +46,7 @@ class File(Init):
 		cmb = self.ui.cmb000
 
 		list_ = rt.getRecentfiles()
-		contents = self.comboBox(cmb, list_, "Recent Files")
+		contents = cmb.addItems_(list_, "Recent Files")
 
 		if not index:
 			index = cmb.currentIndex()
@@ -71,7 +65,7 @@ class File(Init):
 		path = ''
 		list_ = []#[f for f in os.listdir(path)]
 
-		contents = self.comboBox(cmb, list_, "Recent Projects")
+		contents = cmb.addItems_(list_, "Recent Projects")
 
 		if not index:
 			index = cmb.currentIndex()
@@ -91,7 +85,7 @@ class File(Init):
 
 		list_ = [f+'  '+datetime.fromtimestamp(os.path.getmtime(path+'\\'+f)).strftime('%H:%M  %m-%d-%Y') for f in files] #attach modified timestamp
 
-		contents = self.comboBox(cmb, sorted(list_, reverse=1), "Recent Autosave")
+		contents = cmb.addItems_(sorted(list_, reverse=1), "Recent Autosave")
 
 		if not index:
 			index = cmb.currentIndex()
@@ -106,7 +100,7 @@ class File(Init):
 		'''
 		cmb = self.ui.cmb003
 
-		contents = self.comboBox(cmb, ['Import file', 'Import Options', 'Merge', 'Replace', 'Link Revit', 'Link FBX', 'Link AutoCAD'], 'Import')
+		contents = cmb.addItems_(['Import file', 'Import Options', 'Merge', 'Replace', 'Link Revit', 'Link FBX', 'Link AutoCAD'], 'Import')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -138,7 +132,7 @@ class File(Init):
 
 		list_ = ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ", "Send to Maya: New Scene", "Send to Maya: Update Scene", "Send to Maya: Add to Scene"]
 
-		self.comboBox(cmb, list_, "Export")
+		cmb.addItems_(list_, "Export")
 
 		if not index:
 			index = cmb.currentIndex()
@@ -177,7 +171,7 @@ class File(Init):
 		cmb = self.ui.cmb005
 
 		files = ['Schematic View']
-		contents = self.comboBox(cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -198,7 +192,7 @@ class File(Init):
 
 		project = MaxPlus.PathManager.GetProjectFolderDir().split('\\')[-1] #add current project path string to label. strip path and trailing '/'
 
-		contents = self.comboBox(cmb, list_, project)
+		contents = cmb.addItems_(list_, project)
 
 		if not index:
 			index = cmb.currentIndex()

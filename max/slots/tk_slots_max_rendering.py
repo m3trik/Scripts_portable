@@ -1,11 +1,7 @@
-import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
-from pymxs import runtime as rt
+from tk_slots_max_init import Init
+maxEval = Init.maxEval
 
 import os.path
-
-from tk_slots_max_init import Init
-
-
 
 
 
@@ -36,7 +32,7 @@ class Rendering(Init):
 		self.cams = [cam for cam in rt.cameras if 'Target' not in str(cam)]
 		if self.cams:
 			list_ = [str(cam.name) for cam in self.cams] #camera names
-			self.comboBox (cmb, list_)
+			cmb.addItems_(list_)
 
 
 	def cmb001(self, index=None):
@@ -46,7 +42,7 @@ class Rendering(Init):
 		cmb = self.ui.cmb001
 		
 		files = ['']
-		contents = self.comboBox(cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()

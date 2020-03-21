@@ -1,11 +1,6 @@
-import maya.mel as mel
-import pymel.core as pm
-
-import os.path
-
 from tk_slots_maya_init import Init
 
-
+import os.path
 
 
 
@@ -22,21 +17,21 @@ class Polygons(Init):
 		'''
 		Split U
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk010')
+		self.toggleWidgets(self.ui, setChecked_False='chk010')
 
 
 	def chk009(self):
 		'''
 		Split V
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk010')
+		self.toggleWidgets(self.ui, setChecked_False='chk010')
 
 
 	def chk010(self):
 		'''
 		Tris
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk008-9')
+		self.toggleWidgets(self.ui, setChecked_False='chk008-9')
 
 
 	def cmb000(self, index=None):
@@ -46,7 +41,7 @@ class Polygons(Init):
 		cmb = self.ui.cmb000
 
 		files = ['Extrude Options','Bevel Options','Bridge Options','Combine Options','Merge Vertex Options','Offset Edgeloop','Edit Edgeflow Options','Extract Curve Options','Poke Options','Wedge Options','Assign Invisible Options']
-		contents = self.comboBox(cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()

@@ -1,10 +1,11 @@
+from __future__ import print_function
 from tk_ import Tk
 from PySide2.QtWidgets import QApplication
+
 
 app = QApplication.instance() #get the qApp instance if it exists.
 if not app:
 	app = QApplication(sys.argv)
-
 
 
 
@@ -19,14 +20,13 @@ class Tk_maya(Tk):
 	def __init__(self, parent=None):
 
 		if not parent:
-			global app
-			parent = [x for x in app.topLevelWidgets() if x.objectName()=='MayaWindow']
-			if parent:
-				super(Tk_maya, self).__init__(parent[0])
-			else:
-				super(Tk_maya, self).__init__(None)
-				print '# Error: "MayaWindow" object not found in app.topLevelWidgets() #'
+			try:
+				global app
+				parent = [x for x in app.topLevelWidgets() if x.objectName() is 'MayaWindow'][0]
+			except:
+				print('# Error: "MayaWindow" object not found in app.topLevelWidgets() #')
 
+		super(Tk_maya, self).__init__(parent)
 		self.setUi()
 
 
@@ -60,8 +60,12 @@ if __name__ == "__main__":
 	import sys
 	global app
 
-	Tk_maya().show()
+	#create a parent object to run the code outside of maya.
+	from PySide2.QtWidgets import QWidget
+	p = QWidget()
+	p.setObjectName('MayaWindow')
 
+	Tk_maya(p).show()
 	sys.exit(app.exec_())
 
 

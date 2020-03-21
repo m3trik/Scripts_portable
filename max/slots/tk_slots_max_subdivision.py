@@ -1,11 +1,7 @@
-import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
-from pymxs import runtime as rt
+from tk_slots_max_init import Init
+maxEval = Init.maxEval
 
 import os.path
-
-from tk_slots_max_init import Init
-
-
 
 
 
@@ -32,7 +28,7 @@ class Subdivision(Init):
 		cmb = self.ui.cmb000
 		
 		selectionSets = [set for set in rt.selectionSets]
-		contents = self.comboBox (cmb, ['TurboSmooth','TurboSmooth Pro','OpenSubDiv','Subdivide','Subdivide (WSM)','MeshSmooth','Optimize','Pro Optimizer','Add Divisions'], ' ')
+		contents = cmb.addItems_(['TurboSmooth','TurboSmooth Pro','OpenSubDiv','Subdivide','Subdivide (WSM)','MeshSmooth','Optimize','Pro Optimizer','Add Divisions'], ' ')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -171,9 +167,9 @@ class Subdivision(Init):
 		#check shape for an existing output to a smoothProxy
 		attachedSmoothProxies = pm.listConnections (shape[0], type="polySmoothProxy", s=0, d=1)
 		if len(attachedSmoothProxies) == 0: #subdiv on
-			self.setWidgets(self.ui, setEnabled='b000', setChecked='b009')
+			self.toggleWidgets(self.ui, setEnabled='b000', setChecked='b009')
 		else:
-			self.setWidgets(self.ui, setDisabled='b000', setChecked_False='b009')
+			self.toggleWidgets(self.ui, setDisabled='b000', setChecked_False='b009')
 			mel.eval("smoothingDisplayToggle 0;")
 
 		#toggle performSmoothProxy

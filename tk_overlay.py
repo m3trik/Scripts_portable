@@ -1,11 +1,11 @@
+from __future__ import print_function
 from PySide2 import QtCore, QtGui, QtWidgets
 
 import os.path
 
-from tk_switchboard import Switchboard
 from tk_childEvents import EventFactoryFilter
 
-
+from tk_switchboard import sb
 
 
 
@@ -26,7 +26,7 @@ class Overlay(QtWidgets.QWidget):
 		super(Overlay, self).__init__(parent)
 
 		if parent:
-			self.tk = parent
+			self.parent = parent
 
 			self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
 			self.setAttribute(QtCore.Qt.WA_NoSystemBackground) #takes a single arg
@@ -41,13 +41,13 @@ class Overlay(QtWidgets.QWidget):
 		args:
 			event=<QEvent>
 		'''
-		if self.tk.uiLevel>0 and self.tk.uiLevel<3:
+		if sb.uiLevel>0 and sb.uiLevel<3:
 
 			self.painter.begin(self)
 
-			for i, start_point in enumerate(self.tk.drawPath): #plot and draw the points in the drawPath list.
+			for i, start_point in enumerate(self.parent.drawPath): #plot and draw the points in the drawPath list.
 				try:
-					end_point = self.mapFromGlobal(self.tk.drawPath[i+1])
+					end_point = self.mapFromGlobal(self.parent.drawPath[i+1])
 				except:
 					end_point = self.mouseEventPos #after the list points are drawn, plot the current end_point, controlled by the mouse move event.
 
@@ -151,7 +151,7 @@ class OverlayFactoryFilter(QtCore.QObject):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 
 
 # -----------------------------------------------

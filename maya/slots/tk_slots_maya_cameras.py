@@ -1,19 +1,14 @@
-import maya.mel as mel
-import pymel.core as pm
+from tk_slots_maya_init import Init
 
 import os.path
 
-from tk_slots_maya_init import Init
 
 
-
-
-
-class Viewport(Init):
+class Cameras(Init):
 	def __init__(self, *args, **kwargs):
-		super(Viewport, self).__init__(*args, **kwargs)
+		super(Cameras, self).__init__(*args, **kwargs)
 
-		self.ui = self.sb.getUi('viewport')
+		self.ui = self.sb.getUi('cameras')
 
 
 
@@ -25,7 +20,7 @@ class Viewport(Init):
 		cmb = self.ui.cmb000
 		
 		list_ = ['Camera Sequencer', 'Camera Set Editor']
-		contents = self.comboBox(cmb, list_, ' ')
+		contents = cmb.addItems_(list_, ' ')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -56,7 +51,7 @@ class Viewport(Init):
 
 		cmb = self.ui.cmb001
 		
-		contents = self.comboBox (cmb, non_startup_cameras, "Cameras")
+		contents = cmb.addItems_(non_startup_cameras, "Cameras")
 
 		if not index:
 			index = cmb.currentIndex()
@@ -73,7 +68,7 @@ class Viewport(Init):
 		cmb = self.ui.cmb002
 		
 		list_ = ['Custom Camera', 'Set Custom Camera', 'Camera From View']
-		contents = self.comboBox (cmb, list_, "Create")
+		contents = cmb.addItems_(list_, "Create")
 
 		if not index:
 			index = cmb.currentIndex()
@@ -95,7 +90,7 @@ class Viewport(Init):
 		cmb = self.ui.cmb003
 		
 		list_ = ['Group Cameras']
-		contents = self.comboBox (cmb, list_, "Options")
+		contents = cmb.addItems_(list_, "Options")
 
 		if not index:
 			index = cmb.currentIndex()
@@ -134,7 +129,7 @@ class Viewport(Init):
 
 	def v000(self):
 		'''
-		Viewport: Back View
+		Cameras: Back View
 
 		'''
 		mel.eval('''
@@ -166,21 +161,21 @@ class Viewport(Init):
 
 	def v001(self):
 		'''
-		Viewport: Top View
+		Cameras: Top View
 
 		'''
 		pm.lookThru ("topShape")
 
 	def v002(self):
 		'''
-		Viewport: Right View
+		Cameras: Right View
 
 		'''
 		pm.lookThru ("sideShape")
 
 	def v003(self):
 		'''
-		Viewport: Left View
+		Cameras: Left View
 
 		'''
 		mel.eval('''
@@ -210,21 +205,21 @@ class Viewport(Init):
 
 	def v004(self):
 		'''
-		Viewport: Perspective View
+		Cameras: Perspective View
 
 		'''
 		pm.lookThru ("perspShape")
 
 	def v005(self):
 		'''
-		Viewport: Front View
+		Cameras: Front View
 
 		'''
 		pm.lookThru ("frontShape")
 
 	def v006(self):
 		'''
-		Viewport: Bottom View
+		Cameras: Bottom View
 
 		'''
 		mel.eval('''
@@ -256,7 +251,7 @@ class Viewport(Init):
 
 	def v007(self):
 		'''
-		Viewport: Align View
+		Cameras: Align View
 
 		'''
 		mel.eval('''

@@ -1,12 +1,8 @@
-import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
-from pymxs import runtime as rt
-
-import os
-from datetime import datetime
-
 from tk_slots_max_init import Init
+maxEval = Init.maxEval
 
-
+from datetime import datetime
+import os.path
 
 
 class Scene(Init):

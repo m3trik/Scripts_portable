@@ -1,12 +1,7 @@
-import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
-from pymxs import runtime as rt
+from tk_slots_max_init import Init
+maxEval = Init.maxEval
 
 import os.path
-
-from tk_slots_max_init import Init
-
-
-
 
 
 
@@ -23,21 +18,21 @@ class Polygons(Init):
 		'''
 		Split U
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk010')
+		self.toggleWidgets(self.ui, setChecked_False='chk010')
 
 
 	def chk009(self):
 		'''
 		Split V
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk010')
+		self.toggleWidgets(self.ui, setChecked_False='chk010')
 
 
 	def chk010(self):
 		'''
 		Tris
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk008,chk009')
+		self.toggleWidgets(self.ui, setChecked_False='chk008,chk009')
 
 
 	def cmb000(self, index=None):
@@ -47,7 +42,7 @@ class Polygons(Init):
 		cmb = self.ui.cmb000
 
 		files = ['Bridge','Extrude']
-		contents = self.comboBox (cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()

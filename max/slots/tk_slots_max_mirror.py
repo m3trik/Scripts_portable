@@ -1,11 +1,7 @@
-import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
-from pymxs import runtime as rt
+from tk_slots_max_init import Init
+maxEval = Init.maxEval
 
 import os.path
-
-from tk_slots_max_init import Init
-
-
 
 
 
@@ -38,7 +34,7 @@ class Mirror(Init):
 		'''
 		Delete: X Axis
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk002,chk003')
+		self.toggleWidgets(self.ui, setChecked_False='chk002,chk003')
 		axis = "X"
 		if self.ui.chk000.isChecked():
 			axis = '-'+axis
@@ -50,7 +46,7 @@ class Mirror(Init):
 		'''
 		Delete: Y Axis
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk001,chk003')
+		self.toggleWidgets(self.ui, setChecked_False='chk001,chk003')
 		axis = "Y"
 		if self.ui.chk000.isChecked():
 			axis = '-'+axis
@@ -62,7 +58,7 @@ class Mirror(Init):
 		'''
 		Delete: Z Axis
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk001,chk002')
+		self.toggleWidgets(self.ui, setChecked_False='chk001,chk002')
 		axis = "Z"
 		if self.ui.chk000.isChecked():
 			axis = '-'+axis
@@ -77,7 +73,7 @@ class Mirror(Init):
 		cmb = self.ui.cmb000
 
 		files = ['']
-		contents = self.comboBox(cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()

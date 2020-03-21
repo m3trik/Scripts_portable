@@ -1,11 +1,6 @@
-import maya.mel as mel
-import pymel.core as pm
-
-import os.path
-
 from tk_slots_maya_init import Init
 
-
+import os.path
 
 
 
@@ -24,7 +19,7 @@ class Rigging(Init):
 		'''
 		Scale Joint
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk001-2')
+		self.toggleWidgets(self.ui, setChecked_False='chk001-2')
 		self.ui.s000.setValue(pm.jointDisplayScale(query=1)) #init global joint display size
 
 
@@ -32,7 +27,7 @@ class Rigging(Init):
 		'''
 		Scale IK
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk000, chk002')
+		self.toggleWidgets(self.ui, setChecked_False='chk000, chk002')
 		self.ui.s000.setValue(pm.ikHandleDisplayScale(query=1)) #init IK handle display size
 		
 
@@ -40,7 +35,7 @@ class Rigging(Init):
 		'''
 		Scale IK/FK
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk000-1')
+		self.toggleWidgets(self.ui, setChecked_False='chk000-1')
 		self.ui.s000.setValue(pm.jointDisplayScale(query=1, ikfk=1)) #init IKFK display size
 
 
@@ -65,7 +60,7 @@ class Rigging(Init):
 		cmb = self.ui.cmb000
 
 		files = ['Quick Rig','HumanIK','Expression Editor','Shape Editor','Connection Editor','Channel Control Editor','Set Driven Key']
-		contents = self.comboBox(cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -94,7 +89,7 @@ class Rigging(Init):
 		cmb = self.ui.cmb001
 
 		files = ['Joints','Locator','IK Handle', 'Lattice', 'Cluster']
-		contents = self.comboBox(cmb, files, "Create")
+		contents = cmb.addItems_(files, "Create")
 
 		if not index:
 			index = cmb.currentIndex()

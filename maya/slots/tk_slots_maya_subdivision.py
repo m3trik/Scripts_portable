@@ -1,12 +1,7 @@
-import maya.mel as mel
-import pymel.core as pm
-
-import os.path
-import traceback
-
 from tk_slots_maya_init import Init
 
-
+import traceback
+import os.path
 
 
 class Subdivision(Init):
@@ -25,7 +20,7 @@ class Subdivision(Init):
 		cmb = self.ui.cmb000
 		
 		files = ['Reduce Polygons','Add Divisions','Smooth','SubDiv Proxy']
-		contents = self.comboBox (cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -101,9 +96,9 @@ class Subdivision(Init):
 		#check shape for an existing output to a smoothProxy
 		attachedSmoothProxies = pm.listConnections (shape[0], type="polySmoothProxy", s=0, d=1)
 		if len(attachedSmoothProxies) == 0: #subdiv on
-			self.setWidgets(self.ui, setEnabled='b000', setChecked='b009')
+			self.toggleWidgets(self.ui, setEnabled='b000', setChecked='b009')
 		else:
-			self.setWidgets(self.ui, setDisabled='b000', setChecked_False='b009')
+			self.toggleWidgets(self.ui, setDisabled='b000', setChecked_False='b009')
 			mel.eval("smoothingDisplayToggle 0;")
 
 		#toggle performSmoothProxy

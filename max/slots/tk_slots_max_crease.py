@@ -1,11 +1,7 @@
-import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
-from pymxs import runtime as rt
+from tk_slots_max_init import Init
+maxEval = Init.maxEval
 
 import os.path
-
-from tk_slots_max_init import Init
-
-
 
 
 
@@ -25,7 +21,7 @@ class Crease(Init):
 		if self.ui.chk002.isChecked():
 			self.ui.s003.setValue(0) #crease value
 			self.ui.s004.setValue(180) #normal angle
-			self.setWidgets(self.ui, setChecked='chk002', setChecked_False='chk003')
+			self.toggleWidgets(self.ui, setChecked='chk002', setChecked_False='chk003')
 		else:
 			self.ui.s003.setValue(5) #crease value
 			self.ui.s004.setValue(60) #normal angle
@@ -38,7 +34,7 @@ class Crease(Init):
 		if self.ui.chk003.isChecked():
 			self.ui.s003.setValue(10) #crease value
 			self.ui.s004.setValue(30) #normal angle
-			self.setWidgets(self.ui, setChecked='chk003', setChecked_False='chk002')
+			self.toggleWidgets(self.ui, setChecked='chk003', setChecked_False='chk002')
 		else:
 			self.ui.s003.setValue(5) #crease value
 			self.ui.s004.setValue(60) #normal angle
@@ -51,7 +47,7 @@ class Crease(Init):
 		cmb = self.ui.cmb000
 
 		files = ['']
-		contents = self.comboBox(cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()

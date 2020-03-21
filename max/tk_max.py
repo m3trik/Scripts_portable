@@ -1,5 +1,11 @@
+from __future__ import print_function
 from tk_ import Tk
-import MaxPlus
+
+try:
+	import MaxPlus
+
+except ImportError as error:
+	print(error)
 
 
 
@@ -15,14 +21,13 @@ class Tk_max(Tk):
 	def __init__(self, parent=None):
 
 		if not parent:
-			parent = MaxPlus.GetQMaxMainWindow()
-			if parent:
+			try:
+				parent = MaxPlus.GetQMaxMainWindow()
 				parent.setObjectName('MaxWindow')
-				super(Tk_max, self).__init__(parent)
-			else:
-				super(Tk_max, self).__init__(None)
-				print '# Error: "MaxWindow" object not found by MaxPlus.GetQMaxMainWindow() #'
+			except:
+				print('# Error: "MaxWindow" object not found by MaxPlus.GetQMaxMainWindow() #')
 
+		super(Tk_max, self).__init__(parent)
 		self.setUi()
 
 
@@ -31,10 +36,12 @@ class Tk_max(Tk):
 		args:
 			event = <QEvent>
 		'''
-		MaxPlus.CUI.DisableAccelerators()
+		try:
+			MaxPlus.CUI.DisableAccelerators()
+		except Exception as error:
+			print(error)
 
-		# super(Tk_max, self).showEvent(event)
-		return Tk.showEvent(self, event)
+		return Tk.showEvent(self, event) #super(Tk_max, self).showEvent(event)
 
 
 	def hideEvent(self, event):
@@ -42,10 +49,16 @@ class Tk_max(Tk):
 		args:
 			event = <QEvent>
 		'''
-		MaxPlus.CUI.EnableAccelerators()
+		try:
+			MaxPlus.CUI.EnableAccelerators()
+		except Exception as error:
+			print(error)
 
-		# super(Tk_max, self).hideEvent(event)
-		return Tk.hideEvent(self, event)
+		if __name__ == "__main__":
+			sys.exit() #assure that the sys processes are terminated.
+
+		return Tk.hideEvent(self, event) #super(Tk_max, self).hideEvent(event)
+
 
 
 
@@ -59,8 +72,12 @@ if __name__ == "__main__":
 	if not app:
 		app = QApplication(sys.argv)
 
-	Tk_max().show()
+	#create a parent object to run the code outside of maya.
+	from PySide2.QtWidgets import QWidget
+	p=QWidget() #dummy parent
+	p.setObjectName('MaxWindow')
 
+	Tk_max(p).show()
 	sys.exit(app.exec_())
 
 

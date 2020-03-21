@@ -1,11 +1,7 @@
-import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
-from pymxs import runtime as rt
+from tk_slots_max_init import Init
+maxEval = Init.maxEval
 
 import os.path
-
-from tk_slots_max_init import Init
-
-
 
 
 
@@ -25,7 +21,7 @@ class Edit(Init):
 		cmb = self.ui.cmb000
 
 		files = ['']
-		contents = self.comboBox(cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -127,9 +123,9 @@ class Edit(Init):
 				self.ui.b042.setText(creaseSet)
 			else:
 				self.ui.b042.setText("must select set first")
-				self.setWidgets(self.ui, setChecked_False='b042')
+				self.toggleWidgets(self.ui, setChecked_False='b042')
 			if self.ui.b043.isChecked():
-				self.setWidgets(self.ui, setEnabled='b052')
+				self.toggleWidgets(self.ui, setEnabled='b052')
 		else:
 			self.ui.b042.setText("Crease Set")
 
@@ -149,9 +145,9 @@ class Edit(Init):
 				self.ui.b043.setText(newObject)
 			else:
 				self.ui.b043.setText("must select obj first")
-				self.setWidgets(self.ui, setChecked_False='b043')
+				self.toggleWidgets(self.ui, setChecked_False='b043')
 			if self.ui.b042.isChecked():
-				self.setWidgets(self.ui, setEnabled='b052')
+				self.toggleWidgets(self.ui, setEnabled='b052')
 		else:
 			self.ui.b043.setText("Object")
 
@@ -186,7 +182,7 @@ class Edit(Init):
 			# print "crease:", name
 		pm.undoInfo (closeChunk=1)
 
-		self.setWidgets(self.ui, setDisabled='b052', setChecked_False='b042')#,self.ui.b043])
+		self.toggleWidgets(self.ui, setDisabled='b052', setChecked_False='b042')#,self.ui.b043])
 		self.ui.b042.setText("Crease Set")
 		# self.ui.b043.setText("Object")
 

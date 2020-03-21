@@ -24,8 +24,6 @@ class QComboBox_(QtWidgets.QComboBox):
 	'''
 	
 	'''
-	sb = None
-
 	def __init__(self, parent=None):
 		super(QComboBox_, self).__init__(parent)
 
@@ -60,7 +58,6 @@ class QComboBox_(QtWidgets.QComboBox):
 		args:
 			event=<QEvent>
 		'''
-		# print '__enterEvent'
 
 		return QtWidgets.QComboBox.enterEvent(self, event)
 
@@ -70,31 +67,33 @@ class QComboBox_(QtWidgets.QComboBox):
 		args:
 			event=<QEvent>
 		'''
-		# print '__leaveEvent'
-
 		# self.hidePopup()
 
 		return QtWidgets.QComboBox.leaveEvent(self, event)
 
 
-	# def construct(self, name=None):
-	# 	'''
+	def addItems_(self, items, title=None):
+		'''
+		Set items.
+		args:
+			items (list) = list of strings to fill the comboBox with
+			title (str) = optional value for the first index of the comboBox's list
 
-	# 	'''
-	# 	if not self.sb:
-	# 		try:
-	# 			from tk_switchboard import Switchboard
-	# 			self.sb = Switchboard()
-	# 			# self.tk = self.sb.getClassInstance('tk')
-	# 		except Exception as error:
-	# 			print error
+		returns:
+			comboBox's current item list minus any title.
+		ex. comboBox.addItems_(["Import file", "Import Options"], "Import")
+		'''
+		self.blockSignals(True) #to keep clear from triggering currentIndexChanged
+		index = self.currentIndex() #get current index before refreshing list
+		self.clear()
+		
+		items_ = [str(i) for i in [title]+items if i]
+		self.addItems(items_) 
 
-	# 	if not name:
-	# 		name = self.sb.getUiName()
+		self.setCurrentIndex(index)
+		self.blockSignals(False)
 
-	# 	method = self.sb.getMethod(name, self.objectName())
-	# 	if callable(method):
-	# 		method()
+		return items_
 
 
 
@@ -103,7 +102,8 @@ class QComboBox_(QtWidgets.QComboBox):
 if __name__ == "__main__":
 	app = QtWidgets.QApplication(sys.argv)
 
-	QComboBox_().show()
+	w=QComboBox_()
+	w.show()
 	sys.exit(app.exec_())
 
 

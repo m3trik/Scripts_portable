@@ -1,11 +1,6 @@
-import maya.mel as mel
-import pymel.core as pm
-
-import os.path
-
 from tk_slots_maya_init import Init
 
-
+import os.path
 
 
 
@@ -26,7 +21,7 @@ class Rendering(Init):
 		# self.cams = [cam for cam in rt.cameras if 'Target' not in str(cam)]
 		# if self.cams:
 		# 	list_ = [str(cam.name) for cam in self.cams] #camera names
-		# 	contents = self.comboBox (cmb, list_)
+		# 	contents = cmb.addItems_(list_)
 
 
 	def cmb001(self, index=None):
@@ -36,7 +31,7 @@ class Rendering(Init):
 		cmb = self.ui.cmb001
 
 		files = ['']
-		contents = self.comboBox(cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()

@@ -1,14 +1,19 @@
-import maya.mel as mel
-import pymel.core as pm
-import maya.OpenMayaUI as omUI
-
 from PySide2 import QtGui, QtWidgets
-import shiboken2
 
-import os.path
+import os
 
 from tk_slots_ import Slot
 
+#maya dependancies
+try:
+	import maya.mel as mel
+	import pymel.core as pm
+	import maya.OpenMayaUI as omUI
+
+	import shiboken2
+
+except ImportError as error:
+	print error
 
 
 
@@ -28,8 +33,11 @@ class Init(Slot):
 				{dict} - current object attributes.
 		'''
 		infoDict={}
-		selection = pm.ls(selection=1)
+		if __name__ is not "__main__":
+			return infoDict
 
+
+		selection = pm.ls(selection=1)
 
 		symmetry = pm.symmetricModelling(query=1, symmetry=1);
 		if symmetry: axis = pm.symmetricModelling(query=1, axis=1); infoDict.update({'Symmetry Axis: ':axis.upper()}) #symmetry axis
@@ -40,8 +48,15 @@ class Init(Slot):
 		if selection:
 			if pm.selectMode(query=1, object=1): #object mode:
 				if pm.selectType(query=1, allObjects=1): #get object/s
-					selectedObjects={}; [selectedObjects.setdefault(str(pm.objectType(s)),[]).append(str(s)) for s in pm.ls(selection=1, objectsOnly=1)] #for any selected objects, set object type as key and append object names as value. if key doesn't exist, use setdefault to initialize an empty list and append. ie. {'joint': ['joint_root_0', 'joint_lower_L8', 'joint_lower_L3']}
+					selectedObjects = pm.ls(selection=1, objectsOnly=1)
+					dict_={}; [dict_.setdefault(str(pm.objectType(s)),[]).append(str(s)) for s in selectedObjects] #for any selected objects, set object type as key and append object names as value. if key doesn't exist, use setdefault to initialize an empty list and append. ie. {'joint': ['joint_root_0', 'joint_lower_L8', 'joint_lower_L3']}
 					infoDict.update({'Selection: ':selectedObjects}) #currently selected objects
+					objectFaces = pm.polyEvaluate(selectedObjects, face=True)
+					if type(objectFaces)==int:
+						infoDict.update({'Faces: ':format(objectFaces, ',d')}) #add commas each 3 decimal places.
+					# objectTris = pm.polyEvaluate(selectedObjects, triangle=True)
+					# if type(objectTris)==int:
+					# 	infoDict.update({'Tris: ':format(objectTris, ',d')}) #add commas each 3 decimal places.
 
 			elif pm.selectMode(query=1, component=1): #component mode:
 				if pm.selectType(query=1, vertex=1): #get vertex selection info
@@ -49,13 +64,13 @@ class Init(Slot):
 					collapsedList = self.collapseList(selectedVerts, limit=6)
 					numVerts = pm.polyEvaluate (selection[0], vertex=1)
 					infoDict.update({'Vertices: '+str(len(selectedVerts))+'/'+str(numVerts):collapsedList}) #selected verts
-					
+
 				elif pm.selectType(query=1, edge=1): #get edge selection info
 					selectedEdges = [e.split('[')[-1].rstrip(']') for e in pm.filterExpand(selectionMask=32)] #pm.polyEvaluate(edgeComponent=1);
 					collapsedList = self.collapseList(selectedEdges, limit=6)
 					numEdges = pm.polyEvaluate (selection[0], edge=1)
 					infoDict.update({'Edges: '+str(len(selectedEdges))+'/'+str(numEdges):collapsedList}) #selected edges
-					
+
 				elif pm.selectType(query=1, facet=1): #get face selection info
 					selectedFaces = [f.split('[')[-1].rstrip(']') for f in pm.filterExpand(selectionMask=34)] #pm.polyEvaluate(faceComponent=1);
 					collapsedList = self.collapseList(selectedFaces, limit=6)

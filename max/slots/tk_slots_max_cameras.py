@@ -1,20 +1,44 @@
-import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
-from pymxs import runtime as rt
+from __future__ import print_function
+from tk_slots_max_init import Init
+maxEval = Init.maxEval
 
 import os.path
 
-from tk_slots_max_init import Init
 
 
-
-
-
-class Viewport(Init):
+class Cameras(Init):
 	def __init__(self, *args, **kwargs):
-		super(Viewport, self).__init__(*args, **kwargs)
+		super(Cameras, self).__init__(*args, **kwargs)
 
-		self.ui = self.sb.getUi('viewport')
+		self.ui = self.sb.getUi('cameras')
 
+		self.tree000()
+
+
+	def tree000(self, index=None):
+		'''
+		Cameras
+		'''
+		w = self.ui.tree000
+		w.convert(w.getItems(), 'QPushButton')
+
+		w.add('QPushButton', 'Create', setText='Custom Camera')
+		w.add('QPushButton', 'Create', setText='Set Custom Camera')
+		w.add('QPushButton', 'Create', setText='Camera From View')
+		w.add('QPushButton', 'Cameras', setText='Cam1')
+		w.add('QPushButton', 'Cameras', setText='Cam2')
+
+		# self.tk.childEvents.initWidgetItems(w.getWidgets(), 'cameras')
+
+		print(self)
+		# cameras = [cam.name for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
+		# [w.add('QPushButton', 'Cameras', setText=c) for c in cameras]
+
+		# cam = rt.getNodeByName(contents[index])
+		# rt.select (cam) #select the camera
+		# rt.viewport.setCamera (cam) #set viewport to camera
+		# cmb.setCurrentIndex(0)
+		# rt.redrawViews()
 
 
 	def cmb000(self, index=None):
@@ -24,7 +48,7 @@ class Viewport(Init):
 		cmb = self.ui.cmb000
 		
 		files = ['']
-		contents = self.comboBox(cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -41,7 +65,7 @@ class Viewport(Init):
 		cmb = self.ui.cmb001
 		
 		cameras = [cam.name for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
-		contents = self.comboBox(cmb, cameras, "Cameras:")
+		contents = cmb.addItems_(cameras, "Cameras:")
 		
 		if not index:
 			index = cmb.currentIndex()
@@ -60,7 +84,7 @@ class Viewport(Init):
 		cmb = self.ui.cmb002
 		
 		list_ = ['Custom Camera','Set Custom Camera','Camera From View']
-		contents = self.comboBox(cmb, list_, "Create")
+		contents = cmb.addItems_(list_, "Create")
 
 		if not index:
 			index = cmb.currentIndex()
@@ -81,7 +105,7 @@ class Viewport(Init):
 		cmb = self.ui.cmb003
 		
 		list_ = ['Group Cameras']
-		contents = self.comboBox(cmb, list_, "Options")
+		contents = cmb.addItems_(list_, "Options")
 
 		if not index:
 			index = cmb.currentIndex()
@@ -101,56 +125,56 @@ class Viewport(Init):
 
 	def v000(self):
 		'''
-		Viewport: Back View
+		Cameras: Back View
 		'''
 		maxEval("max vpt back")
 
 
 	def v001(self):
 		'''
-		Viewport: Top View
+		Cameras: Top View
 		'''
 		maxEval("max vpt top")
 
 
 	def v002(self):
 		'''
-		Viewport: Right View
+		Cameras: Right View
 		'''
 		maxEval("max vpt right")
 
 
 	def v003(self):
 		'''
-		Viewport: Left View
+		Cameras: Left View
 		'''
 		maxEval("max vpt left")
 
 
 	def v004(self):
 		'''
-		Viewport: Perspective View
+		Cameras: Perspective View
 		'''
 		maxEval("max vpt persp user")
 
 
 	def v005(self):
 		'''
-		Viewport: Front View
+		Cameras: Front View
 		'''
 		maxEval("max vpt front")
 
 
 	def v006(self):
 		'''
-		Viewport: Bottom View
+		Cameras: Bottom View
 		'''
 		maxEval("max vpt bottom")
 
 
 	def v007(self):
 		'''
-		Viewport: Align View
+		Cameras: Align View
 		'''
 		maxEval('''
 		max vpt iso user
@@ -221,7 +245,7 @@ class Viewport(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

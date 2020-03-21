@@ -1,11 +1,6 @@
-import maya.mel as mel
-import pymel.core as pm
-
-import os.path
-
 from tk_slots_maya_init import Init
 
-
+import os.path
 
 
 
@@ -102,7 +97,7 @@ class Create(Init):
 		Rotate X Axis
 
 		'''
-		self.setWidgets(self.ui, setChecked='chk000', setChecked_False='chk001, chk002')
+		self.toggleWidgets(self.ui, setChecked='chk000', setChecked_False='chk001, chk002')
 		if self.node:
 			self.rotateAbsolute(self.getAxis())
 
@@ -112,7 +107,7 @@ class Create(Init):
 		Rotate Y Axis
 
 		'''
-		self.setWidgets(self.ui, setChecked='chk001', setChecked_False='chk000, chk002')
+		self.toggleWidgets(self.ui, setChecked='chk001', setChecked_False='chk000, chk002')
 		if self.node:
 			self.rotateAbsolute(self.getAxis())
 
@@ -122,7 +117,7 @@ class Create(Init):
 		Rotate Z Axis
 
 		'''
-		self.setWidgets(self.ui, setChecked='chk002', setChecked_False='chk000, chk001')
+		self.toggleWidgets(self.ui, setChecked='chk002', setChecked_False='chk000, chk001')
 		if self.node:
 			self.rotateAbsolute(self.getAxis())
 
@@ -178,7 +173,7 @@ class Create(Init):
 		cmb = self.ui.cmb002
 		
 		files = ['']
-		contents = self.comboBox(cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()

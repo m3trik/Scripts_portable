@@ -1,11 +1,7 @@
-import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
-from pymxs import runtime as rt
+from tk_slots_max_init import Init
+maxEval = Init.maxEval
 
 import os.path
-
-from tk_slots_max_init import Init
-
-
 
 
 
@@ -29,7 +25,7 @@ class Preferences(Init):
 	# 	cmb = self.ui.cmb000
 		
 	# 	list_ = ['Modeling', 'Normals', 'Materials', 'UV'] #combobox list menu corresponding to the button text sets.
-	# 	contents = self.comboBox(cmb, list_, 'Menu Sets')
+	# 	contents = cmb.addItems_(list_, 'Menu Sets')
 
 	# 	if not index:
 			# index = cmb.currentIndex()
@@ -50,7 +46,7 @@ class Preferences(Init):
 
 		from PySide2 import QtGui, QtCore
 		list_ = QtGui.QStyleFactory.keys() #get styles from QStyleFactory
-		contents = self.comboBox(cmb, list_)
+		contents = cmb.addItems_(list_)
 
 		if init: #temp.  move main function to shared Slots class
 			index = self.styleComboBox.findText(QtGui.qApp.style().objectName(), QtCore.Qt.MatchFixedString)
@@ -69,7 +65,7 @@ class Preferences(Init):
 		cmb = self.ui.cmb001
 
 		list_ = ['millimeter','centimeter','meter','kilometer','inch','foot','yard','mile']
-		contents = self.comboBox(cmb, list_)
+		contents = cmb.addItems_(list_)
 
 		# if init:
 		# 	index = contents.index(pm.currentUnit(query=1, fullName=1, linear=1)) #get/set current linear value
@@ -89,7 +85,7 @@ class Preferences(Init):
 		list_ = [i[0]+i[1] for i in l] #ie. ['15 fps: game','24 fps: film', ..etc]
 		values = [i[1] for i in l] #ie. ['game','film', ..etc]
 
-		contents = self.comboBox(cmb, list_)
+		contents = cmb.addItems_(list_)
 
 		# if init:
 		# 	index = values.index(pm.currentUnit(query=1, fullName=1, time=1)) #get/set current time value
@@ -105,7 +101,7 @@ class Preferences(Init):
 		cmb = self.ui.cmb003
 
 		files = ['']
-		contents = self.comboBox(cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()

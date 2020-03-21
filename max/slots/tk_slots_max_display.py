@@ -1,12 +1,8 @@
-import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
-from pymxs import runtime as rt
-
-import os.path
-import traceback
-
 from tk_slots_max_init import Init
+maxEval = Init.maxEval
 
-
+import traceback
+import os.path
 
 
 class Display(Init):
@@ -25,7 +21,7 @@ class Display(Init):
 		cmb = self.ui.cmb000
 
 		files = ['']
-		contents = self.comboBox(cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()

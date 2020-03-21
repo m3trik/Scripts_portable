@@ -1,11 +1,6 @@
-import maya.mel as mel
-import pymel.core as pm
-
-import os.path
-
 from tk_slots_maya_init import Init
 
-
+import os.path
 
 
 
@@ -24,7 +19,7 @@ class Nurbs(Init):
 		cmb = self.ui.cmb000
 		
 		files = ['Project Curve','Duplicate Curve','Create Curve from Poly','Bend Curve', 'Curl Curve','Modify Curve Curvature','Smooth Curve','Straighten Curves','Extrude Curves','Revolve Curves','Loft Curves','Planar Curves','Insert Isoparms','Insert Knot','Rebuild Curve','Extend Curve']
-		contents = self.comboBox (cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -73,7 +68,7 @@ class Nurbs(Init):
 		cmb = self.ui.cmb001
 		
 		files = ['Ep Curve Tool','CV Curve Tool','Bezier Curve Tool','Pencil Curve Tool','2 Point Circular Arc','3 Point Circular Arc']
-		contents = self.comboBox(cmb, files, 'Create Curve')
+		contents = cmb.addItems_(files, 'Create Curve')
 
 		if not index:
 			index = cmb.currentIndex()

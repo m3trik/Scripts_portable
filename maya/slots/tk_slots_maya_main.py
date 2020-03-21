@@ -1,11 +1,6 @@
-import maya.mel as mel
-import pymel.core as pm
-
-from PySide2 import QtWidgets
+from tk_slots_maya_init import Init
 
 import os.path
-
-from tk_slots_maya_init import Init
 
 
 
@@ -13,11 +8,7 @@ class Main(Init):
 	def __init__(self, *args, **kwargs):
 		super(Main, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('main')
-
-
-
 
 
 

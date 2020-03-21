@@ -26,7 +26,7 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 	'''
 
 	__mousePressPos = QtCore.QPoint()
-	sb = None
+	sb_exists = False
 
 	def __init__(self, parent=None):
 		super(QPushButton_Draggable, self).__init__(parent)
@@ -38,8 +38,8 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 
 		self.setStyleSheet('''
 			QPushButton {
-				border: 1px solid black;
-				background-color: rgba(127,127,127,25);
+				border: 0px solid black;
+				background-color: rgba(127,127,127,2);
 			}''')
 
 		self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
@@ -107,11 +107,11 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 		args:
 			event=<QEvent>
 		'''
-		if not self.sb:
+		if not self.sb_exists:
 			try:
-				from tk_switchboard import Switchboard
-				self.sb = Switchboard()
-				self.tk = self.sb.getClassInstance('tk')
+				import tk_switchboard
+				sb = tk_switchboard.sb
+				self.tk = sb.getClassInstance('tk')
 			except Exception as error:
 				print error
 

@@ -1,11 +1,7 @@
-import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
-from pymxs import runtime as rt
+from tk_slots_max_init import Init
+maxEval = Init.maxEval
 
 import os.path
-
-from tk_slots_max_init import Init
-
-
 
 
 
@@ -110,7 +106,7 @@ class Create(Init):
 		'''
 		Rotate X Axis
 		'''
-		self.setWidgets(self.ui, setChecked='chk000', setChecked_False='chk001,chk002')
+		self.toggleWidgets(self.ui, setChecked='chk000', setChecked_False='chk001,chk002')
 		if self.node:
 			self.rotateAbsolute(self.getAxis())
 			
@@ -119,7 +115,7 @@ class Create(Init):
 		'''
 		Rotate Y Axis
 		'''
-		self.setWidgets(self.ui, setChecked='chk001', setChecked_False='chk000,chk002')
+		self.toggleWidgets(self.ui, setChecked='chk001', setChecked_False='chk000,chk002')
 		if self.node:
 			self.rotateAbsolute(self.getAxis())
 
@@ -128,7 +124,7 @@ class Create(Init):
 		'''
 		Rotate Z Axis
 		'''
-		self.setWidgets(self.ui, setChecked='chk002', setChecked_False='chk001,chk000')
+		self.toggleWidgets(self.ui, setChecked='chk002', setChecked_False='chk001,chk000')
 		if self.node:
 			self.rotateAbsolute(self.getAxis())
 
@@ -188,7 +184,7 @@ class Create(Init):
 		cmb = self.ui.cmb002
 
 		files = ['']
-		contents = self.comboBox(cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()

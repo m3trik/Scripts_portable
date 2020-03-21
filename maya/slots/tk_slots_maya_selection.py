@@ -1,11 +1,6 @@
-import maya.mel as mel
-import pymel.core as pm
-
-import os.path
-
 from tk_slots_maya_init import Init
 
-
+import os.path
 
 
 
@@ -85,21 +80,21 @@ class Selection(Init):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk001-2')
+		self.toggleWidgets(self.ui, setChecked_False='chk001-2')
 
 
 	def chk001(self):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk000,chk002')
+		self.toggleWidgets(self.ui, setChecked_False='chk000,chk002')
 
 
 	def chk002(self):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.setWidgets(self.ui, setChecked_False='chk000-1')
+		self.toggleWidgets(self.ui, setChecked_False='chk000-1')
 
 
 	def chk004(self):
@@ -119,7 +114,7 @@ class Selection(Init):
 		Select Style: Marquee
 		'''
 		self.setSelectionStyle('selectContext')
-		self.setWidgets(self.ui, setChecked='chk005', setChecked_False='chk006-7')
+		self.toggleWidgets(self.ui, setChecked='chk005', setChecked_False='chk006-7')
 		self.ui.cmb004.setCurrentIndex(0)
 
 
@@ -128,7 +123,7 @@ class Selection(Init):
 		Select Style: Lasso
 		'''
 		self.setSelectionStyle('lassoContext')
-		self.setWidgets(self.ui, setChecked='chk006', setChecked_False='chk005,chk007')
+		self.toggleWidgets(self.ui, setChecked='chk006', setChecked_False='chk005,chk007')
 		self.ui.cmb004.setCurrentIndex(1)
 
 
@@ -137,7 +132,7 @@ class Selection(Init):
 		Select Style: Paint
 		'''
 		self.setSelectionStyle('paintContext')
-		self.setWidgets(self.ui, setChecked='chk007', setChecked_False='chk005-6')
+		self.toggleWidgets(self.ui, setChecked='chk007', setChecked_False='chk005-6')
 		self.ui.cmb004.setCurrentIndex(2)
 
 
@@ -167,7 +162,7 @@ class Selection(Init):
 		'''
 		cmb = self.ui.cmb000
 
-		contents = self.comboBox(cmb, [str(set_) for set_ in pm.ls (et="objectSet", flatten=1)], "Sets")
+		contents = cmb.addItems_([str(set_) for set_ in pm.ls (et="objectSet", flatten=1)], "Sets")
 
 		if not index:
 			index = cmb.currentIndex()
@@ -183,7 +178,7 @@ class Selection(Init):
 		cmb = self.ui.cmb001
 		
 		files = ['Selection Constraints']
-		contents = self.comboBox(cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -200,7 +195,7 @@ class Selection(Init):
 		cmb = self.ui.cmb002	
 
 		list_ = ['IK Handles','Joints','Clusters','Lattices','Sculpt Objects','Wires','Transforms','Geometry','NURBS Curves','NURBS Surfaces','Polygon Geometry','Cameras','Lights','Image Planes','Assets','Fluids','Particles','Rigid Bodies','Rigid Constraints','Brushes','Strokes','Dynamic Constraints','Follicles','nCloths','nParticles','nRigids']
-		contents = self.comboBox(cmb, list_, 'By Type')
+		contents = cmb.addItems_(list_, 'By Type')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -271,7 +266,7 @@ class Selection(Init):
 
 		list_ = ['Verts', 'Vertex Faces', 'Vertex Perimeter', 'Edges', 'Edge Loop', 'Edge Ring', 'Contained Edges', 'Edge Perimeter', 'Border Edges', 'Faces', 'Face Path', 'Contained Faces', 'Face Perimeter', 'UV\'s', 'UV Shell', 'UV Shell Border', 'UV Perimeter', 'UV Edge Loop', 'Shell', 'Shell Border'] 
 
-		contents = self.comboBox(cmb, list_, 'Convert To')
+		contents = cmb.addItems_(list_, 'Convert To')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -327,7 +322,7 @@ class Selection(Init):
 
 		list_ = ['Marquee', 'Lasso', 'Paint'] 
 
-		contents = self.comboBox (cmb, list_)
+		contents = cmb.addItems_(list_)
 
 		if not index:
 			index = cmb.currentIndex()

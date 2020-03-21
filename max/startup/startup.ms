@@ -80,19 +80,19 @@ function PerformDelayedTasks sender evt=
 	-- user macros:
 	FileIn (dir_+"/max/macros.ms")
 
-	-- hide statusPanel
+	-- statusPanel
 	statusPanel.visible = true
 
-	-- open the layer explorer
-	if sceneexplorermanager.ExplorerExists "Layer Explorer" then 
-	(
-		if (not sceneexplorermanager.ExplorerIsOpen "Layer Explorer") then
-			sceneexplorermanager.OpenExplorer "Layer Explorer"
-	)
-	else
-	(
-		sceneexplorermanager.CreateExplorerFromDefault "Layer Explorer"
-	)
+-- 	-- open the layer explorer
+-- 	if sceneexplorermanager.ExplorerExists "Layer Explorer" then 
+-- 	(
+-- 		if (not sceneexplorermanager.ExplorerIsOpen "Layer Explorer") then
+-- 			sceneexplorermanager.OpenExplorer "Layer Explorer"
+-- 	)
+-- 	else
+-- 	(
+-- 		sceneexplorermanager.CreateExplorerFromDefault "Layer Explorer"
+-- 	)
 
 
 	-- hotkeys:

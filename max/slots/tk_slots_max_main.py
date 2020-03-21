@@ -1,11 +1,7 @@
-import MaxPlus; maxEval = MaxPlus.Core.EvalMAXScript
-from pymxs import runtime as rt
+from tk_slots_max_init import Init
+maxEval = Init.maxEval
 
 import os.path
-
-
-from tk_slots_max_init import Init
-
 
 
 
@@ -13,11 +9,7 @@ class Main(Init):
 	def __init__(self, *args, **kwargs):
 		super(Main, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('main')
-
-		
-
 
 
 

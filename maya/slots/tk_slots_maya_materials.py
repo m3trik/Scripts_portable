@@ -1,12 +1,6 @@
-import maya.mel as mel
-import pymel.core as pm
-
-import os.path
-
 from tk_slots_maya_init import Init
 
-from PySide2 import QtGui
-
+import os.path
 
 
 
@@ -42,7 +36,7 @@ class Materials(Init):
 		mats = [m for m in pm.ls(materials=1)]
 		matNames = [m.name() for m in mats]
 
-		contents = self.comboBox (cmb, matNames, "Scene Materials")
+		contents = cmb.addItems_(matNames, "Scene Materials")
 
 		if not index:
 			index = cmb.currentIndex()
@@ -63,7 +57,7 @@ class Materials(Init):
 		cmb = self.ui.cmb001
 		
 		files = ['Hypershade']
-		contents = self.comboBox (cmb, files, ' ')
+		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -85,7 +79,7 @@ class Materials(Init):
 			if not matNames: 
 				matNames = ['ID Map: None']
 
-			contents = self.comboBox(cmb, matNames)
+			contents = cmb.addItems_(matNames)
 			
 			if matNames[0]!='ID Map: None': #add mat objects to storedID_mats dict. 'mat name'=key, <mat object>=value
 				self.storedID_mats = {n:mats[i] for i, n in enumerate(matNames)}
@@ -112,7 +106,7 @@ class Materials(Init):
 			else:
 				subMatNames = []
 
-			contents = self.comboBox(cmb, subMatNames, matName)
+			contents = cmb.addItems_(subMatNames, matName)
 
 			if not index:
 				index = cmb.currentIndex()

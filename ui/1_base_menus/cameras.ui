@@ -190,186 +190,85 @@
    <widget class="QWidget" name="r001" native="true">
     <property name="geometry">
      <rect>
-      <x>190</x>
+      <x>0</x>
       <y>400</y>
-      <width>216</width>
+      <width>601</width>
       <height>201</height>
      </rect>
     </property>
-    <widget class="QWidget" name="r008" native="true">
+    <widget class="QTreeWidget_ExpandableList" name="tree000">
      <property name="geometry">
       <rect>
-       <x>65</x>
-       <y>10</y>
-       <width>86</width>
-       <height>171</height>
+       <x>250</x>
+       <y>0</y>
+       <width>96</width>
+       <height>191</height>
       </rect>
      </property>
-     <widget class="QComboBox_Popup" name="cmb002">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>86</width>
-        <height>21</height>
-       </rect>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QAbstractScrollArea::AdjustToContents</enum>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::NoSelection</enum>
+     </property>
+     <property name="indentation">
+      <number>0</number>
+     </property>
+     <property name="itemsExpandable">
+      <bool>false</bool>
+     </property>
+     <property name="headerHidden">
+      <bool>false</bool>
+     </property>
+     <property name="expandsOnDoubleClick">
+      <bool>false</bool>
+     </property>
+     <property name="columnCount">
+      <number>1</number>
+     </property>
+     <attribute name="headerVisible">
+      <bool>true</bool>
+     </attribute>
+     <column>
+      <property name="text">
+       <string notr="true">-1</string>
       </property>
-      <property name="minimumSize">
-       <size>
-        <width>86</width>
-        <height>21</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>86</width>
-        <height>21</height>
-       </size>
-      </property>
-      <property name="layoutDirection">
-       <enum>Qt::LeftToRight</enum>
-      </property>
-      <property name="currentText">
+     </column>
+     <item>
+      <property name="text">
        <string>Create</string>
       </property>
-      <property name="maxVisibleItems">
-       <number>50</number>
-      </property>
-      <property name="frame">
-       <bool>false</bool>
-      </property>
-      <item>
-       <property name="text">
-        <string>Create</string>
-       </property>
-      </item>
-     </widget>
-     <widget class="QComboBox_Popup" name="cmb001">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>20</y>
-        <width>86</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>86</width>
-        <height>21</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>86</width>
-        <height>21</height>
-       </size>
-      </property>
-      <property name="layoutDirection">
-       <enum>Qt::LeftToRight</enum>
-      </property>
-      <property name="currentText">
+     </item>
+     <item>
+      <property name="text">
        <string>Cameras</string>
       </property>
-      <property name="maxVisibleItems">
-       <number>50</number>
-      </property>
-      <property name="sizeAdjustPolicy">
-       <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
-      </property>
-      <property name="frame">
-       <bool>false</bool>
-      </property>
-      <item>
-       <property name="text">
-        <string>Cameras</string>
-       </property>
-      </item>
-     </widget>
-     <widget class="QComboBox_Popup" name="cmb003">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>60</y>
-        <width>86</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>86</width>
-        <height>21</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>86</width>
-        <height>21</height>
-       </size>
-      </property>
-      <property name="layoutDirection">
-       <enum>Qt::LeftToRight</enum>
-      </property>
-      <property name="currentText">
-       <string>Options</string>
-      </property>
-      <property name="maxVisibleItems">
-       <number>50</number>
-      </property>
-      <property name="sizeAdjustPolicy">
-       <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
-      </property>
-      <property name="frame">
-       <bool>false</bool>
-      </property>
-      <item>
-       <property name="text">
-        <string>Options</string>
-       </property>
-      </item>
-     </widget>
-     <widget class="QComboBox_Popup" name="cmb000">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>40</y>
-        <width>86</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>86</width>
-        <height>21</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>86</width>
-        <height>21</height>
-       </size>
-      </property>
-      <property name="layoutDirection">
-       <enum>Qt::LeftToRight</enum>
-      </property>
-      <property name="currentText">
+     </item>
+     <item>
+      <property name="text">
        <string>Editors</string>
       </property>
-      <property name="maxVisibleItems">
-       <number>50</number>
+     </item>
+     <item>
+      <property name="text">
+       <string>Options</string>
       </property>
-      <property name="sizeAdjustPolicy">
-       <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
-      </property>
-      <property name="frame">
-       <bool>false</bool>
-      </property>
-      <item>
-       <property name="text">
-        <string>Editors</string>
-       </property>
-      </item>
-     </widget>
+     </item>
     </widget>
    </widget>
    <widget class="QWidget" name="viewport" native="true">
@@ -589,9 +488,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QComboBox_Popup</class>
-   <extends>QComboBox</extends>
-   <header>widgets.qcombobox_popup.h</header>
+   <class>QTreeWidget_ExpandableList</class>
+   <extends>QTreeWidget</extends>
+   <header>qtreewidget_expandablelist.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
