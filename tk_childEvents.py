@@ -132,9 +132,10 @@ class EventFactoryFilter(QtCore.QObject):
 					self._mouseOver.append(widget)
 
 					if not widgetName=='mainWindow':
-						# widget.grabMouse() #set widget to receive mouse events.
-						# self._mouseGrabber = widget
-						print(widget)
+						# if '|' not in widgetName:
+						widget.grabMouse() #set widget to receive mouse events.
+						self._mouseGrabber = widget
+
 			else:
 				if widget in self._mouseOver: #if widget is in the mouseOver list, but the mouse is no longer over the widget:
 					QtWidgets.QApplication.sendEvent(widget, self.leaveEvent_)
@@ -202,7 +203,7 @@ class EventFactoryFilter(QtCore.QObject):
 		self.widget = widget
 		self.name = sb.getNameFrom(self.widget) #get the name of the ui containing the given widget.
 		if not self.name:
-			print('# Error: tk_childEvents.eventFilter: getNameFrom({0}) Failed on {1} #'.format(self.widget.objectName(), event))
+			print('# Error: tk_childEvents.eventFilter: getNameFrom(widget): {0} Failed on Event: {1} #'.format(self.widget.objectName(), str(event.type()).split('.')[-1]))
 			return False
 		self.widgetName = self.widget.objectName()
 		self.widgetType = sb.getWidgetType(self.widget, self.name)

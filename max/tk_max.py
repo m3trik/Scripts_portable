@@ -55,6 +55,7 @@ class Tk_max(Tk):
 			print(error)
 
 		if __name__ == "__main__":
+			QApplication.instance().quit()
 			sys.exit() #assure that the sys processes are terminated.
 
 		return Tk.hideEvent(self, event) #super(Tk_max, self).hideEvent(event)

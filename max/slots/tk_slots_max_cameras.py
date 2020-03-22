@@ -30,7 +30,7 @@ class Cameras(Init):
 
 		# self.tk.childEvents.initWidgetItems(w.getWidgets(), 'cameras')
 
-		print(self)
+		print(self, 8*'tree000-')
 		# cameras = [cam.name for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
 		# [w.add('QPushButton', 'Cameras', setText=c) for c in cameras]
 

@@ -36,9 +36,7 @@ class Tk_maya(Tk):
 			event = <QEvent>
 		'''
 
-
-		# super(Tk_maya, self).showEvent(event)
-		return Tk.showEvent(self, event)
+		return Tk.showEvent(self, event) #super(Tk_maya, self).showEvent(event)
 
 
 	def hideEvent(self, event):
@@ -46,10 +44,11 @@ class Tk_maya(Tk):
 		args:
 			event = <QEvent>
 		'''
+		if __name__ == "__main__":
+			QApplication.instance().quit()
+			sys.exit() #assure that the sys processes are terminated.
 
-
-		# super(Tk_maya, self).hideEvent(event)
-		return Tk.hideEvent(self, event)
+		return Tk.hideEvent(self, event) #super(Tk_maya, self).hideEvent(event)
 
 
 
