@@ -66,8 +66,7 @@ class EventFactoryFilter(QtCore.QObject):
 
 
 			if widgetType=='QPushButton' and uiLevel<3:
-				if not '|' in widgetName:
-					self.resizeAndCenterWidget(widget)
+				self.resizeAndCenterWidget(widget)
 
 			elif widgetType=='QWidget':
 				if sb.prefix(widgetName, 'r'): #prefix returns True if widgetName startswith the given prefix, and is followed by three integers.

@@ -15,30 +15,42 @@ class Cameras(Init):
 		self.tree000()
 
 
-	def tree000(self, index=None):
+	def tree000(self, wItem=None, column=None):
 		'''
 		Cameras
 		'''
-		w = self.ui.tree000
-		w.convert(w.getItems(), 'QPushButton')
+		tree = self.ui.tree000
 
-		w.add('QPushButton', 'Create', setText='Custom Camera')
-		w.add('QPushButton', 'Create', setText='Set Custom Camera')
-		w.add('QPushButton', 'Create', setText='Camera From View')
-		w.add('QPushButton', 'Cameras', setText='Cam1')
-		w.add('QPushButton', 'Cameras', setText='Cam2')
+		if not any([wItem, column]):
+			tree.convert(tree.getItems(), 'QPushButton')
 
-		# self.tk.childEvents.initWidgetItems(w.getWidgets(), 'cameras')
+			l = ['Custom Camera','Set Custom Camera','Camera From View']
+			[tree.add('QPushButton', 'Create', setText=t) for t in l]
 
-		print(self, 8*'tree000-')
-		# cameras = [cam.name for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
-		# [w.add('QPushButton', 'Cameras', setText=c) for c in cameras]
+			l = ['camera '+str(i) for i in range(8)] #List scene Cameras
+			[tree.add('QPushButton', 'Cameras', setText=t) for t in l]
+			# l = [cam.name for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
+			# [w.add('QPushButton', 'Cameras', setText=t) for t in l]
 
-		# cam = rt.getNodeByName(contents[index])
-		# rt.select (cam) #select the camera
-		# rt.viewport.setCamera (cam) #set viewport to camera
-		# cmb.setCurrentIndex(0)
-		# rt.redrawViews()
+		else:
+			text = tree.getWidgetText(wItem, column)
+			group = tree.getGroup(wItem)
+			print(text, group, column)
+
+			if group=='Create':
+				if text=='Custom Camera':
+					rt.StartObjectCreation(rt.Physical_Camera)
+				if text=='Set Custom Camera':
+					maxEval('Try(viewport.setcamera $) Catch()')
+				if text=='Camera From View':
+					maxEval('macros.run "Lights and Cameras" "PhysicalCamera_CreateFromView"')
+
+			if group=='Cameras':
+				cam = rt.getNodeByName(text)
+				rt.select(cam) #select the camera
+				rt.viewport.setCamera(cam) #set viewport to camera
+				cmb.setCurrentIndex(0)
+				rt.redrawViews()
 
 
 	def cmb000(self, index=None):
@@ -58,44 +70,44 @@ class Cameras(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def cmb001(self, index=None):
-		'''
-		Cameras
-		'''
-		cmb = self.ui.cmb001
+	# def cmb001(self, index=None):
+	# 	'''
+	# 	Cameras
+	# 	'''
+	# 	cmb = self.ui.cmb001
 		
-		cameras = [cam.name for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
-		contents = cmb.addItems_(cameras, "Cameras:")
+	# 	cameras = [cam.name for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
+	# 	contents = cmb.addItems_(cameras, "Cameras:")
 		
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			cam = rt.getNodeByName(contents[index])
-			rt.select (cam) #select the camera
-			rt.viewport.setCamera (cam) #set viewport to camera
-			cmb.setCurrentIndex(0)
-			rt.redrawViews()
+	# 	if not index:
+	# 		index = cmb.currentIndex()
+	# 	if index!=0:
+	# 		cam = rt.getNodeByName(contents[index])
+	# 		rt.select (cam) #select the camera
+	# 		rt.viewport.setCamera (cam) #set viewport to camera
+	# 		cmb.setCurrentIndex(0)
+	# 		rt.redrawViews()
 
 
-	def cmb002(self, index=None):
-		'''
-		Create
-		'''
-		cmb = self.ui.cmb002
+	# def cmb002(self, index=None):
+	# 	'''
+	# 	Create
+	# 	'''
+	# 	cmb = self.ui.cmb002
 		
-		list_ = ['Custom Camera','Set Custom Camera','Camera From View']
-		contents = cmb.addItems_(list_, "Create")
+	# 	list_ = ['Custom Camera','Set Custom Camera','Camera From View']
+	# 	contents = cmb.addItems_(list_, "Create")
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==1:
-				rt.StartObjectCreation(rt.Physical_Camera)
-			if index==2:
-				maxEval('Try(viewport.setcamera $) Catch()')
-			if index==3:
-				maxEval('macros.run "Lights and Cameras" "PhysicalCamera_CreateFromView"')
-			cmb.setCurrentIndex(0)
+	# 	if not index:
+	# 		index = cmb.currentIndex()
+	# 	if index!=0:
+	# 		if index==1:
+	# 			rt.StartObjectCreation(rt.Physical_Camera)
+	# 		if index==2:
+	# 			maxEval('Try(viewport.setcamera $) Catch()')
+	# 		if index==3:
+	# 			maxEval('macros.run "Lights and Cameras" "PhysicalCamera_CreateFromView"')
+	# 		cmb.setCurrentIndex(0)
 
 
 	def cmb003(self, index=None):

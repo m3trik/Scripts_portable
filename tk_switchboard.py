@@ -50,7 +50,7 @@ class __Switchboard(object):
 		'gcProtect' : [items protected from garbage collection]
 	}
 
-	The widgetDict is built as needed for each class when addSignal (or any other dependant method) is called.
+	The widgetDict is built as needed for each class when __addSignal (or any other dependant method) is called.
 	'''
 	def __init__(self, sbDict):
 		'''
@@ -181,10 +181,10 @@ class __Switchboard(object):
 	def widgetDict(self, name):
 		'''
 		Dictionary holding widget information.
-		Used primarily by 'buildWidgetDict' method to construct signal and slot connections that can later be connected and disconnected by the add/removeSignal methods.
+		Used primarily by 'buildWidgetDict' method to construct signal and slot connections that can later be connected and disconnected by the add/__removeSignal methods.
 
 		args:
-			name = 'string' name of ui/class. ie. 'polygons'
+			name (str) = name of ui/class. ie. 'polygons'
 		returns:
 			connection dict of given name with widget/method name string as key.
 		ex.
@@ -211,12 +211,12 @@ class __Switchboard(object):
 		# print('setSignals:', self.previousName(allowLevel0=True, allowDuplicates=1, as_list=1))
 		previousName = self.previousName(allowLevel0=True, allowDuplicates=1)
 		if previousName:
-			self.removeSignal(previousName) #remove signals from the previous ui.
-		self.addSignal(name)
+			self.__removeSignal(previousName) #remove signals from the previous ui.
+		self.__addSignal(name)
 
 
 
-	def addSignal(self, name):
+	def __addSignal(self, name):
 		'''
 		Connects signals/slots from the widgetDict for the given ui. Works with both single slots or multiple slots given as a list.
 
@@ -226,7 +226,7 @@ class __Switchboard(object):
 		for objectName in self.widgetDict(name):
 			signal = self.getSignal(name, objectName)
 			slot = self.getMethod(name, objectName)
-			# print('addSignal: ', name, objectName, signal, slot)
+			# print('__addSignal: ', name, objectName, signal, slot)
 			if slot and signal:
 				try:
 					signal.connect(slot) #connect single slot (main and cameras)
@@ -235,11 +235,11 @@ class __Switchboard(object):
 						map(signal.connect, slot) #connect multiple slots from a list.
 
 					except Exception as error:
-						print('# Error: addSignal:', name, objectName, error, signal, slot,'#') #, error
+						print('# Error: __addSignal:', name, objectName, error, signal, slot,'#') #, error
 
 
 
-	def removeSignal(self, name):
+	def __removeSignal(self, name):
 		'''
 		Disconnects signals/slots from the widgetDict for the given ui. Works with both single slots or multiple slots given as a list.
 
@@ -249,7 +249,7 @@ class __Switchboard(object):
 		for objectName in self.widgetDict(name):
 			signal = self.getSignal(name, objectName)
 			slot = self.getMethod(name, objectName)
-			# print('removeSignal: ', name, objectName, signal, slot)
+			# print('__removeSignal: ', name, objectName, signal, slot)
 			if slot and signal:
 				try:
 					signal.disconnect(slot) #disconnect single slot (main and cameras)
@@ -259,7 +259,7 @@ class __Switchboard(object):
 						# map(signal.disconnect, slot) #disconnect multiple slots from a list.
 
 					except Exception as error:
-						print('# Error: removeSignal:', name, objectName, error, signal, slot,'#') #, error
+						print('# Error: __removeSignal:', name, objectName, error, signal, slot,'#') #, error
 
 
 
@@ -289,7 +289,7 @@ class __Switchboard(object):
 		Get the dynamic ui using its string name, or if no argument is given, return the current ui.
 
 		args:
-			name = 'string' name of class. ie. 'polygons' (by default getUi returns the current ui)
+			name (str) = name of class. ie. 'polygons' (by default getUi returns the current ui)
 		returns:
 			if name: corresponding dynamic ui object of given name from the key 'uiList'.
 			else: current dynamic ui object
@@ -355,7 +355,7 @@ class __Switchboard(object):
 		Get the index of the given ui name in the uiList.
 
 		args:
-			name = 'string' name of class. ie. 'polygons'
+			name (str) = name of class. ie. 'polygons'
 		returns:
 			if name: index of given name from the key 'uiList'.
 			else: index of current ui
@@ -547,7 +547,7 @@ class __Switchboard(object):
 		Case insensitive. Class string keys are stored lowercase regardless of how they are recieved.
 
 		args:
-			class_ = 'string' *or <class object> - module name.class to import and store class. 
+			class_ (str)(obj) = module name.class to import and store class. 
 					ie.  ie. 'polygons', 'tk_slots_max_polygons.Polygons', or <tk_slots_max_polygons.Polygons>
 			name (str) = optional name key to store the class under (else the class name will be used).
 		returns:
@@ -580,7 +580,7 @@ class __Switchboard(object):
 		If class is not in self._sbDict, getClassInstance will attempt to use setClassInstance() to first store the class.
 
 		args:
-			class_ = 'string' *or <class object> - module name.class to import and store class.
+			class_ (str)(obj) = module name.class to import and store class.
 				ie. 'polygons', 'tk_slots_max_polygons.Polygons', or <tk_slots_max_polygons.Polygons>
 		returns:
 			class object.
@@ -697,8 +697,8 @@ class __Switchboard(object):
 	def getMethod(self, name, methodName=None):
 		'''
 		args:
-			name = 'string' name of class. ie. 'polygons'
-			methodName = 'string' optional name of method. ie. 'b001'
+			name (str) = name of class. ie. 'polygons'
+			methodName (str) = optional name of method. ie. 'b001'
 		returns:
 			if methodName: corresponding method object to given method name string.
 			else: all of the methods associated with the given name as a list.
@@ -720,8 +720,8 @@ class __Switchboard(object):
 	def getSignal(self, name, objectName=None):
 		'''
 		args:
-			name = 'string' name of ui. ie. 'polygons'
-			objectName = 'string' optional widget name. ie. 'b001'
+			name (str) = name of ui. ie. 'polygons'
+			objectName (str) = optional widget name. ie. 'b001'
 		returns:
 			if objectName: the corresponding widget object with attached signal (ie. b001.onPressed) of the given widget name.
 			else: all of the signals associated with the given name as a list.
@@ -736,21 +736,21 @@ class __Switchboard(object):
 
 
 
-	def getDocString(self, name, methodName, full=False):
+	def getDocString(self, name, methodName, all_=False):
 		'''
 		args:
-			name = 'string' optional name of class. ie. 'polygons'. else, use current name.
-			methodName = 'string' name of method. ie. 'b001'
-			full = bool return full unedited docString
+			name (str) = optional name of class. ie. 'polygons'. else, use current name.
+			methodName (str) = name of method. ie. 'b001'
+			all_ = bool return entire unedited docString
 		returns:
-			if full: full stored docString
+			if all_: the entire stored docString
 			else: edited docString; name of method
 		'''
 		if not 'widgetDict' in self._sbDict[name]:
 			self.widgetDict(name) #construct the signals and slots for the ui
 
 		docString = self._sbDict[name]['widgetDict'][methodName]['docString']
-		if docString and not full:
+		if docString and not all_:
 			return docString.strip('\n\t') #return formatted docString
 		else:
 			return docString #return entire unformatted docString, or 'None' is docString==None.
