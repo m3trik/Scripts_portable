@@ -9,11 +9,7 @@ import sys
 
 class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 	'''
-	Additional columns are shown as they are triggered by the widgets in column 0.
-	ie.  in column 0 index (row) 0 unhides column 1. index 1 (row 1) unhides column 2.
-	
-	Uses the widgetItem as a dictionary key to store the row, column, and group (derived from the parent items text).
-	_wItems (dict) = wItem(key) : [row, column, group](value as list)
+	Additional columns are shown as they are triggered by parent widgets.
 	'''
 	hoverLeave_ = QtCore.QEvent(QtCore.QEvent.HoverLeave)
 
@@ -23,7 +19,8 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		self.setHeaderHidden(True)
 		self.setIndentation(0)
 
-		self._wItems={}
+		self.widgets={}
+
 
 		self.setStyleSheet('''
 			QTreeWidget {
@@ -95,47 +92,51 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			self.move(self.mapFromGlobal(value - self.rect().center())) #move and center
 
 
-	def add(self, w, g=None, **kwargs):
+	def add(self, widget, header=None, parent_=None, column=None, row=0, **kwargs):
 		'''
 		Add items to the treeWidget.
 
 		kwargs:
-			w (str)(obj) = widget. ie. w='QLabel' or w=QtWidgets.QLabel
-			g (str) = group.
+			widget (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
+			header (str) = header
 		returns:
-			the group name as a string.
+ 			the header name as a string.
 
 		ex.call: create = w.add('QPushButton', setText='Create')
 				 cameras = w.add('QPushButton', setText='Cameras')
 				 w.add('QPushButton', create, setText='Custom Camera')
 		'''
 		try:
-			item = getattr(QtWidgets, w)(self) #ex. QtWidgets.QAction(self) object from string. parented to self.
+			widget = getattr(QtWidgets, widget)(self) #ex. QtWidgets.QAction(self) object from string. parented to self.
 		except:
-			if callable(w):
-				item = w(self) #ex. QtWidgets.QAction(self) object. parented to self.
-			else:
-				item = w
+			if callable(widget):
+				widget = widget(self) #ex. QtWidgets.QAction(self) object. parented to self.
 
-		self.setAttributes(item, kwargs) #set any built-in attributes.
+		self.setAttributes(widget, kwargs) #set any built-in attributes.
 
-		column = self.getColumnFromGroup(g)
+		header = self.getHeaderFromWidget(widget, header)
+		column = self.getColumnFromHeader(header, column)
 
-		wItem = self.getWItemFromRow(0) #get the top widgetItem.
+		wItem = self.getWItemFromRow(row) #get the top widgetItem.
 		while self.itemWidget(wItem, column): #while there is a widget in this column:
 			wItem = self.itemBelow(wItem) #get the wItem below
+			row+=1
 		if not wItem:
-			wItem = self.__createNewWItem(item)
+			wItem = QtWidgets.QTreeWidgetItem(self)
 
 
-		self.setItemWidget(wItem, column, item)
+		self.setItemWidget(wItem, column, widget)
+
+		if parent_ is '':
+			parent_ = widget.text()
+		self.widgets[widget] = [header, column, row, parent_]
+
 		self.setColumnCount(len(self.getColumns()))
 
-		item.setObjectName(self.__createObjectName(wItem, column)) #set an dynamically generated objectName.
-		item.installEventFilter(self)
+		widget.setObjectName(self.__createObjectName(wItem, column)) #set an dynamically generated objectName.
+		widget.installEventFilter(self)
 
-		return g
-
+		return parent_
 
 
 	def eventFilter(self, widget, event):
@@ -143,12 +144,12 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		'''
 		# if not (str(event.type()).split('.')[-1]) in ['QPaintEvent', 'UpdateLater', 'PolishRequest', 'Paint']: print(str(event.type())) #debugging
 		if event.type()==QtCore.QEvent.Enter:
-			group = self.getGroupFromWidget(widget)
-			parent = self.getGroupParent(group)
-			if widget is parent:
-				column = self.getColumnFromGroup(group)
-				self.__showColumns(column)
-				self.__resize(column)
+			if self.isParent(widget):
+				column = self.getColumnFromWidget(widget)
+				childColumns = self.getChildColumnsFromWidget(widget)
+				if childColumns:
+					self.__showColumns([column]+childColumns)
+					self.__resize(childColumns)
 
 		if event.type()==QtCore.QEvent.HoverMove:
 			if not widget.rect().contains(widget.mapFromGlobal(QtGui.QCursor.pos())):
@@ -157,29 +158,18 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		if event.type()==QtCore.QEvent.HoverLeave:
 			if not __name__=='__main__':
 				self.window().grabMouse()
+				# print(self.mouseGrabber().objectName(), 'grab --')
 
 		if event.type()==QtCore.QEvent.MouseButtonRelease:
-			wItem = self.getWItemFromWidget(widget)
-			row = self.getRowFromWidget(widget)
-			print(widget.text())
-			column = self.getColumnFromWidget(widget)
-			self.itemClicked.emit(wItem, column)
-			self.window().hide()
-
+			if widget.rect().contains(widget.mapFromGlobal(QtGui.QCursor.pos())):
+				wItem = self.getWItemFromWidget(widget)
+				row = self.getRowFromWidget(widget)
+				column = self.getColumnFromWidget(widget)
+				print(widget.text(), wItem, row, column, 8*'*')
+				self.itemClicked.emit(wItem, column)
+				self.window().hide()
 
 		return super(QTreeWidget_ExpandableList, self).eventFilter(widget, event)
-
-
-	def getGroupParent(self, group):
-		'''
-		Get the groups parent from the group name.
-
-		args:
-			group (str) = group name. ie. 'Options'
-		'''
-		for w in self.getWidgets():
-			if w.text()==group:
-				return w
 
 
 	def leaveEvent(self, event):
@@ -190,52 +180,40 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		return QtWidgets.QTreeWidget.leaveEvent(self, event)
 
 
-	def __resize(self, column, buffer_=25):
+	def __resize(self, columns, buffer_=25):
 		'''
 		Resize the treeWidget to fit it's current visible wItems.
 
 		args:
-			column (int) = column index.
+			columns (int)(list) = column index or list of column indices.
 			buffer (int) = Amount to additionally resize. (default is 25)
 		'''
-		if column is 0:
-			return self.resize(self.columnWidth(0), self.sizeHint().height())
+		if type(columns) is int:
+			if columns is 0:
+				return self.resize(self.columnWidth(0), self.sizeHint().height())
+			columns = [columns]
 
-		columnWidth = self.sizeHintForColumn(column)+buffer_
-		self.setColumnWidth(column, columnWidth)
+		for column in columns:
+			columnWidth = self.sizeHintForColumn(column)+buffer_
+			self.setColumnWidth(column, columnWidth)
 
-		totalWidth = self.columnWidth(0)+columnWidth
+		totalWidth = self.columnWidth(0) + sum([self.columnWidth(c) for c in columns])
 		self.resize(totalWidth, self.sizeHint().height()) #resize main widget to fit column.
-
-
-	def __createNewWItem(self, item):
-		'''
-		Create a new widgetItem containing the given widget type.
-
-		args:
-			item (obj) = QWidget.
-		'''
-		try:
-			g = item.text()
-		except:
-			g = item.value()
-		wItem = QtWidgets.QTreeWidgetItem(self)
-		row = self.getRow(wItem)
-		self._wItems[wItem] = [row, row+1, g] #use the widgetItem as a dictionary key to store the row, column, and group (derived from the parent items text).
-		return wItem
 
 
 	def __createObjectName(self, wItem, column):
 		'''
-		Create an objectName for an itemWidget consisting of its group, row index, and column index.
+		Create an objectName for an itemWidget consisting of the parent treeWidget's object name, header, column, and row index.
 
 		args:
 			wItem (obj) = QWidgetItem.
 			column (int) = The index of the column.
+		returns:
+			(str) name string.
 		'''
-		group = self.getGroup(wItem)
+		header = self.getHeaderFromColumn(column)
 		row = self.getRow(wItem)
-		return 'b0{0}{1}|{2}|{3}'.format(row, column, group, self.objectName()) #ie. 'b000|Options|tree002'
+		return '{0}|{1}|{2}|{3}'.format(self.objectName(), header, column, row) #ie. 'tree002|Options|0|1'
 
 
 	def getWItemFromRow(self, row):
@@ -246,36 +224,64 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			row (int) = Row index.
 		'''
 		try:
-			return next(k for k, v in self._wItems.items() if v[0]==row)
-		except:
-			None
-
-
-	def getGroup(self, wItem):
-		'''
-		Get the stored Group.
-
-		args:
-			wItem (obj) = QWidgetItem.
-		'''
-		try:
-			return self._wItems[wItem][2]
+			return next(wItem for wItem in self.getTopLevelItems() if self.indexOfTopLevelItem(wItem)==row)
 		except:
 			return None
 
 
-	def getGroupFromWidget(self, widget):
+	def __setHeader(self, header, column=None):
 		'''
-		Get the group that the widget belongs to.
+		Set new header and column or modify an existing.
+
+		args:
+			header (str) = header text.
+			column (int) = column index.
+		returns:
+			(str) header text.
+		'''
+		if column:
+			self.headerItem().setText(column, header)
+		else: #set new header and column
+			self.setHeaderLabel(header)
+		return header
+
+
+	def getHeaderFromWidget(self, widget, __header=None):
+		'''
+		Get the header that the widget belongs to.
 
 		args:
 			widget (obj) = A widget contained in one of the tree's wItems.
+			__header (str) = internal use. header to assign as parent. Used when setting parent.
+		returns:
+			(str) header
+		'''
+		if __header is not None:
+			return __header
+		try:
+			return self.widgets[widget][0]
+		except:
+			return None
+
+
+	def getParentFromHeader(self, header):
+		'''
+		Get the Headers parent from the header name.
+
+		args:
+			header (str) = header name. ie. 'Options'
 		'''
 		try:
-			for wItem, v in self._wItems.items():
-				for w in self.getWidgets(wItem):
-					if w==widget:
-						return v[2]
+			return next(i[3] for i in self.widgets.values() if i[0]==header)
+		except:
+			None
+
+
+	def getHeaderFromColumn(self, column):
+		'''
+		'''
+		try:
+			return next(i[0] for i in self.widgets.values() if i[1]==column)
 		except:
 			return None
 
@@ -287,53 +293,61 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		args:
 			wItem (obj) = QWidgetItem.
 		'''
-		try:
-			return self._wItems[wItem][0]
-		except:
-			return self.indexFromItem(wItem).row()
+		return self.indexFromItem(wItem).row()
 
 
 	def getRowFromWidget(self, widget):
 		'''
 		'''
-		return next(self.getRow(i) for c in self.getColumns() for i in self.getItems() if self.itemWidget(i, c)==widget)
-
-
-	def getColumn(self, wItem):
-		'''
-		Get the stored column index.
-		
-		args:
-			wItem (obj) = QWidgetItem.
-		'''
-		try:
-			if self.itemWidget(wItem, 0):
-				return self._wItems[wItem][1]
-			else: #
-				return 0
-		except:
-			return self.indexFromItem(wItem).column()
+		return next(self.getRow(i) for c in self.getColumns() for i in self.getTopLevelItems() if self.itemWidget(i, c)==widget)
 
 
 	def getColumnFromWidget(self, widget):
 		'''
 		'''
-		return next(c for c in self.getColumns() for i in self.getItems() if self.itemWidget(i, c)==widget)
+		return next(c for c in self.getColumns() for i in self.getTopLevelItems() if self.itemWidget(i, c)==widget)
 
 
-	def getColumnFromGroup(self, group):
+	def getChildColumnsFromWidget(self, widget):
+		'''
+		'''
+		header = self.widgets[widget][3]
+		try:
+			return list(set([i[1] for i in self.widgets.values() if i[0]==header]))
+		except:
+			return []
+
+
+	def getColumnFromHeader(self, header, __column=None):
 		'''
 		Get the stored column index.
 
 		args:
-			group (str) = Group name.
+			header (str) = header name.
+			__column (int) = internal use.
 		'''
-		if not group:
-			return 0
+		if __column is not None:
+			return __column
 		try:
-			return next(v[1] for v in self._wItems.values() if v[2]==group)
+			return next(i[1] for i in self.widgets.values() if i[0]==header)
+		except: #else assign a new column to the header.
+			if not hasattr(self, 'c'):
+				self.c = max(self.getColumns()) #get the highest column and increment by one.
+			self.c+=1
+			return self.c
+
+
+	def getColumnFromParent(self, parent):
+		'''
+		Get the stored column index.
+
+		args:
+			parent (str) = parent name.
+		'''
+		try:
+			return next(i[1] for i in self.widgets.values() if i[3]==parent)
 		except:
-			None
+			return None
 
 
 	def getColumns(self):
@@ -344,33 +358,33 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			set of ints 
 		'''
 		try:
-			return set([0]+[v[1] for v in self._wItems.values()])
+			return set([i[1] for i in self.widgets.values()])
 		except:
 			0
 
 
 	def __showColumns(self, columns):
 		'''
-		Unhide the given column, while hiding all others. Column 0 is always left visible.
+		Unhide the given column, while hiding all others.
 
 		args:
 			columns (list) = list of indices of the columns to show.
 		'''
 		if type(columns)==int:
 			columns = [columns]
-		for c in [i[1] for i in self._wItems.values()]:
+		for c in self.getColumns():
 			if c in columns:
 				self.setColumnHidden(c, False)
 			else:
 				self.setColumnHidden(c, True)
 
 
-	def getItems(self):
+	def getTopLevelItems(self):
 		'''
-		Get all QTreeWidgetItems in the given QTreeWidget.
+		Get all top level QTreeWidgetItems in the given QTreeWidget.
 		
 		returns:
-			QTreeWidgetItems (list)
+			(list) All Top level QTreeWidgetItems
 		'''
 		return [self.topLevelItem(i) for i in xrange(self.topLevelItemCount())]
 
@@ -378,7 +392,10 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 	def getWItemFromWidget(self, widget):
 		'''
 		'''
-		return next(i for c in self.getColumns() for i in self.getItems() if self.itemWidget(i, c)==widget)
+		try:
+			return next(i for c in self.getColumns() for i in self.getTopLevelItems() if self.itemWidget(i, c)==widget)
+		except:
+			return None
 
 
 	def getWidgets(self, wItem=None, removeNoneValues=False):
@@ -394,7 +411,7 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		if wItem:
 			list_ = [self.itemWidget(wItem, c) for c in self.getColumns()]
 		else: 
-			list_ = [self.itemWidget(i, c) for c in self.getColumns() for i in self.getItems()]
+			list_ = [self.itemWidget(i, c) for c in self.getColumns() for i in self.getTopLevelItems()]
 		if removeNoneValues:
 			list_ = [i for i in list_ if not i==None]
 
@@ -433,6 +450,16 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			return None
 
 
+	def isParent(self, widget):
+		'''
+		'''
+		if widget in self.widgets:
+			if self.widgets[widget][3] is not None:
+				return True
+			return False
+		return None
+
+
 	def convert(self, items, w):
 		'''
 		Convert itemsWidgets to a given type.
@@ -446,8 +473,7 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		except:
 			wItems = [i.value(0) for i in items]
 		[self.takeTopLevelItem(self.indexOfTopLevelItem(i)) for i in items] #delete each widgetItem
-		for t in wItems:
-			self.add(w, setText=t)
+		[self.add(w, parent_='', column=0, setText=t) for t in wItems]
 
 
 	def showEvent(self, event):
@@ -466,19 +492,27 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 
 
 
+
+
+
 if __name__ == '__main__':
 	app = QtWidgets.QApplication(sys.argv)
 
 	tree=QTreeWidget_ExpandableList()
 
-	create = tree.add('QPushButton', setText='Create')
+	create = tree.add('QPushButton', parent_='Create', column=0, setText='Create')
 	tree.add('QPushButton', create, setText='Custom Camera')
 	tree.add('QPushButton', create, setText='Set Custom Camera')
 	tree.add('QPushButton', create, setText='Camera From View')
 
-	cameras = tree.add('QPushButton', setText='Cameras')
+	cameras = tree.add('QPushButton', parent_='Cameras', column=0, setText='Cameras')
 	tree.add('QPushButton', cameras, setText='Cam1')
 	tree.add('QPushButton', cameras, setText='Cam2')
+
+	options = tree.add('QPushButton', cameras, parent_='Options', setText='Options')
+	tree.add('QPushButton', options, setText='Opt1')
+	tree.add('QPushButton', options, setText='Opt2')
+
 
 	tree.show()
 
@@ -491,9 +525,3 @@ if __name__ == '__main__':
 
 # depricated: ---------------------------------------------------------------------------
 
-
-	# self.itemClicked.connect(self.test)
-	# def test(self, item, column):
-	# 	'''
-	# 	'''
-	# 	print(item, column)

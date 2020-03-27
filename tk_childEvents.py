@@ -131,8 +131,8 @@ class EventFactoryFilter(QtCore.QObject):
 					self._mouseOver.append(widget)
 
 					if not widgetName=='mainWindow':
-						# if '|' not in widgetName:
 						widget.grabMouse() #set widget to receive mouse events.
+						# print(widget.mouseGrabber().objectName(), 'grab -')
 						self._mouseGrabber = widget
 
 			else:

@@ -3,7 +3,6 @@ from tk_ import Tk
 
 try:
 	import MaxPlus
-
 except ImportError as error:
 	print(error)
 

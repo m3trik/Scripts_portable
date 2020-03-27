@@ -22,22 +22,27 @@ class Cameras(Init):
 		tree = self.ui.tree000
 
 		if not any([wItem, column]):
-			tree.convert(tree.getItems(), 'QPushButton')
+			tree.convert(tree.getTopLevelItems(), 'QPushButton')
 
 			l = ['Custom Camera','Set Custom Camera','Camera From View']
 			[tree.add('QPushButton', 'Create', setText=t) for t in l]
 
-			l = ['camera '+str(i) for i in range(8)] #List scene Cameras
+			l = ['camera'+str(i) for i in range(8)] #List scene Cameras
 			[tree.add('QPushButton', 'Cameras', setText=t) for t in l]
 			# l = [cam.name for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
 			# [w.add('QPushButton', 'Cameras', setText=t) for t in l]
 
-		else:
-			text = tree.getWidgetText(wItem, column)
-			group = tree.getGroup(wItem)
-			print(text, group, column)
+			l = ['test'+str(i) for i in range(6)]
+			test = tree.add('QPushButton', 'Cameras', parent_='Test', setText='Options')
+			[tree.add('QPushButton', test, setText=t) for t in l]
 
-			if group=='Create':
+		else:
+			# widget = tree.getWidget(wItem, column)
+			text = tree.getWidgetText(wItem, column)
+			header = tree.getHeaderFromColumn(column)
+			print(header, text, column)
+
+			if header=='Create':
 				if text=='Custom Camera':
 					rt.StartObjectCreation(rt.Physical_Camera)
 				if text=='Set Custom Camera':
@@ -45,7 +50,7 @@ class Cameras(Init):
 				if text=='Camera From View':
 					maxEval('macros.run "Lights and Cameras" "PhysicalCamera_CreateFromView"')
 
-			if group=='Cameras':
+			if header=='Cameras':
 				cam = rt.getNodeByName(text)
 				rt.select(cam) #select the camera
 				rt.viewport.setCamera(cam) #set viewport to camera
