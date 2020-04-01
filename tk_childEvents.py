@@ -126,14 +126,16 @@ class EventFactoryFilter(QtCore.QObject):
 			widgetName = widget.objectName()
 
 			if widget.rect().contains(widget.mapFromGlobal(QtGui.QCursor.pos())): #if mouse over widget:
+				# print (widget.objectName(), 'mouseTracking')
 				if not widget in self._mouseOver: #if widget is already in the mouseOver list, no need to re-process the events.
 					QtWidgets.QApplication.sendEvent(widget, self.enterEvent_)
 					self._mouseOver.append(widget)
 
 					if not widgetName=='mainWindow':
-						widget.grabMouse() #set widget to receive mouse events.
-						# print(widget.mouseGrabber().objectName(), 'grab -')
-						self._mouseGrabber = widget
+						if widget.isEnabled():
+							widget.grabMouse() #set widget to receive mouse events.
+							print('grab:', widget.mouseGrabber().objectName(), '(tk_childEvents)')
+							self._mouseGrabber = widget
 
 			else:
 				if widget in self._mouseOver: #if widget is in the mouseOver list, but the mouse is no longer over the widget:

@@ -22,12 +22,13 @@ class StyleSheet():
 	'COLOR_ACCENT' 	: 'rgba(82,133,166,225)',
 	'COLOR_TEXT1'	: 'white',
 	'COLOR_TEXT2'	: 'black',
+	'COLOR_TEXT3'	: 'grey',
 	}
 
-	def f(s):
+	def f(string):
 		for k,v in colorValues.items():
-			s = s.replace('{'+k+'}', v)
-		return s
+			string = string.replace('{'+k+'}', v)
+		return string
 
 
 	QWidget=f('''
@@ -47,6 +48,14 @@ class StyleSheet():
 			padding: 0px;
 			background-color: {COLOR_MEDIUM};
 			color: {COLOR_TEXT1};
+		}
+
+		QPushButton::enabled {
+			color: {COLOR_TEXT1};
+		}
+
+		QPushButton::disabled {
+			color: {COLOR_TEXT3};
 		}
 
 		QPushButton::checked {
@@ -441,6 +450,14 @@ class StyleSheet():
 
 		QTreeWidget::item {
 			height: 20px;
+		}
+
+		QTreeWidget::item:enabled {
+			color: {COLOR_TEXT1};
+		}
+
+		QTreeWidget::item:disabled {
+			color: {COLOR_TEXT3};
 		}
 
 		QTreeView::item:hover {

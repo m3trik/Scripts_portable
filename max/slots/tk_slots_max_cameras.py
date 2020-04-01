@@ -22,17 +22,18 @@ class Cameras(Init):
 		tree = self.ui.tree000
 
 		if not any([wItem, column]):
+			tree.stepColumns = True
 			tree.convert(tree.getTopLevelItems(), 'QPushButton')
 
 			l = ['Custom Camera','Set Custom Camera','Camera From View']
 			[tree.add('QPushButton', 'Create', setText=t) for t in l]
 
-			l = ['camera'+str(i) for i in range(8)] #List scene Cameras
+			l = ['camera'+str(i) for i in range(3)] #List scene Cameras
 			[tree.add('QPushButton', 'Cameras', setText=t) for t in l]
 			# l = [cam.name for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
 			# [w.add('QPushButton', 'Cameras', setText=t) for t in l]
 
-			l = ['test'+str(i) for i in range(6)]
+			l = ['test'+str(i) for i in range(3)]
 			test = tree.add('QPushButton', 'Cameras', parent_='Test', setText='Options')
 			[tree.add('QPushButton', test, setText=t) for t in l]
 
