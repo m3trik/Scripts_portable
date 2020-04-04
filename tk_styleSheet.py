@@ -45,7 +45,8 @@ class StyleSheet():
 			border-style: outset;
 			border-radius: 1px;
 			border: 1px solid black;
-			padding: 0px;
+			padding-left: 5px;
+			padding-right: 5px;
 			background-color: {COLOR_MEDIUM};
 			color: {COLOR_TEXT1};
 		}
@@ -145,7 +146,8 @@ class StyleSheet():
 			border-style: outset;
 			border-radius: 1px;
 			border: 1px solid black;
-			padding: 0px;
+			padding-left: 5px;
+			padding-right: 5px;
 			background-color: {COLOR_MEDIUM};
 			color: {COLOR_TEXT1};
 		}
@@ -660,12 +662,32 @@ class StyleSheet():
 
 	QLabel=f('''
 		QLabel {
-			border: none;
+			background-color: {COLOR_MEDIUM};
+			color: {COLOR_TEXT1};
+			border: 1px solid black;
+			border-radius: 0px;
+			margin-left: 0px;
+			padding-left: 5px;
+			padding-right: 5px;
+		}
+
+		QLabel::hover {   
+			border: 1px solid black;
+			background-color: {COLOR_ACCENT};
+			color: {COLOR_TEXT1};
+		}
+
+		QLabel::enabled {
+			color: {COLOR_TEXT1};
+		}
+
+		QLabel::disabled {
+			color: {COLOR_TEXT3};
 		}''')
 
 	QToolTip=f('''
 		QToolTip {
-			background-color: transparent;
+			background-color: {COLOR_MEDIUM};
 			color: {COLOR_TEXT1};
 			border: 0px solid transparent;
 		}''')

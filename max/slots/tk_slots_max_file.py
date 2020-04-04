@@ -1,5 +1,5 @@
-from tk_slots_max_init import Init
-maxEval = Init.maxEval
+from tk_slots_max_init import *
+
 
 from datetime import datetime
 import os.path

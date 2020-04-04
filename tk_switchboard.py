@@ -32,8 +32,8 @@ class __Switchboard(object):
 					'class' : <Class>,
 					'size' : [int, int]
 					'widgetDict' : {
-								'<widget name>':{
-											'widget':<widget>,
+								'<widget>':{
+											'widgetName':'objectName',
 											'signalInstance':<widget.signal>,
 											'widgetType':'<widgetClassName>',
 											'derivedType':'<derivedClassName>',
@@ -122,7 +122,7 @@ class __Switchboard(object):
 		if objectName:
 			widget.setObjectName(objectName) #assure the widget has an object name.
 		else:
-			objectName = widget.objectName()
+			objectName = str(widget.objectName())
 
 
 		n = name.split('_')[0] #get ie. 'polygons' from 'polygons_submenu' in cases where a submenu shares the same slot class of it's parent menu.
@@ -165,16 +165,17 @@ class __Switchboard(object):
 
 		#add values to widgetDict
 		self.widgetDict(name).update(
-					{objectName:{'widget':widget, 
-								'signalInstance':signalInstance,
-								'widgetType':widget.__class__.__name__,
-								'derivedType':derivedType,
-								'method':method,
-								'prefix':prefix,
-								'docString':docString}})
+					{widget:{
+						'widgetName':objectName, 
+						'signalInstance':signalInstance,
+						'widgetType':widget.__class__.__name__,
+						'derivedType':derivedType,
+						'method':method,
+						'prefix':prefix,
+						'docString':docString}})
 
-		# print(self._sbDict[name]['widgetDict'][objectName]['widget'].objectName())
-		return self._sbDict[name]['widgetDict'][objectName]['widget'] #return the stored widget.
+		# print(self._sbDict[name]['widgetDict'][widget]['widgetName']
+		return self._sbDict[name]['widgetDict'][widget]['widgetName'] #return the stored widget.
 
 
 
@@ -201,6 +202,22 @@ class __Switchboard(object):
 		return self._sbDict[name]['widgetDict']
 
 
+	def removeWidgets(self, widgets, name=None):
+		'''
+		Remove widget keys from the 'widgetDict'.
+
+		args:
+			widgets (obj)(list) = single or list of QWidgets.
+			name (str) = ui name.
+		'''
+		if not name:
+			name = self.getUiName()
+		if not type(widgets) is list:
+			widgets = [widgets]
+		for widget in widgets:
+			w = self._sbDict[name]['widgetDict'].pop(widget, None)
+			self.gcProtect(w)
+
 
 	def setSignals(self, name):
 		'''
@@ -223,9 +240,9 @@ class __Switchboard(object):
 		args:
 			name (str) = ui name
 		'''
-		for objectName in self.widgetDict(name):
-			signal = self.getSignal(name, objectName)
-			slot = self.getMethod(name, objectName)
+		for widget in self.widgetDict(name):
+			signal = self.getSignal(name, widget)
+			slot = self.getMethod(name, widget)
 			# print('__addSignal: ', name, objectName, signal, slot)
 			if slot and signal:
 				try:
@@ -235,7 +252,7 @@ class __Switchboard(object):
 						map(signal.connect, slot) #connect multiple slots from a list.
 
 					except Exception as error:
-						print('# Error: __addSignal:', name, objectName, error, signal, slot,'#') #, error
+						print('# Error: __addSignal:', name, widget.objectName(), error, signal, slot,'#') #, error
 
 
 
@@ -246,9 +263,9 @@ class __Switchboard(object):
 		args:
 			name (str) = ui name
 		'''
-		for objectName in self.widgetDict(name):
-			signal = self.getSignal(name, objectName)
-			slot = self.getMethod(name, objectName)
+		for widget in self.widgetDict(name):
+			signal = self.getSignal(name, widget)
+			slot = self.getMethod(name, widget)
 			# print('__removeSignal: ', name, objectName, signal, slot)
 			if slot and signal:
 				try:
@@ -259,7 +276,7 @@ class __Switchboard(object):
 						# map(signal.disconnect, slot) #disconnect multiple slots from a list.
 
 					except Exception as error:
-						print('# Error: __removeSignal:', name, objectName, error, signal, slot,'#') #, error
+						print('# Error: __removeSignal:', name, widget.objectName(), error, signal, slot,'#') #, error
 
 
 
@@ -286,6 +303,7 @@ class __Switchboard(object):
 
 	def getUi(self, name=False):
 		'''
+		Property.
 		Get the dynamic ui using its string name, or if no argument is given, return the current ui.
 
 		args:
@@ -295,9 +313,7 @@ class __Switchboard(object):
 			else: current dynamic ui object
 		'''
 		if not name:
-			n = self.getUiName()
-			name = n[0].lower()+n[1:] #lowercase the first letter of name.
-
+			name = self.getUiName(camelCase=True)
 		try:
 			return self._sbDict[name]['ui'] #self.uiList(ui=True)[self.getUiIndex(name)]
 		except ValueError:
@@ -311,9 +327,9 @@ class __Switchboard(object):
 
 		args:
 			index (str) = name
-				*or int - index of ui name
+				*or (int) - index of ui name
 		returns:
-			corresponding ui name as string
+			(str) corresponding ui name.
 		'''
 		if not 'name' in self._sbDict:
 			self._sbDict['name'] = []
@@ -327,24 +343,32 @@ class __Switchboard(object):
 
 
 
-	def getUiName(self, ui=None):
+	def getUiName(self, ui=None, camelCase=False, pascalCase=False):
 		'''
+		Property.
 		Get the ui name as a string.
 		If no argument is given, the name for the current ui will be returned.
 
 		args:
-			ui = <ui object> - (optional) use ui object to get its corresponding name. (the default behavior is to return the current ui name)
+			ui (obj) = (optional) use ui object to get its corresponding name. (the default behavior is to return the current ui name)
+			camelCase (bool) = (optional) return name with first letter lowercase. (default: False)
+			pascalCase (bool) = (optional) return name with first letter capitalized. (default: False)
 		returns:
-			'string' - ui name.
+			(str) - ui name.
 		'''
 		if not 'name' in self._sbDict:
-			self._sbDict['name'] = []
+			self._sbDict['name']=[]
 
 		if ui:
 			return next(k for k, value in self.uiList().items() if value==ui)
 
 		try:
-			return self._sbDict['name'][-1]
+			name = self._sbDict['name'][-1]
+			if pascalCase:
+				name = name[:1].capitalize()+name[1:] #capitalize the first letter
+			if camelCase:
+				name = name[0].lower()+name[1:] #lowercase the first letter
+			return name
 		except: #if index out of range (no value exists): return None
 			return None
 
@@ -352,6 +376,7 @@ class __Switchboard(object):
 
 	def getUiIndex(self, name=False):
 		'''
+		Property.
 		Get the index of the given ui name in the uiList.
 
 		args:
@@ -394,6 +419,7 @@ class __Switchboard(object):
 
 	def setUiSizeX(self, width, name=None):
 		'''
+		Property.
 		Set the X (width) value for the current ui.
 
 		args:
@@ -401,12 +427,13 @@ class __Switchboard(object):
 			width (int) = X size as an int
 		'''
 		height = self.getUiSize(name=name, height=True) #get the hight value.
-		setUiSize(name=name, width=width, height=height)
+		self.setUiSize(name=name, width=width, height=height)
 
 
 
 	def setUiSizeY(self, height, name=None):
 		'''
+		Property.
 		Set the Y (height) value for the current ui.
 
 		args:
@@ -414,12 +441,13 @@ class __Switchboard(object):
 			height (int) = Y size as an int
 		'''
 		width = self.getUiSize(name=name, width=True) #get the width value.
-		setUiSize(name=name, height=height, width=width)
+		self.setUiSize(name=name, height=height, width=width)
 
 
 
 	def getUiSize(self, name=None, width=None, percentWidth=None, height=None, percentHeight=None): #get current ui size info.
 		'''
+		Property.
 		Get the size info for each ui (allows for resizing a stacked widget where ordinarily resizing is constrained by the largest widget in the stack)
 
 		args:
@@ -456,6 +484,7 @@ class __Switchboard(object):
 
 	def getUiSizeX(self, name=None):
 		'''
+		Property.
 		Get the X (width) value for the current ui.
 
 		args:
@@ -469,6 +498,7 @@ class __Switchboard(object):
 
 	def getUiSizeY(self, name=None):
 		'''
+		Property.
 		Get the Y (height) value for the current ui.
 
 		args:
@@ -480,30 +510,22 @@ class __Switchboard(object):
 
 
 
-	def getNameFrom(self, obj):
+	def getNameFromWidget(self, widget):
 		'''
-		Get the ui name from any object existing in widgetDict.
+		Get the ui name from the given widget.
 
 		args:
-			obj = <object> - 
+			widget (obj) = QWidget
 		returns:
-			 'string' - the corresponding method name from the given object.
-			 ex. 'polygons' from <widget>
+			 (str) ui name. ie. 'polygons' from <somewidget>
 		'''
-		for name, v in self._sbDict.iteritems():
-			if type(v)==dict:
-				for k, v in v.iteritems():
-					if type(v)==dict:
-						for k, v in v.iteritems():
-							if type(v)==dict:
-								for k, v in v.iteritems():
-									if v==obj:
-										return name
+		return next((k for k,v in _sbDict.items() if type(v) is dict and 'widgetDict' in v and widget in v['widgetDict']), None)
 
 
 
 	def setMainAppWindow(self, app):
 		'''
+		Property.
 		Set parent application.
 
 		args:
@@ -519,6 +541,7 @@ class __Switchboard(object):
 
 	def getMainAppWindow(self, objectName=False):
 		'''
+		Property.
 		Get parent application if any.
 
 		args:
@@ -544,6 +567,7 @@ class __Switchboard(object):
 
 	def setClassInstance(self, class_, name=None):
 		'''
+		Property.
 		Case insensitive. Class string keys are stored lowercase regardless of how they are recieved.
 
 		args:
@@ -576,6 +600,7 @@ class __Switchboard(object):
 
 	def getClassInstance(self, class_):
 		'''
+		Property.
 		Case insensitive. (Class string keys are lowercase and any given string will be converted automatically)
 		If class is not in self._sbDict, getClassInstance will attempt to use setClassInstance() to first store the class.
 
@@ -603,7 +628,8 @@ class __Switchboard(object):
 
 	def getWidget(self, objectName=None, name=None):
 		'''
-		Case insensitive. Get the widget object/s from the given ui or widget name.
+		Property.
+		Case insensitive. Get the widget object/s from the given ui and objectName.
 
 		args:
 			name (str) = name of ui. ie. 'polygons'. If no name is given, the current ui will be used.
@@ -620,14 +646,15 @@ class __Switchboard(object):
 			self.widgetDict(name) #construct the signals and slots for the ui
 
 		if objectName:
-			return self._sbDict[name]['widgetDict'][objectName]['widget']
-		else: #return all widgets:
-			return [self._sbDict[name]['widgetDict'][objectName]['widget'] for objectName in self._sbDict[name]['widgetDict']]
+			return next((w for w in self._sbDict[name]['widgetDict'].values() if w['widgetName']==objectName), None)
+		else:
+			return [w for w in self._sbDict[name]['widgetDict'].keys()]
 
 
 
 	def getWidgets(self, name=None):
 		'''
+		Get Property.
 		Get all widgets for a ui.
 
 		args:
@@ -635,6 +662,34 @@ class __Switchboard(object):
 		'''
 		self.getWidget(name=name)
 
+
+
+	def getWidgetName(self, widget=None, name=None):
+		'''
+		Property.
+		Get the widget's objectName as a string from the given ui.
+
+		args:
+			name (str) = name of ui. ie. 'polygons'. If no name is given, the current ui will be used.
+		returns:
+			if widget: (str) the stored objectName for the given widget.
+			if not widget: (list) all names.
+			if name: stored objectNames for the given ui name.
+			if not name: stored objectName from the current ui.
+			else: all stored objectNames.
+		'''
+		if not name:
+			name = self.getUiName()
+
+		if not 'widgetDict' in self._sbDict[name]:
+			self.widgetDict(name) #construct the signals and slots for the ui
+
+		if widget:
+			return self._sbDict[name]['widgetDict'][widget]['widgetName']
+		if name and not widget: #return all objectNames from ui name.
+			return [w['widgetName'] for w in self._sbDict[name]['widgetDict'].values()]
+		else: #return all objectNames:
+			return [w['widgetName'] for k,w in self._sbDict.items() if k=='widgetDict']
 
 
 	def getWidgetType(self, widget, name=None):
@@ -649,8 +704,9 @@ class __Switchboard(object):
 		returns:
 			'string' - the corresponding widget class name
 		'''
-		if not type(widget)==str:
-			widget = widget.objectName() #use the objectName to get a string key for 'widget'
+		if type(widget)==str:
+			objectName = self._sbDict[name]['widgetDict'][widget] #use the stored objectName as a more reliable key.
+			widget = self.getWidget(objectName, name) #use the objectName to get a string key for 'widget'
 
 		if not name:
 			name = self.getUiName()
@@ -671,18 +727,14 @@ class __Switchboard(object):
 		ie. 'QPushButton' from a custom subclassed pushbutton.
 
 		args:
-			widget = 'string'  - name of widget/widget
-				*or <object> - widget
-			name (str) = name of dynamic ui (else use current ui)
+			widget (str)(obj) = widget or objectName.
+			name (str) = ui name.
 		returns:
 			'string' - the corresponding widget derived class name
 		'''
-		if not type(widget)==str:
-			w = widget.objectName() #use the objectName to get a string key for 'widget'
-			if not w:
-				raise Exception('# Error: No object name found for '+str(widget)+' #')
-			else:
-				widget = w
+		if type(widget)==str:
+			objectName = self._sbDict[name]['widgetDict'][widget] #use the stored objectName as a more reliable key.
+			widget = self.getWidget(objectName, name) #use the objectName to get a string key for 'widget'
 
 		if not name:
 			name = self.getUiName()
@@ -694,30 +746,34 @@ class __Switchboard(object):
 
 
 
-	def getMethod(self, name, methodName=None):
+	def getMethod(self, name, widget=None):
 		'''
 		args:
 			name (str) = name of class. ie. 'polygons'
-			methodName (str) = optional name of method. ie. 'b001'
+			widget (str)(obj) = widget, widget's objectName, or method name.
 		returns:
-			if methodName: corresponding method object to given method name string.
-			else: all of the methods associated with the given name as a list.
-		ex. sb.getMethod('polygons', 'b022')() #call method 'b022' of the 'polygons' class
+			if widget: corresponding method object to given widget.
+			else: all of the methods associated to the given ui name as a list.
+		ex. sb.getMethod('polygons', <b022>)() #call method <b022> of the 'polygons' class
 		'''
 		if not 'widgetDict' in self._sbDict[name]:
 			self.widgetDict(name) #construct the signals and slots for the ui
-		
-		if methodName:
+
+		if widget:
 			try:
-				return self._sbDict[name]['widgetDict'][methodName]['method'][0] #if there are event filters attached (ie. a list), just get the method.
+				if type(widget) is str:
+					return next(w['method'][0] for w in self._sbDict[name]['widgetDict'].values() if w['widgetName']==widget) #if there are event filters attached (as a list), just get the method (at index 0).
+				return self._sbDict[name]['widgetDict'][widget]['method'][0] #if there are event filters attached (as a list), just get the method (at index 0).
 			except:
-				return  self._sbDict[name]['widgetDict'][methodName]['method']
+				if type(widget) is str:
+					return next((w['method'] for w in self._sbDict[name]['widgetDict'].values() if w['widgetName']==widget), None)
+				return self._sbDict[name]['widgetDict'][widget]['method']
 		else:
-			return [self._sbDict[name]['widgetDict'][methodName]['method'] for methodName in self._sbDict[name]['widgetDict']]
+			return [w['method'] for w in self._sbDict[name]['widgetDict'].values()]
 
 
 
-	def getSignal(self, name, objectName=None):
+	def getSignal(self, name, widget=None):
 		'''
 		args:
 			name (str) = name of ui. ie. 'polygons'
@@ -729,18 +785,18 @@ class __Switchboard(object):
 		if not 'widgetDict' in self._sbDict[name]:
 			self.widgetDict(name) #construct the signals and slots for the ui
 
-		if objectName:
-			return self._sbDict[name]['widgetDict'][objectName]['signalInstance']
+		if widget:
+			return self._sbDict[name]['widgetDict'][widget]['signalInstance']
 		else:
-			return [self._sbDict[name]['widgetDict'][objectName]['signalInstance'] for objectName in self._sbDict[name]['widgetDict']]
+			return [w['signalInstance'] for w in self._sbDict[name]['widgetDict'].values()]
 
 
 
-	def getDocString(self, name, methodName, all_=False):
+	def getDocString(self, name, widgetName, all_=False):
 		'''
 		args:
 			name (str) = optional name of class. ie. 'polygons'. else, use current name.
-			methodName (str) = name of method. ie. 'b001'
+			widgetName (str) = name of method. ie. 'b001'
 			all_ = bool return entire unedited docString
 		returns:
 			if all_: the entire stored docString
@@ -749,7 +805,7 @@ class __Switchboard(object):
 		if not 'widgetDict' in self._sbDict[name]:
 			self.widgetDict(name) #construct the signals and slots for the ui
 
-		docString = self._sbDict[name]['widgetDict'][methodName]['docString']
+		docString = next(w['docString'] for w in self._sbDict[name]['widgetDict'].values() if w['widgetName']==widgetName)
 		if docString and not all_:
 			return docString.strip('\n\t') #return formatted docString
 		else:
@@ -759,6 +815,7 @@ class __Switchboard(object):
 
 	def previousName(self, previousIndex=False, allowDuplicates=False, allowLevel0=False, allowLevel1=True, allowLevel2=True, allowCurrent=False, as_list=False):
 		'''
+		Property.
 		Get the previously called ui name string, or a list of ui name strings ordered by use.
 		It does so by pulling from the 'name' list which keeps a list of the ui names as they are called. ie. ['previousName2', 'previousName1', 'currentName']
 
@@ -910,20 +967,23 @@ class __Switchboard(object):
 
 
 
-	def gcProtect(self, obj=None):
+	def gcProtect(self, obj=None, clear=False):
 		'''
 		Protect given object from garbage collection.
 
 		args:
-			obj = <object>
+			obj (obj) = obj to add to the protected list.
 		returns:
-			list of protected objects.
+			(list) of protected objects.
 		'''
 		if not 'gcProtect' in self._sbDict:
 			self._sbDict['gcProtect']=[]
 
+		if clear:
+			return self._sbDict['gcProtect'][:]
+
 		if obj and obj not in self._sbDict['gcProtect']:
-				self._sbDict['gcProtect'].append(obj)
+			self._sbDict['gcProtect'].append(obj)
 
 		return self._sbDict['gcProtect']
 
@@ -967,6 +1027,65 @@ class __Switchboard(object):
 
 
 
+	def getParentKeys(self, nested_dict, value):
+		'''
+		Get all parent keys from a nested value.
+
+		args:
+			nested_dict (dict) = 
+			value (value) = 
+		returns:
+			(list) parent keys
+
+		ex. call:
+		getParentKeys(_sbDict, 'cmb002') returns all parent keys of the given value. ex. ['polygons', 'widgetDict', '<widgets.QComboBox_.QComboBox_ object at 0x0000016B6C078908>', 'widgetName'] ...
+		'''
+		for k,v in nested_dict.items():
+			if type(v) is dict:
+				p = self.getParentKeys(v, value)
+				if p:
+					return [k]+p
+			elif v==value:
+				return [k]
+
+
+
+	def get(self, nested_dict, obj, type_='value', nested_list=[]):
+		'''
+		Get objects from any nested dict in _sbDict using a given key or value.
+
+		args:
+			nested_dict (dict) = 
+			obj (key)(value) = 
+			type_ (str) = 
+			nested_list (list) = 
+		returns:
+			(list) keys or values.
+
+		ex. call:
+		self.get(self._sbDict, 'cmb002', 'nameFromValue') #returns a list of all ui names containing 'cmb002' values.
+		'''
+		for k,v in nested_dict.items():
+			if type_ is 'valuesFromKey': 
+				if k==obj: #found key
+					nested_list.append(v)
+
+			elif type_ is 'keysFromValue':
+				if v==obj: #found value
+					nested_list.append(k)
+
+			elif type_ is 'namesFromValue':
+				if v==obj: #found value
+					nested_list.append(self.getParentKeys(self._sbDict, v)[0])
+
+			if type(v) is dict: #found dict
+				p = get(v, obj, type_, nested_list) #recursive call
+				if p:
+					return p
+		return nested_list
+
+
+
 	def getSubmenu(self, ui):
 		'''
 		Get the submenu object of the given ui using it's name string, or the parent ui object.
@@ -986,6 +1105,7 @@ class __Switchboard(object):
 
 	def getUiLevel(self, name=False):
 		'''
+		Property.
 		Get the hierarcical level of a ui from its string name.
 		If no argument is given, the level of current ui will be returned.
 
@@ -1010,7 +1130,7 @@ class __Switchboard(object):
 
 
 
-	def prefix(self, objectName, prefix=None):
+	def prefix(self, widget, prefix=None):
 		'''
 		Checks if the given objectName startswith an alphanumeric prefix, followed by three integers. ex. i000 (alphanum,int,int,int)
 		and if so, returns the alphanumberic prefix.
@@ -1018,41 +1138,48 @@ class __Switchboard(object):
 		if second prefix arg is given, then the method checks if the given objectName has the prefix, and the return value is bool.
 
 		args:
-			objectName (str) = string to check against.
+			widget (str)(obj) = widget or it's objectName.
 			prefix (str) = optional; check if the given objectName startwith this prefix.
 		returns:
 			if prefix arg given:
-				bool - True if correct format else, False.
+				(bool) - True if correct format else; False.
 			else:
-				alphanumeric 'string' 
+				(str) alphanumeric 'string' 
 		'''
 		if prefix: #check the actual prefix against the given prefix and return bool.
 			name = self.getUiName()
 			try:
-				prefix1 = self._sbDict[name]['widgetDict'][objectName]['prefix']
+				if type(widget) is str: #get prefix using the widget's objectName.
+					prefix1 = next(w['prefix'] for w in self._sbDict[name]['widgetDict'].values() if w['widgetName']==widget)
+				else:
+					prefix1 = self._sbDict[name]['widgetDict'][widget]['prefix']
 				if prefix1==prefix:
 					return True
 
 			except KeyError:
-				if objectName.startswith(prefix):
+				if not type(widget) is str:
+					widget = widget.objectName()
+				if widget.startswith(prefix):
 					i = len(prefix)
-					integers = [c for c in objectName[i:i+3] if c.isdigit()]
-					if len(integers)>2 or len(objectName)==i:
+					integers = [c for c in widget[i:i+3] if c.isdigit()]
+					if len(integers)>2 or len(widget)==i:
 						return True
 
 			return False
 
 		else: #return prefix.
 			prefix=''
-			for char in objectName:
+			if not type(widget) is str:
+				widget = widget.objectName()
+			for char in widget:
 				if not char.isdigit():
 					prefix = prefix+char
 				else:
 					break
 
 			i = len(prefix)
-			integers = [c for c in objectName[i:i+3] if c.isdigit()]
-			if len(integers)>2 or len(objectName)==i:
+			integers = [c for c in widget[i:i+3] if c.isdigit()]
+			if len(integers)>2 or len(widget)==i:
 				return prefix
 
 
@@ -1107,6 +1234,7 @@ class __Switchboard(object):
 	class_ = property(getClassInstance, setClassInstance)
 	mainAppWindow = property(getMainAppWindow, setMainAppWindow)
 	getWidgets = property(getWidget)
+	getWidgetNames = property(getWidgetName)
 
 
 
@@ -1173,7 +1301,8 @@ _sbDict={
 				'ui': '<polygons ui object>',
 				'uiLevel': 3,
 				'size': [210, 480],
-				'widgetDict': {'cmb002': {'widget': '<widgets.QComboBox_.QComboBox_ object at 0x0000016B6C078908>', 
+				'widgetDict': {'<widgets.QComboBox_.QComboBox_ object at 0x0000016B6C078908>': {
+									'widgetName': 'cmb002', 
 									'widgetType': 'QComboBox_', 
 									'derivedType': 'QComboBox', 
 									'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000016B62BC5780>',
@@ -1212,3 +1341,23 @@ _sbDict={
 	# 		list
 	# 	'''
 	# 	return self.previousName(allowLevel0=1, as_list=1)
+
+# def getNameFrom(obj):
+# 	'''
+# 	Get the ui name from any object existing in 'widgetDict'.
+
+# 	args:
+# 		obj = <object> - 
+# 	returns:
+# 		 'string' - the corresponding method name from the given object.
+# 		 ex. 'polygons' from <widget>
+# 	'''
+# 	for name, v in self._sbDict.items():
+# 		if type(v)==dict:
+# 			for k, v in v.items():
+# 				if type(v)==dict:
+# 					for k, v in v.items():
+# 						if type(v)==dict:
+# 							for k, v in v.items():
+# 								if v==obj:
+# 									return name

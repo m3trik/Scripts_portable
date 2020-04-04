@@ -246,6 +246,8 @@ class Tk(QtWidgets.QStackedWidget):
 		args:
 			event = <QEvent>
 		'''
+		sb.gcProtect(clear=True) #clear any garbage protected items.
+
 		self.setUi('init')
 		#run once on launch. update the info textEdit.
 		method = sb.getMethod(sb.name, 'info')

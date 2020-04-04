@@ -1,8 +1,10 @@
 from __future__ import print_function
-from tk_slots_max_init import Init
-maxEval = Init.maxEval
+from tk_slots_max_init import *
+
 
 import os.path
+
+
 
 
 
@@ -15,27 +17,30 @@ class Cameras(Init):
 		self.tree000()
 
 
-	def tree000(self, wItem=None, column=None):
+	def tree000(self, wItem=None, column=None, refresh=False):
 		'''
 		Cameras
 		'''
 		tree = self.ui.tree000
 
 		if not any([wItem, column]):
-			tree.stepColumns = True
-			tree.convert(tree.getTopLevelItems(), 'QPushButton')
+			if not refresh:
+				tree.stepColumns = True
+				tree.convert(tree.getTopLevelItems(), 'QPushButton')
+			else:
+				tree.refresh()
 
 			l = ['Custom Camera','Set Custom Camera','Camera From View']
 			[tree.add('QPushButton', 'Create', setText=t) for t in l]
 
-			l = ['camera'+str(i) for i in range(3)] #List scene Cameras
-			[tree.add('QPushButton', 'Cameras', setText=t) for t in l]
+			l = ['camera '+str(i) for i in range(3)] #List scene Cameras
 			# l = [cam.name for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
-			# [w.add('QPushButton', 'Cameras', setText=t) for t in l]
+			print(l, '*cameras')
+			[tree.add('QLabel', 'Cameras', setText=t) for t in l]
 
-			l = ['test'+str(i) for i in range(3)]
-			test = tree.add('QPushButton', 'Cameras', parent_='Test', setText='Options')
-			[tree.add('QPushButton', test, setText=t) for t in l]
+			l = ['Group Cameras']
+			[tree.add('QPushButton', 'Options', setText=t) for t in l]
+
 
 		else:
 			# widget = tree.getWidget(wItem, column)
@@ -58,22 +63,33 @@ class Cameras(Init):
 				cmb.setCurrentIndex(0)
 				rt.redrawViews()
 
+			if header=='Create':
+				if text=='Group Cameras':
+					cameras = [cam for cam in rt.cameras] #List scene Cameras
 
-	def cmb000(self, index=None):
-		'''
-		Editors
-		'''
-		cmb = self.ui.cmb000
+					layer = rt.LayerManager.getLayerFromName ("Cameras")
+					if not layer:
+						layer = rt.LayerManager.NewLayerFromName("Cameras")
+
+					for cam in cameras:
+						layer.addnode(cam)
+
+
+	# def cmb000(self, index=None):
+	# 	'''
+	# 	Editors
+	# 	'''
+	# 	cmb = self.ui.cmb000
 		
-		files = ['']
-		contents = cmb.addItems_(files, ' ')
+	# 	files = ['']
+	# 	contents = cmb.addItems_(files, ' ')
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index(''):
-				pass
-			cmb.setCurrentIndex(0)
+	# 	if not index:
+	# 		index = cmb.currentIndex()
+	# 	if index!=0:
+	# 		if index==contents.index(''):
+	# 			pass
+	# 		cmb.setCurrentIndex(0)
 
 
 	# def cmb001(self, index=None):
@@ -116,28 +132,28 @@ class Cameras(Init):
 	# 		cmb.setCurrentIndex(0)
 
 
-	def cmb003(self, index=None):
-		'''
-		Options
-		'''
-		cmb = self.ui.cmb003
+	# def cmb003(self, index=None):
+	# 	'''
+	# 	Options
+	# 	'''
+	# 	cmb = self.ui.cmb003
 		
-		list_ = ['Group Cameras']
-		contents = cmb.addItems_(list_, "Options")
+	# 	list_ = ['Group Cameras']
+	# 	contents = cmb.addItems_(list_, "Options")
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==1:
-				cameras = [cam for cam in rt.cameras] #List scene Cameras
+	# 	if not index:
+	# 		index = cmb.currentIndex()
+	# 	if index!=0:
+	# 		if index==1:
+	# 			cameras = [cam for cam in rt.cameras] #List scene Cameras
 
-				layer = rt.LayerManager.getLayerFromName ("Cameras")
-				if not layer:
-					layer = rt.LayerManager.NewLayerFromName("Cameras")
+	# 			layer = rt.LayerManager.getLayerFromName ("Cameras")
+	# 			if not layer:
+	# 				layer = rt.LayerManager.NewLayerFromName("Cameras")
 
-				for cam in cameras:
-					layer.addnode(cam)
-			cmb.setCurrentIndex(0)
+	# 			for cam in cameras:
+	# 				layer.addnode(cam)
+	# 		cmb.setCurrentIndex(0)
 
 
 

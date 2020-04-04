@@ -4,25 +4,22 @@ import os
 
 from tk_slots_ import Slot
 
-
 #3ds Max dependancies
 try:
 	import MaxPlus
 	from pymxs import runtime as rt
+	maxEval = MaxPlus.Core.EvalMAXScript
 
 except ImportError as error:
 	print error
+	def p(s): pass
+	maxEval = p
+	rt = None
 
 
 
 class Init(Slot):
 
-	try:
-		maxEval = MaxPlus.Core.EvalMAXScript
-	except:
-		@staticmethod
-		def p(s): pass
-		maxEval = p
 
 	def __init__(self, *args, **kwargs):
 		super(Init, self).__init__(*args, **kwargs)
