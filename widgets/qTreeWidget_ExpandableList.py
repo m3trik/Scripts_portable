@@ -20,7 +20,7 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 
 	refresh_ = QtCore.Signal(bool)
 
-	def __init__(self, parent=None, stepColumns=False):
+	def __init__(self, parent=None, stepColumns=True):
 		super (QTreeWidget_ExpandableList, self).__init__(parent)
 
 		self.setHeaderHidden(True)
@@ -174,21 +174,21 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		'''
 		'''
 		# if not (str(event.type()).split('.')[-1]) in ['QPaintEvent', 'UpdateLater', 'PolishRequest', 'Paint']: print(str(event.type())) #debugging
-		if not widget.isVisible():
-			return super(QTreeWidget_ExpandableList, self).eventFilter(widget, event)
+		# if not widget.isVisible():
+		# 	return super(QTreeWidget_ExpandableList, self).eventFilter(widget, event)
 
 		if event.type()==QtCore.QEvent.HoverEnter:
 			# print(widget.text(), 'HoverEnter')
 			if self.isParent(widget):
 				childColumns = self.getChildColumnsFromWidget(widget)
 				columns = [0]+childColumns
-				self.__setEnabledState(childColumns, widget) #set widgets enabled/disabled
+				self._setEnabledState(childColumns, widget) #set widgets enabled/disabled
 				self._showColumns(columns)
 				self._resize(columns)
 			else:
 				column = self.getColumnFromWidget(widget)
 				parentColumns = self.getParentColumnsFromWidget(widget)
-				self.__setEnabledState(column, widget) #set widgets enabled/disabled
+				self._setEnabledState(column, widget) #set widgets enabled/disabled
 				self._showColumns([column]+parentColumns)
 				self._resize([column]+parentColumns)
 
@@ -211,6 +211,9 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 
 		if event.type()==QtCore.QEvent.HoverLeave:
 			# print(widget.text(), 'HoverLeave')
+			self._resize(0)
+			self._showColumns(0)
+			self._setEnabledState(0, widget) #set widgets enabled/disabled
 			if not __name__=='__main__':
 				self.window().grabMouse()
 				# print('grab:', self.mouseGrabber().objectName(), 'window()')
@@ -227,24 +230,13 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		return super(QTreeWidget_ExpandableList, self).eventFilter(widget, event)
 
 
-	def EnterEvent(self, event):
-		'''
-		'''
-		# print ('EnterEvent')
-		self.__setEnabledState(0) #set widgets enabled/disabled
-		self._resize(0)
-		self._showColumns(0)
-		QtWidgets.QApplication.sendEvent(self._mouseGrabber, self.hoverMove_)
-		
-		return QtWidgets.QTreeWidget.EnterEvent(self, event)
-
-
 	def leaveEvent(self, event):
 		'''
 		'''
 		# print ('LeaveEvent')
 		self._resize(0)
 		self._showColumns(0)
+		self._mouseGrabber = self
 		
 		return QtWidgets.QTreeWidget.leaveEvent(self, event)
 
@@ -293,14 +285,16 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		return '{0}|{1}|{2}|{3}'.format(self.objectName(), header, column, row) #ie. 'tree002|Options|0|1'
 
 
-	def __setEnabledState(self, columns, widget=None):
+	def _setEnabledState(self, columns, widget=None):
 		'''
 		Disables/Enables widgets along the tree hierarchy.
 
 		args:
 			widget (obj) = QWidget. current widget
-			columns (list) = column indices.
+			columns (int)(list) = column indices.
 		'''
+		if type(columns) is int:
+			columns = [columns]
 		if widget:
 			if self.getColumnFromWidget(widget)==(0):
 				columns = [0]+columns
@@ -334,7 +328,7 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			return None
 
 
-	def __setHeader(self, header, column=None):
+	def _setHeader(self, header, column=None):
 		'''
 		Set new header and column or modify an existing.
 
@@ -688,16 +682,20 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		'''
 		try:
 			if not __name__=='__main__':
-				# print('showEvent')
-				className = self.sb.getUiName(pascalCase=True)
-				class_ = self.sb.getClassInstance(className)
-				class_.tree000(refresh=1)
-		except Exception as error:
-			# print (error)
+				self.classMethod(refresh=True)
+
+		except AttributeError:
 			from tk_switchboard import sb
 			self.sb = sb
-		childEvents = self.sb.getClassInstance('EventFactoryFilter')
-		childEvents.initWidgetItems(self.getWidgets(removeNoneValues=1), self.sb.getUiName())
+
+			className = self.sb.getUiName(pascalCase=True)
+			class_ = self.sb.getClassInstance(className)
+			widgetName = str(self.objectName())
+			self.classMethod = getattr(class_, widgetName)
+			self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
+
+		
+		self.childEvents.initWidgetItems(self.getWidgets(removeNoneValues=1), self.sb.getUiName())
 
 		return QtWidgets.QTreeWidget.showEvent(self, event)
 
@@ -783,3 +781,16 @@ if __name__ == '__main__':
 	# 	if self.itemWidget(wItem, column).text()==widget.text():
 	# 		print (widget.text())
 	# 		return True
+
+
+
+	# def EnterEvent(self, event):
+	# 	'''
+	# 	'''
+	# 	print ('EnterEvent')
+	# 	self._setEnabledState(0) #set widgets enabled/disabled
+	# 	self._resize(0)
+	# 	self._showColumns(0)
+	# 	QtWidgets.QApplication.sendEvent(self._mouseGrabber, self.hoverMove_)
+		
+	# 	return QtWidgets.QTreeWidget.EnterEvent(self, event)

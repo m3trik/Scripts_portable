@@ -123,12 +123,11 @@ class EventFactoryFilter(QtCore.QObject):
 			name (str) = ui name.
 		'''
 		# print([i.objectName() for i in sb.getWidget(name=name) if name=='cameras']), '---'
+		widgetsUnderMouse=[] #list of widgets currently under the mouse cursor and their parents. in hierarchical order.
 		for widget in sb.getWidget(name=name): #get all widgets from the current ui.
 			try:
 				widgetName = widget.objectName()
 			except:
-				
-				print (name, 'mouseTracking')
 				return False
 
 			if widget.rect().contains(widget.mapFromGlobal(QtGui.QCursor.pos())): #if mouse over widget:
@@ -138,10 +137,14 @@ class EventFactoryFilter(QtCore.QObject):
 					self._mouseOver.append(widget)
 
 					if not widgetName=='mainWindow':
-						if widget.isEnabled():
-							widget.grabMouse() #set widget to receive mouse events.
-							# print('grab:', widget.mouseGrabber().objectName(), '(tk_childEvents)')
-							self._mouseGrabber = widget
+						if widget.underMouse() and widget.isEnabled():
+							parentWidgets=[]
+							w = widget
+							while w:
+								parentWidgets.append(w)
+								w = w.parentWidget()
+							widgetsUnderMouse.append(parentWidgets)
+							# print([str(w.objectName()) for w in allParentWidgets])
 
 			else:
 				if widget in self._mouseOver: #if widget is in the mouseOver list, but the mouse is no longer over the widget:
@@ -151,6 +154,13 @@ class EventFactoryFilter(QtCore.QObject):
 						self.ui.mainWindow.grabMouse()
 						self._mouseGrabber = self.ui.mainWindow
 
+		widgetsUnderMouse.sort(key=len) #sort 'widgetsUnderMouse' by ascending length so that lowest level child widgets get grabMouse last.
+		if widgetsUnderMouse:
+			for widgetList in widgetsUnderMouse:
+				widget = widgetList[0]
+				widget.grabMouse() #set widget to receive mouse events.
+				# print('grab:', widget.mouseGrabber().objectName(), '(tk_childEvents)')
+				self._mouseGrabber = widget
 
 
 	@staticmethod

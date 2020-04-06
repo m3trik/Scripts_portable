@@ -59,6 +59,10 @@ class Tk(QtWidgets.QStackedWidget):
 		sb.setSignals(name)#sb.setSignals = name #connect new signals while disconnecting any previous.
 
 		self.resize(sb.sizeX, sb.sizeY)  #Set the size info for each ui (allows for resizing a stacked widget where ordinarily resizing is constrained by the largest widget in the stack)
+		# if sb.uiLevel<3:
+		# 	self.showFullScreen()
+
+		# print('keyboardGrabber:', self.keyboardGrabber())
 
 		self.setCurrentWidget(sb.ui) #set the stacked widget to the given ui.
 
@@ -255,6 +259,7 @@ class Tk(QtWidgets.QStackedWidget):
 			sb.ui.info.insertText(method())
 
 		self.move(QtGui.QCursor.pos() - self.rect().center()) #move window to cursor position and offset from left corner to center
+		# sb.ui.staticWindow.move(sb.ui.staticWindow.pos()+QtGui.QCursor.pos())
 		self.activateWindow()
 
 
