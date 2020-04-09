@@ -135,7 +135,7 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 				}
 		'''
 		#if header doesn't contain the refresh column flag: return the parent header.
-		if not header.startswith('*') and self.refresh==True:
+		if not self.isRefreshedHeader(header) and self.refresh:
 			return self.getParentHeaderFromHeader(header)
 
 		#set widget
@@ -150,7 +150,7 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 
 		#set widgetItem
 		header = self.getHeaderFromWidget(widget, header)
-		column = self.getColumnFromHeader(header)
+		column = self.getColumnFromHeader(header, self.refresh)
 		row = self.getStartingRowFromHeader(header)
 		parentHeader = self.getParentHeaderFromWidget(widget, parentHeader)
 
@@ -203,19 +203,20 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		if event.type()==QtCore.QEvent.HoverMove:
 			try:
 				w = next(w for w in self.widgets.keys() if w.rect().contains(w.mapFromGlobal(QtGui.QCursor.pos())) and w.isVisible())
-				if not w is self._mouseGrabber:
-					if self._mouseGrabber is not None:
-						QtWidgets.QApplication.sendEvent(self._mouseGrabber, self.hoverLeave_)
-						QtWidgets.QApplication.sendEvent(self._mouseGrabber, self.leaveEvent_)
-					if not w is self.mouseGrabber():
-						w.grabMouse()
-						# print('grab:', self.mouseGrabber().objectName())
-					self._mouseGrabber = w
-					QtWidgets.QApplication.sendEvent(w, self.hoverEnter_)
-					QtWidgets.QApplication.sendEvent(w, self.enterEvent_)
-
 			except StopIteration:
-				QtWidgets.QApplication.sendEvent(self._mouseGrabber, self.hoverLeave_)
+				return QtWidgets.QApplication.sendEvent(self._mouseGrabber, self.hoverLeave_)
+
+			if not w is self._mouseGrabber:
+				if self._mouseGrabber is not None:
+					QtWidgets.QApplication.sendEvent(self._mouseGrabber, self.hoverLeave_)
+					QtWidgets.QApplication.sendEvent(self._mouseGrabber, self.leaveEvent_)
+				if not w is self.mouseGrabber():
+					w.grabMouse()
+					# print('grab:', self.mouseGrabber().objectName())
+				self._mouseGrabber = w
+				QtWidgets.QApplication.sendEvent(w, self.hoverEnter_)
+				QtWidgets.QApplication.sendEvent(w, self.enterEvent_)
+
 
 		if event.type()==QtCore.QEvent.HoverLeave:
 			# print(widget.text(), 'HoverLeave')
@@ -498,7 +499,7 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			return []
 
 
-	def getColumnFromHeader(self, header):
+	def getColumnFromHeader(self, header, refreshedColumn=False):
 		'''
 		Get the stored column index.
 
@@ -508,7 +509,10 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			(int) = the column corresponding to the given header.
 		'''
 		try:
-			return next(i[1] for i in self.widgets.values() if i[0]==header)
+			if refreshedColumn:
+				return next(i[1] for i in self._refreshed if i and i[0]==header)
+			else:
+				return next(i[1] for i in self.widgets.values() if i[0]==header)
 		except StopIteration: #else assign a new column to the header.
 			if not hasattr(self, '_c'):
 				self._c = 0 #columns start at 0
@@ -543,7 +547,7 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		Get the stored column index.
 
 		args:
-			parentHeader (str) = parentHeader name.
+			parentHeader (str) = parentHeader text.
 		'''
 		try:
 			return next(i[1] for i in self.widgets.values() if i[3]==parentHeader)
@@ -551,15 +555,20 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			return None
 
 
-	def getColumns(self):
+	def getColumns(self, refreshedColumns=False):
 		'''
 		Get all of the columns currently used.
 
+		args:
+			refreshedColumns (bool) = get only columns flagged as refreshed. Default is False.
 		returns:
-			set of ints 
+			(set) set of ints representing column indices. 
 		'''
 		try:
-			columns = set([i[1] for i in self.widgets.values()])
+			if refreshedColumns:
+				columns = set([i[1] for i in self.widgets.values() if self.isRefreshedHeader(i[0])])
+			else:
+				columns = set([i[1] for i in self.widgets.values()])
 			if not columns:
 				raise Exception
 		except Exception:
@@ -631,7 +640,7 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			list_ = [self.itemWidget(i, c) for c in self.getColumns() for i in self.getTopLevelItems()]
 
 		if refreshedWidgets:
-			list_ = [w for w in list_ if w is not None and self.getHeaderFromWidget(w).startswith('*')]
+			list_ = [w for w in list_ if w is not None and self.isRefreshedHeader(self.getHeaderFromWidget(w))]
 
 		if inverse:
 			list_ = [i for i in self.getWidgets() if i not in list_]
@@ -684,6 +693,15 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		return None
 
 
+	def isRefreshedHeader(self, header):
+		'''
+		'''
+		if header is not None and header.startswith('*'):
+			return True
+		else:
+			return False
+
+
 	def convert(self, items, w, columns=None):
 		'''
 		Convert itemWidgets to a given type.
@@ -709,6 +727,20 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 				[self.add(w, parentHeader=i, setText=i) for i in list_ if i]
 			else:
 				[self.add(w, header=self.headerItem().text(c), setText=i) for i in list_ if i]
+
+
+	def clear_(self, columns):
+		'''
+		'''
+		self._refreshed=[]
+		for column in columns:
+			for wItem in self.getTopLevelItems():
+				widget = self.itemWidget(wItem, column)
+				self.removeItemWidget(wItem, column)
+				list_ = self.widgets.pop(widget, None) #remove the widget from the widgets dict.
+				self._refreshed.append(list_)
+				if widget:
+					shiboken2.delete(widget)
 
 
 	def showEvent(self, event):
@@ -744,6 +776,9 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			event = <QEvent>
 		'''
 		self.refresh = True
+		refreshedColumns = self.getColumns(refreshedColumns=True)
+		if refreshedColumns:
+			self.clear_(refreshedColumns)
 
 		return QtWidgets.QTreeWidget.hideEvent(self, event)
 
@@ -810,28 +845,6 @@ if __name__ == '__main__':
 
 # depricated: ---------------------------------------------------------------------------
 
-
-# def _resize(self, columns, buffer_=25, resizeFirstColumn=False):
-	# 	'''
-	# 	Resize the treeWidget to fit it's current visible wItems.
-
-	# 	args:
-	# 		columns (int)(list) = column index or list of column indices.
-	# 		buffer (int) = Amount to additionally resize. (default is 25)
-	# 	'''
-	# 	if type(columns) is int:
-	# 		columns = [columns]
-	# 	for column in set(columns):
-	# 		if not resizeFirstColumn and column is 0:
-	# 			columnWidth = self.columnWidth(column)
-	# 		else:
-	# 			columnWidth = self.sizeHintForColumn(column)+buffer_
-	# 			self.resizeColumnToContents(column)
-	# 		# self.setColumnWidth(column, columnWidth)
-	# 		# self.header().resizeSection(column, columnWidth)
-
-	# 	# totalWidth = sum([self.columnWidth(c) for c in columns])
-	# 	# self.resize(totalWidth, self.sizeHint().height()) #resize main widget to fit column.
 
 
 	# def isExistingWidget(self, widget, column, row):
