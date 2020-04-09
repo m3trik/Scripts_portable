@@ -114,29 +114,51 @@
        <bool>false</bool>
       </property>
       <property name="columnCount">
-       <number>1</number>
+       <number>3</number>
       </property>
       <attribute name="headerVisible">
        <bool>false</bool>
       </attribute>
       <column>
        <property name="text">
-        <string notr="true">-1</string>
+        <string notr="true">root</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Create</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Options</string>
        </property>
       </column>
       <item>
        <property name="text">
         <string>Create</string>
        </property>
+       <property name="text">
+        <string>Custom Camera</string>
+       </property>
+       <property name="text">
+        <string>Group Cameras</string>
+       </property>
       </item>
       <item>
        <property name="text">
-        <string>Cameras</string>
+        <string>*Cameras</string>
+       </property>
+       <property name="text">
+        <string>Set Custom Camera</string>
        </property>
       </item>
       <item>
        <property name="text">
         <string>Editors</string>
+       </property>
+       <property name="text">
+        <string>Camera From View</string>
        </property>
       </item>
       <item>

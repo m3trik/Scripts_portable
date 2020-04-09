@@ -17,27 +17,20 @@ class Cameras(Init):
 		self.tree000()
 
 
-	def tree000(self, wItem=None, column=None, refresh=False):
+	def tree000(self, wItem=None, column=None):
 		'''
 		Cameras
 		'''
 		tree = self.ui.tree000
 
 		if not any([wItem, column]):
-			if refresh:
-				tree.clear_()
-			else:
+			if not tree.refresh:
 				tree.convert(tree.getTopLevelItems(), 'QLabel')
 
-			l = ['Custom Camera','Set Custom Camera','Camera From View']
-			[tree.add('QLabel', 'Create', setText=t) for t in l]
-
-			l = ['camera '+str(i) for i in range(3)] #List scene Cameras
-			# l = [cam.name for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
-			[tree.add('QLabel', 'Cameras', setText=t) for t in l]
-
-			l = ['Group Cameras']
-			[tree.add('QLabel', 'Options', setText=t) for t in l]
+			try:
+				l = [cam.name for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
+			except AttributeError: l = ['camera '+str(i) for i in range(3)] #debug: dummy list
+			[tree.add('QLabel', '*Cameras', setText=t) for t in l]
 
 
 		else:

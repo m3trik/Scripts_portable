@@ -1,5 +1,5 @@
 from __future__ import print_function
-from PySide2 import QtCore, QtGui, QtWidgets
+from PySide2 import QtCore, QtGui, QtWidgets, shiboken2
 
 import os.path
 
@@ -123,36 +123,35 @@ class EventFactoryFilter(QtCore.QObject):
 			name (str) = ui name.
 		'''
 		# print([i.objectName() for i in sb.getWidget(name=name) if name=='cameras']), '---'
+		ui = sb.getUi(name)
 		widgetsUnderMouse=[] #list of widgets currently under the mouse cursor and their parents. in hierarchical order.
 		for widget in sb.getWidget(name=name): #get all widgets from the current ui.
-			try:
-				widgetName = widget.objectName()
-			except:
-				return False
+			if shiboken2.isValid(widget):
+				widgetName = sb.getWidgetName(widget)
+				if widget.rect().contains(widget.mapFromGlobal(QtGui.QCursor.pos())): #if mouse over widget:
+					# print (widget.objectName(), 'mouseTracking')
+					if not widget in self._mouseOver: #if widget is already in the mouseOver list, no need to re-process the events.
+						QtWidgets.QApplication.sendEvent(widget, self.enterEvent_)
+						self._mouseOver.append(widget)
 
-			if widget.rect().contains(widget.mapFromGlobal(QtGui.QCursor.pos())): #if mouse over widget:
-				# print (widget.objectName(), 'mouseTracking')
-				if not widget in self._mouseOver: #if widget is already in the mouseOver list, no need to re-process the events.
-					QtWidgets.QApplication.sendEvent(widget, self.enterEvent_)
-					self._mouseOver.append(widget)
-
-					if not widgetName=='mainWindow':
-						if widget.underMouse() and widget.isEnabled():
-							parentWidgets=[]
-							w = widget
-							while w:
-								parentWidgets.append(w)
-								w = w.parentWidget()
-							widgetsUnderMouse.append(parentWidgets)
-							# print([str(w.objectName()) for w in allParentWidgets])
-
+						if not widgetName=='mainWindow':
+							if widget.underMouse() and widget.isEnabled():
+								parentWidgets=[]
+								w = widget
+								while w:
+									parentWidgets.append(w)
+									w = w.parentWidget()
+								widgetsUnderMouse.append(parentWidgets)
+								# print([str(w.objectName()) for w in allParentWidgets])
+				else:
+					if widget in self._mouseOver: #if widget is in the mouseOver list, but the mouse is no longer over the widget:
+						QtWidgets.QApplication.sendEvent(widget, self.leaveEvent_)
+						self._mouseOver.remove(widget)
+						if ui.mainWindow.isVisible():
+							ui.mainWindow.grabMouse()
+							self._mouseGrabber = ui.mainWindow
 			else:
-				if widget in self._mouseOver: #if widget is in the mouseOver list, but the mouse is no longer over the widget:
-					QtWidgets.QApplication.sendEvent(widget, self.leaveEvent_)
-					self._mouseOver.remove(widget)
-					if self.ui.mainWindow.isVisible():
-						self.ui.mainWindow.grabMouse()
-						self._mouseGrabber = self.ui.mainWindow
+				sb.removeWidgets(widget)
 
 		widgetsUnderMouse.sort(key=len) #sort 'widgetsUnderMouse' by ascending length so that lowest level child widgets get grabMouse last.
 		if widgetsUnderMouse:
@@ -193,6 +192,8 @@ class EventFactoryFilter(QtCore.QObject):
 			widget = <QWidget>
 			event = <QEvent>
 		'''
+		if not shiboken2.isValid(widget) or event.type()==QtCore.QEvent.Destroy:
+			return False
 
 		eventTypes = [ #types of events to be handled:
 			'QEvent',
@@ -213,16 +214,11 @@ class EventFactoryFilter(QtCore.QObject):
 
 		if not any([event.__class__.__name__==e for e in eventTypes]): #do not process the event if it is not one of the types listed in 'eventTypes'
 			# print(event.__class__.__name__)
-			return False
-		# print(event.__class__.__name__)
-
+			return False #;print(event.__class__.__name__)
 
 		self.widget = widget
 		self.name = sb.getNameFromWidget(self.widget) #get the name of the ui containing the given widget.
-		if not self.name:
-			sb.removeWidgets(self.widget, self.name) #if the widget no longer exists, remove it from sb's widgetDict
-			print('# Error: tk_childEvents.eventFilter: getNameFrom(widget): {0} Failed on Event: {1} #'.format(self.widget.objectName(), str(event.type()).split('.')[-1]))
-			return False
+		# if not self.name: print('# Error: tk_childEvents.eventFilter: getNameFrom(widget): {0} Failed on Event: {1} #'.format(self.widget.objectName(), str(event.type()).split('.')[-1]))
 		self.widgetName = sb.getWidgetName(self.widget, self.name) #get the stored objectName string (pyside objectName() returns unicode).
 		self.widgetType = sb.getWidgetType(self.widget, self.name)
 		self.derivedType = sb.getDerivedType(self.widget, self.name)
