@@ -50,9 +50,10 @@ class Tk(QtWidgets.QStackedWidget):
 		args:
 			name (str) = name of ui.
 		'''
+		ui = sb.getUi(name)
 		if not name in sb.previousName(allowLevel0=1, as_list=1): #if ui(name) hasn't been set before, init the ui for the given name.
 		# sb.setUiSize(name) #Set the size info for each ui (allows for resizing a stacked widget where ordinarily resizing is constrained by the largest widget in the stack)
-			self.addWidget(sb.getUi(name)) #add each ui to the stackedLayout.
+			self.addWidget(ui) #add each ui to the stackedLayout.
 			self.childEvents.initWidget(name)
 
 		sb.name = name #set ui name.
@@ -61,11 +62,10 @@ class Tk(QtWidgets.QStackedWidget):
 		self.resize(sb.sizeX, sb.sizeY)  #Set the size info for each ui (allows for resizing a stacked widget where ordinarily resizing is constrained by the largest widget in the stack)
 		# if sb.uiLevel<3:
 		# 	self.showFullScreen()
-
 		# print('keyboardGrabber:', self.keyboardGrabber())
 
 		self.setCurrentWidget(sb.ui) #set the stacked widget to the given ui.
-
+		return ui
 
 
 	def setPrevUi(self):
@@ -98,11 +98,8 @@ class Tk(QtWidgets.QStackedWidget):
 
 		try: #open a submenu on mouse enter (if it exists).
 			self.setUi(name) #switch the stacked widget to the given submenu.
-		except Exception as error:
-			if type(error)==ValueError: #if no submenu exists: ignore and return.
-				return None
-			else:
-				raise error
+		except ValueError: #if no submenu exists: ignore and return.
+			return None
 
 		w = getattr(self.currentWidget(), widget.objectName()) #get the widget of the same name in the new ui.
 		#maintain the correct contents of the widgetPath and drawPath lists by removing elements when moving back up levels in the ui.
@@ -125,15 +122,13 @@ class Tk(QtWidgets.QStackedWidget):
 		#recreate any relevant buttons from the previous ui on first show.
 		if name not in sb.previousName(as_list=1, allowDuplicates=1)[:-1]: #if submenu ui called for the first time, construct widgets from the previous ui that fall along the plotted path.
 			w0 = QPushButton_(parent=sb.getUi(name), setObjectName='<', resize=QtCore.QSize(45, 45), moveGlobal=self.drawPath[0]) #create an invisible return button at the start point.
-			sb.addWidget(name, w0)
-			self.childEvents.initWidget(name, w0) #initialize the widget to set things like the event filter and styleSheet.
+			self.childEvents.addWidgets(name, w0) #initialize the widget to set things like the event filter and styleSheet.
 
 			if sb.getUiLevel(sb.previousName())==2: #if submenu: recreate widget/s from the previous ui that are in the current path.
 				for i in range(2, len(self.widgetPath)+1): #index starting at 2:
 					prevWidget = self.widgetPath[-i][0] #give index neg value.
 					w1 = QPushButton_(parent=sb.getUi(name), copy=prevWidget, moveGlobal=self.widgetPath[-i][1], setVisible=True)
-					sb.addWidget(name, w1)
-					self.childEvents.initWidget(name, w1) #initialize the widget to set things like the event filter and styleSheet.
+					self.childEvents.addWidgets(name, w1) #initialize the widget to set things like the event filter and styleSheet.
 					# QtWidgets.QApplication.sendEvent(w1, self.childEvents.enterEvent_)
 					self.childEvents._mouseOver.append(w1)
 					w1.grabMouse() #set widget to receive mouse events.

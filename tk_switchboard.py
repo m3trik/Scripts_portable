@@ -31,7 +31,7 @@ class __Switchboard(object):
 					'uiLevel' : int,
 					'class' : <Class>,
 					'size' : [int, int]
-					'widgetDict' : {
+					'widgets' : {
 								'<widget>':{
 											'widgetName':'objectName',
 											'signalInstance':<widget.signal>,
@@ -50,7 +50,7 @@ class __Switchboard(object):
 		'gcProtect' : [items protected from garbage collection]
 	}
 
-	The widgetDict is built as needed for each class when __addSignal (or any other dependant method) is called.
+	The widgets is built as needed for each class when __addSignal (or any other dependant method) is called.
 	'''
 	def __init__(self, sbDict):
 		'''
@@ -61,11 +61,11 @@ class __Switchboard(object):
 
 
 
-	def buildWidgetDict(self, name):
+	def buildwidgets(self, name):
 		'''
 		Add the signal/slot connections for each widget in a given ui.
 
-		The signals dict establishes what type widgets will be added to the widgetDict, and what associated signal to apply.
+		The signals dict establishes what type widgets will be added to the widgets, and what associated signal to apply.
 		Following that, the items in the ui are looped over, and the widgets' method resolution order is checked against the signals keys
 		to determine the correct derived class type (used in the case of a custom widget).
 
@@ -79,8 +79,8 @@ class __Switchboard(object):
 		for objectName, widget in ui.__dict__.items(): #for each object in the ui:
 			self.addWidget(name, widget, objectName)
 
-		# print(self.widgetDict(name))
-		return self.widgetDict(name)
+		# print(self.widgets(name))
+		return self.widgets(name)
 
 
 
@@ -106,8 +106,8 @@ class __Switchboard(object):
 
 	def addWidget(self, name, widget, objectName=None):
 		'''
-		Adds a widget to the widgetDict under the given (ui) name.
-		Decoupling this from 'buildWidgetDict' allows additional widgets to be added at any time.
+		Adds a widget to the widgets under the given (ui) name.
+		Decoupling this from 'buildwidgets' allows additional widgets to be added at any time.
 		The signals dictionary provides both a way to set a default signal for a widget type.
 
 		args:
@@ -163,8 +163,8 @@ class __Switchboard(object):
 		docString = getattr(method, '__doc__', None)
 		prefix = self.prefix(objectName) #returns an string alphanumberic prefix if objectName startswith a series of alphanumberic chars, and is followed by three integers. ie. 'cmb' from 'cmb015'
 
-		#add values to widgetDict
-		self.widgetDict(name).update(
+		#add values to widgets
+		self.widgets(name).update(
 					{widget:{
 						'widgetName':objectName, 
 						'signalInstance':signalInstance,
@@ -174,15 +174,15 @@ class __Switchboard(object):
 						'prefix':prefix,
 						'docString':docString}})
 
-		# print(self._sbDict[name]['widgetDict'][widget]['widgetName']
-		return self._sbDict[name]['widgetDict'][widget]['widgetName'] #return the stored widget.
+		# print(self._sbDict[name]['widgets'][widget]['widgetName']
+		return self._sbDict[name]['widgets'][widget]['widgetName'] #return the stored widget.
 
 
 
-	def widgetDict(self, name):
+	def widgets(self, name):
 		'''
 		Dictionary holding widget information.
-		Used primarily by 'buildWidgetDict' method to construct signal and slot connections that can later be connected and disconnected by the add/__removeSignal methods.
+		Used primarily by 'buildwidgets' method to construct signal and slot connections that can later be connected and disconnected by the add/__removeSignal methods.
 
 		args:
 			name (str) = name of ui/class. ie. 'polygons'
@@ -195,16 +195,16 @@ class __Switchboard(object):
 		'docString': string description of command from method docString.  ie. 'Multi-Cut Tool'}
 		#ie. {'b001':{'widget':b001, 'signalInstance':b001.onPressed, 'method':main.b001, 'docString':'Multi-Cut Tool'}},
 		'''
-		if not 'widgetDict' in self._sbDict[name]:
-			self._sbDict[name]['widgetDict'] = {}
-			self.buildWidgetDict(name) #construct the signals and slots for the ui
+		if not 'widgets' in self._sbDict[name]:
+			self._sbDict[name]['widgets'] = {}
+			self.buildwidgets(name) #construct the signals and slots for the ui
 
-		return self._sbDict[name]['widgetDict']
+		return self._sbDict[name]['widgets']
 
 
 	def removeWidgets(self, widgets, name=None):
 		'''
-		Remove widget keys from the 'widgetDict'.
+		Remove widget keys from the 'widgets'.
 
 		args:
 			widgets (obj)(list) = single or list of QWidgets.
@@ -212,10 +212,10 @@ class __Switchboard(object):
 		'''
 		if not name:
 			name = self.getUiName()
-		if not type(widgets) is list:
+		if not isinstance(widgets, (list,set,tuple)):
 			widgets = [widgets]
 		for widget in widgets:
-			w = self._sbDict[name]['widgetDict'].pop(widget, None)
+			w = self._sbDict[name]['widgets'].pop(widget, None)
 			self.gcProtect(w)
 
 
@@ -235,12 +235,12 @@ class __Switchboard(object):
 
 	def __addSignal(self, name):
 		'''
-		Connects signals/slots from the widgetDict for the given ui. Works with both single slots or multiple slots given as a list.
+		Connects signals/slots from the widgets for the given ui. Works with both single slots or multiple slots given as a list.
 
 		args:
 			name (str) = ui name
 		'''
-		for widget in self.widgetDict(name):
+		for widget in self.widgets(name):
 			signal = self.getSignal(name, widget)
 			slot = self.getMethod(name, widget)
 			# print('__addSignal: ', name, objectName, signal, slot)
@@ -258,12 +258,12 @@ class __Switchboard(object):
 
 	def __removeSignal(self, name):
 		'''
-		Disconnects signals/slots from the widgetDict for the given ui. Works with both single slots or multiple slots given as a list.
+		Disconnects signals/slots from the widgets for the given ui. Works with both single slots or multiple slots given as a list.
 
 		args:
 			name (str) = ui name
 		'''
-		for widget in self.widgetDict(name):
+		for widget in self.widgets(name):
 			signal = self.getSignal(name, widget)
 			slot = self.getMethod(name, widget)
 			# print('__removeSignal: ', name, objectName, signal, slot)
@@ -519,7 +519,7 @@ class __Switchboard(object):
 		returns:
 			 (str) ui name. ie. 'polygons' from <somewidget>
 		'''
-		return next((k for k,v in _sbDict.items() if type(v) is dict and 'widgetDict' in v and widget in v['widgetDict']), None)
+		return next((k for k,v in _sbDict.items() if type(v) is dict and 'widgets' in v and widget in v['widgets']), None)
 
 
 
@@ -577,7 +577,7 @@ class __Switchboard(object):
 		returns:
 			class object.
 		'''
-		if type(class_)==str or type(class_)==unicode: #if arg given as string or unicode:
+		if isinstance(class_, (str, unicode)): #if arg given as string or unicode:
 			name = class_.split('_')[-1].split('.')[-1] #get key from the class_ string ie. 'class' from 'module.Class'
 			class_ = locate(class_)
 		elif not name:
@@ -610,7 +610,7 @@ class __Switchboard(object):
 		returns:
 			class object.
 		'''
-		if type(class_)==str or type(class_)==unicode: #if arg given as string or unicode:
+		if isinstance(class_, (str, unicode)): #if arg given as string or unicode:
 			name = class_.split('_')[-1].split('.')[-1] #get key from class_ string ie. 'class' from 'module.Class'#class_.lower()
 		else: #if arg as <object>:
 			if not callable(class_):
@@ -642,34 +642,37 @@ class __Switchboard(object):
 		if not name:
 			name = self.getUiName()
 
-		if not 'widgetDict' in self._sbDict[name]:
-			self.widgetDict(name) #construct the signals and slots for the ui
+		if not 'widgets' in self._sbDict[name]:
+			self.widgets(name) #construct the signals and slots for the ui
 
 		if objectName:
-			return next((w for w in self._sbDict[name]['widgetDict'].values() if w['widgetName']==objectName), None)
+			return next((w for w in self._sbDict[name]['widgets'].values() if w['widgetName']==objectName), None)
 		else:
-			return [w for w in self._sbDict[name]['widgetDict'].keys()]
+			return [w for w in self._sbDict[name]['widgets'].keys()]
 
 
 
-	def getWidgets(self, name=None):
-		'''
-		Get Property.
-		Get all widgets for a ui.
+	# def getWidgets(self, name=None):
+	# 	'''
+	# 	Get Property.
+	# 	Get all widgets for a ui.
 
-		args:
-			name (str) = name of ui. ie. 'polygons'. If no name is given, the current ui will be used.
-		'''
-		self.getWidget(name=name)
+	# 	args:
+	# 		name (str) = name of ui. ie. 'polygons'. If no name is given, the current ui will be used.
+	# 	returns:
+	# 		all widgets for the given ui.
+	# 	'''
+	# 	return self.getWidget(name=name)
 
 
 
 	def getWidgetName(self, widget=None, name=None):
 		'''
 		Property.
-		Get the widget's objectName as a string from the given ui.
+		Get the widget's stored string objectName.
 
 		args:
+			widget (obj) = QWidget
 			name (str) = name of ui. ie. 'polygons'. If no name is given, the current ui will be used.
 		returns:
 			if widget: (str) the stored objectName for the given widget.
@@ -681,15 +684,16 @@ class __Switchboard(object):
 		if not name:
 			name = self.getUiName()
 
-		if not 'widgetDict' in self._sbDict[name]:
-			self.widgetDict(name) #construct the signals and slots for the ui
+		if not 'widgets' in self._sbDict[name]:
+			self.widgets(name) #construct the signals and slots for the ui
 
 		if widget:
-			return self._sbDict[name]['widgetDict'][widget]['widgetName']
+			return self._sbDict[name]['widgets'][widget]['widgetName']
+
 		if name and not widget: #return all objectNames from ui name.
-			return [w['widgetName'] for w in self._sbDict[name]['widgetDict'].values()]
+			return [w['widgetName'] for w in self._sbDict[name]['widgets'].values()]
 		else: #return all objectNames:
-			return [w['widgetName'] for k,w in self._sbDict.items() if k=='widgetDict']
+			return [w['widgetName'] for k,w in self._sbDict.items() if k=='widgets']
 
 
 	def getWidgetType(self, widget, name=None):
@@ -705,17 +709,17 @@ class __Switchboard(object):
 			'string' - the corresponding widget class name
 		'''
 		if type(widget)==str:
-			objectName = self._sbDict[name]['widgetDict'][widget] #use the stored objectName as a more reliable key.
+			objectName = self._sbDict[name]['widgets'][widget] #use the stored objectName as a more reliable key.
 			widget = self.getWidget(objectName, name) #use the objectName to get a string key for 'widget'
 
 		if not name:
 			name = self.getUiName()
 
-		if not 'widgetDict' in self._sbDict[name]:
-			self.widgetDict(name) #construct the signals and slots for the ui
+		if not 'widgets' in self._sbDict[name]:
+			self.widgets(name) #construct the signals and slots for the ui
 		# print(name, widget)
 		try:
-			return self._sbDict[name]['widgetDict'][widget]['widgetType']
+			return self._sbDict[name]['widgets'][widget]['widgetType']
 		except KeyError:
 			return None
 
@@ -733,16 +737,16 @@ class __Switchboard(object):
 			'string' - the corresponding widget derived class name
 		'''
 		if type(widget)==str:
-			objectName = self._sbDict[name]['widgetDict'][widget] #use the stored objectName as a more reliable key.
+			objectName = self._sbDict[name]['widgets'][widget] #use the stored objectName as a more reliable key.
 			widget = self.getWidget(objectName, name) #use the objectName to get a string key for 'widget'
 
 		if not name:
 			name = self.getUiName()
 
-		if not 'widgetDict' in self._sbDict[name]:
-			self.widgetDict(name) #construct the signals and slots for the ui
+		if not 'widgets' in self._sbDict[name]:
+			self.widgets(name) #construct the signals and slots for the ui
 
-		return self._sbDict[name]['widgetDict'][widget]['derivedType']
+		return self._sbDict[name]['widgets'][widget]['derivedType']
 
 
 
@@ -756,20 +760,20 @@ class __Switchboard(object):
 			else: all of the methods associated to the given ui name as a list.
 		ex. sb.getMethod('polygons', <b022>)() #call method <b022> of the 'polygons' class
 		'''
-		if not 'widgetDict' in self._sbDict[name]:
-			self.widgetDict(name) #construct the signals and slots for the ui
+		if not 'widgets' in self._sbDict[name]:
+			self.widgets(name) #construct the signals and slots for the ui
 
 		if widget:
 			try:
 				if type(widget) is str:
-					return next(w['method'][0] for w in self._sbDict[name]['widgetDict'].values() if w['widgetName']==widget) #if there are event filters attached (as a list), just get the method (at index 0).
-				return self._sbDict[name]['widgetDict'][widget]['method'][0] #if there are event filters attached (as a list), just get the method (at index 0).
+					return next(w['method'][0] for w in self._sbDict[name]['widgets'].values() if w['widgetName']==widget) #if there are event filters attached (as a list), just get the method (at index 0).
+				return self._sbDict[name]['widgets'][widget]['method'][0] #if there are event filters attached (as a list), just get the method (at index 0).
 			except:
 				if type(widget) is str:
-					return next((w['method'] for w in self._sbDict[name]['widgetDict'].values() if w['widgetName']==widget), None)
-				return self._sbDict[name]['widgetDict'][widget]['method']
+					return next((w['method'] for w in self._sbDict[name]['widgets'].values() if w['widgetName']==widget), None)
+				return self._sbDict[name]['widgets'][widget]['method']
 		else:
-			return [w['method'] for w in self._sbDict[name]['widgetDict'].values()]
+			return [w['method'] for w in self._sbDict[name]['widgets'].values()]
 
 
 
@@ -782,13 +786,13 @@ class __Switchboard(object):
 			if objectName: the corresponding widget object with attached signal (ie. b001.onPressed) of the given widget name.
 			else: all of the signals associated with the given name as a list.
 		'''
-		if not 'widgetDict' in self._sbDict[name]:
-			self.widgetDict(name) #construct the signals and slots for the ui
+		if not 'widgets' in self._sbDict[name]:
+			self.widgets(name) #construct the signals and slots for the ui
 
 		if widget:
-			return self._sbDict[name]['widgetDict'][widget]['signalInstance']
+			return self._sbDict[name]['widgets'][widget]['signalInstance']
 		else:
-			return [w['signalInstance'] for w in self._sbDict[name]['widgetDict'].values()]
+			return [w['signalInstance'] for w in self._sbDict[name]['widgets'].values()]
 
 
 
@@ -802,10 +806,10 @@ class __Switchboard(object):
 			if all_: the entire stored docString
 			else: edited docString; name of method
 		'''
-		if not 'widgetDict' in self._sbDict[name]:
-			self.widgetDict(name) #construct the signals and slots for the ui
+		if not 'widgets' in self._sbDict[name]:
+			self.widgets(name) #construct the signals and slots for the ui
 
-		docString = next(w['docString'] for w in self._sbDict[name]['widgetDict'].values() if w['widgetName']==widgetName)
+		docString = next(w['docString'] for w in self._sbDict[name]['widgets'].values() if w['widgetName']==widgetName)
 		if docString and not all_:
 			return docString.strip('\n\t') #return formatted docString
 		else:
@@ -1000,10 +1004,10 @@ class __Switchboard(object):
 
 	def hasKey(self, *args): #check if key exists in switchboard dict.
 		'''
-		ie. hasKey('polygons', 'widgetDict', 'objectName')
+		ie. hasKey('polygons', 'widgets', 'objectName')
 
 		args:
-			'string' dict keys in order of hierarchy.  ie. 'polygons', 'widgetDict', 'b001', 'method'
+			'string' dict keys in order of hierarchy.  ie. 'polygons', 'widgets', 'b001', 'method'
 		returns:
 			bool
 		'''
@@ -1038,7 +1042,7 @@ class __Switchboard(object):
 			(list) parent keys
 
 		ex. call:
-		getParentKeys(_sbDict, 'cmb002') returns all parent keys of the given value. ex. ['polygons', 'widgetDict', '<widgets.QComboBox_.QComboBox_ object at 0x0000016B6C078908>', 'widgetName'] ...
+		getParentKeys(_sbDict, 'cmb002') returns all parent keys of the given value. ex. ['polygons', 'widgets', '<widgets.QComboBox_.QComboBox_ object at 0x0000016B6C078908>', 'widgetName'] ...
 		'''
 		for k,v in nested_dict.items():
 			if type(v) is dict:
@@ -1150,9 +1154,9 @@ class __Switchboard(object):
 			name = self.getUiName()
 			try:
 				if type(widget) is str: #get prefix using the widget's objectName.
-					prefix1 = next(w['prefix'] for w in self._sbDict[name]['widgetDict'].values() if w['widgetName']==widget)
+					prefix1 = next(w['prefix'] for w in self._sbDict[name]['widgets'].values() if w['widgetName']==widget)
 				else:
-					prefix1 = self._sbDict[name]['widgetDict'][widget]['prefix']
+					prefix1 = self._sbDict[name]['widgets'][widget]['prefix']
 				if prefix1==prefix:
 					return True
 
@@ -1301,7 +1305,7 @@ _sbDict={
 				'ui': '<polygons ui object>',
 				'uiLevel': 3,
 				'size': [210, 480],
-				'widgetDict': {'<widgets.QComboBox_.QComboBox_ object at 0x0000016B6C078908>': {
+				'widgets': {'<widgets.QComboBox_.QComboBox_ object at 0x0000016B6C078908>': {
 									'widgetName': 'cmb002', 
 									'widgetType': 'QComboBox_', 
 									'derivedType': 'QComboBox', 
@@ -1344,7 +1348,7 @@ _sbDict={
 
 # def getNameFrom(obj):
 # 	'''
-# 	Get the ui name from any object existing in 'widgetDict'.
+# 	Get the ui name from any object existing in 'widgets'.
 
 # 	args:
 # 		obj = <object> - 

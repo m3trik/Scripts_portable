@@ -302,7 +302,7 @@
      </size>
     </property>
    </widget>
-   <widget class="QPushButton" name="b026_3">
+   <widget class="QPushButton" name="b026">
     <property name="enabled">
      <bool>true</bool>
     </property>

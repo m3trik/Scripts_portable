@@ -756,16 +756,17 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			from tk_switchboard import sb
 			self.sb = sb
 
-			className = self.sb.getUiName(pascalCase=True)
-			class_ = self.sb.getClassInstance(className)
-			self.classMethod = getattr(class_, str(self.objectName()))
+			self.classMethod = self.sb.getMethod(self.sb.getUiName(), str(self.objectName()))
+			# className = self.sb.getUiName(pascalCase=True)
+			# class_ = self.sb.getClassInstance(className)
+			# self.classMethod = getattr(class_, str(self.objectName()))
 			self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
 
 		if self.refresh:
 			widgets = self.getWidgets(refreshedWidgets=1)
 		else:
 			widgets = self.getWidgets(removeNoneValues=1)
-		self.childEvents.initWidgetItems(widgets, self.sb.getUiName())
+		self.childEvents.addWidgets(self.sb.getUiName(), widgets)
 
 		return QtWidgets.QTreeWidget.showEvent(self, event)
 

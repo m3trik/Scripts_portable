@@ -44,15 +44,6 @@ class QComboBox_(QtWidgets.QComboBox):
 		super(QComboBox_, self).hidePopup()
 
 
-	def showEvent(self, event):
-		'''
-		args:
-			event=<QEvent>
-		'''
-
-		return QtWidgets.QComboBox.showEvent(self, event)
-
-
 	def enterEvent(self, event):
 		'''
 		args:
@@ -95,6 +86,26 @@ class QComboBox_(QtWidgets.QComboBox):
 
 		return items_
 
+
+	def showEvent(self, event):
+		'''
+		args:
+			event=<QEvent>
+		'''
+		try:
+			if not __name__=='__main__':
+				self.classMethod()
+
+		except AttributeError:
+			from tk_switchboard import sb
+			self.sb = sb
+
+			self.classMethod = self.sb.getMethod(self.sb.getUiName(), str(self.objectName()))
+			# className = self.sb.getUiName(pascalCase=True)
+			# class_ = self.sb.getClassInstance(className)
+			# self.classMethod = getattr(class_, str(self.objectName()))
+
+		return QtWidgets.QComboBox.showEvent(self, event)
 
 
 

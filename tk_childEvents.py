@@ -46,7 +46,7 @@ class EventFactoryFilter(QtCore.QObject):
 		'''
 		if not widgets:
 			widgets = sb.getWidget(name=name)
-		elif not type(widgets)==list:
+		elif not isinstance(widgets, (list,set,tuple)):
 			widgets = [widgets]
 
 		for widget in widgets: #get all widgets for the given ui name.
@@ -80,20 +80,19 @@ class EventFactoryFilter(QtCore.QObject):
 
 
 
-	def initWidgetItems(self, items, name):
+	def addWidgets(self, name, widgets):
 		'''
-		Store widget items in the switchboard dict for referencing.
-		Set Event filters, stylesheets, and connections for the items.
+		Store widget widgets in the switchboard dict for referencing.
+		Set Event filters, stylesheets, and connections for the widgets.
 
 		args:
 			name (str) = name of the parent ui.
-			items (list) = widget objects.
+			widgets (list) = widget objects.
 		'''
-		try:
-			sb.addWidgets(name, items)
-			self.initWidget(name, items) #initialize the widget to set things like the event filter and styleSheet.
-		except Exception as error:
-			print(error)
+		if not isinstance(widgets, (list,set,tuple)):
+			widgets = [widgets]
+		sb.addWidgets(name, widgets)
+		self.initWidget(name, widgets) #initialize the widget to set things like the event filter and styleSheet.
 
 
 
@@ -125,9 +124,14 @@ class EventFactoryFilter(QtCore.QObject):
 		# print([i.objectName() for i in sb.getWidget(name=name) if name=='cameras']), '---'
 		ui = sb.getUi(name)
 		widgetsUnderMouse=[] #list of widgets currently under the mouse cursor and their parents. in hierarchical order.
-		for widget in sb.getWidget(name=name): #get all widgets from the current ui.
+		for widget in sb.getWidget(name=name): #all widgets from the current ui.
 			if shiboken2.isValid(widget):
-				widgetName = sb.getWidgetName(widget)
+				try:
+					widgetName = sb.getWidgetName(widget, name)
+				except:
+					self.addWidgets(name, widget) #initialize the widget to set things like the event filter and styleSheet.
+					widgetName = sb.getWidgetName(widget, name)
+
 				if widget.rect().contains(widget.mapFromGlobal(QtGui.QCursor.pos())): #if mouse over widget:
 					# print (widget.objectName(), 'mouseTracking')
 					if not widget in self._mouseOver: #if widget is already in the mouseOver list, no need to re-process the events.
@@ -251,10 +255,10 @@ class EventFactoryFilter(QtCore.QObject):
 		if self.widgetName=='info':
 			self.resizeAndCenterWidget(self.widget)
 
-		if self.derivedType=='QComboBox':
-			method = sb.getMethod(self.name, self.widgetName)
-			if callable(method):
-				method()
+		# if self.derivedType=='QComboBox':
+		# 	method = sb.getMethod(self.name, self.widgetName)
+		# 	if callable(method):
+		# 		method()
 
 
 
@@ -339,8 +343,8 @@ class EventFactoryFilter(QtCore.QObject):
 		if self.widget.underMouse(): #if self.widget.rect().contains(event.pos()): #if mouse over widget:
 			if self.derivedType=='QPushButton':
 				if sb.prefix(self.widget, 'i'): #ie. 'i012'
-					self.parent.setUi(self.widget.whatsThis()) #switch the stacked layout to the given ui.
-					self.parent.move(QtGui.QCursor.pos() - self.parent.ui.rect().center()) #move window to cursor position and offset from left corner to center
+					ui = self.parent.setUi(self.widget.whatsThis()) #switch the stacked layout to the given ui.
+					self.parent.move(QtGui.QCursor.pos() - ui.rect().center()) #self.parent.ui.rect().center()) #move window to cursor position and offset from left corner to center
 
 				elif sb.prefix(self.widget, 'v'):
 					#add the buttons command info to the prevCamera list.
