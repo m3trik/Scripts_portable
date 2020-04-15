@@ -1,4 +1,5 @@
-from tk_slots_maya_init import Init
+from __future__ import print_function
+from tk_slots_maya_init import *
 
 import os.path
 
@@ -80,21 +81,21 @@ class Selection(Init):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.toggleWidgets(self.ui, setChecked_False='chk001-2')
+		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk001-2')
 
 
 	def chk001(self):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.toggleWidgets(self.ui, setChecked_False='chk000,chk002')
+		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk000,chk002')
 
 
 	def chk002(self):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.toggleWidgets(self.ui, setChecked_False='chk000-1')
+		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk000-1')
 
 
 	def chk004(self):
@@ -114,7 +115,7 @@ class Selection(Init):
 		Select Style: Marquee
 		'''
 		self.setSelectionStyle('selectContext')
-		self.toggleWidgets(self.ui, setChecked='chk005', setChecked_False='chk006-7')
+		self.toggleWidgets(self.ui, self.submenu, setChecked='chk005', setChecked_False='chk006-7')
 		self.ui.cmb004.setCurrentIndex(0)
 
 
@@ -123,7 +124,7 @@ class Selection(Init):
 		Select Style: Lasso
 		'''
 		self.setSelectionStyle('lassoContext')
-		self.toggleWidgets(self.ui, setChecked='chk006', setChecked_False='chk005,chk007')
+		self.toggleWidgets(self.ui, self.submenu, setChecked='chk006', setChecked_False='chk005,chk007')
 		self.ui.cmb004.setCurrentIndex(1)
 
 
@@ -132,7 +133,7 @@ class Selection(Init):
 		Select Style: Paint
 		'''
 		self.setSelectionStyle('paintContext')
-		self.toggleWidgets(self.ui, setChecked='chk007', setChecked_False='chk005-6')
+		self.toggleWidgets(self.ui, self.submenu, setChecked='chk007', setChecked_False='chk005-6')
 		self.ui.cmb004.setCurrentIndex(2)
 
 
@@ -524,7 +525,7 @@ class Selection(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

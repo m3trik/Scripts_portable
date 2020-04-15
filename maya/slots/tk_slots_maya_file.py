@@ -1,4 +1,5 @@
-from tk_slots_maya_init import Init
+from __future__ import print_function
+from tk_slots_maya_init import *
 
 import os.path
 
@@ -368,7 +369,7 @@ class File(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

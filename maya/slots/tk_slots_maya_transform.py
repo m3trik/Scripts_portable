@@ -1,4 +1,5 @@
-from tk_slots_maya_init import Init
+from __future__ import print_function
+from tk_slots_maya_init import *
 
 import os.path
 
@@ -33,7 +34,7 @@ class Transform(Init):
 		Transform: Scale
 
 		'''
-		self.toggleWidgets(self.ui, setChecked_False='chk008-9', setChecked='chk000-2')
+		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk008-9', setChecked='chk000-2')
 		self.ui.s000.setValue(2)
 		self.ui.s000.setSingleStep(1)
 
@@ -43,7 +44,7 @@ class Transform(Init):
 		Transform: Move
 
 		'''
-		self.toggleWidgets(self.ui, setChecked_False='chk005,chk009,chk000-2')
+		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk005,chk009,chk000-2')
 		self.ui.s000.setValue(0.1)
 		self.ui.s000.setSingleStep(0.1)
 
@@ -53,7 +54,7 @@ class Transform(Init):
 		Transform: Rotate
 
 		'''
-		self.toggleWidgets(self.ui, setChecked_False='chk005,chk008,chk000-2')
+		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk005,chk008,chk000-2')
 		self.ui.s000.setValue(45)
 		self.ui.s000.setSingleStep(5)
 
@@ -64,9 +65,9 @@ class Transform(Init):
 
 		'''
 		if self.ui.chk010.isChecked():
-			self.toggleWidgets(self.ui, setDisabled='b029-31')
+			self.toggleWidgets(self.ui, self.submenu, setDisabled='b029-31')
 		else:
-			self.toggleWidgets(self.ui, setEnabled='b029-31')
+			self.toggleWidgets(self.ui, self.submenu, setEnabled='b029-31')
 
 
 	def chk012(self):
@@ -242,18 +243,18 @@ class Transform(Init):
 
 				if self.ui.chk011.isChecked():
 					if axis == x: #"yz"
-						self.toggleWidgets(self.ui, setChecked='b030,b031', setChecked_False='b029')
+						self.toggleWidgets(self.ui, self.submenu, setChecked='b030,b031', setChecked_False='b029')
 					if axis == y: #"xz"
-						self.toggleWidgets(self.ui, setChecked='b029,b031', setChecked_False='b030')
+						self.toggleWidgets(self.ui, self.submenu, setChecked='b029,b031', setChecked_False='b030')
 					if axis == z: #"xy"
-						self.toggleWidgets(self.ui, setChecked='b029,b030', setChecked_False='b031')
+						self.toggleWidgets(self.ui, self.submenu, setChecked='b029,b030', setChecked_False='b031')
 				else:
 					if any ([axis == x and tangent == ty, axis == y and tangent == tx]): #"z"
-						self.toggleWidgets(self.ui, setChecked='b031', setChecked_False='b029,b030')
+						self.toggleWidgets(self.ui, self.submenu, setChecked='b031', setChecked_False='b029,b030')
 					if any ([axis == x and tangent == tz, axis == z and tangent == tx]): #"y"
-						self.toggleWidgets(self.ui, setChecked='b030', setChecked_False='b029,b031')
+						self.toggleWidgets(self.ui, self.submenu, setChecked='b030', setChecked_False='b029,b031')
 					if any ([axis == y and tangent == tz, axis == z and tangent == ty]): #"x"
-						self.toggleWidgets(self.ui, setChecked='b029', setChecked_False='b030,b031')
+						self.toggleWidgets(self.ui, self.submenu, setChecked='b029', setChecked_False='b030,b031')
 			else:
 				print "// Warning: An edge must be selected. //"
 				return
@@ -578,7 +579,7 @@ class Transform(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

@@ -34,7 +34,7 @@ class Mirror(Init):
 		'''
 		Delete: X Axis
 		'''
-		self.toggleWidgets(self.ui, setChecked_False='chk002,chk003')
+		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk002,chk003')
 		axis = "X"
 		if self.ui.chk000.isChecked():
 			axis = '-'+axis
@@ -46,7 +46,7 @@ class Mirror(Init):
 		'''
 		Delete: Y Axis
 		'''
-		self.toggleWidgets(self.ui, setChecked_False='chk001,chk003')
+		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk001,chk003')
 		axis = "Y"
 		if self.ui.chk000.isChecked():
 			axis = '-'+axis
@@ -58,7 +58,7 @@ class Mirror(Init):
 		'''
 		Delete: Z Axis
 		'''
-		self.toggleWidgets(self.ui, setChecked_False='chk001,chk002')
+		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk001,chk002')
 		axis = "Z"
 		if self.ui.chk000.isChecked():
 			axis = '-'+axis

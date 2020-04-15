@@ -1,5 +1,9 @@
 from __future__ import print_function
-from PySide2 import QtCore, QtGui, QtWidgets, shiboken2
+from PySide2 import QtCore, QtGui, QtWidgets
+try:
+	import shiboken2
+except:
+	from PySide2 import shiboken2
 
 import os.path
 
@@ -35,7 +39,6 @@ class EventFactoryFilter(QtCore.QObject):
 			self.parent = parent
 
 
-
 	def initWidget(self, name, widgets=None):
 		'''
 		Set Initial widget states.
@@ -44,7 +47,7 @@ class EventFactoryFilter(QtCore.QObject):
 			name (str) = ui name.
 			widgets (str)(list) = <QWidgets> if no arg is given, the operation will be performed on all widgets of the given ui name.
 		'''
-		if not widgets:
+		if widgets is None:
 			widgets = sb.getWidget(name=name)
 		elif not isinstance(widgets, (list,set,tuple)):
 			widgets = [widgets]
@@ -79,7 +82,6 @@ class EventFactoryFilter(QtCore.QObject):
 						widget.setVisible(False)
 
 
-
 	def addWidgets(self, name, widgets):
 		'''
 		Store widget widgets in the switchboard dict for referencing.
@@ -93,7 +95,6 @@ class EventFactoryFilter(QtCore.QObject):
 			widgets = [widgets]
 		sb.addWidgets(name, widgets)
 		self.initWidget(name, widgets) #initialize the widget to set things like the event filter and styleSheet.
-
 
 
 	def resizeAndCenterWidget(self, widget, paddingX=30, paddingY=6):
@@ -112,7 +113,6 @@ class EventFactoryFilter(QtCore.QObject):
 		widget.move(widget.pos()+diff)
 
 
-
 	def mouseTracking(self, name):
 		'''
 		Get widget/s currently under cursor. Grab mouse, and send events accordingly.
@@ -125,7 +125,9 @@ class EventFactoryFilter(QtCore.QObject):
 		ui = sb.getUi(name)
 		widgetsUnderMouse=[] #list of widgets currently under the mouse cursor and their parents. in hierarchical order.
 		for widget in sb.getWidget(name=name): #all widgets from the current ui.
-			if shiboken2.isValid(widget):
+			if not shiboken2.isValid(widget):
+				sb.removeWidgets(widget)
+			else:
 				try:
 					widgetName = sb.getWidgetName(widget, name)
 				except:
@@ -154,8 +156,7 @@ class EventFactoryFilter(QtCore.QObject):
 						if ui.mainWindow.isVisible():
 							ui.mainWindow.grabMouse()
 							self._mouseGrabber = ui.mainWindow
-			else:
-				sb.removeWidgets(widget)
+				
 
 		widgetsUnderMouse.sort(key=len) #sort 'widgetsUnderMouse' by ascending length so that lowest level child widgets get grabMouse last.
 		if widgetsUnderMouse:
@@ -182,7 +183,6 @@ class EventFactoryFilter(QtCore.QObject):
 		e = e[0].lower() + e[1:] #lowercase the first letter.
 		e = e.replace('Button', '') #remove 'Button' if it exists.
 		return e + 'Event' #add trailing 'Event'
-
 
 
 	def eventFilter(self, widget, event):
@@ -240,7 +240,6 @@ class EventFactoryFilter(QtCore.QObject):
 			return False
 
 
-
 	# ------------------------------------------------
 	# Events
 	# ------------------------------------------------
@@ -255,12 +254,6 @@ class EventFactoryFilter(QtCore.QObject):
 		if self.widgetName=='info':
 			self.resizeAndCenterWidget(self.widget)
 
-		# if self.derivedType=='QComboBox':
-		# 	method = sb.getMethod(self.name, self.widgetName)
-		# 	if callable(method):
-		# 		method()
-
-
 
 	def hideEvent(self, event):
 		'''
@@ -271,7 +264,6 @@ class EventFactoryFilter(QtCore.QObject):
 			if self._mouseGrabber:
 				self._mouseGrabber.releaseMouse()
 				self._mouseGrabber = None
-
 
 
 	def enterEvent(self, event):
@@ -299,7 +291,6 @@ class EventFactoryFilter(QtCore.QObject):
 					self.widget.click()
 
 
-
 	def leaveEvent(self, event):
 		'''
 		args:
@@ -312,7 +303,6 @@ class EventFactoryFilter(QtCore.QObject):
 				self.widget.setVisible(False) #set visibility
 
 
-
 	def mousePressEvent(self, event):
 		'''
 		args:
@@ -320,7 +310,6 @@ class EventFactoryFilter(QtCore.QObject):
 		'''
 		self._mousePressPos = event.globalPos() #mouse positon at press
 		self.__mouseMovePos = event.globalPos() #mouse move position from last press
-
 
 
 	def mouseMoveEvent(self, event):
@@ -332,7 +321,6 @@ class EventFactoryFilter(QtCore.QObject):
 			globalPos = event.globalPos()
 			diff = globalPos -self.__mouseMovePos
 			self.__mouseMovePos = globalPos
-
 
 
 	def mouseReleaseEvent(self, event):

@@ -1,4 +1,5 @@
-from tk_slots_maya_init import Init
+from __future__ import print_function
+from tk_slots_maya_init import *
 
 import os.path
 
@@ -12,119 +13,83 @@ class Cameras(Init):
 
 
 
-	def cmb000(self, index=None):
+	def tree000(self, wItem=None, column=None):
 		'''
-		Camera Editors
-
-		'''
-		cmb = self.ui.cmb000
-		
-		list_ = ['Camera Sequencer', 'Camera Set Editor']
-		contents = cmb.addItems_(list_, ' ')
-
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==1:
-				mel.eval('SequenceEditor;')
-			if index==2:
-				mel.eval('cameraSetEditor;')
-			cmb.setCurrentIndex(0)
-
-
-	def cmb001(self, index=None):
-		'''
-		Additional Cameras
 
 		'''
-		# Get all cameras first
-		cameras = pm.ls(type=('camera'), l=True)
-		# Let's filter all startup / default cameras
-		startup_cameras = [camera for camera in cameras if pm.camera(camera.parent(0), startupCamera=True, q=True)]
-		# non-default cameras are easy to find now. Please note that these are all PyNodes
-		non_startup_cameras_pynodes = list(set(cameras) - set(startup_cameras))
-		# Let's get their respective transform names, just in-case
-		non_startup_cameras_transform_pynodes = map(lambda x: x.parent(0), non_startup_cameras_pynodes)
-		# Now we can have a non-PyNode, regular string names list of them
-		non_startup_cameras = map(str, non_startup_cameras_pynodes)
-		non_startup_cameras_transforms = map(str, non_startup_cameras_transform_pynodes)
+		tree = self.ui.tree000
 
-		cmb = self.ui.cmb001
-		
-		contents = cmb.addItems_(non_startup_cameras, "Cameras")
+		if not any([wItem, column]):
+			if not tree.refresh:
+				tree.expandOnHover = True
+				tree.convert(tree.getTopLevelItems(), 'QLabel') #construct the tree using the existing contents.
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			pm.select (contents[index])
-			cmb.setCurrentIndex(0)
+			try:
+				cameras = pm.ls(type=('camera'), l=True) #Get all cameras
+				startup_cameras = [camera for camera in cameras if pm.camera(camera.parent(0), startupCamera=True, q=True)] #filter all startup / default cameras
+				non_startup_cameras_pynodes = list(set(cameras) - set(startup_cameras)) #get non-default cameras. these are all PyNodes
+				non_startup_cameras_transform_pynodes = map(lambda x: x.parent(0), non_startup_cameras_pynodes) #get respective transform names
+				non_startup_cameras = map(str, non_startup_cameras_pynodes) #non-PyNode, regular string name list
+				non_startup_cameras_transforms = map(str, non_startup_cameras_transform_pynodes)
+			except AttributeError:
+				non_startup_cameras = ['camera '+str(i) for i in range(3)] #debug: dummy list
+			[tree.add('QLabel', 'Cameras', refresh=True, setText=s) for s in non_startup_cameras]
 
+			l = ['Camera Sequencer', 'Camera Set Editor']
+			[tree.add('QLabel', 'Editors', setText=s) for s in l]
 
-	def cmb002(self, index=None):
-		'''
-		Create
+		else:
+			# widget = tree.getWidget(wItem, column)
+			text = tree.getWidgetText(wItem, column)
+			header = tree.getHeaderFromColumn(column)
+			print(header, text, column)
 
-		'''
-		cmb = self.ui.cmb002
-		
-		list_ = ['Custom Camera', 'Set Custom Camera', 'Camera From View']
-		contents = cmb.addItems_(list_, "Create")
+			if header=='Create':
+				if text=='Custom Camera':
+					mel.eval('cameraView -edit -camera persp -setCamera $homeName;')
+				if text=='Set Custom Camera':
+					mel.eval('string $homeName = `cameraView -camera persp`;')
+				if text=='Camera From View':
+					mel.eval('print "--no code--"')
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==1:
-				mel.eval('cameraView -edit -camera persp -setCamera $homeName;')
-			if index==2:
-				mel.eval('string $homeName = `cameraView -camera persp`;')
-			if index==3:
-				mel.eval('print "--no code--"')
-			cmb.setCurrentIndex(0)
+			if header=='Cameras':
+				pm.select(text)
 
+			if header=='Editors':
+				if text=='Camera Sequencer':
+					mel.eval('SequenceEditor;')
+				if text=='Camera Set Editor':
+					mel.eval('cameraSetEditor;')
 
-	def cmb003(self, index=None):
-		'''
-		Options
-
-		'''
-		cmb = self.ui.cmb003
-		
-		list_ = ['Group Cameras']
-		contents = cmb.addItems_(list_, "Options")
-
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==1:
-				mel.eval('''
-				if (`objExists cameras`)
-				{
-				  print "Group 'cameras' already exists";
-				}
-				else
-				{
-				  group -world -name cameras side front top persp;
-				  hide cameras;
-				  // Now add non-default cameras to group
-				  if (`objExists back`)
-				  {
-				  	parent back cameras;
-				  }
-				  if (`objExists bottom`)
-				  {
-				  	parent bottom cameras;
-				  }
-				  if (`objExists left`)
-				  {
-				  	parent left cameras;
-				  }
-				  if (`objExists alignToPoly`)
-				  {
-				  	parent alignToPoly cameras;
-				  }
-				}
-				''')
-			cmb.setCurrentIndex(0)
+			if header=='Options':
+				if text=='Group Cameras':
+					mel.eval('''
+					if (`objExists cameras`)
+					{
+					  print "Group 'cameras' already exists";
+					}
+					else
+					{
+					  group -world -name cameras side front top persp;
+					  hide cameras;
+					  // Now add non-default cameras to group
+					  if (`objExists back`)
+					  {
+					  	parent back cameras;
+					  }
+					  if (`objExists bottom`)
+					  {
+					  	parent bottom cameras;
+					  }
+					  if (`objExists left`)
+					  {
+					  	parent left cameras;
+					  }
+					  if (`objExists alignToPoly`)
+					  {
+					  	parent alignToPoly cameras;
+					  }
+					}''')
 
 
 	def v000(self):
@@ -347,7 +312,127 @@ class Cameras(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
+
+
+
+
+#deprecated -------------------------------------
+
+
+	# def cmb000(self, index=None):
+	# 	'''
+	# 	Camera Editors
+
+	# 	'''
+	# 	cmb = self.ui.cmb000
+		
+	# 	list_ = ['Camera Sequencer', 'Camera Set Editor']
+	# 	contents = cmb.addItems_(list_, ' ')
+
+	# 	if not index:
+	# 		index = cmb.currentIndex()
+	# 	if index!=0:
+	# 		if index==1:
+	# 			mel.eval('SequenceEditor;')
+	# 		if index==2:
+	# 			mel.eval('cameraSetEditor;')
+	# 		cmb.setCurrentIndex(0)
+
+
+	# def cmb001(self, index=None):
+	# 	'''
+	# 	Additional Cameras
+
+	# 	'''
+	# 	# Get all cameras first
+	# 	cameras = pm.ls(type=('camera'), l=True)
+	# 	# Let's filter all startup / default cameras
+	# 	startup_cameras = [camera for camera in cameras if pm.camera(camera.parent(0), startupCamera=True, q=True)]
+	# 	# non-default cameras are easy to find now. Please note that these are all PyNodes
+	# 	non_startup_cameras_pynodes = list(set(cameras) - set(startup_cameras))
+	# 	# Let's get their respective transform names, just in-case
+	# 	non_startup_cameras_transform_pynodes = map(lambda x: x.parent(0), non_startup_cameras_pynodes)
+	# 	# Now we can have a non-PyNode, regular string names list of them
+	# 	non_startup_cameras = map(str, non_startup_cameras_pynodes)
+	# 	non_startup_cameras_transforms = map(str, non_startup_cameras_transform_pynodes)
+
+	# 	cmb = self.ui.cmb001
+		
+	# 	contents = cmb.addItems_(non_startup_cameras, "Cameras")
+
+	# 	if not index:
+	# 		index = cmb.currentIndex()
+	# 	if index!=0:
+	# 		pm.select (contents[index])
+	# 		cmb.setCurrentIndex(0)
+
+
+	# def cmb002(self, index=None):
+	# 	'''
+	# 	Create
+
+	# 	'''
+	# 	cmb = self.ui.cmb002
+		
+	# 	list_ = ['Custom Camera', 'Set Custom Camera', 'Camera From View']
+	# 	contents = cmb.addItems_(list_, "Create")
+
+	# 	if not index:
+	# 		index = cmb.currentIndex()
+	# 	if index!=0:
+	# 		if index==1:
+	# 			mel.eval('cameraView -edit -camera persp -setCamera $homeName;')
+	# 		if index==2:
+	# 			mel.eval('string $homeName = `cameraView -camera persp`;')
+	# 		if index==3:
+	# 			mel.eval('print "--no code--"')
+	# 		cmb.setCurrentIndex(0)
+
+
+	# def cmb003(self, index=None):
+	# 	'''
+	# 	Options
+
+	# 	'''
+	# 	cmb = self.ui.cmb003
+		
+	# 	list_ = ['Group Cameras']
+	# 	contents = cmb.addItems_(list_, "Options")
+
+	# 	if not index:
+	# 		index = cmb.currentIndex()
+	# 	if index!=0:
+	# 		if index==1:
+	# 			mel.eval('''
+	# 			if (`objExists cameras`)
+	# 			{
+	# 			  print "Group 'cameras' already exists";
+	# 			}
+	# 			else
+	# 			{
+	# 			  group -world -name cameras side front top persp;
+	# 			  hide cameras;
+	# 			  // Now add non-default cameras to group
+	# 			  if (`objExists back`)
+	# 			  {
+	# 			  	parent back cameras;
+	# 			  }
+	# 			  if (`objExists bottom`)
+	# 			  {
+	# 			  	parent bottom cameras;
+	# 			  }
+	# 			  if (`objExists left`)
+	# 			  {
+	# 			  	parent left cameras;
+	# 			  }
+	# 			  if (`objExists alignToPoly`)
+	# 			  {
+	# 			  	parent alignToPoly cameras;
+	# 			  }
+	# 			}
+	# 			''')
+	# 		cmb.setCurrentIndex(0)

@@ -1,5 +1,9 @@
 from __future__ import print_function
-from PySide2 import QtCore, QtGui, QtWidgets, shiboken2
+from PySide2 import QtCore, QtGui, QtWidgets
+try:
+	import shiboken2
+except:
+	from PySide2 import shiboken2
 
 import sys
 
@@ -10,7 +14,12 @@ import sys
 
 class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 	'''
-	Additional columns are shown as they are triggered by parent widgets.
+	Additional column lists are shown as they are triggered by their parent widgets.
+
+	args:
+		parent (obj) = Parent Object.
+		stepColumns (bool) = Start child columns at row of its parent widget. Else, always at row 0.
+		expandOnHover (bool) = Expand columns on mouse hover.
 	'''
 	enterEvent_	= QtCore.QEvent(QtCore.QEvent.Enter)
 	leaveEvent_	= QtCore.QEvent(QtCore.QEvent.Leave)
@@ -19,17 +28,21 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 	hoverLeave_ = QtCore.QEvent(QtCore.QEvent.HoverLeave)
 
 
-	def __init__(self, parent=None, stepColumns=True):
+	def __init__(self, parent=None, stepColumns=True, expandOnHover=False):
 		super (QTreeWidget_ExpandableList, self).__init__(parent)
+
+		self.refresh=False
+		self._mouseGrabber=None
+		self.widgets={}
+		self._gcWidgets={}
+		self.refreshedHeaders=set()
+		print (self.refreshedHeaders, 'self.refreshedHeaders'*3)
+
+		self.stepColumns=stepColumns
+		self.expandOnHover=expandOnHover		
 
 		self.setHeaderHidden(True)
 		self.setIndentation(0)
-
-		self.widgets={}
-		self.stepColumns=stepColumns
-		self._mouseGrabber=None
-		self.refresh=False
-
 		self.setStyleSheet('''
 			QTreeWidget {
 				background-color: transparent;
@@ -81,12 +94,15 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 
 			except Exception as error:
 				if type(error)==AttributeError:
-					self.setCustomAttribute(attr, value)
+					if item:
+						self.setCustomAttribute(attr, value, item)
+					else:
+						self.setCustomAttribute(attr, value)
 				else:
 					raise error
 
 
-	def setCustomAttribute(self, attr, value):
+	def setCustomAttribute(self, attr, value, item=None):
 		'''
 		Handle custom keyword arguments.
 
@@ -94,8 +110,18 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			attr (str) = custom keyword attribute.
 			value (str) = the value corresponding to the given attr.
 		kwargs:
+			refresh (bool) = set the header's column to be refreshed on showEvent.
 			moveGlobal (QPoint) = move to given global location and center.
 		'''
+		if attr=='refresh':
+			if item and not self.isParent(item):
+				header = self.getHeaderFromWidget(item) #self.widgets[item][4] = True
+				print (self.refreshedHeaders, header, 'setCustomAttribute')
+				if value:
+					self.refreshedHeaders.add(header)
+				else:
+					self.refreshedHeaders.remove(header)
+
 		if attr=='moveGlobal':
 			self.move(self.mapFromGlobal(value - self.rect().center())) #move and center
 
@@ -103,11 +129,11 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 	def add(self, widget, header='root', parentHeader=None, **kwargs):
 		'''
 		Add items to the treeWidget.
-		header's starting with '*' will have their contents refreshed each time the widget is shown.
+		Using custom kwarg refresh=True will flag the header's column contents to be refreshed each time the widget is shown.
 
 		args:
 			widget (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
-			header (str) = header
+			header (str) = header.
 			parentHeader (str) = parent header.
 		returns:
  			the parent header string.
@@ -135,7 +161,8 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 				}
 		'''
 		#if header doesn't contain the refresh column flag: return the parent header.
-		if not self.isRefreshedHeader(header) and self.refresh:
+		if self.refresh and not self.isRefreshedHeader(header):
+			print (widget, header, self.refresh, self.isRefreshedHeader(header), self.refreshedHeaders)
 			return self.getParentHeaderFromHeader(header)
 
 		#set widget
@@ -144,9 +171,6 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		except:
 			if callable(widget):
 				widget = widget(self) #ex. QtWidgets.QAction(self) object. parented to self.
-
-		self.setAttributes(widget, kwargs) #set any built-in attributes.
-		widget.setText(widget.text().strip('*')) #strip '*' (refresh column flag) from widget text.
 
 		#set widgetItem
 		header = self.getHeaderFromWidget(widget, header)
@@ -161,44 +185,29 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		if not wItem:
 			wItem = QtWidgets.QTreeWidgetItem(self)
 
-
+		self.widgets[widget] = [header, column, row, parentHeader] #store the widget and it's column/row/header information.
+		# print (self.widgets[widget])
 		self.setItemWidget(wItem, column, widget)
-
-		self.widgets[widget] = [header, column, row, parentHeader]
-
 		self.setColumnCount(len(self.getColumns()))
 
-		widget.setObjectName(self.__createObjectName(wItem, column)) #set an dynamically generated objectName.
+		widget.setObjectName(self._createObjectName(wItem, column)) #set an dynamically generated objectName.
 		widget.installEventFilter(self)
 
-		return parentHeader
+		self.setAttributes(widget, kwargs) #set any additional given keyword args for the widget.
 
+		return parentHeader
 
 
 	def eventFilter(self, widget, event):
 		'''
 		'''
 		# if not (str(event.type()).split('.')[-1]) in ['QPaintEvent', 'UpdateLater', 'PolishRequest', 'Paint']: print(str(event.type())) #debugging
-		if not shiboken2.isValid(widget):
-			return False
-
-		if not widget in self.widgets:
+		if widget not in self.widgets or not shiboken2.isValid(widget):
 			return False
 
 		if event.type()==QtCore.QEvent.HoverEnter:
-			# print(widget.text(), 'HoverEnter')
-			if self.isParent(widget):
-				childColumns = self.getChildColumnsFromWidget(widget)
-				columns = [0]+childColumns
-				self._setEnabledState(childColumns, widget) #set widgets enabled/disabled
-				self._showColumns(columns)
-				self._resize(columns)
-			else:
-				column = self.getColumnFromWidget(widget)
-				parentColumns = self.getParentColumnsFromWidget(widget)
-				self._setEnabledState(column, widget) #set widgets enabled/disabled
-				self._showColumns([column]+parentColumns)
-				self._resize([column]+parentColumns)
+			if self.expandOnHover:
+				self.resizeAndShowColumns(widget)
 
 		if event.type()==QtCore.QEvent.HoverMove:
 			try:
@@ -212,23 +221,17 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 					QtWidgets.QApplication.sendEvent(self._mouseGrabber, self.leaveEvent_)
 				if not w is self.mouseGrabber():
 					w.grabMouse()
-					# print('grab:', self.mouseGrabber().objectName())
 				self._mouseGrabber = w
 				QtWidgets.QApplication.sendEvent(w, self.hoverEnter_)
 				QtWidgets.QApplication.sendEvent(w, self.enterEvent_)
 
-
 		if event.type()==QtCore.QEvent.HoverLeave:
-			# print(widget.text(), 'HoverLeave')
-			self._resize(0)
-			self._showColumns(0)
-			self._setEnabledState(0, widget) #set widgets enabled/disabled
+			if self.expandOnHover:
+				self.resizeAndShowColumns(widget, reset=True)
 			if not __name__=='__main__':
 				self.window().grabMouse()
-				# print('grab:', self.mouseGrabber().objectName(), 'window()')
 
 		if event.type()==QtCore.QEvent.MouseButtonRelease:
-			# print(widget.text(), 'MouseButtonRelease')
 			if widget.rect().contains(widget.mapFromGlobal(QtGui.QCursor.pos())):
 				wItem = self.getWItemFromWidget(widget)
 				row = self.getRowFromWidget(widget)
@@ -242,12 +245,37 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 	def leaveEvent(self, event):
 		'''
 		'''
-		# print ('LeaveEvent')
-		self._resize(0)
-		self._showColumns(0)
+		self.resizeAndShowColumns(reset=True)
 		self._mouseGrabber = self
 		
 		return QtWidgets.QTreeWidget.leaveEvent(self, event)
+
+
+	def resizeAndShowColumns(self, widget=None, reset=False):
+		'''
+		Set size, widget states, and visible columns for a given widget.
+
+		args:
+			widget (obj) = QWidget. Required when not doing a reset.
+			reset (bool) = set tree to original state.
+		'''
+		if reset:
+			self._resize(0)
+			self._showColumns(0)
+			self._setEnabledState(0, widget) #set widgets enabled/disabled
+
+		elif self.isParent(widget):
+			childColumns = self.getChildColumnsFromWidget(widget)
+			columns = [0]+childColumns
+			self._setEnabledState(childColumns, widget) #set widgets enabled/disabled
+			self._showColumns(columns)
+			self._resize(columns)
+		else:
+			column = self.getColumnFromWidget(widget)
+			parentColumns = self.getParentColumnsFromWidget(widget)
+			self._setEnabledState(column, widget) #set widgets enabled/disabled
+			self._showColumns([column]+parentColumns)
+			self._resize([column]+parentColumns)
 
 
 	def _resize(self, columns, resizeFirstColumn=False, collapseOtherColumns=False):
@@ -279,21 +307,6 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			[self.setColumnWidth(c, 0) for c in self.getColumns() if c not in columns] #set all other column widths to 0
 
 
-	def __createObjectName(self, wItem, column):
-		'''
-		Create an objectName for an itemWidget consisting of the parent treeWidget's object name, header, column, and parentHeader.
-
-		args:
-			wItem (obj) = QWidgetItem.
-			column (int) = The index of the column.
-		returns:
-			(str) name string.
-		'''
-		header = self.getHeaderFromColumn(column)
-		row = self.getRow(wItem)
-		return '{0}|{1}|{2}|{3}'.format(self.objectName(), header, column, row) #ie. 'tree002|Options|0|1'
-
-
 	def _setEnabledState(self, columns, widget=None):
 		'''
 		Disables/Enables widgets along the tree hierarchy.
@@ -322,6 +335,21 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			for k, v in kwargs.items():
 				if hasattr(w, k):
 					getattr(w, k)(v)
+
+
+	def _createObjectName(self, wItem, column):
+		'''
+		Create an objectName for an itemWidget consisting of the parent treeWidget's object name, header, column, and parentHeader.
+
+		args:
+			wItem (obj) = QWidgetItem.
+			column (int) = The index of the column.
+		returns:
+			(str) name string.
+		'''
+		header = self.getHeaderFromColumn(column)
+		row = self.getRow(wItem)
+		return '{0}|{1}|{2}|{3}'.format(self.objectName(), header, column, row) #ie. 'tree002|Options|0|1'
 
 
 	def getWItemFromRow(self, row):
@@ -510,7 +538,7 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		'''
 		try:
 			if refreshedColumn:
-				return next(i[1] for i in self._refreshed if i and i[0]==header)
+				return next(i[1] for i in self._gcWidgets.values() if i and i[0]==header)
 			else:
 				return next(i[1] for i in self.widgets.values() if i[0]==header)
 		except StopIteration: #else assign a new column to the header.
@@ -569,8 +597,8 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 				columns = set([i[1] for i in self.widgets.values() if self.isRefreshedHeader(i[0])])
 			else:
 				columns = set([i[1] for i in self.widgets.values()])
-			if not columns:
-				raise Exception
+				if not columns: #when not getting refreshed columns, and columns have yet to be stored in the widgets dict, try an alt method.
+					raise Exception
 		except Exception:
 			columns = set([i for i in range(self.columnCount())])
 		return columns
@@ -620,7 +648,7 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			columns (int)(list) = column(s) where widgets are located. single column or a list of columns.
 			removeNoneValues (bool) = Remove any 'None' values from the returned list.
 			refreshedWidgets (bool) = Return only widgets from a column that is flagged to refresh. ie. it's column header starts with '*'. None values are removed when this argument is set.
-			inverse (bool) = get the widgets not associated with the given argument. ie. not in 'columns' or not in 'wItem'. inverse has no effect when returning all widgets.
+			inverse (bool)(iter) = get the widgets not associated with the given argument. ie. not in 'columns' or not in 'wItem'. An iterative can be passed in instead of a bool value. inverse has no effect when returning all widgets.
 		returns:
 			widgets (list)
 		'''
@@ -643,6 +671,8 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			list_ = [w for w in list_ if w is not None and self.isRefreshedHeader(self.getHeaderFromWidget(w))]
 
 		if inverse:
+			if isinstance(inverse, (list, tuple, set)):
+				list_ = inverse
 			list_ = [i for i in self.getWidgets() if i not in list_]
 
 		if removeNoneValues:
@@ -696,7 +726,7 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 	def isRefreshedHeader(self, header):
 		'''
 		'''
-		if header is not None and header.startswith('*'):
+		if header is not None and header in self.refreshedHeaders:
 			return True
 		else:
 			return False
@@ -726,19 +756,20 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			if c is 0:
 				[self.add(w, parentHeader=i, setText=i) for i in list_ if i]
 			else:
-				[self.add(w, header=self.headerItem().text(c), setText=i) for i in list_ if i]
+				header = str(self.headerItem().text(c))
+				[self.add(w, header=header, setText=i) for i in list_ if i]
 
 
 	def clear_(self, columns):
 		'''
 		'''
-		self._refreshed=[]
+		self._gcWidgets={}
 		for column in columns:
 			for wItem in self.getTopLevelItems():
 				widget = self.itemWidget(wItem, column)
 				self.removeItemWidget(wItem, column)
 				list_ = self.widgets.pop(widget, None) #remove the widget from the widgets dict.
-				self._refreshed.append(list_)
+				self._gcWidgets[widget] = list_
 				if widget:
 					shiboken2.delete(widget)
 
@@ -752,21 +783,26 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			if not __name__=='__main__':
 				self.classMethod()
 
-		except AttributeError:
+		except:
 			from tk_switchboard import sb
 			self.sb = sb
 
-			self.classMethod = self.sb.getMethod(self.sb.getUiName(), str(self.objectName()))
+			self.parentUiName = self.sb.getUiName()
+			self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
+			self.classMethod = self.sb.getMethod(self.parentUiName, self)
 			# className = self.sb.getUiName(pascalCase=True)
 			# class_ = self.sb.getClassInstance(className)
-			# self.classMethod = getattr(class_, str(self.objectName()))
-			self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
+			# try:
+				# self.classMethod = getattr(class_, str(self.objectName()))
+			self.classMethod()
+			# except AttributeError as error:
+			# 	print('# Error:', self.__class__.__name__, 'in getattr:', error, '#')
 
 		if self.refresh:
-			widgets = self.getWidgets(refreshedWidgets=1)
+			widgets = self.getWidgets(refreshedWidgets=1) #get only any newly created widgets on each refresh.
 		else:
-			widgets = self.getWidgets(removeNoneValues=1)
-		self.childEvents.addWidgets(self.sb.getUiName(), widgets)
+			widgets = self.getWidgets(removeNoneValues=1) #get all widgets on first show.
+		self.childEvents.addWidgets(self.parentUiName, widgets) #removeWidgets=self._gcWidgets.keys()
 
 		return QtWidgets.QTreeWidget.showEvent(self, event)
 
@@ -776,12 +812,14 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		args:
 			event = <QEvent>
 		'''
-		self.refresh = True
+		self.refresh = True #init flag stays False after first hide
 		refreshedColumns = self.getColumns(refreshedColumns=True)
 		if refreshedColumns:
 			self.clear_(refreshedColumns)
 
 		return QtWidgets.QTreeWidget.hideEvent(self, event)
+
+
 
 
 
@@ -792,17 +830,17 @@ if __name__ == '__main__':
 	tree=QTreeWidget_ExpandableList(stepColumns=1)
 
 	create = tree.add('QPushButton', parentHeader='Create', setText='Create')
-	tree.add('QPushButton', create, setText='Custom Camera')
-	tree.add('QPushButton', create, setText='Set Custom Camera')
-	tree.add('QPushButton', create, setText='Camera From View')
+	tree.add('QLabel', create, setText='Custom Camera')
+	tree.add('QLabel', create, setText='Set Custom Camera')
+	tree.add('QLabel', create, setText='Camera From View')
 
 	cameras = tree.add('QPushButton', parentHeader='Cameras', setText='Cameras')
-	tree.add('QPushButton', cameras, setText='Cam1')
-	tree.add('QPushButton', cameras, setText='Cam2')
+	tree.add('QLabel', cameras, setText='Cam1')
+	tree.add('QLabel', cameras, setText='Cam2')
 
 	options = tree.add('QPushButton', cameras, parentHeader='Options', setText='Options')
-	tree.add('QPushButton', options, setText='Opt1')
-	tree.add('QPushButton', options, setText='Opt2')
+	tree.add('QLabel', options, setText='Opt1')
+	tree.add('QLabel', options, setText='Opt2')
 
 	tree.show()
 	sys.exit(app.exec_())
@@ -810,14 +848,14 @@ if __name__ == '__main__':
 
 
 # #alternate call example: ------------------------------
-# l = ['Create', '*Cameras', 'Editors', 'Options']
+# l = ['Create', 'Cameras', 'Editors', 'Options']
 # [tree.add('QLabel', parentHeader=t, setText=t) for t in l]
 
 # l = ['Custom Camera','Set Custom Camera','Camera From View']
 # [tree.add('QLabel', 'Create', setText=t) for t in l]
 
 # l = ['camera '+str(i) for i in range(6)] #debug: dummy list
-# [tree.add('QLabel', '*Cameras', setText=t) for t in l]
+# [tree.add('QLabel', '*Cameras', setText=t, refresh=True) for t in l]
 
 # l = ['Group Cameras']
 # [tree.add('QLabel', 'Options', setText=t) for t in l]
@@ -892,3 +930,8 @@ if __name__ == '__main__':
 	# 	# 	self.widgets.pop(widget, None) #remove the widget from the widgets dict.
 	# 	# 	# if widget:
 	# 	# 	# 	shiboken2.delete(widget)
+
+
+			# className = self.sb.getUiName(pascalCase=True)
+			# class_ = self.sb.getClassInstance(className)
+			# self.classMethod = getattr(class_, str(self.objectName()))

@@ -37,9 +37,6 @@
   <property name="windowTitle">
    <string>Toolkit</string>
   </property>
-  <property name="whatsThis">
-   <string>main</string>
-  </property>
   <property name="toolButtonStyle">
    <enum>Qt::ToolButtonIconOnly</enum>
   </property>

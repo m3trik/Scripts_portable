@@ -44,10 +44,10 @@ class Duplicate(Init):
 		Duplicate: Translate To Components
 		'''
 		if self.ui.chk007.isChecked():
-			self.toggleWidgets(self.ui, setEnabled='chk008,b034,cmb000', setDisabled='chk000,chk009,s005')
+			self.toggleWidgets(self.ui, self.submenu, setEnabled='chk008,b034,cmb000', setDisabled='chk000,chk009,s005')
 			self.b034()
 		else:
-			self.toggleWidgets(self.ui, setEnabled='chk000,chk009,s005', setDisabled='chk008,b034,cmb000')
+			self.toggleWidgets(self.ui, self.submenu, setEnabled='chk000,chk009,s005', setDisabled='chk008,b034,cmb000')
 
 
 	def chk010(self):
@@ -63,7 +63,7 @@ class Duplicate(Init):
 				pivot = pm.xform (selection, query=1, translation=1, relative=1)
 			except:
 				print "# Warning: Nothing selected. #"
-				self.toggleWidgets(self.ui, setChecked='chk010')
+				self.toggleWidgets(self.ui, self.submenu, setChecked='chk010')
 				return
 			# radialPivot.extend ([pivot[0],pivot[1],pivot[2]])
 			radialPivot.extend (pivot) #extend the list contents
@@ -85,7 +85,7 @@ class Duplicate(Init):
 		'''
 		Radial Array: X Axis
 		'''
-		self.toggleWidgets(self.ui, setChecked='chk012', setChecked_False='chk013,chk014')
+		self.toggleWidgets(self.ui, self.submenu, setChecked='chk012', setChecked_False='chk013,chk014')
 		self.chk015()
 
 
@@ -93,7 +93,7 @@ class Duplicate(Init):
 		'''
 		Radial Array: Y Axis
 		'''
-		self.toggleWidgets(self.ui, setChecked='chk013', setChecked_False='chk012,chk014')
+		self.toggleWidgets(self.ui, self.submenu, setChecked='chk013', setChecked_False='chk012,chk014')
 		self.chk015()
 
 
@@ -101,7 +101,7 @@ class Duplicate(Init):
 		'''
 		Radial Array: Z Axis
 		'''
-		self.toggleWidgets(self.ui, setChecked='chk014', setChecked_False='chk012,chk013')
+		self.toggleWidgets(self.ui, self.submenu, setChecked='chk014', setChecked_False='chk012,chk013')
 		self.chk015()
 
 
@@ -115,7 +115,7 @@ class Duplicate(Init):
 		instance = self.ui.chk011.isChecked() #instance object
 
 		if self.ui.chk015.isChecked():
-			self.toggleWidgets(self.ui, setEnabled='b003')
+			self.toggleWidgets(self.ui, self.submenu, setEnabled='b003')
 
 			selection = pm.ls (selection=1, type="transform", flatten=1)
 			if selection:
@@ -164,7 +164,7 @@ class Duplicate(Init):
 					pm.undoInfo (closeChunk=1)
 			else: #if both lists objects are empty:
 				print "# Warning: Nothing selected. #"
-				self.toggleWidgets(self.ui, setDisabled='b003', setChecked_False='chk015')
+				self.toggleWidgets(self.ui, self.submenu, setDisabled='b003', setChecked_False='chk015')
 				return
 		else: #if chk015 is unchecked by user or by create button
 			if create:
@@ -180,7 +180,7 @@ class Duplicate(Init):
 				pass
 			del radialArrayObjList[:] #clear the list
 
-			self.toggleWidgets(self.ui, setDisabled='b003')
+			self.toggleWidgets(self.ui, self.submenu, setDisabled='b003')
 
 
 	@staticmethod
@@ -237,7 +237,7 @@ class Duplicate(Init):
 		Duplicate: Preview
 		'''
 		if self.ui.chk016.isChecked():
-			self.toggleWidgets(self.ui, setEnabled='b002')
+			self.toggleWidgets(self.ui, self.submenu, setEnabled='b002')
 
 			instance = self.ui.chk000.isChecked()
 			numOfDuplicates = int(self.ui.s005.value())
@@ -319,7 +319,7 @@ class Duplicate(Init):
 			pm.delete(duplicateObjList[1:]) #delete all the geometry in the list, except the original obj
 			pm.select(duplicateObjList[:1]) #re-select the original object
 			del duplicateObjList[:] #clear the list
-			self.toggleWidgets(self.ui, setDisabled='b002')
+			self.toggleWidgets(self.ui, self.submenu, setDisabled='b002')
 
 
 	def cmb001(self, index=None):

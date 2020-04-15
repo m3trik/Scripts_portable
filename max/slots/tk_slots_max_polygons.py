@@ -18,21 +18,21 @@ class Polygons(Init):
 		'''
 		Split U
 		'''
-		self.toggleWidgets(self.ui, setChecked_False='chk010')
+		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk010')
 
 
 	def chk009(self):
 		'''
 		Split V
 		'''
-		self.toggleWidgets(self.ui, setChecked_False='chk010')
+		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk010')
 
 
 	def chk010(self):
 		'''
 		Tris
 		'''
-		self.toggleWidgets(self.ui, setChecked_False='chk008,chk009')
+		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk008,chk009')
 
 
 	def cmb000(self, index=None):

@@ -1,4 +1,5 @@
-from tk_slots_maya_init import Init
+from __future__ import print_function
+from tk_slots_maya_init import *
 
 import traceback
 import os.path
@@ -96,9 +97,9 @@ class Subdivision(Init):
 		#check shape for an existing output to a smoothProxy
 		attachedSmoothProxies = pm.listConnections (shape[0], type="polySmoothProxy", s=0, d=1)
 		if len(attachedSmoothProxies) == 0: #subdiv on
-			self.toggleWidgets(self.ui, setEnabled='b000', setChecked='b009')
+			self.toggleWidgets(self.ui, self.submenu, setEnabled='b000', setChecked='b009')
 		else:
-			self.toggleWidgets(self.ui, setDisabled='b000', setChecked_False='b009')
+			self.toggleWidgets(self.ui, self.submenu, setDisabled='b000', setChecked_False='b009')
 			mel.eval("smoothingDisplayToggle 0;")
 
 		#toggle performSmoothProxy
@@ -177,7 +178,7 @@ class Subdivision(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

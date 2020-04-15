@@ -1,10 +1,7 @@
 from __future__ import print_function
 from tk_slots_max_init import *
 
-
 import os.path
-
-
 
 
 
@@ -14,30 +11,33 @@ class Cameras(Init):
 
 		self.ui = self.sb.getUi('cameras')
 
-		self.tree000()
 
 
 	def tree000(self, wItem=None, column=None):
 		'''
-		Cameras
+		
 		'''
 		tree = self.ui.tree000
 
 		if not any([wItem, column]):
 			if not tree.refresh:
-				tree.convert(tree.getTopLevelItems(), 'QLabel')
+				tree.expandOnHover = True
+				tree.convert(tree.getTopLevelItems(), 'QLabel') #construct the tree using the existing contents.
 
 			try:
-				l = [cam.name for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
-			except AttributeError: l = ['camera '+str(i) for i in range(3)] #debug: dummy list
-			[tree.add('QLabel', '*Cameras', setText=t) for t in l]
+				l = [str(cam.name) for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
+			except AttributeError:
+				l = ['camera '+str(i) for i in range(3)] #dummy debug list
+			# print (l)
+			[tree.add('QLabel', 'Cameras', refresh=True, setText=s) for s in l]
 
+			l = []
+			[tree.add('QLabel', 'Editors', setText=s) for s in l]
 
 		else:
 			# widget = tree.getWidget(wItem, column)
 			text = tree.getWidgetText(wItem, column)
 			header = tree.getHeaderFromColumn(column)
-			print(header, text, column)
 
 			if header=='Create':
 				if text=='Custom Camera':
@@ -51,7 +51,6 @@ class Cameras(Init):
 				cam = rt.getNodeByName(text)
 				rt.select(cam) #select the camera
 				rt.viewport.setCamera(cam) #set viewport to camera
-				cmb.setCurrentIndex(0)
 				rt.redrawViews()
 
 			if header=='Create':
@@ -64,88 +63,6 @@ class Cameras(Init):
 
 					for cam in cameras:
 						layer.addnode(cam)
-
-
-	# def cmb000(self, index=None):
-	# 	'''
-	# 	Editors
-	# 	'''
-	# 	cmb = self.ui.cmb000
-		
-	# 	files = ['']
-	# 	contents = cmb.addItems_(files, ' ')
-
-	# 	if not index:
-	# 		index = cmb.currentIndex()
-	# 	if index!=0:
-	# 		if index==contents.index(''):
-	# 			pass
-	# 		cmb.setCurrentIndex(0)
-
-
-	# def cmb001(self, index=None):
-	# 	'''
-	# 	Cameras
-	# 	'''
-	# 	cmb = self.ui.cmb001
-		
-	# 	cameras = [cam.name for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
-	# 	contents = cmb.addItems_(cameras, "Cameras:")
-		
-	# 	if not index:
-	# 		index = cmb.currentIndex()
-	# 	if index!=0:
-	# 		cam = rt.getNodeByName(contents[index])
-	# 		rt.select (cam) #select the camera
-	# 		rt.viewport.setCamera (cam) #set viewport to camera
-	# 		cmb.setCurrentIndex(0)
-	# 		rt.redrawViews()
-
-
-	# def cmb002(self, index=None):
-	# 	'''
-	# 	Create
-	# 	'''
-	# 	cmb = self.ui.cmb002
-		
-	# 	list_ = ['Custom Camera','Set Custom Camera','Camera From View']
-	# 	contents = cmb.addItems_(list_, "Create")
-
-	# 	if not index:
-	# 		index = cmb.currentIndex()
-	# 	if index!=0:
-	# 		if index==1:
-	# 			rt.StartObjectCreation(rt.Physical_Camera)
-	# 		if index==2:
-	# 			maxEval('Try(viewport.setcamera $) Catch()')
-	# 		if index==3:
-	# 			maxEval('macros.run "Lights and Cameras" "PhysicalCamera_CreateFromView"')
-	# 		cmb.setCurrentIndex(0)
-
-
-	# def cmb003(self, index=None):
-	# 	'''
-	# 	Options
-	# 	'''
-	# 	cmb = self.ui.cmb003
-		
-	# 	list_ = ['Group Cameras']
-	# 	contents = cmb.addItems_(list_, "Options")
-
-	# 	if not index:
-	# 		index = cmb.currentIndex()
-	# 	if index!=0:
-	# 		if index==1:
-	# 			cameras = [cam for cam in rt.cameras] #List scene Cameras
-
-	# 			layer = rt.LayerManager.getLayerFromName ("Cameras")
-	# 			if not layer:
-	# 				layer = rt.LayerManager.NewLayerFromName("Cameras")
-
-	# 			for cam in cameras:
-	# 				layer.addnode(cam)
-	# 		cmb.setCurrentIndex(0)
-
 
 
 	def v000(self):
@@ -274,4 +191,90 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
+
+
+
+# deprecated ------------------------------------
+
+
+	# def cmb000(self, index=None):
+	# 	'''
+	# 	Editors
+	# 	'''
+	# 	cmb = self.ui.cmb000
+		
+	# 	files = ['']
+	# 	contents = cmb.addItems_(files, ' ')
+
+	# 	if not index:
+	# 		index = cmb.currentIndex()
+	# 	if index!=0:
+	# 		if index==contents.index(''):
+	# 			pass
+	# 		cmb.setCurrentIndex(0)
+
+
+	# def cmb001(self, index=None):
+	# 	'''
+	# 	Cameras
+	# 	'''
+	# 	cmb = self.ui.cmb001
+		
+	# 	cameras = [cam.name for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
+	# 	contents = cmb.addItems_(cameras, "Cameras:")
+		
+	# 	if not index:
+	# 		index = cmb.currentIndex()
+	# 	if index!=0:
+	# 		cam = rt.getNodeByName(contents[index])
+	# 		rt.select (cam) #select the camera
+	# 		rt.viewport.setCamera (cam) #set viewport to camera
+	# 		cmb.setCurrentIndex(0)
+	# 		rt.redrawViews()
+
+
+	# def cmb002(self, index=None):
+	# 	'''
+	# 	Create
+	# 	'''
+	# 	cmb = self.ui.cmb002
+		
+	# 	list_ = ['Custom Camera','Set Custom Camera','Camera From View']
+	# 	contents = cmb.addItems_(list_, "Create")
+
+	# 	if not index:
+	# 		index = cmb.currentIndex()
+	# 	if index!=0:
+	# 		if index==1:
+	# 			rt.StartObjectCreation(rt.Physical_Camera)
+	# 		if index==2:
+	# 			maxEval('Try(viewport.setcamera $) Catch()')
+	# 		if index==3:
+	# 			maxEval('macros.run "Lights and Cameras" "PhysicalCamera_CreateFromView"')
+	# 		cmb.setCurrentIndex(0)
+
+
+	# def cmb003(self, index=None):
+	# 	'''
+	# 	Options
+	# 	'''
+	# 	cmb = self.ui.cmb003
+		
+	# 	list_ = ['Group Cameras']
+	# 	contents = cmb.addItems_(list_, "Options")
+
+	# 	if not index:
+	# 		index = cmb.currentIndex()
+	# 	if index!=0:
+	# 		if index==1:
+	# 			cameras = [cam for cam in rt.cameras] #List scene Cameras
+
+	# 			layer = rt.LayerManager.getLayerFromName ("Cameras")
+	# 			if not layer:
+	# 				layer = rt.LayerManager.NewLayerFromName("Cameras")
+
+	# 			for cam in cameras:
+	# 				layer.addnode(cam)
+	# 		cmb.setCurrentIndex(0)
+
 

@@ -1,4 +1,5 @@
-from tk_slots_maya_init import Init
+from __future__ import print_function
+from tk_slots_maya_init import *
 
 import os.path
 
@@ -17,21 +18,21 @@ class Polygons(Init):
 		'''
 		Split U
 		'''
-		self.toggleWidgets(self.ui, setChecked_False='chk010')
+		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk010')
 
 
 	def chk009(self):
 		'''
 		Split V
 		'''
-		self.toggleWidgets(self.ui, setChecked_False='chk010')
+		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk010')
 
 
 	def chk010(self):
 		'''
 		Tris
 		'''
-		self.toggleWidgets(self.ui, setChecked_False='chk008-9')
+		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk008-9')
 
 
 	def cmb000(self, index=None):
@@ -450,7 +451,7 @@ class Polygons(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

@@ -1,4 +1,5 @@
-from tk_slots_maya_init import Init
+from __future__ import print_function
+from tk_slots_maya_init import *
 
 import traceback
 
@@ -35,7 +36,7 @@ class Mirror(Init):
 		'''
 		Delete: X Axis
 		'''
-		self.toggleWidgets(self.ui, setChecked_False='chk002,chk003')
+		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk002,chk003')
 		axis = "X"
 		if self.ui.chk000.isChecked():
 			axis = '-'+axis
@@ -47,7 +48,7 @@ class Mirror(Init):
 		'''
 		Delete: Y Axis
 		'''
-		self.toggleWidgets(self.ui, setChecked_False='chk001,chk003')
+		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk001,chk003')
 		axis = "Y"
 		if self.ui.chk000.isChecked():
 			axis = '-'+axis
@@ -59,7 +60,7 @@ class Mirror(Init):
 		'''
 		Delete: Z Axis
 		'''
-		self.toggleWidgets(self.ui, setChecked_False='chk001,chk002')
+		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk001,chk002')
 		axis = "Z"
 		if self.ui.chk000.isChecked():
 			axis = '-'+axis
@@ -73,9 +74,9 @@ class Mirror(Init):
 		'''
 		#keep menu and submenu in sync:
 		# if self.submenu.chk005.isChecked():
-		# 	self.toggleWidgets(self.ui, setChecked='chk005')
+		# 	self.toggleWidgets(self.ui, self.submenu, setChecked='chk005')
 		# else:
-		# 	self.toggleWidgets(self.ui, setChecked_False='chk005')
+		# 	self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk005')
 
 
 	def cmb000(self, index=None):
@@ -236,7 +237,7 @@ class Mirror(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

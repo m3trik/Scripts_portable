@@ -101,19 +101,14 @@ class Slot(object):
 		Set multiple boolean properties, for multiple widgets, on multiple ui's at once.
 		If the ui has a submenu with the same widget, then the value will be set there as well. It can be set on additional ui's by passing them in explicitly in *args.
 		args:
-			*args = dynamic ui object
+			*args = dynamic ui object/s
 			*kwargs = keyword: - the property to modify. ex. setChecked, setChecked_False, setEnabled, setDisabled, setVisible, setHidden
 								Optionally appending '_False' or '_True' to the attribute name, will set the attribute accordingly. (The default state is True)
 					argument: string of objectNames - objectNames separated by ',' ie. 'b000-12,b022'
 
 		ex.	toggleWidgets(self.ui1, self.ui2, setDisabled='b000', setChecked_False='chk009-12', setVisible='b015,b017')
 		'''
-		args = [a for a in args] #make args mutable so that any submenus can be appended.
 		for ui in args:
-			submenu = self.sb.getSubmenu(ui)
-			if submenu:
-				args.append(submenu) #append submenu to args if one exists.
-
 			for property_ in kwargs: #ie. property_ could be setChecked_False
 				widgets = self.getObject(ui, kwargs[property_]) #getObject returns a widget list from a string of objectNames.
 

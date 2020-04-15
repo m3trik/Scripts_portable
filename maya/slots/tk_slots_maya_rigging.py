@@ -1,4 +1,5 @@
-from tk_slots_maya_init import Init
+from __future__ import print_function
+from tk_slots_maya_init import *
 
 import os.path
 
@@ -19,7 +20,7 @@ class Rigging(Init):
 		'''
 		Scale Joint
 		'''
-		self.toggleWidgets(self.ui, setChecked_False='chk001-2')
+		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk001-2')
 		self.ui.s000.setValue(pm.jointDisplayScale(query=1)) #init global joint display size
 
 
@@ -27,7 +28,7 @@ class Rigging(Init):
 		'''
 		Scale IK
 		'''
-		self.toggleWidgets(self.ui, setChecked_False='chk000, chk002')
+		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk000, chk002')
 		self.ui.s000.setValue(pm.ikHandleDisplayScale(query=1)) #init IK handle display size
 		
 
@@ -35,7 +36,7 @@ class Rigging(Init):
 		'''
 		Scale IK/FK
 		'''
-		self.toggleWidgets(self.ui, setChecked_False='chk000-1')
+		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk000-1')
 		self.ui.s000.setValue(pm.jointDisplayScale(query=1, ikfk=1)) #init IKFK display size
 
 
@@ -206,7 +207,7 @@ class Rigging(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

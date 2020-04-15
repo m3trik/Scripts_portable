@@ -1,4 +1,5 @@
-from tk_slots_maya_init import Init
+from __future__ import print_function
+from tk_slots_maya_init import *
 
 import os.path
 
@@ -20,7 +21,7 @@ class Crease(Init):
 		if self.ui.chk002.isChecked():
 			self.ui.s003.setValue(0) #crease value
 			self.ui.s004.setValue(180) #normal angle
-			self.toggleWidgets(self.ui, setChecked_False='chk003')
+			self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk003')
 		else:
 			self.ui.s003.setValue(7.5) #crease value
 			self.ui.s004.setValue(30) #normal angle
@@ -33,7 +34,7 @@ class Crease(Init):
 		if self.ui.chk003.isChecked():
 			self.ui.s003.setValue(10) #crease value
 			self.ui.s004.setValue(30) #normal angle
-			self.toggleWidgets(self.ui, setChecked_False='chk002')
+			self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk002')
 		else:
 			self.ui.s003.setValue(7.5) #crease value
 			self.ui.s004.setValue(60) #normal angle
@@ -44,9 +45,9 @@ class Crease(Init):
 		Crease: Auto
 		'''
 		if self.ui.chk011.isChecked():
-			self.toggleWidgets(self.ui, setEnabled='s005,s006')
+			self.toggleWidgets(self.ui, self.submenu, setEnabled='s005,s006')
 		else:
-			self.toggleWidgets(self.ui, setDisabled='s005,s006')
+			self.toggleWidgets(self.ui, self.submenu, setDisabled='s005,s006')
 
 
 	def cmb000(self, index=None):
@@ -112,7 +113,7 @@ class Crease(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

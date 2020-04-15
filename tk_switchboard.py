@@ -696,6 +696,7 @@ class __Switchboard(object):
 			return [w['widgetName'] for k,w in self._sbDict.items() if k=='widgets']
 
 
+
 	def getWidgetType(self, widget, name=None):
 		'''
 		Get widget type class name as a string.
@@ -708,7 +709,7 @@ class __Switchboard(object):
 		returns:
 			'string' - the corresponding widget class name
 		'''
-		if type(widget)==str:
+		if isinstance(widget, (str, unicode)):
 			objectName = self._sbDict[name]['widgets'][widget] #use the stored objectName as a more reliable key.
 			widget = self.getWidget(objectName, name) #use the objectName to get a string key for 'widget'
 
@@ -736,7 +737,7 @@ class __Switchboard(object):
 		returns:
 			'string' - the corresponding widget derived class name
 		'''
-		if type(widget)==str:
+		if isinstance(widget, (str, unicode)):
 			objectName = self._sbDict[name]['widgets'][widget] #use the stored objectName as a more reliable key.
 			widget = self.getWidget(objectName, name) #use the objectName to get a string key for 'widget'
 
@@ -1098,10 +1099,10 @@ class __Switchboard(object):
 			ui (str) = ui name.
 				<ui object> - dynamic ui.
 		'''
-		if type(ui)==str: #get name using string.
-			name = ui+'_submenu'
-		else: #get name using ui object.
-			name = self.getUiName(ui)+'_submenu'
+		if not isinstance(ui, (str, unicode)):
+			name = self.getUiName(ui) #get name using ui object.
+		if 'submenu' not in name:
+			name = name+'_submenu'
 
 		return self.getUi(name)
 

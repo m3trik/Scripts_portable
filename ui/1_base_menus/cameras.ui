@@ -114,7 +114,7 @@
        <bool>false</bool>
       </property>
       <property name="columnCount">
-       <number>3</number>
+       <number>5</number>
       </property>
       <attribute name="headerVisible">
        <bool>false</bool>
@@ -126,6 +126,16 @@
       </column>
       <column>
        <property name="text">
+        <string>Editors</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Cameras</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
         <string>Create</string>
        </property>
       </column>
@@ -139,6 +149,12 @@
         <string>Create</string>
        </property>
        <property name="text">
+        <string/>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="text">
         <string>Custom Camera</string>
        </property>
        <property name="text">
@@ -147,10 +163,19 @@
       </item>
       <item>
        <property name="text">
-        <string>*Cameras</string>
+        <string>Cameras</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="text">
+        <string/>
        </property>
        <property name="text">
         <string>Set Custom Camera</string>
+       </property>
+       <property name="text">
+        <string/>
        </property>
       </item>
       <item>
@@ -158,12 +183,33 @@
         <string>Editors</string>
        </property>
        <property name="text">
+        <string/>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="text">
         <string>Camera From View</string>
+       </property>
+       <property name="text">
+        <string/>
        </property>
       </item>
       <item>
        <property name="text">
         <string>Options</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="text">
+        <string/>
        </property>
       </item>
      </widget>

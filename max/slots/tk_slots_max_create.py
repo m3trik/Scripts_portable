@@ -106,7 +106,7 @@ class Create(Init):
 		'''
 		Rotate X Axis
 		'''
-		self.toggleWidgets(self.ui, setChecked='chk000', setChecked_False='chk001,chk002')
+		self.toggleWidgets(self.ui, self.submenu, setChecked='chk000', setChecked_False='chk001,chk002')
 		if self.node:
 			self.rotateAbsolute(self.getAxis())
 			
@@ -115,7 +115,7 @@ class Create(Init):
 		'''
 		Rotate Y Axis
 		'''
-		self.toggleWidgets(self.ui, setChecked='chk001', setChecked_False='chk000,chk002')
+		self.toggleWidgets(self.ui, self.submenu, setChecked='chk001', setChecked_False='chk000,chk002')
 		if self.node:
 			self.rotateAbsolute(self.getAxis())
 
@@ -124,7 +124,7 @@ class Create(Init):
 		'''
 		Rotate Z Axis
 		'''
-		self.toggleWidgets(self.ui, setChecked='chk002', setChecked_False='chk001,chk000')
+		self.toggleWidgets(self.ui, self.submenu, setChecked='chk002', setChecked_False='chk001,chk000')
 		if self.node:
 			self.rotateAbsolute(self.getAxis())
 

@@ -1,4 +1,5 @@
-from tk_slots_maya_init import Init
+from __future__ import print_function
+from tk_slots_maya_init import *
 
 import os.path
 
@@ -150,9 +151,9 @@ class Edit(Init):
 				self.ui.b043.setText(newObject)
 			else:
 				self.ui.b043.setText("must select obj first")
-				self.toggleWidgets(self.ui, setChecked_False='b043')
+				self.toggleWidgets(self.ui, self.submenu, setChecked_False='b043')
 			if self.ui.b042.isChecked():
-				self.toggleWidgets(self.ui, setEnabled='b052')
+				self.toggleWidgets(self.ui, self.submenu, setEnabled='b052')
 		else:
 			self.ui.b043.setText("Object")
 
@@ -172,9 +173,9 @@ class Edit(Init):
 				self.ui.b042.setText(creaseSet)
 			else:
 				self.ui.b042.setText("must select set first")
-				self.toggleWidgets(self.ui, setChecked_False='b042')
+				self.toggleWidgets(self.ui, self.submenu, setChecked_False='b042')
 			if self.ui.b043.isChecked():
-				self.toggleWidgets(self.ui, setEnabled='b052')
+				self.toggleWidgets(self.ui, self.submenu, setEnabled='b052')
 		else:
 			self.ui.b042.setText("Crease Set")
 
@@ -209,7 +210,7 @@ class Edit(Init):
 			# print "crease:", name
 		pm.undoInfo (closeChunk=1)
 
-		self.toggleWidgets(self.ui, setDisabled='b052', setChecked_False='b042')#,self.ui.b043])
+		self.toggleWidgets(self.ui, self.submenu, setDisabled='b052', setChecked_False='b042')#,self.ui.b043])
 		self.ui.b042.setText("Crease Set")
 		# self.ui.b043.setText("Object")
 
@@ -339,7 +340,7 @@ class Edit(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

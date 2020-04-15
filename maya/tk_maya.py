@@ -22,7 +22,7 @@ class Tk_maya(Tk):
 		if not parent:
 			try:
 				global app
-				parent = [x for x in app.topLevelWidgets() if x.objectName() is 'MayaWindow'][0]
+				parent = next(w for w in app.topLevelWidgets() if w.objectName()=='MayaWindow')
 			except:
 				print('# Error: "MayaWindow" object not found in app.topLevelWidgets() #')
 
