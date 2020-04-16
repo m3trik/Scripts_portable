@@ -20,6 +20,21 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		parent (obj) = Parent Object.
 		stepColumns (bool) = Start child columns at row of its parent widget. Else, always at row 0.
 		expandOnHover (bool) = Expand columns on mouse hover.
+
+	ex. widgets dict
+		#QWidget object			#header	#col #row #parentHeader
+		widgets = {
+			<Custom Camera>:	['Create',	1, 0, None],
+			<Cameras>:			['root', 	0, 1, 'Cameras'], 
+			<Set Custom Camera>:['Create',	1, 1, None], 
+			<Cam1>:				['Cameras', 2, 1, None],
+			<Cam2>:				['Cameras', 2, 2, None],
+			<opt2>:				['Options', 3, 4, None], 
+			<Create>:			['root', 	0, 0, 'Create'], 
+			<Camera From View>:	['Create', 	1, 2, None], 
+			<Options>:			['Cameras', 2, 3, 'Options'], 
+			<opt1>:				['Options', 3, 3, None]
+		}
 	'''
 	enterEvent_	= QtCore.QEvent(QtCore.QEvent.Enter)
 	leaveEvent_	= QtCore.QEvent(QtCore.QEvent.Leave)
@@ -35,8 +50,6 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		self._mouseGrabber=None
 		self.widgets={}
 		self._gcWidgets={}
-		self.refreshedHeaders=set()
-		print (self.refreshedHeaders, 'self.refreshedHeaders'*3)
 
 		self.stepColumns=stepColumns
 		self.expandOnHover=expandOnHover		
@@ -113,20 +126,11 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			refresh (bool) = set the header's column to be refreshed on showEvent.
 			moveGlobal (QPoint) = move to given global location and center.
 		'''
-		if attr=='refresh':
-			if item and not self.isParent(item):
-				header = self.getHeaderFromWidget(item) #self.widgets[item][4] = True
-				print (self.refreshedHeaders, header, 'setCustomAttribute')
-				if value:
-					self.refreshedHeaders.add(header)
-				else:
-					self.refreshedHeaders.remove(header)
-
 		if attr=='moveGlobal':
 			self.move(self.mapFromGlobal(value - self.rect().center())) #move and center
 
 
-	def add(self, widget, header='root', parentHeader=None, **kwargs):
+	def add(self, widget, header='root', parentHeader=None, refresh=False, **kwargs):
 		'''
 		Add items to the treeWidget.
 		Using custom kwarg refresh=True will flag the header's column contents to be refreshed each time the widget is shown.
@@ -144,25 +148,10 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			#sublist:
 			options = tree.add('QPushButton', create, parentHeader='Options', setText='Options')
 			tree.add('QPushButton', options, setText='Opt1')
-
-		ex. widgets dict
-				#QWidget object			#header	#col #row #parentHeader
-				widgets = {
-					<Custom Camera>:	['Create',	1, 0, None],
-					<Cameras>:			['root', 	0, 1, 'Cameras'], 
-					<Set Custom Camera>:['Create',	1, 1, None], 
-					<Cam1>:				['Cameras', 2, 1, None],
-					<Cam2>:				['Cameras', 2, 2, None],
-					<opt2>:				['Options', 3, 4, None], 
-					<Create>:			['root', 	0, 0, 'Create'], 
-					<Camera From View>:	['Create', 	1, 2, None], 
-					<Options>:			['Cameras', 2, 3, 'Options'], 
-					<opt1>:				['Options', 3, 3, None]
-				}
 		'''
 		#if header doesn't contain the refresh column flag: return the parent header.
-		if self.refresh and not self.isRefreshedHeader(header):
-			print (widget, header, self.refresh, self.isRefreshedHeader(header), self.refreshedHeaders)
+		if self.refresh and self.isRefreshedHeader(header)==False:
+			print (widget, header, self.refresh, self.isRefreshedHeader(header))
 			return self.getParentHeaderFromHeader(header)
 
 		#set widget
@@ -185,8 +174,8 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		if not wItem:
 			wItem = QtWidgets.QTreeWidgetItem(self)
 
-		self.widgets[widget] = [header, column, row, parentHeader] #store the widget and it's column/row/header information.
-		# print (self.widgets[widget])
+		self.widgets[widget] = [header, column, row, parentHeader, refresh] #store the widget and it's column/row/header information.
+
 		self.setItemWidget(wItem, column, widget)
 		self.setColumnCount(len(self.getColumns()))
 
@@ -594,7 +583,8 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		'''
 		try:
 			if refreshedColumns:
-				columns = set([i[1] for i in self.widgets.values() if self.isRefreshedHeader(i[0])])
+				columns = set([i[1] for i in self.widgets.values() if i[4]])
+				# columns = set([i[1] for i in self.widgets.values() if self.isRefreshedHeader(i[0])])
 			else:
 				columns = set([i[1] for i in self.widgets.values()])
 				if not columns: #when not getting refreshed columns, and columns have yet to be stored in the widgets dict, try an alt method.
@@ -726,10 +716,10 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 	def isRefreshedHeader(self, header):
 		'''
 		'''
-		if header is not None and header in self.refreshedHeaders:
-			return True
-		else:
-			return False
+		try:
+			return next(i[4] for i in self.widgets.values() if i[0]==header)
+		except StopIteration:
+			return None
 
 
 	def convert(self, items, w, columns=None):
@@ -770,8 +760,8 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 				self.removeItemWidget(wItem, column)
 				list_ = self.widgets.pop(widget, None) #remove the widget from the widgets dict.
 				self._gcWidgets[widget] = list_
-				if widget:
-					shiboken2.delete(widget)
+				# if widget:
+				# 	shiboken2.delete(widget)
 
 
 	def showEvent(self, event):

@@ -32,7 +32,7 @@ class Cameras(Init):
 				non_startup_cameras = map(str, non_startup_cameras_pynodes) #non-PyNode, regular string name list
 				non_startup_cameras_transforms = map(str, non_startup_cameras_transform_pynodes)
 			except AttributeError:
-				non_startup_cameras = ['camera '+str(i) for i in range(3)] #debug: dummy list
+				non_startup_cameras = []
 			[tree.add('QLabel', 'Cameras', refresh=True, setText=s) for s in non_startup_cameras]
 
 			l = ['Camera Sequencer', 'Camera Set Editor']

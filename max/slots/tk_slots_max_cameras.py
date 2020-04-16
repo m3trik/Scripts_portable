@@ -27,8 +27,7 @@ class Cameras(Init):
 			try:
 				l = [str(cam.name) for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
 			except AttributeError:
-				l = ['camera '+str(i) for i in range(3)] #dummy debug list
-			# print (l)
+				l = []
 			[tree.add('QLabel', 'Cameras', refresh=True, setText=s) for s in l]
 
 			l = []
