@@ -31,8 +31,7 @@ class Cameras(Init):
 				non_startup_cameras_transform_pynodes = map(lambda x: x.parent(0), non_startup_cameras_pynodes) #get respective transform names
 				non_startup_cameras = map(str, non_startup_cameras_pynodes) #non-PyNode, regular string name list
 				non_startup_cameras_transforms = map(str, non_startup_cameras_transform_pynodes)
-			except AttributeError:
-				non_startup_cameras = []
+			except AttributeError: non_startup_cameras=[]
 			[tree.add('QLabel', 'Cameras', refresh=True, setText=s) for s in non_startup_cameras]
 
 			l = ['Camera Sequencer', 'Camera Set Editor']
@@ -46,14 +45,15 @@ class Cameras(Init):
 
 			if header=='Create':
 				if text=='Custom Camera':
-					mel.eval('cameraView -edit -camera persp -setCamera $homeName;')
+					mel.eval('camera -centerOfInterest 5 -focalLength 35 -lensSqueezeRatio 1 -cameraScale 1 -horizontalFilmAperture 1.41732 -horizontalFilmOffset 0 -verticalFilmAperture 0.94488 -verticalFilmOffset 0 -filmFit Fill -overscan 1 -motionBlur 0 -shutterAngle 144 -nearClipPlane 0.1 -farClipPlane 10000 -orthographic 0 -orthographicWidth 30 -panZoomEnabled 0 -horizontalPan 0 -verticalPan 0 -zoom 1; objectMoveCommand; cameraMakeNode 1 "";')
 				if text=='Set Custom Camera':
-					mel.eval('string $homeName = `cameraView -camera persp`;')
+					mel.eval('string $homeName = `cameraView -camera persp`;') #cameraView -edit -camera persp -setCamera $homeName;
 				if text=='Camera From View':
 					mel.eval('print "--no code--"')
 
 			if header=='Cameras':
 				pm.select(text)
+				pm.lookThru(text)
 
 			if header=='Editors':
 				if text=='Camera Sequencer':

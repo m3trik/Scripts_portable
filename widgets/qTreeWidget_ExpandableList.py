@@ -151,7 +151,6 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		'''
 		#if header doesn't contain the refresh column flag: return the parent header.
 		if self.refresh and self.isRefreshedHeader(header)==False:
-			print (widget, header, self.refresh, self.isRefreshedHeader(header))
 			return self.getParentHeaderFromHeader(header)
 
 		#set widget
