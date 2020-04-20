@@ -2,7 +2,7 @@ from __future__ import print_function
 from tk_slots_max_init import *
 
 import os.path
-
+from widgets.qWidget_MultiWidget import QWidget_MultiWidget as MultiWidget
 
 
 class Cameras(Init):
@@ -28,6 +28,11 @@ class Cameras(Init):
 				l = [str(cam.name) for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
 			except AttributeError: l=[]
 			[tree.add('QLabel', 'Cameras', refresh=True, setText=s) for s in l]
+
+			m = MultiWidget(['QLabel', 'QLabel'])
+			m.childWidgets(0).setText('ButtonText')
+			m.setAsOptionBox(m.childWidgets(1))
+			tree.add(m, parentHeader='Header')
 
 			l = []
 			[tree.add('QLabel', 'Editors', setText=s) for s in l]

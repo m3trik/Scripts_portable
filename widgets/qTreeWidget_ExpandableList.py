@@ -52,7 +52,7 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		self._gcWidgets={}
 
 		self.stepColumns=stepColumns
-		self.expandOnHover=expandOnHover		
+		self.expandOnHover=expandOnHover
 
 		self.setHeaderHidden(True)
 		self.setIndentation(0)
@@ -248,8 +248,8 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			reset (bool) = set tree to original state.
 		'''
 		if reset:
-			self._resize(0)
 			self._showColumns(0)
+			self._resize(0)
 			self._setEnabledState(0, widget) #set widgets enabled/disabled
 
 		elif self.isParent(widget):
@@ -280,12 +280,12 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 
 		columnWidths=[]
 		for column in set(columns):
-			if not resizeFirstColumn and column is 0:
+			if column is 0 and not resizeFirstColumn:
 				if not hasattr(self, '_columnWidth0'):
 					self._columnWidth0 = self.columnWidth(column)
 				columnWidth = self._columnWidth0
 			else:
-				columnWidth = self.sizeHintForColumn(column)
+				columnWidth = self.sizeHintForColumn(column) #else get the size hint
 			self.setColumnWidth(column, columnWidth)
 			columnWidths.append(columnWidth)
 		totalWidth = sum(columnWidths) #totalWidth = sum([self.columnWidth(c) for c in columns])
@@ -779,13 +779,7 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			self.parentUiName = self.sb.getUiName()
 			self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
 			self.classMethod = self.sb.getMethod(self.parentUiName, self)
-			# className = self.sb.getUiName(pascalCase=True)
-			# class_ = self.sb.getClassInstance(className)
-			# try:
-				# self.classMethod = getattr(class_, str(self.objectName()))
 			self.classMethod()
-			# except AttributeError as error:
-			# 	print('# Error:', self.__class__.__name__, 'in getattr:', error, '#')
 
 		if self.refresh:
 			widgets = self.getWidgets(refreshedWidgets=1) #get only any newly created widgets on each refresh.
@@ -924,3 +918,10 @@ if __name__ == '__main__':
 			# className = self.sb.getUiName(pascalCase=True)
 			# class_ = self.sb.getClassInstance(className)
 			# self.classMethod = getattr(class_, str(self.objectName()))
+
+	# className = self.sb.getUiName(pascalCase=True)
+	# class_ = self.sb.getClassInstance(className)
+	# try:
+		# self.classMethod = getattr(class_, str(self.objectName()))
+	# except AttributeError as error:
+	# 	print('# Error:', self.__class__.__name__, 'in getattr:', error, '#')

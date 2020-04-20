@@ -48,7 +48,7 @@ class EventFactoryFilter(QtCore.QObject):
 			widgets (str)(list) = <QWidgets> if no arg is given, the operation will be performed on all widgets of the given ui name.
 		'''
 		if widgets is None:
-			widgets = sb.getWidget(name=name)
+			widgets = sb.getWidget(name=name) #get all widgets for the given ui name.
 		elif not isinstance(widgets, (list,set,tuple)):
 			widgets = [widgets]
 
@@ -59,17 +59,22 @@ class EventFactoryFilter(QtCore.QObject):
 
 			uiLevel = sb.getUiLevel(name)
 
-			if hasattr(widget,'styleSheet') and not widget.styleSheet(): #if the widget can be assigned a stylesheet, and doesn't already have one:
+			# if hasattr(widget, 'styleSheet') and not widget.styleSheet(): #if the widget can be assigned a stylesheet, and doesn't already have one:
+			if hasattr(widget, 'styleSheet'):
 				if uiLevel==2 and not sb.prefix(widget, 'i'): #if submenu and objectName doesn't start with 'i':
-					widget.setStyleSheet(getattr(StyleSheet, 'submenu', ''))
+					s = getattr(StyleSheet, 'submenu', '')
 				else:
-					widget.setStyleSheet(getattr(StyleSheet, derivedType, ''))			
+					s = getattr(StyleSheet, derivedType, '')
+				if widget.styleSheet():
+					s = s+widget.styleSheet() #if the widget has an existing style sheet, append.
+				widget.setStyleSheet(s)
+
 
 			widget.installEventFilter(self)
 
 
 			if widgetType=='QPushButton' and uiLevel<3:
-				if '|' not in widgetName:
+				if sb.prefix(widget, ['b', 'v', 'i']):
 					self.resizeAndCenterWidget(widget)
 
 			elif widgetType=='QWidget':
@@ -126,7 +131,7 @@ class EventFactoryFilter(QtCore.QObject):
 		widgetsUnderMouse=[] #list of widgets currently under the mouse cursor and their parents. in hierarchical order.
 		for widget in sb.getWidget(name=name): #all widgets from the current ui.
 			if not shiboken2.isValid(widget):
-				sb.removeWidgets(widget)
+				sb.removeWidgets(widget) #remove any widgets from the main dict if the c++ object no longer exists.
 			else:
 				try:
 					widgetName = sb.getWidgetName(widget, name)

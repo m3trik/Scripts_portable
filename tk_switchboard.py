@@ -1137,44 +1137,50 @@ class __Switchboard(object):
 
 	def prefix(self, widget, prefix=None):
 		'''
-		Checks if the given objectName startswith an alphanumeric prefix, followed by three integers. ex. i000 (alphanum,int,int,int)
-		and if so, returns the alphanumberic prefix.
+		Get or Query the widgets prefix.
+		A valid prefix is returned when the given widget's objectName startswith an alphanumeric char, followed by at least three integers. ex. i000 (alphanum,int,int,int)
+
 		ex. prefix('i023') returns 'i'
-		if second prefix arg is given, then the method checks if the given objectName has the prefix, and the return value is bool.
+		if the second 'prefix' arg is given, then the method checks if the given objectName has the prefix, and the return value is bool.
 
 		args:
 			widget (str)(obj) = widget or it's objectName.
-			prefix (str) = optional; check if the given objectName startwith this prefix.
+			prefix (str)(list) = optional; check if the given objectName startwith this prefix.
 		returns:
 			if prefix arg given:
 				(bool) - True if correct format else; False.
 			else:
 				(str) alphanumeric 'string' 
-		'''
-		if prefix: #check the actual prefix against the given prefix and return bool.
-			name = self.getUiName()
-			try:
-				if type(widget) is str: #get prefix using the widget's objectName.
-					prefix1 = next(w['prefix'] for w in self._sbDict[name]['widgets'].values() if w['widgetName']==widget)
-				else:
-					prefix1 = self._sbDict[name]['widgets'][widget]['prefix']
-				if prefix1==prefix:
-					return True
 
-			except KeyError:
-				if not type(widget) is str:
-					widget = widget.objectName()
-				if widget.startswith(prefix):
-					i = len(prefix)
-					integers = [c for c in widget[i:i+3] if c.isdigit()]
-					if len(integers)>2 or len(widget)==i:
+		ex call: sb.prefix(widget, ['b', 'v', 'i'])
+		'''
+		if prefix is not None: #check the actual prefix against the given prefix and return bool.
+			if not isinstance(prefix, (set, tuple, list)):
+				prefix = [prefix]
+
+			name = self.getUiName()
+			for p in prefix:
+				try:
+					if isinstance(widget, (str, unicode)): #get the prefix using the widget's objectName.
+						prefix_ = next(w['prefix'] for w in self._sbDict[name]['widgets'].values() if w['widgetName']==widget)
+					else:
+						prefix_ = self._sbDict[name]['widgets'][widget]['prefix']
+					if prefix_==p:
 						return True
 
+				except:
+					if not isinstance(widget, (str, unicode)):
+						widget = widget.objectName()
+					if widget.startswith(p):
+						i = len(p)
+						integers = [c for c in widget[i:i+3] if c.isdigit()]
+						if len(integers)>2 or len(widget)==i:
+							return True
 			return False
 
 		else: #return prefix.
 			prefix=''
-			if not type(widget) is str:
+			if not isinstance(widget, (str, unicode)):
 				widget = widget.objectName()
 			for char in widget:
 				if not char.isdigit():

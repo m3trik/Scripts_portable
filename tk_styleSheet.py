@@ -11,7 +11,7 @@ import os.path
 # ------------------------------------------------
 class StyleSheet():
 	'''
-	
+	Set the style for a specific widget by using the '#' syntax and the widget's objectName. ie. QWidget#mainWindow
 	'''
 	global colorValues
 	colorValues={	
@@ -380,6 +380,12 @@ class StyleSheet():
 			selection-background-color: {COLOR_ACCENT};
 			selection-color: {COLOR_TEXT1};
 			background-attachment: fixed; /* fixed, scroll */
+
+		QTextEdit#info {
+			background-color: transparent';
+			color: white;
+			selection-background-color: grey;
+			selection-color: white;
 		}''')
 
 	QListView=f('''

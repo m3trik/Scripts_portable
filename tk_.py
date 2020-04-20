@@ -146,6 +146,8 @@ class Tk(QtWidgets.QStackedWidget):
 		if event.key()==self.key_show and not event.isAutoRepeat():
 			pass
 
+		return QtWidgets.QStackedWidget.keyPressEvent(self, event)
+
 
 
 	def keyReleaseEvent(self, event):
@@ -155,6 +157,8 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		if event.key()==self.key_show and not event.isAutoRepeat():
 			self.hide()
+
+		return QtWidgets.QStackedWidget.keyReleaseEvent(self, event)
 
 
 
@@ -179,6 +183,8 @@ class Tk(QtWidgets.QStackedWidget):
 			elif event.button()==QtCore.Qt.RightButton:
 				self.setUi('main')
 
+		return QtWidgets.QStackedWidget.mousePressEvent(self, event)
+
 
 
 	def mouseMoveEvent(self, event):
@@ -189,6 +195,8 @@ class Tk(QtWidgets.QStackedWidget):
 		if sb.uiLevel<3:
 			self.childEvents.mouseTracking(sb.name)
 
+		return QtWidgets.QStackedWidget.mouseMoveEvent(self, event)
+
 
 
 	def mouseReleaseEvent(self, event):
@@ -198,6 +206,8 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		if sb.uiLevel>0 and sb.uiLevel<3:
 			self.setUi('init')
+
+		return QtWidgets.QStackedWidget.mouseReleaseEvent(self, event)
 
 
 
@@ -214,6 +224,8 @@ class Tk(QtWidgets.QStackedWidget):
 
 		elif event.button()==QtCore.Qt.MiddleButton:
 			self.repeatLastUi()
+
+		return QtWidgets.QStackedWidget.mouseDoubleClickEvent(self, event)
 
 
 
@@ -238,6 +250,8 @@ class Tk(QtWidgets.QStackedWidget):
 		if __name__ == "__main__":
 			sys.exit() #assure that the sys processes are terminated.
 
+		return QtWidgets.QStackedWidget.hideEvent(self, event)
+
 
 
 	def showEvent(self, event):
@@ -256,6 +270,8 @@ class Tk(QtWidgets.QStackedWidget):
 		self.move(QtGui.QCursor.pos() - self.rect().center()) #move window to cursor position and offset from left corner to center
 		# sb.ui.staticWindow.move(sb.ui.staticWindow.pos()+QtGui.QCursor.pos())
 		self.activateWindow()
+
+		return QtWidgets.QStackedWidget.showEvent(self, event)
 
 
 
