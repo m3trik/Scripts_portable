@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>249</width>
+    <width>252</width>
     <height>226</height>
    </rect>
   </property>
@@ -44,7 +44,7 @@
       <x>8</x>
       <y>6</y>
       <width>236</width>
-      <height>196</height>
+      <height>201</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
@@ -188,102 +188,20 @@
            <property name="title">
             <string>Save</string>
            </property>
-           <widget class="QPushButton" name="chk003">
-            <property name="geometry">
-             <rect>
-              <x>40</x>
-              <y>12</y>
-              <width>25</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="toolTip">
-             <string>Save scene: as ASCII or Binary</string>
-            </property>
-            <property name="text">
-             <string>ascii</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="chk001">
-            <property name="geometry">
-             <rect>
-              <x>84</x>
-              <y>12</y>
-              <width>15</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="toolTip">
-             <string>Save: Increment</string>
-            </property>
-            <property name="text">
-             <string>i</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="chk000">
-            <property name="geometry">
-             <rect>
-              <x>64</x>
-              <y>12</y>
-              <width>21</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="toolTip">
-             <string>Save: Wireframe</string>
-            </property>
-            <property name="text">
-             <string>wf</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="chk002">
-            <property name="geometry">
-             <rect>
-              <x>96</x>
-              <y>12</y>
-              <width>15</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="toolTip">
-             <string>Save: Quit after saving</string>
-            </property>
-            <property name="text">
-             <string>q</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="b000">
+           <widget class="QToolButton_" name="tb000">
             <property name="geometry">
              <rect>
               <x>0</x>
               <y>12</y>
-              <width>41</width>
+              <width>109</width>
               <height>19</height>
              </rect>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>19</height>
+             </size>
             </property>
             <property name="toolTip">
              <string>Save scene</string>
@@ -759,6 +677,11 @@
    <class>QProgressBar_</class>
    <extends>QProgressBar</extends>
    <header>widgets.qprogressbar_.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QToolButton_</class>
+   <extends>QToolButton</extends>
+   <header>widgets.qtoolbutton_.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

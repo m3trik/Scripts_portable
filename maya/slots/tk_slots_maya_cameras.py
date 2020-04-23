@@ -36,60 +36,60 @@ class Cameras(Init):
 
 			l = ['Camera Sequencer', 'Camera Set Editor']
 			[tree.add('QLabel', 'Editors', setText=s) for s in l]
+			return
 
-		else:
-			# widget = tree.getWidget(wItem, column)
-			text = tree.getWidgetText(wItem, column)
-			header = tree.getHeaderFromColumn(column)
-			print(header, text, column)
+		# widget = tree.getWidget(wItem, column)
+		text = tree.getWidgetText(wItem, column)
+		header = tree.getHeaderFromColumn(column)
+		print(header, text, column)
 
-			if header=='Create':
-				if text=='Custom Camera':
-					mel.eval('camera -centerOfInterest 5 -focalLength 35 -lensSqueezeRatio 1 -cameraScale 1 -horizontalFilmAperture 1.41732 -horizontalFilmOffset 0 -verticalFilmAperture 0.94488 -verticalFilmOffset 0 -filmFit Fill -overscan 1 -motionBlur 0 -shutterAngle 144 -nearClipPlane 0.1 -farClipPlane 10000 -orthographic 0 -orthographicWidth 30 -panZoomEnabled 0 -horizontalPan 0 -verticalPan 0 -zoom 1; objectMoveCommand; cameraMakeNode 1 "";')
-				if text=='Set Custom Camera':
-					mel.eval('string $homeName = `cameraView -camera persp`;') #cameraView -edit -camera persp -setCamera $homeName;
-				if text=='Camera From View':
-					mel.eval('print "--no code--"')
+		if header=='Create':
+			if text=='Custom Camera':
+				mel.eval('camera -centerOfInterest 5 -focalLength 35 -lensSqueezeRatio 1 -cameraScale 1 -horizontalFilmAperture 1.41732 -horizontalFilmOffset 0 -verticalFilmAperture 0.94488 -verticalFilmOffset 0 -filmFit Fill -overscan 1 -motionBlur 0 -shutterAngle 144 -nearClipPlane 0.1 -farClipPlane 10000 -orthographic 0 -orthographicWidth 30 -panZoomEnabled 0 -horizontalPan 0 -verticalPan 0 -zoom 1; objectMoveCommand; cameraMakeNode 1 "";')
+			if text=='Set Custom Camera':
+				mel.eval('string $homeName = `cameraView -camera persp`;') #cameraView -edit -camera persp -setCamera $homeName;
+			if text=='Camera From View':
+				mel.eval('print "--no code--"')
 
-			if header=='Cameras':
-				pm.select(text)
-				pm.lookThru(text)
+		if header=='Cameras':
+			pm.select(text)
+			pm.lookThru(text)
 
-			if header=='Editors':
-				if text=='Camera Sequencer':
-					mel.eval('SequenceEditor;')
-				if text=='Camera Set Editor':
-					mel.eval('cameraSetEditor;')
+		if header=='Editors':
+			if text=='Camera Sequencer':
+				mel.eval('SequenceEditor;')
+			if text=='Camera Set Editor':
+				mel.eval('cameraSetEditor;')
 
-			if header=='Options':
-				if text=='Group Cameras':
-					mel.eval('''
-					if (`objExists cameras`)
-					{
-					  print "Group 'cameras' already exists";
-					}
-					else
-					{
-					  group -world -name cameras side front top persp;
-					  hide cameras;
-					  // Now add non-default cameras to group
-					  if (`objExists back`)
-					  {
-					  	parent back cameras;
-					  }
-					  if (`objExists bottom`)
-					  {
-					  	parent bottom cameras;
-					  }
-					  if (`objExists left`)
-					  {
-					  	parent left cameras;
-					  }
-					  if (`objExists alignToPoly`)
-					  {
-					  	parent alignToPoly cameras;
-					  }
-					}''')
+		if header=='Options':
+			if text=='Group Cameras':
+				mel.eval('''
+				if (`objExists cameras`)
+				{
+				  print "Group 'cameras' already exists";
+				}
+				else
+				{
+				  group -world -name cameras side front top persp;
+				  hide cameras;
+				  // Now add non-default cameras to group
+				  if (`objExists back`)
+				  {
+				  	parent back cameras;
+				  }
+				  if (`objExists bottom`)
+				  {
+				  	parent bottom cameras;
+				  }
+				  if (`objExists left`)
+				  {
+				  	parent left cameras;
+				  }
+				  if (`objExists alignToPoly`)
+				  {
+				  	parent alignToPoly cameras;
+				  }
+				}''')
 
 
 	def v000(self):

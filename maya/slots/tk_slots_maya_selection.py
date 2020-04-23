@@ -51,30 +51,33 @@ class Selection(Init):
 		'''
 		Select Island: tolerance x
 		'''
-		if self.ui.chk003.isChecked():
-			text = self.ui.s002.value()
-			self.ui.s004.setValue(text)
-			self.ui.s005.setValue(text)
+		tb = self.ui.tb002
+		if tb.chk003.isChecked():
+			text = tb.s002.value()
+			tb.s004.setValue(text)
+			tb.s005.setValue(text)
 
 
 	def s004(self):
 		'''
 		Select Island: tolerance y
 		'''
-		if self.ui.chk003.isChecked():
-			text = self.ui.s004.value()
-			self.ui.s002.setValue(text)
-			self.ui.s005.setValue(text)
+		tb = self.ui.tb002
+		if tb.chk003.isChecked():
+			text = tb.s004.value()
+			tb.s002.setValue(text)
+			tb.s005.setValue(text)
 
 
 	def s005(self):
 		'''
 		Select Island: tolerance z
 		'''
-		if self.ui.chk003.isChecked():
-			text = self.ui.s005.value()
-			self.ui.s002.setValue(text)
-			self.ui.s004.setValue(text)
+		tb = self.ui.tb002
+		if tb.chk003.isChecked():
+			text = tb.s005.value()
+			tb.s002.setValue(text)
+			tb.s004.setValue(text)
 
 
 	def chk000(self):
@@ -336,6 +339,50 @@ class Selection(Init):
 			self.chk007()
 
 
+	def tb000(self, state=None):
+		'''
+		Select Nth
+		'''
+		tb = self.ui.tb000
+		if state=='setMenu':
+			tb.add('QCheckBox', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
+			tb.add('QCheckBox', setText='Component Loop', setObjectName='chk001', setChecked=True, setToolTip='Select all contiguous components that form a loop with the current selection.')
+			tb.add('QCheckBox', setText='Shortest Path', setObjectName='chk002', setToolTip='Shortest component path between two selected vertices or UV\'s.')
+			tb.add('QSpinBox', setPrefix='Step: ', setObjectName='s003', preset_='1-100 step1', setValue=1, setToolTip='Step Amount.')
+			return
+
+		step = tb.s003.value()
+
+		if tb.chk000.isChecked(): #Select Ring
+			print "# Warning: add correct arguments for this tool #" 
+			self.shortestEdgePath()
+
+		if tb.chk001.isChecked(): #Select contigious
+			# mel.eval('SelectContiguousEdges;')
+			mel.eval('SelectContiguousEdgesOptions;') #Select contigious edge loop options
+		
+		if tb.chk002.isChecked(): #Shortest Edge Path
+			self.shortestEdgePath()
+			# maxEval('SelectShortestEdgePathTool;')
+
+		else: #Select Loop
+			mel.eval("selectEveryNEdge;")
+
+
+	def tb001(self, state=None):
+		'''
+		Select Similar
+		'''
+		tb = self.ui.tb001
+		if state=='setMenu':
+			tb.add('QDoubleSpinBox', setPrefix='Tolerance: ', setObjectName='s000', preset_='0.0-10 step.1', setValue=0.3, setToolTip='Select similar objects or components, depending on selection mode.')
+			return
+
+		tolerance = str(tb.s000.value()) #string value because mel.eval is sending a command string
+
+		mel.eval("doSelectSimilar 1 {\""+ tolerance +"\"}")
+
+
 	def b000(self):
 		'''
 		Create Selection Set
@@ -348,6 +395,37 @@ class Selection(Init):
 			pm.sets (name=name, text="gCharacterSet")
 			self.ui.t000.clear()
 
+
+	def tb002(self, state=None):
+		'''
+		Select Island: Select Polygon Face Island
+		'''
+		tb = self.ui.tb002
+		if state=='setMenu':
+			tb.add('QCheckBox', setText='Lock Values', setObjectName='chk003', setChecked=True, setToolTip='Keep values in sync.')
+			tb.add('QDoubleSpinBox', setPrefix='x: ', setObjectName='s002', preset_='0.00-1 step.01', setValue=0.01, setToolTip='Normal X range.')
+			tb.add('QDoubleSpinBox', setPrefix='y: ', setObjectName='s004', preset_='0.00-1 step.01', setValue=0.01, setToolTip='Normal Y range.')
+			tb.add('QDoubleSpinBox', setPrefix='z: ', setObjectName='s005', preset_='0.00-1 step.01', setValue=0.01, setToolTip='Normal Z range.')
+			return
+
+		rangeX = float(tb.s002.value())
+		rangeY = float(tb.s004.value())
+		rangeZ = float(tb.s005.value())
+		selectedFaces = pm.filterExpand(sm=34)
+
+		pm.undoInfo(openChunk=1)
+		if selectedFaces:
+			similarFaces = self.getFacesWithSimilarNormals(selectedFaces, rangeX=rangeX, rangeY=rangeY, rangeZ=rangeZ)
+			islands = self.getContigiousIslands(similarFaces)
+
+			for island in islands: #select the islands that contain faces from the original selection.
+				for face in selectedFaces:
+					if face in island:
+						pm.select(island, add=1)
+						break
+		else:
+			print '# Warning: No faces selected. #'
+		pm.undoInfo(closeChunk=1)
 
 
 	def b001(self):
@@ -382,61 +460,6 @@ class Selection(Init):
 		'''
 		pass
 
-
-	def b006(self):
-		'''
-		Select Similar
-		'''
-		tolerance = str(self.ui.s000.value()) #string value because mel.eval is sending a command string
-
-		mel.eval("doSelectSimilar 1 {\""+ tolerance +"\"}")
-
-
-	def b007(self):
-		'''
-		Select Island: Select Polygon Face Island
-		'''
-		rangeX = float(self.ui.s002.value())
-		rangeY = float(self.ui.s004.value())
-		rangeZ = float(self.ui.s005.value())
-		selectedFaces = pm.filterExpand(sm=34)
-
-		pm.undoInfo(openChunk=1)
-		if selectedFaces:
-			similarFaces = self.getFacesWithSimilarNormals(selectedFaces, rangeX=rangeX, rangeY=rangeY, rangeZ=rangeZ)
-			islands = self.getContigiousIslands(similarFaces)
-
-			for island in islands: #select the islands that contain faces from the original selection.
-				for face in selectedFaces:
-					if face in island:
-						pm.select(island, add=1)
-						break
-		else:
-			print '# Warning: No faces selected. #'
-		pm.undoInfo(closeChunk=1)
-
-
-	def b008(self):
-		'''
-		Select Nth
-		'''
-		step = self.ui.s003.value()
-
-		if self.ui.chk000.isChecked(): #Select Ring
-			print "# Warning: add correct arguments for this tool #" 
-			self.shortestEdgePath()
-
-		if self.ui.chk001.isChecked(): #Select contigious
-			# mel.eval('SelectContiguousEdges;')
-			mel.eval('SelectContiguousEdgesOptions;') #Select contigious edge loop options
-		
-		if self.ui.chk002.isChecked(): #Shortest Edge Path
-			self.shortestEdgePath()
-			# maxEval('SelectShortestEdgePathTool;')
-
-		else: #Select Loop
-			mel.eval("selectEveryNEdge;")
-		
 
 	def b009(self):
 		'''

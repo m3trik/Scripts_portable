@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>297</width>
+    <width>288</width>
     <height>278</height>
    </rect>
   </property>
@@ -178,24 +178,30 @@
          </property>
          <item>
           <widget class="QGroupBox" name="groupBox_5">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>129</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
              <width>111</width>
-             <height>151</height>
+             <height>129</height>
             </size>
            </property>
            <property name="title">
             <string>Select</string>
            </property>
-           <widget class="QPushButton" name="b006">
+           <widget class="QToolButton_" name="tb001">
             <property name="enabled">
              <bool>true</bool>
             </property>
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>110</y>
-              <width>76</width>
+              <y>90</y>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -217,25 +223,16 @@
               <height>18</height>
              </size>
             </property>
-            <property name="autoDefault">
-             <bool>false</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
            </widget>
-           <widget class="QPushButton" name="b007">
+           <widget class="QToolButton_" name="tb002">
             <property name="enabled">
              <bool>true</bool>
             </property>
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>130</y>
-              <width>36</width>
+              <y>110</y>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -257,52 +254,6 @@
               <height>18</height>
              </size>
             </property>
-            <property name="autoDefault">
-             <bool>false</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-           </widget>
-           <widget class="QDoubleSpinBox" name="s000">
-            <property name="geometry">
-             <rect>
-              <x>75</x>
-              <y>110</y>
-              <width>36</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Select similar tolerance</string>
-            </property>
-            <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::NoButtons</enum>
-            </property>
-            <property name="decimals">
-             <number>3</number>
-            </property>
-            <property name="singleStep">
-             <double>0.001000000000000</double>
-            </property>
-            <property name="value">
-             <double>0.001000000000000</double>
-            </property>
            </widget>
            <widget class="QPushButton" name="b014">
             <property name="enabled">
@@ -311,7 +262,7 @@
             <property name="geometry">
              <rect>
               <x>12</x>
-              <y>90</y>
+              <y>70</y>
               <width>13</width>
               <height>19</height>
              </rect>
@@ -351,7 +302,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>90</y>
+              <y>70</y>
               <width>13</width>
               <height>19</height>
              </rect>
@@ -382,49 +333,6 @@
             </property>
             <property name="flat">
              <bool>false</bool>
-            </property>
-           </widget>
-           <widget class="QDoubleSpinBox" name="s002">
-            <property name="geometry">
-             <rect>
-              <x>50</x>
-              <y>130</y>
-              <width>21</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>10</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Select Island: normal X range</string>
-            </property>
-            <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::NoButtons</enum>
-            </property>
-            <property name="prefix">
-             <string/>
-            </property>
-            <property name="suffix">
-             <string/>
-            </property>
-            <property name="decimals">
-             <number>1</number>
-            </property>
-            <property name="singleStep">
-             <double>0.100000000000000</double>
-            </property>
-            <property name="value">
-             <double>0.300000000000000</double>
             </property>
            </widget>
            <widget class="QLineEdit" name="t001">
@@ -492,7 +400,7 @@
             <property name="geometry">
              <rect>
               <x>25</x>
-              <y>90</y>
+              <y>70</y>
               <width>86</width>
               <height>19</height>
              </rect>
@@ -564,152 +472,42 @@
              </property>
             </item>
            </widget>
-           <widget class="QDoubleSpinBox" name="s004">
+           <widget class="Line" name="line">
             <property name="geometry">
              <rect>
-              <x>70</x>
-              <y>130</y>
-              <width>21</width>
-              <height>19</height>
+              <x>-5</x>
+              <y>70</y>
+              <width>118</width>
+              <height>3</height>
              </rect>
             </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>10</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Select Island: normal X range</string>
-            </property>
-            <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::NoButtons</enum>
-            </property>
-            <property name="prefix">
-             <string/>
-            </property>
-            <property name="suffix">
-             <string/>
-            </property>
-            <property name="decimals">
-             <number>1</number>
-            </property>
-            <property name="singleStep">
-             <double>0.100000000000000</double>
-            </property>
-            <property name="value">
-             <double>0.300000000000000</double>
-            </property>
-           </widget>
-           <widget class="QDoubleSpinBox" name="s005">
-            <property name="geometry">
-             <rect>
-              <x>90</x>
-              <y>130</y>
-              <width>21</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>10</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Select Island: normal X range</string>
-            </property>
-            <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::NoButtons</enum>
-            </property>
-            <property name="prefix">
-             <string/>
-            </property>
-            <property name="suffix">
-             <string/>
-            </property>
-            <property name="decimals">
-             <number>1</number>
-            </property>
-            <property name="singleStep">
-             <double>0.100000000000000</double>
-            </property>
-            <property name="value">
-             <double>0.300000000000000</double>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="chk003">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>35</x>
-              <y>130</y>
-              <width>16</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Select Island: Lock Values</string>
-            </property>
-            <property name="text">
-             <string>L</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-            <property name="autoDefault">
-             <bool>false</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
             </property>
            </widget>
            <zorder>t001</zorder>
-           <zorder>b006</zorder>
-           <zorder>b007</zorder>
-           <zorder>s000</zorder>
+           <zorder>tb001</zorder>
+           <zorder>tb002</zorder>
            <zorder>b014</zorder>
            <zorder>b015</zorder>
-           <zorder>s002</zorder>
            <zorder>cmb002</zorder>
            <zorder>chk004</zorder>
            <zorder>cmb004</zorder>
-           <zorder>s004</zorder>
-           <zorder>s005</zorder>
-           <zorder>chk003</zorder>
+           <zorder>line</zorder>
           </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>111</width>
+             <height>17</height>
+            </size>
+           </property>
+          </spacer>
          </item>
         </layout>
        </item>
@@ -863,121 +661,7 @@
            <property name="title">
             <string>Select Loop</string>
            </property>
-           <widget class="QSpinBox" name="s003">
-            <property name="geometry">
-             <rect>
-              <x>90</x>
-              <y>10</y>
-              <width>26</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Select Nth:  Step Amount</string>
-            </property>
-            <property name="layoutDirection">
-             <enum>Qt::LeftToRight</enum>
-            </property>
-            <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::NoButtons</enum>
-            </property>
-            <property name="minimum">
-             <number>1</number>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="chk000">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>54</x>
-              <y>10</y>
-              <width>14</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>121</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Select Nth: select component ring.</string>
-            </property>
-            <property name="text">
-             <string>r</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="autoDefault">
-             <bool>false</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="chk002">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>77</x>
-              <y>10</y>
-              <width>14</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>120</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Select Nth: shortest component path between two selected vertices or UV's.</string>
-            </property>
-            <property name="text">
-             <string>p</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="autoDefault">
-             <bool>false</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="b008">
+           <widget class="QToolButton_" name="tb000">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -985,7 +669,7 @@
              <rect>
               <x>0</x>
               <y>10</y>
-              <width>56</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -1006,49 +690,6 @@
               <width>18</width>
               <height>18</height>
              </size>
-            </property>
-            <property name="autoDefault">
-             <bool>false</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="chk001">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>66</x>
-              <y>10</y>
-              <width>14</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Select Nth: Select all contiguous components that form a loop with the current selection </string>
-            </property>
-            <property name="text">
-             <string>c</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
             </property>
            </widget>
           </widget>
@@ -1237,6 +878,11 @@
    <class>QProgressBar_</class>
    <extends>QProgressBar</extends>
    <header>widgets.qprogressbar_.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QToolButton_</class>
+   <extends>QToolButton</extends>
+   <header>widgets.qtoolbutton_.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

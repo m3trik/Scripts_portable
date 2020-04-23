@@ -19,10 +19,10 @@ class Cameras(Init):
 		'''
 		tree = self.ui.tree000
 
-		if not any([wItem, column]):
+		if not any([wItem, column]): #populate the tree columns.
 			if not tree.refresh:
 				tree.expandOnHover = True
-				tree.convert(tree.getTopLevelItems(), 'QLabel') #construct the tree using the existing contents.
+				tree.convert(tree.getTopLevelItems(), 'QLabel') #convert any existing contents.
 
 			try:
 				l = [str(cam.name) for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
@@ -36,36 +36,36 @@ class Cameras(Init):
 
 			l = []
 			[tree.add('QLabel', 'Editors', setText=s) for s in l]
+			return
 
-		else:
-			# widget = tree.getWidget(wItem, column)
-			text = tree.getWidgetText(wItem, column)
-			header = tree.getHeaderFromColumn(column)
+		# widget = tree.getWidget(wItem, column)
+		text = tree.getWidgetText(wItem, column)
+		header = tree.getHeaderFromColumn(column)
 
-			if header=='Create':
-				if text=='Custom Camera':
-					rt.StartObjectCreation(rt.Physical_Camera)
-				if text=='Set Custom Camera':
-					maxEval('Try(viewport.setcamera $) Catch()')
-				if text=='Camera From View':
-					maxEval('macros.run "Lights and Cameras" "PhysicalCamera_CreateFromView"')
+		if header=='Create':
+			if text=='Custom Camera':
+				rt.StartObjectCreation(rt.Physical_Camera)
+			if text=='Set Custom Camera':
+				maxEval('Try(viewport.setcamera $) Catch()')
+			if text=='Camera From View':
+				maxEval('macros.run "Lights and Cameras" "PhysicalCamera_CreateFromView"')
 
-			if header=='Cameras':
-				cam = rt.getNodeByName(text)
-				rt.select(cam) #select the camera
-				rt.viewport.setCamera(cam) #set viewport to camera
-				rt.redrawViews()
+		if header=='Cameras':
+			cam = rt.getNodeByName(text)
+			rt.select(cam) #select the camera
+			rt.viewport.setCamera(cam) #set viewport to camera
+			rt.redrawViews()
 
-			if header=='Create':
-				if text=='Group Cameras':
-					cameras = [cam for cam in rt.cameras] #List scene Cameras
+		if header=='Create':
+			if text=='Group Cameras':
+				cameras = [cam for cam in rt.cameras] #List scene Cameras
 
-					layer = rt.LayerManager.getLayerFromName ("Cameras")
-					if not layer:
-						layer = rt.LayerManager.NewLayerFromName("Cameras")
+				layer = rt.LayerManager.getLayerFromName ("Cameras")
+				if not layer:
+					layer = rt.LayerManager.NewLayerFromName("Cameras")
 
-					for cam in cameras:
-						layer.addnode(cam)
+				for cam in cameras:
+					layer.addnode(cam)
 
 
 	def v000(self):

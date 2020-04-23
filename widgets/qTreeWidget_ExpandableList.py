@@ -129,6 +129,12 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		if attr=='moveGlobal':
 			self.move(self.mapFromGlobal(value - self.rect().center())) #move and center
 
+		else:
+			if item:
+				print('# Error: {} has no attribute {}'.format(item, attr))
+			else:
+				print('# Error: {} has no attribute {}'.format(self, attr))
+
 
 	def add(self, widget, header='root', parentHeader=None, refresh=False, **kwargs):
 		'''

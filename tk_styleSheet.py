@@ -15,7 +15,7 @@ class StyleSheet():
 	'''
 	global colorValues
 	colorValues={	
-	'COLOR_DARK' 	: 'rgb(0,0,0)',
+	'COLOR_DARK' 	: 'rgb(50,50,50)',
 	'COLOR_MEDIUM' 	: 'rgb(100,100,100)',
 	'COLOR_MEDLIGHT': 'rgb(125,125,125)',
 	'COLOR_LIGHT' 	: 'rgb(225,225,225)',
@@ -293,33 +293,73 @@ class StyleSheet():
 		}''')
 
 	QCheckBox=f('''
-		QCheckBox, QRadioButton {
-			border: none;
-		}''')
+		QCheckBox {
+			border-style: outset;
+			border-radius: 1px;
+			border: 1px solid black;
+			padding-left: 5px;
+			padding-right: 5px;
+			background-color: {COLOR_MEDIUM};
+			color: {COLOR_TEXT1};
+		}
 
-	QRadioButton=f('''
 		QRadioButton::indicator, QCheckBox::indicator {
-			width: 13px;
-			height: 13px;
+			width: 6px;
+			height: 6px;
 		}
 
 		QRadioButton::indicator::unchecked, QCheckBox::indicator::unchecked {
-			border: 1px solid {COLOR_MEDLIGHT};
+			border: 0px solid {COLOR_DARK};
 			background: none;
 		}
 
 		QRadioButton::indicator:unchecked:hover, QCheckBox::indicator:unchecked:hover {
-			border: 1px solid {COLOR_MEDIUM};
+			border: 1px solid {COLOR_ACCENT};
 		}
 
 		QRadioButton::indicator::checked, QCheckBox::indicator::checked {
-			border: 1px solid {COLOR_MEDLIGHT};
-			background: {COLOR_MEDLIGHT};
+			border: 0px solid {COLOR_DARK};
+			background: {COLOR_ACCENT};
 		}
 
 		QRadioButton::indicator:checked:hover, QCheckBox::indicator:checked:hover {
-			border: 1px solid {COLOR_MEDIUM};
-			background: {COLOR_MEDIUM};
+			border: 0px solid {COLOR_DARK};
+			background: {COLOR_ACCENT};
+		}''')
+
+	QRadioButton=f('''
+		QRadioButton {
+			border-style: outset;
+			border-radius: 1px;
+			border: 1px solid black;
+			padding-left: 5px;
+			padding-right: 5px;
+			background-color: {COLOR_MEDIUM};
+			color: {COLOR_TEXT1};
+		}
+
+		QRadioButton::indicator, QCheckBox::indicator {
+			width: 6px;
+			height: 6px;
+		}
+
+		QRadioButton::indicator::unchecked, QCheckBox::indicator::unchecked {
+			border: 1px solid {COLOR_DARK};
+			background: none;
+		}
+
+		QRadioButton::indicator:unchecked:hover, QCheckBox::indicator:unchecked:hover {
+			border: 1px solid black;
+		}
+
+		QRadioButton::indicator::checked, QCheckBox::indicator::checked {
+			border: 1px solid black;
+			background: {COLOR_ACCENT};
+		}
+
+		QRadioButton::indicator:checked:hover, QCheckBox::indicator:checked:hover {
+			border: 1px solid black;
+			background: {COLOR_ACCENT};
 		}''')
 
 	QAbstractItemView=f('''
@@ -374,18 +414,19 @@ class StyleSheet():
 		}''')
 
 	QTextEdit=f('''
+		QTextEdit#info {
+			background-color: transparent';
+			color: white;
+			selection-background-color: grey;
+			selection-color: white;
+		}
+
 		QTextEdit {
 			background-color: {COLOR_MEDIUM};
 			color: {COLOR_TEXT1};
 			selection-background-color: {COLOR_ACCENT};
 			selection-color: {COLOR_TEXT1};
 			background-attachment: fixed; /* fixed, scroll */
-
-		QTextEdit#info {
-			background-color: transparent';
-			color: white;
-			selection-background-color: grey;
-			selection-color: white;
 		}''')
 
 	QListView=f('''
@@ -474,7 +515,7 @@ class StyleSheet():
 		}
 
 		QTreeView::item:selected {
-		    background-color: none;
+			background-color: none;
 		}''')
 
 	QToolBox=f('''
@@ -641,7 +682,7 @@ class StyleSheet():
 			top: -7px;
 			left: 7px;
 
-    		subcontrol-position: top left; /* position at the top center */
+			subcontrol-position: top left; /* position at the top center */
 			background-color: transparent;
 			color: {COLOR_MEDLIGHT};
 		}''')
@@ -662,8 +703,41 @@ class StyleSheet():
 		}''')
 
 	QMenu=f('''
-		QMenu::separator {
+		QMenu {
+			background-color: transparent;
+			margin: 0px; /* spacing around the menu */
+		}
+
+		QMenu::item {
+			padding: 5px 5px 0px 0px;
+			border: 1px solid transparent; /* reserve space for selection border */
+		}
+
+		QMenu::item:selected {
+			border-color: {COLOR_ACCENT};
 			background: {COLOR_MEDIUM};
+		}
+
+		QMenu::icon:checked { /* appearance of a 'checked' icon */
+			background: gray;
+			border: 1px inset gray;
+			position: absolute;
+			top: 1px;
+			right: 1px;
+			bottom: 1px;
+			left: 1px;
+		}
+
+		QMenu::separator {
+			height: 2px;
+			background: {COLOR_MEDIUM};
+			margin-left: 10px;
+			margin-right: 5px;
+		}
+
+		QMenu::indicator {
+			width: 13px;
+			height: 13px;
 		}''')
 
 	QLabel=f('''
@@ -978,6 +1052,36 @@ color1 (non-zero pixel value) (opaque, i.e. foreground)
 # 	left: 1px;
 # }
 
+# /* non-exclusive indicator = check box style indicator (see QActionGroup::setExclusive) */
+# QMenu::indicator:non-exclusive:unchecked {
+#     image: url(:/images/checkbox_unchecked.png);
+# }
 
+# QMenu::indicator:non-exclusive:unchecked:selected {
+#     image: url(:/images/checkbox_unchecked_hover.png);
+# }
 
+# QMenu::indicator:non-exclusive:checked {
+#     image: url(:/images/checkbox_checked.png);
+# }
+
+# QMenu::indicator:non-exclusive:checked:selected {
+#     image: url(:/images/checkbox_checked_hover.png);
+# }
+
+# /* exclusive indicator = radio button style indicator (see QActionGroup::setExclusive) */
+# QMenu::indicator:exclusive:unchecked {
+#     image: url(:/images/radiobutton_unchecked.png);
+# }
+
+# QMenu::indicator:exclusive:unchecked:selected {
+#     image: url(:/images/radiobutton_unchecked_hover.png);
+# }
+
+# QMenu::indicator:exclusive:checked {
+#     image: url(:/images/radiobutton_checked.png);
+# }
+
+# QMenu::indicator:exclusive:checked:selected {
+#     image: url(:/images/radiobutton_checked_hover.png);
 

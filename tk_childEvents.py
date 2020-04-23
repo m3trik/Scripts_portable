@@ -49,27 +49,14 @@ class EventFactoryFilter(QtCore.QObject):
 		'''
 		if widgets is None:
 			widgets = sb.getWidget(name=name) #get all widgets for the given ui name.
-		elif not isinstance(widgets, (list,set,tuple)):
-			widgets = [widgets]
+		widgets = sb.list_(widgets) #if 'widgets' isn't a list, convert it to one.
 
 		for widget in widgets: #get all widgets for the given ui name.
 			widgetName = sb.getWidgetName(widget, name)
 			widgetType = sb.getWidgetType(widget, name) #get the class type as string.
-			derivedType = sb.getDerivedType(widget, name) #get the derived class type as string.
-
 			uiLevel = sb.getUiLevel(name)
 
-			# if hasattr(widget, 'styleSheet') and not widget.styleSheet(): #if the widget can be assigned a stylesheet, and doesn't already have one:
-			if hasattr(widget, 'styleSheet'):
-				if uiLevel==2 and not sb.prefix(widget, 'i'): #if submenu and objectName doesn't start with 'i':
-					s = getattr(StyleSheet, 'submenu', '')
-				else:
-					s = getattr(StyleSheet, derivedType, '')
-				if widget.styleSheet():
-					s = s+widget.styleSheet() #if the widget has an existing style sheet, append.
-				widget.setStyleSheet(s)
-
-
+			self.setStyleSheet_(name, widget)
 			widget.installEventFilter(self)
 
 
@@ -94,12 +81,33 @@ class EventFactoryFilter(QtCore.QObject):
 
 		args:
 			name (str) = name of the parent ui.
-			widgets (list) = widget objects.
+			widgets (obj)(list) = widget or list of widgets.
 		'''
-		if not isinstance(widgets, (list,set,tuple)):
-			widgets = [widgets]
+		widgets = sb.list_(widgets) #if 'widgets' isn't a list, convert it to one.
 		sb.addWidgets(name, widgets)
+		sb.addSignals(name, widgets)
 		self.initWidget(name, widgets) #initialize the widget to set things like the event filter and styleSheet.
+
+
+	def setStyleSheet_(self, name, widgets):
+		'''
+		Set the style sheet for the given widgets.
+
+		args:
+			name (str) = name of the parent ui.
+			widgets (obj)(list) = widget or list of widgets.
+		'''
+		uiLevel = sb.getUiLevel(name)
+		for widget in sb.list_(widgets):
+			derivedType = sb.getDerivedType(widget, name) #get the derived class type as string.
+			if hasattr(widget, 'styleSheet'):
+				if uiLevel==2 and not sb.prefix(widget, 'i'): #if submenu and objectName doesn't start with 'i':
+					s = getattr(StyleSheet, 'submenu', '')
+				else:
+					s = getattr(StyleSheet, derivedType, '')
+				if widget.styleSheet(): #if the widget has an existing style sheet, append.
+					s = s+widget.styleSheet()
+				widget.setStyleSheet(s)		
 
 
 	def resizeAndCenterWidget(self, widget, paddingX=30, paddingY=6):
@@ -147,13 +155,8 @@ class EventFactoryFilter(QtCore.QObject):
 
 						if not widgetName=='mainWindow':
 							if widget.underMouse() and widget.isEnabled():
-								parentWidgets=[]
-								w = widget
-								while w:
-									parentWidgets.append(w)
-									w = w.parentWidget()
+								parentWidgets = sb.getParentWidgets(widget)
 								widgetsUnderMouse.append(parentWidgets)
-								# print([str(w.objectName()) for w in allParentWidgets])
 				else:
 					if widget in self._mouseOver: #if widget is in the mouseOver list, but the mouse is no longer over the widget:
 						QtWidgets.QApplication.sendEvent(widget, self.leaveEvent_)
@@ -288,7 +291,7 @@ class EventFactoryFilter(QtCore.QObject):
 				if not self.name==submenu: #do not reopen the submenu if it is already open.
 					self.name = self.parent.setSubUi(self.widget, submenu)
 
-			elif self.widgetName=='<':
+			elif self.widgetName=='return_':
 				self.parent.setPrevUi()
 
 			elif sb.prefix(self.widget, 'chk'):

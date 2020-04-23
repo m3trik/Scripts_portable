@@ -121,7 +121,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 		#recreate any relevant buttons from the previous ui on first show.
 		if name not in sb.previousName(as_list=1, allowDuplicates=1)[:-1]: #if submenu ui called for the first time, construct widgets from the previous ui that fall along the plotted path.
-			w0 = QPushButton_(parent=sb.getUi(name), setObjectName='<', resize=QtCore.QSize(45, 45), moveGlobal=self.drawPath[0]) #create an invisible return button at the start point.
+			w0 = QPushButton_(parent=sb.getUi(name), setObjectName='return_', resize=QtCore.QSize(45, 45), moveGlobal=self.drawPath[0]) #create an invisible return button at the start point.
 			self.childEvents.addWidgets(name, w0) #initialize the widget to set things like the event filter and styleSheet.
 
 			if sb.getUiLevel(sb.previousName())==2: #if submenu: recreate widget/s from the previous ui that are in the current path.

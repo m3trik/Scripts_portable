@@ -53,30 +53,33 @@ class Selection(Init):
 		'''
 		Select Island: tolerance x
 		'''
-		if self.ui.chk003.isChecked():
-			text = self.ui.s002.value()
-			self.ui.s004.setValue(text)
-			self.ui.s005.setValue(text)
+		tb = self.ui.tb002
+		if tb.chk003.isChecked():
+			text = tb.s002.value()
+			tb.s004.setValue(text)
+			tb.s005.setValue(text)
 
 
 	def s004(self):
 		'''
 		Select Island: tolerance y
 		'''
-		if self.ui.chk003.isChecked():
-			text = self.ui.s004.value()
-			self.ui.s002.setValue(text)
-			self.ui.s005.setValue(text)
+		tb = self.ui.tb002
+		if tb.chk003.isChecked():
+			text = tb.s004.value()
+			tb.s002.setValue(text)
+			tb.s005.setValue(text)
 
 
 	def s005(self):
 		'''
 		Select Island: tolerance z
 		'''
-		if self.ui.chk003.isChecked():
-			text = self.ui.s005.value()
-			self.ui.s002.setValue(text)
-			self.ui.s004.setValue(text)
+		tb = self.ui.tb002
+		if tb.chk003.isChecked():
+			text = tb.s005.value()
+			tb.s002.setValue(text)
+			tb.s004.setValue(text)
 
 
 	def chk000(self):
@@ -267,6 +270,93 @@ class Selection(Init):
 			self.chk007()
 
 
+	def tb000(self, state=None):
+		'''
+		Select Nth
+		'''
+		tb = self.ui.tb000
+		if state=='setMenu':
+			tb.add('QCheckBox', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
+			tb.add('QCheckBox', setText='Component Loop', setObjectName='chk001', setChecked=True, setToolTip='Select all contiguous components that form a loop with the current selection.')
+			tb.add('QCheckBox', setText='Shortest Path', setObjectName='chk002', setToolTip='Shortest component path between two selected vertices or UV\'s.')
+			tb.add('QSpinBox', setPrefix='Step: ', setObjectName='s003', preset_='1-100 step1', setValue=1, setToolTip='Step Amount.')
+			return
+
+		step = tb.s003.value()
+
+		if tb.chk000.isChecked(): #Select Ring
+			rt.macros.run('PolyTools', 'Ring')
+
+		elif tb.chk001.isChecked(): #Select contigious
+			if rt.subObjectLevel==2: #Edge
+				maxEval('''
+				curmod = Modpanel.getcurrentObject()
+				if ( Ribbon_Modeling.IsEditablePoly() ) then
+				(
+					curmod.SelectEdgeRing();
+				)
+				else
+				(
+					curmod.ButtonOp #SelectEdgeRing;
+				)
+				''')
+			elif rt.subObjectLevel==4: #Face
+				pass
+
+		elif tb.chk002.isChecked(): #Shortest Edge Path
+			self.shortestEdgePath()
+			# maxEval('SelectShortestEdgePathTool;')
+
+		else: #Select Loop
+			rt.macros.run('PolyTools', 'Loop')
+			
+			# if rt.subObjectLevel==2: #Edge
+			# 	mel.eval("selectEveryNEdge;")
+			# elif rt.subObjectLevel==4: #Face
+			# 	self.selectFaceLoop(tolerance=50)
+
+
+	def tb001(self, state=None):
+		'''
+		Select Similar
+		'''
+		tb = self.ui.tb001
+		if state=='setMenu':
+			tb.add('QDoubleSpinBox', setPrefix='Tolerance: ', setObjectName='s000', preset_='0.0-10 step.1', setValue=0.3, setToolTip='Select similar objects or components, depending on selection mode.')
+			return
+
+		tolerance = str(tb.s000.value()) #string value because mel.eval is sending a command string
+		mel.eval("doSelectSimilar 1 {\""+ tolerance +"\"}")
+
+
+	def tb002(self, state=None):
+		'''
+		Select Island: Select Polygon Face Island
+		'''
+		tb = self.ui.tb002
+		if state=='setMenu':
+			tb.add('QCheckBox', setText='Lock Values', setObjectName='chk003', setChecked=True, setToolTip='Keep values in sync.')
+			tb.add('QDoubleSpinBox', setPrefix='x: ', setObjectName='s002', preset_='0.00-1 step.01', setValue=0.01, setToolTip='Normal X range.')
+			tb.add('QDoubleSpinBox', setPrefix='y: ', setObjectName='s004', preset_='0.00-1 step.01', setValue=0.01, setToolTip='Normal Y range.')
+			tb.add('QDoubleSpinBox', setPrefix='z: ', setObjectName='s005', preset_='0.00-1 step.01', setValue=0.01, setToolTip='Normal Z range.')
+			return
+
+		rangeX = float(tb.s002.value())
+		rangeY = float(tb.s004.value())
+		rangeZ = float(tb.s005.value())
+
+		curmod = rt.Modpanel.getcurrentObject()
+		curmod.selectAngle = rangeX
+		curmod.selectByAngle = not curmod.selectByAngle
+
+		# $.selectAngle=rangeX
+		# $.selectByAngle = on
+		# sel = $.selectedfaces as bitarray #maintains current single selection. need to reselect with angle contraint active to make work.
+		# $.selectByAngle = off
+		# print sel
+		# setFaceSelection sel #{}
+
+
 	def b000(self):
 		'''
 		Create Selection Set
@@ -317,73 +407,6 @@ class Selection(Init):
 		
 		'''
 		pass
-
-
-	def b006(self):
-		'''
-		Select Similar
-		'''
-		tolerance = str(self.ui.s000.value()) #string value because mel.eval is sending a command string
-		mel.eval("doSelectSimilar 1 {\""+ tolerance +"\"}")
-
-
-	def b007(self):
-		'''
-		Select Island: Select Polygon Face Island
-		'''
-		rangeX = float(self.ui.s002.value())
-		rangeY = float(self.ui.s004.value())
-		rangeZ = float(self.ui.s005.value())
-
-		curmod = rt.Modpanel.getcurrentObject()
-		curmod.selectAngle=rangeX
-		curmod.selectByAngle= not curmod.selectByAngle
-
-		# $.selectAngle=rangeX
-		# $.selectByAngle = on
-		# sel = $.selectedfaces as bitarray #maintains current single selection. need to reselect with angle contraint active to make work.
-		# $.selectByAngle = off
-		# print sel
-		# setFaceSelection sel #{}
-
-
-	def b008(self):
-		'''
-		Select Nth
-		'''
-		step = self.ui.s003.value()
-
-
-		if self.ui.chk000.isChecked(): #Select Ring
-			rt.macros.run('PolyTools', 'Ring')
-
-		elif self.ui.chk001.isChecked(): #Select contigious
-			if rt.subObjectLevel==2: #Edge
-				maxEval('''
-				curmod = Modpanel.getcurrentObject()
-				if ( Ribbon_Modeling.IsEditablePoly() ) then
-				(
-					curmod.SelectEdgeRing();
-				)
-				else
-				(
-					curmod.ButtonOp #SelectEdgeRing;
-				)
-				''')
-			elif rt.subObjectLevel==4: #Face
-				pass
-		
-		elif self.ui.chk002.isChecked(): #Shortest Edge Path
-			self.shortestEdgePath()
-			# maxEval('SelectShortestEdgePathTool;')
-
-		else: #Select Loop
-			rt.macros.run('PolyTools', 'Loop')
-			
-			# if rt.subObjectLevel==2: #Edge
-			# 	mel.eval("selectEveryNEdge;")
-			# elif rt.subObjectLevel==4: #Face
-			# 	self.selectFaceLoop(tolerance=50)
 
 
 	def b009(self):

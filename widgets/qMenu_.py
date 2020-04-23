@@ -23,20 +23,28 @@ Promoting a widget in designer to use a custom class:
 class QMenu_(QtWidgets.QMenu):
 	'''
 	args:
-			
-	returns:
-
+		toolButton (obj) = Setting a widget to this property allows the menu to be positioned in relation to the widget (as the menu often works better parented to the main window instead of the widget itself).
 	'''
-	def __init__(self, parent=None, **kwargs):
+	def __init__(self, parent=None, widget=None, **kwargs):
 		super(QMenu_, self).__init__(parent)
 
+		self.widget=widget
+
 		self.setAttributes(kwargs)
-		# self.setAttribute(QtCore.Qt.WA_ShowWithoutActivating) #Show the widget without making it active.
+		# self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+		self.setStyleSheet('''
+			QMenu {
+				background-color: transparent;
+				margin: 0px;
+			}
 
-		self.items=[]
+			QMenu::item {
+				padding: 0px 0px 0px 0px;
+				border: 0px solid transparent;
+			}''')
 
 
-	def setAttributes(self, attributes=None, action=None, w=None, order=['show'], **kwargs):
+	def setAttributes(self, attributes=None, action=None, order=['show'], **kwargs):
 		'''
 		Works with attributes passed in as a dict or kwargs.
 		If attributes are passed in as a dict, kwargs are ignored.
@@ -44,7 +52,6 @@ class QMenu_(QtWidgets.QMenu):
 		args:
 			attributes (dict) = keyword attributes and their corresponding values.
 			action (obj) = the child action or widgetAction to set attributes for. (default=None)
-			w (str) = the string action or widgetAction type. ie. 'QAction' or 'QPushButton' (default=None)
 			#order (list) = list of string keywords. ie. ['move', 'show']. attributes in this list will be set last, by list order. an example would be setting move positions after setting resize arguments, or showing the widget only after other attributes have been set.
 		kwargs:
 			set any keyword arguments.
@@ -65,64 +72,83 @@ class QMenu_(QtWidgets.QMenu):
 
 			except Exception as error:
 				if type(error)==AttributeError:
-					self.setCustomAttribute(action, w, attr, value)
+					self.setCustomAttribute(action, attr, value)
 				else:
 					raise error
 
 
-	def setCustomAttribute(self, action, w, attr, value):
+	def setCustomAttribute(self, action, attr, value):
 		'''
+		Custom attributes can be set using a trailing underscore convention to differentiate them from standard attributes. ie. insertSeparator_=True
+
 		args:
 			action (obj) = action (obj) = the child action or widgetAction to set attributes for.
-			w (str) = the string action or widgetAction type. ie. 'QAction' or 'QPushButton'
 			attr (str) = custom keyword attribute.
 			value (str) = the value corresponding to the given attr.
 		'''
-		if attr=='show':
-			# self.popup()
-			# self.exec_()
-			self.show()
+		if attr=='show_': #show the menu immediately.
+			self.show() # self.exec_() # self.popup()
 
-		if attr=='insertSeparator':
-			try:
-				self.insertSeparator(action)
-			except: pass
+		elif attr=='insertSeparator_':
+			self.insertSeparator(action)
+
+		elif attr=='setLayoutDirection_':
+			self.setAttributes({'setLayoutDirection':getattr(QtCore.Qt, value)}, action)
+
+		elif attr=='setAlignment_':
+			self.setAttributes({'setAlignment':getattr(QtCore.Qt, value)}, action)
+
+		elif attr=='setButtonSymbols_':
+			self.setAttributes({'setButtonSymbols':getattr(QtWidgets.QAbstractSpinBox, value)}, action)
+
+		#presets
+		elif attr=='preset_':
+			if value=='1-100 step1':
+				self.setAttributes({'setMinimum':1, 'setMaximum':100, 'setSingleStep':1, 'setButtonSymbols_':'NoButtons'}, action)
+			elif value=='0.0-10 step.1':
+				self.setAttributes({'setMinimum':0.0, 'setMaximum':100.0, 'setSingleStep':0.1, 'setDecimals':1, 'setButtonSymbols_':'NoButtons'}, action)
+			elif value=='0.00-1 step.01':
+				self.setAttributes({'setMinimum':0.0, 'setMaximum':1.0, 'setSingleStep':0.01, 'setDecimals':2, 'setButtonSymbols_':'NoButtons'}, action)
+
+		else:
+			print('# Error: {} has no attribute {}'.format(action, attr))
 
 
 	def add(self, w, **kwargs):
 		'''
-		Add items to the menu.
+		Add items to the QMenu.
 
 		args:
-			w (str)(obj) = widget. ie. 'QAction' or QtWidgets.QAction
+			widget (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
 		kwargs:
 			show (bool) = show the menu.
 			insertSeparator (QAction) = insert separator in front of the given action.
+		returns:
+ 			the added widget.
 
-		ex.call: menu().add('QAction', setText='', insertSeparator=True)
+		ex.call:
+		menu.add('QCheckBox', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
 		'''
+		#set widget
 		try:
-			action = getattr(QtWidgets, w)(self) #ex. QtWidgets.QAction(self) object from string. parented to self.
+			w = getattr(QtWidgets, w)() #ex. QtWidgets.QAction(self) object from string.
 		except:
-			action = w(self) #ex. QtWidgets.QAction(self) object. parented to self.
+			if callable(w):
+				w = widget() #ex. QtWidgets.QAction(self) object.
 
+		type_ = w.__class__.__name__
 
-		if w=='QAction':
-			self.addAction(action)
+		if type_=='QAction':
+			self.addAction(w)
 		elif w is not self:
 			wAction = QtWidgets.QWidgetAction(self)
-			# action = wAction.createWidget(a)
-			wAction.setDefaultWidget(action)
+			# w = wAction.createWidget(a)
+			wAction.setDefaultWidget(w)
 			self.addAction(wAction)
 
+		self.setAttributes(kwargs, w) #set any additional given keyword args for the widget.
 
-		#set any built-in attributes.
-		self.setAttributes(kwargs, action, w)
-
-		self.items.append(action)
-
-
-		return action
+		return w
 
 
 	def addMenus(self, menus):
@@ -137,19 +163,43 @@ class QMenu_(QtWidgets.QMenu):
 		return [self.addMenu(m) for m in menus]
 
 
-
-	def clear(self):
+	def leaveEvent(self, event):
 		'''
-		Clear the Menu and the items list.
+		args:
+			event = <QEvent>
 		'''
-		self.clear()
-		self.items=[]
+		self.hide()
 
-		return QtWidgets.QMenu.clear(self)
+		return QtWidgets.QMenu.leaveEvent(self, event)
 
 
-	def temp(self):
-		print __name__
+	def showEvent(self, event):
+		'''
+		args:
+			event = <QEvent>
+		'''
+		if not __name__=='__main__' and not hasattr(self, 'sb'):
+			from tk_switchboard import sb
+			self.sb = sb
+
+			self.parentUiName = self.sb.getUiName()
+			self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
+
+			self.childEvents.addWidgets(self.parentUiName, self.children()+[self])
+
+
+		if self.widget:
+			pos = self.widget.mapToGlobal(self.widget.rect().topRight())
+			self.move(pos)
+		elif self.parent():
+			pos = self.parent().mapToGlobal(self.parent().rect().topRight())
+			self.move(pos)
+
+		self.resize(self.sizeHint().width(), self.sizeHint().height())
+
+		return QtWidgets.QToolButton.showEvent(self, event)
+
+
 
 
 
@@ -180,284 +230,3 @@ if __name__ == "__main__":
 
 # depricated ------------------------------------------------------------------------
 
-	# def showEvent(self, event):
-	# 	'''
-	# 	args:
-	# 		event = <QEvent>
-	# 	'''
-
-	# 	return QtWidgets.QMenu.showEvent(self, event)
-
-
-	# def hide(self):
-	# 	'''
-	# 	args:
-	# 		event = <QEvent>
-	# 	'''
-
-	# 	return QtWidgets.QMenu.hide(self)
-
-
-	# def enterEvent(self, event):
-	# 	'''
-	# 	args:
-	# 		event = <QEvent>
-	# 	'''
-
-	# 	return QtWidgets.QMenu.enterEvent(self, event)
-
-
-	# def leaveEvent(self, event):
-	# 	'''
-	# 	args:
-	# 		event = <QEvent>
-	# 	'''
-
-	# 	return QtWidgets.QMenu.leaveEvent(self, event)
-
-
-	# def mouseMoveEvent(self, event):
-	# 	'''
-	# 	args:
-	# 		event = <QEvent>
-	# 	'''
-
-	# 	return QtWidgets.QMenu.mouseMoveEvent(self, event)
-
-
-# class QMenu_(QtWidgets.QMenu):
-# 	'''
-# 	'''	
-# 	def __init__(self, parent=None):
-# 		super(QMenu_, self).__init__(parent)
-
-
-# 		a1 = QtWidgets.QAction('Import mail', self) 
-# 		self.addAction(a1)
-		
-# 		submenu = self.addMenu('menu')
-# 		a2 = QtWidgets.QAction('submenu', self)
-# 		submenu.addAction(a2)
-
-# 		self.setGeometry(300, 300, 300, 200)
-# 		self.setWindowTitle('Submenu')    
-
-
-
-
-
-
-# if __name__ == '__main__':
-# 	app = QtWidgets.QApplication(sys.argv)
-# 	w = QMenu_('Import')
-# 	w.show()
-
-# 	sys.exit(app.exec_())
-
-# we have two menu items; one is located in the File menu and the other one in the File's Import submenu.
-# self = QMenu('Import', self)
-# New menu is created with QMenu.
-
-# action = QAction('Import mail', self) 
-# self.addAction(action)
-# An action is added to the submenu with addAction().
-
-
-
-
-# OLD
-
-# '''
-# Promoting a widget in designer to use a custom class:
-# >	In Qt Designer, select all the widgets you want to replace, 
-# 		then right-click them and select 'Promote to...'. 
-
-# >	In the dialog:
-# 		Base Class:		Class from which you inherit. ie. QWidget
-# 		Promoted Class:	Name of the class. ie. "MyWidget"
-# 		Header File:	Path of the file (changing the extension .py to .h)  ie. myfolder.mymodule.mywidget.h
-
-# >	Then click "Add", "Promote", 
-# 		and you will see the class change from "QWidget" to "MyWidget" in the Object Inspector pane.
-# '''
-
-
-
-# class QMenu_(QtWidgets.QMenu):
-# 	'''
-# 	args:
-			
-# 	returns:
-
-# 	'''
-# 	def __init__(self, parent=None, **kwargs):
-# 		super(QMenu_, self).__init__(parent)
-
-# 		self.setAttributes(kwargs)
-
-# 		self.setAttribute(QtCore.Qt.WA_ShowWithoutActivating) #Show the widget without making it active.
-
-
-
-# 	def setAttributes(self, attributes=None, action=None, type_=None, order=['show'], **kwargs):
-# 		'''
-# 		Works with attributes passed in as a dict or kwargs.
-# 		If attributes are passed in as a dict, kwargs are ignored.
-
-# 		args:
-# 			attributes (dict) = keyword attributes and their corresponding values.
-# 			action (obj) = the child action or widgetAction to set attributes for. (default=None)
-# 			type_ (str) = the string action or widgetAction type. ie. 'QAction' or 'QPushButton' (default=None)
-# 			#order (list) = list of string keywords. ie. ['move', 'show']. attributes in this list will be set last, by list order. an example would be setting move positions after setting resize arguments, or showing the widget only after other attributes have been set.
-# 		kwargs:
-# 			set any keyword arguments.
-# 		'''
-# 		if not attributes:
-# 			attributes = kwargs
-
-# 		for k in order:
-# 			v = attributes.pop(k, None)
-# 			if v:
-# 				from collections import OrderedDict
-# 				attributes = OrderedDict(attributes)
-# 				attributes[k] = v
-
-# 		for attr, value in attributes.items():
-# 			try:
-# 				getattr(action, attr)(value)
-
-# 			except Exception as error:
-# 				if type(error)==AttributeError:
-# 					self.setCustomAttribute(action, type_, attr, value)
-# 				else:
-# 					raise error
-
-
-# 	def setCustomAttribute(self, action, type_, attr, value):
-# 		'''
-# 		args:
-# 			action (obj) = action (obj) = the child action or widgetAction to set attributes for.
-# 			type_ (str) = the string action or widgetAction type. ie. 'QAction' or 'QPushButton'
-# 			attr (str) = custom keyword attribute.
-# 			value (str) = the value corresponding to the given attr.
-# 		'''
-# 		if attr=='show':
-# 			self.show()
-
-# 		if attr=='insertSeparator':
-# 			try:
-# 				self.insertSeparator(action)
-# 			except: pass
-
-
-# 	def add(self, **kwargs):
-# 		'''
-# 		Add items to the menu.
-
-# 		kwargs:
-# 			show (bool) = show the menu.
-# 			insertSeparator (QAction) = insert separator in front of the given action.
-
-# 		ex.call: menu().add(type_='QAction', setText='', insertSeparator=True)
-# 		'''
-# 		type_ = kwargs.pop('type_')
-
-# 		try:
-# 			action = getattr(QtWidgets, type_)(self) #ex. QtWidgets.QAction(self) object from string. parented to self.
-# 		except:
-# 			if callable(type_):
-# 				action = type_(self) #ex. QtWidgets.QAction(self) object. parented to self.
-# 			else:
-# 				action = type_ #ex. self object. not parented.
-		
-# 		if type_=='QAction':
-# 			self.addAction(action)
-# 		elif type_ is not self:
-# 			wAction = QtWidgets.QWidgetAction(self)
-# 			# action = wAction.createWidget(a)
-# 			wAction.setDefaultWidget(action)
-# 			self.addAction(wAction)
-
-
-# 		#set any built-in attributes.
-# 		self.setAttributes(kwargs, action, type_)
-
-
-# 			#a.colorSelected.connect(self.clicked_color)
-# 			#button.action.trigger()
-# 			#button.triggered.connect(self.close)
-
-
-
-# 	def showEvent(self, event):
-# 		'''
-# 		args:
-# 			event = <QEvent>
-# 		'''
-
-# 		return QtWidgets.QMenu.showEvent(self, event)
-
-
-# 	def hide(self):
-# 		'''
-# 		args:
-# 			event = <QEvent>
-# 		'''
-# 		if self.rect().contains(self.mapFromGlobal(QtGui.QCursor.pos())): #if not mouse over widget:
-# 			return
-
-# 		return QtWidgets.QMenu.hide(self)
-
-
-# 	def enterEvent(self, event):
-# 		'''
-# 		args:
-# 			event = <QEvent>
-# 		'''
-# 		print 'enterEvent'
-
-# 		return QtWidgets.QMenu.enterEvent(self, event)
-
-
-# 	def leaveEvent(self, event):
-# 		'''
-# 		args:
-# 			event = <QEvent>
-# 		'''
-# 		self.hide()
-
-# 		return QtWidgets.QMenu.leaveEvent(self, event)
-
-
-# 	def mouseMoveEvent(self, event):
-# 		'''
-# 		args:
-# 			event = <QEvent>
-# 		'''
-# 		if not self.rect().contains(self.mapFromGlobal(QtGui.QCursor.pos())): #if not mouse over self:
-# 			print self.mouseGrabber(), '0'
-# 			self.parent().grabMouse()
-# 			# self.parent().window().grabMouse()
-# 			# self.releaseMouse()
-# 			# self.parent().window().activateWindow()
-# 		else:
-# 			print self.mouseGrabber(),'1'
-# 			self.grabMouse()
-# 			# self.activateWindow()
-
-# 		return QtWidgets.QMenu.mouseMoveEvent(self, event)
-
-
-
-
-
-
-# if __name__ == "__main__":
-# 	import sys
-# 	app = QtWidgets.QApplication(sys.argv)
-# 	m = QMenu_(show=True)
-
-# 	m.add(type_='QAction', setText='Action', insertSeparator=True)
-# 	m.add(type_='QPushButton', setText='Button', insertSeparator=True)
-# 	m.add(type_='QLabel', setText='Label', insertSeparator=True)
-# 	sys.exit(app.exec_())

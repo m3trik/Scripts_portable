@@ -32,7 +32,7 @@ class QWidget_MultiWidget(QtWidgets.QWidget):
 
 			self.row.addWidget(widget)
 
-			widget.setSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Ignored)
+			# widget.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
 			widget.installEventFilter(self)
 
 
@@ -61,12 +61,12 @@ class QWidget_MultiWidget(QtWidgets.QWidget):
 
 		if event.type()==QtCore.QEvent.HoverLeave:
 			if not __name__=='__main__':
-				self.window().grabMouse()
+				if self.window().isVisible():
+					self.window().grabMouse()
 
-		# if event.type()==QtCore.QEvent.MouseButtonRelease:
-		# 	if widget.rect().contains(widget.mapFromGlobal(QtGui.QCursor.pos())):
-		# 		self.itemClicked.emit(wItem, column)
-		# 		self.window().hide()
+		if event.type()==QtCore.QEvent.MouseButtonRelease:
+			if widget.rect().contains(widget.mapFromGlobal(QtGui.QCursor.pos())):
+				next(w.hide() for w in QtWidgets.QApplication.topLevelWindows() if w.isVisible() and not 'QMenu' in w.objectName()) #hide all windowshttps://www.commondreams.org/news/2020/04/21/warnings-suspension-democracy-new-york-state-officials-weigh-removing-sanders
 
 		return super(QWidget_MultiWidget, self).eventFilter(widget, event)
 
@@ -137,11 +137,7 @@ class QWidget_MultiWidget(QtWidgets.QWidget):
 		args:
 			event = <QEvent>
 		'''
-		try:
-			if not __name__=='__main__':
-				self.sb
-
-		except:
+		if not __name__=='__main__' and not hasattr(self, 'sb'):
 			from tk_switchboard import sb
 			self.sb = sb
 
@@ -149,6 +145,8 @@ class QWidget_MultiWidget(QtWidgets.QWidget):
 			self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
 
 			self.childEvents.addWidgets(self.parentUiName, self.childWidgets())
+
+		self.resize(self.sizeHint().width(), self.sizeHint().height())
 
 		return QtWidgets.QWidget.showEvent(self, event)
 

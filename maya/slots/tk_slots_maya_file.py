@@ -172,19 +172,26 @@ class File(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def b000(self):
+	def tb000(self, state=None):
 		'''
 		Save
-
 		'''
+		tb = self.ui.tb000
+		if state=='setMenu':
+			tb.add('QCheckBox', setText='ASCII', setObjectName='chk003', setChecked=True, setToolTip='Toggle ASCII or binary file type.')
+			tb.add('QCheckBox', setText='Wireframe', setObjectName='chk000', setChecked=True, setToolTip='Set view to wireframe before save.')
+			tb.add('QCheckBox', setText='Increment', setObjectName='chk001', setChecked=True, setToolTip='Append and increment a unique integer value.')
+			tb.add('QCheckBox', setText='Quit', setObjectName='chk002', setToolTip='Quit after save.')
+			return
+
 		preSaveScript = ''
 		postSaveScript = ''
 
 		type_ = "mayaBinary"
-		if self.ui.chk003.isChecked(): #toggle ascii/ binary
+		if tb.chk003.isChecked(): #toggle ascii/ binary
 			type_ = "mayaAscii" #type: mayaAscii, mayaBinary, mel, OBJ, directory, plug-in, audio, move, EPS, Adobe(R) Illustrator(R)
 
-		if self.ui.chk000.isChecked():
+		if tb.chk000.isChecked():
 			mel.eval("DisplayWireframe;")
 
 		#get scene name and file path
@@ -193,7 +200,7 @@ class File(Init):
 		curFullName = fullPath[index:] #ie. elise_mid.009.mb
 		currentPath = fullPath[:index] #ie. O:/Cloud/____Graphics/______project_files/elise.proj/elise.scenes/.maya/
 		
-		if self.ui.chk001.isChecked(): #increment filename
+		if tb.chk001.isChecked(): #increment filename
 			import re, os, fnmatch, shutil
 			incrementAmount = 5
 
@@ -232,7 +239,7 @@ class File(Init):
 			pm.saveFile (force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
 			print "// Result: ", currentPath+currentName
 
-		if self.ui.chk002.isChecked(): #quit maya
+		if tb.chk002.isChecked(): #quit maya
 			import time
 			for timer in range(5):
 				self.viewPortMessage("shutting down:<hl>"+str(timer)+"</hl>")
