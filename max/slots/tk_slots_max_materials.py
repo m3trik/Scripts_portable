@@ -157,12 +157,18 @@ class Materials(Init):
 		self.cmb002()
 
 
-	def b000(self):
+	def tb000(self, state=None):
 		'''
 		Select By Material Id
 		'''
-		shell = self.ui.chk000.isChecked() 
-		invert = self.ui.chk001.isChecked()
+		tb = self.ui.tb000
+		if state=='setMenu':
+			tb.add('QCheckBox', setText='Shell', setObjectName='chk000', setToolTip='Select entire shell.')
+			tb.add('QCheckBox', setText='Invert', setObjectName='chk001', setToolTip='Invert Selection.')
+			return
+
+		shell = tb.chk000.isChecked() 
+		invert = tb.chk001.isChecked()
 
 		if not rt.getNumSubMtls(self.storedMaterial): #if not a multimaterial
 			mat = self.storedMaterial

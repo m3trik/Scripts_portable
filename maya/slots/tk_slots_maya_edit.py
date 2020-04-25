@@ -36,14 +36,25 @@ class Edit(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def b000(self):
+	def tb000(self, state=None):
 		'''
 		Mesh Cleanup
 		'''
-		repair = self.ui.chk004.isChecked() #auto repair errors
+		tb = self.ui.tb000
+		if state=='setMenu':
+			# tb.add('QCheckBox', setText='N-Gons', setObjectName='chk002', setToolTip='Find N-gons.')
+			# tb.add('QCheckBox', setText='Isolated Vertex', setObjectName='chk003', setChecked=True, setToolTip='Find isolated vertices within specified angle threshold.')
+			# tb.add('QSpinBox', setPrefix='Loose Vertex Angle: ', setObjectName='s006', preset_='1-360 step1', setValue=15, setToolTip='Loose vertex search: Angle Threshold.')
+			tb.add('QCheckBox', setText='Repair', setObjectName='chk004', setToolTip='Repair matching geometry. (else: select)')
+			return
+
+		# isolatedVerts = tb.chk003.isChecked() #isolated vertices
+		# edgeAngle = tb.s006.value()
+		# nGons = tb.chk002.isChecked() #n-sided polygons
+		repair = tb.chk004.isChecked() #attempt auto repair errors
 
 		#Select components for cleanup from all visible geometry in the scene
-		scene = pm.ls (visible=1, geometry=1)
+		scene = pm.ls(visible=1, geometry=1)
 		[pm.select (geometry, add=1) for geometry in scene]
 		if repair: #auto repair errors
 			mel.eval(r'polyCleanupArgList 4 { "0","1","1","0","1","0","1","0","0","1e-005","1","0.0001","0","1e-005","0","1","1","0" };')
@@ -66,23 +77,23 @@ class Edit(Init):
 				self.viewPortMessage("<hl>"+str(nGons[0])+"</hl> N-Gon(s) found.")
 
 
-	def b001(self):
-		'''
-
-		'''
-		pass
-
-
-	def b006(self):
+	def tb001(self, state=None):
 		'''
 		Delete History
 		'''
-		all_ = self.ui.chk018.isChecked()
-		unusedNodes = self.ui.chk019.isChecked()
-		deformers = self.ui.chk020.isChecked()
-		objects = pm.ls (selection=1)
+		tb = self.ui.tb001
+		if state=='setMenu':
+			tb.add('QCheckBox', setText='All', setObjectName='chk018', setChecked=True, setToolTip='Delete history on All objects.')
+			tb.add('QCheckBox', setText='Delete Unused Nodes', setObjectName='chk019', setChecked=True, setToolTip='Delete unused nodes.')
+			tb.add('QCheckBox', setText='Delete Deformers', setObjectName='chk020', setToolTip='Delete deformers.')
+			return
+
+		all_ = tb.chk018.isChecked()
+		unusedNodes = tb.chk019.isChecked()
+		deformers = tb.chk020.isChecked()
+		objects = pm.ls(selection=1)
 		if all_:
-			objects = pm.ls (typ="mesh")
+			objects = pm.ls(typ="mesh")
 
 		for obj in objects:
 			try:
@@ -108,10 +119,15 @@ class Edit(Init):
 				self.viewPortMessage("delete <hl>non-deformer</hl> history on "+str(objects))
 
 
-	def b007(self):
+	def tb002(self, state=None):
 		'''
 		Delete 
 		'''
+		tb = self.ui.tb002
+		if state=='setMenu':
+			tb.add('QCheckBox', setText='Delete Loop', setObjectName='chk001', setToolTip='Delete the entire edge loop of any components selected.')
+			return
+
 		selectionMask = pm.selectMode (query=True, component=True)
 		maskVertex = pm.selectType (query=True, vertex=True)
 		maskEdge = pm.selectType (query=True, edge=True)
@@ -134,6 +150,13 @@ class Edit(Init):
 					pm.delete(obj) #delete faces\mesh objects
 		
 		self.viewPortMessage('Delete <hl>'+str(objects)+'</hl>.')
+
+
+	def b001(self):
+		'''
+
+		'''
+		pass
 
 
 	def b009(self):

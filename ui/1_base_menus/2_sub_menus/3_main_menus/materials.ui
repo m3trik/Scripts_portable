@@ -184,7 +184,7 @@
              </size>
             </property>
            </widget>
-           <widget class="QPushButton" name="b000">
+           <widget class="QToolButton_" name="tb000">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -192,7 +192,7 @@
              <rect>
               <x>40</x>
               <y>30</y>
-              <width>41</width>
+              <width>71</width>
               <height>19</height>
              </rect>
             </property>
@@ -219,77 +219,6 @@
               <width>16</width>
               <height>16</height>
              </size>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="chk000">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>80</x>
-              <y>30</y>
-              <width>16</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Select All MatID: Shell</string>
-            </property>
-            <property name="text">
-             <string>s</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="chk001">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>95</x>
-              <y>30</y>
-              <width>16</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Select All MatID: Invert</string>
-            </property>
-            <property name="text">
-             <string>i</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
             </property>
            </widget>
            <widget class="QPushButton" name="b002">
@@ -579,7 +508,7 @@
          <rect>
           <x>0</x>
           <y>20</y>
-          <width>231</width>
+          <width>224</width>
           <height>19</height>
          </rect>
         </property>
@@ -694,6 +623,11 @@
    <class>QProgressBar_</class>
    <extends>QProgressBar</extends>
    <header>widgets.qprogressbar_.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QToolButton_</class>
+   <extends>QToolButton</extends>
+   <header>widgets.qtoolbutton_.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -25,15 +25,66 @@ class QWidget_MultiWidget(QtWidgets.QWidget):
 
 		for widget in widgets:
 			try:
-				widget = getattr(QtWidgets, widget)(self) #ex. QtWidgets.QAction(self) object from string. parented to self.
+				widget = getattr(QtWidgets, widget)(self) #ex. QtWidgets.QLabel(self) object from string. parented to self.
 			except:
 				if callable(widget):
-					widget = widget(self) #ex. QtWidgets.QAction(self) object. parented to self.
+					widget = widget(self) #ex. QtWidgets.QLabel(self) object. parented to self.
 
 			self.row.addWidget(widget)
+			self.setAttributes(kwargs, w) #set any additional given keyword args for the widget.
+			setattr(self, w.objectName(), w)
 
 			# widget.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
 			widget.installEventFilter(self)
+
+
+	def setAttributes(self, attributes=None, w=None, order=[], **kwargs):
+		'''
+		Works with attributes passed in as a dict or kwargs.
+		If attributes are passed in as a dict, kwargs are ignored.
+
+		args:
+			attributes (dict) = keyword attributes and their corresponding values.
+			w (obj) = the child widget to set attributes for. (default=None)
+			#order (list) = list of string keywords. ie. ['move', 'show']. attributes in this list will be set last, by list order. an example would be setting move positions after setting resize arguments, or showing the widget only after other attributes have been set.
+		kwargs:
+			set any keyword arguments.
+		'''
+		if not attributes:
+			attributes = kwargs
+
+		for k in order:
+			v = attributes.pop(k, None)
+			if v:
+				from collections import OrderedDict
+				attributes = OrderedDict(attributes)
+				attributes[k] = v
+
+		for attr, value in attributes.items():
+			try:
+				getattr(w, attr)(value)
+
+			except Exception as error:
+				if type(error)==AttributeError:
+					self.setCustomAttribute(w, attr, value)
+				else:
+					raise error
+
+
+	def setCustomAttribute(self, w, attr, value):
+		'''
+		Custom attributes can be set using a trailing underscore convention to differentiate them from standard attributes. ie. insertSeparator_=True
+
+		args:
+			w (obj) = the child widget to set attributes for.
+			attr (str) = custom keyword attribute.
+			value (str) = the value corresponding to the given attr.
+		'''
+		if attr=='':
+			if value=='':
+				pass
+		else:
+			print('# Error: {} has no attribute {}'.format(action, attr))
 
 
 	def eventFilter(self, widget, event):

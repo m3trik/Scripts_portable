@@ -71,11 +71,6 @@ class StyleSheet():
 			color: {COLOR_TEXT1};
 		}
 
-		QPushButton::unchecked::hover {
-			background-color: {COLOR_ACCENT};
-			color: {COLOR_TEXT1};
-		}
-
 		QPushButton::checked::hover {
 			background-color: {COLOR_ACCENT};
 			color: {COLOR_TEXT2};
@@ -117,11 +112,6 @@ class StyleSheet():
 			color: {COLOR_TEXT1};
 		}
 
-		QPushButton::unchecked::hover {
-			background-color: {COLOR_ACCENT};
-			color: {COLOR_TEXT1};
-		}
-
 		QPushButton::checked::hover {
 			background-color: {COLOR_ACCENT};
 			color: {COLOR_TEXT2};
@@ -148,7 +138,13 @@ class StyleSheet():
 			border: 1px solid black;
 			padding-left: 5px;
 			padding-right: 5px;
-			background-color: {COLOR_MEDIUM};
+			background-color: {COLOR_MEDIUM}; /* The background will not appear unless you set the border property. */
+			color: {COLOR_TEXT1};
+		}
+
+		QToolButton::hover {   
+			border: 1px solid black;
+			background-color: {COLOR_ACCENT};
 			color: {COLOR_TEXT1};
 		}
 
@@ -158,34 +154,50 @@ class StyleSheet():
 			color: {COLOR_TEXT2};
 		}
 
-		QToolButton::hover {   
-			border: 1px solid black;
-			background-color: {COLOR_ACCENT};
-			color: {COLOR_TEXT1};
-		}
-
-		QToolButton::unchecked::hover {
-			background-color: {COLOR_ACCENT};
-			color: {COLOR_TEXT1};
-		}
-
 		QToolButton::checked::hover {
 			background-color: {COLOR_ACCENT};
 			color: {COLOR_TEXT2};
 		}
 
-		QToolButton::pressed {   
+		QToolButton::pressed, QToolButton::menu-button:pressed {   
 			border: 1px solid black;
 			background-color: {COLOR_MEDLIGHT};
 			color: {COLOR_TEXT1};
 		}
 
-		QToolButton:flat {
-			border: none; /* no border for a flat push button */
+		/* When the QToolButton displays arrows, the ::up-arrow, ::down-arrow, ::left-arrow and ::right-arrow subcontrols are used. */
+		QToolButton::down-arrow, QToolButton::up-arrow, QToolButton::left-arrow, QToolButton::right-arrow {
+			image: url(Resources/ComboBox_Right1.png);
+			padding-right: 15px;
 		}
 
-		QToolButton:default {
-			border-color: navy; /* make the default button prominent */
+		QToolButton::down-arrow:hover, QToolButton::up-arrow:hover, QToolButton::left-arrow:hover, QToolButton::right-arrow:hover {
+			background-color: {COLOR_ACCENT};
+			padding-right: 5px;
+		}
+
+		/* the subcontrols below are used only in the MenuButtonPopup mode */
+		QToolButton::menu-button {
+			border: 1px solid {COLOR_TEXT1};
+			padding: 0px 0px 0px 4px;
+			margin: 4px 2px 4px 0px;
+		}
+
+		QToolButton::menu-button:hover{
+			border: 1px solid {COLOR_TEXT1};
+		}
+
+		QToolButton::menu-button:pressed {
+
+		}
+
+		QToolButton::menu-arrow {
+			image: none;
+		}
+
+		QToolButton::menu-indicator {
+			bottom: 5px;
+			right: 5px;
 		}''')
 
 	QAbstractButton=f('''
@@ -303,27 +315,35 @@ class StyleSheet():
 			color: {COLOR_TEXT1};
 		}
 
-		QRadioButton::indicator, QCheckBox::indicator {
+		QCheckBox::hover {
+
+		}
+
+		QCheckBox::hover:checked {
+
+		}
+
+		QCheckBox::indicator {
 			width: 6px;
 			height: 6px;
 		}
 
-		QRadioButton::indicator::unchecked, QCheckBox::indicator::unchecked {
-			border: 0px solid {COLOR_DARK};
+		QCheckBox::indicator::unchecked {
+			border: 1px solid transparent;
 			background: none;
 		}
 
-		QRadioButton::indicator:unchecked:hover, QCheckBox::indicator:unchecked:hover {
+		QCheckBox::indicator:unchecked:hover {
 			border: 1px solid {COLOR_ACCENT};
 		}
 
-		QRadioButton::indicator::checked, QCheckBox::indicator::checked {
-			border: 0px solid {COLOR_DARK};
+		QCheckBox::indicator::checked {
+			border: 1px solid transparent;
 			background: {COLOR_ACCENT};
 		}
 
-		QRadioButton::indicator:checked:hover, QCheckBox::indicator:checked:hover {
-			border: 0px solid {COLOR_DARK};
+		QCheckBox::indicator:checked:hover {
+			border: 1px solid transparent;
 			background: {COLOR_ACCENT};
 		}''')
 
@@ -338,27 +358,35 @@ class StyleSheet():
 			color: {COLOR_TEXT1};
 		}
 
-		QRadioButton::indicator, QCheckBox::indicator {
+		QRadioButton::hover {
+
+		}
+
+		QRadioButton::hover:checked {
+
+		}
+
+		QRadioButton::indicator {
 			width: 6px;
 			height: 6px;
 		}
 
-		QRadioButton::indicator::unchecked, QCheckBox::indicator::unchecked {
-			border: 1px solid {COLOR_DARK};
+		QRadioButton::indicator::unchecked {
+			border: 1px solid transparent;
 			background: none;
 		}
 
-		QRadioButton::indicator:unchecked:hover, QCheckBox::indicator:unchecked:hover {
-			border: 1px solid black;
+		QRadioButton::indicator:unchecked:hover {
+			border: 1px solid {COLOR_ACCENT};
 		}
 
-		QRadioButton::indicator::checked, QCheckBox::indicator::checked {
-			border: 1px solid black;
+		QRadioButton::indicator::checked {
+			border: 1px solid transparent;
 			background: {COLOR_ACCENT};
 		}
 
-		QRadioButton::indicator:checked:hover, QCheckBox::indicator:checked:hover {
-			border: 1px solid black;
+		QRadioButton::indicator:checked:hover {
+			border: 1px solid transparent;
 			background: {COLOR_ACCENT};
 		}''')
 
@@ -1085,3 +1113,45 @@ color1 (non-zero pixel value) (opaque, i.e. foreground)
 # QMenu::indicator:exclusive:checked:selected {
 #     image: url(:/images/radiobutton_checked_hover.png);
 
+
+# QToolButton:hover, QToolButton::menu-button:hover {
+#     background: #787876;
+# }
+
+# QToolButton::checked{
+#     background: #484846;
+#     border: 1px solid #787876;
+# }
+
+# QToolButton:pressed, QToolButton::menu-button:pressed {
+#     background: #787876;
+# }
+
+# QToolButton[popupMode="1"]{
+# /* only for MenuButtonPopup */
+#     padding-right: 30px;
+#     background: red;
+# }
+# QToolButton[popupMode="2"]{
+# /* only for OSC Server Status */
+#     padding-right: 30px;
+#     background: #484846;
+# }
+# QToolButton[popupMode="2"]:hover{
+#     background: #787876;
+# }
+# QToolButton::down-arrow{
+# } 
+# /* the subcontrols below are used only in the MenuButtonPopup mode */
+# QToolButton::menu-button{
+# }
+
+# QToolButton::menu-button:hover{
+#     background: #787876;
+# }
+# QToolButton::menu-button:pressed{
+# }
+# QToolButton::menu-indicator{
+#     bottom: 5px;
+#     right: 5px;
+# }

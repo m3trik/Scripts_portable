@@ -400,7 +400,7 @@
              </size>
             </property>
            </widget>
-           <widget class="QPushButton" name="b003">
+           <widget class="QToolButton_" name="tb002">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -408,7 +408,7 @@
              <rect>
               <x>0</x>
               <y>70</y>
-              <width>96</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -429,52 +429,6 @@
               <width>18</width>
               <height>18</height>
              </size>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="chk000">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>95</x>
-              <y>70</y>
-              <width>16</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Combine selected meshes and merge any coincident verts/edges.</string>
-            </property>
-            <property name="text">
-             <string>M</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-            <property name="autoDefault">
-             <bool>false</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
             </property>
            </widget>
           </widget>
@@ -502,6 +456,11 @@
    <class>QProgressBar_</class>
    <extends>QProgressBar</extends>
    <header>widgets.qprogressbar_.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QToolButton_</class>
+   <extends>QToolButton</extends>
+   <header>widgets.qtoolbutton_.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

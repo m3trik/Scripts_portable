@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>259</width>
-    <height>389</height>
+    <height>403</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -313,7 +313,7 @@
              </size>
             </property>
            </widget>
-           <widget class="QPushButton" name="b005">
+           <widget class="QToolButton_" name="tb001">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -321,7 +321,7 @@
              <rect>
               <x>0</x>
               <y>30</y>
-              <width>91</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -437,7 +437,7 @@
              </size>
             </property>
            </widget>
-           <widget class="QPushButton" name="b003">
+           <widget class="QToolButton_" name="tb002">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -445,7 +445,7 @@
              <rect>
               <x>0</x>
               <y>90</y>
-              <width>96</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -468,83 +468,6 @@
              </size>
             </property>
            </widget>
-           <widget class="QPushButton" name="chk000">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>95</x>
-              <y>90</y>
-              <width>16</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Combine selected meshes and merge any coincident verts/edges.</string>
-            </property>
-            <property name="text">
-             <string>M</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-            <property name="autoDefault">
-             <bool>false</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-           </widget>
-           <widget class="QSpinBox" name="s003">
-            <property name="geometry">
-             <rect>
-              <x>90</x>
-              <y>30</y>
-              <width>21</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="baseSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Bridge: divisions</string>
-            </property>
-            <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::NoButtons</enum>
-            </property>
-            <property name="minimum">
-             <number>0</number>
-            </property>
-            <property name="maximum">
-             <number>999</number>
-            </property>
-            <property name="value">
-             <number>0</number>
-            </property>
-           </widget>
           </widget>
          </item>
          <item>
@@ -564,7 +487,7 @@
            <property name="title">
             <string>Component</string>
            </property>
-           <widget class="QPushButton" name="b006">
+           <widget class="QPushButton" name="tb003">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -572,7 +495,7 @@
              <rect>
               <x>0</x>
               <y>10</y>
-              <width>96</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -595,7 +518,7 @@
              </size>
             </property>
            </widget>
-           <widget class="QPushButton" name="b007">
+           <widget class="QToolButton_" name="tb004">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -603,7 +526,7 @@
              <rect>
               <x>0</x>
               <y>30</y>
-              <width>56</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -737,44 +660,7 @@
              </size>
             </property>
            </widget>
-           <widget class="QPushButton" name="chk007">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>95</x>
-              <y>90</y>
-              <width>16</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Detach: delete original selected faces</string>
-            </property>
-            <property name="text">
-             <string>ƒ</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="b044">
+           <widget class="QToolButton_" name="tb005">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -782,7 +668,7 @@
              <rect>
               <x>45</x>
               <y>90</y>
-              <width>51</width>
+              <width>66</width>
               <height>19</height>
              </rect>
             </property>
@@ -803,40 +689,6 @@
               <width>18</width>
               <height>18</height>
              </size>
-            </property>
-           </widget>
-           <widget class="QDoubleSpinBox" name="s000">
-            <property name="geometry">
-             <rect>
-              <x>55</x>
-              <y>30</y>
-              <width>56</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="baseSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Bevel: Width</string>
-            </property>
-            <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::NoButtons</enum>
-            </property>
-            <property name="decimals">
-             <number>2</number>
-            </property>
-            <property name="minimum">
-             <double>0.050000000000000</double>
-            </property>
-            <property name="singleStep">
-             <double>0.050000000000000</double>
-            </property>
-            <property name="value">
-             <double>1.000000000000000</double>
             </property>
            </widget>
            <widget class="QPushButton" name="b012">
@@ -868,80 +720,6 @@
               <width>18</width>
               <height>18</height>
              </size>
-            </property>
-            <property name="balette" stdset="0">
-             <palette>
-              <active>
-               <colorrole role="Highlight">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>168</red>
-                  <green>152</green>
-                  <blue>250</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </active>
-              <inactive>
-               <colorrole role="Highlight">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>168</red>
-                  <green>152</green>
-                  <blue>250</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </inactive>
-              <disabled>
-               <colorrole role="Highlight">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>0</red>
-                  <green>120</green>
-                  <blue>215</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </disabled>
-             </palette>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="chk002">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>95</x>
-              <y>10</y>
-              <width>16</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Keep edges/faces together.</string>
-            </property>
-            <property name="text">
-             <string>K</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
             </property>
             <property name="balette" stdset="0">
              <palette>
@@ -1134,7 +912,7 @@
              <bool>false</bool>
             </property>
            </widget>
-           <widget class="QPushButton" name="b040">
+           <widget class="QToolButton_" name="tb000">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -1142,7 +920,7 @@
              <rect>
               <x>0</x>
               <y>10</y>
-              <width>76</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -1163,55 +941,6 @@
               <width>18</width>
               <height>18</height>
              </size>
-            </property>
-           </widget>
-           <widget class="QDoubleSpinBox" name="s002">
-            <property name="geometry">
-             <rect>
-              <x>75</x>
-              <y>10</y>
-              <width>36</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="baseSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Merge: distance</string>
-            </property>
-            <property name="layoutDirection">
-             <enum>Qt::LeftToRight</enum>
-            </property>
-            <property name="wrapping">
-             <bool>false</bool>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-            </property>
-            <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::NoButtons</enum>
-            </property>
-            <property name="decimals">
-             <number>3</number>
-            </property>
-            <property name="minimum">
-             <double>0.001000000000000</double>
-            </property>
-            <property name="singleStep">
-             <double>0.001000000000000</double>
-            </property>
-            <property name="value">
-             <double>0.001000000000000</double>
             </property>
            </widget>
            <widget class="QPushButton" name="b043">
@@ -1903,7 +1632,7 @@
            <property name="title">
             <string>Face</string>
            </property>
-           <widget class="QPushButton" name="b016">
+           <widget class="QToolButton_" name="tb006">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -1911,7 +1640,7 @@
              <rect>
               <x>0</x>
               <y>30</y>
-              <width>61</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -1932,43 +1661,6 @@
               <width>18</width>
               <height>18</height>
              </size>
-            </property>
-            <property name="balette" stdset="0">
-             <palette>
-              <active>
-               <colorrole role="Button">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>80</red>
-                  <green>80</green>
-                  <blue>80</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </active>
-              <inactive>
-               <colorrole role="Button">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>80</red>
-                  <green>80</green>
-                  <blue>80</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </inactive>
-              <disabled>
-               <colorrole role="Button">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>80</red>
-                  <green>80</green>
-                  <blue>80</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </disabled>
-             </palette>
             </property>
            </widget>
            <widget class="QPushButton" name="b032">
@@ -2175,7 +1867,7 @@
              </palette>
             </property>
            </widget>
-           <widget class="QPushButton" name="b029">
+           <widget class="QToolButton_" name="tb007">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -2183,7 +1875,7 @@
              <rect>
               <x>0</x>
               <y>10</y>
-              <width>66</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -2204,290 +1896,6 @@
               <width>18</width>
               <height>18</height>
              </size>
-            </property>
-            <property name="balette" stdset="0">
-             <palette>
-              <active>
-               <colorrole role="Highlight">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>168</red>
-                  <green>152</green>
-                  <blue>250</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </active>
-              <inactive>
-               <colorrole role="Highlight">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>168</red>
-                  <green>152</green>
-                  <blue>250</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </inactive>
-              <disabled>
-               <colorrole role="Highlight">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>0</red>
-                  <green>120</green>
-                  <blue>215</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </disabled>
-             </palette>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="chk008">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>65</x>
-              <y>10</y>
-              <width>16</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Divide facet: U</string>
-            </property>
-            <property name="text">
-             <string>U</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-            <property name="balette" stdset="0">
-             <palette>
-              <active>
-               <colorrole role="Highlight">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>168</red>
-                  <green>152</green>
-                  <blue>250</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </active>
-              <inactive>
-               <colorrole role="Highlight">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>168</red>
-                  <green>152</green>
-                  <blue>250</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </inactive>
-              <disabled>
-               <colorrole role="Highlight">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>0</red>
-                  <green>120</green>
-                  <blue>215</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </disabled>
-             </palette>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="chk009">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>80</x>
-              <y>10</y>
-              <width>16</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Divide facet: V</string>
-            </property>
-            <property name="text">
-             <string>V</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-            <property name="balette" stdset="0">
-             <palette>
-              <active>
-               <colorrole role="Highlight">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>168</red>
-                  <green>152</green>
-                  <blue>250</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </active>
-              <inactive>
-               <colorrole role="Highlight">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>168</red>
-                  <green>152</green>
-                  <blue>250</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </inactive>
-              <disabled>
-               <colorrole role="Highlight">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>0</red>
-                  <green>120</green>
-                  <blue>215</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </disabled>
-             </palette>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="chk010">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>95</x>
-              <y>10</y>
-              <width>16</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Divide facet: tris</string>
-            </property>
-            <property name="text">
-             <string>tri</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="balette" stdset="0">
-             <palette>
-              <active>
-               <colorrole role="Highlight">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>168</red>
-                  <green>152</green>
-                  <blue>250</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </active>
-              <inactive>
-               <colorrole role="Highlight">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>168</red>
-                  <green>152</green>
-                  <blue>250</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </inactive>
-              <disabled>
-               <colorrole role="Highlight">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>0</red>
-                  <green>120</green>
-                  <blue>215</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </disabled>
-             </palette>
-            </property>
-           </widget>
-           <widget class="QDoubleSpinBox" name="s001">
-            <property name="geometry">
-             <rect>
-              <x>60</x>
-              <y>30</y>
-              <width>51</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="baseSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Inset: offset amount</string>
-            </property>
-            <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::NoButtons</enum>
-            </property>
-            <property name="singleStep">
-             <double>0.250000000000000</double>
-            </property>
-            <property name="value">
-             <double>2.000000000000000</double>
             </property>
            </widget>
           </widget>
@@ -2528,6 +1936,11 @@
    <class>QProgressBar_</class>
    <extends>QProgressBar</extends>
    <header>widgets.qprogressbar_.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QToolButton_</class>
+   <extends>QToolButton</extends>
+   <header>widgets.qtoolbutton_.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -128,7 +128,6 @@ class __Switchboard(object):
 		class_ = self.getClassInstance(path)
 
 
-
 		signals = { #the default signal to be associated with each widget type.
 			'QProgressBar':'valueChanged',
 			'QPushButton':'released',
@@ -171,6 +170,12 @@ class __Switchboard(object):
 						'prefix':prefix,
 						'docString':docString}})
 
+		#add the widget as an attribute of the ui if it is not already.
+		ui = self.getUi(name)
+		if not hasattr(ui, objectName):
+			setattr(ui, objectName, widget)
+
+
 		# print(self._sbDict[name]['widgets'][widget])
 		return self._sbDict[name]['widgets'][widget] #return the stored widget.
 
@@ -208,10 +213,15 @@ class __Switchboard(object):
 		'''
 		if not name:
 			name = self.getUiName()
+
 		widgets = self.list_(widgets) #if 'widgets' isn't a list, convert it to one.
 		for widget in widgets:
 			w = self._sbDict[name]['widgets'].pop(widget, None)
 			self.gcProtect(w)
+
+			try: #remove the widget attribute from the ui if it exists.
+				delattr(ui, w.objectName())
+			except: pass
 
 
 	def setSignals(self, name):

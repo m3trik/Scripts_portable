@@ -80,33 +80,61 @@ class Polygons(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def b000(self):
+	def tb000(self, state=None):
 		'''
-		
+		Merge Vertices
 		'''
-		pass
+		tb = self.ui.tb000
+		if state=='setMenu':
+			tb.add('QDoubleSpinBox', setPrefix='Distance: ', setObjectName='s002', preset_='0.000-10 step.001', setValue=0.001, setToolTip='Merge Distance.')
+			return
+
+		tolerance = float(tb.s002.value())
+		selection = rt.selection
+
+		if selection:
+			for n, obj in enumerate(selection):
+				if not self.ui.progressBar.step(n, len(selection)): #register progress while checking for cancellation:
+					break
+
+				vertSelection = rt.getVertSelection(obj)
+				if rt.subObjectLevel==1 and vertSelection>1: #merge selected components.
+					obj.weldThreshold = tolerance
+					rt.polyop.weldVertsByThreshold(obj, vertSelection)
+
+				else: #if object mode. merge all vertices on the selected object.
+					rt.polyop.weldVertsByThreshold(obj, obj.verts)
+		else:
+			print "// Warning: No object selected. Must select an object or component"
+			return
 
 
-	def b001(self):
+	def tb001(self, state=None):
 		'''
-		Fill Holes
+		Bridge
 		'''
-		rt.macros.run('Modifiers', 'Cap_Holes')
+		tb = self.ui.tb001
+		if state=='setMenu':
+			tb.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s003', preset_='0-10000 step1', setValue=0.001, setToolTip='Divisions.')
+			return
+
+		divisions = tb.s003.value()
+
+		for obj in rt.selection:
+			obj.EditablePoly.Bridge() #perform bridge
+		rt.redrawViews() #redraw changes in viewport
 
 
-	def b002(self):
-		'''
-		Separate
-		'''
-		pass
-		# rt.detachElement(obj)
-
-
-	def b003(self):
+	def tb002(self, state=None):
 		'''
 		Combine
 		'''
-		if self.ui.chk000.isChecked():
+		tb = self.ui.tb002
+		if state=='setMenu':
+			tb.add('QCheckBox', setText='Merge', setObjectName='chk000', setChecked=True, setToolTip='Combine selected meshes and merge any coincident verts/edges.')
+			return
+
+		if tb.chk000.isChecked():
 			pass
 
 		sel = rt.selection
@@ -134,35 +162,33 @@ class Polygons(Init):
 		''')
 
 
-	def b004(self):
-		'''
-		Slice
-		'''
-		rt.macros.run('Ribbon - Modeling', 'CutsQuickSlice')
-		
-
-	def b005(self):
-		'''
-		Bridge
-		'''
-		for obj in rt.selection:
-			obj.EditablePoly.Bridge() #perform bridge
-		rt.redrawViews() #redraw changes in viewport
-
-
-	def b006(self):
+	def tb003(self, state=None):
 		'''
 		Extrude
 		'''
+		tb = self.ui.tb003
+		if state=='setMenu':
+			tb.add('QCheckBox', setText='Keep Faces Together', setObjectName='chk002', setChecked=True, setToolTip='Keep edges/faces together.')
+			return
+
+		keepFacesTogether = tb.chk002.isChecked() #keep faces/edges together.
+
 		rt.macros.run('Ribbon - Modeling', 'EPoly_Extrude')
 		# for obj in rt.selection:
 		# 	self.extrudeObject(obj)
 
 
-	def b007(self):
+	def tb004(self, state=None):
 		'''
 		Bevel (Chamfer)
 		'''
+		tb = self.ui.tb004
+		if state=='setMenu':
+			tb.add('QDoubleSpinBox', setPrefix='Width: ', setObjectName='s000', preset_='0.00-100 step.01', setValue=0.01, setToolTip='Bevel Width.')
+			return
+
+		width = float(tb.s000.value())
+
 		rt.macros.run('Ribbon - Modeling', 'EPoly_Chamfer')
 		# width = float(self.ui.s000.value())
 		# chamfer = True
@@ -172,6 +198,119 @@ class Polygons(Init):
 		# else: #bevel
 		# 	maxEval('modPanel.addModToSelection (Bevel ()) ui:on')
 
+
+	def tb005(self, state=None):
+		'''
+		Detach
+		'''
+		tb = self.ui.tb005
+		if state=='setMenu':
+			tb.add('QCheckBox', setText='Delete Original', setObjectName='chk007', setChecked=True, setToolTip='Delete original selected faces.')
+			return
+
+		#rt.macros.run('Ribbon - Modeling', 'GeometryDetach')
+		level = rt.subObjectLevel
+
+		
+		for obj in rt.selection:
+			if level==1: #vertices
+				vertices = rt.getVertSelection(obj)
+				for v in vertices:
+					obj.EditablePoly.breakVerts(v)
+
+			if level==2: #edges
+				pass #add function to detach edge. likely as spline.
+
+			if level==4: #faces
+				element=rt.polyop.getElementsUsingFace(obj, 1)
+				if rt.queryBox('Detach as Element?', title='Detach'): #detach as element
+					rt.polyop.detachFaces(obj, element, delete=False, asNode=False)
+				else: #detach as separate object
+					rt.polyop.detachFaces(obj, element, delete=True, asNode=True)
+	
+
+	def tb006(self, state=None):
+		'''
+		Inset Face Region
+		'''
+		tb = self.ui.tb006
+		if state=='setMenu':
+			tb.add('QDoubleSpinBox', setPrefix='Offset: ', setObjectName='s001', preset_='0.00-100 step.01', setValue=2.00, setToolTip='Offset amount.')
+			return
+
+		offset = float(tb.s001.value())
+		maxEval('''
+		Try 
+		(
+			If subObjectLevel == undefined then Max Modify Mode
+			local A = modPanel.getCurrentObject()
+			if keyboard.shiftpressed then A.popupDialog #Inset
+			else A.toggleCommandMode #InsetFace
+		)
+		Catch()
+		''')
+
+
+	def tb007(self, state=None):
+		'''
+		Divide Facet
+		'''
+		tb = self.ui.tb007
+		if state=='setMenu':
+			tb.add('QCheckBox', setText='U', setObjectName='chk008', setChecked=True, setToolTip='Divide facet: U coordinate.')
+			tb.add('QCheckBox', setText='V', setObjectName='chk009', setChecked=True, setToolTip='Divide facet: V coordinate.')
+			tb.add('QCheckBox', setText='Tris', setObjectName='chk010', setToolTip='Divide facet: Tris.')
+			return
+
+		dv=u=v=0
+		if tb.chk008.isChecked(): #Split U
+			u=2
+		if tb.chk009.isChecked(): #Split V
+			v=2
+
+		mode = 0 #The subdivision mode. 0=quads, 1=triangles
+		subdMethod = 1 #subdivision type: 0=exponential(traditional subdivision) 1=linear(number of faces per edge grows linearly)
+		if tb.chk010.isChecked(): #tris
+			mode=dv=1
+			subdMethod=0
+		if all([tb.chk008.isChecked(), tb.chk009.isChecked()]): #subdivide once into quads
+			dv=1
+			subdMethod=0
+			u=v=0
+		#perform operation
+		selectedFaces = rt.getFaceSelection()
+		for face in selectedFaces: #when performing polySubdivideFacet on multiple faces, adjacent subdivided faces will make the next face an n-gon and therefore not able to be subdivided. 
+			pm.polySubdivideFacet(face, divisions=0, divisionsU=2, divisionsV=2, mode=0, subdMethod=1)
+
+
+	def b000(self):
+		'''
+		
+		'''
+		pass
+
+
+	def b001(self):
+		'''
+		Fill Holes
+		'''
+		rt.macros.run('Modifiers', 'Cap_Holes')
+
+
+	def b002(self):
+		'''
+		Separate
+		'''
+		pass
+		# rt.detachElement(obj)
+
+
+	def b004(self):
+		'''
+		Slice
+		'''
+		rt.macros.run('Ribbon - Modeling', 'CutsQuickSlice')
+		
 
 	def b009(self):
 		'''
@@ -220,23 +359,6 @@ class Polygons(Init):
 		maxEval('$.EditablePoly.Remove ()')
 
 
-	def b016(self):
-		'''
-		Inset Face Region
-		'''
-		offset = float(self.ui.s001.value())
-		maxEval('''
-		Try 
-		(
-			If subObjectLevel == undefined then Max Modify Mode
-			local A = modPanel.getCurrentObject()
-			if keyboard.shiftpressed then A.popupDialog #Inset
-			else A.toggleCommandMode #InsetFace
-		)
-		Catch()
-		''')
-
-
 	def b021(self):
 		'''
 		Connect Border Edges
@@ -265,30 +387,6 @@ class Polygons(Init):
 		mel.eval("dR_quadDrawTool;")
 
 
-	def b029(self):
-		'''
-		Divide Facet
-		'''
-		dv=u=v=0
-		if self.ui.chk008.isChecked(): #Split U
-			u=2
-		if self.ui.chk009.isChecked(): #Split V
-			v=2
-
-		mode = 0 #The subdivision mode. 0=quads, 1=triangles
-		subdMethod = 1 #subdivision type: 0=exponential(traditional subdivision) 1=linear(number of faces per edge grows linearly)
-		if self.ui.chk010.isChecked(): #tris
-			mode=dv=1
-			subdMethod=0
-		if all([self.ui.chk008.isChecked(), self.ui.chk009.isChecked()]): #subdivide once into quads
-			dv=1
-			subdMethod=0
-			u=v=0
-		#perform operation
-		for face in selectedFaces: #when performing polySubdivideFacet on multiple faces, adjacent subdivided faces will make the next face an n-gon and therefore not able to be subdivided. 
-			pm.polySubdivideFacet (face, divisions=0, divisionsU=2, divisionsV=2, mode=0, subdMethod=1)
-
-
 	def b032(self):
 		'''
 		Poke
@@ -310,30 +408,6 @@ class Polygons(Init):
 		mel.eval("polyHole -assignHole 1;")
 
 
-	def b040(self):
-		'''
-		Merge Vertices
-		'''
-		tolerance = float(self.ui.s002.value())
-		selection = rt.selection
-
-		if selection:
-			for n, obj in enumerate(selection):
-				if not self.ui.progressBar.step(n, len(selection)): #register progress while checking for cancellation:
-					break
-
-				vertSelection = rt.getVertSelection(obj)
-				if rt.subObjectLevel==1 and vertSelection>1: #merge selected components.
-					obj.weldThreshold = tolerance
-					rt.polyop.weldVertsByThreshold(obj, vertSelection)
-
-				else: #if object mode. merge all vertices on the selected object.
-					rt.polyop.weldVertsByThreshold(obj, obj.verts)
-		else:
-			print "// Warning: No object selected. Must select an object or component"
-			return
-
-
 	def b043(self):
 		'''
 		Target Weld
@@ -341,31 +415,6 @@ class Polygons(Init):
 		self.setSubObjectLevel(1) #set component mode to vertex
 		rt.macros.run('Editable Polygon Object', 'EPoly_TargetWeld')
 		
-
-	def b044(self):
-		'''
-		Detach
-		'''
-		#rt.macros.run('Ribbon - Modeling', 'GeometryDetach')
-		level = rt.subObjectLevel
-
-		
-		for obj in rt.selection:
-			if level==1: #vertices
-				vertices = rt.getVertSelection(obj)
-				for v in vertices:
-					obj.EditablePoly.breakVerts(v)
-
-			if level==2: #edges
-				pass #add function to detach edge. likely as spline.
-
-			if level==4: #faces
-				element=rt.polyop.getElementsUsingFace(obj, 1)
-				if rt.queryBox('Detach as Element?', title='Detach'): #detach as element
-					rt.polyop.detachFaces(obj, element, delete=False, asNode=False)
-				else: #detach as separate object
-					rt.polyop.detachFaces(obj, element, delete=True, asNode=True)
-				
 
 	def b045(self):
 		'''

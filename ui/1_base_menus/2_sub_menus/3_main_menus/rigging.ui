@@ -54,78 +54,6 @@
      <property name="spacing">
       <number>0</number>
      </property>
-     <item row="1" column="1">
-      <widget class="QPushButton_Draggable" name="pin">
-       <property name="minimumSize">
-        <size>
-         <width>19</width>
-         <height>17</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>999</width>
-         <height>17</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QComboBox_" name="cmb">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>17</width>
-         <height>17</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>17</width>
-         <height>17</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1" colspan="2">
-      <widget class="QProgressBar_" name="progressBar">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>10</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>10</height>
-        </size>
-       </property>
-       <property name="value">
-        <number>0</number>
-       </property>
-       <property name="textVisible">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
      <item row="2" column="1" colspan="2">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
@@ -135,6 +63,12 @@
          </property>
          <item>
           <widget class="QGroupBox" name="groupBox_7">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>31</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
              <width>111</width>
@@ -149,7 +83,7 @@
              <rect>
               <x>0</x>
               <y>12</y>
-              <width>113</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -181,6 +115,12 @@
          </item>
          <item>
           <widget class="QGroupBox" name="groupBox_3">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>49</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
              <width>111</width>
@@ -222,12 +162,12 @@
              <string>Reroot</string>
             </property>
            </widget>
-           <widget class="QPushButton" name="b003">
+           <widget class="QToolButton_" name="tb001">
             <property name="geometry">
              <rect>
               <x>56</x>
               <y>12</y>
-              <width>41</width>
+              <width>53</width>
               <height>19</height>
              </rect>
             </property>
@@ -254,29 +194,16 @@
              <string>Connect</string>
             </property>
            </widget>
-           <widget class="QPushButton" name="chk003">
-            <property name="geometry">
-             <rect>
-              <x>96</x>
-              <y>12</y>
-              <width>14</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="toolTip">
-             <string>Orient Joints: align with the worlds transform.</string>
-            </property>
-            <property name="text">
-             <string>w</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-           </widget>
           </widget>
          </item>
          <item>
           <widget class="QGroupBox" name="groupBox_5">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>31</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
              <width>111</width>
@@ -290,6 +217,12 @@
          </item>
          <item>
           <widget class="QGroupBox" name="groupBox_8">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>67</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
              <width>111</width>
@@ -379,6 +312,19 @@
            </widget>
           </widget>
          </item>
+         <item>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
         </layout>
        </item>
        <item>
@@ -397,7 +343,7 @@
            <property name="title">
             <string>Display</string>
            </property>
-           <widget class="QPushButton" name="b000">
+           <widget class="QToolButton_" name="tb000">
             <property name="geometry">
              <rect>
               <x>0</x>
@@ -422,119 +368,96 @@
              <bool>true</bool>
             </property>
            </widget>
-           <widget class="QPushButton" name="chk002">
-            <property name="geometry">
-             <rect>
-              <x>26</x>
-              <y>30</y>
-              <width>16</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="toolTip">
-             <string>Global Display Scale:  IK/FK</string>
-            </property>
-            <property name="text">
-             <string>FK</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="chk001">
-            <property name="geometry">
-             <rect>
-              <x>12</x>
-              <y>30</y>
-              <width>16</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="toolTip">
-             <string>Global Display Scale:  IK</string>
-            </property>
-            <property name="text">
-             <string>IK</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="chk000">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>30</y>
-              <width>16</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="toolTip">
-             <string/>
-            </property>
-            <property name="text">
-             <string>J</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-           <widget class="QDoubleSpinBox" name="s000">
-            <property name="geometry">
-             <rect>
-              <x>40</x>
-              <y>30</y>
-              <width>69</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="baseSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Global Display Scale</string>
-            </property>
-            <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::NoButtons</enum>
-            </property>
-            <property name="prefix">
-             <string>Scale: </string>
-            </property>
-            <property name="decimals">
-             <number>2</number>
-            </property>
-            <property name="minimum">
-             <double>0.100000000000000</double>
-            </property>
-            <property name="singleStep">
-             <double>0.050000000000000</double>
-            </property>
-            <property name="value">
-             <double>1.000000000000000</double>
-            </property>
-           </widget>
-           <zorder>chk000</zorder>
-           <zorder>b000</zorder>
-           <zorder>s000</zorder>
-           <zorder>chk002</zorder>
-           <zorder>chk001</zorder>
           </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
          </item>
         </layout>
        </item>
       </layout>
+     </item>
+     <item row="0" column="1" colspan="2">
+      <widget class="QProgressBar_" name="progressBar">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>10</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>10</height>
+        </size>
+       </property>
+       <property name="value">
+        <number>0</number>
+       </property>
+       <property name="textVisible">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton_Draggable" name="pin">
+       <property name="minimumSize">
+        <size>
+         <width>19</width>
+         <height>17</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>999</width>
+         <height>17</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QComboBox_" name="cmb">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>17</width>
+         <height>17</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>17</width>
+         <height>17</height>
+        </size>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -555,6 +478,11 @@
    <class>QProgressBar_</class>
    <extends>QProgressBar</extends>
    <header>widgets.qprogressbar_.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QToolButton_</class>
+   <extends>QToolButton</extends>
+   <header>widgets.qtoolbutton_.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

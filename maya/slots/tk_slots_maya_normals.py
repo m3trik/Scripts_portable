@@ -30,11 +30,16 @@ class Normals(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def b000(self):
+	def tb000(self, state=None):
 		'''
 		Display Face Normals
 		'''
-		size = float(self.tk.ui.s001.value())
+		tb = self.ui.tb000
+		if state=='setMenu':
+			tb.add('QSpinBox', setPrefix='Display Size: ', setObjectName='s001', preset_='1-100 step1', setValue=1, setToolTip='Normal display size.')
+			return
+
+		size = float(tb.s001.value())
 		# state = pm.polyOptions (query=True, displayNormal=True)
 		state = self.cycle([1,2,3,0], 'displayNormals')
 		if state ==0: #off
@@ -53,6 +58,94 @@ class Normals(Init):
 			pm.polyOptions (displayTangent=True)
 			pm.polyOptions (displayNormal=0)
 			self.viewPortMessage("<hl>Tangent</hl> Display <hl>On</hl>.")
+
+
+	def tb001(self, state=None):
+		'''
+		Harden Creased Edges
+		'''
+		tb = self.ui.tb001
+		if state=='setMenu':
+			tb.add('QCheckBox', setText='Soften non-creased', setObjectName='chk000', setToolTip='Soften all non-creased edges.')
+			return
+
+		mel.eval("PolySelectConvert 2")
+		edges = pm.polyListComponentConversion (toEdge=1)
+		edges = pm.ls (edges, flatten=1)
+
+		pm.undoInfo (openChunk=1)
+		self.mainProgressBar (len(edges))
+
+		soften = tb.chk000.isChecked()
+
+		for edge in edges:
+			pm.progressBar ("tk_progressBar", edit=1, step=1)
+			if pm.progressBar ("tk_progressBar", query=1, isCancelled=1):
+				break
+			crease = pm.polyCrease (edge, query=1, value=1)
+			# print edge, crease[0]
+			if crease[0]>0:
+				pm.polySoftEdge (edge, angle=30)
+			elif soften:
+				pm.polySoftEdge (edge, angle=180)
+		pm.progressBar ("tk_progressBar", edit=1, endProgress=1)
+		pm.undoInfo (closeChunk=1)
+
+
+	def tb002(self, state=None):
+		'''
+		Set Normal Angle
+		'''
+		tb = self.ui.tb002
+		if state=='setMenu':
+			tb.add('QSpinBox', setPrefix='Angle: ', setObjectName='s000', preset_='1-180 step1', setValue=30, setToolTip='Angle degree.')
+			return
+
+		normalAngle = str(sb.s000.value())
+		pm.polySetToFaceNormal (setUserNormal=1) #reset to face
+		pm.polySoftEdge (angle=normalAngle) #smooth if angle is lower than specified amount. default 30
+
+
+	def tb003(self, state=None):
+		'''
+		Lock/Unlock Vertex Normals
+		'''
+		tb = self.ui.tb003
+		if state=='setMenu':
+			tb.add('QCheckBox', setText='All', setObjectName='chk001', setChecked=True, setToolTip='Lock/Unlock: all.')
+			return
+
+		all_ = tb.chk001.isChecked()
+		state = self.tk.ui.chk002.isChecked()#pm.polyNormalPerVertex(vertex, query=1, freezeNormal=1)
+		selection = pm.ls (selection=1, objectsOnly=1)
+		maskObject = pm.selectMode (query=1, object=1)
+		maskVertex = pm.selectType (query=1, vertex=1)
+
+		if len(selection)>0:
+			if (all_ and maskVertex) or maskObject:
+				for obj in selection:
+					count = pm.polyEvaluate(obj, vertex=1) #get number of vertices
+					vertices = [vertices.append(str(obj) + ".vtx ["+str(num)+"]") for num in xrange(count)] #geometry.vtx[0]
+					for vertex in vertices:
+						if state:
+							pm.polyNormalPerVertex(vertex, unFreezeNormal=1)
+						else:
+							pm.polyNormalPerVertex(vertex, freezeNormal=1)
+					if state:
+						self.viewPortMessage("Normals <hl>UnLocked</hl>.")
+					else:
+						self.viewPortMessage("Normals <hl>Locked</hl>.")
+			elif maskVertex and not maskObject:
+				if state:
+					pm.polyNormalPerVertex(unFreezeNormal=1)
+					self.viewPortMessage("Normals <hl>UnLocked</hl>.")
+				else:
+					pm.polyNormalPerVertex(freezeNormal=1)
+					self.viewPortMessage("Normals <hl>Locked</hl>.")
+			else:
+				print "// Warning: Selection must be object or vertex. //"
+		else:
+			print "// Warning: No object selected. //"
 
 
 	def b001(self):
@@ -76,15 +169,6 @@ class Normals(Init):
 		mel.eval('int $g_cond[1]=`polyOptions -q -ae`; if ($g_cond[0]) polyOptions -se; else polyOptions -ae;')
 
 
-	def b004(self):
-		'''
-		Set Normal Angle
-		'''
-		normalAngle = str(self.tk.ui.s000.value())
-		pm.polySetToFaceNormal (setUserNormal=1) #reset to face
-		pm.polySoftEdge (angle=normalAngle) #smooth if angle is lower than specified amount. default 30
-
-
 	def b005(self):
 		'''
 		Maya Bonus Tools: Adjust Vertex Normals
@@ -104,33 +188,6 @@ class Normals(Init):
 		Average Normals
 		'''
 		mel.eval('polySetToFaceNormal;polyAverageNormal;')
-
-
-	def b008(self):
-		'''
-		Harden Creased Edges
-		'''
-		mel.eval("PolySelectConvert 2")
-		edges = pm.polyListComponentConversion (toEdge=1)
-		edges = pm.ls (edges, flatten=1)
-
-		pm.undoInfo (openChunk=1)
-		self.mainProgressBar (len(edges))
-
-		soften = self.tk.ui.chk000.isChecked()
-
-		for edge in edges:
-			pm.progressBar ("tk_progressBar", edit=1, step=1)
-			if pm.progressBar ("tk_progressBar", query=1, isCancelled=1):
-				break
-			crease = pm.polyCrease (edge, query=1, value=1)
-			# print edge, crease[0]
-			if crease[0]>0:
-				pm.polySoftEdge (edge, angle=30)
-			elif soften:
-				pm.polySoftEdge (edge, angle=180)
-		pm.progressBar ("tk_progressBar", edit=1, endProgress=1)
-		pm.undoInfo (closeChunk=1)
 
 
 	def b009(self):
@@ -182,48 +239,7 @@ class Normals(Init):
 		mel.eval('ReversePolygonNormals;')
 
 
-	def b011(self):
-		'''
-		Lock/Unlock Vertex Normals
-		'''
-		all_ = self.tk.ui.chk001.isChecked()
-		state = self.tk.ui.chk002.isChecked()#pm.polyNormalPerVertex(vertex, query=1, freezeNormal=1)
-		selection = pm.ls (selection=1, objectsOnly=1)
-		maskObject = pm.selectMode (query=1, object=1)
-		maskVertex = pm.selectType (query=1, vertex=1)
 
-		if len(selection)>0:
-			if (all_ and maskVertex) or maskObject:
-				for obj in selection:
-					count = pm.polyEvaluate(obj, vertex=1) #get number of vertices
-					vertices = [vertices.append(str(obj) + ".vtx ["+str(num)+"]") for num in xrange(count)] #geometry.vtx[0]
-					for vertex in vertices:
-						if state:
-							pm.polyNormalPerVertex(vertex, unFreezeNormal=1)
-						else:
-							pm.polyNormalPerVertex(vertex, freezeNormal=1)
-					if state:
-						self.viewPortMessage("Normals <hl>UnLocked</hl>.")
-					else:
-						self.viewPortMessage("Normals <hl>Locked</hl>.")
-			elif maskVertex and not maskObject:
-				if state:
-					pm.polyNormalPerVertex(unFreezeNormal=1)
-					self.viewPortMessage("Normals <hl>UnLocked</hl>.")
-				else:
-					pm.polyNormalPerVertex(freezeNormal=1)
-					self.viewPortMessage("Normals <hl>Locked</hl>.")
-			else:
-				print "// Warning: Selection must be object or vertex. //"
-		else:
-			print "// Warning: No object selected. //"
-
-
-	def b012(self):
-		'''
-		
-		'''
-		pass
 		
 
 

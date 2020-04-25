@@ -51,6 +51,14 @@ class QToolButton_(QtWidgets.QToolButton):
 		ex.call:
 		tb.add('QCheckBox', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
 		'''
+		try:
+			w = getattr(QtWidgets, w)() #ex. QtWidgets.QAction(self) object from string.
+		except:
+			if callable(w):
+				w = widget() #ex. QtWidgets.QAction(self) object.
+
+		w.setMinimumHeight(self.minimumSizeHint().height()+1) #set child widget height to that of the toolbutton
+
 		w = self.menu().add(w, **kwargs)
 		setattr(self, w.objectName(), w)
 		return w
@@ -106,9 +114,14 @@ class QToolButton_(QtWidgets.QToolButton):
 			self.parentUiName = self.sb.getUiName()
 			self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
 			self.classMethod = self.sb.getMethod(self.parentUiName, self)
-			self.classMethod('setMenu')
+			if callable(self.classMethod):
+				self.classMethod('setMenu')
 
 		return QtWidgets.QToolButton.showEvent(self, event)
+
+
+
+
 
 
 
