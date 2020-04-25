@@ -81,7 +81,7 @@ class Symmetry(Init):
 		if any ([self.ui.chk000.isChecked(), self.ui.chk001.isChecked(), self.ui.chk002.isChecked()]): #(symmetry)
 			pm.symmetricModelling(edit=True, symmetry=False)
 			self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk000,chk001,chk002')
-			print "# Note: First select a seam edge and then check the symmetry button to enable topographic symmetry #"
+			print("# Note: First select a seam edge and then check the symmetry button to enable topographic symmetry #")
 
 
 	def cmb000(self, index=None):
@@ -99,49 +99,6 @@ class Symmetry(Init):
 			if index==contents.index(''):
 				mel.eval('')
 			cmb.setCurrentIndex(0)
-
-
-	def b001(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b002(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b003(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b004(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b005(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b006(self):
-		'''
-		
-		'''
-		pass
-
 
 
 

@@ -141,7 +141,7 @@ class Create(Init):
 		try:
 			self.point = pm.xform (selection, query=1, translation=1, worldSpace=1, absolute=1)
 		except:
-			print "# Warning: Nothing selected. Point set to origin [0,0,0]. #"
+			print("# Warning: Nothing selected. Point set to origin [0,0,0]. #")
 			self.point = [0,0,0]
 
 		self.ui.t000.setText(str(self.point[0]))

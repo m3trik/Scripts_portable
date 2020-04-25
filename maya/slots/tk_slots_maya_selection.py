@@ -354,7 +354,7 @@ class Selection(Init):
 		step = tb.s003.value()
 
 		if tb.chk000.isChecked(): #Select Ring
-			print "# Warning: add correct arguments for this tool #" 
+			print("# Warning: add correct arguments for this tool. #") 
 			self.shortestEdgePath()
 
 		if tb.chk001.isChecked(): #Select contigious
@@ -424,74 +424,8 @@ class Selection(Init):
 						pm.select(island, add=1)
 						break
 		else:
-			print '# Warning: No faces selected. #'
+			print('# Warning: No faces selected. #')
 		pm.undoInfo(closeChunk=1)
-
-
-	def b001(self):
-		'''
-		'''
-
-
-	def b002(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b003(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b004(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b005(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b009(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b10(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b011(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b012(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b013(self):
-		'''
-		'''
 
 
 	def b014(self):
@@ -534,13 +468,6 @@ class Selection(Init):
 		Convert Selection To Edge Ring
 		'''
 		mel.eval('SelectEdgeRingSp;')
-
-
-	def b020(self):
-		'''
-
-		'''
-		pass
 
 
 

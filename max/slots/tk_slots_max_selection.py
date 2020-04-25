@@ -1,3 +1,4 @@
+from __future__ import print_function
 from tk_slots_max_init import *
 
 
@@ -373,68 +374,7 @@ class Selection(Init):
 			else:
 				rt.selectionSets[name] #if set exists, overwrite set; else create set
 		else:
-			print '# Warning: No valid objects selected. #'
-
-
-	def b001(self):
-		'''
-		'''
-
-
-	def b002(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b003(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b004(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b005(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b009(self):
-		'''
-
-		'''
-		pass
-
-
-	def b10(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b011(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b012(self):
-		'''
-		
-		'''
-		pass
+			print('# Warning: No valid objects selected. #')
 
 
 	def b013(self):
@@ -464,41 +404,6 @@ class Selection(Init):
 			obj.EditablePoly.ShrinkSelection()
 
 
-	def b016(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b017(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b018(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b019(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b020(self):
-		'''
-
-		'''
-		pass
-
-
 
 
 
@@ -508,7 +413,7 @@ class Selection(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

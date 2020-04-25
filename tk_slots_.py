@@ -1,9 +1,7 @@
+from __future__ import print_function
 import os.path
 
 import tk_switchboard
-
-
-
 
 
 
@@ -37,7 +35,7 @@ class Slot(object):
 				objects.append(getattr(class_, name)) #equivilent to:(self.ui.m000)
 			except: 
 				if showError_:
-					print "# Error: getObject()"+str(class_)+" has no attribute "+str(name)+" #"
+					print("# Error: getObject()"+str(class_)+" has no attribute "+str(name)+" #")
 				else: pass
 		return objects
 
@@ -225,7 +223,7 @@ class Slot(object):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print (os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

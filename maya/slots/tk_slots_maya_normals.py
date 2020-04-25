@@ -143,9 +143,9 @@ class Normals(Init):
 					pm.polyNormalPerVertex(freezeNormal=1)
 					self.viewPortMessage("Normals <hl>Locked</hl>.")
 			else:
-				print "// Warning: Selection must be object or vertex. //"
+				print("# Warning: Selection must be object or vertex. #")
 		else:
-			print "// Warning: No object selected. //"
+			print("# Warning: No object selected. #")
 
 
 	def b001(self):

@@ -1,3 +1,4 @@
+from __future__ import print_function
 from tk_slots_max_init import *
 
 
@@ -40,7 +41,7 @@ class Display(Init):
 			mel.eval("smoothingDisplayToggle "+str(state))
 		except:
 			traceback.print_exc()
-			print "// Warning: Nothing Selected\n"
+			print("# Warning: Nothing Selected. #")
 
 
 	def b001(self):
@@ -296,7 +297,7 @@ class Display(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

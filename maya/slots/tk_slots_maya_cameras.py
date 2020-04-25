@@ -247,65 +247,6 @@ class Cameras(Init):
 		}
 		''')
 
-	def v008(self):
-		'''
-		
-
-		'''
-		pass
-
-	def v009(self):
-		'''
-		
-
-		'''
-		pass
-
-	def v010(self):
-		'''
-		Camera: Dolly
-
-		'''
-		pass
-
-	def v011(self):
-		'''
-		Camera: Roll
-
-		'''
-		pass
-
-	def v012(self):
-		'''
-		Camera: Truck
-
-		'''
-		pass
-
-	def v013(self):
-		'''
-		Camera: Orbit
-
-		'''
-		pass
-
-	def v014(self):
-		'''
-		
-
-		'''
-		pass
-
-	def v015(self):
-		'''
-		
-
-		'''
-		pass
-
-
-	# ------------------------------------
-
 
 
 

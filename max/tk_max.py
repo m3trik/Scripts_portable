@@ -8,9 +8,6 @@ except ImportError as error:
 
 
 
-
-
-
 class Tk_max(Tk):
 	'''
 	Tk class overridden for use with Autodesk 3ds max.

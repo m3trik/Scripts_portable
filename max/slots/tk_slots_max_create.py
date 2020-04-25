@@ -1,3 +1,4 @@
+from __future__ import print_function
 from tk_slots_max_init import *
 
 
@@ -151,7 +152,7 @@ class Create(Init):
 			else:
 				self.point = obj.position
 		else:
-			print "# Warning: Nothing selected. Point set to origin [0,0,0]. #"
+			print("# Warning: Nothing selected. Point set to origin [0,0,0]. #")
 			self.point = [0,0,0]
 
 		self.ui.t000.setText(str(self.point[0]))
@@ -369,7 +370,7 @@ class Create(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

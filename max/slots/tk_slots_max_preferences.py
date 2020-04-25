@@ -1,3 +1,4 @@
+from __future__ import print_function
 from tk_slots_max_init import *
 
 
@@ -115,7 +116,7 @@ class Preferences(Init):
 		'''
 		Init Tk_Main
 		'''
-		print "init: tk_main"
+		print("reload: tk_main module")
 		reload(tk_main)
 
 
@@ -124,48 +125,6 @@ class Preferences(Init):
 		Color Settings
 		'''
 		maxEval('colorPrefWnd;')
-
-	
-	def b002(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b003(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b004(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b005(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b006(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b007(self):
-		'''
-		
-		'''
-		pass
 
 
 	def b008(self):
@@ -194,7 +153,7 @@ class Preferences(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

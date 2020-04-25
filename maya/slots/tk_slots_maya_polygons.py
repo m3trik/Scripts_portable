@@ -107,7 +107,7 @@ class Polygons(Init):
 				for obj in selection:
 					pm.select(obj, add=1)
 		else:
-			print "// Warning: No object selected. Must select an object or component"
+			print("# Warning: No object selected. Must select an object or component. #")
 			return
 
 
@@ -205,15 +205,15 @@ class Polygons(Init):
 				selObj = pm.ls (objectsOnly=1, noIntermediate=1, sl=1) #to errorcheck if more than 1 obj selected
 
 				if len(selFace) < 1:
-					print "// Warning: Nothing selected. //"
+					print("# Warning: Nothing selected. #")
 					return
 				if len(selObj) > 1:
-					print "// Warning: Only components from a single object can be extracted. //"
+					print("# Warning: Only components from a single object can be extracted. #")
 					return
 				else:
 					pm.undoInfo (openChunk=1)
 					sel = str(selFace[0]).split(".") #creates ex. ['polyShape', 'f[553]']
-					print sel
+					print(sel)
 					extractedObject = "extracted_"+sel[0]
 					pm.duplicate (sel[0], name=extractedObject)
 					if tb.chk007.isChecked(): #delete original
@@ -285,7 +285,7 @@ class Polygons(Init):
 			for face in selectedFaces: #when performing polySubdivideFacet on multiple faces, adjacent subdivided faces will make the next face an n-gon and therefore not able to be subdivided. 
 				pm.polySubdivideFacet(face, divisions=0, divisionsU=2, divisionsV=2, mode=0, subdMethod=1)
 		else:
-			print '# Warning: No faces selected. #'
+			print('# Warning: No faces selected. #')
 
 
 	def b000(self):

@@ -68,7 +68,7 @@ class File(Init):
 			if str(mel.eval("file -query -sceneName -shortName;")):
 				force=False #if sceneName, prompt user to save; else force open
 			pm.openFile(path+contents[index], open=1, force=force)
-			print path+contents[index]
+			print(path+contents[index])
 			cmb.setCurrentIndex(0)
 
 
@@ -229,15 +229,15 @@ class File(Init):
 								except:
 									pass
 				except OSError:
-					print "# Warning: could not delete "+currentPath+oldName+" #"
+					print("# Warning: could not delete ", currentPath+oldName, " #")
 					pass
 			else:
 				newName = currentName+".001"
 			pm.saveAs (currentPath+newName, force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
-			print "// Result: ", currentPath+newName
+			print("# Result: ", currentPath+newName, " #")
 		else:	#save without renaming
 			pm.saveFile (force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
-			print "// Result: ", currentPath+currentName
+			print("# Result: ", currentPath+currentName, " #")
 
 		if tb.chk002.isChecked(): #quit maya
 			import time

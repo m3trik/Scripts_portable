@@ -1,3 +1,4 @@
+from __future__ import print_function
 from tk_slots_max_init import *
 
 
@@ -100,7 +101,7 @@ class Symmetry(Init):
 		if any ([self.ui.chk000.isChecked(), self.ui.chk001.isChecked(), self.ui.chk002.isChecked()]): #(symmetry)
 			pm.symmetricModelling(edit=True, symmetry=False)
 			self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk000-2')
-			print "# Warning: First select a seam edge and then check the symmetry button to enable topographic symmetry #"
+			print("# Warning: First select a seam edge and then check the symmetry button to enable topographic symmetry #")
 
 
 	def cmb000(self, index=None):
@@ -120,48 +121,6 @@ class Symmetry(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def b001(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b002(self):
-		'''
-
-		'''
-		pass
-
-
-	def b003(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b004(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b005(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b006(self):
-		'''
-		
-		'''
-		pass
-
-
 
 
 
@@ -169,7 +128,7 @@ class Symmetry(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

@@ -220,7 +220,7 @@ class Edit(Init):
 		for set_ in sets:
 			name = str(set_)
 			setArray.append(name)
-		print setArray
+		print(setArray)
 
 		pm.undoInfo (openChunk=1)
 		for set_ in setArray:
@@ -236,71 +236,6 @@ class Edit(Init):
 		self.toggleWidgets(self.ui, self.submenu, setDisabled='b052', setChecked_False='b042')#,self.ui.b043])
 		self.ui.b042.setText("Crease Set")
 		# self.ui.b043.setText("Object")
-
-
-	def b012(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b013(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b014(self):
-		'''
-		
-
-		'''
-		pass
-
-
-	def b015(self):
-		'''
-		
-
-		'''
-		pass
-
-
-	def b016(self):
-		'''
-
-		'''
-		pass
-
-
-	def b017(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b018(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b019(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b020(self):
-		'''
-		
-		'''
-		pass
 
 
 	def b021(self):
@@ -324,39 +259,12 @@ class Edit(Init):
 		mel.eval('TransferAttributeValues;')
 
 
-	def b024(self):
-		'''
-
-		'''
-		pass
-
-
-	def b025(self):
-		'''
-
-		'''
-		pass
-
-
-	def b026(self):
-		'''
-		
-		'''
-		pass
-
-
 	def b027(self):
 		'''
 		Shading Sets
 		'''
 		mel.eval('performTransferShadingSets 0;')
 
-
-	def b028(self):
-		'''
-
-		'''
-		pass
 
 
 

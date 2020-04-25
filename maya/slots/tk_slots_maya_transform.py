@@ -280,7 +280,7 @@ class Transform(Init):
 					if any ([axis == y and tangent == tz, axis == z and tangent == ty]): #"x"
 						self.toggleWidgets(self.ui, self.submenu, setChecked='b029', setChecked_False='b030,b031')
 			else:
-				print "// Warning: An edge must be selected. //"
+				print("# Warning: An edge must be selected. #")
 				return
 
 		#align
@@ -369,54 +369,6 @@ class Transform(Init):
 		source.center = target.center
 
 
-	def b006(self):
-		'''
-		
-
-		'''
-		pass
-
-
-	def b007(self):
-		'''
-		
-
-		'''
-		pass
-
-
-	def b008(self):
-		'''
-		
-
-		'''
-		pass
-
-
-	def b009(self):
-		'''
-		
-
-		'''
-		pass
-
-
-	def b010(self):
-		'''
-		
-
-		'''
-		pass
-
-
-	def b011(self):
-		'''
-		
-
-		'''
-		pass
-
-
 	def b012(self):
 		'''
 		Toggle: Make Live
@@ -426,7 +378,7 @@ class Transform(Init):
 
 		obj = pm.ls(sl=1)[0]
 		if not obj:
-			print '# Error: Nothing Selected. #'
+			print("# Error: Nothing Selected. #")
 			return
 
 		if state:
@@ -516,46 +468,6 @@ class Transform(Init):
 
 		'''
 		mel.eval("bt_snapAlignObjectToComponentOptions;")
-
-
-	def b027(self):
-		'''
-		
-
-		'''
-		mel.eval("")
-
-
-	def b028(self):
-		'''
-		
-
-		'''
-		mel.eval("")
-
-
-	def b029(self):
-		'''
-		
-
-		'''
-		mel.eval("")
-
-
-	def b030(self):
-		'''
-		
-
-		'''
-		mel.eval("")
-
-
-	def b031(self):
-		'''
-		
-
-		'''
-		mel.eval("")
 
 
 	def b032(self):

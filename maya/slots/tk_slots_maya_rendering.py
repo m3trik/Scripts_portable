@@ -111,31 +111,13 @@ class Rendering(Init):
 			try:
 				pm.unloadPlugin(vray)
 			except:
-				print "# Result: Force unloadPlugin:"+str(vray)+" #"
+				print("# Result: Force unloadPlugin:", str(vray), " #")
 				pm.unloadPlugin(vray, force=1)
 		else:
 			pm.loadPlugin (vray)
 
 
-	def b007(self):
-		'''
-		
-		'''
-		pass
 
-
-	def b008(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b009(self):
-		'''
-		
-		'''
-		pass
 
 
 

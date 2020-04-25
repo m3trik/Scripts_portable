@@ -67,7 +67,7 @@ class Duplicate(Init):
 					bb = pm.xform (selection, query=1, boundingBox=1, worldSpace=1)
 					pivot = bb[0]+bb[3]/2, bb[1]+bb[4]/2, bb[2]+bb[5]/2 #get median of bounding box coordinates. from [min xyz, max xyz]
 			else:
-				print "# Warning: Nothing selected. #"
+				print("# Warning: Nothing selected. #")
 				self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk010')
 				return
 			# radialPivot.extend ([pivot[0],pivot[1],pivot[2]])
@@ -148,7 +148,7 @@ class Duplicate(Init):
 							if len(radialPivot):
 								pm.rotate (x, y, z, relative=1, pivot=radialPivot) #euler=1
 							else:
-								print "# Warning: No pivot point set. #"
+								print("# Warning: No pivot point set. #")
 						else:
 							pm.rotate (x, y, z, relative=1) #euler=1
 						radialArrayObjList.append(name)
@@ -161,7 +161,7 @@ class Duplicate(Init):
 					pm.select (objectName)
 					pm.undoInfo (closeChunk=1)
 			else: #if both lists objects are empty:
-				print "# Warning: Nothing selected. #"
+				print("# Warning: Nothing selected. #")
 				self.toggleWidgets(self.ui, self.submenu, setDisabled='b003', setChecked_False='chk015')
 				return
 		else: #if chk015 is unchecked by user or by create button
@@ -169,7 +169,7 @@ class Duplicate(Init):
 				originalObj = radialArrayObjList[0][:radialArrayObjList[0].rfind("_")] #remove the trailing _ins# or _dup#. ie. pCube1 from pCube1_inst1
 				radialArrayObjList.append(originalObj)
 				pm.polyUnite (radialArrayObjList, name=originalObj+"_array") #combine objects. using the original name results in a duplicate object error on deletion
-				print "# Result: "+str(radialArrayObjList)+" #"
+				print("# Result: "+str(radialArrayObjList)+" #")
 				pm.delete (radialArrayObjList); del radialArrayObjList[:] #delete all geometry and clear the list
 				return
 			try:
@@ -200,7 +200,7 @@ class Duplicate(Init):
 			componentList = [self.ui.cmb000.itemText(i) for i in range(self.ui.cmb000.count())]
 			
 			try: pm.delete(duplicateObjList[1:]) #delete all the geometry in the list, except the original obj
-			except e as error: print e
+			except e as error: print(e)
 			del duplicateObjList[1:] #clear the list, leaving the original obj
 			selection = pm.ls(selection=1, flatten=1, objectsOnly=1) #there will only be a selection when first called. After, the last selected item will have been deleted with the other duplicated objects, leaving only the original un-selected.
 
@@ -263,7 +263,7 @@ class Duplicate(Init):
 				# originalObj = duplicateObjList[0][:duplicateObjList[0].rfind("_")] #remove the trailing _ins# or _dup#. ie. pCube1 from pCube1_inst1
 				# duplicateObjList.append(originalObj)
 				# pm.polyUnite (duplicateObjList, name=originalObj+"_array") #combine objects. using the original name results in a duplicate object error on deletion
-				# print "# Result: "+str(duplicateObjList)+" #"
+				# print("# Result: "+str(duplicateObjList)+" #")
 				# pm.delete(duplicateObjList) #delete all duplicated geometry
 				del duplicateObjList[:] #clear the list
 				return

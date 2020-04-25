@@ -1,3 +1,4 @@
+from __future__ import print_function
 from PySide2 import QtGui, QtWidgets
 
 import os
@@ -13,7 +14,7 @@ try:
 	import shiboken2
 
 except ImportError as error:
-	print error
+	print(error)
 
 
 
@@ -600,7 +601,7 @@ class Init(Slot):
 			for obj in selection:
 				pm.setAttr (obj+attribute, value)
 		else:
-			print "// Warning: No polygon object selected.", attribute, value, "not applied."
+			print("# Warning: No polygon object selected.", attribute, value, "not applied. #")
 
 
 
@@ -734,7 +735,7 @@ class Init(Slot):
 										horizontalScrollBarThickness=16))
 		pm.columnLayout(adjustableColumn=True)
 		text_field = str(pm.text(label=text, align='left'))
-		print text_field
+		print(text_field)
 		pm.setParent('..')
 		pm.showWindow(window)
 		return
@@ -783,7 +784,7 @@ class Init(Slot):
 		text_field = str(pm.scrollField(text=(text),
 		                                width=scroll_width,
 		                                height=scroll_height,))
-		print window
+		print(window)
 		pm.setParent('..')
 		pm.showWindow(window)
 		return

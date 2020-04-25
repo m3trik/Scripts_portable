@@ -1,3 +1,4 @@
+from __future__ import print_function
 from tk_slots_max_init import *
 
 
@@ -279,7 +280,7 @@ class Transform(Init):
 					if any ([axis == y and tangent == tz, axis == z and tangent == ty]): #"x"
 						self.toggleWidgets(self.ui, self.submenu, setChecked='b029', setChecked_False='b030,b031')
 			else:
-				print "// Warning: An edge must be selected. //"
+				print("# Warning: An edge must be selected. #")
 				return
 
 		#align
@@ -412,7 +413,7 @@ class Transform(Init):
 		'''
 		objects = pm.ls (sl=1)[0] #construction planes, nurbs surfaces and polygon meshes can be made live. makeLive supports one live object at a time.
 		pm.makeLive(obj)
-		print str(obj)+'is live.' 
+		print(str(obj)+'is live.')
 
 
 	def b014(self):
@@ -486,41 +487,6 @@ class Transform(Init):
 		mel.eval("bt_snapAlignObjectToComponentOptions;")
 
 
-	def b027(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b028(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b029(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b030(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b031(self):
-		'''
-		
-		'''
-		pass
-
-
 	def b032(self):
 		'''
 		Reset Pivot Transforms
@@ -541,7 +507,7 @@ class Transform(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

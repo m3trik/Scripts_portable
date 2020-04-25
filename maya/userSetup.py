@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os, sys
 import pymel.core as pm
 import maya.mel as mel
@@ -15,8 +16,8 @@ dir_ = dir_.rstrip('/maya')
 
 #if path not found, print error and current paths set in maya.env
 if not dir_:
-	print "# Error: in userSetup.py. dir not found in MAYA_SCRIPT_PATH #"
-	print "# MAYA_SCRIPT_PATH:"+ str([s for s in os.environ['MAYA_SCRIPT_PATH'].split(';')]) +" #"
+	print("# Error: in userSetup.py. dir not found in MAYA_SCRIPT_PATH #")
+	print("# MAYA_SCRIPT_PATH:"+ str([s for s in os.environ['MAYA_SCRIPT_PATH'].split(';')]) +" #")
 
 #append to system path:
 paths = [

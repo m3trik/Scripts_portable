@@ -1,3 +1,4 @@
+from __future__ import print_function
 from tk_slots_max_init import *
 
 
@@ -9,11 +10,8 @@ class Rendering(Init):
 	def __init__(self, *args, **kwargs):
 		super(Rendering, self).__init__(*args, **kwargs)
 
-
 		self.ui = self.sb.getUi('rendering')
 
-		
-		
 		# #checkable comboBox not working
 		# comboBox = self.CheckableComboBox(self.ui.cmb000)
 		# for num in range(6):
@@ -121,33 +119,10 @@ class Rendering(Init):
 			try:
 				pm.unloadPlugin(vray)
 			except:
-				print "# Result: Force unloadPlugin:"+str(vray)+" #"
+				print("# Result: Force unloadPlugin:"+str(vray)+" #")
 				pm.unloadPlugin(vray, force=1)
 		else:
 			pm.loadPlugin (vray)
-
-
-	def b007(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b008(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b009(self):
-		'''
-		
-
-		'''
-		pass
-
 
 
 
@@ -157,7 +132,7 @@ class Rendering(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

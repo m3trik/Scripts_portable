@@ -1,3 +1,4 @@
+from __future__ import print_function
 from tk_slots_max_init import *
 
 
@@ -136,7 +137,7 @@ class Subdivision(Init):
 			mel.eval("smoothingDisplayToggle "+str(state))
 		except:
 			traceback.print_exc()
-			print "// Warning: Nothing Selected\n"
+			print("# Warning: Nothing Selected. #")
 
 
 	def b001(self):
@@ -152,7 +153,7 @@ class Subdivision(Init):
 		sel = mel.eval("polyCheckSelection \"polySmoothProxy\" \"o\" 0")
 		
 		if len(sel)==0 and len(polySmoothBaseMesh)==0:
-			print "// Warning: Nothing selected."
+			print("# Warning: Nothing selected. #")
 			return
 		if len(sel)!=0:
 			del polySmoothBaseMesh[:]
@@ -176,20 +177,6 @@ class Subdivision(Init):
 		mel.eval("performSmoothProxy 0;") #toggle SubDiv Proxy;
 
 
-	def b002(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b003(self):
-		'''
-		
-		'''
-		pass
-
-
 	def b004(self):
 		'''
 		Poly Reduce
@@ -202,20 +189,6 @@ class Subdivision(Init):
 		Reduce
 		'''
 		mel.eval("ReducePolygon;")
-
-
-	def b006(self):
-		'''
-		
-		'''
-		pass
-
-
-	def b007(self):
-		'''
-		
-		'''
-		pass
 
 
 	def b008(self):
@@ -267,7 +240,7 @@ class Subdivision(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

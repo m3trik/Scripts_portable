@@ -1,3 +1,4 @@
+from __future__ import print_function
 from tk_slots_max_init import *
 
 
@@ -104,7 +105,7 @@ class File(Init):
 		if not index:
 			index = cmb.currentIndex()
 		if index!=0: #hide then perform operation
-			print index
+			print(index)
 			self.tk.hide(force=1)
 			if index == 1: #Import
 				maxEval('max file import')
@@ -146,7 +147,7 @@ class File(Init):
 			if index==4: #Unity: File: Game Exporter
 				maxEval('actionMan.executeAction 0 "40488"')
 			if index==5: #GoZ
-				print 'GoZ'
+				print('GoZ')
 				maxEval(''' 
 					try (
 						if (s_verbose) then print "\n === 3DS -> ZBrush === "
@@ -259,15 +260,15 @@ class File(Init):
 								except:
 									pass
 				except OSError:
-					print "# Warning: could not delete "+currentPath+oldName+" #"
+					print("# Warning: could not delete ", currentPath+oldName, " #")
 					pass
 			else:
 				newName = currentName+".001"
 			pm.saveAs (currentPath+newName, force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
-			print "// Result: ", currentPath+newName
+			print("# Result: ", currentPath+newName, " #")
 		else:	#save without renaming
 			pm.saveFile (force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
-			print "// Result: ", currentPath+currentName
+			print("# Result: ", currentPath+currentName, " #")
 
 		if tb.chk002.isChecked(): #quit
 			import time
@@ -388,7 +389,7 @@ class File(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

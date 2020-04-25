@@ -1,3 +1,4 @@
+from __future__ import print_function
 from tk_slots_max_init import *
 
 
@@ -166,9 +167,9 @@ class Normals(Init):
 					pm.polyNormalPerVertex(freezeNormal=1)
 					self.viewPortMessage("Normals <hl>Locked</hl>.")
 			else:
-				print "// Warning: Selection must be object or vertex. //"
+				print("# Warning: Selection must be object or vertex. #")
 		else:
-			print "// Warning: No object selected. //"
+			print("# Warning: No object selected. #")
 
 
 	def b001(self):
@@ -283,7 +284,7 @@ class Normals(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

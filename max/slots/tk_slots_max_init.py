@@ -1,3 +1,4 @@
+from __future__ import print_function
 from PySide2 import QtGui
 
 import os
@@ -11,7 +12,7 @@ try:
 	maxEval = MaxPlus.Core.EvalMAXScript
 
 except ImportError as error:
-	print error
+	print(error)
 	def p(s): pass
 	maxEval = p
 	rt = None
@@ -202,9 +203,9 @@ class Init(Slot):
 
 		elementArray = []
 
-		print obj[0] #object
-		print obj[6] #baseObject class TYPE |string|
-		print obj[7] #isValidNode
+		print(obj[0]) #object
+		print(obj[6]) #baseObject class TYPE |string|
+		print(obj[7]) #isValidNode
 
 		if (obj[4] == rt.Editable_Poly and obj[7]): #or obj[6] == "Shape" or obj[6] == "Geometry" 
 
@@ -220,7 +221,7 @@ class Init(Slot):
 			rt.select(elementArray)
 
 		else:
-			print "-< Error: Object must be an Editable_Poly. >-"
+			print("# Error: Object must be an Editable_Poly. #")
 		
 		return elementArray
 
@@ -249,10 +250,10 @@ class Init(Slot):
 		componentArray = selection.selectedVerts
 		
 		if len(componentArray) == 0:
-			print "# Error: No vertices selected. #"
+			print("# Error: No vertices selected. #")
 		
 		if len(componentArray) < 2:
-			return "# Error: Selection must contain at least two vertices. #"
+			return("# Error: Selection must contain at least two vertices. #")
 			
 		
 		lastSelected = componentArray[-1]#3ds max re-orders array by vert index, so this doesnt work for aligning to last selected
@@ -329,14 +330,14 @@ class Init(Slot):
 				)
 				''')
 			
-			print 100*"-"
-			print "vertex.index:", vertex.index
-			print "position:", vX, vY, vZ
-			print "align:   ", aX, aY, aZ
+			print(100*"-")
+			print("vertex.index:", vertex.index)
+			print("position:", vX, vY, vZ)
+			print("align:   ", aX, aY, aZ)
 			
 			rt.alignXYZ(mode, vertex, vX, vY, vZ, aX, aY, aZ)
 			
-			print "result:  ", vertex.pos[0], vertex.pos[1], vertex.pos[2]
+			print("result:  ", vertex.pos[0], vertex.pos[1], vertex.pos[2])
 
 
 
@@ -522,7 +523,7 @@ class Init(Slot):
 				(return bitArray as Array)
 			''')
 	except Exception as error:
-		print error
+		print(error)
 
 
 
@@ -725,7 +726,7 @@ class Init(Slot):
 					else: #Find and select N-gons	
 						rt.setFaceSelection(obj, nGons_)
 
-					print 'Found '+str(len(nGons_))+' N-gons.'
+					print('Found '+str(len(nGons_))+' N-gons.')
 
 
 				if isolatedVerts: #delete loose vertices
@@ -757,7 +758,7 @@ class Init(Slot):
 
 					Init.undo(True)
 					rt.polyop.setVertSelection(obj, selection)
-					print 'Found '+str(len(selection))+' isolated vertices.'
+					print('Found '+str(len(selection))+' isolated vertices.')
 					if repair:
 						obj.EditablePoly.remove(selLevel='Vertex', flag=1)
 						obj.selectMode = 0 #multi-component selection preview off
@@ -800,11 +801,11 @@ class Init(Slot):
 				if state: #check
 					if not aitm.isChecked:
 						rt.actionMan.executeAction(0, id)
-						print aitm.isChecked
+						print(aitm.isChecked)
 				else: #uncheck
 					if aitm.isChecked:
 						rt.actionMan.executeAction(0, id)
-						print aitm.isChecked
+						print(aitm.isChecked)
 
 
 
@@ -828,7 +829,7 @@ class Init(Slot):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

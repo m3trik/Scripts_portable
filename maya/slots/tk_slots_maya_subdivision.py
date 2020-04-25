@@ -66,7 +66,7 @@ class Subdivision(Init):
 			mel.eval("smoothingDisplayToggle "+str(state))
 		except:
 			traceback.print_exc()
-			print "// Warning: Nothing Selected\n"
+			print("# Warning: Nothing Selected. #")
 
 	def b001(self):
 		'''
@@ -82,7 +82,7 @@ class Subdivision(Init):
 		sel = mel.eval("polyCheckSelection \"polySmoothProxy\" \"o\" 0")
 		
 		if len(sel)==0 and len(polySmoothBaseMesh)==0:
-			print "// Warning: Nothing selected."
+			print("# Warning: Nothing selected. #")
 			return
 		if len(sel)!=0:
 			del polySmoothBaseMesh[:]

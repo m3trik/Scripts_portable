@@ -116,7 +116,7 @@ class Preferences(Init):
 		Init Tk_Main
 
 		'''
-		print "init: tk_main"
+		print("reload: tk_main")
 		reload(tk_main)
 
 
@@ -126,54 +126,6 @@ class Preferences(Init):
 
 		'''
 		mel.eval('colorPrefWnd;')
-
-
-	def b002(self):
-		'''
-		
-
-		'''
-		pass
-
-
-	def b003(self):
-		'''
-		
-
-		'''
-		pass
-
-
-	def b004(self):
-		'''
-		
-
-		'''
-		pass
-
-
-	def b005(self):
-		'''
-		
-
-		'''
-		pass
-
-
-	def b006(self):
-		'''
-		
-
-		'''
-		pass
-
-
-	def b007(self):
-		'''
-		
-
-		'''
-		pass
 
 
 	def b008(self):

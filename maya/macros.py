@@ -1,3 +1,4 @@
+from __future__ import print_function
 import pymel.core as pm
 import maya.mel as mel
 
@@ -87,7 +88,7 @@ class Macros(object):
 			else:
 				key = char
 
-		# print name, char, ctl, alt, sht
+		# print(name, char, ctl, alt, sht)
 		pm.hotkey(keyShortcut=key, name=nameCommand, ctl=ctl, alt=alt, sht=sht) #set only the key press.
 
 
@@ -149,7 +150,7 @@ class Macros(object):
 				Macros.setWireframeOnShadedOption(currentPanel, 1)
 				pm.inViewMessage(statusMessage="Back-Face Culling is now <hl>ON</hl>.\\n<hl>1</hl>", pos='topCenter', fade=True)
 		else:
-			print '# Warning: Nothing selected. #'
+			print("# Warning: Nothing selected. #")
 
 
 
@@ -265,72 +266,60 @@ class Macros(object):
 				if not pm.melGlobals['tk_toggleFrame'] == 1:
 					pm.viewFit(fitFactor=.65)
 					pm.melGlobals['tk_toggleFrame']=1
-					print "frame vertices " + str(pm.melGlobals['tk_toggleFrame']) + "\n"
-					
-				
+					print("frame vertices " + str(pm.melGlobals['tk_toggleFrame']) + "\n")
+
 				else:
 					pm.viewFit(fitFactor=.10)
 					#viewSet -previousView;
 					pm.melGlobals['tk_toggleFrame']=0
-					print "frame vertices " + str(pm.melGlobals['tk_toggleFrame']) + "\n"
-					
-				
+					print("frame vertices " + str(pm.melGlobals['tk_toggleFrame']) + "\n")
 			
 			elif not pm.melGlobals['tk_toggleFrame'] == 1:
 				pm.viewFit(fitFactor=.15)
 				pm.melGlobals['tk_toggleFrame']=1
-				print "frame vertex " + str(pm.melGlobals['tk_toggleFrame']) + "\n"
-				
+				print("frame vertex " + str(pm.melGlobals['tk_toggleFrame']) + "\n")
 			
 			else:
 				pm.viewFit(fitFactor=.01)
 				#viewSet -previousView;
 				pm.melGlobals['tk_toggleFrame']=0
-				print "frame vertex " + str(pm.melGlobals['tk_toggleFrame']) + "\n"
-				
+				print("frame vertex " + str(pm.melGlobals['tk_toggleFrame']) + "\n")
 			
 		if mode == 1 and maskEdge == 1 and len(selection) != 0:
 			if not pm.melGlobals['tk_toggleFrame'] == 1:
 				pm.viewFit(fitFactor=.3)
 				pm.melGlobals['tk_toggleFrame']=1
-				print "frame edge " + str(pm.melGlobals['tk_toggleFrame']) + "\n"
-				
+				print("frame edge " + str(pm.melGlobals['tk_toggleFrame']) + "\n")
 			
 			else:
 				pm.viewFit(fitFactor=.9)
 				#viewSet -previousView;
 				pm.melGlobals['tk_toggleFrame']=0
-				print "frame edge " + str(pm.melGlobals['tk_toggleFrame']) + "\n"
-				
+				print("frame edge " + str(pm.melGlobals['tk_toggleFrame']) + "\n")
 			
 		if mode == 1 and maskFacet == 1:
 			if not pm.melGlobals['tk_toggleFrame'] == 1:
 				pm.viewFit(fitFactor=.9)
 				pm.melGlobals['tk_toggleFrame']=1
-				print "frame facet " + str(pm.melGlobals['tk_toggleFrame']) + "\n"
-				
+				print("frame facet " + str(pm.melGlobals['tk_toggleFrame']) + "\n")
 			
 			else:
 				pm.viewFit(fitFactor=.45)
 				#viewSet -previousView;
 				pm.melGlobals['tk_toggleFrame']=0
-				print "frame facet " + str(pm.melGlobals['tk_toggleFrame']) + "\n"
-				
-			
+				print("frame facet " + str(pm.melGlobals['tk_toggleFrame']) + "\n")
 
 		elif mode == 0 and len(selection) != 0:
 			if not pm.melGlobals['tk_toggleFrame'] == 1:
 				pm.viewFit(fitFactor=.99)
 				pm.melGlobals['tk_toggleFrame']=1
-				print "frame object " + str(pm.melGlobals['tk_toggleFrame']) + "\n"
-				
+				print("frame object " + str(pm.melGlobals['tk_toggleFrame']) + "\n")
 			
 			else:
 				pm.viewFit(fitFactor=.65)
 				#viewSet -previousView;
 				pm.melGlobals['tk_toggleFrame']=0
-				print "frame object " + str(pm.melGlobals['tk_toggleFrame']) + "\n"
-				
+				print("frame object " + str(pm.melGlobals['tk_toggleFrame']) + "\n")
 
 
 	@staticmethod
@@ -412,7 +401,7 @@ class Macros(object):
 		displayTextures = pm.modelEditor (currentPanel, query=1, displayTextures=1)
 		displayLights = pm.modelEditor (currentPanel, query=1, displayLights=1)
 
-		#print displayAppearance, displayTextures, displayLights
+		#print(displayAppearance, displayTextures, displayLights)
 		if pm.modelEditor (currentPanel, exists=1):
 			if all ([displayAppearance=="wireframe", displayTextures==False, displayLights=="default"]):
 				pm.modelEditor (currentPanel, edit=1, displayAppearance="smoothShaded", displayTextures=False, displayLights="default") #textures off
