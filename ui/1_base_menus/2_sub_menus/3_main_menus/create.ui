@@ -51,50 +51,6 @@
      <property name="spacing">
       <number>0</number>
      </property>
-     <item row="1" column="1">
-      <widget class="QPushButton_Draggable" name="pin">
-       <property name="minimumSize">
-        <size>
-         <width>19</width>
-         <height>17</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>999</width>
-         <height>17</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QComboBox_" name="cmb">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>17</width>
-         <height>17</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>17</width>
-         <height>17</height>
-        </size>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="1" colspan="2">
       <widget class="QProgressBar_" name="progressBar">
        <property name="sizePolicy">
@@ -153,7 +109,7 @@
               <x>50</x>
               <y>10</y>
               <width>86</width>
-              <height>19</height>
+              <height>22</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -252,8 +208,8 @@
              <rect>
               <x>0</x>
               <y>10</y>
-              <width>136</width>
-              <height>19</height>
+              <width>67</width>
+              <height>22</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -548,6 +504,28 @@
         </layout>
        </item>
       </layout>
+     </item>
+     <item row="1" column="1" colspan="2">
+      <widget class="QPushButton_Draggable" name="pin">
+       <property name="minimumSize">
+        <size>
+         <width>19</width>
+         <height>17</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>999</width>
+         <height>17</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
