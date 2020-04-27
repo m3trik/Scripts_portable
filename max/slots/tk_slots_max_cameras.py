@@ -29,11 +29,6 @@ class Cameras(Init):
 			except AttributeError: l=[]
 			[tree.add('QLabel', 'Cameras', refresh=True, setText=s) for s in l]
 
-			m = MultiWidget(['QLabel', 'QLabel'])
-			m.childWidgets(0).setText('ButtonText')
-			m.setAsOptionBox(m.childWidgets(1))
-			tree.add(m, parentHeader='Header')
-
 			l = []
 			[tree.add('QLabel', 'Editors', setText=s) for s in l]
 			return

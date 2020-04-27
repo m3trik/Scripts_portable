@@ -13,7 +13,7 @@ class QWidget_MultiWidget(QtWidgets.QWidget):
 	hoverMove_ = QtCore.QEvent(QtCore.QEvent.HoverMove)
 	hoverLeave_ = QtCore.QEvent(QtCore.QEvent.HoverLeave)
 
-	def __init__(self, widgets, parent=None):
+	def __init__(self, widgets, parent=None, **kwargs):
 		super(QWidget_MultiWidget, self).__init__(parent)
 
 		self._mouseGrabber=None
@@ -23,19 +23,19 @@ class QWidget_MultiWidget(QtWidgets.QWidget):
 		# self.row.addStretch(0)
 		self.row.setContentsMargins(0,0,0,0) #self.row.setMargin(0)
 
-		for widget in widgets:
+		for w in widgets:
 			try:
-				widget = getattr(QtWidgets, widget)(self) #ex. QtWidgets.QLabel(self) object from string. parented to self.
+				w = getattr(QtWidgets, w)(self) #ex. QtWidgets.QLabel(self) object from string. parented to self.
 			except:
-				if callable(widget):
-					widget = widget(self) #ex. QtWidgets.QLabel(self) object. parented to self.
+				if callable(w):
+					w = widget(self) #ex. QtWidgets.QLabel(self) object. parented to self.
 
-			self.row.addWidget(widget)
+			self.row.addWidget(w)
 			self.setAttributes(kwargs, w) #set any additional given keyword args for the widget.
 			setattr(self, w.objectName(), w)
 
-			# widget.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
-			widget.installEventFilter(self)
+			# w.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+			w.installEventFilter(self)
 
 
 	def setAttributes(self, attributes=None, w=None, order=[], **kwargs):
