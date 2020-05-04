@@ -154,7 +154,7 @@ class __Switchboard(object):
 		except:
 			signal = ''
 
-		signalInstance = getattr(widget, signal, None) #add signal to widget. ie. signalInstance = widget.valueChanged
+		signalInstance = getattr(widget, signal, None) #add signal to widget. ie. signalInstance == widget.valueChanged
 		method = getattr(class_, objectName, None) #use 'objectName' to get the corresponding method of the same name. ie. get method <b006> from widget 'b006' else None
 		docString = getattr(method, '__doc__', None)
 		prefix = self.prefix(objectName) #returns an string alphanumberic prefix if objectName startswith a series of alphanumberic chars, and is followed by three integers. ie. 'cmb' from 'cmb015'
@@ -222,6 +222,26 @@ class __Switchboard(object):
 			try: #remove the widget attribute from the ui if it exists.
 				delattr(ui, w.objectName())
 			except: pass
+
+
+	def getSignal(self, name, widget=None):
+		'''
+		Get the widget object with attached signal (ie. b001.onPressed) from the given widget name.
+
+		args:
+			name (str) = name of ui. ie. 'polygons'
+			objectName (str) = optional widget name. ie. 'b001'
+		returns:
+			if objectName: (obj) widget object with attached signal (ie. b001.onPressed) of the given widget name.
+			else: (list) all of the signals associated with the given name as a list.
+		'''
+		if not 'widgets' in self._sbDict[name]:
+			self.widgets(name) #construct the signals and slots for the ui
+
+		if widget:
+			return self._sbDict[name]['widgets'][widget]['signalInstance']
+		else:
+			return [w['signalInstance'] for w in self._sbDict[name]['widgets'].values()]
 
 
 	def setSignals(self, name):
@@ -293,7 +313,7 @@ class __Switchboard(object):
 					print('# Error: {0} {1} removeSignals: {2} {3} #'.format(name, widget.objectName(), signal, slot), '\n', error)
 
 
-	def uiList(self, name=False, ui=False):
+	def uiList(self, name=None, ui=None):
 		'''
 		Get a list of either all ui names, all ui object's, or both as key/value pairs in a dict.
 
@@ -313,7 +333,7 @@ class __Switchboard(object):
 			return {k:v['ui'] for k,v in self._sbDict.items() if type(v)==dict and 'ui' in v}
 
 
-	def getUi(self, name=False):
+	def getUi(self, name=None):
 		'''
 		Property.
 		Get the dynamic ui using its string name, or if no argument is given, return the current ui.
@@ -324,7 +344,7 @@ class __Switchboard(object):
 			if name: corresponding dynamic ui object of given name from the key 'uiList'.
 			else: current dynamic ui object
 		'''
-		if not name:
+		if name is None:
 			name = self.getUiName(camelCase=True)
 		try:
 			return self._sbDict[name]['ui'] #self.uiList(ui=True)[self.getUiIndex(name)]
@@ -754,24 +774,6 @@ class __Switchboard(object):
 				return self._sbDict[name]['widgets'][widget]['method']
 		else:
 			return [w['method'] for w in self._sbDict[name]['widgets'].values()]
-
-
-	def getSignal(self, name, widget=None):
-		'''
-		args:
-			name (str) = name of ui. ie. 'polygons'
-			objectName (str) = optional widget name. ie. 'b001'
-		returns:
-			if objectName: the corresponding widget object with attached signal (ie. b001.onPressed) of the given widget name.
-			else: all of the signals associated with the given name as a list.
-		'''
-		if not 'widgets' in self._sbDict[name]:
-			self.widgets(name) #construct the signals and slots for the ui
-
-		if widget:
-			return self._sbDict[name]['widgets'][widget]['signalInstance']
-		else:
-			return [w['signalInstance'] for w in self._sbDict[name]['widgets'].values()]
 
 
 	def getDocString(self, name, widgetName, all_=False):

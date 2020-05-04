@@ -164,14 +164,15 @@ class Create(Init):
 		cmb = self.ui.cmb000
 
 		self.ui.cmb001.clear()
+		index = cmb.currentIndex()
 
-		if cmb.currentIndex() == 0:
+		if index==0 or index==1 or index==3 or index==4: #later converted to the specified type.
 			polygons = ["Cube", "Sphere", "Cylinder", "Plane", "Circle", "Cone", "Pyramid", "Torus", "Tube", "GeoSphere", "Platonic Solids", "Text"]
 			self.ui.cmb001.addItems(polygons)
 
-		if cmb.currentIndex() == 1:
-			nurbs = ["Cube", "Sphere", "Cylinder", "Cone", "Plane", "Torus", "Circle", "Square"]
-			self.ui.cmb001.addItems(nurbs)
+		# if cmb.currentIndex() == 1:
+		# 	nurbs = ["Cube", "Sphere", "Cylinder", "Cone", "Plane", "Torus", "Circle", "Square"]
+		# 	self.ui.cmb001.addItems(nurbs)
 
 		if cmb.currentIndex() == 2:
 			lights = ["Ambient", "Directional", "Point", "Spot", "Area", "Volume", "VRay Sphere", "VRay Dome", "VRay Rect", "VRay IES"]
@@ -250,44 +251,21 @@ class Create(Init):
 			if self.ui.cmb001.currentIndex() == 10:
 				pass
 
-		# nurbs
-		# if self.ui.cmb000.currentIndex() == 1:
-			
-		# 	#Cube
-		# 	if self.ui.cmb001.currentIndex() == 0:
-		# 		self.node = pm.nurbsCube (ch=1, d=3, hr=1, p=(0, 0, 0), lr=1, w=1, v=1, ax=(0, 1, 0), u=1)
+		#convert to the type selected in cmb000
+		if self.ui.cmb000.currentIndex() == 0: #Polygons
+			rt.convertTo(self.node, rt.PolyMeshObject)
 
-		# 	#Sphere
-		# 	if self.ui.cmb001.currentIndex() == 1:
-		# 		self.node = pm.sphere (esw=360, ch=1, d=3, ut=0, ssw=0, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=4, ax=(0, 1, 0))
+		elif self.ui.cmb000.currentIndex() == 1: #NURBS
+			rt.convertTo(self.node, rt.NURBSSurf)
 
-		# 	#Cylinder
-		# 	if self.ui.cmb001.currentIndex() == 2:
-		# 		self.node = pm.cylinder (esw=360, ch=1, d=3, hr=2, ut=0, ssw=0, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=1, ax=(0, 1, 0))
+		elif self.ui.cmb000.currentIndex() == 3: #Mesh
+			rt.convertTo(self.node, rt.TriMeshGeometry)
 
-		# 	#Cone
-		# 	if self.ui.cmb001.currentIndex() == 3:
-		# 		self.node = pm.cone (esw=360, ch=1, d=3, hr=2, ut=0, ssw=0, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=1, ax=(0, 1, 0))
-
-		# 	#Plane
-		# 	if self.ui.cmb001.currentIndex() == 4:
-		# 		self.node = pm.nurbsPlane (ch=1, d=3, v=1, p=(0, 0, 0), u=1, w=1, ax=(0, 1, 0), lr=1)
-
-		# 	#Torus
-		# 	if self.ui.cmb001.currentIndex() == 5:
-		# 		self.node = pm.torus (esw=360, ch=1, d=3, msw=360, ut=0, ssw=0, hr=0.5, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=4, ax=(0, 1, 0))
-
-		# 	#Circle
-		# 	if self.ui.cmb001.currentIndex() == 6:
-		# 		self.node = pm.circle (c=(0, 0, 0), ch=1, d=3, ut=0, sw=360, s=8, r=1, tol=0.01, nr=(0, 1, 0))
-
-		# 	#Square
-		# 	if self.ui.cmb001.currentIndex() == 7:
-		# 		self.node = pm.nurbsSquare (c=(0, 0, 0), ch=1, d=3, sps=1, sl1=1, sl2=1, nr=(0, 1, 0))
-
+		elif self.ui.cmb000.currentIndex() == 4: #Patch
+			rt.convertTo(self.node, rt.Editable_Patch)
 		
 		# lights
-		if self.ui.cmb000.currentIndex() == 2:
+		elif self.ui.cmb000.currentIndex() == 2: #Lights
 			
 			#
 			if self.ui.cmb001.currentIndex() == 0:

@@ -13,26 +13,26 @@ class Materials(Init):
 
 		self.ui.cmb002.editTextChanged.connect(self.renameMaterial)
 
-		self.storedMaterial=None
-		self.storedID_mats=None
+		self.currentMaterial=None
+		self.materials=None
 		self.randomMat=None
 
 
-	def cmb001(self, index=None):
-		'''
-		Editors
-		'''
-		cmb = self.ui.cmb001
+	# def cmb001(self, index=None):
+	# 	'''
+	# 	Editors
+	# 	'''
+	# 	cmb = self.ui.cmb001
 
-		files = ['Material Editor']
-		contents = cmb.addItems_(files, ' ')
+	# 	files = ['Material Editor']
+	# 	contents = cmb.addItems_(files, ' ')
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index('Material Editor'):
-				maxEval('max mtledit')
-			cmb.setCurrentIndex(0)
+	# 	if index is None:
+	# 		index = cmb.currentIndex()
+	# 	if index!=0:
+	# 		if index==contents.index('Material Editor'):
+	# 			maxEval('max mtledit')
+	# 		cmb.setCurrentIndex(0)
 
 
 	def cmb002(self, index=None):
@@ -40,10 +40,11 @@ class Materials(Init):
 		Material list
 		'''
 		cmb = self.ui.cmb002
+		sceneMaterials = self.ui.tb001.chk000.isChecked()
+		idMapMaterials = self.ui.tb001.chk001.isChecked()
 
-		if self.ui.chk000.isChecked(): #Scene Materials
-			# materials = [mat for mat in rt.sceneMaterials if 'Multimaterial' not in mat.name and 'BlendMtl' not in mat.name and not mat.name.startswith('Material')]
-			materials=[] #get any scene material that doesnt startswith 'Material'
+		if sceneMaterials:
+			materials=[] #get any scene material that does not start with 'Material'
 			for mat in rt.sceneMaterials:
 				try:
 					if rt.getNumSubMtls(mat): #if material is a submaterial; search submaterials
@@ -57,87 +58,35 @@ class Materials(Init):
 				except RuntimeError:
 					pass
 
-			materialNames = sorted([mat.name for mat in materials])
-			
-			contents = cmb.addItems_(materialNames, 'Scene Materials:')
-
-			if not index:
-				index = cmb.currentIndex()
-			if index!=0:
-				mat = [m for m in materials if m.name==contents[index]][0]
-
-				self.storedMaterial = mat #store material
-				cmb.setCurrentIndex(0)
-				self.ui.chk001.setChecked(True)
-				self.cmb002() #reload cmb as stored material
-
-		elif self.ui.chk001.isChecked(): #Stored Material
-			mat = self.storedMaterial
-			if not mat:
-				return
-
-			matName = mat.name
-			
-			subMaterials = [rt.getSubMtl(mat, i) for i in range(1, rt.getNumSubMtls(mat)+1)] #get the material using the matID index. modify index range for index starting at 1.
-			subMatNames = [s.name for s in subMaterials if s is not None]
-			
-			contents = cmb.addItems_(subMatNames, matName)
-
-			if not index:
-				index = cmb.currentIndex()
-			if index!=0:
-				self.storedMaterial = subMaterials[index-1]
-			else:
-				self.storedMaterial = mat
-
-		elif self.ui.chk002.isChecked(): #ID map mode 
-			mats=[] #get any scene material that startswith 'matID'
+		elif idMapMaterials:
+			materials=[] #get any scene material that startswith 'matID'
 			for mat in rt.sceneMaterials:
 				if rt.getNumSubMtls(mat): #if material is a submaterial; search submaterials
 					for i in range(1, rt.getNumSubMtls(mat)+1):
 						subMat = rt.getSubMtl(mat, i)
 						if subMat.name.startswith('matID'):
-							mats.append(subMat)
+							materials.append(subMat)
 				elif mat.name.startswith('matID'):
-					mats.append(mat)
+					materials.append(mat)
 
-			matNames = [m.name for m in mats]
-			if not matNames: 
-				matNames = ['ID Map: None']
+		mats = sorted([mat for mat in set(materials)])
+		matNames = [mat.name for mat in mats]
+		contents = cmb.addItems_(matNames)
 
-			contents = cmb.addItems_(matNames)
+		#create and set icons with color swatch
+		for index in range(len(mats)): #create icons with color swatch
+			r = int(mats[index].diffuse.r) #convert from float value
+			g = int(mats[index].diffuse.g)
+			b = int(mats[index].diffuse.b)
+			pixmap = QtGui.QPixmap(100,100)
+			pixmap.fill(QtGui.QColor.fromRgb(r, g, b))
+			cmb.setItemIcon(index, QtGui.QIcon(pixmap))
 
-			if matNames[0]!='ID Map: None': #add mat objects to storedID_mats dictionary. 'mat name'=key, <mat object>=value
-				self.storedID_mats = {n:mats[i] for i, n in enumerate(matNames)}
+		if index is None:
+			index = cmb.currentIndex()
 
-			for index in range(len(mats)): #create icons with color swatch
-				r = int(mats[index].diffuse.r) #convert from float value
-				g = int(mats[index].diffuse.g)
-				b = int(mats[index].diffuse.b)
-				pixmap = QtGui.QPixmap(100,100)
-				pixmap.fill(QtGui.QColor.fromRgb(r, g, b))
-				cmb.setItemIcon(index, QtGui.QIcon(pixmap))
-
-
-	def chk000(self):
-		'''
-		Material mode: Current Material
-		'''
-		self.cmb002()
-
-
-	def chk001(self):
-		'''
-		Material mode: Scene Materials
-		'''
-		self.cmb002()
-
-
-	def chk002(self):
-		'''
-		Material mode: ID Map Materials
-		'''
-		self.cmb002()
+		self.currentMaterial = contents[index] if len(contents)>index else None #store material
+		self.materials = {n:mats[i] for i, n in enumerate(contents)} #add mat objects to materials dictionary. 'mat name'=key, <mat object>=value
 
 
 	def tb000(self, state=None):
@@ -153,8 +102,8 @@ class Materials(Init):
 		shell = tb.chk005.isChecked() #Select by material: shell
 		invert = tb.chk006.isChecked() #Select by material: invert
 
-		if not rt.getNumSubMtls(self.storedMaterial): #if not a multimaterial
-			mat = self.storedMaterial
+		if not rt.getNumSubMtls(self.currentMaterial): #if not a multimaterial
+			mat = self.currentMaterial
 		else:
 			return '# Error: No valid stored material. If material is a multimaterial, select a submaterial. #'
 
@@ -212,10 +161,16 @@ class Materials(Init):
 		'''
 		tb = self.ui.tb001
 		if state=='setMenu':
-			tb.add('QRadioButton', setText='Scene Materials', setObjectName='chk000', setToolTip='Load scene materials.')
-			tb.add('QRadioButton', setText='Current Material', setObjectName='chk001', setChecked=True, setToolTip='Show current material.')
-			tb.add('QRadioButton', setText='ID map', setObjectName='chk002', setToolTip='Load ID map materials.')
+			tb.add('QRadioButton', setText='All Scene Materials', setObjectName='chk000', setChecked=True, setToolTip='List all scene materials.') #Material mode: Stored Materials
+			tb.add('QRadioButton', setText='ID Map Materials', setObjectName='chk001', setToolTip='List ID map materials.') #Material mode: ID Map Materials
+
+			self.connect([tb.chk000, tb.chk001], 'toggled', [self.cmb002, self.tb001])
 			return
+
+		if tb.chk000.isChecked():
+			self.ui.group000.setTitle(tb.chk000.text())
+		elif tb.chk001.isChecked():
+			self.ui.group000.setTitle(tb.chk001.text())
 
 
 	def tb002(self, state=None):
@@ -229,19 +184,19 @@ class Materials(Init):
 			return
 
 		if tb.chk003.isChecked():
-			if self.ui.chk002.isChecked: #delete mat ID material
-				mat = self.storedID_mats[self.ui.cmb002.currentText()] #get object from string key
+			if self.ui.tb001.chk001.isChecked: #delete mat ID material
+				mat = self.materials[self.ui.cmb002.currentText()] #get object from string key
 				mat = rt.Standard(name="Default Material") #replace with standard material
 			else: #delete stored material
-				self.storedMaterial = rt.Standard(name="Default Material") #replace with standard material
-				self.storedMaterial = None
+				self.currentMaterial = rt.Standard(name="Default Material") #replace with standard material
+				self.currentMaterial = None
 
 				self.comboBox(self.ui.cmb002, [], 'Stored Material: None') #init combobox
 
 		if tb.chk004.isChecked(): #Delete Unused Materials
 			defaultMaterial = rt.Standard(name='Default Material')
 			
-			for mat in rt.scenematerials:
+			for mat in rt.sceneMaterials:
 				nodes = rt.refs().dependentnodes(mat) 
 				if nodes.count==0:
 					rt.replaceinstances(mat, defaultMaterial)
@@ -250,12 +205,68 @@ class Materials(Init):
 				rt.freeSceneBitmaps()
 
 
+	def tb003(self, state=None):
+		'''
+		Assign Material
+		'''
+		tb = self.ui.tb003
+		if state=='setMenu':
+			tb.add('QRadioButton', setText='Current Material', setObjectName='chk007', setChecked=True, setToolTip='Re-Assign the current stored material.')
+			tb.add('QRadioButton', setText='New Random Material', setObjectName='chk008', setToolTip='Assign a new random ID material.')
+			return
+
+
+		if tb.chk008.isChecked(): #Assign New random mat ID
+			import random
+
+			selection = rt.selection
+
+			if selection:
+				prefix = 'matID'
+				rgb = [random.randint(0, 255) for _ in range(3)] #generate a list containing 3 values between 0-255
+
+				#format name
+				name = '_'.join([prefix, str(rgb[0]), str(rgb[1]), str(rgb[2])])
+				#create shader
+				mat = rt.StandardMaterial()
+		 		mat.name = name
+				mat.diffuse = rt.color(rgb[0], rgb[1], rgb[2])
+
+				for obj in selection:
+					obj.material = mat
+
+				#delete previous shader
+				if self.randomMat:
+					self.randomMat = None #replace with standard material
+
+				self.randomMat = mat
+
+				if self.ui.tb001.chk001.isChecked():
+					self.cmb002() #refresh the combobox
+				else:
+					self.ui.tb001.chk001.setChecked(True) #set combobox to ID map mode. toggling the checkbox refreshes the combobox.
+				self.ui.cmb002.setCurrentText_(name) #set the combobox index to the new mat #self.cmb002.setCurrentIndex(self.cmb002.findText(name))
+			else:
+				return '# Error: No valid object/s selected. #'
+
+		elif tb.chk007.isChecked(): #Assign current mat
+			name = self.ui.cmb002.currentText()
+			mat = self.materials[name]
+
+			for obj in rt.selection:
+				if rt.getNumSubMtls(mat): #if multimaterial
+					mat.materialList.count = mat.numsubs+1 #add slot to multimaterial
+					mat.materialList[-1] = material #assign new material to slot
+				else:
+					obj.material = mat
+
+			rt.redrawViews()
+
+
 	def b002(self):
 		'''
 		Store Material
 		'''
-		self.ui.chk002.setChecked(False) #put combobox in stored material mode
-
 		obj = rt.selection[0]
 		mat = obj.material #get material from selection
 
@@ -266,85 +277,29 @@ class Materials(Init):
 					id_ = obj.GetFaceMaterial(f) #Returns the material ID of the specified face.
 					mat = rt.getSubMtl(mat, id_) #get material from mat ID
 
-			self.storedMaterial = mat #store material
+			self.currentMaterial = mat #store material
+			self.ui.tb001.chk000.setChecked(True) #put combobox in current material mode
 			self.cmb002() #refresh combobox
 		else:
 			print '# Error: Nothing selected. #'
-
-
-	def b003(self):
-		'''
-		Assign Material
-		'''
-		if self.ui.chk002.isChecked(): #Assign Existing mat ID
-			name = self.ui.cmb002.currentText()
-			mat = self.storedID_mats[name]
-			
-			for obj in rt.selection:
-				if rt.getNumSubMtls(mat): #if multimaterial
-					mat.materialList.count = mat.numsubs+1 #add slot to multimaterial
-					mat.materialList[-1] = material #assign new material to slot
-				else:
-					obj.material = mat
-		else: #assign stored material
-			for obj in rt.selection:
-				obj.material = self.storedMaterial #assign material per object in selection
-		
-		rt.redrawViews()
-
-
-	def b004(self):
-		'''
-		Assign New random mat ID
-		'''
-		self.ui.chk002.setChecked(True) #set combobox to ID map mode
-
-		import random
-
-		selection = rt.selection
-
-		if selection:
-			prefix = 'matID'
-			rgb = [random.randint(0, 255) for _ in range(3)] #generate a list containing 3 values between 0-255
-
-			#format name
-			name = '_'.join([prefix, str(rgb[0]), str(rgb[1]), str(rgb[2])])
-			#create shader
-			mat = rt.StandardMaterial()
-	 		mat.name = name
-			mat.diffuse = rt.color(rgb[0], rgb[1], rgb[2])
-
-			for obj in selection:
-				obj.material = mat
-
-			#delete previous shader
-			if self.randomMat:
-				self.randomMat = None #replace with standard material
-
-			self.randomMat = mat
-
-			self.cmb002() #refresh combobox
-			rt.redrawViews()
-		else:
-			print '# Error: No valid object/s selected. #'
 
 
 	def b007(self):
 		'''
 		Open material in editor
 		'''
-		if self.ui.chk002.isChecked(): #ID map mode
+		if self.ui.tb001.chk001.isChecked(): #ID map mode
 			try:
-				mat = self.storedID_mats[self.ui.cmb002.currentText()] #get object from string key
+				mat = self.materials[self.ui.cmb002.currentText()] #get object from string key
 			except:
 				return '# Error: No stored material or no valid object selected. #'
 		else: #Stored material mode
-			if not self.storedMaterial: #get material from selected scene object
+			if not self.currentMaterial: #get material from selected scene object
 				if rt.selection:
-					self.storedMaterial = rt.selection[0].material
+					self.currentMaterial = rt.selection[0].material
 				else:
 					return '# Error: No stored material or no valid object selected. #'
-			mat = self.storedMaterial
+			mat = self.currentMaterial
 
 		#open the slate material editor
 		if not rt.SME.isOpen():
@@ -369,19 +324,19 @@ class Materials(Init):
 		'''
 		newMatName = self.ui.cmb002.currentText()
 
-		if self.ui.chk002.isChecked(): #Rename ID map Material
+		if self.ui.tb001.chk001.isChecked(): #Rename ID map Material
 			prefix = 'matID_'
 			newName = newMatName
 
 			matName = self.currentMatName
-			mat = self.storedID_mats[matName] #get object from string key
+			mat = self.materials[matName] #get object from string key
 			if not newName.startswith(prefix):
 				mat.name = prefix+newName
 			else:
 				mat.name = newName
 		else: #Rename Stored Material
-			if self.storedMaterial:
-				self.storedMaterial.name = newMatName
+			if self.currentMaterial:
+				self.currentMaterial.name = newMatName
 
 
 	def b008(self):
@@ -397,8 +352,10 @@ class Materials(Init):
 				b.setChecked(False)
 			else:
 				self.ui.cmb002.setEditable(True)
+				self.toggleWidgets(self.ui, setDisabled='b002,b007,tb000,tb002-3')
 		else:
 			self.ui.cmb002.setEditable(False)
+			self.toggleWidgets(self.ui, setEnabled='b002,b007,tb000,tb002-3')
 
 
 
@@ -417,13 +374,36 @@ print os.path.splitext(os.path.basename(__file__))[0]
 
 # deprecated
 
+
+# elif storedMaterial:
+# 	mat = self.currentMaterial
+# 	if not mat:
+# 		cmb.addItems_(['Stored Material: None'])
+# 		return
+
+# 	matName = mat.name
+	
+# 	subMaterials = [rt.getSubMtl(mat, i) for i in range(1, rt.getNumSubMtls(mat)+1)] #get the material using the matID index. modify index range for index starting at 1.
+# 	subMatNames = [s.name for s in subMaterials if s is not None]
+	
+# 	contents = cmb.addItems_(subMatNames, matName)
+
+# 	if index is None:
+# 		index = cmb.currentIndex()
+# 	if index!=0:
+# 		self.currentMaterial = subMaterials[index-1]
+# 	else:
+# 		self.currentMaterial = mat
+
+
+
 	# def cmb000(self, index=None):
 	# 	'''
 	# 	Existing Materials
 	# 	'''
 	# 	cmb = self.ui.cmb000
 
-	# 	self.ui.chk002.setChecked(False) #put combobox cmb002 in stored material mode.
+	# 	self.ui.tb001.chk001.setChecked(False) #put combobox cmb002 in stored material mode.
 
 	# 	# materials = [mat for mat in rt.sceneMaterials if 'Multimaterial' not in mat.name and 'BlendMtl' not in mat.name and not mat.name.startswith('Material')]
 	# 	materials=[] #get any scene material that doesnt startswith 'Material'
@@ -444,12 +424,12 @@ print os.path.splitext(os.path.basename(__file__))[0]
 		
 	# 	contents = cmb.addItems_(materialNames, 'Scene Materials:')
 
-	# 	if not index:
+	# 	if index is None:
 	# 		index = cmb.currentIndex()
 	# 	if index!=0:
 	# 		mat = [m for m in materials if m.name==contents[index]][0]
 
-	# 		self.storedMaterial = mat #store material
+	# 		self.currentMaterial = mat #store material
 	# 		self.cmb002() #refresh combobox
 
 	# 		cmb.setCurrentIndex(0)

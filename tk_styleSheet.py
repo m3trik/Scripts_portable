@@ -142,6 +142,14 @@ class StyleSheet():
 			color: {COLOR_TEXT1};
 		}
 
+		QToolButton::enabled {
+			color: {COLOR_TEXT1};
+		}
+
+		QToolButton::disabled {
+			color: {COLOR_TEXT3};
+		}
+
 		QToolButton::hover {   
 			border: 1px solid black;
 			background-color: {COLOR_ACCENT};
@@ -181,6 +189,15 @@ class StyleSheet():
 			border: 1px solid {COLOR_TEXT1};
 			padding: 0px 0px 0px 4px;
 			margin: 4px 2px 4px 0px;
+		}
+
+		QToolButton::menu-button::enabled {
+			color: {COLOR_TEXT1};
+		}
+
+		QToolButton::menu-button::disabled {
+			color: {COLOR_TEXT3};
+			border: 1px solid transparent;
 		}
 
 		QToolButton::menu-button:hover{

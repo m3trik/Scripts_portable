@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>256</width>
-    <height>218</height>
+    <height>235</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -44,41 +44,13 @@
       <x>10</x>
       <y>10</y>
       <width>236</width>
-      <height>181</height>
+      <height>215</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
      <property name="spacing">
       <number>0</number>
      </property>
-     <item row="0" column="1" colspan="2">
-      <widget class="QProgressBar_" name="progressBar">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>10</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>10</height>
-        </size>
-       </property>
-       <property name="value">
-        <number>0</number>
-       </property>
-       <property name="textVisible">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="1" colspan="2">
       <widget class="QPushButton_Draggable" name="pin">
        <property name="minimumSize">
@@ -101,342 +73,212 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1" colspan="2">
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <property name="spacing">
-          <number>12</number>
-         </property>
-         <item>
-          <widget class="QGroupBox" name="groupBox_3">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>52</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>111</width>
-             <height>64</height>
-            </size>
-           </property>
-           <property name="title">
-            <string>Material</string>
-           </property>
-           <widget class="QPushButton" name="b003">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>55</x>
-              <y>10</y>
-              <width>56</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Assign stored material shader ID</string>
-            </property>
-            <property name="text">
-             <string>Assign</string>
-            </property>
-            <property name="autoDefault">
-             <bool>true</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="b002">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>10</y>
-              <width>56</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Store selected material shader ID</string>
-            </property>
-            <property name="text">
-             <string>Store </string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-           </widget>
-           <widget class="QToolButton_" name="tb000">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>30</y>
-              <width>111</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>8</pointsize>
-             </font>
-            </property>
-            <property name="toolTip">
-             <string>Select all components with the same material.  
- If nothing is selected; search all geometry.</string>
-            </property>
-            <property name="text">
-             <string>Select</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>16</width>
-              <height>16</height>
-             </size>
-            </property>
-           </widget>
-          </widget>
-         </item>
-         <item>
-          <spacer name="verticalSpacer">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QVBoxLayout" name="verticalLayout_2">
-         <property name="spacing">
-          <number>12</number>
-         </property>
-         <item>
-          <widget class="QGroupBox" name="groupBox_7">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>69</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>111</width>
-             <height>80</height>
-            </size>
-           </property>
-           <property name="title">
-            <string/>
-           </property>
-           <widget class="QToolButton_" name="tb002">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>10</y>
-              <width>71</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Delete Material</string>
-            </property>
-            <property name="text">
-             <string>Delete</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="b007">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>50</x>
-              <y>30</y>
-              <width>61</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Open material in editor</string>
-            </property>
-            <property name="text">
-             <string>Edit</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="b004">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>70</x>
-              <y>10</y>
-              <width>41</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>8</pointsize>
-             </font>
-            </property>
-            <property name="toolTip">
-             <string>Mat ID: Assign new random material ID color to selected</string>
-            </property>
-            <property name="text">
-             <string>ID</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>16</width>
-              <height>16</height>
-             </size>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="b008">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>30</y>
-              <width>51</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Rename stored material</string>
-            </property>
-            <property name="text">
-             <string>Rename</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </widget>
-         </item>
-         <item>
-          <spacer name="verticalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </item>
-     <item row="2" column="1" colspan="2">
-      <widget class="QGroupBox" name="groupBox">
+     <item row="2" column="1" rowspan="2" colspan="2">
+      <widget class="QGroupBox" name="group000">
        <property name="minimumSize">
         <size>
          <width>0</width>
-         <height>30</height>
+         <height>73</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
          <width>999</width>
-         <height>40</height>
+         <height>64</height>
         </size>
        </property>
        <property name="title">
-        <string/>
+        <string> Scene Materials</string>
        </property>
+       <widget class="QToolButton_" name="tb003">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>135</x>
+          <y>30</y>
+          <width>96</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>111</width>
+          <height>19</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Assign stored material shader ID</string>
+        </property>
+        <property name="text">
+         <string>Assign</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="b002">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>60</x>
+          <y>30</y>
+          <width>76</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>111</width>
+          <height>19</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Set material shader ID from selection.</string>
+        </property>
+        <property name="text">
+         <string>Set</string>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>18</width>
+          <height>18</height>
+         </size>
+        </property>
+       </widget>
+       <widget class="QToolButton_" name="tb000">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>55</x>
+          <y>50</y>
+          <width>81</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>999</width>
+          <height>19</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>Select all components with the same material.  
+ If nothing is selected; search all geometry.</string>
+        </property>
+        <property name="text">
+         <string>Select</string>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
+       </widget>
+       <widget class="QToolButton_" name="tb002">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>50</y>
+          <width>56</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>111</width>
+          <height>19</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Delete Material</string>
+        </property>
+        <property name="text">
+         <string>Delete</string>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>18</width>
+          <height>18</height>
+         </size>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="b007">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>135</x>
+          <y>50</y>
+          <width>96</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>111</width>
+          <height>19</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Open material in editor</string>
+        </property>
+        <property name="text">
+         <string>Open in Editor</string>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>18</width>
+          <height>18</height>
+         </size>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="b008">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>30</y>
+          <width>61</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>111</width>
+          <height>19</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Rename stored material</string>
+        </property>
+        <property name="text">
+         <string>Rename</string>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>18</width>
+          <height>18</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
        <widget class="QComboBox_" name="cmb002">
         <property name="geometry">
          <rect>
@@ -475,7 +317,7 @@
         </property>
         <item>
          <property name="text">
-          <string>Current Material: None</string>
+          <string>Scene Materials</string>
          </property>
         </item>
        </widget>
@@ -487,7 +329,7 @@
          <rect>
           <x>215</x>
           <y>10</y>
-          <width>18</width>
+          <width>16</width>
           <height>19</height>
          </rect>
         </property>
@@ -516,6 +358,78 @@
          </size>
         </property>
        </widget>
+      </widget>
+     </item>
+     <item row="4" column="1" colspan="2">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <property name="spacing">
+          <number>12</number>
+         </property>
+         <item>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="spacing">
+          <number>12</number>
+         </property>
+         <item>
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item row="0" column="1" colspan="2">
+      <widget class="QProgressBar_" name="progressBar">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>10</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>10</height>
+        </size>
+       </property>
+       <property name="value">
+        <number>0</number>
+       </property>
+       <property name="textVisible">
+        <bool>false</bool>
+       </property>
       </widget>
      </item>
     </layout>

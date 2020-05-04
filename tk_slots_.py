@@ -15,10 +15,11 @@ class Slot(object):
 		self.tk = self.sb.getClassInstance('tk')
 
 
-
 	def getObject(self, class_, objectNames, showError_=False):
 		'''
 		Get a list of corresponding objects from a single string.
+		ie. 's000,b002,cmb011-15' would get objects with objectNames: s000, b002, and cmb011-cmb015
+
 		args:
 			class_ = class object
 			objectNames (str) = names separated by ','. ie. 's000,b004-7'. b004-7 specifies buttons b004-b007.  
@@ -27,7 +28,7 @@ class Slot(object):
 		returns:
 			list of corresponding objects
 
-		#ex. getObject(self.ui, 's000,b002,cmb011-15') #get objects for s000,b002, and cmb011-cmb015
+		#ex call: getObject(self.ui, 's000,b002,cmb011-15')
 		'''
 		objects=[]
 		for name in Slot.unpackNames(objectNames):
@@ -40,58 +41,34 @@ class Slot(object):
 		return objects
 
 
-
-	@staticmethod
-	def unpackNames(nameString):
+	def connect(self, widgets, signals, slots, class_=None):
 		'''
-		Get a list of individual names from a single name string.
+		Connect multiple signals to multiple slots at once.
+
 		args:
-			nameString = string consisting of widget names separated by commas. ie. 'v000, b004-6'
+			widgets (str)(obj)(list) = 
+			signals (str)(list) = 
+			slots (obj)(list) =
+			class_ (obj)(list) = if the widgets arg is given as a string, then the class_ it belongs to can be explicitly given. else, the current ui will be used.
 
-		returns:
-			unpacked names. ie. ['v000','b004','b005','b006']
+		ex call: self.connect('chk000-2', 'toggled', self.cmb002, tb) *or self.connect([tb.chk000, tb.chk001], 'toggled', self.cmb002)
 		'''
-		packed_names = [n.strip() for n in nameString.split(',') if '-' in n] #build list of all widgets passed in containing '-'
+		if isinstance(widgets, (str,unicode)):
+			try:
+				widgets = self.getObject(class_, widgets, showError_=True) #getObject returns a widget list from a string of objectNames.
+			except:
+				widgets = self.getObject(self.sb.getUi(), widgets, showError_=True)
 
-		unpacked_names=[]
-		for name in packed_names:
-			name=name.split('-') #ex. split 'b000-8'
-			prefix = name[0].strip('0123456789') #ex. split 'b' from 'b000'
-			start = int(name[0].strip('abcdefghijklmnopqrstuvwxyz') or 0) #start range. #ex. '000' #converting int('000') returns None, if case; assign 0.
-			stop = int(name[1])+1 #end range. #ex. '9' from 'b000-8' for range up to 9 but not including 9.
-			unpacked_names.extend([str(prefix)+'000'[:-len(str(num))]+str(num) for num in range(start,stop)]) #build list of name strings within given range
+		#if the variables are not of a list type; convert them.
+		widgets = self.sb.list_(widgets)
+		signals = self.sb.list_(signals)
+		slots = self.sb.list_(slots)
 
-		names = [n.strip() for n in nameString.split(',') if '-' not in n] #all widgets passed in not containing '-'
-
-		return names+unpacked_names
-
-
-
-	@staticmethod
-	def getAttributes(node, exclude=None):
-		'''
-		Get existing node attributes.
-		args:
-			node = object
-			exclude = 'string list' - attributes to exclude from returned dictionay
-
-		returns:
-			dictionary {'string attribute': value}
-		'''
-		return {attr:getattr(node, attr) for attr in dir(node) if attr not in exclude}
-
-
-
-	@staticmethod
-	def setAttributes(node, attributes):
-		'''
-		Set node attributes.
-		args:
-			node = object
-			attributes = dictionary {'string attribute': value} - attributes and their correponding value to set
-		'''
-		[setattr(node, attr, value) for attr, value in attributes.iteritems() if attr and value]
-
+		for widget in widgets:
+			for signal in signals:
+				signal = getattr(widget, signal)
+				for slot in slots:
+					signal.connect(slot)
 
 
 	def toggleWidgets(self, *args, **kwargs):
@@ -104,7 +81,7 @@ class Slot(object):
 								Optionally appending '_False' or '_True' to the attribute name, will set the attribute accordingly. (The default state is True)
 					argument: string of objectNames - objectNames separated by ',' ie. 'b000-12,b022'
 
-		ex.	toggleWidgets(self.ui1, self.ui2, setDisabled='b000', setChecked_False='chk009-12', setVisible='b015,b017')
+		ex.	self.toggleWidgets(self.ui1, self.ui2, setDisabled='b000', setChecked_False='chk009-12', setVisible='b015,b017')
 		'''
 		for ui in args:
 			for property_ in kwargs: #ie. property_ could be setChecked_False
@@ -118,7 +95,6 @@ class Slot(object):
 					state = True
 
 				[getattr(w, property_)(state) for w in widgets] #set the property state for each widget in the list.
-
 
 
 	def setSpinboxes(self, ui, spinboxNames, attributes={}):
@@ -155,6 +131,30 @@ class Slot(object):
 				spinboxes[index].blockSignals(False)
 
 
+	@staticmethod
+	def getAttributes(node, exclude=None):
+		'''
+		Get existing node attributes.
+		args:
+			node = object
+			exclude = 'string list' - attributes to exclude from returned dictionay
+
+		returns:
+			dictionary {'string attribute': value}
+		'''
+		return {attr:getattr(node, attr) for attr in dir(node) if attr not in exclude}
+
+
+	@staticmethod
+	def setAttributes(node, attributes):
+		'''
+		Set node attributes.
+		args:
+			node = object
+			attributes = dictionary {'string attribute': value} - attributes and their correponding value to set
+		'''
+		[setattr(node, attr, value) for attr, value in attributes.iteritems() if attr and value]
+
 
 	global cycleDict
 	cycleDict={}
@@ -186,15 +186,44 @@ class Slot(object):
 		return value #return current value. ie. 1
 
 
+	@staticmethod
+	def unpackNames(nameString):
+		'''
+		Get a list of individual names from a single name string.
+		If you are looking to get multiple objects from a name string, call 'getObject' directly instead.
+
+		args:
+			nameString = string consisting of widget names separated by commas. ie. 'v000, b004-6'
+
+		returns:
+			unpacked names. ie. ['v000','b004','b005','b006']
+		'''
+		packed_names = [n.strip() for n in nameString.split(',') if '-' in n] #build list of all widgets passed in containing '-'
+
+		unpacked_names=[]
+		for name in packed_names:
+			name=name.split('-') #ex. split 'b000-8'
+			prefix = name[0].strip('0123456789') #ex. split 'b' from 'b000'
+			start = int(name[0].strip('abcdefghijklmnopqrstuvwxyz') or 0) #start range. #ex. '000' #converting int('000') returns None, if case; assign 0.
+			stop = int(name[1])+1 #end range. #ex. '9' from 'b000-8' for range up to 9 but not including 9.
+			unpacked_names.extend([str(prefix)+'000'[:-len(str(num))]+str(num) for num in range(start,stop)]) #build list of name strings within given range
+
+		names = [n.strip() for n in nameString.split(',') if '-' not in n] #all widgets passed in not containing '-'
+
+		return names+unpacked_names
+
 
 	@staticmethod
 	def collapseList(list_, limit=None):
 		'''
+		Convert a list of integers to a collapsed sequential string format.
+		ie. [19,22,23,24,25,26] to ['19', '22..26']
+
 		args:
 			list_ (list) = of integers
 
 		returns:
-			list with sequential integers collapsed in string format. ie. ['20', '22..28']
+			(list)
 		'''
 		list_ = [str(x) for x in list_] #make sure the list is made up of strings.
 		
@@ -216,6 +245,9 @@ class Slot(object):
 			return l
 		else:
 			return collapsedList
+
+
+
 
 
 

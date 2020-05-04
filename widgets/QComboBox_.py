@@ -65,19 +65,21 @@ class QComboBox_(QtWidgets.QComboBox):
 
 	def addItems_(self, items, title=None):
 		'''
-		Set items.
+		Add items to the combobox without triggering any signals.
+
 		args:
 			items (list) = list of strings to fill the comboBox with
 			title (str) = optional value for the first index of the comboBox's list
 
 		returns:
 			comboBox's current item list minus any title.
-		ex. comboBox.addItems_(["Import file", "Import Options"], "Import")
+
+		ex call: comboBox.addItems_(["Import file", "Import Options"], "Import")
 		'''
 		self.blockSignals(True) #to keep clear from triggering currentIndexChanged
 		index = self.currentIndex() #get current index before refreshing list
 		self.clear()
-		
+
 		items_ = [str(i) for i in [title]+items if i]
 		self.addItems(items_) 
 
@@ -87,6 +89,20 @@ class QComboBox_(QtWidgets.QComboBox):
 		return items_
 
 
+	def setCurrentText_(self, item):
+		'''
+		Sets the current item from the given item text string without triggering any signals.
+
+		args:
+			item (str) = item text
+		'''
+		self.blockSignals(True) #to keep clear from triggering currentIndexChanged
+
+		self.setCurrentText(item)
+
+		self.blockSignals(False)
+
+
 	def showEvent(self, event):
 		'''
 		args:
@@ -94,9 +110,9 @@ class QComboBox_(QtWidgets.QComboBox):
 		'''
 		try:
 			if not __name__=='__main__':
-				self.classMethod()
-
-		except AttributeError:
+				if callable(self.classMethod):
+					self.classMethod()
+		except:
 			from tk_switchboard import sb
 			self.sb = sb
 
@@ -106,6 +122,11 @@ class QComboBox_(QtWidgets.QComboBox):
 			# self.classMethod = getattr(class_, str(self.objectName()))
 
 		return QtWidgets.QComboBox.showEvent(self, event)
+
+
+
+
+
 
 
 
