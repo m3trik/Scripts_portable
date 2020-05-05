@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>276</width>
-    <height>381</height>
+    <width>262</width>
+    <height>343</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -88,10 +88,16 @@
          </property>
          <item>
           <widget class="QGroupBox" name="animation">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>71</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
              <width>999</width>
-             <height>71</height>
+             <height>999</height>
             </size>
            </property>
            <property name="title">
@@ -188,6 +194,19 @@
             </property>
            </widget>
           </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
          </item>
         </layout>
        </item>

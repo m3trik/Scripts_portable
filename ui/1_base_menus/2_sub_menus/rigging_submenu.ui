@@ -87,7 +87,7 @@
      <string>Rigging</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="b002_2">
+   <widget class="QPushButton" name="b001">
     <property name="geometry">
      <rect>
       <x>230</x>
@@ -132,7 +132,7 @@
      <string>Parent</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="b003">
+   <widget class="QPushButton" name="tb001">
     <property name="geometry">
      <rect>
       <x>175</x>

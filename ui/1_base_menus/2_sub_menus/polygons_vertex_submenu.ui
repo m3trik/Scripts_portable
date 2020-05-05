@@ -59,7 +59,7 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <widget class="QPushButton" name="b040">
+   <widget class="QPushButton" name="tb000">
     <property name="enabled">
      <bool>true</bool>
     </property>

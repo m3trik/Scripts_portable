@@ -155,7 +155,7 @@
      <string>Edge</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="b005">
+   <widget class="QPushButton" name="tb001">
     <property name="enabled">
      <bool>true</bool>
     </property>

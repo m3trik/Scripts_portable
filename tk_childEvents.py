@@ -61,7 +61,7 @@ class EventFactoryFilter(QtCore.QObject):
 
 
 			if widgetType=='QPushButton' and uiLevel<3:
-				if sb.prefix(widget, ['b', 'v', 'i']):
+				if sb.prefix(widget, ['b', 'v', 'i', 'tb']):
 					self.resizeAndCenterWidget(widget)
 
 			elif widgetType=='QWidget':
@@ -101,13 +101,12 @@ class EventFactoryFilter(QtCore.QObject):
 		for widget in sb.list_(widgets):
 			derivedType = sb.getDerivedType(widget, name) #get the derived class type as string.
 			if hasattr(widget, 'styleSheet'):
+				s = getattr(StyleSheet, derivedType, '')
 				if uiLevel==2 and not sb.prefix(widget, 'i'): #if submenu and objectName doesn't start with 'i':
-					s = getattr(StyleSheet, 'submenu', '')
-				else:
-					s = getattr(StyleSheet, derivedType, '')
+					s = s+getattr(StyleSheet, 'dark') #override with the dark version on submenus.
 				if widget.styleSheet(): #if the widget has an existing style sheet, append.
 					s = s+widget.styleSheet()
-				widget.setStyleSheet(s)		
+				widget.setStyleSheet(s)
 
 
 	def resizeAndCenterWidget(self, widget, paddingX=30, paddingY=6):

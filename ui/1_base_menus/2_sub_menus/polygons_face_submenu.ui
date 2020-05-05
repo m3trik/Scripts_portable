@@ -223,7 +223,7 @@
      <string>Face</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="b016">
+   <widget class="QPushButton" name="tb006">
     <property name="enabled">
      <bool>true</bool>
     </property>

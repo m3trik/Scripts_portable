@@ -25,6 +25,7 @@ class StyleSheet():
 	'COLOR_TEXT3'	: 'grey',
 	}
 
+
 	def f(string):
 		for k,v in colorValues.items():
 			string = string.replace('{'+k+'}', v)
@@ -60,13 +61,11 @@ class StyleSheet():
 		}
 
 		QPushButton::checked {
-			border: 1px solid black;
 			background-color: {COLOR_ACCENT};
 			color: {COLOR_TEXT2};
 		}
 
-		QPushButton::hover {   
-			border: 1px solid black;
+		QPushButton::hover {
 			background-color: {COLOR_ACCENT};
 			color: {COLOR_TEXT1};
 		}
@@ -76,49 +75,7 @@ class StyleSheet():
 			color: {COLOR_TEXT2};
 		}
 
-		QPushButton::pressed {   
-			border: 1px solid black;
-			background-color: {COLOR_MEDLIGHT};
-			color: {COLOR_TEXT1};
-		}
-
-		QPushButton:flat {
-			border: none; /* no border for a flat push button */
-		}
-
-		QPushButton:default {
-			border-color: navy; /* make the default button prominent */
-		}''')
-
-	submenu=f('''
-		QPushButton {
-			border-style: outset;
-			border-radius: 1px;
-			border: 1px solid black;
-			padding: 0px;
-			background-color: rgb(50,50,50);
-			color: grey;
-		}
-
-		QPushButton::checked {
-			border: 1px solid black;
-			background-color: {COLOR_ACCENT};
-			color: {COLOR_TEXT2};
-		}
-
-		QPushButton::hover {   
-			border: 1px solid black;
-			background-color: {COLOR_ACCENT};
-			color: {COLOR_TEXT1};
-		}
-
-		QPushButton::checked::hover {
-			background-color: {COLOR_ACCENT};
-			color: {COLOR_TEXT2};
-		}
-
-		QPushButton::pressed {   
-			border: 1px solid black;
+		QPushButton::pressed {
 			background-color: {COLOR_MEDLIGHT};
 			color: {COLOR_TEXT1};
 		}
@@ -151,13 +108,11 @@ class StyleSheet():
 		}
 
 		QToolButton::hover {   
-			border: 1px solid black;
 			background-color: {COLOR_ACCENT};
 			color: {COLOR_TEXT1};
 		}
 
 		QToolButton::checked {
-			border: 1px solid black;
 			background-color: {COLOR_ACCENT};
 			color: {COLOR_TEXT2};
 		}
@@ -168,7 +123,6 @@ class StyleSheet():
 		}
 
 		QToolButton::pressed, QToolButton::menu-button:pressed {   
-			border: 1px solid black;
 			background-color: {COLOR_MEDLIGHT};
 			color: {COLOR_TEXT1};
 		}
@@ -462,7 +416,7 @@ class StyleSheet():
 		QTextEdit#info {
 			background-color: transparent';
 			color: white;
-			selection-background-color: grey;
+			selection-background-color: {COLOR_TEXT3};
 			selection-color: white;
 		}
 
@@ -829,6 +783,48 @@ class StyleSheet():
 			margin: 0px;
 			background-color: {COLOR_ACCENT};
 		}''')
+
+	dark=f('''
+			QPushButton, QToolButton {
+				background-color: {COLOR_DARK};
+				color: {COLOR_TEXT3};
+			}
+
+			QPushButton::enabled, QToolButton::enabled {
+				color: {COLOR_TEXT3};
+			}
+
+			QPushButton::disabled, QToolButton::disabled {
+				color: {COLOR_TEXT2};
+			}
+
+			QPushButton::checked, QToolButton::checked {
+				background-color: {COLOR_ACCENT};
+				color: {COLOR_TEXT2};
+			}
+
+			QPushButton::hover, QToolButton::hover {
+				background-color: {COLOR_ACCENT};
+				color: {COLOR_TEXT1};
+			}
+
+			QPushButton::checked::hover, QToolButton::checked::hover {
+				background-color: {COLOR_ACCENT};
+				color: {COLOR_TEXT2};
+			}
+
+			QPushButton::pressed, QToolButton::pressed {
+				background-color: {COLOR_MEDLIGHT};
+				color: {COLOR_TEXT1};
+			}
+
+			QToolButton::menu-button {
+				border: 1px solid transparent;
+			}
+
+			QToolButton::menu-button::hover {
+				border: 1px solid transparent;
+			}''')
 
 
 

@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>132</width>
-    <height>135</height>
+    <height>164</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -44,7 +44,7 @@
       <x>5</x>
       <y>10</y>
       <width>117</width>
-      <height>91</height>
+      <height>134</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
@@ -87,34 +87,66 @@
           <number>12</number>
          </property>
          <item>
-          <widget class="QComboBox_" name="cmb001">
+          <widget class="QGroupBox" name="groupBox">
            <property name="minimumSize">
             <size>
-             <width>111</width>
-             <height>21</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
              <width>0</width>
-             <height>21</height>
+             <height>30</height>
             </size>
            </property>
-           <property name="maxVisibleItems">
-            <number>50</number>
+           <property name="title">
+            <string>Convert</string>
            </property>
-           <property name="sizeAdjustPolicy">
-            <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
-           </property>
-           <property name="frame">
-            <bool>false</bool>
-           </property>
-           <item>
-            <property name="text">
-             <string>Convert To</string>
+           <widget class="QComboBox_" name="cmb001">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>10</y>
+              <width>111</width>
+              <height>21</height>
+             </rect>
             </property>
-           </item>
+            <property name="minimumSize">
+             <size>
+              <width>111</width>
+              <height>21</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>0</width>
+              <height>21</height>
+             </size>
+            </property>
+            <property name="maxVisibleItems">
+             <number>50</number>
+            </property>
+            <property name="sizeAdjustPolicy">
+             <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
+            </property>
+            <property name="frame">
+             <bool>false</bool>
+            </property>
+            <item>
+             <property name="text">
+              <string>Convert To</string>
+             </property>
+            </item>
+           </widget>
           </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
          </item>
         </layout>
        </item>

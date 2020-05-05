@@ -143,7 +143,7 @@
      <string>Materials</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="b003">
+   <widget class="QToolButton_" name="tb003">
     <property name="enabled">
      <bool>true</bool>
     </property>
@@ -166,15 +166,6 @@
     </property>
     <property name="text">
      <string>Assign</string>
-    </property>
-    <property name="autoDefault">
-     <bool>true</bool>
-    </property>
-    <property name="default">
-     <bool>false</bool>
-    </property>
-    <property name="flat">
-     <bool>false</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="b002">
@@ -199,7 +190,7 @@
      <string>Store selected material shader ID</string>
     </property>
     <property name="text">
-     <string>Store </string>
+     <string>Set</string>
     </property>
     <property name="iconSize">
      <size>
@@ -208,7 +199,7 @@
      </size>
     </property>
    </widget>
-   <widget class="QPushButton" name="b000">
+   <widget class="QToolButton_" name="tb000">
     <property name="enabled">
      <bool>true</bool>
     </property>
@@ -245,15 +236,15 @@
      </size>
     </property>
    </widget>
-   <widget class="QPushButton" name="b001">
+   <widget class="QToolButton_" name="tb002">
     <property name="enabled">
      <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>240</x>
       <y>350</y>
-      <width>41</width>
+      <width>46</width>
       <height>19</height>
      </rect>
     </property>
@@ -309,6 +300,13 @@
    </widget>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QToolButton_</class>
+   <extends>QToolButton</extends>
+   <header>widgets.qtoolbutton_.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
  <designerdata>

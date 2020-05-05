@@ -38,10 +38,16 @@ class Materials(Init):
 	def cmb002(self, index=None):
 		'''
 		Material list
+
+		args:
+			index (int) = parameter on activated, currentIndexChanged, and highlighted signals.
 		'''
 		cmb = self.ui.cmb002
-		sceneMaterials = self.ui.tb001.chk000.isChecked()
-		idMapMaterials = self.ui.tb001.chk001.isChecked()
+		try:
+			sceneMaterials = self.ui.tb001.chk000.isChecked()
+			idMapMaterials = self.ui.tb001.chk001.isChecked()
+		except: #if the toolbox hasn't been built yet: default to sceneMaterials
+			sceneMaterials = True
 
 		if sceneMaterials:
 			materials=[] #get any scene material that does not start with 'Material'
@@ -74,19 +80,19 @@ class Materials(Init):
 		contents = cmb.addItems_(matNames)
 
 		#create and set icons with color swatch
-		for index in range(len(mats)): #create icons with color swatch
-			r = int(mats[index].diffuse.r) #convert from float value
-			g = int(mats[index].diffuse.g)
-			b = int(mats[index].diffuse.b)
+		for i in range(len(mats)): #create icons with color swatch
+			r = int(mats[i].diffuse.r) #convert from float value
+			g = int(mats[i].diffuse.g)
+			b = int(mats[i].diffuse.b)
 			pixmap = QtGui.QPixmap(100,100)
 			pixmap.fill(QtGui.QColor.fromRgb(r, g, b))
-			cmb.setItemIcon(index, QtGui.QIcon(pixmap))
+			cmb.setItemIcon(i, QtGui.QIcon(pixmap))
 
 		if index is None:
 			index = cmb.currentIndex()
 
-		self.currentMaterial = contents[index] if len(contents)>index else None #store material
-		self.materials = {n:mats[i] for i, n in enumerate(contents)} #add mat objects to materials dictionary. 'mat name'=key, <mat object>=value
+		self.materials = {name:mats[i] for i, name in enumerate(matNames)} #add mat objects to materials dictionary. 'mat name'=key, <mat object>=value
+		self.currentMaterial = mats[index] if len(mats)>index else None #store material
 
 
 	def tb000(self, state=None):

@@ -89,16 +89,19 @@ class QComboBox_(QtWidgets.QComboBox):
 		return items_
 
 
-	def setCurrentText_(self, item):
+	def setCurrent_(self, i):
 		'''
-		Sets the current item from the given item text string without triggering any signals.
+		Sets the current item from the given item text or index without triggering any signals.
 
 		args:
-			item (str) = item text
+			item (str)(int) = item text or item index
 		'''
 		self.blockSignals(True) #to keep clear from triggering currentIndexChanged
 
-		self.setCurrentText(item)
+		if isinstance(i, int): #set by item index:
+			self.setCurrentIndex(i)
+		else: #set by item text string:
+			self.setCurrentText(i)
 
 		self.blockSignals(False)
 
@@ -120,6 +123,8 @@ class QComboBox_(QtWidgets.QComboBox):
 			# className = self.sb.getUiName(pascalCase=True)
 			# class_ = self.sb.getClassInstance(className)
 			# self.classMethod = getattr(class_, str(self.objectName()))
+			if callable(self.classMethod):
+				self.classMethod()
 
 		return QtWidgets.QComboBox.showEvent(self, event)
 

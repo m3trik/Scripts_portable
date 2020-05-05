@@ -146,7 +146,7 @@
            <property name="title">
             <string>Mesh Cleanup</string>
            </property>
-           <widget class="QPushButton" name="tb000">
+           <widget class="QToolButton_" name="tb000">
             <property name="geometry">
              <rect>
               <x>0</x>
@@ -172,9 +172,6 @@
               <width>18</width>
               <height>18</height>
              </size>
-            </property>
-            <property name="bnabled" stdset="0">
-             <bool>true</bool>
             </property>
            </widget>
           </widget>

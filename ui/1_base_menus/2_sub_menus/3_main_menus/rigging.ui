@@ -178,7 +178,7 @@
              <string>Orient</string>
             </property>
            </widget>
-           <widget class="QPushButton" name="b002_2">
+           <widget class="QPushButton" name="b001">
             <property name="geometry">
              <rect>
               <x>0</x>

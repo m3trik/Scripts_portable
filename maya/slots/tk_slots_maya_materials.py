@@ -39,13 +39,19 @@ class Materials(Init):
 	def cmb002(self, index=None):
 		'''
 		Material list
+
+		args:
+			index (int) = parameter on activated, currentIndexChanged, and highlighted signals.
 		'''
 		cmb = self.ui.cmb002
-		sceneMaterials = self.ui.tb001.chk000.isChecked()
-		idMapMaterials = self.ui.tb001.chk001.isChecked()
+		try:
+			sceneMaterials = self.ui.tb001.chk000.isChecked()
+			idMapMaterials = self.ui.tb001.chk001.isChecked()
+		except: #if the toolbox hasn't been built yet: default to sceneMaterials
+			sceneMaterials = True
 
 		if sceneMaterials:
-			materials = [m for m in pm.ls(materials=1)]
+			materials = [m for m in pm.ls(materials=1) if not pm.nodeType(m)=='standardSurface']
 
 		elif idMapMaterials:
 			materials = [m for m in pm.ls(mat=1, flatten=1) if m.name().startswith('matID')]
@@ -55,20 +61,19 @@ class Materials(Init):
 		contents = cmb.addItems_(matNames)
 
 		#create and set icons with color swatch
-		for index in range(len(mats)):
-			r = int(pm.getAttr(matNames[index]+'.colorR')*255) #convert from 0-1 to 0-255 value and then to an integer
-			g = int(pm.getAttr(matNames[index]+'.colorG')*255)
-			b = int(pm.getAttr(matNames[index]+'.colorB')*255)
+		for i in range(len(mats)):
+			r = int(pm.getAttr(matNames[i]+'.colorR')*255) #convert from 0-1 to 0-255 value and then to an integer
+			g = int(pm.getAttr(matNames[i]+'.colorG')*255)
+			b = int(pm.getAttr(matNames[i]+'.colorB')*255)
 			pixmap = QtGui.QPixmap(100,100)
 			pixmap.fill(QtGui.QColor.fromRgb(r, g, b))
-			cmb.setItemIcon(index, QtGui.QIcon(pixmap))
+			cmb.setItemIcon(i, QtGui.QIcon(pixmap))
 
 		if index is None:
 			index = cmb.currentIndex()
 
-		# print(contents[index])
-		self.currentMaterial = contents[index] if len(contents) > index else None #store material
-		self.materials = {n:mats[i] for i, n in enumerate(contents)} #add mat objects to materials dictionary. 'mat name'=key, <mat object>=value
+		self.materials = {name:mats[i] for i, name in enumerate(matNames)} #add mat objects to materials dictionary. 'mat name'=key, <mat object>=value
+		self.currentMaterial = mats[index] if len(mats)>index else None #store material
 
 
 	def tb000(self, state=None):
@@ -203,7 +208,7 @@ class Materials(Init):
 					self.cmb002() #refresh the combobox
 				else:
 					self.ui.tb001.chk001.setChecked(True) #set combobox to ID map mode. toggling the checkbox refreshes the combobox.
-				self.ui.cmb002.setCurrentText_(name) #set the combobox index to the new mat #self.cmb002.setCurrentIndex(self.cmb002.findText(name))
+				self.ui.cmb002.setCurrent_(name) #set the combobox index to the new mat #self.cmb002.setCurrentIndex(self.cmb002.findText(name))
 			else:
 				print('# Error: No valid object/s selected. #')
 
