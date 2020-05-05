@@ -19,7 +19,7 @@ class StyleSheet():
 	'COLOR_MEDIUM' 	: 'rgb(100,100,100)',
 	'COLOR_MEDLIGHT': 'rgb(125,125,125)',
 	'COLOR_LIGHT' 	: 'rgb(225,225,225)',
-	'COLOR_ACCENT' 	: 'rgba(82,133,166,225)',
+	'COLOR_ACCENT' 	: 'rgba(82,133,166,175)',
 	'COLOR_TEXT1'	: 'white',
 	'COLOR_TEXT2'	: 'black',
 	'COLOR_TEXT3'	: 'grey',
@@ -670,20 +670,19 @@ class StyleSheet():
 
 	QGroupBox=f('''
 		QGroupBox {
+			border: 1px transparent;
+			border-radius: 1px;
 			margin-top: 4px; /* leave space at the top for the title */
-			background-color: rgbs(127,127,127,2);
-			color: {COLOR_TEXT2};
-			border: 1px {COLOR_MEDLIGHT};
-			border-radius: 5px;
+			background-color: {COLOR_ACCENT};
 		}
 
 		QGroupBox::title {
-			top: -7px;
-			left: 7px;
+			top: -2px;
+			left: 5px;
 
 			subcontrol-position: top left; /* position at the top center */
 			background-color: transparent;
-			color: {COLOR_MEDLIGHT};
+			color: {COLOR_TEXT2};
 		}''')
 
 	QTabBar=f('''

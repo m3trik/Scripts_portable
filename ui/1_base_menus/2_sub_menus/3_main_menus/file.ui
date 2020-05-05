@@ -43,7 +43,7 @@
      <rect>
       <x>8</x>
       <y>6</y>
-      <width>236</width>
+      <width>238</width>
       <height>201</height>
      </rect>
     </property>
@@ -63,7 +63,7 @@
            <property name="minimumSize">
             <size>
              <width>111</width>
-             <height>50</height>
+             <height>56</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -79,7 +79,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>30</y>
+              <y>35</y>
               <width>109</width>
               <height>19</height>
              </rect>
@@ -112,7 +112,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>12</y>
+              <y>17</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -145,7 +145,7 @@
             <property name="geometry">
              <rect>
               <x>84</x>
-              <y>12</y>
+              <y>17</y>
               <width>25</width>
               <height>19</height>
              </rect>
@@ -176,7 +176,7 @@
            <property name="minimumSize">
             <size>
              <width>111</width>
-             <height>30</height>
+             <height>36</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -192,7 +192,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>12</y>
+              <y>15</y>
               <width>109</width>
               <height>19</height>
              </rect>
@@ -243,7 +243,7 @@
            <property name="minimumSize">
             <size>
              <width>111</width>
-             <height>67</height>
+             <height>71</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -259,7 +259,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>30</y>
+              <y>32</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -287,7 +287,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>48</y>
+              <y>50</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -315,7 +315,7 @@
             <property name="geometry">
              <rect>
               <x>48</x>
-              <y>12</y>
+              <y>14</y>
               <width>63</width>
               <height>19</height>
              </rect>
@@ -348,7 +348,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>12</y>
+              <y>14</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -495,12 +495,34 @@
        </property>
       </widget>
      </item>
+     <item row="1" column="1" colspan="2">
+      <widget class="QPushButton_Draggable" name="pin">
+       <property name="minimumSize">
+        <size>
+         <width>19</width>
+         <height>17</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>999</width>
+         <height>17</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
      <item row="2" column="1" colspan="2">
       <widget class="QGroupBox" name="Project">
        <property name="minimumSize">
         <size>
          <width>0</width>
-         <height>30</height>
+         <height>37</height>
         </size>
        </property>
        <property name="maximumSize">
@@ -516,8 +538,8 @@
         <property name="geometry">
          <rect>
           <x>208</x>
-          <y>12</y>
-          <width>25</width>
+          <y>15</y>
+          <width>26</width>
           <height>19</height>
          </rect>
         </property>
@@ -544,20 +566,20 @@
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>12</y>
-          <width>234</width>
+          <y>15</y>
+          <width>231</width>
           <height>19</height>
          </rect>
         </property>
         <property name="minimumSize">
          <size>
-          <width>234</width>
+          <width>231</width>
           <height>19</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>234</width>
+          <width>999</width>
           <height>19</height>
          </size>
         </property>
@@ -579,8 +601,8 @@
        <widget class="QComboBox_" name="cmb001">
         <property name="geometry">
          <rect>
-          <x>168</x>
-          <y>12</y>
+          <x>160</x>
+          <y>15</y>
           <width>65</width>
           <height>19</height>
          </rect>
@@ -614,28 +636,6 @@
        <zorder>b017</zorder>
       </widget>
      </item>
-     <item row="1" column="1" colspan="2">
-      <widget class="QPushButton_Draggable" name="pin">
-       <property name="minimumSize">
-        <size>
-         <width>19</width>
-         <height>17</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>999</width>
-         <height>17</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
     </layout>
    </widget>
   </widget>
@@ -647,11 +647,6 @@
    <header>widgets.qpushbutton_draggable.h</header>
   </customwidget>
   <customwidget>
-   <class>QComboBox_</class>
-   <extends>QComboBox</extends>
-   <header>widgets.qcombobox_.h</header>
-  </customwidget>
-  <customwidget>
    <class>QProgressBar_</class>
    <extends>QProgressBar</extends>
    <header>widgets.qprogressbar_.h</header>
@@ -661,15 +656,20 @@
    <extends>QToolButton</extends>
    <header>widgets.qtoolbutton_.h</header>
   </customwidget>
+  <customwidget>
+   <class>QComboBox_</class>
+   <extends>QComboBox</extends>
+   <header>widgets.qcombobox_.h</header>
+  </customwidget>
  </customwidgets>
  <resources/>
  <connections/>
  <designerdata>
   <property name="gridDeltaX">
-   <number>4</number>
+   <number>5</number>
   </property>
   <property name="gridDeltaY">
-   <number>6</number>
+   <number>5</number>
   </property>
   <property name="gridSnapX">
    <bool>true</bool>

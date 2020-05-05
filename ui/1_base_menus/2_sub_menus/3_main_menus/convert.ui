@@ -91,7 +91,7 @@
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>30</height>
+             <height>38</height>
             </size>
            </property>
            <property name="title">
@@ -101,7 +101,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>10</y>
+              <y>15</y>
               <width>111</width>
               <height>21</height>
              </rect>
@@ -185,14 +185,14 @@
    <header>widgets.qpushbutton_draggable.h</header>
   </customwidget>
   <customwidget>
-   <class>QComboBox_</class>
-   <extends>QComboBox</extends>
-   <header>widgets.qcombobox_.h</header>
-  </customwidget>
-  <customwidget>
    <class>QProgressBar_</class>
    <extends>QProgressBar</extends>
    <header>widgets.qprogressbar_.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QComboBox_</class>
+   <extends>QComboBox</extends>
+   <header>widgets.qcombobox_.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
@@ -202,7 +202,7 @@
    <number>5</number>
   </property>
   <property name="gridDeltaY">
-   <number>10</number>
+   <number>5</number>
   </property>
   <property name="gridSnapX">
    <bool>true</bool>

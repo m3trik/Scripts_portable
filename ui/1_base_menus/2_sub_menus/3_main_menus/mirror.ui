@@ -49,41 +49,13 @@
       <x>156</x>
       <y>12</y>
       <width>121</width>
-      <height>91</height>
+      <height>131</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
      <property name="spacing">
       <number>0</number>
      </property>
-     <item row="0" column="1" colspan="2">
-      <widget class="QProgressBar_" name="progressBar">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>10</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>10</height>
-        </size>
-       </property>
-       <property name="value">
-        <number>0</number>
-       </property>
-       <property name="textVisible">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
      <item row="2" column="1" colspan="2">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
@@ -93,6 +65,12 @@
          </property>
          <item>
           <widget class="QGroupBox" name="mirror">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>61</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
              <width>111</width>
@@ -106,7 +84,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>30</y>
+              <y>35</y>
               <width>61</width>
               <height>19</height>
              </rect>
@@ -146,7 +124,7 @@
             <property name="geometry">
              <rect>
               <x>76</x>
-              <y>12</y>
+              <y>17</y>
               <width>37</width>
               <height>19</height>
              </rect>
@@ -189,7 +167,7 @@
             <property name="geometry">
              <rect>
               <x>60</x>
-              <y>12</y>
+              <y>17</y>
               <width>17</width>
               <height>19</height>
              </rect>
@@ -232,7 +210,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>12</y>
+              <y>17</y>
               <width>16</width>
               <height>19</height>
              </rect>
@@ -275,7 +253,7 @@
             <property name="geometry">
              <rect>
               <x>28</x>
-              <y>12</y>
+              <y>17</y>
               <width>16</width>
               <height>19</height>
              </rect>
@@ -315,7 +293,7 @@
             <property name="geometry">
              <rect>
               <x>44</x>
-              <y>12</y>
+              <y>17</y>
               <width>16</width>
               <height>19</height>
              </rect>
@@ -355,7 +333,7 @@
             <property name="geometry">
              <rect>
               <x>12</x>
-              <y>12</y>
+              <y>17</y>
               <width>16</width>
               <height>19</height>
              </rect>
@@ -398,7 +376,7 @@
             <property name="geometry">
              <rect>
               <x>60</x>
-              <y>30</y>
+              <y>35</y>
               <width>53</width>
               <height>19</height>
              </rect>
@@ -447,6 +425,19 @@
            <zorder>b008</zorder>
           </widget>
          </item>
+         <item>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
         </layout>
        </item>
       </layout>
@@ -473,6 +464,34 @@
        </property>
       </widget>
      </item>
+     <item row="0" column="1" colspan="2">
+      <widget class="QProgressBar_" name="progressBar">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>10</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>10</height>
+        </size>
+       </property>
+       <property name="value">
+        <number>0</number>
+       </property>
+       <property name="textVisible">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
   </widget>
@@ -493,10 +512,10 @@
  <connections/>
  <designerdata>
   <property name="gridDeltaX">
-   <number>4</number>
+   <number>5</number>
   </property>
   <property name="gridDeltaY">
-   <number>6</number>
+   <number>5</number>
   </property>
   <property name="gridSnapX">
    <bool>true</bool>

@@ -44,7 +44,7 @@
       <x>8</x>
       <y>6</y>
       <width>117</width>
-      <height>67</height>
+      <height>91</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
@@ -88,6 +88,12 @@
          </property>
          <item>
           <widget class="QGroupBox" name="groupBox_2">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>36</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
              <width>111</width>
@@ -103,8 +109,8 @@
             </property>
             <property name="geometry">
              <rect>
-              <x>48</x>
-              <y>12</y>
+              <x>47</x>
+              <y>15</y>
               <width>29</width>
               <height>19</height>
              </rect>
@@ -149,8 +155,8 @@
             </property>
             <property name="geometry">
              <rect>
-              <x>76</x>
-              <y>12</y>
+              <x>75</x>
+              <y>15</y>
               <width>37</width>
               <height>19</height>
              </rect>
@@ -192,8 +198,8 @@
             </property>
             <property name="geometry">
              <rect>
-              <x>0</x>
-              <y>12</y>
+              <x>-1</x>
+              <y>15</y>
               <width>17</width>
               <height>19</height>
              </rect>
@@ -238,8 +244,8 @@
             </property>
             <property name="geometry">
              <rect>
-              <x>16</x>
-              <y>12</y>
+              <x>15</x>
+              <y>15</y>
               <width>16</width>
               <height>19</height>
              </rect>
@@ -284,8 +290,8 @@
             </property>
             <property name="geometry">
              <rect>
-              <x>32</x>
-              <y>12</y>
+              <x>31</x>
+              <y>15</y>
               <width>16</width>
               <height>19</height>
              </rect>
@@ -325,6 +331,19 @@
             </property>
            </widget>
           </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
          </item>
         </layout>
        </item>
@@ -372,10 +391,10 @@
  <connections/>
  <designerdata>
   <property name="gridDeltaX">
-   <number>4</number>
+   <number>5</number>
   </property>
   <property name="gridDeltaY">
-   <number>6</number>
+   <number>5</number>
   </property>
   <property name="gridSnapX">
    <bool>true</bool>

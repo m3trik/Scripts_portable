@@ -139,10 +139,10 @@
  <connections/>
  <designerdata>
   <property name="gridDeltaX">
-   <number>4</number>
+   <number>5</number>
   </property>
   <property name="gridDeltaY">
-   <number>6</number>
+   <number>5</number>
   </property>
   <property name="gridSnapX">
    <bool>true</bool>

@@ -91,7 +91,7 @@
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>86</height>
+             <height>91</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -107,7 +107,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>48</y>
+              <y>52</y>
               <width>89</width>
               <height>19</height>
              </rect>
@@ -120,7 +120,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>12</y>
+              <y>16</y>
               <width>89</width>
               <height>19</height>
              </rect>
@@ -133,7 +133,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>30</y>
+              <y>34</y>
               <width>89</width>
               <height>19</height>
              </rect>
@@ -146,7 +146,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>66</y>
+              <y>70</y>
               <width>89</width>
               <height>19</height>
              </rect>
@@ -229,10 +229,10 @@
  <connections/>
  <designerdata>
   <property name="gridDeltaX">
-   <number>4</number>
+   <number>5</number>
   </property>
   <property name="gridDeltaY">
-   <number>6</number>
+   <number>5</number>
   </property>
   <property name="gridSnapX">
    <bool>true</bool>

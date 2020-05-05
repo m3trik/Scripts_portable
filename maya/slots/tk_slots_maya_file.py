@@ -78,9 +78,9 @@ class File(Init):
 
 		'''
 		cmb = self.ui.cmb003
-		
-		contents = self.comboBox(cmb,["Import file", "Import Options"], "Import")
-		
+
+		contents = cmb.addItems_(["Import file", "Import Options"], "Import")
+
 		if not index:
 			index = cmb.currentIndex()
 		if index!=0: #hide then perform operation
@@ -100,7 +100,6 @@ class File(Init):
 		cmb = self.ui.cmb004
 		
 		list_ = ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ", 'Send to 3dsMax: As New Scene', 'Send to 3dsMax: Update Current', 'Send to 3dsMax: Add to Current']
-
 		contents = cmb.addItems_(list_, "Export")
 
 		if not index:

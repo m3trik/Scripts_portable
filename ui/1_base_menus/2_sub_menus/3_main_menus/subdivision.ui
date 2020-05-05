@@ -44,7 +44,7 @@
       <x>10</x>
       <y>10</y>
       <width>246</width>
-      <height>181</height>
+      <height>190</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
@@ -88,6 +88,12 @@
          </property>
          <item>
           <widget class="QGroupBox" name="subdivision">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>96</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
              <width>111</width>
@@ -104,7 +110,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>30</y>
+              <y>35</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -135,7 +141,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>50</y>
+              <y>55</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -203,7 +209,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>70</y>
+              <y>75</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -234,7 +240,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>10</y>
+              <y>15</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -288,6 +294,19 @@
            </property>
           </widget>
          </item>
+         <item>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
         </layout>
        </item>
        <item>
@@ -297,6 +316,12 @@
          </property>
          <item>
           <widget class="QGroupBox" name="gb000">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>76</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
              <width>111</width>
@@ -310,7 +335,7 @@
             <property name="geometry">
              <rect>
               <x>1</x>
-              <y>30</y>
+              <y>35</y>
               <width>81</width>
               <height>21</height>
              </rect>
@@ -326,7 +351,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>50</y>
+              <y>55</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -354,7 +379,7 @@
             <property name="geometry">
              <rect>
               <x>80</x>
-              <y>10</y>
+              <y>15</y>
               <width>31</width>
               <height>19</height>
              </rect>
@@ -394,7 +419,7 @@
             <property name="geometry">
              <rect>
               <x>1</x>
-              <y>10</y>
+              <y>15</y>
               <width>81</width>
               <height>22</height>
              </rect>
@@ -407,7 +432,7 @@
             <property name="geometry">
              <rect>
               <x>80</x>
-              <y>30</y>
+              <y>35</y>
               <width>31</width>
               <height>19</height>
              </rect>
@@ -447,6 +472,12 @@
          </item>
          <item>
           <widget class="QGroupBox" name="groupBox_2">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>56</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
              <width>111</width>
@@ -463,7 +494,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>30</y>
+              <y>35</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -497,7 +528,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>10</y>
+              <y>15</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -525,6 +556,19 @@
             </property>
            </widget>
           </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
          </item>
         </layout>
        </item>
@@ -575,7 +619,7 @@
    <number>5</number>
   </property>
   <property name="gridDeltaY">
-   <number>10</number>
+   <number>5</number>
   </property>
   <property name="gridSnapX">
    <bool>true</bool>

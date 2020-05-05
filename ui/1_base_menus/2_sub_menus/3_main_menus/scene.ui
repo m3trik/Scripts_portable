@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>240</width>
-    <height>119</height>
+    <height>154</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -44,7 +44,7 @@
       <x>5</x>
       <y>10</y>
       <width>226</width>
-      <height>91</height>
+      <height>113</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
@@ -95,6 +95,12 @@
          </property>
          <item>
           <widget class="QGroupBox" name="groupBox_4">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>62</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
              <width>111</width>
@@ -111,7 +117,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>12</y>
+              <y>17</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -151,7 +157,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>30</y>
+              <y>35</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -185,6 +191,19 @@
             </property>
            </widget>
           </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
          </item>
         </layout>
        </item>
@@ -235,7 +254,7 @@
    <number>5</number>
   </property>
   <property name="gridDeltaY">
-   <number>10</number>
+   <number>5</number>
   </property>
   <property name="gridSnapX">
    <bool>true</bool>

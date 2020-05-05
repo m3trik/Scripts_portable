@@ -195,7 +195,7 @@
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>112</height>
+             <height>117</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -214,7 +214,7 @@
             <property name="geometry">
              <rect>
               <x>55</x>
-              <y>10</y>
+              <y>15</y>
               <width>56</width>
               <height>19</height>
              </rect>
@@ -245,7 +245,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>10</y>
+              <y>15</y>
               <width>56</width>
               <height>19</height>
              </rect>
@@ -276,7 +276,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>90</y>
+              <y>95</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -307,7 +307,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>30</y>
+              <y>35</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -338,7 +338,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>50</y>
+              <y>55</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -369,7 +369,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>70</y>
+              <y>75</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -462,7 +462,7 @@
    <number>5</number>
   </property>
   <property name="gridDeltaY">
-   <number>10</number>
+   <number>5</number>
   </property>
   <property name="gridSnapX">
    <bool>true</bool>

@@ -84,7 +84,6 @@ class File(Init):
 		files = [f for f in os.listdir(path) if f.endswith('.max') or f.endswith('.bak')] #get list of max autosave files
 
 		list_ = [f+'  '+datetime.fromtimestamp(os.path.getmtime(path+'\\'+f)).strftime('%H:%M  %m-%d-%Y') for f in files] #attach modified timestamp
-
 		contents = cmb.addItems_(sorted(list_, reverse=1), "Recent Autosave")
 
 		if not index:
@@ -131,7 +130,6 @@ class File(Init):
 		cmb = self.ui.cmb004
 
 		list_ = ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ", "Send to Maya: New Scene", "Send to Maya: Update Scene", "Send to Maya: Add to Scene"]
-
 		cmb.addItems_(list_, "Export")
 
 		if not index:

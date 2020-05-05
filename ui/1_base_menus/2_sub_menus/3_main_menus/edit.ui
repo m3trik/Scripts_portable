@@ -134,7 +134,7 @@
            <property name="minimumSize">
             <size>
              <width>111</width>
-             <height>30</height>
+             <height>35</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -150,7 +150,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>10</y>
+              <y>15</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -181,7 +181,7 @@
            <property name="minimumSize">
             <size>
              <width>111</width>
-             <height>30</height>
+             <height>36</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -197,7 +197,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>10</y>
+              <y>15</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -228,7 +228,7 @@
            <property name="minimumSize">
             <size>
              <width>111</width>
-             <height>30</height>
+             <height>71</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -281,7 +281,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>10</y>
+              <y>15</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -378,7 +378,7 @@
            <property name="minimumSize">
             <size>
              <width>111</width>
-             <height>30</height>
+             <height>71</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -394,7 +394,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>10</y>
+              <y>15</y>
               <width>41</width>
               <height>19</height>
              </rect>
@@ -536,7 +536,7 @@
             <property name="geometry">
              <rect>
               <x>40</x>
-              <y>10</y>
+              <y>15</y>
               <width>71</width>
               <height>19</height>
              </rect>
@@ -650,7 +650,7 @@
            <property name="minimumSize">
             <size>
              <width>111</width>
-             <height>30</height>
+             <height>36</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -666,7 +666,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>10</y>
+              <y>15</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -762,7 +762,7 @@
    <number>5</number>
   </property>
   <property name="gridDeltaY">
-   <number>10</number>
+   <number>5</number>
   </property>
   <property name="gridSnapX">
    <bool>true</bool>

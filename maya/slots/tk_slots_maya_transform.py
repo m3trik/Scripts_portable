@@ -223,6 +223,7 @@ class Transform(Init):
 		'''
 		Align Vertices
 
+		Auto Align finds the axis with the largest variance, and set the axis checkboxes accordingly before performing a regular align.
 		'''
 		tb = self.ui.tb001
 		if state=='setMenu':
@@ -235,10 +236,10 @@ class Transform(Init):
 			tb.add('QCheckBox', setText='Auto Align: Two Axes', setObjectName='chk011', setToolTip='')
 			return
 
-		if tb.chk010.isChecked(): #if checked; set coordinates for auto align:
+		if tb.chk010.isChecked(): #Auto Align: if checked; set coordinates for auto align:
 			sel = pm.ls(selection=1)
 
-			if len(sel) != 0:
+			if len(sel)!=0:
 				point = pm.xform(sel[0], q=True, t=True, ws=True)
 				#vertex point 1
 				x1 = round(point[0], 4)
@@ -255,8 +256,8 @@ class Transform(Init):
 				y = abs(y1-y2)
 				z = abs(z1-z2)
 
-				vertex = pm.polyListComponentConversion (fromEdge=1, toVertexFace=1)[0]
-				vertexTangent = pm.polyNormalPerVertex (vertex, query=True, xyz=True)
+				vertex = pm.polyListComponentConversion(fromEdge=1, toVertexFace=1)[0]
+				vertexTangent = pm.polyNormalPerVertex(vertex, query=True, xyz=True)
 
 				tx = abs(round(vertexTangent[0], 4))
 				ty = abs(round(vertexTangent[1], 4))
@@ -265,28 +266,28 @@ class Transform(Init):
 				axis = max(x,y,z)
 				tangent = max(tx,ty,tz)
 
-				if tb.chk011.isChecked():
-					if axis == x: #"yz"
-						self.toggleWidgets(self.ui, self.submenu, setChecked='b030,b031', setChecked_False='b029')
-					if axis == y: #"xz"
-						self.toggleWidgets(self.ui, self.submenu, setChecked='b029,b031', setChecked_False='b030')
-					if axis == z: #"xy"
-						self.toggleWidgets(self.ui, self.submenu, setChecked='b029,b030', setChecked_False='b031')
+				if tb.chk011.isChecked(): #Auto Align: Two Axes
+					if axis==x: #"yz"
+						self.toggleWidgets(tb, setChecked='chk030-31', setChecked_False='chk029')
+					if axis==y: #"xz"
+						self.toggleWidgets(tb, setChecked='chk029,chk031', setChecked_False='chk030')
+					if axis==z: #"xy"
+						self.toggleWidgets(tb, setChecked='chk029-30', setChecked_False='chk031')
 				else:
-					if any ([axis == x and tangent == ty, axis == y and tangent == tx]): #"z"
-						self.toggleWidgets(self.ui, self.submenu, setChecked='b031', setChecked_False='b029,b030')
-					if any ([axis == x and tangent == tz, axis == z and tangent == tx]): #"y"
-						self.toggleWidgets(self.ui, self.submenu, setChecked='b030', setChecked_False='b029,b031')
-					if any ([axis == y and tangent == tz, axis == z and tangent == ty]): #"x"
-						self.toggleWidgets(self.ui, self.submenu, setChecked='b029', setChecked_False='b030,b031')
+					if any ([axis==x and tangent==ty, axis==y and tangent==tx]): #"z"
+						self.toggleWidgets(tb, setChecked='chk031', setChecked_False='chk029-30')
+					if any ([axis==x and tangent==tz, axis==z and tangent==tx]): #"y"
+						self.toggleWidgets(tb, setChecked='chk030', setChecked_False='chk029,chk031')
+					if any ([axis==y and tangent==tz, axis==z and tangent==ty]): #"x"
+						self.toggleWidgets(tb, setChecked='chk029', setChecked_False='chk030-31')
 			else:
 				print("# Warning: An edge must be selected. #")
 				return
 
 		#align
-		x = tb.b029.isChecked()
-		y = tb.b030.isChecked()
-		z = tb.b031.isChecked()
+		x = tb.chk029.isChecked()
+		y = tb.chk030.isChecked()
+		z = tb.chk031.isChecked()
 		avg = tb.chk006.isChecked()
 		loop = tb.chk007.isChecked()
 
