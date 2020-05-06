@@ -171,7 +171,7 @@
      <string>Export Selection</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="tb000">
+   <widget class="QToolButton_" name="tb000">
     <property name="geometry">
      <rect>
       <x>220</x>
@@ -201,6 +201,13 @@
    </widget>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QToolButton_</class>
+   <extends>QToolButton</extends>
+   <header>widgets.qtoolbutton_.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
  <designerdata>

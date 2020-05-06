@@ -336,7 +336,7 @@ class EventFactoryFilter(QtCore.QObject):
 			event = <QEvent>
 		'''
 		if self.widget.underMouse(): #if self.widget.rect().contains(event.pos()): #if mouse over widget:
-			if self.derivedType=='QPushButton':
+			if self.derivedType=='QPushButton' or self.derivedType=='QToolButton':
 				if sb.prefix(self.widget, 'i'): #ie. 'i012'
 					ui = self.parent.setUi(self.widget.whatsThis()) #switch the stacked layout to the given ui.
 					self.parent.move(QtGui.QCursor.pos() - ui.rect().center()) #self.parent.ui.rect().center()) #move window to cursor position and offset from left corner to center
@@ -349,13 +349,16 @@ class EventFactoryFilter(QtCore.QObject):
 					#send click signal on mouseRelease.
 					self.widget.click()
 
-				elif sb.prefix(self.widget, 'b'):
-					if '_submenu' in self.name:
+				elif sb.prefix(self.widget, ['b','tb']):
+					if sb.getUiLevel(self.name)==2: #if submenu:
 						self.widget.click()
 					#add the buttons command info to the prevCommand list.
 					method = sb.getMethod(self.name, self.widgetName)
 					docString = sb.getDocString(self.name, self.widgetName)
 					sb.prevCommand(as_list=1).append([method, docString]) #store the command method object and it's docString (ie. 'Multi-cut tool')
+
+
+
 
 
 

@@ -201,7 +201,7 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="tb000">
+   <widget class="QToolButton_" name="tb000">
     <property name="enabled">
      <bool>true</bool>
     </property>
@@ -231,17 +231,8 @@
       <height>18</height>
      </size>
     </property>
-    <property name="autoDefault">
-     <bool>false</bool>
-    </property>
-    <property name="default">
-     <bool>false</bool>
-    </property>
-    <property name="flat">
-     <bool>false</bool>
-    </property>
    </widget>
-   <widget class="QPushButton" name="tb002">
+   <widget class="QToolButton_" name="tb002">
     <property name="enabled">
      <bool>true</bool>
     </property>
@@ -271,17 +262,8 @@
       <height>18</height>
      </size>
     </property>
-    <property name="autoDefault">
-     <bool>false</bool>
-    </property>
-    <property name="default">
-     <bool>false</bool>
-    </property>
-    <property name="flat">
-     <bool>false</bool>
-    </property>
    </widget>
-   <widget class="QPushButton" name="tb001">
+   <widget class="QToolButton_" name="tb001">
     <property name="enabled">
      <bool>true</bool>
     </property>
@@ -310,15 +292,6 @@
       <width>18</width>
       <height>18</height>
      </size>
-    </property>
-    <property name="autoDefault">
-     <bool>false</bool>
-    </property>
-    <property name="default">
-     <bool>false</bool>
-    </property>
-    <property name="flat">
-     <bool>false</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="chk005">
@@ -409,6 +382,13 @@
    </widget>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QToolButton_</class>
+   <extends>QToolButton</extends>
+   <header>widgets.qtoolbutton_.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
  <designerdata>

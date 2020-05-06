@@ -132,7 +132,7 @@
      <string>Parent</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="tb001">
+   <widget class="QToolButton_" name="tb001">
     <property name="geometry">
      <rect>
       <x>175</x>
@@ -192,6 +192,13 @@
    </widget>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QToolButton_</class>
+   <extends>QToolButton</extends>
+   <header>widgets.qtoolbutton_.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
  <designerdata>
