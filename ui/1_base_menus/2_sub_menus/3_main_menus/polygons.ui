@@ -443,7 +443,7 @@
            <property name="title">
             <string>Component</string>
            </property>
-           <widget class="QPushButton" name="tb003">
+           <widget class="QToolButton_" name="tb003">
             <property name="enabled">
              <bool>true</bool>
             </property>

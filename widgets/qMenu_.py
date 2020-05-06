@@ -23,12 +23,14 @@ Promoting a widget in designer to use a custom class:
 class QMenu_(QtWidgets.QMenu):
 	'''
 	args:
-		toolButton (obj) = Setting a widget to this property allows the menu to be positioned in relation to the widget (as the menu often works better parented to the main window instead of the widget itself).
+		widget (obj) = Setting a widget to this property allows the menu to be positioned in relation to the widget. If nothing is given, the parent widget 
+		position (str) = Desired menu position relative to it's parent.
 	'''
-	def __init__(self, parent=None, widget=None, **kwargs):
+	def __init__(self, parent=None, widget=None, position='topRight', **kwargs):
 		super(QMenu_, self).__init__(parent)
 
 		self.widget=widget
+		self.position=position
 
 		self.setAttributes(kwargs)
 		# self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
@@ -121,6 +123,8 @@ class QMenu_(QtWidgets.QMenu):
 				self.setAttributes({'setMinimum':0.0, 'setMaximum':10.0, 'setSingleStep':0.05, 'setDecimals':2, 'setButtonSymbols_':'NoButtons'}, action)
 			elif value=='0.00-100 step.01':
 				self.setAttributes({'setMinimum':0.0, 'setMaximum':100.0, 'setSingleStep':0.01, 'setDecimals':2, 'setButtonSymbols_':'NoButtons'}, action)
+			elif value=='0.00-100 step1':
+				self.setAttributes({'setMinimum':0.0, 'setMaximum':100.0, 'setSingleStep':1, 'setDecimals':2, 'setButtonSymbols_':'NoButtons'}, action)
 			elif value=='0.000-10 step.001':
 				self.setAttributes({'setMinimum':0.0, 'setMaximum':10.0, 'setSingleStep':0.001, 'setDecimals':3, 'setButtonSymbols_':'NoButtons'}, action)
 		else:
@@ -201,12 +205,13 @@ class QMenu_(QtWidgets.QMenu):
 			self.childEvents.addWidgets(self.parentUiName, self.children()+[self])
 
 
-		if self.widget:
-			pos = self.widget.mapToGlobal(self.widget.rect().topRight())
-			self.move(pos)
-		elif self.parent():
-			pos = self.parent().mapToGlobal(self.parent().rect().topRight())
-			self.move(pos)
+		if self.widget: #if a widget is specified:
+			pos = getattr(self.widget.rect(), self.position)
+			self.move(self.widget.mapToGlobal(pos()))
+		elif self.parent(): #else; try to get the parent.
+			pos = getattr(self.parent().rect(), self.position)
+			self.move(self.parent().mapToGlobal(pos()))
+
 
 		self.resize(self.sizeHint().width(), self.sizeHint().height())
 

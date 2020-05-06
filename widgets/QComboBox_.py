@@ -2,7 +2,7 @@ from PySide2 import QtCore, QtGui, QtWidgets
 
 import sys
 
-
+from widgets.qMenu_ import QMenu_
 
 '''
 Promoting a widget in designer to use a custom class:
@@ -24,24 +24,41 @@ class QComboBox_(QtWidgets.QComboBox):
 	'''
 	
 	'''
-	def __init__(self, parent=None):
+	def __init__(self, parent=None, popupStyle='modelView'):
 		super(QComboBox_, self).__init__(parent)
-
+		'''
+		args:
+			popupStyle (str) = specify the type of popup menu. default is the standard 'modelView'.
+		'''
+		self.popupStyle = popupStyle
+		self.menu = QMenu_(self, position='bottomLeft')
+		self.menu.visible=False #built-in method isVisible() not working.
 
 
 	def showPopup(self):
-		# self.setMaximumSize(999,999)
+		'''
+		Show the popup menu.
+		'''
+		if not self.popupStyle=='modelView':
+			if not self.menu.visible:
+				self.menu.show()
+				self.menu.visible=True
+			else:
+				self.menu.hide()
+				self.menu.visible=False
+		else:
+			width = self.minimumSizeHint().width()
+			self.view().setMinimumWidth(width)
 
-		width = self.minimumSizeHint().width()
-		self.view().setMinimumWidth(width)
-
-		super(QComboBox_, self).showPopup()
+			super(QComboBox_, self).showPopup()
 
 
 	def hidePopup(self):
-		# self.setMaximumSize(self.minimumSize())
-
-		super(QComboBox_, self).hidePopup()
+		if not self.popupStyle=='modelView':
+			self.menu.hide()
+			self.menu.visible=False
+		else:
+			super(QComboBox_, self).hidePopup()
 
 
 	def enterEvent(self, event):
@@ -63,9 +80,50 @@ class QComboBox_(QtWidgets.QComboBox):
 		return QtWidgets.QComboBox.leaveEvent(self, event)
 
 
+	def mousePressEvent(self, event):
+		'''
+		args:
+			event=<QEvent>
+		'''
+
+		return QtWidgets.QComboBox.mousePressEvent(self, event)
+
+
+	def add(self, w, title=None, **kwargs):
+		'''
+		Add items to the comboboxes's custom menu (or it's standard modelView).
+
+		args:
+			widget (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
+		kwargs:
+			show (bool) = show the menu.
+			insertSeparator (QAction) = insert separator in front of the given action.
+		returns:
+ 			the added widget.
+
+		ex.call:
+		tb.add('QCheckBox', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
+		'''
+		if self.popupStyle=='modelView':
+			items = self.addItems_(w, title)
+			return items
+
+		try:
+			w = getattr(QtWidgets, w)() #ex. QtWidgets.QAction(self) object from string.
+		except:
+			if callable(w):
+				w = widget() #ex. QtWidgets.QAction(self) object.
+
+		w.setMinimumHeight(self.minimumSizeHint().height()+1) #set child widget height to that of the toolbutton
+
+		w = self.menu.add(w, **kwargs)
+		setattr(self, w.objectName(), w)
+		return w
+
+
 	def addItems_(self, items, title=None):
 		'''
-		Add items to the combobox without triggering any signals.
+		Add items to the combobox's standard modelView without triggering any signals.
 
 		args:
 			items (list) = list of strings to fill the comboBox with
@@ -106,6 +164,13 @@ class QComboBox_(QtWidgets.QComboBox):
 		self.blockSignals(False)
 
 
+	def menuItems(self):
+		'''
+
+		'''
+		return [i for i in self.menu.children() if i.__class__.__name__ not in ['QAction', 'QWidgetAction']]
+
+
 	def showEvent(self, event):
 		'''
 		args:
@@ -139,7 +204,7 @@ class QComboBox_(QtWidgets.QComboBox):
 if __name__ == "__main__":
 	app = QtWidgets.QApplication(sys.argv)
 
-	w=QComboBox_()
+	w=QComboBox_(popupStyle='qmenu')
 	w.show()
 	sys.exit(app.exec_())
 

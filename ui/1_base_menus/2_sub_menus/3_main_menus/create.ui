@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>176</width>
-    <height>486</height>
+    <height>262</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -43,8 +43,8 @@
      <rect>
       <x>15</x>
       <y>10</y>
-      <width>146</width>
-      <height>152</height>
+      <width>143</width>
+      <height>216</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
@@ -90,14 +90,14 @@
           <widget class="QGroupBox" name="groupBox">
            <property name="minimumSize">
             <size>
-             <width>0</width>
-             <height>113</height>
+             <width>137</width>
+             <height>139</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>999</width>
-             <height>111</height>
+             <width>137</width>
+             <height>999</height>
             </size>
            </property>
            <property name="title">
@@ -208,13 +208,13 @@
              <rect>
               <x>0</x>
               <y>15</y>
-              <width>67</width>
+              <width>136</width>
               <height>22</height>
              </rect>
             </property>
             <property name="minimumSize">
              <size>
-              <width>67</width>
+              <width>136</width>
               <height>0</height>
              </size>
             </property>
@@ -487,6 +487,51 @@
              <bool>false</bool>
             </property>
            </widget>
+           <widget class="QComboBox_" name="cmb002">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>115</y>
+              <width>136</width>
+              <height>22</height>
+             </rect>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>136</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>136</width>
+              <height>999</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>Select an object to create.</string>
+            </property>
+            <property name="editable">
+             <bool>false</bool>
+            </property>
+            <property name="maxVisibleItems">
+             <number>20</number>
+            </property>
+            <property name="maxCount">
+             <number>200</number>
+            </property>
+            <property name="sizeAdjustPolicy">
+             <enum>QComboBox::AdjustToContents</enum>
+            </property>
+            <property name="frame">
+             <bool>true</bool>
+            </property>
+            <item>
+             <property name="text">
+              <string>Attributes</string>
+             </property>
+            </item>
+           </widget>
            <zorder>cmb000</zorder>
            <zorder>cmb001</zorder>
            <zorder>b000</zorder>
@@ -499,6 +544,7 @@
            <zorder>t000</zorder>
            <zorder>chk005</zorder>
            <zorder>chk003</zorder>
+           <zorder>cmb002</zorder>
           </widget>
          </item>
          <item>
@@ -541,272 +587,6 @@
       </widget>
      </item>
     </layout>
-   </widget>
-   <widget class="QDoubleSpinBox" name="s013">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>15</x>
-      <y>391</y>
-      <width>140</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="buttonSymbols">
-     <enum>QAbstractSpinBox::NoButtons</enum>
-    </property>
-    <property name="maximum">
-     <double>9999.000000000000000</double>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="s011">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>15</x>
-      <y>437</y>
-      <width>140</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="buttonSymbols">
-     <enum>QAbstractSpinBox::NoButtons</enum>
-    </property>
-    <property name="maximum">
-     <double>9999.000000000000000</double>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="s005">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>15</x>
-      <y>276</y>
-      <width>140</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="buttonSymbols">
-     <enum>QAbstractSpinBox::NoButtons</enum>
-    </property>
-    <property name="maximum">
-     <double>9999.000000000000000</double>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="s009">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>15</x>
-      <y>368</y>
-      <width>140</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="buttonSymbols">
-     <enum>QAbstractSpinBox::NoButtons</enum>
-    </property>
-    <property name="maximum">
-     <double>9999.000000000000000</double>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="s004">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>15</x>
-      <y>253</y>
-      <width>140</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="buttonSymbols">
-     <enum>QAbstractSpinBox::NoButtons</enum>
-    </property>
-    <property name="maximum">
-     <double>9999.000000000000000</double>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="s000">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>15</x>
-      <y>161</y>
-      <width>140</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="buttonSymbols">
-     <enum>QAbstractSpinBox::NoButtons</enum>
-    </property>
-    <property name="maximum">
-     <double>9999.000000000000000</double>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="s008">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>15</x>
-      <y>345</y>
-      <width>140</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="buttonSymbols">
-     <enum>QAbstractSpinBox::NoButtons</enum>
-    </property>
-    <property name="maximum">
-     <double>9999.000000000000000</double>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="s001">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>15</x>
-      <y>184</y>
-      <width>140</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="buttonSymbols">
-     <enum>QAbstractSpinBox::NoButtons</enum>
-    </property>
-    <property name="maximum">
-     <double>9999.000000000000000</double>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="s010">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>15</x>
-      <y>460</y>
-      <width>140</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="buttonSymbols">
-     <enum>QAbstractSpinBox::NoButtons</enum>
-    </property>
-    <property name="maximum">
-     <double>9999.000000000000000</double>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="s007">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>15</x>
-      <y>322</y>
-      <width>140</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="buttonSymbols">
-     <enum>QAbstractSpinBox::NoButtons</enum>
-    </property>
-    <property name="maximum">
-     <double>9999.000000000000000</double>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="s002">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>15</x>
-      <y>207</y>
-      <width>140</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="buttonSymbols">
-     <enum>QAbstractSpinBox::NoButtons</enum>
-    </property>
-    <property name="maximum">
-     <double>9999.000000000000000</double>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="s012">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>15</x>
-      <y>414</y>
-      <width>140</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="buttonSymbols">
-     <enum>QAbstractSpinBox::NoButtons</enum>
-    </property>
-    <property name="maximum">
-     <double>9999.000000000000000</double>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="s003">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>15</x>
-      <y>230</y>
-      <width>140</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="buttonSymbols">
-     <enum>QAbstractSpinBox::NoButtons</enum>
-    </property>
-    <property name="maximum">
-     <double>9999.000000000000000</double>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="s006">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>15</x>
-      <y>299</y>
-      <width>140</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="buttonSymbols">
-     <enum>QAbstractSpinBox::NoButtons</enum>
-    </property>
-    <property name="maximum">
-     <double>9999.000000000000000</double>
-    </property>
    </widget>
   </widget>
  </widget>

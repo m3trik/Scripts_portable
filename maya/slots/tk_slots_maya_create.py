@@ -17,12 +17,6 @@ class Create(Init):
 		self.point=[0,0,0]
 		self.history=[]
 
-		#spinboxes on valueChanged; connect to sXXX method with index as arg
-		self.spinboxes = self.getObject(self.ui, 's000-13')
-		for i, s in enumerate(self.spinboxes):
-			s.valueChanged.connect (lambda: self.sXXX(i)) #ie. self.ui.s000.valueChanged.connect (lambda: self.sXXX(0))
-
-
 
 	def getAxis(self):
 		'''
@@ -50,15 +44,6 @@ class Create(Init):
 		rotateOrder = pm.xform (self.node, query=1, rotateOrder=1)
 		pm.xform (self.node, preserve=1, rotation=axis, rotateOrder=rotateOrder, absolute=1)
 		self.rotation['last'] = axis
-
-
-	def sXXX(self, index=None):
-		'''
-		set node attributes from multiple spinbox values.
-		args: index(int) = optional index of the spinbox that called this function. ie. 5 from s005
-		'''
-		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.spinboxes} #current spinbox values. ie. from s000 get the value of six and add it to the list
-		self.setAttributesMEL(self.node, spinboxValues) #set attributes for the history node
 
 
 	def t000(self):
@@ -167,21 +152,55 @@ class Create(Init):
 			self.ui.cmb001.addItems(lights)
 
 
-	def cmb002(self, index=None):
+	def cmb002(self, index=None, values={}, clear=False, show=False):
 		'''
-		Editors
+		Primitive Attributes
 		'''
 		cmb = self.ui.cmb002
-		
-		files = ['']
-		contents = cmb.addItems_(files, ' ')
+		cmb.popupStyle = 'qmenu'
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index(''):
-				mel.eval('')
-			cmb.setCurrentIndex(0)
+		names = 's000-'+str(len(values)-1)
+
+		if clear:
+			cmb.menu.clear()
+
+		#add spinboxes
+		[cmb.add('QDoubleSpinBox', setObjectName=name, preset_='0.00-100 step1') for name in self.unpackNames(names)]
+
+		#set values
+		self.setSpinboxes(cmb, names, values)
+
+		#set signal/slot connections
+		self.connect(names, 'valueChanged', self.sXXX, cmb)
+
+		if show:
+			cmb.showPopup()
+
+
+	def sXXX(self, index=None):
+		'''
+		set node attributes from multiple spinbox values.
+		args: index(int) = optional index of the spinbox that called this function. ie. 5 from s005
+		'''
+		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.ui.cmb002.menuItems()} #current spinbox values. ie. from s000 get the value of six and add it to the list
+		self.setAttributesMEL(self.node, spinboxValues) #set attributes for the history node
+
+
+	# def cmb002(self, index=None):
+	# 	'''
+	# 	Editors
+	# 	'''
+	# 	cmb = self.ui.cmb002
+		
+	# 	files = ['']
+	# 	contents = cmb.addItems_(files, ' ')
+
+	# 	if not index:
+	# 		index = cmb.currentIndex()
+	# 	if index!=0:
+	# 		if index==contents.index(''):
+	# 			mel.eval('')
+	# 		cmb.setCurrentIndex(0)
 
 
 	def b000(self):
@@ -297,7 +316,7 @@ class Create(Init):
 
 		exclude = [u'message', u'caching', u'frozen', u'isHistoricallyInteresting', u'nodeState', u'binMembership', u'output', u'axis', u'axisX', u'axisY', u'axisZ', u'paramWarn', u'uvSetName', 'maya70']
 		attributes = self.getAttributesMEL(self.node, exclude) #get list of attributes and their values using the transform node.
-		self.setSpinboxes (self.ui, 's000-13', attributes)
+		self.cmb002(values=attributes, clear=True, show=True)
 
 		pm.select(self.node) #select the transform node so that you can see any edits
 

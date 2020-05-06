@@ -36,7 +36,7 @@ class Slot(object):
 				objects.append(getattr(class_, name)) #equivilent to:(self.ui.m000)
 			except: 
 				if showError_:
-					print("# Error: getObject()"+str(class_)+" has no attribute "+str(name)+" #")
+					print("# Error: in getObject(): "+str(class_)+" has no attribute "+str(name)+" #")
 				else: pass
 		return objects
 
