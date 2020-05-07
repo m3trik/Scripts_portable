@@ -9,8 +9,7 @@ class Utilities(Init):
 	def __init__(self, *args, **kwargs):
 		super(Utilities, self).__init__(*args, **kwargs)
 
-		self.ui = self.sb.getUi('utilities')
-
+		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
 
 
 	def cmb000(self, index=None):

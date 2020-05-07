@@ -50,13 +50,13 @@ class Tk(QtWidgets.QStackedWidget):
 		args:
 			name (str) = name of ui.
 		'''
-		ui = sb.getUi(name)
+		ui = sb.getUi(name, setAsCurrent=True) #Get the ui of the given name, and set it as the current ui.
+
 		if not name in sb.previousName(allowLevel0=1, as_list=1): #if ui(name) hasn't been set before, init the ui for the given name.
 		# sb.setUiSize(name) #Set the size info for each ui (allows for resizing a stacked widget where ordinarily resizing is constrained by the largest widget in the stack)
 			self.addWidget(ui) #add each ui to the stackedLayout.
 			self.childEvents.initWidget(name)
 
-		sb.name = name #set ui name.
 		sb.setSignals(name)#sb.setSignals = name #connect new signals while disconnecting any previous.
 
 		self.resize(sb.sizeX, sb.sizeY)  #Set the size info for each ui (allows for resizing a stacked widget where ordinarily resizing is constrained by the largest widget in the stack)

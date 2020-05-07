@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>256</width>
-    <height>235</height>
+    <height>186</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -44,7 +44,7 @@
       <x>10</x>
       <y>10</y>
       <width>236</width>
-      <height>215</height>
+      <height>146</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
@@ -78,12 +78,12 @@
        <property name="minimumSize">
         <size>
          <width>0</width>
-         <height>87</height>
+         <height>77</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>999</width>
+         <width>232</width>
          <height>64</height>
         </size>
        </property>
@@ -284,13 +284,13 @@
          <rect>
           <x>0</x>
           <y>15</y>
-          <width>224</width>
+          <width>231</width>
           <height>19</height>
          </rect>
         </property>
         <property name="minimumSize">
          <size>
-          <width>224</width>
+          <width>231</width>
           <height>0</height>
          </size>
         </property>

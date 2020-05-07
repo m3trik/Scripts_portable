@@ -15,6 +15,31 @@ class Slot(object):
 		self.tk = self.sb.getClassInstance('tk')
 
 
+	@property
+	def currentUi(self):
+		'''
+		Get the current Ui.
+		'''
+		# print ('currentUi:', self.sb.getUiName(self.sb.getUi()))
+		return self.sb.getUi() #current
+
+	@property
+	def parentUi(self):
+		'''
+		Get the current top level Ui.
+		'''
+		# print ('ui:', self.sb.getUiName(self.sb.getUi(level=3)))
+		return self.sb.getUi(level=3) #main_menu
+
+	@property
+	def childUi(self):
+		'''
+		Get the current Ui's submenu.
+		'''
+		# print ('submenu:', self.sb.getUiName(self.sb.getUi(level=2)))
+		return self.sb.getUi(level=2) #submenu
+
+
 	def getObject(self, class_, objectNames, showError_=False):
 		'''
 		Get a list of corresponding objects from a single string.

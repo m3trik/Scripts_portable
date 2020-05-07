@@ -9,8 +9,7 @@ class Rendering(Init):
 	def __init__(self, *args, **kwargs):
 		super(Rendering, self).__init__(*args, **kwargs)
 
-		self.ui = self.sb.getUi('rendering')
-
+		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
 
 
 	def cmb000(self):

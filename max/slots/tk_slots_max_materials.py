@@ -9,7 +9,7 @@ class Materials(Init):
 	def __init__(self, *args, **kwargs):
 		super(Materials, self).__init__(*args, **kwargs)
 
-		self.ui = self.sb.getUi('materials')
+		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
 
 		self.ui.cmb002.editTextChanged.connect(self.renameMaterial)
 
@@ -99,7 +99,7 @@ class Materials(Init):
 		'''
 		Select By Material Id
 		'''
-		tb = self.ui.tb000
+		tb = self.currentUi.tb000
 		if state=='setMenu':
 			tb.add('QRadioButton', setText='Shell', setObjectName='chk005', setToolTip='Select entire shell.')
 			tb.add('QRadioButton', setText='Invert', setObjectName='chk006', setToolTip='Invert Selection.')
@@ -165,7 +165,7 @@ class Materials(Init):
 		'''
 		Stored Material Options
 		'''
-		tb = self.ui.tb001
+		tb = self.currentUi.tb001
 		if state=='setMenu':
 			tb.add('QRadioButton', setText='All Scene Materials', setObjectName='chk000', setChecked=True, setToolTip='List all scene materials.') #Material mode: Stored Materials
 			tb.add('QRadioButton', setText='ID Map Materials', setObjectName='chk001', setToolTip='List ID map materials.') #Material mode: ID Map Materials
@@ -183,7 +183,7 @@ class Materials(Init):
 		'''
 		Delete Material
 		'''
-		tb = self.ui.tb002
+		tb = self.currentUi.tb002
 		if state=='setMenu':
 			tb.add('QRadioButton', setText='Delete Current Material', setObjectName='chk003', setChecked=True, setToolTip='Delete the current material.')
 			tb.add('QRadioButton', setText='Delete Unused Materials', setObjectName='chk004', setToolTip='Delete All unused materials.')
@@ -215,7 +215,7 @@ class Materials(Init):
 		'''
 		Assign Material
 		'''
-		tb = self.ui.tb003
+		tb = self.currentUi.tb003
 		if state=='setMenu':
 			tb.add('QRadioButton', setText='Current Material', setObjectName='chk007', setChecked=True, setToolTip='Re-Assign the current stored material.')
 			tb.add('QRadioButton', setText='New Random Material', setObjectName='chk008', setToolTip='Assign a new random ID material.')
@@ -343,6 +343,8 @@ class Materials(Init):
 		else: #Rename Stored Material
 			if self.currentMaterial:
 				self.currentMaterial.name = newMatName
+
+		self.b008() #uncheck rename, and re-enable widgets.
 
 
 	def b008(self):

@@ -9,7 +9,7 @@ class Preferences(Init):
 	def __init__(self, *args, **kwargs):
 		super(Preferences, self).__init__(*args, **kwargs)
 
-		self.ui = self.sb.getUi('preferences')
+		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
 
 		self.ui.b010.setText('Maya Preferences')
 

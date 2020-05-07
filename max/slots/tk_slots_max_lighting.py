@@ -9,8 +9,7 @@ class Lighting(Init):
 	def __init__(self, *args, **kwargs):
 		super(Lighting, self).__init__(*args, **kwargs)
 
-		self.ui = self.sb.getUi('lighting')
-
+		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
 
 
 	def cmb000(self, index=None):

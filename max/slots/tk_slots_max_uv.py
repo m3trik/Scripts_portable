@@ -9,8 +9,7 @@ class Uv(Init):
 	def __init__(self, *args, **kwargs):
 		super(Uv, self).__init__(*args, **kwargs)
 
-		self.ui = self.sb.getUi('uv')
-
+		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
 
 
 	def cmb000(self, index=None):

@@ -9,18 +9,16 @@ class Rigging(Init):
 	def __init__(self, *args, **kwargs):
 		super(Rigging, self).__init__(*args, **kwargs)
 
-		self.ui = self.sb.getUi('rigging')
-		self.submenu = self.sb.getUi('rigging_submenu')
+		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
 
 		self.chk000() #init scale joint value
-
 
 
 	def chk000(self):
 		'''
 		Scale Joint
 		'''
-		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk001-2')
+		self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk001-2')
 		self.ui.s000.setValue(pm.jointDisplayScale(query=1)) #init global joint display size
 
 
@@ -28,7 +26,7 @@ class Rigging(Init):
 		'''
 		Scale IK
 		'''
-		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk000, chk002')
+		self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk000, chk002')
 		self.ui.s000.setValue(pm.ikHandleDisplayScale(query=1)) #init IK handle display size
 		
 
@@ -36,7 +34,7 @@ class Rigging(Init):
 		'''
 		Scale IK/FK
 		'''
-		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk000-1')
+		self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk000-1')
 		self.ui.s000.setValue(pm.jointDisplayScale(query=1, ikfk=1)) #init IKFK display size
 
 
@@ -112,7 +110,7 @@ class Rigging(Init):
 		'''
 		Toggle Display Local Rotation Axes
 		'''
-		tb = self.ui.tb000
+		tb = self.currentUi.tb000
 		if state=='setMenu':
 			tb.add('QCheckBox', setText='Joints', setObjectName='chk000', setChecked=True, setToolTip='Display Joints.')
 			tb.add('QCheckBox', setText='IK', setObjectName='chk001', setChecked=True, setToolTip='Display IK.')
@@ -140,7 +138,7 @@ class Rigging(Init):
 		'''
 		Orient Joints
 		'''
-		tb = self.ui.tb001
+		tb = self.currentUi.tb001
 		if state=='setMenu':
 			tb.add('QCheckBox', setText='Align world', setObjectName='chk003', setToolTip='Align joints with the worlds transform.')
 			return

@@ -9,9 +9,7 @@ class Subdivision(Init):
 	def __init__(self, *args, **kwargs):
 		super(Subdivision, self).__init__(*args, **kwargs)
 
-		self.ui = self.sb.getUi('subdivision')
-		self.submenu = self.sb.getUi('subdivision_submenu')
-
+		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
 
 
 	def cmb000(self, index=None):
@@ -97,9 +95,9 @@ class Subdivision(Init):
 		#check shape for an existing output to a smoothProxy
 		attachedSmoothProxies = pm.listConnections (shape[0], type="polySmoothProxy", s=0, d=1)
 		if len(attachedSmoothProxies) == 0: #subdiv on
-			self.toggleWidgets(self.ui, self.submenu, setEnabled='b000', setChecked='b009')
+			self.toggleWidgets(self.ui, self.childUi, setEnabled='b000', setChecked='b009')
 		else:
-			self.toggleWidgets(self.ui, self.submenu, setDisabled='b000', setChecked_False='b009')
+			self.toggleWidgets(self.ui, self.childUi, setDisabled='b000', setChecked_False='b009')
 			mel.eval("smoothingDisplayToggle 0;")
 
 		#toggle performSmoothProxy

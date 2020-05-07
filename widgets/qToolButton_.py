@@ -74,10 +74,7 @@ class QToolButton_(QtWidgets.QToolButton):
 		returns:
 			(QWidget) or (list)
 		'''
-		children = [i for i in self.children() if not i.__class__.__name__=='']
-		if index is not None:
-			return children[index]
-		return children
+		return self.menu().childWidgets(index)
 
 
 	def enterEvent(self, event):

@@ -9,8 +9,7 @@ class Create(Init):
 	def __init__(self, *args, **kwargs):
 		super(Create, self).__init__(*args, **kwargs)
 
-		self.ui = self.sb.getUi('create')
-		self.submenu = self.sb.getUi('create_submenu')
+		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
 
 		self.node=None
 		self.rotation = {'x':[90,0,0], 'y':[0,90,0], 'z':[0,0,90], '-x':[-90,0,0], '-y':[0,-90,0], '-z':[0,0,-90], 'last':[]}
@@ -84,7 +83,7 @@ class Create(Init):
 		Rotate X Axis
 
 		'''
-		self.toggleWidgets(self.ui, self.submenu, setChecked='chk000', setChecked_False='chk001, chk002')
+		self.toggleWidgets(self.ui, self.childUi, setChecked='chk000', setChecked_False='chk001, chk002')
 		if self.node:
 			self.rotateAbsolute(self.getAxis())
 
@@ -94,7 +93,7 @@ class Create(Init):
 		Rotate Y Axis
 
 		'''
-		self.toggleWidgets(self.ui, self.submenu, setChecked='chk001', setChecked_False='chk000, chk002')
+		self.toggleWidgets(self.ui, self.childUi, setChecked='chk001', setChecked_False='chk000, chk002')
 		if self.node:
 			self.rotateAbsolute(self.getAxis())
 
@@ -104,7 +103,7 @@ class Create(Init):
 		Rotate Z Axis
 
 		'''
-		self.toggleWidgets(self.ui, self.submenu, setChecked='chk002', setChecked_False='chk000, chk001')
+		self.toggleWidgets(self.ui, self.childUi, setChecked='chk002', setChecked_False='chk000, chk001')
 		if self.node:
 			self.rotateAbsolute(self.getAxis())
 

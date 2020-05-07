@@ -9,10 +9,7 @@ class Scene(Init):
 	def __init__(self, *args, **kwargs):
 		super(Scene, self).__init__(*args, **kwargs)
 
-
-		self.ui = self.sb.getUi('scene')
-
-		
+		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
 
 		self.ui.t000.returnPressed.connect(self.t001) #preform rename on returnPressed
 

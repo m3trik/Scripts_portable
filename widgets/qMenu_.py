@@ -180,6 +180,22 @@ class QMenu_(QtWidgets.QMenu):
 		return [self.addMenu(m) for m in menus]
 
 
+	def childWidgets(self, index=None):
+		'''
+		Get the widget at the given index.
+		If no arg is given all widgets will be returned.
+
+		args:
+			index (int) = widget location.
+		returns:
+			(QWidget) or (list)
+		'''
+		children = [i for i in self.children() if not i.__class__.__name__ in ['QAction', 'QWidgetAction']]
+		if index is not None:
+			return children[index]
+		return children
+
+
 	def leaveEvent(self, event):
 		'''
 		args:

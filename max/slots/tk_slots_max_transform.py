@@ -10,8 +10,7 @@ class Transform(Init):
 	def __init__(self, *args, **kwargs):
 		super(Transform, self).__init__(*args, **kwargs)
 
-		self.ui = self.sb.getUi('transform')
-		self.submenu = self.sb.getUi('transform_submenu')
+		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
 
 		#set input masks for text fields
 		# self.ui.t000.setInputMask("00.00") #change to allow for neg values
@@ -33,7 +32,7 @@ class Transform(Init):
 		'''
 		Transform: Scale
 		'''
-		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk008,chk009', setChecked='chk000,chk001,chk002')
+		self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk008,chk009', setChecked='chk000,chk001,chk002')
 		self.ui.s000.setValue(2)
 		self.ui.s000.setSingleStep(1)
 
@@ -42,7 +41,7 @@ class Transform(Init):
 		'''
 		Transform: Move
 		'''
-		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk005,chk009,chk000,chk001,chk002')
+		self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk005,chk009,chk000,chk001,chk002')
 		self.ui.s000.setValue(0.1)
 		self.ui.s000.setSingleStep(0.1)
 
@@ -51,7 +50,7 @@ class Transform(Init):
 		'''
 		Transform: Rotate
 		'''
-		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk005,chk008,chk000,chk001,chk002')
+		self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk005,chk008,chk000,chk001,chk002')
 		self.ui.s000.setValue(45)
 		self.ui.s000.setSingleStep(5)
 
@@ -61,9 +60,9 @@ class Transform(Init):
 		Align: Auto Align
 		'''
 		if self.ui.chk010.isChecked():
-			self.toggleWidgets(self.ui, self.submenu, setDisabled='b029,b030,b031')
+			self.toggleWidgets(self.ui, self.childUi, setDisabled='b029,b030,b031')
 		else:
-			self.toggleWidgets(self.ui, self.submenu, setEnabled='b029,b030,b031')
+			self.toggleWidgets(self.ui, self.childUi, setEnabled='b029,b030,b031')
 
 
 	def chk012(self):
@@ -165,7 +164,7 @@ class Transform(Init):
 		'''
 		Drop To Grid
 		'''
-		tb = self.ui.tb000
+		tb = self.currentUi.tb000
 		if state=='setMenu':
 			tb.add('QCheckBox', setText='Move to Origin', setObjectName='chk014', setChecked=True, setToolTip='Move to origin (xyz 0,0,0).')
 			tb.add('QCheckBox', setText='Use Lowest Point', setObjectName='chk015', setToolTip='Use Lowest bounding box point (else mid point).')
@@ -224,7 +223,7 @@ class Transform(Init):
 
 		Auto Align finds the axis with the largest variance, and set the axis checkboxes accordingly before performing a regular align.
 		'''
-		tb = self.ui.tb001
+		tb = self.currentUi.tb001
 		if state=='setMenu':
 			tb.add('QCheckBox', setText='X Axis', setObjectName='chk029', setToolTip='Align X axis')
 			tb.add('QCheckBox', setText='Y Axis', setObjectName='chk030', setToolTip='Align Y axis')

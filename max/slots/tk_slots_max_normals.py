@@ -10,8 +10,7 @@ class Normals(Init):
 	def __init__(self, *args, **kwargs):
 		super(Normals, self).__init__(*args, **kwargs)
 
-		self.ui = self.sb.getUi('normals')
-
+		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
 
 		self.ui.b003.setText('Hard Edge Display')
 
@@ -38,7 +37,7 @@ class Normals(Init):
 		'''
 		Display Face Normals
 		'''
-		tb = self.ui.tb000
+		tb = self.currentUi.tb000
 		if state=='setMenu':
 			tb.add('QSpinBox', setPrefix='Display Size: ', setObjectName='s001', preset_='1-100 step1', setValue=1, setToolTip='Normal display size.')
 			return
@@ -68,7 +67,7 @@ class Normals(Init):
 		'''
 		Harden Creased Edges
 		'''
-		tb = self.ui.tb001
+		tb = self.currentUi.tb001
 		if state=='setMenu':
 			tb.add('QCheckBox', setText='Soften non-creased', setObjectName='chk000', setToolTip='Soften all non-creased edges.')
 			return
@@ -100,7 +99,7 @@ class Normals(Init):
 		'''
 		Set Normal Angle
 		'''
-		tb = self.ui.tb002
+		tb = self.currentUi.tb002
 		if state=='setMenu':
 			tb.add('QSpinBox', setPrefix='Angle: ', setObjectName='s000', preset_='1-180 step1', setValue=30, setToolTip='Angle degree.')
 			return
@@ -134,7 +133,7 @@ class Normals(Init):
 		'''
 		Lock/Unlock Vertex Normals
 		'''
-		tb = self.ui.tb003
+		tb = self.currentUi.tb003
 		if state=='setMenu':
 			tb.add('QCheckBox', setText='All', setObjectName='chk001', setChecked=True, setToolTip='Lock/Unlock: all.')
 			return

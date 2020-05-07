@@ -9,9 +9,7 @@ class Crease(Init):
 	def __init__(self, *args, **kwargs):
 		super(Crease, self).__init__(*args, **kwargs)
 
-		self.ui = self.sb.getUi('crease')
-		self.submenu = self.sb.getUi('crease_submenu')
-
+		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
 
 
 	def chk002(self):
@@ -21,7 +19,7 @@ class Crease(Init):
 		if self.ui.chk002.isChecked():
 			self.ui.s003.setValue(0) #crease value
 			self.ui.s004.setValue(180) #normal angle
-			self.toggleWidgets(self.ui, self.submenu, setChecked='chk002', setChecked_False='chk003')
+			self.toggleWidgets(self.ui, self.childUi, setChecked='chk002', setChecked_False='chk003')
 		else:
 			self.ui.s003.setValue(5) #crease value
 			self.ui.s004.setValue(60) #normal angle
@@ -34,7 +32,7 @@ class Crease(Init):
 		if self.ui.chk003.isChecked():
 			self.ui.s003.setValue(10) #crease value
 			self.ui.s004.setValue(30) #normal angle
-			self.toggleWidgets(self.ui, self.submenu, setChecked='chk003', setChecked_False='chk002')
+			self.toggleWidgets(self.ui, self.childUi, setChecked='chk003', setChecked_False='chk002')
 		else:
 			self.ui.s003.setValue(5) #crease value
 			self.ui.s004.setValue(60) #normal angle

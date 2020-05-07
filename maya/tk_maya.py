@@ -9,8 +9,6 @@ if not app:
 
 
 
-
-
 class Tk_maya(Tk):
 	'''
 	Tk class overridden for use with Autodesk Maya.

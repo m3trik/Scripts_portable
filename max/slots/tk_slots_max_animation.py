@@ -9,8 +9,7 @@ class Animation(Init):
 	def __init__(self, *args, **kwargs):
 		super(Animation, self).__init__(*args, **kwargs)
 
-		self.ui = self.sb.getUi('animation')
-
+		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
 
 
 	def cmb000(self, index=None):

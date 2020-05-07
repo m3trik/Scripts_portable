@@ -9,99 +9,7 @@ class Main(Init):
 	def __init__(self, *args, **kwargs):
 		super(Main, self).__init__(*args, **kwargs)
 
-		self.ui = self.sb.getUi('main')
-
-
-
-	def v000(self):
-		'''
-		
-		'''
-		
-		
-
-	def v001(self):
-		'''
-		
-		'''
-		
-
-
-	def v002(self):
-		'''
-		
-		'''
-		
-
-
-	def v003(self):
-		'''
-		
-		'''
-		
-
-
-	def v004(self):
-		'''
-		
-		'''
-		
-
-
-	def v005(self):
-		'''
-		
-		'''
-		
-
-
-	def v006(self):
-		'''
-		
-		'''
-		
-
-
-	def v007(self):
-		'''
-		
-		'''
-		
-
-
-	def v008(self):
-		'''
-		
-		'''
-		
-
-
-	def v009(self):
-		'''
-		
-		'''
-		
-
-
-	def v010(self):
-		'''
-		
-		'''
-		
-
-
-	def v011(self):
-		'''
-		
-		'''
-		
-
-
-	def v012(self):
-		'''
-		
-		'''
-		pass
+		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
 
 
 	def v013(self):
@@ -110,20 +18,6 @@ class Main(Init):
 
 		'''
 		self.sb.getMethod('file', 'b005')()
-
-
-	def v022(self):
-		'''
-		
-		'''
-		
-
-
-	def v023(self):
-		'''
-		
-		'''
-		
 
 
 	def v024(self):

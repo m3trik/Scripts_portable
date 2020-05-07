@@ -9,9 +9,7 @@ class Scripting(Init):
 	def __init__(self, *args, **kwargs):
 		super(Scripting, self).__init__(*args, **kwargs)
 
-		self.ui = self.sb.getUi('scripting')
-
-		
+		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
 
 		# tk_cmdScrollFieldReporter = pm.cmdScrollFieldReporter (
 		# 														height=35,

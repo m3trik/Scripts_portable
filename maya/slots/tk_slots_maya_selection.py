@@ -9,25 +9,27 @@ class Selection(Init):
 	def __init__(self, *args, **kwargs):
 		super(Selection, self).__init__(*args, **kwargs)
 
-		self.ui = self.sb.getUi('selection')
-		self.submenu = self.sb.getUi('selection_submenu')
+		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
 
-		#set checked button states
-		#chk004 ignore backfacing (camera based selection)
-		state = pm.selectPref(query=True, useDepth=True)
-		self.ui.chk004.setChecked(state)
+		try:
+			#set checked button states
+			#chk004 ignore backfacing (camera based selection)
+			state = pm.selectPref(query=True, useDepth=True)
+			self.ui.chk004.setChecked(state)
 
-		#selection style: set initial checked state
-		ctx = pm.currentCtx() #flags (ctx, c=True) get the context's class.
-		if ctx == 'lassoContext':
-			self.cmb004(index=1)
-			self.submenu.chk006.setChecked(True)
-		elif ctx == 'paintContext':
-			self.cmb004(index=2)
-			self.submenu.chk007.setChecked(True)
-		else: #selectContext
-			self.cmb004(index=0)
-			self.submenu.chk005.setChecked(True)
+			#selection style: set initial checked state
+			ctx = pm.currentCtx() #flags (ctx, c=True) get the context's class.
+			if ctx == 'lassoContext':
+				self.cmb004(index=1)
+				self.childUi.chk006.setChecked(True)
+			elif ctx == 'paintContext':
+				self.cmb004(index=2)
+				self.childUi.chk007.setChecked(True)
+			else: #selectContext
+				self.cmb004(index=0)
+				self.childUi.chk005.setChecked(True)
+		except NameError:
+			pass
 
 
 	def t000(self):
@@ -51,7 +53,7 @@ class Selection(Init):
 		'''
 		Select Island: tolerance x
 		'''
-		tb = self.ui.tb002
+		tb = self.currentUi.tb002
 		if tb.chk003.isChecked():
 			text = tb.s002.value()
 			tb.s004.setValue(text)
@@ -62,7 +64,7 @@ class Selection(Init):
 		'''
 		Select Island: tolerance y
 		'''
-		tb = self.ui.tb002
+		tb = self.currentUi.tb002
 		if tb.chk003.isChecked():
 			text = tb.s004.value()
 			tb.s002.setValue(text)
@@ -73,7 +75,7 @@ class Selection(Init):
 		'''
 		Select Island: tolerance z
 		'''
-		tb = self.ui.tb002
+		tb = self.currentUi.tb002
 		if tb.chk003.isChecked():
 			text = tb.s005.value()
 			tb.s002.setValue(text)
@@ -84,21 +86,21 @@ class Selection(Init):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk001-2')
+		self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk001-2')
 
 
 	def chk001(self):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk000,chk002')
+		self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk000,chk002')
 
 
 	def chk002(self):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk000-1')
+		self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk000-1')
 
 
 	def chk004(self):
@@ -118,7 +120,7 @@ class Selection(Init):
 		Select Style: Marquee
 		'''
 		self.setSelectionStyle('selectContext')
-		self.toggleWidgets(self.ui, self.submenu, setChecked='chk005', setChecked_False='chk006-7')
+		self.toggleWidgets(self.ui, self.childUi, setChecked='chk005', setChecked_False='chk006-7')
 		self.ui.cmb004.setCurrentIndex(0)
 
 
@@ -127,7 +129,7 @@ class Selection(Init):
 		Select Style: Lasso
 		'''
 		self.setSelectionStyle('lassoContext')
-		self.toggleWidgets(self.ui, self.submenu, setChecked='chk006', setChecked_False='chk005,chk007')
+		self.toggleWidgets(self.ui, self.childUi, setChecked='chk006', setChecked_False='chk005,chk007')
 		self.ui.cmb004.setCurrentIndex(1)
 
 
@@ -136,7 +138,7 @@ class Selection(Init):
 		Select Style: Paint
 		'''
 		self.setSelectionStyle('paintContext')
-		self.toggleWidgets(self.ui, self.submenu, setChecked='chk007', setChecked_False='chk005-6')
+		self.toggleWidgets(self.ui, self.childUi, setChecked='chk007', setChecked_False='chk005-6')
 		self.ui.cmb004.setCurrentIndex(2)
 
 
@@ -343,7 +345,7 @@ class Selection(Init):
 		'''
 		Select Nth
 		'''
-		tb = self.ui.tb000
+		tb = self.currentUi.tb000
 		if state=='setMenu':
 			tb.add('QCheckBox', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
 			tb.add('QCheckBox', setText='Component Loop', setObjectName='chk001', setChecked=True, setToolTip='Select all contiguous components that form a loop with the current selection.')
@@ -373,7 +375,7 @@ class Selection(Init):
 		'''
 		Select Similar
 		'''
-		tb = self.ui.tb001
+		tb = self.currentUi.tb001
 		if state=='setMenu':
 			tb.add('QDoubleSpinBox', setPrefix='Tolerance: ', setObjectName='s000', preset_='0.0-10 step.1', setValue=0.3, setToolTip='Select similar objects or components, depending on selection mode.')
 			return
@@ -400,7 +402,7 @@ class Selection(Init):
 		'''
 		Select Island: Select Polygon Face Island
 		'''
-		tb = self.ui.tb002
+		tb = self.currentUi.tb002
 		if state=='setMenu':
 			tb.add('QCheckBox', setText='Lock Values', setObjectName='chk003', setChecked=True, setToolTip='Keep values in sync.')
 			tb.add('QDoubleSpinBox', setPrefix='x: ', setObjectName='s002', preset_='0.00-1 step.01', setValue=0.01, setToolTip='Normal X range.')

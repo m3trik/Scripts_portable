@@ -10,8 +10,7 @@ class Symmetry(Init):
 	def __init__(self, *args, **kwargs):
 		super(Symmetry, self).__init__(*args, **kwargs)
 
-		self.ui = self.sb.getUi('symmetry')
-		self.submenu = self.sb.getUi('symmetry_submenu')
+		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
 
 		#symmetry: set initial checked state
 		# state = pm.symmetricModelling(query=True, symmetry=True) #application symmetry state
@@ -63,7 +62,7 @@ class Symmetry(Init):
 		'''
 		Symmetry X
 		'''
-		self.toggleWidgets(self.ui, self.submenu, self.submenu, setChecked_False='chk001,chk002')
+		self.toggleWidgets(self.ui, self.childUi, self.childUi, setChecked_False='chk001,chk002')
 		state = self.ui.chk000.isChecked() #symmetry button state
 		self.setSymmetry(state, 'x')
 
@@ -72,7 +71,7 @@ class Symmetry(Init):
 		'''
 		Symmetry Y
 		'''
-		self.toggleWidgets(self.ui, self.submenu, self.submenu, setChecked_False='chk000,chk002')
+		self.toggleWidgets(self.ui, self.childUi, self.childUi, setChecked_False='chk000,chk002')
 		state = self.ui.chk001.isChecked() #symmetry button state
 		self.setSymmetry(state, 'y')
 
@@ -81,7 +80,7 @@ class Symmetry(Init):
 		'''
 		Symmetry Z
 		'''
-		self.toggleWidgets(self.ui, self.submenu, self.submenu, setChecked_False='chk000,chk001')
+		self.toggleWidgets(self.ui, self.childUi, self.childUi, setChecked_False='chk000,chk001')
 		state = self.ui.chk002.isChecked() #symmetry button state
 		self.setSymmetry(state, 'z')
 
@@ -100,7 +99,7 @@ class Symmetry(Init):
 		self.ui.chk004.setChecked(False) #uncheck symmetry:object space
 		if any ([self.ui.chk000.isChecked(), self.ui.chk001.isChecked(), self.ui.chk002.isChecked()]): #(symmetry)
 			pm.symmetricModelling(edit=True, symmetry=False)
-			self.toggleWidgets(self.ui, self.submenu, setChecked_False='chk000-2')
+			self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk000-2')
 			print("# Warning: First select a seam edge and then check the symmetry button to enable topographic symmetry #")
 
 

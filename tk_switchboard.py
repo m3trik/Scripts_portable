@@ -333,23 +333,40 @@ class __Switchboard(object):
 			return {k:v['ui'] for k,v in self._sbDict.items() if type(v)==dict and 'ui' in v}
 
 
-	def getUi(self, name=None):
+	def getUi(self, name=None, setAsCurrent=False, level=None):
 		'''
 		Property.
 		Get the dynamic ui using its string name, or if no argument is given, return the current ui.
 
 		args:
-			name (str) = name of class. ie. 'polygons' (by default getUi returns the current ui)
+			name (str) = Name of class. ie. 'polygons' (by default getUi returns the current ui)
+			setAsCurrent (bool) = Set the ui name as currently active. (default: False)
+			level (int) = Get the ui of the given level. (2:submenu, 3:main_menu)
 		returns:
 			if name: corresponding dynamic ui object of given name from the key 'uiList'.
 			else: current dynamic ui object
 		'''
 		if name is None:
 			name = self.getUiName(camelCase=True)
+
+		if level==2:
+			if 'submenu' not in name:
+				name = name+'_submenu'
+
+		if level==3:
+			name = name.split('_')[0] #polygons from polygons_component_submenu
+
+		if setAsCurrent:
+			self.name = name #set the property for the current ui name.
+
 		try:
 			return self._sbDict[name]['ui'] #self.uiList(ui=True)[self.getUiIndex(name)]
-		except ValueError:
-			return None
+		except (ValueError, KeyError): #if the ui key doesn't exist, try lowercasing the first letter in name.
+			try:
+				name = name[0].lower()+name[1:]
+				return self._sbDict[name]['ui'] #self.uiList(ui=True)[self.getUiIndex(name)]
+			except (ValueError, KeyError): #if the ui key doesn't exist; return None.
+				return None
 
 
 	def setUiName(self, index):
@@ -380,27 +397,30 @@ class __Switchboard(object):
 		If no argument is given, the name for the current ui will be returned.
 
 		args:
-			ui (obj) = (optional) use ui object to get its corresponding name. (the default behavior is to return the current ui name)
-			camelCase (bool) = (optional) return name with first letter lowercase. (default: False)
-			pascalCase (bool) = (optional) return name with first letter capitalized. (default: False)
+			ui (obj) = Use ui object to get its corresponding name. (the default behavior is to return the current ui name)
+			camelCase (bool) = Return name with first letter lowercase. (default: False)
+			pascalCase (bool) = Return name with first letter capitalized. (default: False)
 		returns:
 			(str) - ui name.
 		'''
 		if not 'name' in self._sbDict:
 			self._sbDict['name']=[]
 
-		if ui:
-			return next(k for k, value in self.uiList().items() if value==ui)
+		if ui is None:
+			try:
+				name = self._sbDict['name'][-1]
+			except IndexError: #if index out of range (no value exists): return None
+				return None
 
-		try:
-			name = self._sbDict['name'][-1]
-			if pascalCase:
-				name = name[:1].capitalize()+name[1:] #capitalize the first letter
-			if camelCase:
-				name = name[0].lower()+name[1:] #lowercase the first letter
-			return name
-		except: #if index out of range (no value exists): return None
-			return None
+		else: #get the ui name string key from the ui value in uiList.
+			name = next(k for k, v in self.uiList().items() if v==ui)
+
+		if pascalCase:
+			name = name[:1].capitalize()+name[1:] #capitalize the first letter
+		if camelCase:
+			name = name[0].lower()+name[1:] #lowercase the first letter
+
+		return name
 
 
 	def getUiIndex(self, name=False):
@@ -1061,22 +1081,6 @@ class __Switchboard(object):
 		return nested_list
 
 
-	def getSubmenu(self, ui):
-		'''
-		Get the submenu object of the given ui using it's name string, or the parent ui object.
-
-		args:
-			ui (str) = ui name.
-				<ui object> - dynamic ui.
-		'''
-		if not isinstance(ui, (str, unicode)):
-			name = self.getUiName(ui) #get name using ui object.
-		if 'submenu' not in name:
-			name = name+'_submenu'
-
-		return self.getUi(name)
-
-
 	def getUiLevel(self, name=False):
 		'''
 		Property.
@@ -1346,6 +1350,27 @@ _sbDict={
 
 
 # deprecated: -----------------------------------
+
+
+
+
+	# def getSubmenu(self, ui=None):
+	# 	'''
+	# 	Get the submenu object of the given ui using it's name string, or the parent ui object.
+
+	# 	args:
+	# 		ui (str) = ui name.
+	# 			<ui object> - dynamic ui.
+	# 	'''
+	# 	if not isinstance(ui, (str, unicode)):
+	# 		name = self.getUiName(ui) #get name using ui object, or get current ui name if ui=None.
+
+	# 	if 'submenu' not in name:
+	# 		name = name+'_submenu'
+
+	# 	return self.getUi(name)
+
+
 
 	# def getWidgets(self, name=None):
 	# 	'''

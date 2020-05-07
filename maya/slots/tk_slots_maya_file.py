@@ -9,10 +9,12 @@ class File(Init):
 	def __init__(self, *args, **kwargs):
 		super(File, self).__init__(*args, **kwargs)
 
-		self.ui = self.sb.getUi('file')
+		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
 
-		self.cmb006() #refresh cmb006 contents to reflect the current project folder
-
+		try:
+			self.cmb006() #refresh cmb006 contents to reflect the current project folder
+		except NameError:
+			pass
 
 
 	def cmb000(self, index=None):
@@ -175,7 +177,7 @@ class File(Init):
 		'''
 		Save
 		'''
-		tb = self.ui.tb000
+		tb = self.currentUi.tb000
 		if state=='setMenu':
 			tb.add('QCheckBox', setText='ASCII', setObjectName='chk003', setChecked=True, setToolTip='Toggle ASCII or binary file type.')
 			tb.add('QCheckBox', setText='Wireframe', setObjectName='chk000', setChecked=True, setToolTip='Set view to wireframe before save.')

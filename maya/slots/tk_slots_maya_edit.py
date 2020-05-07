@@ -9,9 +9,7 @@ class Edit(Init):
 	def __init__(self, *args, **kwargs):
 		super(Edit, self).__init__(*args, **kwargs)
 
-		self.ui = self.sb.getUi('edit')
-		self.submenu = self.sb.getUi('edit_submenu')
-
+		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
 
 
 	def cmb000(self, index=None):
@@ -40,7 +38,7 @@ class Edit(Init):
 		'''
 		Mesh Cleanup
 		'''
-		tb = self.ui.tb000
+		tb = self.currentUi.tb000
 		if state=='setMenu':
 			# tb.add('QCheckBox', setText='N-Gons', setObjectName='chk002', setToolTip='Find N-gons.')
 			# tb.add('QCheckBox', setText='Isolated Vertex', setObjectName='chk003', setChecked=True, setToolTip='Find isolated vertices within specified angle threshold.')
@@ -81,7 +79,7 @@ class Edit(Init):
 		'''
 		Delete History
 		'''
-		tb = self.ui.tb001
+		tb = self.currentUi.tb001
 		if state=='setMenu':
 			tb.add('QCheckBox', setText='All', setObjectName='chk018', setChecked=True, setToolTip='Delete history on All objects.')
 			tb.add('QCheckBox', setText='Delete Unused Nodes', setObjectName='chk019', setChecked=True, setToolTip='Delete unused nodes.')
@@ -123,7 +121,7 @@ class Edit(Init):
 		'''
 		Delete 
 		'''
-		tb = self.ui.tb002
+		tb = self.currentUi.tb002
 		if state=='setMenu':
 			tb.add('QCheckBox', setText='Delete Loop', setObjectName='chk001', setToolTip='Delete the entire edge loop of any components selected.')
 			return
@@ -174,9 +172,9 @@ class Edit(Init):
 				self.ui.b043.setText(newObject)
 			else:
 				self.ui.b043.setText("must select obj first")
-				self.toggleWidgets(self.ui, self.submenu, setChecked_False='b043')
+				self.toggleWidgets(self.ui, self.childUi, setChecked_False='b043')
 			if self.ui.b042.isChecked():
-				self.toggleWidgets(self.ui, self.submenu, setEnabled='b052')
+				self.toggleWidgets(self.ui, self.childUi, setEnabled='b052')
 		else:
 			self.ui.b043.setText("Object")
 
@@ -196,9 +194,9 @@ class Edit(Init):
 				self.ui.b042.setText(creaseSet)
 			else:
 				self.ui.b042.setText("must select set first")
-				self.toggleWidgets(self.ui, self.submenu, setChecked_False='b042')
+				self.toggleWidgets(self.ui, self.childUi, setChecked_False='b042')
 			if self.ui.b043.isChecked():
-				self.toggleWidgets(self.ui, self.submenu, setEnabled='b052')
+				self.toggleWidgets(self.ui, self.childUi, setEnabled='b052')
 		else:
 			self.ui.b042.setText("Crease Set")
 
@@ -233,7 +231,7 @@ class Edit(Init):
 			# print "crease:", name
 		pm.undoInfo (closeChunk=1)
 
-		self.toggleWidgets(self.ui, self.submenu, setDisabled='b052', setChecked_False='b042')#,self.ui.b043])
+		self.toggleWidgets(self.ui, self.childUi, setDisabled='b052', setChecked_False='b042')#,self.ui.b043])
 		self.ui.b042.setText("Crease Set")
 		# self.ui.b043.setText("Object")
 
