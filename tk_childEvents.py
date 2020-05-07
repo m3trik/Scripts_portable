@@ -139,6 +139,10 @@ class EventFactoryFilter(QtCore.QObject):
 		for widget in sb.getWidget(name=name): #all widgets from the current ui.
 			if not shiboken2.isValid(widget):
 				sb.removeWidgets(widget) #remove any widgets from the main dict if the c++ object no longer exists.
+
+			elif not hasattr(widget, 'rect'): #ignore any widgets not having the 'rect' attribute.
+				pass
+
 			else:
 				try:
 					widgetName = sb.getWidgetName(widget, name)

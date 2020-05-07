@@ -162,33 +162,44 @@ class Create(Init):
 
 	def cmb002(self, index=None, values={}, clear=False, show=False):
 		'''
-		Primitive Attributes
+		Get/Set Primitive Attributes.
+
+		args:
+			index (int) = parameter on activated, currentIndexChanged, and highlighted signals.
+			values (dict) = Attibute and it's corresponding value. ie. {width:10}
+			clear (bool) = Clear any previous items.
+			show (bool) = Show the popup menu immediately after adding items.
 		'''
 		cmb = self.ui.cmb002
-		cmb.popupStyle = 'qmenu'
 
-		names = 's000-'+str(len(values)-1)
+		n = len(values)
+		if n and index is None:
+			cmb.popupStyle = 'qmenu'
 
-		if clear:
-			cmb.menu.clear()
+			names = 's000-'+str(n-1)
 
-		#add spinboxes
-		[cmb.add('QDoubleSpinBox', setObjectName=name, preset_='0.00-100 step1') for name in self.unpackNames(names)]
+			if clear:
+				cmb.menu.clear()
 
-		#set values
-		self.setSpinboxes(cmb, names, values)
+			#add spinboxes
+			[cmb.add('QDoubleSpinBox', setObjectName=name, preset_='0.00-100 step1') for name in self.unpackNames(names)]
 
-		#set signal/slot connections
-		self.connect(names, 'valueChanged', self.sXXX, cmb)
+			#set values
+			self.setSpinboxes(cmb, names, values)
 
-		if show:
-			cmb.showPopup()
+			#set signal/slot connections
+			self.connect(names, 'valueChanged', self.sXXX, cmb)
+
+			if show:
+				cmb.showPopup()
 
 
 	def sXXX(self, index=None):
 		'''
-		set node attributes from multiple spinbox values.
-		args: index(int) = optional index of the spinbox that called this function. ie. 5 from s005
+		Set node attributes from multiple spinbox values.
+
+		args:
+			index(int) = optional index of the spinbox that called this function. ie. 5 from s005
 		'''
 		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.ui.cmb002.menuItems()} #current spinbox values. ie. from s000 get the value of six and add it to the list
 		self.setAttributesMEL(self.node, spinboxValues) #set attributes for the history node

@@ -199,18 +199,17 @@ class Slot(object):
 			unpacked names. ie. ['v000','b004','b005','b006']
 		'''
 		packed_names = [n.strip() for n in nameString.split(',') if '-' in n] #build list of all widgets passed in containing '-'
+		otherNames = [n.strip() for n in nameString.split(',') if '-' not in n] #all widgets passed in not containing '-'
 
-		unpacked_names=[]
+		unpacked_names=[] #unpack the packed names:
 		for name in packed_names:
-			name=name.split('-') #ex. split 'b000-8'
+			name = name.split('-') #ex. split 'b000-8'
 			prefix = name[0].strip('0123456789') #ex. split 'b' from 'b000'
 			start = int(name[0].strip('abcdefghijklmnopqrstuvwxyz') or 0) #start range. #ex. '000' #converting int('000') returns None, if case; assign 0.
-			stop = int(name[1])+1 #end range. #ex. '9' from 'b000-8' for range up to 9 but not including 9.
+			stop = int(name[1])+1 #end range. #ex. '8' from 'b000-8' becomes 9, for range up to 9 but not including 9.
 			unpacked_names.extend([str(prefix)+'000'[:-len(str(num))]+str(num) for num in range(start,stop)]) #build list of name strings within given range
 
-		names = [n.strip() for n in nameString.split(',') if '-' not in n] #all widgets passed in not containing '-'
-
-		return names+unpacked_names
+		return otherNames+unpacked_names
 
 
 	@staticmethod

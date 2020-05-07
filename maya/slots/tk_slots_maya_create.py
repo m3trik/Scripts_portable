@@ -75,7 +75,8 @@ class Create(Init):
 		Set Name
 
 		'''
-		pm.rename(self.node.name() ,self.ui.t003.text())
+		transform = self.node[0]
+		pm.rename(transform.name() ,self.ui.t003.text())
 
 
 	def chk000(self):
@@ -135,6 +136,9 @@ class Create(Init):
 
 
 	def cmb000(self):
+		'''
+
+		'''
 		cmb = self.ui.cmb000
 
 		self.ui.cmb001.clear()
@@ -154,35 +158,46 @@ class Create(Init):
 
 	def cmb002(self, index=None, values={}, clear=False, show=False):
 		'''
-		Primitive Attributes
+		Get/Set Primitive Attributes.
+
+		args:
+			index (int) = parameter on activated, currentIndexChanged, and highlighted signals.
+			values (dict) = Attibute and it's corresponding value. ie. {u'width': 10}
+			clear (bool) = Clear any previous items.
+			show (bool) = Show the popup menu immediately after adding items.
 		'''
 		cmb = self.ui.cmb002
-		cmb.popupStyle = 'qmenu'
 
-		names = 's000-'+str(len(values)-1)
+		n = len(values)
+		if n and index is None:
+			cmb.popupStyle = 'qmenu'
 
-		if clear:
-			cmb.menu.clear()
+			names = 's000-'+str(n-1)
 
-		#add spinboxes
-		[cmb.add('QDoubleSpinBox', setObjectName=name, preset_='0.00-100 step1') for name in self.unpackNames(names)]
+			if clear:
+				cmb.menu.clear()
 
-		#set values
-		self.setSpinboxes(cmb, names, values)
+			#add spinboxes
+			[cmb.add('QDoubleSpinBox', setObjectName=name, preset_='0.00-100 step1') for name in self.unpackNames(names)]
 
-		#set signal/slot connections
-		self.connect(names, 'valueChanged', self.sXXX, cmb)
+			#set values
+			self.setSpinboxes(cmb, names, values)
 
-		if show:
-			cmb.showPopup()
+			#set signal/slot connections
+			self.connect(names, 'valueChanged', self.sXXX, cmb)
+
+			if show:
+				cmb.showPopup()
 
 
 	def sXXX(self, index=None):
 		'''
-		set node attributes from multiple spinbox values.
-		args: index(int) = optional index of the spinbox that called this function. ie. 5 from s005
+		Set node attributes from multiple spinbox values.
+
+		args:
+			index(int) = optional index of the spinbox that called this function. ie. 5 from s005
 		'''
-		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.ui.cmb002.menuItems()} #current spinbox values. ie. from s000 get the value of six and add it to the list
+		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.ui.cmb002.menuItems()} #get current spinbox values. ie. {width:10} from spinbox prefix and value.
 		self.setAttributesMEL(self.node, spinboxValues) #set attributes for the history node
 
 
@@ -315,7 +330,7 @@ class Create(Init):
 		pm.xform (self.node, translation=self.point, worldSpace=1, absolute=1)
 
 		exclude = [u'message', u'caching', u'frozen', u'isHistoricallyInteresting', u'nodeState', u'binMembership', u'output', u'axis', u'axisX', u'axisY', u'axisZ', u'paramWarn', u'uvSetName', 'maya70']
-		attributes = self.getAttributesMEL(self.node, exclude) #get list of attributes and their values using the transform node.
+		attributes = self.getAttributesMEL(self.node, exclude) #get dict of attributes and their values using the transform node.
 		self.cmb002(values=attributes, clear=True, show=True)
 
 		pm.select(self.node) #select the transform node so that you can see any edits
