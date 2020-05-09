@@ -23,10 +23,10 @@ class Editors(Init):
 		# self.sb.getUi('dynLayout').setCentralWidget(self.stackedWidget)
 		# self.sb.getUi('dynLayout').addWidget(self.stackedWidget)
 
-		print pm.lsUI(
+		print(pm.lsUI(
 				numWidgets=True,	#[bool, create]  Reports the number of QT widgets used by Maya.
 				dumpWidgets=True	#[bool, create]  Dump all QT widgets used by Maya.
-				)
+				))
 
 
 
@@ -38,7 +38,7 @@ class Editors(Init):
 		returns:
 			the current widget object from the stacked widget.
 		'''
-		print 8*' -'
+		print(8*' -')
 		self.stackedWidget.addWidget(self.sb.getWidget(name=name))
 		self.stackedWidget.setCurrentWidget(name)
 		currentWidget = self.stackedWidget.currentWidget()

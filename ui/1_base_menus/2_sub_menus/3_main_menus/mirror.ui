@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>646</width>
-    <height>379</height>
+    <width>152</width>
+    <height>200</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -46,8 +46,8 @@
    <widget class="QWidget" name="layoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>156</x>
-      <y>12</y>
+      <x>15</x>
+      <y>15</y>
       <width>121</width>
       <height>131</height>
      </rect>
@@ -64,28 +64,28 @@
           <number>12</number>
          </property>
          <item>
-          <widget class="QGroupBox" name="mirror">
+          <widget class="QGroupBox" name="group000">
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>61</height>
+             <height>60</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
              <width>111</width>
-             <height>49</height>
+             <height>73</height>
             </size>
            </property>
            <property name="title">
             <string>Mirror</string>
            </property>
-           <widget class="QPushButton" name="b000">
+           <widget class="QToolButton_" name="tb000">
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>35</y>
-              <width>61</width>
+              <y>20</y>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -107,277 +107,13 @@
               <height>18</height>
              </size>
             </property>
-            <property name="autoDefault">
-             <bool>false</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-            <property name="bnabled" stdset="0">
-             <bool>true</bool>
-            </property>
            </widget>
-           <widget class="QPushButton" name="chk005">
-            <property name="geometry">
-             <rect>
-              <x>76</x>
-              <y>17</y>
-              <width>37</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Mirror: perform delete along specified axis</string>
-            </property>
-            <property name="layoutDirection">
-             <enum>Qt::RightToLeft</enum>
-            </property>
-            <property name="text">
-             <string>Cut</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-            <property name="autoDefault">
-             <bool>false</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-            <property name="bnabled" stdset="0">
-             <bool>true</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="chk004">
-            <property name="geometry">
-             <rect>
-              <x>60</x>
-              <y>17</y>
-              <width>17</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Mirror: instance object</string>
-            </property>
-            <property name="layoutDirection">
-             <enum>Qt::RightToLeft</enum>
-            </property>
-            <property name="text">
-             <string>i</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
-            <property name="autoDefault">
-             <bool>false</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-            <property name="bnabled" stdset="0">
-             <bool>true</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="chk000">
+           <widget class="QToolButton_" name="tb001">
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>17</y>
-              <width>16</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
+              <y>40</y>
               <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Delete: axis negative</string>
-            </property>
-            <property name="layoutDirection">
-             <enum>Qt::RightToLeft</enum>
-            </property>
-            <property name="text">
-             <string>–</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-            <property name="autoDefault">
-             <bool>false</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-            <property name="bnabled" stdset="0">
-             <bool>true</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="chk002">
-            <property name="geometry">
-             <rect>
-              <x>28</x>
-              <y>17</y>
-              <width>16</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Delete: Y axis </string>
-            </property>
-            <property name="layoutDirection">
-             <enum>Qt::RightToLeft</enum>
-            </property>
-            <property name="text">
-             <string>Y</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="autoDefault">
-             <bool>false</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-            <property name="bnabled" stdset="0">
-             <bool>true</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="chk003">
-            <property name="geometry">
-             <rect>
-              <x>44</x>
-              <y>17</y>
-              <width>16</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Delete: Z axis </string>
-            </property>
-            <property name="layoutDirection">
-             <enum>Qt::RightToLeft</enum>
-            </property>
-            <property name="text">
-             <string>Z</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="autoDefault">
-             <bool>false</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-            <property name="bnabled" stdset="0">
-             <bool>true</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="chk001">
-            <property name="geometry">
-             <rect>
-              <x>12</x>
-              <y>17</y>
-              <width>16</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Delete: X axis </string>
-            </property>
-            <property name="layoutDirection">
-             <enum>Qt::RightToLeft</enum>
-            </property>
-            <property name="text">
-             <string>X</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-            <property name="autoDefault">
-             <bool>false</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-            <property name="bnabled" stdset="0">
-             <bool>true</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="b008">
-            <property name="geometry">
-             <rect>
-              <x>60</x>
-              <y>35</y>
-              <width>53</width>
               <height>19</height>
              </rect>
             </property>
@@ -402,27 +138,7 @@
               <height>18</height>
              </size>
             </property>
-            <property name="autoDefault">
-             <bool>false</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-            <property name="bnabled" stdset="0">
-             <bool>true</bool>
-            </property>
            </widget>
-           <zorder>chk000</zorder>
-           <zorder>b000</zorder>
-           <zorder>chk005</zorder>
-           <zorder>chk004</zorder>
-           <zorder>chk002</zorder>
-           <zorder>chk003</zorder>
-           <zorder>chk001</zorder>
-           <zorder>b008</zorder>
           </widget>
          </item>
          <item>
@@ -506,6 +222,11 @@
    <class>QProgressBar_</class>
    <extends>QProgressBar</extends>
    <header>widgets.qprogressbar_.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QToolButton_</class>
+   <extends>QToolButton</extends>
+   <header>widgets.qtoolbutton_.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

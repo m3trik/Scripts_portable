@@ -122,6 +122,31 @@ class Slot(object):
 				[getattr(w, property_)(state) for w in widgets] #set the property state for each widget in the list.
 
 
+	def getAxisFromCheckBoxes(self, checkboxes, ui=None):
+		'''
+		Get the intended axis value as a string from the given checkbox's check states.
+
+		args:
+			checkboxes (str)(list) = 3 or 4 (or six with explicit negative values) checkboxes. Valid text: '-','X','Y','Z','-X','-Y','-Z' ('-' indicates a negative axis in a four checkbox setup)
+
+		ex call: self.getAxis('chk000-3')
+		'''
+		if isinstance(checkboxes, (str, unicode)):
+			if ui is None:
+				ui = self.currentUi
+			checkboxes = self.getObject(ui, checkboxes)
+
+		prefix=axis=''
+		for chk in checkboxes:
+			if chk.isChecked():
+				if chk.text()=='-':
+					prefix = '-'
+				else:
+					axis = chk.text()
+
+		return prefix+axis #ie. '-X'
+
+
 	def setSpinboxes(self, ui, spinboxes, attributes={}):
 		'''
 		Set multiple spinbox values.

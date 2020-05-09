@@ -138,7 +138,7 @@ class Polygons(Init):
 
 		# pm.polyUnite( 'plg1', 'plg2', 'plg3', name='result' ) #for future reference. if more functionality is needed use polyUnite
 		if tb.chk000.isChecked():
-			mel.eval('bt_mergeCombineMeshes;')
+			pm.polyUnite(ch=1, mergeUVSets=1, centerPivot=1)
 		else:
 			mel.eval('CombinePolygons;')
 
