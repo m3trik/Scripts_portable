@@ -30,6 +30,7 @@ class QComboBox_(QtWidgets.QComboBox):
 		args:
 			popupStyle (str) = specify the type of popup menu. default is the standard 'modelView'.
 		'''
+		self.itemsAdded=False
 		self.popupStyle = popupStyle
 		self.menu = QMenu_(self, position='bottomLeft')
 		self.menu.visible=False #built-in method isVisible() not working.
@@ -190,6 +191,7 @@ class QComboBox_(QtWidgets.QComboBox):
 			# self.classMethod = getattr(class_, str(self.objectName()))
 			if callable(self.classMethod):
 				self.classMethod()
+				self.itemsAdded=True
 
 		return QtWidgets.QComboBox.showEvent(self, event)
 

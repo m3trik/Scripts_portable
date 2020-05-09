@@ -348,6 +348,8 @@ class __Switchboard(object):
 		'''
 		if name is None:
 			name = self.getUiName(camelCase=True)
+			if name is None:
+				return None
 
 		if level==2:
 			if 'submenu' not in name:
@@ -657,10 +659,15 @@ class __Switchboard(object):
 
 		name = name[0].lower()+name[1:] #lowercase the first letter.
 
-		if not 'class' in self._sbDict[name]:
-			return self.setClassInstance(class_) #construct the signals and slots for the ui
+		try:
+			if not 'class' in self._sbDict[name]:
+				return self.setClassInstance(class_) #construct the signals and slots for the ui
 
-		return self._sbDict[name]['class']
+			return self._sbDict[name]['class']
+
+		except KeyError as error:
+			print(error)
+			return None
 
 
 	def getWidget(self, objectName=None, name=None):

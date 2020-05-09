@@ -73,7 +73,7 @@ class Materials(Init):
 			index = cmb.currentIndex()
 
 		self.materials = {name:mats[i] for i, name in enumerate(matNames)} #add mat objects to materials dictionary. 'mat name'=key, <mat object>=value
-		self.currentMaterial = mats[index] if len(mats)>index else None #store material
+		self.currentMaterial = mats[index] if len(mats)>index and index>=0 else None #store material.
 
 
 	def tb000(self, state=None):
@@ -277,7 +277,7 @@ class Materials(Init):
 			newName = newMatName
 			 
 			matName = self.currentMatName
-			mat = self.materials[matName] #get object from string key
+			mat = self.currentMaterial #self.materials[matName] #get object from string key
 			if not newName.startswith(prefix):
 				pm.rename(mat, prefix+newName) 
 			else:

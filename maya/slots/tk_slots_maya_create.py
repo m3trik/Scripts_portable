@@ -134,11 +134,15 @@ class Create(Init):
 		self.ui.t002.setText(str(self.point[2]))
 
 
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 
 		'''
 		cmb = self.ui.cmb000
+
+		if not cmb.itemsAdded:
+			items = ['Polygon', 'NURBS', 'Light']
+			contents = cmb.addItems_(items)
 
 		self.ui.cmb001.clear()
 
@@ -222,99 +226,101 @@ class Create(Init):
 		Create Object
 		'''
 		axis = self.rotation[self.getAxis()] #get axis as [int list]
+		type_ = self.ui.cmb000.currentText()
+		index = self.ui.cmb001.currentIndex()
 
 		#polygons
-		if self.ui.cmb000.currentIndex() == 0:
+		if type_=='Polygon':
 
 			#cube:
-			if self.ui.cmb001.currentIndex() == 0:
+			if index==0:
 				self.node = pm.polyCube (axis=axis, width=5, height=5, depth=5, subdivisionsX=1, subdivisionsY=1, subdivisionsZ=1)
 
 			#sphere:
-			if self.ui.cmb001.currentIndex() == 1:
+			if index==1:
 				self.node = pm.polySphere (axis=axis, radius=5, subdivisionsX=12, subdivisionsY=12)
 
 			#cylinder:
-			if self.ui.cmb001.currentIndex() == 2:
+			if index==2:
 				self.node = pm.polyCylinder (axis=axis, radius=5, height=10, subdivisionsX=1, subdivisionsY=1, subdivisionsZ=1)
 
 			#plane:
-			if self.ui.cmb001.currentIndex() == 3:
+			if index==3:
 				self.node = pm.polyPlane (axis=axis, width=5, height=5, subdivisionsX=1, subdivisionsY=1)
 
 			#circle:
-			if self.ui.cmb001.currentIndex() == 4:
+			if index==4:
 				axis = next(key for key, value in self.rotation.items() if value==axis and key!='last') #get key from value, as createCircle takes the key (ie. 'x') as an argument.
 				self.node = self.createCircle(axis=axis, numPoints=5, radius=5, mode=0)
 
 			#Cone:
-			if self.ui.cmb001.currentIndex() == 5:
+			if index==5:
 				self.node = pm.polyCone (axis=axis, radius=5, height=5, subdivisionsX=1, subdivisionsY=1, subdivisionsZ=1)
 
 			#Pyramid
-			if self.ui.cmb001.currentIndex() == 6:
+			if index==6:
 				self.node = pm.polyPyramid (axis=axis, sideLength=5, numberOfSides=5, subdivisionsHeight=1, subdivisionsCaps=1)
 
 			#Torus:
-			if self.ui.cmb001.currentIndex() == 7:
+			if index==7:
 				self.node = pm.polyTorus (axis=axis, radius=10, sectionRadius=5, twist=0, subdivisionsX=5, subdivisionsY=5)
 
 			#Pipe
-			if self.ui.cmb001.currentIndex() == 8:
+			if index==8:
 				self.node = pm.polyPipe (axis=axis, radius=5, height=5, thickness=2, subdivisionsHeight=1, subdivisionsCaps=1)
 
 			#Soccer ball
-			if self.ui.cmb001.currentIndex() == 9:
+			if index==9:
 				self.node = pm.polyPrimitive(axis=axis, radius=5, sideLength=5, polyType=0)
 
 			#Platonic solids
-			if self.ui.cmb001.currentIndex() == 10:
+			if index==10:
 				self.node = mel.eval("performPolyPrimitive PlatonicSolid 0;")
 
 
 		#nurbs
-		if self.ui.cmb000.currentIndex() == 1:
+		if type_=='NURBS':
 
 			#Cube
-			if self.ui.cmb001.currentIndex() == 0:
+			if index==0:
 				self.node = pm.nurbsCube (ch=1, d=3, hr=1, p=(0, 0, 0), lr=1, w=1, v=1, ax=(0, 1, 0), u=1)
 
 			#Sphere
-			if self.ui.cmb001.currentIndex() == 1:
+			if index==1:
 				self.node = pm.sphere (esw=360, ch=1, d=3, ut=0, ssw=0, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=4, ax=(0, 1, 0))
 
 			#Cylinder
-			if self.ui.cmb001.currentIndex() == 2:
+			if index==2:
 				self.node = pm.cylinder (esw=360, ch=1, d=3, hr=2, ut=0, ssw=0, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=1, ax=(0, 1, 0))
 
 			#Cone
-			if self.ui.cmb001.currentIndex() == 3:
+			if index==3:
 				self.node = pm.cone (esw=360, ch=1, d=3, hr=2, ut=0, ssw=0, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=1, ax=(0, 1, 0))
 
 			#Plane
-			if self.ui.cmb001.currentIndex() == 4:
+			if index==4:
 				self.node = pm.nurbsPlane (ch=1, d=3, v=1, p=(0, 0, 0), u=1, w=1, ax=(0, 1, 0), lr=1)
 
 			#Torus
-			if self.ui.cmb001.currentIndex() == 5:
+			if index==5:
 				self.node = pm.torus (esw=360, ch=1, d=3, msw=360, ut=0, ssw=0, hr=0.5, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=4, ax=(0, 1, 0))
 
 			#Circle
-			if self.ui.cmb001.currentIndex() == 6:
+			if index==6:
 				self.node = pm.circle (c=(0, 0, 0), ch=1, d=3, ut=0, sw=360, s=8, r=1, tol=0.01, nr=(0, 1, 0))
 
 			#Square
-			if self.ui.cmb001.currentIndex() == 7:
+			if index==7:
 				self.node = pm.nurbsSquare (c=(0, 0, 0), ch=1, d=3, sps=1, sl1=1, sl2=1, nr=(0, 1, 0))
 
 
 		#lights
-		if self.ui.cmb000.currentIndex() == 2:
+		if type_=='Light':
 			
 			#
-			if self.ui.cmb001.currentIndex() == 0:
+			if index==0:
 				pass
-		
+
 
 		#set name
 		if isinstance(self.node[0], (str,unicode)): #is type of:

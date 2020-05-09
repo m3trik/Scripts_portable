@@ -552,11 +552,11 @@ class Init(Slot):
 		Get history node attributes:values using the transform node. 
 
 		args:
-			node=transform node
-			exclude='string or unicode list' - attributes to exclude from the returned dictionay
+			node (obj) = Transform node.
+			exclude (list) = Attributes to exclude from the returned dictionay. ie. ['Position','Rotation','Scale','renderable','isHidden','isFrozen','selected']
 
 		returns:
-			dictionary {'string attribute': current value}
+			(dict) {'string attribute': current value}
 		'''
 		#get shape node from transform:
 		shapes = pm.listRelatives(node, children=1, shapes=1) #returns list ie. [nt.Mesh(u'pConeShape1')]
@@ -567,15 +567,14 @@ class Init(Slot):
 		return {attr:pm.getAttr(node+'.'+attr) for attr in pm.listAttr(node) if attr not in exclude}
 
 
-
 	@staticmethod
 	def setAttributesMEL(node, attributes):
 		'''
 		Set history node attributes using the transform node.
 
 		args:
-			node=transform node
-			attributes=dictionary {'string attribute': value} - attributes and their correponding value to set
+			node (obj) = Transform node.
+			attributes (dict) = Attributes and their correponding value to set. ie. {'string attribute': value}
 		'''
 		#get shape node from transform:
 		shapes = pm.listRelatives(node, children=1, shapes=1) #returns list ie. [nt.Mesh(u'pConeShape1')]
@@ -583,24 +582,8 @@ class Init(Slot):
 		historyNode = pm.listConnections(shapes, source=1, destination=0) #returns list ie. [nt.PolyCone(u'polyCone1')]
 		node = historyNode[0].name() #get the string name from the history node
 
-		[pm.setAttr(node+'.'+attr, value) for attr, value in attributes.iteritems() if attr and value]
+		[pm.setAttr(node+'.'+attr, value) for attr, value in attributes.items() if attr and value]
 
-
-
-	@staticmethod
-	def setAttributesOnSelected(attribute=None, value=None):
-		'''
-		args:
-			obj (str) = attribute to modify
-			value (int) = new attribute value
-		ex. self.setAttributesOnSelected (attribute=".smoothLevel", value=1)
-		'''
-		selection = pm.ls (selection=1, objectsOnly=1)
-		if selection:
-			for obj in selection:
-				pm.setAttr (obj+attribute, value)
-		else:
-			print("# Warning: No polygon object selected.", attribute, value, "not applied. #")
 
 
 

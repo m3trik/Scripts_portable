@@ -7,7 +7,7 @@ import tk_switchboard
 
 class Slot(object):
 	'''
-	Parent class for all app specific slot type classes.
+	Parent class for all slot type classes.
 	'''
 	def __init__(self):
 
@@ -122,38 +122,50 @@ class Slot(object):
 				[getattr(w, property_)(state) for w in widgets] #set the property state for each widget in the list.
 
 
-	def setSpinboxes(self, ui, spinboxNames, attributes={}):
+	def setSpinboxes(self, ui, spinboxes, attributes={}):
 		'''
-		Set spinbox values.
+		Set multiple spinbox values.
 		args:
 			ui = <dynamic ui>
-			spinboxNames (str) = spinbox names. ie. 's001-4, s007'.
+			spinboxes (str)(list) = Packed spinbox names or object list. ie. 's001-4, s007' or [<s001>, <s002>, <s003>, <s004>, <s007>]
 			attributes = {'string key':value}
 
 		ex. self.setSpinboxes (self.ui, spinboxNames='s000-15', attributes={'width':1, 'length ratio':1, 'patches U':1, 'patches V':1})
 		ex. self.setSpinboxes (self.ui, spinboxNames='s000', attributes={'size':5} #explicit;  set single s000 with a label 'size' and value of 5
 		'''
-		spinboxes = self.getObject(ui, spinboxNames) #get spinbox objects
+		if isinstance(spinboxes, (str, unicode)):
+			spinboxes = self.getObject(ui, spinboxes) #get spinbox objects
 
 		#clear previous values
 		for spinbox in spinboxes:
 			spinbox.blockSignals(True)
-			spinbox.setVisible(False)
+			# spinbox.setEnabled(False)
 
 		#set values
 		for index, (key, value) in enumerate(attributes.items()):
-			if any([type(value)==int, type(value)==float, type(value)==bool]):
-				if value is bool:
-					value = int(value)
-					spinboxes[index].setMaximum(1)
-					spinboxes[index].setSuffix(' <bool>')
-				else:
-					spinboxes[index].setMaximum(9999)
-				spinboxes[index].setVisible(True)
+			if isinstance(value, float):
+				if value<0: spinboxes[index].setMinimum(-100)
+				decimals = str(value)[::-1].find('.') #get decimal places
+				spinboxes[index].setDecimals(decimals)
 				spinboxes[index].setPrefix(key+':  ')
 				spinboxes[index].setValue(value)
 				spinboxes[index].setSuffix('')
-				spinboxes[index].blockSignals(False)
+
+			elif isinstance(value, int):
+				if value<0: spinboxes[index].setMinimum(-100)
+				spinboxes[index].setDecimals(0)
+				spinboxes[index].setPrefix(key+':  ')
+				spinboxes[index].setValue(value)
+				spinboxes[index].setSuffix('')
+
+			elif isinstance(value, bool):
+				value = int(value)
+				spinboxes[index].setMinimum(0)
+				spinboxes[index].setMaximum(1)
+				spinboxes[index].setSuffix(' <bool>')
+
+			# spinboxes[index].setEnabled(True)
+			spinboxes[index].blockSignals(False)
 
 
 	@staticmethod

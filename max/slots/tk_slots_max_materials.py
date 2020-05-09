@@ -92,7 +92,7 @@ class Materials(Init):
 			index = cmb.currentIndex()
 
 		self.materials = {name:mats[i] for i, name in enumerate(matNames)} #add mat objects to materials dictionary. 'mat name'=key, <mat object>=value
-		self.currentMaterial = mats[index] if len(mats)>index else None #store material
+		self.currentMaterial = mats[index] if len(mats)>index and index>=0 else None #store material
 
 
 	def tb000(self, state=None):
@@ -251,7 +251,7 @@ class Materials(Init):
 					self.cmb002() #refresh the combobox
 				else:
 					self.ui.tb001.chk001.setChecked(True) #set combobox to ID map mode. toggling the checkbox refreshes the combobox.
-				self.ui.cmb002.setCurrentText_(name) #set the combobox index to the new mat #self.cmb002.setCurrentIndex(self.cmb002.findText(name))
+				self.ui.cmb002.setCurrent_(name) #set the combobox index to the new mat #self.cmb002.setCurrentIndex(self.cmb002.findText(name))
 			else:
 				return '# Error: No valid object/s selected. #'
 

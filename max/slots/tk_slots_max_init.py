@@ -20,8 +20,9 @@ except ImportError as error:
 
 
 class Init(Slot):
-
-
+	'''
+	App specific methods inherited by all other slot classes.
+	'''
 	def __init__(self, *args, **kwargs):
 		super(Init, self).__init__(*args, **kwargs)
 
@@ -94,6 +95,47 @@ class Init(Slot):
 
 
 
+	# # ------------------------------------------------
+	' DAG Objects'
+	# # ------------------------------------------------
+
+
+	@staticmethod
+	def getAttributesMax(node, exclude=None):
+		'''
+		Get history node attributes:values using the transform node. 
+
+		args:
+			node (obj) = Transform node.
+			exclude (list) = Attributes to exclude from the returned dictionay. ie. ['Position','Rotation','Scale','renderable','isHidden','isFrozen','selected']
+
+		returns:
+			(dict) {'string attribute': current value}
+		'''
+		# print (rt.showProperties(obj))
+		# print (rt.getPropNames(obj))
+
+		return {attr:node.getmxsprop(attr) for attr in [str(n) for n in rt.getPropNames(node)] if attr not in exclude}
+
+
+	@staticmethod
+	def setAttributesMax(node, attributes):
+		'''
+		Set history node attributes using the transform node.
+
+		args:
+			node (obj) = Transform node.
+			attributes (dict) = Attributes and their correponding value to set. ie. {'string attribute': value}
+		'''
+		[setattr(node, attribute, value) for attribute, value in attributes.items() if attribute and value]
+
+		rt.redrawViews()
+
+
+
+
+
+
 	# ------------------------------------------------
 	' Geometry'
 	# ------------------------------------------------
@@ -104,7 +146,7 @@ class Init(Slot):
 	#set grid and snap settings on or off
 	#state = string: "true", "false"
 	@staticmethod
-	def setSnapState (state):
+	def setSnapState(state):
 		'''
 		/*grid and snap settings*/
 

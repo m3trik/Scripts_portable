@@ -140,15 +140,22 @@ class Create(Init):
 		self.ui.t002.setText(str(self.point[2]))
 
 
-	def cmb000(self):
+	def cmb000(self, index=None):
+		'''
+
+		'''
 		cmb = self.ui.cmb000
+
+		if not cmb.itemsAdded:
+			items = ['Mesh', 'Editable Poly', 'Editable Mesh', 'Editable Patch', 'NURBS', 'Light']
+			contents = cmb.addItems_(items)
 
 		self.ui.cmb001.clear()
 		index = cmb.currentIndex()
 
 		if index==0 or index==1 or index==3 or index==4: #later converted to the specified type.
-			polygons = ["Cube", "Sphere", "Cylinder", "Plane", "Circle", "Cone", "Pyramid", "Torus", "Tube", "GeoSphere", "Platonic Solids", "Text"]
-			self.ui.cmb001.addItems(polygons)
+			primitives = ["Cube", "Sphere", "Cylinder", "Plane", "Circle", "Cone", "Pyramid", "Torus", "Tube", "GeoSphere", "Platonic Solids", "Text"]
+			self.ui.cmb001.addItems(primitives)
 
 		# if cmb.currentIndex() == 1:
 		# 	nurbs = ["Cube", "Sphere", "Cylinder", "Cone", "Plane", "Torus", "Circle", "Square"]
@@ -159,19 +166,21 @@ class Create(Init):
 			self.ui.cmb001.addItems(lights)
 
 
-	def cmb002(self, index=None, values={}, clear=False, show=False):
+	def cmb002(self, index=None, attributes={}, clear=False, show=False):
 		'''
 		Get/Set Primitive Attributes.
 
 		args:
 			index (int) = parameter on activated, currentIndexChanged, and highlighted signals.
-			values (dict) = Attibute and it's corresponding value. ie. {width:10}
+			attributes (dict) = Attibute and it's corresponding value. ie. {width:10}
 			clear (bool) = Clear any previous items.
 			show (bool) = Show the popup menu immediately after adding items.
 		'''
 		cmb = self.ui.cmb002
 
-		n = len(values)
+		attributes = {k:v for k,v in attributes.items() if isinstance(v,(int, float, bool))} #get only attributes of int, float, bool type.
+
+		n = len(attributes)
 		if n and index is None:
 			cmb.popupStyle = 'qmenu'
 
@@ -184,7 +193,7 @@ class Create(Init):
 			[cmb.add('QDoubleSpinBox', setObjectName=name, preset_='0.00-100 step1') for name in self.unpackNames(names)]
 
 			#set values
-			self.setSpinboxes(cmb, names, values)
+			self.setSpinboxes(cmb, names, attributes)
 
 			#set signal/slot connections
 			self.connect(names, 'valueChanged', self.sXXX, cmb)
@@ -201,7 +210,7 @@ class Create(Init):
 			index(int) = optional index of the spinbox that called this function. ie. 5 from s005
 		'''
 		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.ui.cmb002.menuItems()} #current spinbox values. ie. from s000 get the value of six and add it to the list
-		self.setAttributesMEL(self.node, spinboxValues) #set attributes for the history node
+		self.setAttributesMax(self.node, spinboxValues) #set attributes for the history node
 
 
 	# def cmb002(self, index=None):
@@ -226,74 +235,75 @@ class Create(Init):
 		Create Object
 		'''
 		axis = self.getAxis() #get axis as 'string'
+		type_ = self.ui.cmb000.currentText()
+		index = self.ui.cmb001.currentIndex()
 
-		# polygons
-		if self.ui.cmb000.currentIndex() == 0:
-			
+		if type_ in ['Mesh', 'Editable Poly', 'Polygon', 'Editable Mesh', 'Editable Patch', 'NURBS']:
+
 			#cube:
-			if self.ui.cmb001.currentIndex() == 0:
+			if index==0:
 				self.node = rt.Box(width=15, length=15, height=15, lengthsegs=1, widthsegs=1, heightsegs=1)
 
 			#sphere:
-			if self.ui.cmb001.currentIndex() == 1:
+			if index==1:
 				self.node = rt.Sphere(radius=5, segs=12)
 
 			#cylinder:
-			if self.ui.cmb001.currentIndex() == 2:
+			if index==2:
 				self.node = rt.Cylinder(radius=5, height=10, sides=5, heightsegs=1, capsegs=1, smooth=True)
 
 			#plane:
-			if self.ui.cmb001.currentIndex() == 3:
+			if index==3:
 				self.node = rt.Plane(width=5, length=5, widthsegs=1, lengthsegs=1)
 
 			#circle:
-			if self.ui.cmb001.currentIndex() == 4:
+			if index==4:
 				mode = None
 				axis = next(key for key, value in self.rotation.items() if value==axis and key!='last') #get key from value as createCircle takes the key argument
 				self.node = self.createCircle(axis=axis, numPoints=5, radius=5, mode=mode)
 
 			#Cone:
-			if self.ui.cmb001.currentIndex() == 5:
+			if index==5:
 				self.node = rt.Cone(radius1=5, radius2=1, height=5, capsegs=1, heightsegs=1, sides=12, smooth=True)
 
 			#Pyramid
-			if self.ui.cmb001.currentIndex() == 6:
+			if index==6:
 				self.node = rt.Pyramid(width=5, depth=3, height=5, widthsegs=1, depthSegs=1, heightsegs=1)
 
 			#Torus:
-			if self.ui.cmb001.currentIndex() == 7:
+			if index==7:
 				self.node = rt.Torus(radius1=10, radius2=5, segs=5)
 
 			#Pipe
-			if self.ui.cmb001.currentIndex() == 8:
+			if index==8:
 				self.node = rt.Tube(radius1=5, radius2=8, height=25, sides=12, capSegs=1, hightSegs=1)
 
 			#Soccer ball
-			if self.ui.cmb001.currentIndex() == 9:
+			if index==9:
 				self.node = rt.GeoSphere(radius=5, segs=2, baseType=2, smooth=True)
 
 			#Platonic solids
-			if self.ui.cmb001.currentIndex() == 10:
+			if index==10:
 				pass
 
 		#convert to the type selected in cmb000
-		if self.ui.cmb000.currentIndex() == 0: #Polygons
+		if type_ in ['Editable Poly', 'Polygons']: #Polygons
 			rt.convertTo(self.node, rt.PolyMeshObject)
 
-		elif self.ui.cmb000.currentIndex() == 1: #NURBS
+		elif type_=='NURBS': #NURBS
 			rt.convertTo(self.node, rt.NURBSSurf)
 
-		elif self.ui.cmb000.currentIndex() == 3: #Mesh
+		elif type_=='Editable Mesh': #Mesh
 			rt.convertTo(self.node, rt.TriMeshGeometry)
 
-		elif self.ui.cmb000.currentIndex() == 4: #Patch
+		elif type_=='Editable Patch': #Patch
 			rt.convertTo(self.node, rt.Editable_Patch)
 		
 		# lights
-		elif self.ui.cmb000.currentIndex() == 2: #Lights
+		elif type_=='Light': #Lights
 			
 			#
-			if self.ui.cmb001.currentIndex() == 0:
+			if index==0:
 				pass
 
 
@@ -311,9 +321,9 @@ class Create(Init):
 		#rotate
 		self.rotateAbsolute(axis)
 
-		exclude = ['getmxsprop', 'setmxsprop', 'typeInHeight', 'typeInLength', 'typeInPos', 'typeInWidth', 'typeInDepth', 'typeInRadius', 'typeInRadius1', 'typeInRadius2', 'typeinCreationMethod']	
-		attributes = self.getAttributes(self.node, exclude)
-		self.cmb002(values=attributes, clear=True, show=True)
+		exclude = ['getmxsprop', 'setmxsprop', 'typeInHeight', 'typeInLength', 'typeInPos', 'typeInWidth', 'typeInDepth', 'typeInRadius', 'typeInRadius1', 'typeInRadius2', 'typeinCreationMethod', 'edgeChamferQuadIntersections', 'edgeChamferType', 'hemisphere', 'realWorldMapSize', 'mapcoords']	
+		attributes = self.getAttributesMax(self.node, exclude)
+		self.cmb002(attributes=attributes, clear=True, show=True)
 
 		# if self.ui.cmb000.currentIndex() == 0: #if create type: polygon; convert to editable poly
 		# 	rt.convertTo(self.node, rt.PolyMeshObject) #convert after adding primitive attributes to spinboxes
@@ -331,6 +341,8 @@ class Create(Init):
 		'''
 		cmb000 = self.ui.cmb000
 		cmb001 = self.ui.cmb001
+		# self.cmb000() #make sure the comboboxes have been built.
+		# cmb000.itemsAdded = True
 
 		cmb000.setCurrentIndex(cmb000.findText(catagory1))
 		cmb001.setCurrentIndex(cmb001.findText(catagory2))
