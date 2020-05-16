@@ -31,10 +31,12 @@ a new layout up and running, is to drop a qt designer ui file into the ui folder
 
 * handle coordinates to populate ui at cursor position.
 
-* set event filters and overrides for the main, and child widgets.
-
 * construct an overlay for paint events.
 
+
+## tk_childEvents: 
+######
+*event handling for child widgets.*
 
 
 
@@ -45,35 +47,6 @@ a new layout up and running, is to drop a qt designer ui file into the ui folder
 * build connection dict for each class with it's corresponding signals and slots.
 
 * construct signal connections.
-
-*the following is an example of some of the data held for each tool class instance.*
-
-* class name as string
-
-* class object
-
-* widget size
-
-* widget type
-
-* widget name/method name as string
-
-* widget Object
-
-* widget Object with Signal
-
-* method Object
-
-* method docString
-
-* uiList : *string list of all ui filenames in the ui folder*
-
-* previousName : *list of last called relevant ui*
-
-* previousView: *index of the last valid previously opened ui name.*
-
-* prevCommand : *history of commands. uses the method docstring to generate a user friendly name from the dynamic element and stores it along side the command method.*
-
 
 
 ## tk_slots_: 
@@ -97,7 +70,7 @@ a new layout up and running, is to drop a qt designer ui file into the ui folder
 
 *Each ui widget looks to connect to a corresponding class method of the same name: ie. widget b021 connects to method b021. The following naming convention isn't required, but using something like it helps keep things organized.*
 *The docstring of each method houses a user friendly name that is stored with all other widget info in the switchboard dict when an
-instance is populated. All of the ui widgets have an event filter attached for additional handling of specific events.*
+instance is populated. All of the ui widgets have an event filter attached for handling of specific events.*
 
 * QPushButton   b000    (b000-b999) can contain 1000 buttons of one type max per class using this convention.
 
