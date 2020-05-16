@@ -31,22 +31,26 @@ a new layout up and running, is to drop a qt designer ui file into the ui folder
 
 * handle coordinates to populate ui at cursor position.
 
-* construct an overlay for paint events.
-
 
 ## tk_childEvents: 
 ######
 *event handling for child widgets.*
 
 
+## tk_overlay: 
+######
+*tracks cursor position and ui hierarchy to generate paint events that overlay the main widget.*
+
 
 ## tk_switchboard: 
 ######
-* get dynamic ui files relative to folder location.
+*contains a master dictionary for widget related info as well as convienience classes for interacting with the dict.*
 
-* build connection dict for each class with it's corresponding signals and slots.
+* gets dynamic ui files relative to folder location.
 
-* construct signal connections.
+* constructs a connection dict for each class with it's corresponding signals and slots.
+
+* handles general signal connections.
 
 
 ## tk_slots_: 
@@ -62,11 +66,10 @@ a new layout up and running, is to drop a qt designer ui file into the ui folder
 -----------------------------------------------
 
 ######
-* ui files:     \<name\>.ui
- 
-* tools module: tk_slots_\<app\>_\<name\>.py
- 
+* ui file:     \<name\>.ui
 
+* corresponding class: tk_slots_\<app\>_\<name\>.py
+ 
 
 *Each ui widget looks to connect to a corresponding class method of the same name: ie. widget b021 connects to method b021. The following naming convention isn't required, but using something like it helps keep things organized.*
 *The docstring of each method houses a user friendly name that is stored with all other widget info in the switchboard dict when an
@@ -104,17 +107,17 @@ etc.
 
 * releasing the mouse over any of the buttons in those windows takes you to the corresponding sub-menu.
 
-* left mouse down: shows viewport navigation and camera settings.
+* left mouse down: shows camera navigation and settings.
 
 * middle mouse down: shows embedded app ui (ie. maya's outliner, or max's modifier stack).
 
-* double left mouseclick: produces last used orthographic view.
+* double right mouseclick: produces last used orthographic view.
 
-* double right mouseclick: produces last sub-menu.
+* double middle mouseclick: produces last sub-menu.
 
-* double middle mouseclick: repeats last command.
+* double left mouseclick: repeats last command.
 
-* dragging on an empty area of the widget moves the window and pins it open.
+* dragging the top area of the widget moves the window and pins it open.
 
 * mouse over buttons while window pinned to get a tooltip explanation of its function.
 
