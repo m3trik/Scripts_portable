@@ -20,8 +20,7 @@ a new layout up and running, is to drop a qt designer ui file into the ui folder
 -----------------------------------------------
 
 ## tk_main: 
-######
-*handles main gui construction.*
+###### *handles main gui construction.*
 
 * set window flags and attributes.
 
@@ -33,18 +32,15 @@ a new layout up and running, is to drop a qt designer ui file into the ui folder
 
 
 ## tk_childEvents: 
-######
-*event handling for child widgets.*
+###### *event handling for child widgets.*
 
 
 ## tk_overlay: 
-######
-*tracks cursor position and ui hierarchy to generate paint events that overlay the main widget.*
+###### *tracks cursor position and ui hierarchy to generate paint events that overlay the main widget.*
 
 
 ## tk_switchboard: 
-######
-*contains a master dictionary for widget related info as well as convienience classes for interacting with the dict.*
+###### *contains a master dictionary for widget related info as well as convienience classes for interacting with the dict.*
 
 * gets dynamic ui files relative to folder location.
 
@@ -54,8 +50,7 @@ a new layout up and running, is to drop a qt designer ui file into the ui folder
 
 
 ## tk_slots_: 
-######
-*master class holding methods that are inherited across all app specific slot class modules.*
+###### *master class holding methods that are inherited across all app specific slot class modules.*
 
 
 
