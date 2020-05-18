@@ -10,7 +10,7 @@
 ######
 *This is a cross-platform, modular, marking menu style ui based on a QStackedWidget.  Each piece is constructed dynamically
 to allow for as little overhead as possible in development and maintainence.  Literally all you have to do to have 
-a new layout up and running, is to drop a qt designer ui file into the ui folder, add a shortcut somewhere in the main ui(with the ui name in the 'whats this' attribute), and a create corresponding class of the same name.  Naming convention allows for a stacked ui to be constructed, signals added/removed as needed, and a master dictionary (stored within the switchboard module) to be created, which provides built-in convenience methods that allow getting/setting of relevant data across modules from one easy location.*
+a new layout up and running, is to drop a qt designer ui file into the ui folder, add a shortcut somewhere in the main ui(with the ui name in the 'whats this' attribute), and a create corresponding class of the same name.  Naming convention allows for a stacked ui to be constructed, signals added/removed as needed, and a master dictionary (stored within the switchboard module) to be created, which provides convenience methods that allow getting/setting of relevant data across modules.*
 
 
 
@@ -20,8 +20,7 @@ a new layout up and running, is to drop a qt designer ui file into the ui folder
 -----------------------------------------------
 
 ## tk_main: 
-######
-*handles main gui construction.*
+###### *handles main gui construction.*
 
 * set window flags and attributes.
 
@@ -31,54 +30,27 @@ a new layout up and running, is to drop a qt designer ui file into the ui folder
 
 * handle coordinates to populate ui at cursor position.
 
-* set event filters and overrides for the main, and child widgets.
 
-* construct an overlay for paint events.
+## tk_childEvents: 
+###### *event handling for child widgets.*
 
 
+## tk_overlay: 
+###### *tracks cursor position and ui hierarchy to generate paint events that overlay the main widget.*
 
 
 ## tk_switchboard: 
-######
-* get dynamic ui files relative to folder location.
+###### *contains a master dictionary for widget related info as well as convienience classes for interacting with the dict.*
 
-* build connection dict for each class with it's corresponding signals and slots.
+* gets dynamic ui files relative to folder location.
 
-* construct signal connections.
+* constructs a connection dict for each class with it's corresponding signals and slots.
 
-*the following is an example of some of the data held for each tool class instance.*
-
-* class name as string
-
-* class object
-
-* widget size
-
-* widget type
-
-* widget name/method name as string
-
-* widget Object
-
-* widget Object with Signal
-
-* method Object
-
-* method docString
-
-* uiList : *string list of all ui filenames in the ui folder*
-
-* previousName : *list of last called relevant ui*
-
-* previousView: *index of the last valid previously opened ui name.*
-
-* prevCommand : *history of commands. uses the method docstring to generate a user friendly name from the dynamic element and stores it along side the command method.*
-
+* handles general signal connections.
 
 
 ## tk_slots_: 
-######
-*master class holding methods that are inherited across all app specific slot class modules.*
+###### *master class holding methods that are inherited across all app specific slot class modules.*
 
 
 
@@ -89,15 +61,14 @@ a new layout up and running, is to drop a qt designer ui file into the ui folder
 -----------------------------------------------
 
 ######
-* ui files:     \<name\>.ui
- 
-* tools module: tk_slots_\<app\>_\<name\>.py
- 
+* ui file:     \<name\>.ui
 
+* corresponding class: tk_slots_\<app\>_\<name\>.py
+ 
 
 *Each ui widget looks to connect to a corresponding class method of the same name: ie. widget b021 connects to method b021. The following naming convention isn't required, but using something like it helps keep things organized.*
 *The docstring of each method houses a user friendly name that is stored with all other widget info in the switchboard dict when an
-instance is populated. All of the ui widgets have an event filter attached for additional handling of specific events.*
+instance is populated. All of the ui widgets have an event filter attached for handling of specific events.*
 
 * QPushButton   b000    (b000-b999) can contain 1000 buttons of one type max per class using this convention.
 
@@ -111,8 +82,9 @@ instance is populated. All of the ui widgets have an event filter attached for a
 
 * QSpinBox      s000    ""
 
-* QtextField    t000    ""
+* QtextField    txt000    ""
 
+etc.
 
 
 
@@ -130,17 +102,17 @@ instance is populated. All of the ui widgets have an event filter attached for a
 
 * releasing the mouse over any of the buttons in those windows takes you to the corresponding sub-menu.
 
-* left mouse down: shows viewport navigation and camera settings.
+* left mouse down: shows camera navigation and settings.
 
 * middle mouse down: shows embedded app ui (ie. maya's outliner, or max's modifier stack).
 
-* double left mouseclick: produces last used orthographic view.
+* double right mouseclick: produces last used orthographic view.
 
-* double right mouseclick: produces last sub-menu.
+* double middle mouseclick: produces last sub-menu.
 
-* double middle mouseclick: repeats last command.
+* double left mouseclick: repeats last command.
 
-* dragging on an empty area of the widget moves the window and pins it open.
+* dragging the top area of the widget moves the window and pins it open.
 
 * mouse over buttons while window pinned to get a tooltip explanation of its function.
 
