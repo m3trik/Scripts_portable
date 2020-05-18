@@ -14,7 +14,7 @@ import sys, os.path
 # ------------------------------------------------
 #	Manage Ui elements
 # ------------------------------------------------
-class __Switchboard(object):
+class Switchboard(object):
 	'''
 	Get/set elements across modules using convenience methods.
 	
@@ -52,12 +52,36 @@ class __Switchboard(object):
 
 	The widgets is built as needed for each class when addSignals (or any other dependant method) is called.
 	'''
-	def __init__(self, sbDict):
+
+	def __init__(self):
 		'''
-		args:
-			sbDict = main dictionary object.
+		Initialize the main dict (_sbDict).
 		'''
-		self._sbDict = sbDict
+		uiLoader = QUiLoader()
+
+		# register any custom widgets.
+		widgetPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'widgets') #get the path to the widget directory.
+		moduleNames = [file_.replace('.py','',-1) for file_ in os.listdir(widgetPath) if file_.startswith('q') and file_.endswith('.py')] #format names using the files in path.
+		for m in moduleNames: #register any custom widgets using the module names.
+			className = m[:1].capitalize()+m[1:] #capitalize first letter of module name to convert to class name
+			path = 'widgets.{0}.{1}'.format(m, className)
+			class_ = locate(path)
+			if class_:
+				uiLoader.registerCustomWidget(class_)
+			else:
+				raise ImportError, path
+
+		# get the path to the directory containing the ui files.
+		uiPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ui') #get absolute path from dir of this module + relative path to directory
+
+		# initialize _sbDict by setting keys for the ui files.
+		self._sbDict={}
+		for dirpath, dirnames, filenames in os.walk(uiPath):
+			for filename in (f for f in filenames if f.endswith(".ui")):
+				path = os.path.join(dirpath, filename)
+				name = filename.replace('.ui','')
+				d = dirpath[dirpath.rfind('ui\\'):] #slice the absolute path from 'ui\' ie. ui\base_menus_1\sub_menus_2\main_menus_3 from fullpath\ui\base_menus_1\sub_menus_2\main_menus_3
+				self._sbDict[filename.replace('.ui','')] = {'ui':uiLoader.load(path), 'uiLevel':len(d.split('\\'))-1} #ie. {'polygons':{'ui':<ui obj>, uiLevel:<int>}} (the ui level is it's hierarchy)
 
 
 	def buildwidgets(self, name):
@@ -121,11 +145,15 @@ class __Switchboard(object):
 		else:
 			objectName = str(widget.objectName())
 
+		#add the widget as an attribute of the ui if it is not already.
+		ui = self.getUi(name)
+		if not hasattr(ui, objectName):
+			setattr(ui, objectName, widget)
 
 		n = name.split('_')[0] #get ie. 'polygons' from 'polygons_submenu' in cases where a submenu shares the same slot class of it's parent menu.
 		# path = 'slots.{0}'.format(n[0].upper()+n[1:]) #ie. slots.Init
 		path = 'tk_slots_{0}_{1}.{2}'.format(self.getMainAppWindow(objectName=True), n, n[0].upper()+n[1:]) #ie. tk_slots_maya_init.Init
-		class_ = self.getClassInstance(path)
+		class_ = self.getClassInstance(path, ui=ui, sb=self) #get the class instance while passing in any keyword arguments.
 
 
 		signals = { #the default signal to be associated with each widget type.
@@ -166,14 +194,9 @@ class __Switchboard(object):
 						'signalInstance':signalInstance,
 						'widgetType':widget.__class__.__name__,
 						'derivedType':derivedType,
-						'method':method,
+						'method': method,
 						'prefix':prefix,
 						'docString':docString}})
-
-		#add the widget as an attribute of the ui if it is not already.
-		ui = self.getUi(name)
-		if not hasattr(ui, objectName):
-			setattr(ui, objectName, widget)
 
 
 		# print(self._sbDict[name]['widgets'][widget])
@@ -340,7 +363,7 @@ class __Switchboard(object):
 
 		args:
 			name (str) = Name of class. ie. 'polygons' (by default getUi returns the current ui)
-			setAsCurrent (bool) = Set the ui name as currently active. (default: False)
+			setAsCurrent (bool) = Set the ui name as the currently active ui. (default: False)
 			level (int) = Get the ui of the given level. (2:submenu, 3:main_menu)
 		returns:
 			if name: corresponding dynamic ui object of given name from the key 'uiList'.
@@ -351,11 +374,11 @@ class __Switchboard(object):
 			if name is None:
 				return None
 
-		if level==2:
+		if level==2: #submenu
 			if 'submenu' not in name:
 				name = name+'_submenu'
 
-		if level==3:
+		if level==3: #main menu
 			name = name.split('_')[0] #polygons from polygons_component_submenu
 
 		if setAsCurrent:
@@ -382,7 +405,7 @@ class __Switchboard(object):
 			(str) corresponding ui name.
 		'''
 		if not 'name' in self._sbDict:
-			self._sbDict['name'] = []
+			self._sbDict['name']=[]
 
 		if not type(index)==int:
 			index = self.getUiIndex(index) #get index using name
@@ -563,7 +586,7 @@ class __Switchboard(object):
 		returns:
 			 (str) ui name. ie. 'polygons' from <somewidget>
 		'''
-		return next((k for k,v in _sbDict.items() if type(v) is dict and 'widgets' in v and widget in v['widgets']), None)
+		return next((k for k,v in self._sbDict.items() if type(v) is dict and 'widgets' in v and widget in v['widgets']), None)
 
 
 	def setMainAppWindow(self, app):
@@ -606,7 +629,7 @@ class __Switchboard(object):
 			return app
 
 
-	def setClassInstance(self, class_, name=None):
+	def setClassInstance(self, class_, name=None, **kwargs):
 		'''
 		Property.
 		Case insensitive. Class string keys are stored lowercase regardless of how they are recieved.
@@ -630,7 +653,7 @@ class __Switchboard(object):
 			self._sbDict[name] = {}
 
 		if callable(class_):
-			self._sbDict[name]['class'] = class_()
+			self._sbDict[name]['class'] = class_(**kwargs)
 		else:
 			self._sbDict[name]['class'] = class_
 
@@ -638,7 +661,7 @@ class __Switchboard(object):
 		return self._sbDict[name]['class']
 
 
-	def getClassInstance(self, class_):
+	def getClassInstance(self, class_, **kwargs):
 		'''
 		Property.
 		Case insensitive. (Class string keys are lowercase and any given string will be converted automatically)
@@ -661,7 +684,7 @@ class __Switchboard(object):
 
 		try:
 			if not 'class' in self._sbDict[name]:
-				return self.setClassInstance(class_) #construct the signals and slots for the ui
+				return self.setClassInstance(class_, **kwargs) #construct the signals and slots for the ui
 
 			return self._sbDict[name]['class']
 
@@ -995,11 +1018,20 @@ class __Switchboard(object):
 		return self._sbDict['gcProtect']
 
 
-	def dict_(self):
+	def dict_(self, key=None):
 		'''
-		returns:
-			full switchboard dict
+		Get the full switchboard dict or one of it's values from a given key.
+
+		args:
+			key (str) =	'<ui name>' returns (dict) ie. 'polygons'
+						'name' returns (list) [string list]
+						'prevCommand' returns (list) [list of 2 element lists]
+						'prevCamera' returns (list) [list of 2 element lists]
+						'mainAppWindow' returns (obj)
+						'gcProtect' returns (list)
 		'''
+		if key:
+			return self._sbDict[key]
 		return self._sbDict
 
 
@@ -1134,7 +1166,7 @@ class __Switchboard(object):
 		ex call: sb.prefix(widget, ['b', 'v', 'i'])
 		'''
 		if prefix is not None: #check the actual prefix against the given prefix and return bool.
-			prefix = sb.list_(prefix) #if 'widgets' isn't a list, convert it to one.
+			prefix = self.list_(prefix) #if 'widgets' isn't a list, convert it to one.
 
 			name = self.getUiName()
 			for p in prefix:
@@ -1280,44 +1312,13 @@ class __Switchboard(object):
 # ------------------------------------------------------------------------------------------
 
 
-#initialize and create a __Switchboard instance
-app = QApplication.instance() #get the app instance if it exists (required by the QUiLoader)
-if not app:
-	app = QApplication(sys.argv)
 
+if __name__=='__main__':
+	#initialize and create a Switchboard instance
+	app = QApplication.instance() #get the app instance if it exists (required by the QUiLoader)
+	if not app:
+		app = QApplication(sys.argv)
 
-global uiLoader, widgetPath, uiPath
-uiLoader = QUiLoader()
-
-# register any custom widgets.
-# get path to the widget directory.
-widgetPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'widgets')
-# format names using the files in path.
-moduleNames = [file_.replace('.py','',-1) for file_ in os.listdir(widgetPath) if file_.startswith('q') and file_.endswith('.py')]
-# register any custom widgets using the module names.
-for m in moduleNames:
-	className = m[:1].capitalize()+m[1:] #capitalize first letter of module name to convert to class name
-	path = 'widgets.{0}.{1}'.format(m, className)
-	class_ = locate(path)
-	if class_:
-		uiLoader.registerCustomWidget(class_)
-	else:
-		raise ImportError, path
-
-
-# set path to the directory containing the ui files.
-uiPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ui') #get absolute path from dir of this module + relative path to directory
-# initialize _sbDict by loading and setting keys for the ui files.
-_sbDict={}
-for dirpath, dirnames, filenames in os.walk(uiPath):
-	for filename in (f for f in filenames if f.endswith(".ui")):
-		path = os.path.join(dirpath, filename)
-		name = filename.replace('.ui','')
-		d = dirpath[dirpath.rfind('ui\\'):] #slice the absolute path from 'ui\' ie. ui\base_menus_1\sub_menus_2\main_menus_3 from fullpath\ui\base_menus_1\sub_menus_2\main_menus_3
-		_sbDict[filename.replace('.ui','')] = {'ui':uiLoader.load(path), 'uiLevel':len(d.split('\\'))-1} #ie. {'polygons':{'ui':<ui obj>, uiLevel:<int>}} (the ui level is it's hierarchy)
-
-
-sb = __Switchboard(_sbDict)
 
 
 

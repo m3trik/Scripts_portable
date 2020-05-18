@@ -12,15 +12,12 @@ class Mirror(Init):
 		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
 
 
-	def chkxxx(self):
+	def chk000_3(self):
 		'''
-		Set the toolbutton's text according to the checkstates.
+		Set the tb000's text according to the checkstates.
 		'''
 		axis = self.getAxisFromCheckBoxes('chk000-3')
 		self.ui.tb000.setText('Mirror '+axis)
-
-		axis = self.getAxisFromCheckBoxes('chk006-9')
-		self.ui.tb001.setText('Delete '+axis)
 
 
 	# def cmb000(self, index=None):
@@ -54,7 +51,7 @@ class Mirror(Init):
 			tb.add('QCheckBox', setText='Cut', setObjectName='chk005', setChecked=True, setToolTip='Perform a delete along specified axis before mirror.')
 			tb.add('QDoubleSpinBox', setPrefix='Merge Threshold: ', setObjectName='s000', preset_='0.000-10 step.001', setValue=0.005, setToolTip='Merge vertex distance.')
 
-			self.connect('chk000-3', 'toggled', self.chkxxx, tb)
+			self.connect('chk000-3', 'toggled', self.chk000_3, tb)
 			return
 
 		axis = self.getAxisFromCheckBoxes('chk000-3')
@@ -62,34 +59,35 @@ class Mirror(Init):
 		instance = tb.chk004.isChecked()
 		mergeThreshold = tb.s000.value()
 
-		# negAxis = tb.chk000.isChecked() #mirror on negative axis
-
 		if axis=='X': #'x'
 			axisDirection = 0 #positive axis
 			a = 0
 			x=-1; y=1; z=1
-			if axis=='-X': #'-x'
-				axisDirection = 1 #negative axis
-				a = 1 #0=-x, 1=x, 2=-y, 3=y, 4=-z, 5=z 
-				x=-1; y=1; z=1 #if instance: used to negatively scale
 
-		if axis=='Y': #'y'
+		elif axis=='-X': #'-x'
+			axisDirection = 1 #negative axis
+			a = 1 #0=-x, 1=x, 2=-y, 3=y, 4=-z, 5=z 
+			x=-1; y=1; z=1 #if instance: used to negatively scale
+
+		elif axis=='Y': #'y'
 			axisDirection = 0
 			a = 2
 			x=1; y=-1; z=1
-			if axis=='-Y': #'-y'
-				axisDirection = 1
-				a = 3
-				x=1; y=-1; z=1
 
-		if axis=='Z': #'z'
+		elif axis=='-Y': #'-y'
+			axisDirection = 1
+			a = 3
+			x=1; y=-1; z=1
+
+		elif axis=='Z': #'z'
 			axisDirection = 0
 			a = 4
 			x=1; y=1; z=-1
-			if axis=='-Z': #'-z'
-				axisDirection = 1
-				a = 5
-				x=1; y=1; z=-1
+
+		elif axis=='-Z': #'-z'
+			axisDirection = 1
+			a = 5
+			x=1; y=1; z=-1
 
 		selection = pm.ls(sl=1, objectsOnly=1)
 		if selection:
@@ -105,48 +103,6 @@ class Mirror(Init):
 			pm.undoInfo(closeChunk=1)
 		else:
 			print('# Warning: Nothing Selected.')
-
-
-	def tb001(self, state=None):
-		'''
-		Delete Along Axis
-		'''
-		tb = self.currentUi.tb001
-		if state=='setMenu':
-			tb.add('QCheckBox', setText='-', setObjectName='chk006', setChecked=True, setToolTip='Perform delete along negative axis.')
-			tb.add('QRadioButton', setText='X', setObjectName='chk007', setChecked=True, setToolTip='Perform delete along X axis.')
-			tb.add('QRadioButton', setText='Y', setObjectName='chk008', setToolTip='Perform delete along Y axis.')
-			tb.add('QRadioButton', setText='Z', setObjectName='chk009', setToolTip='Perform delete along Z axis.')
-
-			self.connect('chk006-9', 'toggled', self.chkxxx, tb)
-			return
-
-		selection = pm.ls(sl=1, objectsOnly=1)
-		axis = self.getAxisFromCheckBoxes('chk006-9')
-
-		pm.undoInfo(openChunk=1)
-		for obj in selection:
-			self.deleteAlongAxis(obj, axis)
-		pm.undoInfo(closeChunk=1)
-
-
-	def deleteAlongAxis(self, obj, axis):
-		'''
-		Delete components of the given mesh object along the specified axis.
-
-		args:
-			obj (obj) = Mesh object.
-			axis (str) = Axis to delete on. ie. '-x' Components belonging to the mesh object given in the 'obj' arg, that fall on this axis, will be deleted. 
-		'''
-		for node in [n for n in pm.listRelatives(obj, allDescendents=1) if pm.objectType(n, isType='mesh')]: #get any mesh type child nodes of obj.
-			faces = self.getAllFacesOnAxis(node, axis)
-			if len(faces)==pm.polyEvaluate(node, face=1): #if all faces fall on the specified axis.
-				pm.delete(node) #delete entire node
-			else:
-				pm.delete(faces) #else, delete any individual faces.
-		
-
-		self.viewPortMessage("Delete faces on <hl>"+axis.upper()+"</hl>.")
 
 
 

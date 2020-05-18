@@ -7,7 +7,6 @@ except:
 
 import os.path
 
-from tk_switchboard import sb
 from tk_styleSheet import StyleSheet
 
 
@@ -33,10 +32,10 @@ class EventFactoryFilter(QtCore.QObject):
 	def __init__(self, parent=None):
 		super(EventFactoryFilter, self).__init__(parent)
 
-		sb.setClassInstance(self)
-
 		if parent:
 			self.parent = parent
+			self.parent.sb.setClassInstance(self)
+
 
 
 	def initWidget(self, name, widgets=None):
@@ -48,29 +47,29 @@ class EventFactoryFilter(QtCore.QObject):
 			widgets (str)(list) = <QWidgets> if no arg is given, the operation will be performed on all widgets of the given ui name.
 		'''
 		if widgets is None:
-			widgets = sb.getWidget(name=name) #get all widgets for the given ui name.
-		widgets = sb.list_(widgets) #if 'widgets' isn't a list, convert it to one.
+			widgets = self.parent.sb.getWidget(name=name) #get all widgets for the given ui name.
+		widgets = self.parent.sb.list_(widgets) #if 'widgets' isn't a list, convert it to one.
 
 		for widget in widgets: #get all widgets for the given ui name.
-			widgetName = sb.getWidgetName(widget, name)
-			widgetType = sb.getWidgetType(widget, name) #get the class type as string.
-			uiLevel = sb.getUiLevel(name)
+			widgetName = self.parent.sb.getWidgetName(widget, name)
+			widgetType = self.parent.sb.getWidgetType(widget, name) #get the class type as string.
+			uiLevel = self.parent.sb.getUiLevel(name)
 
 			self.setStyleSheet_(name, widget)
 			widget.installEventFilter(self)
 
 
 			if widgetType=='QPushButton' and uiLevel<3:
-				if sb.prefix(widget, ['b', 'v', 'i', 'tb']):
+				if self.parent.sb.prefix(widget, ['b', 'v', 'i', 'tb']):
 					self.resizeAndCenterWidget(widget)
 
 			elif widgetType=='QWidget':
-				if sb.prefix(widget, 'r'): #prefix returns True if widgetName startswith the given prefix, and is followed by three integers.
+				if self.parent.sb.prefix(widget, 'r'): #prefix returns True if widgetName startswith the given prefix, and is followed by three integers.
 					widget.setVisible(False)
 
 			elif widgetType=='QDoubleSpinBox':
 				if name=='create':
-					if sb.prefix(widget, 's'):
+					if self.parent.sb.prefix(widget, 's'):
 						widget.setVisible(False)
 
 
@@ -83,9 +82,9 @@ class EventFactoryFilter(QtCore.QObject):
 			name (str) = name of the parent ui.
 			widgets (obj)(list) = widget or list of widgets.
 		'''
-		widgets = sb.list_(widgets) #if 'widgets' isn't a list, convert it to one.
-		sb.addWidgets(name, widgets)
-		sb.addSignals(name, widgets)
+		widgets = self.parent.sb.list_(widgets) #if 'widgets' isn't a list, convert it to one.
+		self.parent.sb.addWidgets(name, widgets)
+		self.parent.sb.addSignals(name, widgets)
 		self.initWidget(name, widgets) #initialize the widget to set things like the event filter and styleSheet.
 
 
@@ -97,12 +96,12 @@ class EventFactoryFilter(QtCore.QObject):
 			name (str) = name of the parent ui.
 			widgets (obj)(list) = widget or list of widgets.
 		'''
-		uiLevel = sb.getUiLevel(name)
-		for widget in sb.list_(widgets):
-			derivedType = sb.getDerivedType(widget, name) #get the derived class type as string.
+		uiLevel = self.parent.sb.getUiLevel(name)
+		for widget in self.parent.sb.list_(widgets):
+			derivedType = self.parent.sb.getDerivedType(widget, name) #get the derived class type as string.
 			if hasattr(widget, 'styleSheet'):
 				s = getattr(StyleSheet, derivedType, '')
-				if uiLevel==2 and not sb.prefix(widget, 'i'): #if submenu and objectName doesn't start with 'i':
+				if uiLevel==2 and not self.parent.sb.prefix(widget, 'i'): #if submenu and objectName doesn't start with 'i':
 					s = s+getattr(StyleSheet, 'dark') #override with the dark version on submenus.
 				if widget.styleSheet(): #if the widget has an existing style sheet, append.
 					s = s+widget.styleSheet()
@@ -133,22 +132,22 @@ class EventFactoryFilter(QtCore.QObject):
 		args:
 			name (str) = ui name.
 		'''
-		# print([i.objectName() for i in sb.getWidget(name=name) if name=='cameras']), '---'
-		ui = sb.getUi(name)
+		# print([i.objectName() for i in self.parent.sb.getWidget(name=name) if name=='cameras']), '---'
+		ui = self.parent.sb.getUi(name)
 		widgetsUnderMouse=[] #list of widgets currently under the mouse cursor and their parents. in hierarchical order.
-		for widget in sb.getWidget(name=name): #all widgets from the current ui.
+		for widget in self.parent.sb.getWidget(name=name): #all widgets from the current ui.
 			if not shiboken2.isValid(widget):
-				sb.removeWidgets(widget) #remove any widgets from the main dict if the c++ object no longer exists.
+				self.parent.sb.removeWidgets(widget) #remove any widgets from the main dict if the c++ object no longer exists.
 
 			elif not hasattr(widget, 'rect'): #ignore any widgets not having the 'rect' attribute.
 				pass
 
 			else:
 				try:
-					widgetName = sb.getWidgetName(widget, name)
+					widgetName = self.parent.sb.getWidgetName(widget, name)
 				except:
 					self.addWidgets(name, widget) #initialize the widget to set things like the event filter and styleSheet.
-					widgetName = sb.getWidgetName(widget, name)
+					widgetName = self.parent.sb.getWidgetName(widget, name)
 
 				if widget.rect().contains(widget.mapFromGlobal(QtGui.QCursor.pos())): #if mouse over widget:
 					# print (widget.objectName(), 'mouseTracking')
@@ -158,7 +157,7 @@ class EventFactoryFilter(QtCore.QObject):
 
 						if not widgetName=='mainWindow':
 							if widget.underMouse() and widget.isEnabled():
-								parentWidgets = sb.getParentWidgets(widget)
+								parentWidgets = self.parent.sb.getParentWidgets(widget)
 								widgetsUnderMouse.append(parentWidgets)
 				else:
 					if widget in self._mouseOver: #if widget is in the mouseOver list, but the mouse is no longer over the widget:
@@ -232,13 +231,13 @@ class EventFactoryFilter(QtCore.QObject):
 			return False #;print(event.__class__.__name__)
 
 		self.widget = widget
-		self.name = sb.getNameFromWidget(self.widget) #get the name of the ui containing the given widget.
+		self.name = self.parent.sb.getNameFromWidget(self.widget) #get the name of the ui containing the given widget.
 		# if not self.name: print('# Error: tk_childEvents.eventFilter: getNameFrom(widget): {0} Failed on Event: {1} #'.format(self.widget.objectName(), str(event.type()).split('.')[-1]))
-		self.widgetName = sb.getWidgetName(self.widget, self.name) #get the stored objectName string (pyside objectName() returns unicode).
-		self.widgetType = sb.getWidgetType(self.widget, self.name)
-		self.derivedType = sb.getDerivedType(self.widget, self.name)
-		self.ui = sb.getUi(self.name)
-		self.uiLevel = sb.getUiLevel(self.name)
+		self.widgetName = self.parent.sb.getWidgetName(self.widget, self.name) #get the stored objectName string (pyside objectName() returns unicode).
+		self.widgetType = self.parent.sb.getWidgetType(self.widget, self.name)
+		self.derivedType = self.parent.sb.getDerivedType(self.widget, self.name)
+		self.ui = self.parent.sb.getUi(self.name)
+		self.uiLevel = self.parent.sb.getUiLevel(self.name)
 
 		eventName = EventFactoryFilter.createEventName(event) #get 'mousePressEvent' from <QEvent>
 		# print(self.name, eventName, self.widgetType, self.widgetName)
@@ -285,11 +284,11 @@ class EventFactoryFilter(QtCore.QObject):
 		self._mouseHover.emit(True)
 
 		if self.widgetType=='QWidget':
-			if sb.prefix(self.widget, 'r'):
+			if self.parent.sb.prefix(self.widget, 'r'):
 				self.widget.setVisible(True) #set visibility
 
 		elif self.derivedType=='QPushButton':
-			if sb.prefix(self.widget, 'i'): #set the stacked widget.
+			if self.parent.sb.prefix(self.widget, 'i'): #set the stacked widget.
 				submenu = self.widget.whatsThis()+'_submenu'
 				if not self.name==submenu: #do not reopen the submenu if it is already open.
 					self.name = self.parent.setSubUi(self.widget, submenu)
@@ -297,8 +296,8 @@ class EventFactoryFilter(QtCore.QObject):
 			elif self.widgetName=='return_':
 				self.parent.setPrevUi()
 
-			elif sb.prefix(self.widget, 'chk'):
-				if sb.getUiLevel(self.name)==2: #if submenu:
+			elif self.parent.sb.prefix(self.widget, 'chk'):
+				if self.parent.sb.getUiLevel(self.name)==2: #if submenu:
 					self.widget.click()
 
 
@@ -310,7 +309,7 @@ class EventFactoryFilter(QtCore.QObject):
 		self._mouseHover.emit(False)
 
 		if self.widgetType=='QWidget':
-			if sb.prefix(self.widget, 'r'):
+			if self.parent.sb.prefix(self.widget, 'r'):
 				self.widget.setVisible(False) #set visibility
 
 
@@ -341,25 +340,25 @@ class EventFactoryFilter(QtCore.QObject):
 		'''
 		if self.widget.underMouse(): #if self.widget.rect().contains(event.pos()): #if mouse over widget:
 			if self.derivedType=='QPushButton' or self.derivedType=='QToolButton':
-				if sb.prefix(self.widget, 'i'): #ie. 'i012'
+				if self.parent.sb.prefix(self.widget, 'i'): #ie. 'i012'
 					ui = self.parent.setUi(self.widget.whatsThis()) #switch the stacked layout to the given ui.
 					self.parent.move(QtGui.QCursor.pos() - ui.rect().center()) #self.parent.ui.rect().center()) #move window to cursor position and offset from left corner to center
 
-				elif sb.prefix(self.widget, 'v'):
+				elif self.parent.sb.prefix(self.widget, 'v'):
 					#add the buttons command info to the prevCamera list.
-					method = sb.getMethod(self.name, self.widgetName)
-					docString = sb.getDocString(self.name, self.widgetName)
-					sb.prevCamera(allowCurrent=True, as_list=1).append([method, docString]) #store the camera view
+					method = self.parent.sb.getMethod(self.name, self.widgetName)
+					docString = self.parent.sb.getDocString(self.name, self.widgetName)
+					self.parent.sb.prevCamera(allowCurrent=True, as_list=1).append([method, docString]) #store the camera view
 					#send click signal on mouseRelease.
 					self.widget.click()
 
-				elif sb.prefix(self.widget, ['b','tb']):
-					if sb.getUiLevel(self.name)==2: #if submenu:
+				elif self.parent.sb.prefix(self.widget, ['b','tb']):
+					if self.parent.sb.getUiLevel(self.name)==2: #if submenu:
 						self.widget.click()
 					#add the buttons command info to the prevCommand list.
-					method = sb.getMethod(self.name, self.widgetName)
-					docString = sb.getDocString(self.name, self.widgetName)
-					sb.prevCommand(as_list=1).append([method, docString]) #store the command method object and it's docString (ie. 'Multi-cut tool')
+					method = self.parent.sb.getMethod(self.name, self.widgetName)
+					docString = self.parent.sb.getDocString(self.name, self.widgetName)
+					self.parent.sb.prevCommand(as_list=1).append([method, docString]) #store the command method object and it's docString (ie. 'Multi-cut tool')
 
 
 
@@ -390,13 +389,13 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 
 
 
-# print(name, sb.previousName(as_list=1)[-3])
-					# if name==sb.previousName(as_list=1, allowDuplicates=1)[-3]: #if index is changed to the previous ui, remove the last widget.
+# print(name, self.parent.sb.previousName(as_list=1)[-3])
+					# if name==self.parent.sb.previousName(as_list=1, allowDuplicates=1)[-3]: #if index is changed to the previous ui, remove the last widget.
 						# del self.prevWidget[-1:]
 
 
 #show button for any previous commands.
-		# if sb.prefix(self.widget, 'v') and self.name=='main': #'v024-29'
-		# 	self.widget.setText(sb.prevCommand(docString=1, as_list=1)[-num]) #prevCommand docString
+		# if self.parent.sb.prefix(self.widget, 'v') and self.name=='main': #'v024-29'
+		# 	self.widget.setText(self.parent.sb.prevCommand(docString=1, as_list=1)[-num]) #prevCommand docString
 		#  	#self.resizeAndCenterWidget(self.widget)
 		# 	self.widget.show()

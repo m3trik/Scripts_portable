@@ -57,7 +57,40 @@ class Tk_max(Tk):
 		return Tk.hideEvent(self, event) #super(Tk_max, self).hideEvent(event)
 
 
+class Instance():
+	'''
+	Manage multiple instances of Tk_max.
+	'''
+	instances={}
 
+	def __init__(self, parent=None):
+		'''
+		'''
+		self.parent = parent
+		self.activeWindow_ = None
+
+
+	def _getInstance(self):
+		'''
+		Internal use. Returns a new instance if one is running and currently visible.
+		Removes any old non-visible instances outside of the current 'activeWindow_'.
+		'''
+		self.instances = {k:v for k,v in self.instances.items() if not any([v.isVisible(), v==self.activeWindow_])}
+
+		if self.activeWindow_ is None or self.activeWindow_.isVisible():
+			name = 'tk'+str(len(self.instances))
+			setattr(self, name, Tk_max(self.parent))
+			self.activeWindow_ = getattr(self, name)
+			self.instances[name] = self.activeWindow_
+
+		return self.activeWindow_
+
+
+	def show_(self):
+		'''
+		'''
+		instance = self._getInstance()
+		instance.show()
 
 
 
@@ -71,10 +104,10 @@ if __name__ == "__main__":
 
 	#create a parent object to run the code outside of maya.
 	from PySide2.QtWidgets import QWidget
-	p=QWidget() #dummy parent
-	p.setObjectName('MaxWindow')
+	dummyParent = QWidget()
+	dummyParent.setObjectName('MayaWindow')
+	Instance(dummyParent).show_() #Tk_max(p).show()
 
-	Tk_max(p).show()
 	sys.exit(app.exec_())
 
 

@@ -105,28 +105,12 @@ class QMenu_(QtWidgets.QMenu):
 
 		#presets
 		elif attr=='preset_':
-			#integer
-			if value=='1-100 step1':
-				self.setAttributes({'setMinimum':1, 'setMaximum':100, 'setSingleStep':1, 'setButtonSymbols_':'NoButtons'}, action)
-			elif value=='1-180 step1':
-				self.setAttributes({'setMinimum':1, 'setMaximum':180, 'setSingleStep':1, 'setButtonSymbols_':'NoButtons'}, action)
-			elif value=='1-360 step1':
-				self.setAttributes({'setMinimum':1, 'setMaximum':360, 'setSingleStep':1, 'setButtonSymbols_':'NoButtons'}, action)
-			if value=='0-10000 step1':
-				self.setAttributes({'setMinimum':0, 'setMaximum':10000, 'setSingleStep':1, 'setButtonSymbols_':'NoButtons'}, action)
-			#float
-			elif value=='0.0-10 step.1':
-				self.setAttributes({'setMinimum':0.0, 'setMaximum':100.0, 'setSingleStep':0.1, 'setDecimals':1, 'setButtonSymbols_':'NoButtons'}, action)
-			elif value=='0.00-1 step.01':
-				self.setAttributes({'setMinimum':0.0, 'setMaximum':1.0, 'setSingleStep':0.01, 'setDecimals':2, 'setButtonSymbols_':'NoButtons'}, action)
-			elif value=='0.00-10 step.05':
-				self.setAttributes({'setMinimum':0.0, 'setMaximum':10.0, 'setSingleStep':0.05, 'setDecimals':2, 'setButtonSymbols_':'NoButtons'}, action)
-			elif value=='0.00-100 step.01':
-				self.setAttributes({'setMinimum':0.0, 'setMaximum':100.0, 'setSingleStep':0.01, 'setDecimals':2, 'setButtonSymbols_':'NoButtons'}, action)
-			elif value=='0.00-100 step1':
-				self.setAttributes({'setMinimum':0.0, 'setMaximum':100.0, 'setSingleStep':1, 'setDecimals':2, 'setButtonSymbols_':'NoButtons'}, action)
-			elif value=='0.000-10 step.001':
-				self.setAttributes({'setMinimum':0.0, 'setMaximum':10.0, 'setSingleStep':0.001, 'setDecimals':3, 'setButtonSymbols_':'NoButtons'}, action)
+			minimum = float(value.split('-')[0])
+			maximum = float(value.split('-')[1].split(' ')[0])
+			step = float(value.split(' ')[1].strip('step'))
+
+			self.setAttributes({'setMinimum':minimum, 'setMaximum':maximum, 'setSingleStep':step, 'setButtonSymbols_':'NoButtons'}, action)
+
 		else:
 			print('# Error: {} has no attribute {}'.format(action, attr))
 
@@ -211,10 +195,8 @@ class QMenu_(QtWidgets.QMenu):
 		args:
 			event = <QEvent>
 		'''
-		if not __name__=='__main__' and not hasattr(self, 'sb'):
-			from tk_switchboard import sb
-			self.sb = sb
-
+		if not __name__=='__main__' and not hasattr(self, 'parentUiName'):
+			self.sb = self.parent().window().sb
 			self.parentUiName = self.sb.getUiName()
 			self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
 
@@ -264,3 +246,28 @@ if __name__ == "__main__":
 
 # depricated ------------------------------------------------------------------------
 
+
+			# integer
+			# if value=='1-10 step1':
+			# 	self.setAttributes({'setMinimum':1, 'setMaximum':10, 'setSingleStep':1, 'setButtonSymbols_':'NoButtons'}, action)
+			# if value=='1-100 step1':
+			# 	self.setAttributes({'setMinimum':1, 'setMaximum':100, 'setSingleStep':1, 'setButtonSymbols_':'NoButtons'}, action)
+			# elif value=='1-180 step1':
+			# 	self.setAttributes({'setMinimum':1, 'setMaximum':180, 'setSingleStep':1, 'setButtonSymbols_':'NoButtons'}, action)
+			# elif value=='1-360 step1':
+			# 	self.setAttributes({'setMinimum':1, 'setMaximum':360, 'setSingleStep':1, 'setButtonSymbols_':'NoButtons'}, action)
+			# if value=='0-10000 step1':
+			# 	self.setAttributes({'setMinimum':0, 'setMaximum':10000, 'setSingleStep':1, 'setButtonSymbols_':'NoButtons'}, action)
+			# #float
+			# elif value=='0.0-10 step.1':
+			# 	self.setAttributes({'setMinimum':0.0, 'setMaximum':100.0, 'setSingleStep':0.1, 'setDecimals':1, 'setButtonSymbols_':'NoButtons'}, action)
+			# elif value=='0.00-1 step.01':
+			# 	self.setAttributes({'setMinimum':0.0, 'setMaximum':1.0, 'setSingleStep':0.01, 'setDecimals':2, 'setButtonSymbols_':'NoButtons'}, action)
+			# elif value=='0.00-10 step.05':
+			# 	self.setAttributes({'setMinimum':0.0, 'setMaximum':10.0, 'setSingleStep':0.05, 'setDecimals':2, 'setButtonSymbols_':'NoButtons'}, action)
+			# elif value=='0.00-100 step.01':
+			# 	self.setAttributes({'setMinimum':0.0, 'setMaximum':100.0, 'setSingleStep':0.01, 'setDecimals':2, 'setButtonSymbols_':'NoButtons'}, action)
+			# elif value=='0.00-100 step1':
+			# 	self.setAttributes({'setMinimum':0.0, 'setMaximum':100.0, 'setSingleStep':1, 'setDecimals':2, 'setButtonSymbols_':'NoButtons'}, action)
+			# elif value=='0.000-10 step.001':
+			# 	self.setAttributes({'setMinimum':0.0, 'setMaximum':10.0, 'setSingleStep':0.001, 'setDecimals':3, 'setButtonSymbols_':'NoButtons'}, action)

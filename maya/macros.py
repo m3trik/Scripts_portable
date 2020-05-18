@@ -20,22 +20,22 @@ class Macros(object):
 		'''
 		Call setMacro for each item.
 		'''
-		self.setMacro(name='hk_back_face_culling', k='1', cat='Display', ann='Toggle back-face culling')
-		self.setMacro(name='hk_smooth_preview', k='2', cat='Display', ann='Toggle smooth mesh preview')
-		self.setMacro(name='hk_isolate_selected', k='F2', cat='Display', ann='Isolate current selection')
-		self.setMacro(name='hk_grid_and_image_planes', k='F1', cat='Display', ann='Toggle grid and image plane visibility')
-		self.setMacro(name='hk_frame_selected', k='f', cat='Display', ann='Frame selected by a set amount')
-		self.setMacro(name='hk_wireframe_on_shaded', k='3', cat='Display', ann='Toggle wireframe on shaded')
-		self.setMacro(name='hk_xray', k='F3', cat='Display', ann='Toggle xRay all')
-		self.setMacro(name='hk_wireframe', k='5', cat='Display', ann='Toggle wireframe/shaded/shaded w/texture display')
-		self.setMacro(name='hk_shading', k='6', cat='Display', ann='Toggle viewport shading')
-		self.setMacro(name='hk_selection_mode', k='sht+q', cat='Edit', ann='Toggle between object selection & last component selection')
-		self.setMacro(name='hk_paste_and_rename', k='ctl+v', cat='Edit', ann='Paste and rename removing keyword "paste"')
-		self.setMacro(name='hk_multi_component', k='F5', cat='Edit', ann='Multi-Component Selection')
-		self.setMacro(name='hk_toggle_component_mask', k='F4', cat='Edit', ann='Toggle Component Selection Mask')
-		self.setMacro(name='hk_tk_show', k='F12', cat='UI', ann='Display tk marking menu')
-		self.setMacro(name='hk_hotbox_full', k='sht+z', cat='UI', ann='Display the full version of the hotbox')
-		self.setMacro(name='hk_toggle_panels', k='9', cat='UI', ann='Toggle UI toolbars')
+		self.setMacro('hk_back_face_culling', k='1', cat='Display', ann='Toggle back-face culling')
+		self.setMacro('hk_smooth_preview', k='2', cat='Display', ann='Toggle smooth mesh preview')
+		self.setMacro('hk_isolate_selected', k='F2', cat='Display', ann='Isolate current selection')
+		self.setMacro('hk_grid_and_image_planes', k='F1', cat='Display', ann='Toggle grid and image plane visibility')
+		self.setMacro('hk_frame_selected', k='f', cat='Display', ann='Frame selected by a set amount')
+		self.setMacro('hk_wireframe_on_shaded', k='3', cat='Display', ann='Toggle wireframe on shaded')
+		self.setMacro('hk_xray', k='F3', cat='Display', ann='Toggle xRay all')
+		self.setMacro('hk_wireframe', k='5', cat='Display', ann='Toggle wireframe/shaded/shaded w/texture display')
+		self.setMacro('hk_shading', k='6', cat='Display', ann='Toggle viewport shading')
+		self.setMacro('hk_selection_mode', k='sht+q', cat='Edit', ann='Toggle between object selection & last component selection')
+		self.setMacro('hk_paste_and_rename', k='ctl+v', cat='Edit', ann='Paste and rename removing keyword "paste"')
+		self.setMacro('hk_multi_component', k='F5', cat='Edit', ann='Multi-Component Selection')
+		self.setMacro('hk_toggle_component_mask', k='F4', cat='Edit', ann='Toggle Component Selection Mask')
+		self.setMacro('hk_tk_show', k='F12', cat='UI', ann='Display tk marking menu')
+		self.setMacro('hk_hotbox_full', k='sht+z', cat='UI', ann='Display the full version of the hotbox')
+		self.setMacro('hk_toggle_panels', k='9', cat='UI', ann='Toggle UI toolbars')
 
 
 	def setMacro(self, name=None, k=None, cat=None, ann=None):
@@ -509,17 +509,11 @@ class Macros(object):
 		hk_tk_show
 		Display tk marking menu
 		'''
-		if 'tk' not in locals() or 'tk' not in globals():
-			import tk_maya
-			tk = tk_maya.Tk_maya()
+		if 'tk' not in locals() and 'tk' not in globals():
+			from tk_maya import Instance
+			tk = Instance()
 
-		# elif tk.isVisible():
-		# 	tk = tk_maya.Tk_maya()
-
-		# tk.sb.gcProtect(tk)
-		tk.show()
-
-		#isActiveWindow ()
+		tk.show_()
 
 
 

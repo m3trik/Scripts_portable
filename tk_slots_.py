@@ -1,18 +1,25 @@
 from __future__ import print_function
+from PySide2 import QtCore
 import os.path
 
-import tk_switchboard
 
 
 
-class Slot(object):
+
+
+class Slots(QtCore.QObject):
 	'''
 	Parent class for all slot type classes.
-	'''
-	def __init__(self):
 
-		self.sb = tk_switchboard.sb
-		self.tk = self.sb.getClassInstance('tk')
+	If you need to create a invokable method that returns some value, declare it as a slot, e.g.:
+	@Slot(result=int, float)
+	def getFloatReturnInt(self, f):
+		return int(f)
+	'''
+	def __init__(self, parent=None, **kwargs):
+		'''
+		'''
+		self.sb = kwargs['sb']
 
 
 	@property
@@ -71,9 +78,9 @@ class Slot(object):
 		Connect multiple signals to multiple slots at once.
 
 		args:
-			widgets (str)(obj)(list) = 
-			signals (str)(list) = 
-			slots (obj)(list) =
+			widgets (str)(obj)(list) = ie. 'chk000-2' or [tb.chk000, tb.chk001]
+			signals (str)(list) = ie. 'toggled' or [toggled]
+			slots (obj)(list) = ie. self.cmb002 or [self.cmb002]
 			class_ (obj)(list) = if the widgets arg is given as a string, then the class_ it belongs to can be explicitly given. else, the current ui will be used.
 
 		ex call: self.connect('chk000-2', 'toggled', self.cmb002, tb) *or self.connect([tb.chk000, tb.chk001], 'toggled', self.cmb002)

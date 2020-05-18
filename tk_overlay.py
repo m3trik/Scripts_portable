@@ -5,7 +5,7 @@ import os.path
 
 from tk_childEvents import EventFactoryFilter
 
-from tk_switchboard import sb
+
 
 
 
@@ -41,7 +41,7 @@ class Overlay(QtWidgets.QWidget):
 		args:
 			event=<QEvent>
 		'''
-		if sb.uiLevel>0 and sb.uiLevel<3:
+		if self.parent.sb.uiLevel>0 and self.parent.sb.uiLevel<3:
 
 			self.painter.begin(self)
 

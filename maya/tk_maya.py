@@ -2,7 +2,8 @@ from __future__ import print_function
 from tk_ import Tk
 from PySide2.QtWidgets import QApplication
 
-
+import sys
+global app
 app = QApplication.instance() #get the qApp instance if it exists.
 if not app:
 	app = QApplication(sys.argv)
@@ -13,13 +14,12 @@ class Tk_maya(Tk):
 	'''
 	Tk class overridden for use with Autodesk Maya.
 	args:
-		parent = main application top level window object.
+		parent = Instance application top level window object.
 	'''
 	def __init__(self, parent=None):
 
 		if not parent:
 			try:
-				global app
 				parent = next(w for w in app.topLevelWidgets() if w.objectName()=='MayaWindow')
 			except:
 				print('# Error: "MayaWindow" object not found in app.topLevelWidgets() #')
@@ -49,20 +49,54 @@ class Tk_maya(Tk):
 		return Tk.hideEvent(self, event) #super(Tk_maya, self).hideEvent(event)
 
 
+class Instance():
+	'''
+	Manage multiple instances of Tk_maya.
+	'''
+	instances={}
+
+	def __init__(self, parent=None):
+		'''
+		'''
+		self.parent = parent
+		self.activeWindow_ = None
+
+
+	def _getInstance(self):
+		'''
+		Internal use. Returns a new instance if one is running and currently visible.
+		Removes any old non-visible instances outside of the current 'activeWindow_'.
+		'''
+		self.instances = {k:v for k,v in self.instances.items() if not any([v.isVisible(), v==self.activeWindow_])}
+
+		if self.activeWindow_ is None or self.activeWindow_.isVisible():
+			name = 'tk'+str(len(self.instances))
+			setattr(self, name, Tk_maya(self.parent))
+			self.activeWindow_ = getattr(self, name)
+			self.instances[name] = self.activeWindow_
+
+		return self.activeWindow_
+
+
+	def show_(self):
+		'''
+		'''
+		instance = self._getInstance()
+		instance.show()
+
 
 
 
 
 if __name__ == "__main__":
 	import sys
-	global app
 
 	#create a parent object to run the code outside of maya.
 	from PySide2.QtWidgets import QWidget
-	p = QWidget()
-	p.setObjectName('MayaWindow')
+	dummyParent = QWidget()
+	dummyParent.setObjectName('MayaWindow')
+	Instance(dummyParent).show_() #Tk_maya(dummyParent).show()
 
-	Tk_maya(p).show()
 	sys.exit(app.exec_())
 
 

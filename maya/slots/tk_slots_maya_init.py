@@ -3,7 +3,7 @@ from PySide2 import QtGui, QtWidgets
 
 import os
 
-from tk_slots_ import Slot
+from tk_slots_ import Slots
 
 #maya dependancies
 try:
@@ -19,7 +19,10 @@ except ImportError as error:
 
 
 
-class Init(Slot):
+class Init(Slots):
+	'''
+	App specific methods inherited by all other slot classes.
+	'''
 	def __init__(self, *args, **kwargs):
 		super(Init, self).__init__(*args, **kwargs)
 
@@ -416,6 +419,22 @@ class Init(Slot):
 		return node
 
 
+	def deleteAlongAxis(self, obj, axis):
+		'''
+		Delete components of the given mesh object along the specified axis.
+
+		args:
+			obj (obj) = Mesh object.
+			axis (str) = Axis to delete on. ie. '-x' Components belonging to the mesh object given in the 'obj' arg, that fall on this axis, will be deleted. 
+		'''
+		for node in [n for n in pm.listRelatives(obj, allDescendents=1) if pm.objectType(n, isType='mesh')]: #get any mesh type child nodes of obj.
+			faces = self.getAllFacesOnAxis(node, axis)
+			if len(faces)==pm.polyEvaluate(node, face=1): #if all faces fall on the specified axis.
+				pm.delete(node) #delete entire node
+			else:
+				pm.delete(faces) #else, delete any individual faces.
+
+		self.viewPortMessage("Delete faces on <hl>"+axis.upper()+"</hl>.")
 
 
 

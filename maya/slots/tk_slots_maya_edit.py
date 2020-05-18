@@ -12,6 +12,14 @@ class Edit(Init):
 		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
 
 
+	def chk006_9(self):
+		'''
+		Set the toolbutton's text according to the checkstates.
+		'''
+		axis = self.getAxisFromCheckBoxes('chk006-9')
+		self.ui.tb003.setText('Along Axis '+axis)
+
+
 	def cmb000(self, index=None):
 		'''
 		Editors
@@ -132,7 +140,7 @@ class Edit(Init):
 		maskFacet = pm.selectType (query=True, facet=True)
 
 		objects = pm.ls(sl=1)
-		
+
 		for obj in objects:
 			if pm.objectType(obj, isType='joint'):
 				pm.removeJoint(obj) #remove joints
@@ -142,12 +150,38 @@ class Edit(Init):
 					pm.polyDelEdge(cleanVertices=True) #delete edges
 
 				elif all([selectionMask==1, maskVertex==1]):
-					pm.polyDelVertex() #delete vertices
+					pm.polyDelVertex() #try delete vertices
+					if pm.ls(sl=1)==objects: #if nothing was deleted:
+						mel.eval('polySelectSp -loop;') #convert selection to edge loop
+						pm.polyDelEdge(cleanVertices=True) #delete edges
 
 				else: #all([selectionMask==1, maskFacet==1]):
 					pm.delete(obj) #delete faces\mesh objects
 		
 		self.viewPortMessage('Delete <hl>'+str(objects)+'</hl>.')
+
+
+	def tb003(self, state=None):
+		'''
+		Delete Along Axis
+		'''
+		tb = self.currentUi.tb003
+		if state=='setMenu':
+			tb.add('QCheckBox', setText='-', setObjectName='chk006', setChecked=True, setToolTip='Perform delete along negative axis.')
+			tb.add('QRadioButton', setText='X', setObjectName='chk007', setChecked=True, setToolTip='Perform delete along X axis.')
+			tb.add('QRadioButton', setText='Y', setObjectName='chk008', setToolTip='Perform delete along Y axis.')
+			tb.add('QRadioButton', setText='Z', setObjectName='chk009', setToolTip='Perform delete along Z axis.')
+
+			self.connect('chk006-9', 'toggled', self.chk006_9, tb)
+			return
+
+		selection = pm.ls(sl=1, objectsOnly=1)
+		axis = self.getAxisFromCheckBoxes('chk006-9')
+
+		pm.undoInfo(openChunk=1)
+		for obj in selection:
+			self.deleteAlongAxis(obj, axis)
+		pm.undoInfo(closeChunk=1)
 
 
 	def b001(self):

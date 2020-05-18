@@ -67,23 +67,36 @@ class Crease(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def b000(self):
+	def tb000(self, state=None):
 		'''
 		Crease
 		'''
-		creaseAmount = float(self.ui.s003.value())
-		normalAngle = int(self.ui.s004.value()) 
+		tb = self.currentUi.tb000
+		if state=='setMenu':
+			tb.add('QSpinBox', setPrefix='Crease Amount: ', setObjectName='s003', preset_='0-10 step1', setValue=10, setToolTip='Crease amount 0-10. Overriden if "max" checked.')
+			tb.add('QCheckBox', setText='Toggle Max', setObjectName='chk003', setChecked=True, setToolTip='Toggle crease amount from it\'s current value to the maximum amount.')
+			tb.add('QCheckBox', setText='Un-Crease', setObjectName='chk002', setToolTip='Un-crease selected components or If in object mode, uncrease all.')
+			tb.add('QCheckBox', setText='Perform Normal Edge Hardness', setObjectName='chk005', setChecked=True, setToolTip='Toggle perform normal edge hardness.')
+			tb.add('QSpinBox', setPrefix='Edge Hardness Angle: ', setObjectName='s004', preset_='0-180 step1', setValue=30, setToolTip='Normal edge hardness 0-180.')
+			tb.add('QCheckBox', setText='Crease Vertex Points', setObjectName='chk004', setChecked=True, setToolTip='Crease vertex points.')
+			tb.add('QCheckBox', setText='Auto Crease', setObjectName='chk011', setToolTip='Auto crease selected object(s) within the set angle tolerance.')
+			tb.add('QSpinBox', setPrefix='Auto Crease: Low: ', setObjectName='s005', preset_='0-180 step1', setValue=85, setToolTip='Auto crease: low angle constraint.')
+			tb.add('QSpinBox', setPrefix='Auto Crease: high: ', setObjectName='s006', preset_='0-180 step1', setValue=95, setToolTip='Auto crease: max angle constraint.')
+			return
 
-		if self.ui.chk011.isChecked(): #crease: Auto
-			angleLow = int(self.ui.s005.value()) 
-			angleHigh = int(self.ui.s006.value()) 
+		creaseAmount = float(tb.s003.value())
+		normalAngle = int(tb.s004.value()) 
+
+		if tb.chk011.isChecked(): #crease: Auto
+			angleLow = int(tb.s005.value()) 
+			angleHigh = int(tb.s006.value()) 
 
 			mel.eval("PolySelectConvert 2;") #convert selection to edges
 			contraint = pm.polySelectConstraint( mode=3, type=0x8000, angle=True, anglebound=(angleLow, angleHigh) ) # to get edges with angle between two degrees. mode=3 (All and Next) type=0x8000 (edge). 
 
 		operation = 0 #Crease selected components
 		pm.polySoftEdge (angle=0, constructionHistory=0) #Harden edge normal
-		if self.ui.chk002.isChecked():
+		if tb.chk002.isChecked():
 			objectMode = pm.selectMode (query=True, object=True)
 			if objectMode: #if in object mode,
 				operation = 2 #2-Remove all crease values from mesh
@@ -91,15 +104,15 @@ class Crease(Init):
 				operation = 1 #1-Remove crease from sel components
 				pm.polySoftEdge (angle=180, constructionHistory=0) #soften edge normal
 
-		if self.ui.chk004.isChecked(): #crease vertex point
+		if tb.chk004.isChecked(): #crease vertex point
 			pm.polyCrease (value=creaseAmount, vertexValue=creaseAmount, createHistory=True, operation=operation)
 		else:
 			pm.polyCrease (value=creaseAmount, createHistory=True, operation=operation) #PolyCreaseTool;
 
-		if self.ui.chk005.isChecked(): #adjust normal angle
+		if tb.chk005.isChecked(): #adjust normal angle
 			pm.polySoftEdge (angle=normalAngle)
 
-		if self.ui.chk011.isChecked(): #crease: Auto
+		if tb.chk011.isChecked(): #crease: Auto
 			pm.polySelectConstraint( angle=False ) # turn off angle constraint
 
 

@@ -100,7 +100,7 @@ class Normals(Init):
 			tb.add('QSpinBox', setPrefix='Angle: ', setObjectName='s000', preset_='1-180 step1', setValue=30, setToolTip='Angle degree.')
 			return
 
-		normalAngle = str(sb.s000.value())
+		normalAngle = str(tb.s000.value())
 		pm.polySetToFaceNormal (setUserNormal=1) #reset to face
 		pm.polySoftEdge (angle=normalAngle) #smooth if angle is lower than specified amount. default 30
 

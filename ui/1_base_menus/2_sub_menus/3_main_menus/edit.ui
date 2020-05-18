@@ -177,58 +177,11 @@
           </widget>
          </item>
          <item>
-          <widget class="QGroupBox" name="history">
-           <property name="minimumSize">
-            <size>
-             <width>111</width>
-             <height>36</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>111</width>
-             <height>999</height>
-            </size>
-           </property>
-           <property name="title">
-            <string>History</string>
-           </property>
-           <widget class="QToolButton_" name="tb001">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>15</y>
-              <width>111</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Delete construction history</string>
-            </property>
-            <property name="text">
-             <string>Delete History</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-           </widget>
-          </widget>
-         </item>
-         <item>
           <widget class="QGroupBox" name="Transfer_Crease_Sets">
            <property name="minimumSize">
             <size>
              <width>111</width>
-             <height>71</height>
+             <height>75</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -247,7 +200,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>50</y>
+              <y>55</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -318,7 +271,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>30</y>
+              <y>35</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -378,7 +331,7 @@
            <property name="minimumSize">
             <size>
              <width>111</width>
-             <height>71</height>
+             <height>75</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -465,7 +418,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>50</y>
+              <y>55</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -607,7 +560,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>30</y>
+              <y>35</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -650,7 +603,7 @@
            <property name="minimumSize">
             <size>
              <width>111</width>
-             <height>36</height>
+             <height>77</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -685,6 +638,65 @@
             </property>
             <property name="text">
              <string>Delete</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>18</width>
+              <height>18</height>
+             </size>
+            </property>
+           </widget>
+           <widget class="QToolButton_" name="tb003">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>35</y>
+              <width>111</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>111</width>
+              <height>19</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>Delete Component or if object selected, along axis</string>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="text">
+             <string>Along Axis -X</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>18</width>
+              <height>18</height>
+             </size>
+            </property>
+           </widget>
+           <widget class="QToolButton_" name="tb001">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>55</y>
+              <width>111</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>111</width>
+              <height>19</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>Delete construction history</string>
+            </property>
+            <property name="text">
+             <string>Delete History</string>
             </property>
             <property name="iconSize">
              <size>

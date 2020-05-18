@@ -200,8 +200,8 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>999</width>
-             <height>108</height>
+             <width>111</width>
+             <height>999</height>
             </size>
            </property>
            <property name="baseSize">

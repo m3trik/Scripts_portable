@@ -126,7 +126,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>150</y>
+              <y>155</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -343,6 +343,12 @@
             <size>
              <width>0</width>
              <height>76</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>111</width>
+             <height>999</height>
             </size>
            </property>
            <property name="title">

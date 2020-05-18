@@ -673,7 +673,7 @@ class StyleSheet():
 			border: 1px transparent;
 			border-radius: 1px;
 			margin-top: 4px; /* leave space at the top for the title */
-			background-color: {COLOR_ACCENT};
+			background-color: rgba(75,75,75,125);
 		}
 
 		QGroupBox::title {
@@ -682,7 +682,7 @@ class StyleSheet():
 
 			subcontrol-position: top left; /* position at the top center */
 			background-color: transparent;
-			color: {COLOR_TEXT2};
+			color: {COLOR_TEXT1};
 		}''')
 
 	QTabBar=f('''

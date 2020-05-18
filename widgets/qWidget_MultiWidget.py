@@ -188,12 +188,9 @@ class QWidget_MultiWidget(QtWidgets.QWidget):
 		args:
 			event = <QEvent>
 		'''
-		if not __name__=='__main__' and not hasattr(self, 'sb'):
-			from tk_switchboard import sb
-			self.sb = sb
-
-			self.parentUiName = self.sb.getUiName()
-			self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
+		if not __name__=='__main__' and not hasattr(self, 'parentUiName'):
+			self.parentUiName = self.window().sb.getUiName()
+			self.childEvents = self.window().sb.getClassInstance('EventFactoryFilter')
 
 			self.childEvents.addWidgets(self.parentUiName, self.childWidgets())
 

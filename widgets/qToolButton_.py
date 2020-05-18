@@ -104,13 +104,11 @@ class QToolButton_(QtWidgets.QToolButton):
 		args:
 			event = <QEvent>
 		'''
-		if not __name__=='__main__' and not hasattr(self, 'sb'):
-			from tk_switchboard import sb
-			self.sb = sb
+		if not __name__=='__main__' and not hasattr(self, 'parentUiName'):
+			self.parentUiName = self.window().sb.getUiName()
+			self.childEvents = self.window().sb.getClassInstance('EventFactoryFilter')
 
-			self.parentUiName = self.sb.getUiName()
-			self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
-			self.classMethod = self.sb.getMethod(self.parentUiName, self)
+			self.classMethod = self.window().sb.getMethod(self.parentUiName, self)
 			if callable(self.classMethod):
 				self.classMethod('setMenu')
 

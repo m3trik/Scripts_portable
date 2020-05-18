@@ -779,12 +779,9 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 				self.classMethod()
 
 		except:
-			from tk_switchboard import sb
-			self.sb = sb
-
-			self.parentUiName = self.sb.getUiName()
-			self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
-			self.classMethod = self.sb.getMethod(self.parentUiName, self)
+			self.parentUiName = self.window().sb.getUiName()
+			self.childEvents = self.window().sb.getClassInstance('EventFactoryFilter')
+			self.classMethod = self.window().sb.getMethod(self.parentUiName, self)
 			self.classMethod()
 
 		if self.refresh:
@@ -921,12 +918,12 @@ if __name__ == '__main__':
 	# 	# 	# 	shiboken2.delete(widget)
 
 
-			# className = self.sb.getUiName(pascalCase=True)
-			# class_ = self.sb.getClassInstance(className)
+			# className = self.window().sb.getUiName(pascalCase=True)
+			# class_ = self.window().sb.getClassInstance(className)
 			# self.classMethod = getattr(class_, str(self.objectName()))
 
-	# className = self.sb.getUiName(pascalCase=True)
-	# class_ = self.sb.getClassInstance(className)
+	# className = self.window().sb.getUiName(pascalCase=True)
+	# class_ = self.window().sb.getClassInstance(className)
 	# try:
 		# self.classMethod = getattr(class_, str(self.objectName()))
 	# except AttributeError as error:

@@ -44,7 +44,7 @@ class Preferences(Init):
 		'''
 		cmb = self.ui.cmb000
 
-		from Pyside2 import QtGui, QtCore
+		from PySide2 import QtGui, QtCore
 		list_ = QtGui.QStyleFactory.keys() #get styles from QStyleFactory
 		contents = cmb.addItems_(list_)
 

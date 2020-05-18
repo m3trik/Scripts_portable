@@ -62,7 +62,7 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 		self.__mouseMovePos = event.globalPos() #mouse move position from last press. (updated on move event) 
 
 		self.setChecked(True) #setChecked to prevent window from closing.
-		self.tk.preventHide = True
+		self.window().preventHide = True
 
 		return QtWidgets.QPushButton.mousePressEvent(self, event)
 
@@ -76,11 +76,11 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 		self.setCursor(QtGui.QCursor(QtCore.Qt.ClosedHandCursor))
 
 		#move window:
-		curPos = self.tk.mapToGlobal(self.tk.pos())
+		curPos = self.window().mapToGlobal(self.window().pos())
 		globalPos = event.globalPos()
 		diff = globalPos -self.__mouseMovePos
 
-		self.tk.move(self.tk.mapFromGlobal(curPos + diff))
+		self.window().move(self.window().mapFromGlobal(curPos + diff))
 		self.__mouseMovePos = globalPos
 
 		return QtWidgets.QPushButton.mouseMoveEvent(self, event)
@@ -98,12 +98,12 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 
 		if moveAmount.manhattanLength() >5: #if widget moved:
 			self.setChecked(True) #setChecked to prevent window from closing.
-			self.tk.preventHide = True
+			self.window().preventHide = True
 		else:
 			self.setChecked(not self.isChecked()) #toggle check state
 
-		self.tk.preventHide = self.isChecked()
-		self.tk.hide()
+		self.window().preventHide = self.isChecked()
+		self.window().hide()
 
 		return QtWidgets.QPushButton.mouseReleaseEvent(self, event)
 
@@ -114,12 +114,12 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 		args:
 			event=<QEvent>
 		'''
-		try:
-			import tk_switchboard
-			sb = tk_switchboard.sb
-			self.tk = sb.getClassInstance('tk')
-		except Exception as error:
-			print error
+		# try:
+		# 	import tk_switchboard
+		# 	sb = tk_switchboard.sb
+		# 	self.window() = sb.getClassInstance('tk')
+		# except Exception as error:
+		# 	print error
 
 		return QtWidgets.QPushButton.showEvent(self, event)
 
