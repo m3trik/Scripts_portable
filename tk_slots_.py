@@ -19,7 +19,9 @@ class Slots(QtCore.QObject):
 	def __init__(self, parent=None, **kwargs):
 		'''
 		'''
+		self.ui = kwargs['ui']
 		self.sb = kwargs['sb']
+		self.tk = self.sb.getClassInstance('tk')
 
 
 	@property
