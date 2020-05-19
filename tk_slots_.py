@@ -65,7 +65,7 @@ class Slots(QtCore.QObject):
 		#ex call: getObject(self.ui, 's000,b002,cmb011-15')
 		'''
 		objects=[]
-		for name in Slot.unpackNames(objectNames):
+		for name in Slots.unpackNames(objectNames):
 			try:
 				objects.append(getattr(class_, name)) #equivilent to:(self.ui.m000)
 			except: 

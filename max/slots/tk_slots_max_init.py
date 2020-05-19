@@ -606,7 +606,7 @@ class Init(Slots):
 
 	@staticmethod
 	def toggleXraySelected():
-		toggle = Slot.cycle([0,1], 'toggleXraySelected') #toggle 0/1
+		toggle = Slots.cycle([0,1], 'toggleXraySelected') #toggle 0/1
 
 		for obj in rt.selection:
 			obj.xray = toggle
@@ -615,7 +615,7 @@ class Init(Slots):
 
 	@staticmethod
 	def toggleBackfaceCull():
-		toggle = Slot.cycle([0,1], 'toggleBackfaceCull') #toggle 0/1
+		toggle = Slots.cycle([0,1], 'toggleBackfaceCull') #toggle 0/1
 
 		for obj in rt.Geometry:
 			obj.backfacecull = toggle
@@ -624,7 +624,7 @@ class Init(Slots):
 
 	@staticmethod
 	def toggleMaterialOverride(checker=False):
-		state = Slot.cycle([0,1], 'OverrideMateridal') #toggle 0/1
+		state = Slots.cycle([0,1], 'OverrideMateridal') #toggle 0/1
 		if state:
 			rt.actionMan.executeAction(0, "63574") #Views: Override Off	
 		else:
@@ -658,7 +658,7 @@ class Init(Slots):
 	@staticmethod
 	def toggleSmoothPreview():
 		global previousSmoothPreviewLevel
-		toggle = Slot.cycle([0,1], 'toggleSmoothPreview') #toggle 0/1
+		toggle = Slots.cycle([0,1], 'toggleSmoothPreview') #toggle 0/1
 
 		geometry = rt.selection #if there is a selection; perform operation on those object/s
 		if not len(geometry): #else: perform operation on all scene geometry.
@@ -717,7 +717,7 @@ class Init(Slots):
 			rt.subObjectLevel = level
 
 			if level==0: #reset the modifier selection to the top of the stack.
-				toggle = Slot.cycle([0,1], 'toggle_baseObjectLevel')
+				toggle = Slots.cycle([0,1], 'toggle_baseObjectLevel')
 				if toggle:
 					rt.modPanel.setCurrentObject(obj.baseObject)
 				else:
