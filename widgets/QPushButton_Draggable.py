@@ -2,7 +2,7 @@ from PySide2 import QtCore, QtGui, QtWidgets
 
 import sys
 
-
+from widgets.qMenu_ import QMenu_
 
 '''
 Promoting a widget in designer to use a custom class:
@@ -27,11 +27,12 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 
 	__mousePressPos = QtCore.QPoint()
 
-	def __init__(self, parent=None):
+	def __init__(self, parent=None, rightClickMenu=True):
 		super(QPushButton_Draggable, self).__init__(parent)
 
-		if parent:
-			self.parent = parent
+		self.rightClickMenu = rightClickMenu
+		if self.rightClickMenu:
+			self.menu = QMenu_(self, position='cursorPos')
 
 		self.setCheckable(True)
 
@@ -52,20 +53,63 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 		self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
 
 
+	def add(self, w, **kwargs):
+		'''
+		Add items to the toolbutton's menu.
+
+		args:
+			widget (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
+		kwargs:
+			show (bool) = show the menu.
+			insertSeparator (QAction) = insert separator in front of the given action.
+		returns:
+ 			the added widget.
+
+		ex.call:
+		tb.add('QCheckBox', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
+		'''
+		try:
+			w = getattr(QtWidgets, w)() #ex. QtWidgets.QAction(self) object from string.
+		except:
+			if callable(w):
+				w = widget() #ex. QtWidgets.QAction(self) object.
+
+		w.setMinimumHeight(self.minimumSizeHint().height()+1) #set child widget height to that of the toolbutton
+
+		w = self.menu.add(w, **kwargs)
+		setattr(self, w.objectName(), w)
+		return w
+
+
+	def childWidgets(self, index=None):
+		'''
+		Get the widget at the given index.
+		If no arg is given all widgets will be returned.
+
+		args:
+			index (int) = widget location.
+		returns:
+			(QWidget) or (list)
+		'''
+		return self.menu.childWidgets(index)
+
 
 	def mousePressEvent(self, event):
 		'''
 		args:
 			event=<QEvent>
 		'''
-		self.__mousePressPos = event.globalPos() #mouse positon at press.
-		self.__mouseMovePos = event.globalPos() #mouse move position from last press. (updated on move event) 
+		if event.button()==QtCore.Qt.LeftButton:
+			self.__mousePressPos = event.globalPos() #mouse positon at press.
+			self.__mouseMovePos = event.globalPos() #mouse move position from last press. (updated on move event) 
 
-		self.setChecked(True) #setChecked to prevent window from closing.
-		self.window().preventHide = True
+			self.setChecked(True) #setChecked to prevent window from closing.
+			self.window().preventHide = True
+
+		if event.button()==QtCore.Qt.RightButton:
+			self.menu.show()
 
 		return QtWidgets.QPushButton.mousePressEvent(self, event)
-
 
 
 	def mouseMoveEvent(self, event):
@@ -84,7 +128,6 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 		self.__mouseMovePos = globalPos
 
 		return QtWidgets.QPushButton.mouseMoveEvent(self, event)
-
 
 
 	def mouseReleaseEvent(self, event):
@@ -108,18 +151,24 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 		return QtWidgets.QPushButton.mouseReleaseEvent(self, event)
 
 
-
 	def showEvent(self, event):
 		'''
 		args:
 			event=<QEvent>
 		'''
-		# try:
-		# 	import tk_switchboard
-		# 	sb = tk_switchboard.sb
-		# 	self.window() = sb.getClassInstance('tk')
-		# except Exception as error:
-		# 	print error
+		if not __name__=='__main__' and not hasattr(self, 'parentUiName'):
+			p = self.parent()
+			while not hasattr(p.window(), 'sb'):
+				p = p.parent()
+
+			self.sb = p.window().sb
+			self.parentUiName = self.sb.getUiName()
+			self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
+
+			self.classMethod = self.sb.getMethod(self.parentUiName, self)
+			if callable(self.classMethod):
+				if self.rightClickMenu:
+					self.classMethod('setMenu')
 
 		return QtWidgets.QPushButton.showEvent(self, event)
 

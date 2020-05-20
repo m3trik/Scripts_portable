@@ -24,7 +24,7 @@ class QMenu_(QtWidgets.QMenu):
 	'''
 	args:
 		widget (obj) = Setting a widget to this property allows the menu to be positioned in relation to the widget. If nothing is given, the parent widget 
-		position (str) = Desired menu position relative to it's parent.
+		position (str) = Desired menu position relative to it's parent. 'cursorPos', 'topRight' etc.
 	'''
 	def __init__(self, parent=None, widget=None, position='topRight', **kwargs):
 		super(QMenu_, self).__init__(parent)
@@ -196,16 +196,26 @@ class QMenu_(QtWidgets.QMenu):
 			event = <QEvent>
 		'''
 		if not __name__=='__main__' and not hasattr(self, 'parentUiName'):
-			self.sb = self.parent().window().sb
+			p = self.parent()
+			while not hasattr(p.window(), 'sb'):
+				p = p.parent()
+
+			self.sb = p.window().sb
 			self.parentUiName = self.sb.getUiName()
 			self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
 
 			self.childEvents.addWidgets(self.parentUiName, self.children()+[self])
 
 
-		if self.widget: #if a widget is specified:
+		#set menu position
+		if self.position is 'cursorPos':
+			pos = QtGui.QCursor.pos() #global position
+			self.move(pos)
+
+		elif self.widget: #if a widget is specified:
 			pos = getattr(self.widget.rect(), self.position)
 			self.move(self.widget.mapToGlobal(pos()))
+
 		elif self.parent(): #else; try to get the parent.
 			pos = getattr(self.parent().rect(), self.position)
 			self.move(self.parent().mapToGlobal(pos()))

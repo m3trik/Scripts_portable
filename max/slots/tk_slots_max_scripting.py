@@ -9,8 +9,6 @@ class Scripting(Init):
 	def __init__(self, *args, **kwargs):
 		super(Scripting, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
 		# tk_cmdScrollFieldReporter = pm.cmdScrollFieldReporter (
 		# 														height=35,
 		# 														backgroundColor=[0,0,0],
@@ -18,24 +16,24 @@ class Scripting(Init):
 		# 														echoAllCommands=False,
 		# 														filterSourceType="")
 
-		# self.ui.plainTextEdit.appendPlainText(tk_cmdScrollFieldReporter)
+		# self.parentUi.plainTextEdit.appendPlainText(tk_cmdScrollFieldReporter)
 		
 
 	def chk000(self):
 		'''
 		Toggle Mel/Python
 		'''
-		if self.ui.chk000.isChecked():
-			self.ui.chk000.setText("python")
+		if self.parentUi.chk000.isChecked():
+			self.parentUi.chk000.setText("python")
 		else:
-			self.ui.chk000.setText("MEL")
+			self.parentUi.chk000.setText("MEL")
 
 
 	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 		
 		files = ['']
 		contents = cmb.addItems_(files, ' ')
@@ -75,18 +73,18 @@ class Scripting(Init):
 		New Tab
 		'''
 		label = "MEL"
-		if self.ui.chk000.isChecked():
+		if self.parentUi.chk000.isChecked():
 			label = ".py"
-		# self.ui.tabWidget.addTab(label)
-		self.ui.tabWidget.insertTab(0, label)
+		# self.parentUi.tabWidget.addTab(label)
+		self.parentUi.tabWidget.insertTab(0, label)
 
 
 	def b004(self):
 		'''
 		Delete Tab
 		'''
-		index = self.ui.tabWidget.currentIndex()
-		self.ui.tabWidget.removeTab(index)
+		index = self.parentUi.tabWidget.currentIndex()
+		self.parentUi.tabWidget.removeTab(index)
 
 
 	def b005(self):

@@ -10,13 +10,11 @@ class Selection(Init):
 	def __init__(self, *args, **kwargs):
 		super(Selection, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
 		#set checked button states
 		#chk004 ignore backfacing (camera based selection)
 		# sel = rt.Filters.GetModOrObj()
 		# state = sel.ignoreBackfacing
-		# self.ui.chk004.setChecked(state)
+		# self.parentUi.chk004.setChecked(state)
 
 		# #selection style: set initial checked state
 		# ctx = pm.currentCtx() #flags (ctx, c=True) get the context's class.
@@ -35,7 +33,7 @@ class Selection(Init):
 		'''
 		Select The Selection Set Itself (Not Members Of)
 		'''
-		name = str(self.ui.t000.text())+"Set"
+		name = str(self.parentUi.t000.text())+"Set"
 		pm.select (name, noExpand=1) #noExpand=select set itself
 
 
@@ -43,7 +41,7 @@ class Selection(Init):
 		'''
 		Select By Name
 		'''
-		searchStr = str(self.ui.t001.text()) #asterisk denotes startswith*, *endswith, *contains* 
+		searchStr = str(self.parentUi.t001.text()) #asterisk denotes startswith*, *endswith, *contains* 
 		if searchStr:
 			selection = rt.select(searchStr)
 
@@ -85,21 +83,21 @@ class Selection(Init):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk001-2')
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk001-2')
 
 
 	def chk001(self):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk000,chk002')
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk000,chk002')
 
 
 	def chk002(self):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk000-1')
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk000-1')
 
 
 	def chk004(self):
@@ -107,7 +105,7 @@ class Selection(Init):
 		Ignore Backfacing (Camera Based Selection)
 		'''
 		for obj in rt.selection:
-			if self.ui.chk004.isChecked():
+			if self.parentUi.chk004.isChecked():
 				sel.ignoreBackfacing = True
 				# self.viewPortMessage("Camera-based selection <hl>On</hl>.")
 			else:
@@ -120,8 +118,8 @@ class Selection(Init):
 		Select Style: Marquee
 		'''
 		self.setSelectionStyle('selectContext')
-		self.toggleWidgets(self.ui, self.childUi, setChecked='chk005', setChecked_False='chk006-7')
-		self.ui.cmb004.setCurrentIndex(0)
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk005', setChecked_False='chk006-7')
+		self.parentUi.cmb004.setCurrentIndex(0)
 
 
 	def chk006(self):
@@ -129,8 +127,8 @@ class Selection(Init):
 		Select Style: Lasso
 		'''
 		self.setSelectionStyle('lassoContext')
-		self.toggleWidgets(self.ui, self.childUi, setChecked='chk006', setChecked_False='chk005,chk007')
-		self.ui.cmb004.setCurrentIndex(1)
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk006', setChecked_False='chk005,chk007')
+		self.parentUi.cmb004.setCurrentIndex(1)
 
 
 	def chk007(self):
@@ -138,8 +136,8 @@ class Selection(Init):
 		Select Style: Paint
 		'''
 		self.setSelectionStyle('paintContext')
-		self.toggleWidgets(self.ui, self.childUi, setChecked='chk007', setChecked_False='chk005-6')
-		self.ui.cmb004.setCurrentIndex(2)
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk007', setChecked_False='chk005-6')
+		self.parentUi.cmb004.setCurrentIndex(2)
 
 
 	def setSelectionStyle(self, ctx):
@@ -166,7 +164,7 @@ class Selection(Init):
 		'''
 		List Selection Sets
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 
 		selectionSets = [set for set in rt.selectionSets]
 		contents = cmb.addItems_([set.name for set in selectionSets], "Sets")
@@ -182,7 +180,7 @@ class Selection(Init):
 		'''
 		Editors
 		'''
-		cmb = self.ui.cmb001
+		cmb = self.parentUi.cmb001
 
 		files = ['']
 		contents = cmb.addItems_(files, ' ')
@@ -199,7 +197,7 @@ class Selection(Init):
 		'''
 		Select All Of Type
 		'''
-		cmb = self.ui.cmb002
+		cmb = self.parentUi.cmb002
 	
 		list_ = ['Geometry', 'Shapes', 'Lights', 'Cameras', 'Helpers', 'Space Warps', 'Particle Systems', 'Bone Objects']
 		contents = cmb.addItems_(list_, 'Select by Type:')
@@ -231,7 +229,7 @@ class Selection(Init):
 		'''
 		Convert To
 		'''
-		cmb = self.ui.cmb003
+		cmb = self.parentUi.cmb003
 
 		list_ = ['Vertex', 'Edge', 'Border', 'Face', 'Element']
 		contents = cmb.addItems_(list_, 'Convert To')
@@ -252,7 +250,7 @@ class Selection(Init):
 		'''
 		Select Style: Set Context
 		'''
-		cmb = self.ui.cmb004
+		cmb = self.parentUi.cmb004
 
 		list_ = ['Marquee', 'Lasso', 'Paint'] 
 
@@ -360,7 +358,7 @@ class Selection(Init):
 		'''
 		Create Selection Set
 		'''
-		name = str(self.ui.t000.text())+"Set"
+		name = str(self.parentUi.t000.text())+"Set"
 
 		sel = rt.selection
 

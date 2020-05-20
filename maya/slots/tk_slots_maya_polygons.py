@@ -9,38 +9,51 @@ class Polygons(Init):
 	def __init__(self, *args, **kwargs):
 		super(Polygons, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
 
 	def chk008(self):
 		'''
 		Split U
 		'''
-		self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk010')
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk010')
 
 
 	def chk009(self):
 		'''
 		Split V
 		'''
-		self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk010')
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk010')
 
 
 	def chk010(self):
 		'''
 		Tris
 		'''
-		self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk008-9')
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk008-9')
+
+
+	def pin(self, state=None):
+		'''
+		Right click menu
+		'''
+		pin = self.parentUi.pin
+
+		if state=='setMenu':
+			from widgets.qComboBox_ import QComboBox_
+			pin.add(QComboBox_(), setObjectName='cmb000', setToolTip='')
+			
+			files = ['Extrude Options','Bevel Options','Bridge Options','Combine Options','Merge Vertex Options','Offset Edgeloop','Edit Edgeflow Options','Extract Curve Options','Poke Options','Wedge Options','Assign Invisible Options']
+			contents = pin.cmb000.addItems_(files, '')
+			return
 
 
 	def cmb000(self, index=None):
 		'''
 		Header comboBox
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 
-		files = ['Extrude Options','Bevel Options','Bridge Options','Combine Options','Merge Vertex Options','Offset Edgeloop','Edit Edgeflow Options','Extract Curve Options','Poke Options','Wedge Options','Assign Invisible Options']
-		contents = cmb.addItems_(files, ' ')
+		# files = ['Extrude Options','Bevel Options','Bridge Options','Combine Options','Merge Vertex Options','Offset Edgeloop','Edit Edgeflow Options','Extract Curve Options','Poke Options','Wedge Options','Assign Invisible Options']
+		# contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -91,7 +104,7 @@ class Polygons(Init):
 
 			else: #if object mode. merge all vertices on the selected object.
 				for n, obj in enumerate(selection):
-					if not self.ui.progressBar.step(n, len(selection)): #register progress while checking for cancellation:
+					if not self.parentUi.progressBar.step(n, len(selection)): #register progress while checking for cancellation:
 						break
 
 					# get number of vertices
@@ -115,7 +128,7 @@ class Polygons(Init):
 		'''
 		tb = self.currentUi.tb001
 		if state=='setMenu':
-			tb.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s003', preset_='0-10000 step1', setValue=0.001, setToolTip='Divisions.')
+			tb.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s003', preset_='0-10000 step1', setValue=1, setToolTip='Subdivision Amount.')
 			return
 
 		divisions = tb.s003.value()
@@ -150,14 +163,18 @@ class Polygons(Init):
 		tb = self.currentUi.tb003
 		if state=='setMenu':
 			tb.add('QCheckBox', setText='Keep Faces Together', setObjectName='chk002', setChecked=True, setToolTip='Keep edges/faces together.')
+			tb.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s004', preset_='1-10000 step1', setValue=1, setToolTip='Subdivision Amount.')
 			return
 
 		keepFacesTogether = tb.chk002.isChecked() #keep faces/edges together.
+		divisions = tb.s004.value()
 
+		selection = pm.ls(sl=1)
 		if pm.selectType(query=1, facet=1): #face selection
-			pm.polyExtrudeFacet(keepFacesTogether=keepFacesTogether)
+			pm.polyExtrudeFacet(selection, ch=1, keepFacesTogether=keepFacesTogether, divisions=divisions)
+
 		elif pm.selectType(query=1, edge=1): #edge selection
-			pm.polyExtrudeEdge(keepFacesTogether=keepFacesTogether)
+			pm.polyExtrudeEdge(selection, ch=1, keepFacesTogether=keepFacesTogether, divisions=divisions)
 
 
 	def tb004(self, state=None):

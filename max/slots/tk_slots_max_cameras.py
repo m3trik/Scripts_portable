@@ -9,14 +9,12 @@ class Cameras(Init):
 	def __init__(self, *args, **kwargs):
 		super(Cameras, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
 
 	def tree000(self, wItem=None, column=None):
 		'''
 		
 		'''
-		tree = self.ui.tree000
+		tree = self.parentUi.tree000
 
 		if not any([wItem, column]): #populate the tree columns.
 			if not tree.refresh:
@@ -198,7 +196,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	Editors
 	# 	'''
-	# 	cmb = self.ui.cmb000
+	# 	cmb = self.parentUi.cmb000
 		
 	# 	files = ['']
 	# 	contents = cmb.addItems_(files, ' ')
@@ -215,7 +213,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	Cameras
 	# 	'''
-	# 	cmb = self.ui.cmb001
+	# 	cmb = self.parentUi.cmb001
 		
 	# 	cameras = [cam.name for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
 	# 	contents = cmb.addItems_(cameras, "Cameras:")
@@ -234,7 +232,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	Create
 	# 	'''
-	# 	cmb = self.ui.cmb002
+	# 	cmb = self.parentUi.cmb002
 		
 	# 	list_ = ['Custom Camera','Set Custom Camera','Camera From View']
 	# 	contents = cmb.addItems_(list_, "Create")
@@ -255,7 +253,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	Options
 	# 	'''
-	# 	cmb = self.ui.cmb003
+	# 	cmb = self.parentUi.cmb003
 		
 	# 	list_ = ['Group Cameras']
 	# 	contents = cmb.addItems_(list_, "Options")

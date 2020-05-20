@@ -11,8 +11,6 @@ class File(Init):
 	def __init__(self, *args, **kwargs):
 		super(File, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
 		#get recent file list. #convert to python
 		maxEval('''
 		Fn getRecentFiles =
@@ -43,7 +41,7 @@ class File(Init):
 		'''
 		Recent Files
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 
 		list_ = rt.getRecentfiles()
 		contents = cmb.addItems_(list_, "Recent Files")
@@ -60,7 +58,7 @@ class File(Init):
 		'''
 		Recent Projects
 		'''
-		cmb = self.ui.cmb001
+		cmb = self.parentUi.cmb001
 
 		path = ''
 		list_ = []#[f for f in os.listdir(path)]
@@ -78,7 +76,7 @@ class File(Init):
 		'''
 		Recent Autosave
 		'''
-		cmb = self.ui.cmb002
+		cmb = self.parentUi.cmb002
 
 		path = MaxPlus.PathManager.GetAutobackDir()
 		files = [f for f in os.listdir(path) if f.endswith('.max') or f.endswith('.bak')] #get list of max autosave files
@@ -97,7 +95,7 @@ class File(Init):
 		'''
 		Import
 		'''
-		cmb = self.ui.cmb003
+		cmb = self.parentUi.cmb003
 
 		contents = cmb.addItems_(['Import file', 'Import Options', 'Merge', 'Replace', 'Link Revit', 'Link FBX', 'Link AutoCAD'], 'Import')
 
@@ -127,7 +125,7 @@ class File(Init):
 		'''
 		Export
 		'''
-		cmb = self.ui.cmb004
+		cmb = self.parentUi.cmb004
 
 		list_ = ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ", "Send to Maya: New Scene", "Send to Maya: Update Scene", "Send to Maya: Add to Scene"]
 		cmb.addItems_(list_, "Export")
@@ -166,7 +164,7 @@ class File(Init):
 		'''
 		Editors
 		'''
-		cmb = self.ui.cmb005
+		cmb = self.parentUi.cmb005
 
 		files = ['Schematic View']
 		contents = cmb.addItems_(files, ' ')
@@ -183,7 +181,7 @@ class File(Init):
 		'''
 		Project Folder
 		'''
-		cmb = self.ui.cmb006
+		cmb = self.parentUi.cmb006
 
 		path = MaxPlus.PathManager.GetProjectFolderDir() #current project path.
 		list_ = [f for f in os.listdir(path)]
@@ -349,10 +347,10 @@ class File(Init):
 		'''
 		Remove String From Object Names.
 		'''
-		from_ = str(self.ui.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
-		to = str(self.ui.t001.text())
-		replace = self.ui.chk004.isChecked()
-		selected = self.ui.chk005.isChecked()
+		from_ = str(self.parentUi.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
+		to = str(self.parentUi.t001.text())
+		replace = self.parentUi.chk004.isChecked()
+		selected = self.parentUi.chk005.isChecked()
 
 		objects = pm.ls (from_) #Stores a list of all objects starting with 'from_'
 		if selected:

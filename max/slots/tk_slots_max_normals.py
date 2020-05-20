@@ -10,9 +10,7 @@ class Normals(Init):
 	def __init__(self, *args, **kwargs):
 		super(Normals, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
-		self.ui.b003.setText('Hard Edge Display')
+		self.parentUi.b003.setText('Hard Edge Display')
 
 
 
@@ -20,7 +18,7 @@ class Normals(Init):
 		'''
 		Editors
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 
 		files = ['']
 		contents = cmb.addItems_(files, ' ')
@@ -139,7 +137,7 @@ class Normals(Init):
 			return
 
 		all_ = tb.chk001.isChecked()
-		state = self.ui.chk002.isChecked()#pm.polyNormalPerVertex(vertex, query=1, freezeNormal=1)
+		state = self.parentUi.chk002.isChecked()#pm.polyNormalPerVertex(vertex, query=1, freezeNormal=1)
 		selection = pm.ls (selection=1, objectsOnly=1)
 		maskObject = pm.selectMode (query=1, object=1)
 		maskVertex = pm.selectType (query=1, vertex=1)

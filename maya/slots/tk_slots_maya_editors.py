@@ -9,8 +9,6 @@ class Editors(Init):
 	def __init__(self, *args, **kwargs):
 		super(Editors, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
 		#construct stacked widget from maya layouts
 		# self.widgetList = ['MainAttributeEditorLayout','MainChannelBoxLayout','ToggledOutlinerLayout','MainToolSettingsLayout','LayerEditorDisplayLayerLayout']
 		self.stackedWidget = self.sb.getUi('dynLayout').stackedWidget

@@ -9,14 +9,12 @@ class Subdivision(Init):
 	def __init__(self, *args, **kwargs):
 		super(Subdivision, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
 
 	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 		
 		files = ['Reduce Polygons','Add Divisions','Smooth','SubDiv Proxy']
 		contents = cmb.addItems_(files, ' ')
@@ -39,7 +37,7 @@ class Subdivision(Init):
 		'''
 		Division Level
 		'''
-		value = self.ui.s000.value()
+		value = self.parentUi.s000.value()
 
 		self.setAttributesOnSelected (attribute=".smoothLevel", value=value)
 		pm.optionVar (intValue=["proxyDivisions",1]) #subDiv proxy options: 'divisions'
@@ -49,7 +47,7 @@ class Subdivision(Init):
 		'''
 		Tesselation Level
 		'''
-		value = self.ui.s001.value()
+		value = self.parentUi.s001.value()
 
 		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=value)
 
@@ -95,9 +93,9 @@ class Subdivision(Init):
 		#check shape for an existing output to a smoothProxy
 		attachedSmoothProxies = pm.listConnections (shape[0], type="polySmoothProxy", s=0, d=1)
 		if len(attachedSmoothProxies) == 0: #subdiv on
-			self.toggleWidgets(self.ui, self.childUi, setEnabled='b000', setChecked='b009')
+			self.toggleWidgets(self.parentUi, self.childUi, setEnabled='b000', setChecked='b009')
 		else:
-			self.toggleWidgets(self.ui, self.childUi, setDisabled='b000', setChecked_False='b009')
+			self.toggleWidgets(self.parentUi, self.childUi, setDisabled='b000', setChecked_False='b009')
 			mel.eval("smoothingDisplayToggle 0;")
 
 		#toggle performSmoothProxy

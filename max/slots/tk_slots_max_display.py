@@ -10,14 +10,12 @@ class Display(Init):
 	def __init__(self, *args, **kwargs):
 		super(Display, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
 
 	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 
 		files = ['']
 		contents = cmb.addItems_(files, ' ')
@@ -131,7 +129,7 @@ class Display(Init):
 		'''
 		Override Material
 		'''
-		if self.ui.chk000.isChecked(): #override with UV checker material
+		if self.parentUi.chk000.isChecked(): #override with UV checker material
 			self.toggleMaterialOverride(checker=1)
 		else:
 			self.toggleMaterialOverride()

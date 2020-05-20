@@ -9,9 +9,7 @@ class Scene(Init):
 	def __init__(self, *args, **kwargs):
 		super(Scene, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
-		self.ui.t000.returnPressed.connect(self.t001) #preform rename on returnPressed
+		self.parentUi.t000.returnPressed.connect(self.t001) #preform rename on returnPressed
 
 		
 
@@ -47,8 +45,8 @@ class Scene(Init):
 		to* - replace prefix
 		**to - replace suffix', moves any integers in front of replacement chars
 		'''
-		find = str(self.ui.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
-		to = str(self.ui.t001.text())
+		find = str(self.parentUi.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
+		to = str(self.parentUi.t001.text())
 
 
 		if rt.selection: #if selection; operate on only the selected objects.

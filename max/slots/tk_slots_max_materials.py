@@ -9,9 +9,7 @@ class Materials(Init):
 	def __init__(self, *args, **kwargs):
 		super(Materials, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
-		self.ui.cmb002.editTextChanged.connect(self.renameMaterial)
+		self.parentUi.cmb002.editTextChanged.connect(self.renameMaterial)
 
 		self.currentMaterial=None
 		self.materials=None
@@ -22,7 +20,7 @@ class Materials(Init):
 	# 	'''
 	# 	Editors
 	# 	'''
-	# 	cmb = self.ui.cmb001
+	# 	cmb = self.parentUi.cmb001
 
 	# 	files = ['Material Editor']
 	# 	contents = cmb.addItems_(files, ' ')
@@ -42,10 +40,10 @@ class Materials(Init):
 		args:
 			index (int) = parameter on activated, currentIndexChanged, and highlighted signals.
 		'''
-		cmb = self.ui.cmb002
+		cmb = self.parentUi.cmb002
 		try:
-			sceneMaterials = self.ui.tb001.chk000.isChecked()
-			idMapMaterials = self.ui.tb001.chk001.isChecked()
+			sceneMaterials = self.parentUi.tb001.chk000.isChecked()
+			idMapMaterials = self.parentUi.tb001.chk001.isChecked()
 		except: #if the toolbox hasn't been built yet: default to sceneMaterials
 			sceneMaterials = True
 
@@ -174,9 +172,9 @@ class Materials(Init):
 			return
 
 		if tb.chk000.isChecked():
-			self.ui.group000.setTitle(tb.chk000.text())
+			self.parentUi.group000.setTitle(tb.chk000.text())
 		elif tb.chk001.isChecked():
-			self.ui.group000.setTitle(tb.chk001.text())
+			self.parentUi.group000.setTitle(tb.chk001.text())
 
 
 	def tb002(self, state=None):
@@ -190,14 +188,14 @@ class Materials(Init):
 			return
 
 		if tb.chk003.isChecked():
-			if self.ui.tb001.chk001.isChecked: #delete mat ID material
-				mat = self.materials[self.ui.cmb002.currentText()] #get object from string key
+			if self.parentUi.tb001.chk001.isChecked: #delete mat ID material
+				mat = self.materials[self.parentUi.cmb002.currentText()] #get object from string key
 				mat = rt.Standard(name="Default Material") #replace with standard material
 			else: #delete stored material
 				self.currentMaterial = rt.Standard(name="Default Material") #replace with standard material
 				self.currentMaterial = None
 
-				self.comboBox(self.ui.cmb002, [], 'Stored Material: None') #init combobox
+				self.comboBox(self.parentUi.cmb002, [], 'Stored Material: None') #init combobox
 
 		if tb.chk004.isChecked(): #Delete Unused Materials
 			defaultMaterial = rt.Standard(name='Default Material')
@@ -247,16 +245,16 @@ class Materials(Init):
 
 				self.randomMat = mat
 
-				if self.ui.tb001.chk001.isChecked():
+				if self.parentUi.tb001.chk001.isChecked():
 					self.cmb002() #refresh the combobox
 				else:
-					self.ui.tb001.chk001.setChecked(True) #set combobox to ID map mode. toggling the checkbox refreshes the combobox.
-				self.ui.cmb002.setCurrent_(name) #set the combobox index to the new mat #self.cmb002.setCurrentIndex(self.cmb002.findText(name))
+					self.parentUi.tb001.chk001.setChecked(True) #set combobox to ID map mode. toggling the checkbox refreshes the combobox.
+				self.parentUi.cmb002.setCurrent_(name) #set the combobox index to the new mat #self.cmb002.setCurrentIndex(self.cmb002.findText(name))
 			else:
 				return '# Error: No valid object/s selected. #'
 
 		elif tb.chk007.isChecked(): #Assign current mat
-			name = self.ui.cmb002.currentText()
+			name = self.parentUi.cmb002.currentText()
 			mat = self.materials[name]
 
 			for obj in rt.selection:
@@ -284,7 +282,7 @@ class Materials(Init):
 					mat = rt.getSubMtl(mat, id_) #get material from mat ID
 
 			self.currentMaterial = mat #store material
-			self.ui.tb001.chk000.setChecked(True) #put combobox in current material mode
+			self.parentUi.tb001.chk000.setChecked(True) #put combobox in current material mode
 			self.cmb002() #refresh combobox
 		else:
 			print '# Error: Nothing selected. #'
@@ -294,9 +292,9 @@ class Materials(Init):
 		'''
 		Open material in editor
 		'''
-		if self.ui.tb001.chk001.isChecked(): #ID map mode
+		if self.parentUi.tb001.chk001.isChecked(): #ID map mode
 			try:
-				mat = self.materials[self.ui.cmb002.currentText()] #get object from string key
+				mat = self.materials[self.parentUi.cmb002.currentText()] #get object from string key
 			except:
 				return '# Error: No stored material or no valid object selected. #'
 		else: #Stored material mode
@@ -328,9 +326,9 @@ class Materials(Init):
 		'''
 		Rename Material
 		'''
-		newMatName = self.ui.cmb002.currentText()
+		newMatName = self.parentUi.cmb002.currentText()
 
-		if self.ui.tb001.chk001.isChecked(): #Rename ID map Material
+		if self.parentUi.tb001.chk001.isChecked(): #Rename ID map Material
 			prefix = 'matID_'
 			newName = newMatName
 
@@ -351,19 +349,19 @@ class Materials(Init):
 		'''
 		Toggle: Rename Material
 		'''
-		b = self.ui.b008
+		b = self.parentUi.b008
 
 		if b.isChecked():
-			self.currentMatName = self.ui.cmb002.currentText()
+			self.currentMatName = self.parentUi.cmb002.currentText()
 
 			if self.currentMatName=='ID Map: None' or self.currentMatName=='Current Material: None':
 				b.setChecked(False)
 			else:
-				self.ui.cmb002.setEditable(True)
-				self.toggleWidgets(self.ui, setDisabled='b002,b007,tb000,tb002-3')
+				self.parentUi.cmb002.setEditable(True)
+				self.toggleWidgets(self.parentUi, setDisabled='b002,b007,tb000,tb002-3')
 		else:
-			self.ui.cmb002.setEditable(False)
-			self.toggleWidgets(self.ui, setEnabled='b002,b007,tb000,tb002-3')
+			self.parentUi.cmb002.setEditable(False)
+			self.toggleWidgets(self.parentUi, setEnabled='b002,b007,tb000,tb002-3')
 
 
 
@@ -409,9 +407,9 @@ print os.path.splitext(os.path.basename(__file__))[0]
 	# 	'''
 	# 	Existing Materials
 	# 	'''
-	# 	cmb = self.ui.cmb000
+	# 	cmb = self.parentUi.cmb000
 
-	# 	self.ui.tb001.chk001.setChecked(False) #put combobox cmb002 in stored material mode.
+	# 	self.parentUi.tb001.chk001.setChecked(False) #put combobox cmb002 in stored material mode.
 
 	# 	# materials = [mat for mat in rt.sceneMaterials if 'Multimaterial' not in mat.name and 'BlendMtl' not in mat.name and not mat.name.startswith('Material')]
 	# 	materials=[] #get any scene material that doesnt startswith 'Material'

@@ -10,7 +10,6 @@ class Create(Init):
 	def __init__(self, *args, **kwargs):
 		super(Create, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
 
 		self.node=None
 		self.rotation = {'x':[90,0,0], 'y':[0,90,0], 'z':[0,0,90], '-x':[-90,0,0], '-y':[0,-90,0], '-z':[0,0,-90], 'last':[]}
@@ -22,13 +21,13 @@ class Create(Init):
 		'''
 
 		'''
-		if self.ui.chk000.isChecked():
+		if self.parentUi.chk000.isChecked():
 			axis = 'x'
-		elif self.ui.chk001.isChecked():
+		elif self.parentUi.chk001.isChecked():
 			axis = 'y'
-		elif self.ui.chk002.isChecked():
+		elif self.parentUi.chk002.isChecked():
 			axis = 'z'
-		if self.ui.chk003.isChecked(): #negative
+		if self.parentUi.chk003.isChecked(): #negative
 			axis = '-'+axis
 		return axis
 
@@ -56,7 +55,7 @@ class Create(Init):
 		'''
 		Set Translate X
 		'''
-		self.point[0] = float(self.ui.t000.text())
+		self.point[0] = float(self.parentUi.t000.text())
 		self.node.pos = rt.point3(self.point[0], self.point[1], self.point[2])
 
 
@@ -64,7 +63,7 @@ class Create(Init):
 		'''
 		Set Translate Y
 		'''
-		self.point[1] = float(self.ui.t001.text())
+		self.point[1] = float(self.parentUi.t001.text())
 		self.node.pos = rt.point3(self.point[0], self.point[1], self.point[2])
 
 
@@ -72,7 +71,7 @@ class Create(Init):
 		'''
 		Set Translate Z
 		'''
-		self.point[2] = float(self.ui.t002.text())
+		self.point[2] = float(self.parentUi.t002.text())
 		self.node.pos = rt.point3(self.point[0], self.point[1], self.point[2])
 
 
@@ -80,14 +79,14 @@ class Create(Init):
 		'''
 		Set Name
 		'''
-		self.node.name = self.ui.t003.text()
+		self.node.name = self.parentUi.t003.text()
 
 
 	def chk000(self):
 		'''
 		Rotate X Axis
 		'''
-		self.toggleWidgets(self.ui, self.childUi, setChecked='chk000', setChecked_False='chk001,chk002')
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk000', setChecked_False='chk001,chk002')
 		if self.node:
 			self.rotateAbsolute(self.getAxis())
 			
@@ -96,7 +95,7 @@ class Create(Init):
 		'''
 		Rotate Y Axis
 		'''
-		self.toggleWidgets(self.ui, self.childUi, setChecked='chk001', setChecked_False='chk000,chk002')
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk001', setChecked_False='chk000,chk002')
 		if self.node:
 			self.rotateAbsolute(self.getAxis())
 
@@ -105,7 +104,7 @@ class Create(Init):
 		'''
 		Rotate Z Axis
 		'''
-		self.toggleWidgets(self.ui, self.childUi, setChecked='chk002', setChecked_False='chk001,chk000')
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk002', setChecked_False='chk001,chk000')
 		if self.node:
 			self.rotateAbsolute(self.getAxis())
 
@@ -135,35 +134,35 @@ class Create(Init):
 			print("# Warning: Nothing selected. Point set to origin [0,0,0]. #")
 			self.point = [0,0,0]
 
-		self.ui.t000.setText(str(self.point[0]))
-		self.ui.t001.setText(str(self.point[1]))
-		self.ui.t002.setText(str(self.point[2]))
+		self.parentUi.t000.setText(str(self.point[0]))
+		self.parentUi.t001.setText(str(self.point[1]))
+		self.parentUi.t002.setText(str(self.point[2]))
 
 
 	def cmb000(self, index=None):
 		'''
 
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 
 		if not cmb.itemsAdded:
 			items = ['Mesh', 'Editable Poly', 'Editable Mesh', 'Editable Patch', 'NURBS', 'Light']
 			contents = cmb.addItems_(items)
 
-		self.ui.cmb001.clear()
+		self.parentUi.cmb001.clear()
 		index = cmb.currentIndex()
 
 		if index==0 or index==1 or index==3 or index==4: #later converted to the specified type.
 			primitives = ["Cube", "Sphere", "Cylinder", "Plane", "Circle", "Cone", "Pyramid", "Torus", "Tube", "GeoSphere", "Platonic Solids", "Text"]
-			self.ui.cmb001.addItems(primitives)
+			self.parentUi.cmb001.addItems(primitives)
 
 		# if cmb.currentIndex() == 1:
 		# 	nurbs = ["Cube", "Sphere", "Cylinder", "Cone", "Plane", "Torus", "Circle", "Square"]
-		# 	self.ui.cmb001.addItems(nurbs)
+		# 	self.parentUi.cmb001.addItems(nurbs)
 
 		if cmb.currentIndex() == 2:
 			lights = ["Ambient", "Directional", "Point", "Spot", "Area", "Volume", "VRay Sphere", "VRay Dome", "VRay Rect", "VRay IES"]
-			self.ui.cmb001.addItems(lights)
+			self.parentUi.cmb001.addItems(lights)
 
 
 	def cmb002(self, index=None, attributes={}, clear=False, show=False):
@@ -176,7 +175,7 @@ class Create(Init):
 			clear (bool) = Clear any previous items.
 			show (bool) = Show the popup menu immediately after adding items.
 		'''
-		cmb = self.ui.cmb002
+		cmb = self.parentUi.cmb002
 
 		attributes = {k:v for k,v in attributes.items() if isinstance(v,(int, float, bool))} #get only attributes of int, float, bool type.
 
@@ -209,7 +208,7 @@ class Create(Init):
 		args:
 			index(int) = optional index of the spinbox that called this function. ie. 5 from s005
 		'''
-		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.ui.cmb002.menuItems()} #current spinbox values. ie. from s000 get the value of six and add it to the list
+		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.parentUi.cmb002.menuItems()} #current spinbox values. ie. from s000 get the value of six and add it to the list
 		self.setAttributesMax(self.node, spinboxValues) #set attributes for the history node
 
 
@@ -217,7 +216,7 @@ class Create(Init):
 	# 	'''
 	# 	Editors
 	# 	'''
-	# 	cmb = self.ui.cmb002
+	# 	cmb = self.parentUi.cmb002
 
 	# 	files = ['']
 	# 	contents = cmb.addItems_(files, ' ')
@@ -235,8 +234,8 @@ class Create(Init):
 		Create Object
 		'''
 		axis = self.getAxis() #get axis as 'string'
-		type_ = self.ui.cmb000.currentText()
-		index = self.ui.cmb001.currentIndex()
+		type_ = self.parentUi.cmb000.currentText()
+		index = self.parentUi.cmb001.currentIndex()
 
 		if type_ in ['Mesh', 'Editable Poly', 'Polygon', 'Editable Mesh', 'Editable Patch', 'NURBS']:
 
@@ -309,9 +308,9 @@ class Create(Init):
 
 		#set name
 		if isinstance(self.node, (str,unicode)): #is type of:
-			self.ui.t003.setText(self.node)
+			self.parentUi.t003.setText(self.node)
 		else:
-			self.ui.t003.setText(self.node.name)
+			self.parentUi.t003.setText(self.node.name)
 
 		self.history.extend(self.node) #save current node to history
 		self.rotation['last']=[] #reset rotation history
@@ -325,7 +324,7 @@ class Create(Init):
 		attributes = self.getAttributesMax(self.node, exclude)
 		self.cmb002(attributes=attributes, clear=True, show=True)
 
-		# if self.ui.cmb000.currentIndex() == 0: #if create type: polygon; convert to editable poly
+		# if self.parentUi.cmb000.currentIndex() == 0: #if create type: polygon; convert to editable poly
 		# 	rt.convertTo(self.node, rt.PolyMeshObject) #convert after adding primitive attributes to spinboxes
 
 		rt.select(self.node) #select the transform node so that you can see any edits
@@ -339,8 +338,8 @@ class Create(Init):
 			catagory1 (str) = type
 			catagory2 (str) = type
 		'''
-		cmb000 = self.ui.cmb000
-		cmb001 = self.ui.cmb001
+		cmb000 = self.parentUi.cmb000
+		cmb001 = self.parentUi.cmb001
 		# self.cmb000() #make sure the comboboxes have been built.
 		# cmb000.itemsAdded = True
 

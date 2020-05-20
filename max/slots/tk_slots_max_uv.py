@@ -9,14 +9,12 @@ class Uv(Init):
 	def __init__(self, *args, **kwargs):
 		super(Uv, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
 
 	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 
 		contents = cmb.addItems_(["UV Editor", "UV Set Editor", "UV Tool Kit", "UV Linking: Texture-Centric", "UV Linking: UV-Centric", "UV Linking: Paint Effects/UV", "UV Linking: Hair/UV"], ' ')
 
@@ -38,7 +36,7 @@ class Uv(Init):
 				maxEval('pfxUVLinkingEditor;')
 			if index == 7: #UV Linking: Hair/UV
 				mel.evel('hairUVLinkingEditor;')
-			self.ui.cmb000.setCurrentIndex(0)
+			self.parentUi.cmb000.setCurrentIndex(0)
 
 
 	def b000(self):
@@ -101,7 +99,7 @@ class Uv(Init):
 		'''
 		Pack UV's
 		'''
-		rotate = self.ui.chk001.isChecked() #rotate uv's
+		rotate = self.parentUi.chk001.isChecked() #rotate uv's
 		obj = rt.selection[0]
 
 		uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv modifier.
@@ -166,7 +164,7 @@ class Uv(Init):
 		'''
 		Auto Unwrap
 		'''
-		scaleMode = self.ui.chk000.isChecked() #0 No scale is applied. 1 Uniform scale to fit in unit square. 2 Non proportional scale to fit in unit square.
+		scaleMode = self.parentUi.chk000.isChecked() #0 No scale is applied. 1 Uniform scale to fit in unit square. 2 Non proportional scale to fit in unit square.
 		objects = rt.selection
 
 		for obj in objects:
@@ -227,8 +225,8 @@ class Uv(Init):
 		'''
 		Move To Uv Space
 		'''
-		u = str(self.ui.s000.value())
-		v = str(self.ui.s001.value())
+		u = str(self.parentUi.s000.value())
+		v = str(self.parentUi.s001.value())
 
 		pm.polyEditUV(u=u, v=v)
 

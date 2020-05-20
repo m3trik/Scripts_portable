@@ -9,14 +9,12 @@ class Convert(Init):
 	def __init__(self, *args, **kwargs):
 		super(Convert, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
 
 	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 
 		files = ['']
 		contents = cmb.addItems_(files, ' ')
@@ -33,7 +31,7 @@ class Convert(Init):
 		'''
 		Convert To
 		'''
-		cmb = self.ui.cmb001
+		cmb = self.parentUi.cmb001
 
 		list_ = ['NURBS to Polygons', 'NURBS to Subdiv', 'Polygons to Subdiv', 'Smooth Mesh Preview to Polygons', 'Polygon Edges to Curve', 'Type to Curves', 'Subdiv to Polygons', 'Subdiv to NURBS', 'NURBS Curve to Bezier', 'Bezier Curve to NURBS', 'Paint Effects to NURBS', 'Paint Effects to Curves', 'Texture to Geometry', 'Displacement to Polygons', 'Displacement to Polygons with History', 'Fluid to Polygons', 'nParticle to Polygons', 'Instance to Object', 'Geometry to Bounding Box', 'Convert XGen Primitives to Polygons'] 
 

@@ -9,22 +9,20 @@ class Mirror(Init):
 	def __init__(self, *args, **kwargs):
 		super(Mirror, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
 
 	def chk000_3(self):
 		'''
 		Set the tb000's text according to the checkstates.
 		'''
 		axis = self.getAxisFromCheckBoxes('chk000-3')
-		self.ui.tb000.setText('Mirror '+axis)
+		self.parentUi.tb000.setText('Mirror '+axis)
 
 
 	# def cmb000(self, index=None):
 	# 	'''
 	# 	Editors
 	# 	'''
-	# 	cmb = self.ui.cmb000
+	# 	cmb = self.parentUi.cmb000
 		
 	# 	files = ['Mirror Options', 'Mirror Instance Mesh']
 	# 	contents = cmb.addItems_(files, ' ')
@@ -129,14 +127,14 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	Delete: Negative Axis. Set Text Mirror Axis
 	# 	'''
 	# 	axis = "X"
-	# 	if self.ui.chk002.isChecked():
+	# 	if self.parentUi.chk002.isChecked():
 	# 		axis = "Y"
-	# 	if self.ui.chk003.isChecked():
+	# 	if self.parentUi.chk003.isChecked():
 	# 		axis = "Z"
-	# 	if self.ui.chk000.isChecked():
+	# 	if self.parentUi.chk000.isChecked():
 	# 		axis = '-'+axis
-	# 	self.ui.tb000.setText('Mirror '+axis)
-	# 	self.ui.tb001.setText('Delete '+axis)
+	# 	self.parentUi.tb000.setText('Mirror '+axis)
+	# 	self.parentUi.tb001.setText('Delete '+axis)
 
 
 	# #set check states
@@ -144,36 +142,36 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	Delete: X Axis
 	# 	'''
-	# 	self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk002,chk003')
+	# 	self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk002,chk003')
 	# 	axis = "X"
-	# 	if self.ui.chk000.isChecked():
+	# 	if self.parentUi.chk000.isChecked():
 	# 		axis = '-'+axis
-	# 	self.ui.tb000.setText('Mirror '+axis)
-	# 	self.ui.tb001.setText('Delete '+axis)
+	# 	self.parentUi.tb000.setText('Mirror '+axis)
+	# 	self.parentUi.tb001.setText('Delete '+axis)
 
 
 	# def chk002(self):
 	# 	'''
 	# 	Delete: Y Axis
 	# 	'''
-	# 	self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk001,chk003')
+	# 	self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk001,chk003')
 	# 	axis = "Y"
-	# 	if self.ui.chk000.isChecked():
+	# 	if self.parentUi.chk000.isChecked():
 	# 		axis = '-'+axis
-	# 	self.ui.tb000.setText('Mirror '+axis)
-	# 	self.ui.tb001.setText('Delete '+axis)
+	# 	self.parentUi.tb000.setText('Mirror '+axis)
+	# 	self.parentUi.tb001.setText('Delete '+axis)
 
 
 	# def chk003(self):
 	# 	'''
 	# 	Delete: Z Axis
 	# 	'''
-	# 	self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk001,chk002')
+	# 	self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk001,chk002')
 	# 	axis = "Z"
-	# 	if self.ui.chk000.isChecked():
+	# 	if self.parentUi.chk000.isChecked():
 	# 		axis = '-'+axis
-	# 	self.ui.tb000.setText('Mirror '+axis)
-	# 	self.ui.tb001.setText('Delete '+axis)
+	# 	self.parentUi.tb000.setText('Mirror '+axis)
+	# 	self.parentUi.tb001.setText('Delete '+axis)
 
 
 	# def chk005(self):
@@ -182,6 +180,6 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 		# '''
 		#keep menu and submenu in sync:
 		# if self.childUi.chk005.isChecked():
-		# 	self.toggleWidgets(self.ui, self.childUi, setChecked='chk005')
+		# 	self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk005')
 		# else:
-		# 	self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk005')
+		# 	self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk005')

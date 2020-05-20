@@ -9,8 +9,6 @@ class Rigging(Init):
 	def __init__(self, *args, **kwargs):
 		super(Rigging, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
 		self.chk000() #init scale joint value
 
 
@@ -19,37 +17,37 @@ class Rigging(Init):
 		'''
 		Scale Joint
 		'''
-		self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk001-2')
-		self.ui.s000.setValue(pm.jointDisplayScale(query=1)) #init global joint display size
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk001-2')
+		self.parentUi.s000.setValue(pm.jointDisplayScale(query=1)) #init global joint display size
 
 
 	def chk001(self):
 		'''
 		Scale IK
 		'''
-		self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk000, chk002')
-		self.ui.s000.setValue(pm.ikHandleDisplayScale(query=1)) #init IK handle display size
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk000, chk002')
+		self.parentUi.s000.setValue(pm.ikHandleDisplayScale(query=1)) #init IK handle display size
 		
 
 	def chk002(self):
 		'''
 		Scale IK/FK
 		'''
-		self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk000-1')
-		self.ui.s000.setValue(pm.jointDisplayScale(query=1, ikfk=1)) #init IKFK display size
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk000-1')
+		self.parentUi.s000.setValue(pm.jointDisplayScale(query=1, ikfk=1)) #init IKFK display size
 
 
 	def s000(self):
 		'''
 		Scale Joint/IK/FK
 		'''
-		value = self.ui.s000.value()
+		value = self.parentUi.s000.value()
 
-		if self.ui.chk000.isChecked():
+		if self.parentUi.chk000.isChecked():
 			pm.jointDisplayScale(value) #set global joint display size
-		elif self.ui.chk001.isChecked():
+		elif self.parentUi.chk001.isChecked():
 			pm.ikHandleDisplayScale(value) #set global IK handle display size
-		else: #self.ui.chk002.isChecked():
+		else: #self.parentUi.chk002.isChecked():
 			pm.jointDisplayScale(value, ikfk=1) #set global IKFK display size
 
 
@@ -57,7 +55,7 @@ class Rigging(Init):
 		'''
 		Editors
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 
 		files = ['Quick Rig','HumanIK','Expression Editor','Shape Editor','Connection Editor','Channel Control Editor','Set Driven Key']
 		contents = cmb.addItems_(files, ' ')
@@ -86,7 +84,7 @@ class Rigging(Init):
 		'''
 		Create
 		'''
-		cmb = self.ui.cmb001
+		cmb = self.parentUi.cmb001
 
 		files = ['Joints','Locator','IK Handle', 'Lattice', 'Cluster']
 		contents = cmb.addItems_(files, "Create")

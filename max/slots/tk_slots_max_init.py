@@ -26,7 +26,8 @@ class Init(Slots):
 	def __init__(self, *args, **kwargs):
 		super(Init, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
+		for k,v in kwargs.items():
+			setattr(self, k, v)
 
 
 	def info(self):
@@ -899,7 +900,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 		comboBox (str) = comboBox name (will also be used as the methods name).
 	# 		index = int or 'string' - text of the index to switch to.
 	# 	'''
-	# 	cmb = getattr(self.ui, comboBox)
+	# 	cmb = getattr(self.parentUi, comboBox)
 	# 	method = getattr(self, comboBox)
 	# 	cmb.currentIndexChanged.connect(method)
 	# 	if not type(index)==int:

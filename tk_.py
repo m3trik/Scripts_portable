@@ -36,7 +36,7 @@ class Tk(QtWidgets.QStackedWidget):
 		self.key_show = QtCore.Qt.Key_F12
 		self.preventHide = False
 
-		self.sb = Switchboard()
+		self.sb = Switchboard(self)
 		self.sb.setMainAppWindow(self.parent)
 		self.sb.setClassInstance(self, 'tk')
 

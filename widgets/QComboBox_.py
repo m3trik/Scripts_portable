@@ -182,7 +182,12 @@ class QComboBox_(QtWidgets.QComboBox):
 				if callable(self.classMethod):
 					self.classMethod()
 		except:
-			self.classMethod = self.window().sb.getMethod(self.window().sb.getUiName(), str(self.objectName()))
+			p = self.parent()
+			while not hasattr(p.window(), 'sb'):
+				p = p.parent()
+
+			self.sb = p.window().sb
+			self.classMethod = self.sb.getMethod(self.sb.getUiName(), str(self.objectName()))
 			# className = self.window().sb.getUiName(pascalCase=True)
 			# class_ = self.window().sb.getClassInstance(className)
 			# self.classMethod = getattr(class_, str(self.objectName()))

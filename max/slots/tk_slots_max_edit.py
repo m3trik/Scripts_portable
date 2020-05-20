@@ -10,22 +10,20 @@ class Edit(Init):
 	def __init__(self, *args, **kwargs):
 		super(Edit, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
 
 	def chk006_9(self):
 		'''
 		Set the toolbutton's text according to the checkstates.
 		'''
 		axis = self.getAxisFromCheckBoxes('chk006-9')
-		self.ui.tb003.setText('Along Axis '+axis)
+		self.parentUi.tb003.setText('Along Axis '+axis)
 
 
 	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 
 		files = ['']
 		contents = cmb.addItems_(files, ' ')
@@ -156,7 +154,7 @@ class Edit(Init):
 		'''
 		Crease Set Transfer: Transform Node
 		'''
-		if self.ui.b042.isChecked():
+		if self.parentUi.b042.isChecked():
 			creaseSet = str(pm.ls(selection=1)) #ex. [nt.CreaseSet(u'creaseSet1')]
 
 			index1 = creaseSet.find("u")
@@ -164,21 +162,21 @@ class Edit(Init):
 			creaseSet = creaseSet[index1+1:index2].strip("'") #ex. creaseSet1
 
 			if creaseSet != "[":
-				self.ui.b042.setText(creaseSet)
+				self.parentUi.b042.setText(creaseSet)
 			else:
-				self.ui.b042.setText("must select set first")
-				self.toggleWidgets(self.ui, self.childUi, setChecked_False='b042')
-			if self.ui.b043.isChecked():
-				self.toggleWidgets(self.ui, self.childUi, setEnabled='b052')
+				self.parentUi.b042.setText("must select set first")
+				self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='b042')
+			if self.parentUi.b043.isChecked():
+				self.toggleWidgets(self.parentUi, self.childUi, setEnabled='b052')
 		else:
-			self.ui.b042.setText("Crease Set")
+			self.parentUi.b042.setText("Crease Set")
 
 
 	def b010(self):
 		'''
 		Crease Set Transfer: Crease Set
 		'''
-		if self.ui.b043.isChecked():
+		if self.parentUi.b043.isChecked():
 			newObject = str(pm.ls(selection=1)) #ex. [nt.Transform(u'pSphere1')]
 
 			index1 = newObject.find("u")
@@ -186,14 +184,14 @@ class Edit(Init):
 			newObject = newObject[index1+1:index2].strip("'") #ex. pSphere1
 
 			if newObject != "[":
-				self.ui.b043.setText(newObject)
+				self.parentUi.b043.setText(newObject)
 			else:
-				self.ui.b043.setText("must select obj first")
-				self.toggleWidgets(self.ui, self.childUi, setChecked_False='b043')
-			if self.ui.b042.isChecked():
-				self.toggleWidgets(self.ui, self.childUi, setEnabled='b052')
+				self.parentUi.b043.setText("must select obj first")
+				self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='b043')
+			if self.parentUi.b042.isChecked():
+				self.toggleWidgets(self.parentUi, self.childUi, setEnabled='b052')
 		else:
-			self.ui.b043.setText("Object")
+			self.parentUi.b043.setText("Object")
 
 
 	def b011(self):
@@ -204,8 +202,8 @@ class Edit(Init):
 		# the use of separate buttons for donor and target mesh are obsolete
 		# add pm.polySoftEdge (angle=0, constructionHistory=0); #harden edge, when applying crease 
 
-		creaseSet = str(self.ui.b042.text())
-		newObject = str(self.ui.b043.text())
+		creaseSet = str(self.parentUi.b042.text())
+		newObject = str(self.parentUi.b043.text())
 
 		sets = pm.sets (creaseSet, query=1)
 
@@ -226,9 +224,9 @@ class Edit(Init):
 			# print "crease:", name
 		pm.undoInfo (closeChunk=1)
 
-		self.toggleWidgets(self.ui, self.childUi, setDisabled='b052', setChecked_False='b042')#,self.ui.b043])
-		self.ui.b042.setText("Crease Set")
-		# self.ui.b043.setText("Object")
+		self.toggleWidgets(self.parentUi, self.childUi, setDisabled='b052', setChecked_False='b042')#,self.parentUi.b043])
+		self.parentUi.b042.setText("Crease Set")
+		# self.parentUi.b043.setText("Object")
 
 
 	def b021(self):

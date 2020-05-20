@@ -19,9 +19,8 @@ class Slots(QtCore.QObject):
 	def __init__(self, parent=None, **kwargs):
 		'''
 		'''
-		self.ui = kwargs['ui']
-		self.sb = kwargs['sb']
-		self.tk = self.sb.getClassInstance('tk')
+		for k,v in kwargs.items():
+			setattr(self, k, v)
 
 
 	@property
@@ -29,6 +28,7 @@ class Slots(QtCore.QObject):
 		'''
 		Get the current Ui.
 		'''
+		# print ('self.ui', self.sb.getUiName(self.ui)) #same as current ui
 		# print ('currentUi:', self.sb.getUiName(self.sb.getUi()))
 		return self.sb.getUi() #current
 

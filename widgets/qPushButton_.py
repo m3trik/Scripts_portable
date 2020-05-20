@@ -1,6 +1,6 @@
 from PySide2 import QtWidgets
 
-
+from widgets.qMenu_ import QMenu_
 
 
 
@@ -24,8 +24,12 @@ class QPushButton_(QtWidgets.QPushButton):
 	'''
 	
 	'''
-	def __init__(self, parent=None, **kwargs):
+	def __init__(self, parent=None, rightClickMenu=True, **kwargs):
 		super(QPushButton_, self).__init__(parent)
+
+		self.rightClickMenu = rightClickMenu
+		if self.rightClickMenu:
+			self.menu = QMenu_(self, position='cursorPos')
 
 		self.setAttributes(kwargs)
 
@@ -82,7 +86,67 @@ class QPushButton_(QtWidgets.QPushButton):
 			self.move(self.mapFromGlobal(value - self.rect().center())) #move and center
 
 			
+	def add(self, w, **kwargs):
+		'''
+		Add items to the toolbutton's menu.
 
+		args:
+			widget (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
+		kwargs:
+			show (bool) = show the menu.
+			insertSeparator (QAction) = insert separator in front of the given action.
+		returns:
+ 			the added widget.
+
+		ex.call:
+		tb.add('QCheckBox', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
+		'''
+		try:
+			w = getattr(QtWidgets, w)() #ex. QtWidgets.QAction(self) object from string.
+		except:
+			if callable(w):
+				w = widget() #ex. QtWidgets.QAction(self) object.
+
+		w.setMinimumHeight(self.minimumSizeHint().height()+1) #set child widget height to that of the toolbutton
+
+		w = self.menu.add(w, **kwargs)
+		setattr(self, w.objectName(), w)
+		return w
+
+
+	def childWidgets(self, index=None):
+		'''
+		Get the widget at the given index.
+		If no arg is given all widgets will be returned.
+
+		args:
+			index (int) = widget location.
+		returns:
+			(QWidget) or (list)
+		'''
+		return self.menu.childWidgets(index)
+
+
+	def showEvent(self, event):
+		'''
+		args:
+			event=<QEvent>
+		'''
+		if not __name__=='__main__' and not hasattr(self, 'parentUiName'):
+			p = self.parent()
+			while not hasattr(p.window(), 'sb'):
+				p = p.parent()
+
+			self.sb = p.window().sb
+			self.parentUiName = self.sb.getUiName()
+			self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
+
+			self.classMethod = self.sb.getMethod(self.parentUiName, self)
+			if callable(self.classMethod):
+				if self.rightClickMenu:
+					self.classMethod('setMenu')
+
+		return QtWidgets.QPushButton.showEvent(self, event)
 
 
 

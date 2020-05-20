@@ -10,9 +10,7 @@ class Preferences(Init):
 	def __init__(self, *args, **kwargs):
 		super(Preferences, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
-		self.ui.b010.setText('3dsMax Preferences')
+		self.parentUi.b010.setText('3dsMax Preferences')
 
 		self.cmb001(init=1) #init cmb001
 		self.cmb002(init=1) #init cmb002
@@ -23,7 +21,7 @@ class Preferences(Init):
 	# 	'''
 	# 	Custom Menu Set
 	# 	'''
-	# 	cmb = self.ui.cmb000
+	# 	cmb = self.parentUi.cmb000
 		
 	# 	list_ = ['Modeling', 'Normals', 'Materials', 'UV'] #combobox list menu corresponding to the button text sets.
 	# 	contents = cmb.addItems_(list_, 'Menu Sets')
@@ -43,7 +41,7 @@ class Preferences(Init):
 		'''
 		Preferences:Ui - Set main ui style using QStyleFactory
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 
 		from PySide2 import QtGui, QtCore
 		list_ = QtGui.QStyleFactory.keys() #get styles from QStyleFactory
@@ -63,7 +61,7 @@ class Preferences(Init):
 		'''
 		Preferences:App - Set Working Units: Linear
 		'''
-		cmb = self.ui.cmb001
+		cmb = self.parentUi.cmb001
 
 		list_ = ['millimeter','centimeter','meter','kilometer','inch','foot','yard','mile']
 		contents = cmb.addItems_(list_)
@@ -79,7 +77,7 @@ class Preferences(Init):
 		'''
 		Preferences:App - Set Working Units: Time
 		'''
-		cmb = self.ui.cmb002
+		cmb = self.parentUi.cmb002
 
 		#store a corresponding value for each item in the comboBox list_.
 		l = [('15 fps: ','game'),('24 fps: ','film'),('25 fps: ','pal'),('30 fps: ','ntsc'),('48 fps: ','show'),('50 fps: ','palf'),('60 fps: ','ntscf')]
@@ -99,7 +97,7 @@ class Preferences(Init):
 		'''
 		Editors
 		'''
-		cmb = self.ui.cmb003
+		cmb = self.parentUi.cmb003
 
 		files = ['']
 		contents = cmb.addItems_(files, ' ')

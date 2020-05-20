@@ -779,9 +779,14 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 				self.classMethod()
 
 		except:
-			self.parentUiName = self.window().sb.getUiName()
-			self.childEvents = self.window().sb.getClassInstance('EventFactoryFilter')
-			self.classMethod = self.window().sb.getMethod(self.parentUiName, self)
+			p = self.parent()
+			while not hasattr(p.window(), 'sb'):
+				p = p.parent()
+
+			self.sb = p.window().sb
+			self.parentUiName = self.sb.getUiName()
+			self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
+			self.classMethod = self.sb.getMethod(self.parentUiName, self)
 			self.classMethod()
 
 		if self.refresh:

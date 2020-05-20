@@ -9,8 +9,6 @@ class Create(Init):
 	def __init__(self, *args, **kwargs):
 		super(Create, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
 		self.node=None
 		self.rotation = {'x':[90,0,0], 'y':[0,90,0], 'z':[0,0,90], '-x':[-90,0,0], '-y':[0,-90,0], '-z':[0,0,-90], 'last':[]}
 		self.point=[0,0,0]
@@ -21,13 +19,13 @@ class Create(Init):
 		'''
 
 		'''
-		if self.ui.chk000.isChecked():
+		if self.parentUi.chk000.isChecked():
 			axis = 'x'
-		elif self.ui.chk001.isChecked():
+		elif self.parentUi.chk001.isChecked():
 			axis = 'y'
-		elif self.ui.chk002.isChecked():
+		elif self.parentUi.chk002.isChecked():
 			axis = 'z'
-		if self.ui.chk003.isChecked(): #negative
+		if self.parentUi.chk003.isChecked(): #negative
 			axis = '-'+axis
 		return axis
 
@@ -49,7 +47,7 @@ class Create(Init):
 		'''
 		Set Translate X
 		'''
-		self.point[0] = float(self.ui.t000.text())
+		self.point[0] = float(self.parentUi.t000.text())
 		pm.xform (self.node, translation=self.point, worldSpace=1, absolute=1)
 
 
@@ -57,7 +55,7 @@ class Create(Init):
 		'''
 		Set Translate Y
 		'''
-		self.point[1] = float(self.ui.t001.text())
+		self.point[1] = float(self.parentUi.t001.text())
 		pm.xform (self.node, translation=self.point, worldSpace=1, absolute=1)
 
 
@@ -65,7 +63,7 @@ class Create(Init):
 		'''
 		Set Translate Z
 		'''
-		self.point[2] = float(self.ui.t002.text())
+		self.point[2] = float(self.parentUi.t002.text())
 		pm.xform (self.node, translation=self.point, worldSpace=1, absolute=1)
 
 
@@ -75,7 +73,7 @@ class Create(Init):
 
 		'''
 		transform = self.node[0]
-		pm.rename(transform.name() ,self.ui.t003.text())
+		pm.rename(transform.name() ,self.parentUi.t003.text())
 
 
 	def chk000(self):
@@ -83,7 +81,7 @@ class Create(Init):
 		Rotate X Axis
 
 		'''
-		self.toggleWidgets(self.ui, self.childUi, setChecked='chk000', setChecked_False='chk001, chk002')
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk000', setChecked_False='chk001, chk002')
 		if self.node:
 			self.rotateAbsolute(self.getAxis())
 
@@ -93,7 +91,7 @@ class Create(Init):
 		Rotate Y Axis
 
 		'''
-		self.toggleWidgets(self.ui, self.childUi, setChecked='chk001', setChecked_False='chk000, chk002')
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk001', setChecked_False='chk000, chk002')
 		if self.node:
 			self.rotateAbsolute(self.getAxis())
 
@@ -103,7 +101,7 @@ class Create(Init):
 		Rotate Z Axis
 
 		'''
-		self.toggleWidgets(self.ui, self.childUi, setChecked='chk002', setChecked_False='chk000, chk001')
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk002', setChecked_False='chk000, chk001')
 		if self.node:
 			self.rotateAbsolute(self.getAxis())
 
@@ -129,34 +127,34 @@ class Create(Init):
 			print("# Warning: Nothing selected. Point set to origin [0,0,0]. #")
 			self.point = [0,0,0]
 
-		self.ui.t000.setText(str(self.point[0]))
-		self.ui.t001.setText(str(self.point[1]))
-		self.ui.t002.setText(str(self.point[2]))
+		self.parentUi.t000.setText(str(self.point[0]))
+		self.parentUi.t001.setText(str(self.point[1]))
+		self.parentUi.t002.setText(str(self.point[2]))
 
 
 	def cmb000(self, index=None):
 		'''
 
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 
 		if not cmb.itemsAdded:
 			items = ['Polygon', 'NURBS', 'Light']
 			contents = cmb.addItems_(items)
 
-		self.ui.cmb001.clear()
+		self.parentUi.cmb001.clear()
 
 		if cmb.currentIndex() == 0:
 			polygons = ["Cube", "Sphere", "Cylinder", "Plane", "Circle", "Cone", "Pyramid", "Torus", "Tube", "GeoSphere", "Platonic Solids", "Text"]
-			self.ui.cmb001.addItems(polygons)
+			self.parentUi.cmb001.addItems(polygons)
 
 		if cmb.currentIndex() == 1:
 			nurbs = ["Cube", "Sphere", "Cylinder", "Cone", "Plane", "Torus", "Circle", "Square"]
-			self.ui.cmb001.addItems(nurbs)
+			self.parentUi.cmb001.addItems(nurbs)
 
 		if cmb.currentIndex() == 2:
 			lights = ["Ambient", "Directional", "Point", "Spot", "Area", "Volume", "VRay Sphere", "VRay Dome", "VRay Rect", "VRay IES"]
-			self.ui.cmb001.addItems(lights)
+			self.parentUi.cmb001.addItems(lights)
 
 
 	def cmb002(self, index=None, values={}, clear=False, show=False):
@@ -169,7 +167,7 @@ class Create(Init):
 			clear (bool) = Clear any previous items.
 			show (bool) = Show the popup menu immediately after adding items.
 		'''
-		cmb = self.ui.cmb002
+		cmb = self.parentUi.cmb002
 
 		n = len(values)
 		if n and index is None:
@@ -200,7 +198,7 @@ class Create(Init):
 		args:
 			index(int) = optional index of the spinbox that called this function. ie. 5 from s005
 		'''
-		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.ui.cmb002.menuItems()} #get current spinbox values. ie. {width:10} from spinbox prefix and value.
+		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.parentUi.cmb002.menuItems()} #get current spinbox values. ie. {width:10} from spinbox prefix and value.
 		self.setAttributesMEL(self.node, spinboxValues) #set attributes for the history node
 
 
@@ -208,7 +206,7 @@ class Create(Init):
 	# 	'''
 	# 	Editors
 	# 	'''
-	# 	cmb = self.ui.cmb002
+	# 	cmb = self.parentUi.cmb002
 		
 	# 	files = ['']
 	# 	contents = cmb.addItems_(files, ' ')
@@ -226,8 +224,8 @@ class Create(Init):
 		Create Object
 		'''
 		axis = self.rotation[self.getAxis()] #get axis as [int list]
-		type_ = self.ui.cmb000.currentText()
-		index = self.ui.cmb001.currentIndex()
+		type_ = self.parentUi.cmb000.currentText()
+		index = self.parentUi.cmb001.currentIndex()
 
 		#polygons
 		if type_=='Polygon':
@@ -324,9 +322,9 @@ class Create(Init):
 
 		#set name
 		if isinstance(self.node[0], (str,unicode)): #is type of:
-			self.ui.t003.setText(self.node[0])
+			self.parentUi.t003.setText(self.node[0])
 		else:
-			self.ui.t003.setText(self.node[0].name())
+			self.parentUi.t003.setText(self.node[0].name())
 
 		self.history.extend(self.node) #save current node to history
 		self.rotation['last']=[] #reset rotation history
@@ -348,8 +346,8 @@ class Create(Init):
 			type1 (str) = 
 			type2 (str) = 
 		'''
-		cmb000 = self.ui.cmb000
-		cmb001 = self.ui.cmb001
+		cmb000 = self.parentUi.cmb000
+		cmb001 = self.parentUi.cmb001
 
 		cmb000.setCurrentIndex(cmb000.findText(catagory1))
 		cmb001.setCurrentIndex(cmb001.findText(catagory2))

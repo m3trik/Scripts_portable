@@ -10,10 +10,8 @@ class Rendering(Init):
 	def __init__(self, *args, **kwargs):
 		super(Rendering, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
 		# #checkable comboBox not working
-		# comboBox = self.CheckableComboBox(self.ui.cmb000)
+		# comboBox = self.CheckableComboBox(self.parentUi.cmb000)
 		# for num in range(6):
 		# 	comboBox.addItem("checkbox " + str(num))
 		# comboBox.checkIndex(1)
@@ -25,7 +23,7 @@ class Rendering(Init):
 		'''
 		Render: camera
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 
 		self.cams = [cam for cam in rt.cameras if 'Target' not in str(cam)]
 		if self.cams:
@@ -37,7 +35,7 @@ class Rendering(Init):
 		'''
 		Editors
 		'''
-		cmb = self.ui.cmb001
+		cmb = self.parentUi.cmb001
 		
 		files = ['']
 		contents = cmb.addItems_(files, ' ')
@@ -54,7 +52,7 @@ class Rendering(Init):
 		'''
 		Render Current Frame
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 		index = cmb.currentIndex()
 
 		try:

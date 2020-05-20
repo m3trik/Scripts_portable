@@ -9,40 +9,17 @@ class Preferences(Init):
 	def __init__(self, *args, **kwargs):
 		super(Preferences, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
-		self.ui.b010.setText('Maya Preferences')
+		self.parentUi.b010.setText('Maya Preferences')
 
 		self.cmb001(init=1) #init cmb001
 		self.cmb002(init=1) #init cmb002
-
-
-
-	# def cmb000(self):
-	# 	'''
-	# 	Custom Menu Set
-	# 	'''
-	# 	cmb = self.ui.cmb000
-		
-	# 	list_ = ['Modeling', 'Normals', 'Materials', 'UV'] #combobox list menu corresponding to the button text sets.
-	# 	contents = cmb.addItems_(list_, 'Menu Sets')
-
-	# 	if not index:
-			# index = cmb.currentIndex()
-	# 	buttons = self.getObject(sb.getUi('main'), 'v000-11') #the ui in which the changes are to be made.
-	# 	for i, button in enumerate(buttons):
-	# 		if index==1: #set the text for each button.
-	# 			button.setText(['','','','','','','','','','','',''][i])
-
-	# 		if index==2:
-	# 			button.setText(['','','','','','','','','','','',''][i])
 
 
 	def cmb000(self, index=None, init=False):
 		'''
 		Preferences:Ui - Set main ui style using QStyleFactory
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 
 		from PySide2 import QtGui, QtCore
 		list_ = QtGui.QStyleFactory.keys() #get styles from QStyleFactory
@@ -62,7 +39,7 @@ class Preferences(Init):
 		'''
 		Set Working Units: Linear
 		'''
-		cmb = self.ui.cmb001
+		cmb = self.parentUi.cmb001
 
 		list_ = ['millimeter','centimeter','meter','kilometer','inch','foot','yard','mile']
 		contents = cmb.addItems_(list_)
@@ -71,6 +48,8 @@ class Preferences(Init):
 			index = contents.index(pm.currentUnit(query=1, fullName=1, linear=1)) #get/set current linear value
 			cmb.setCurrentIndex(index)
 		else:
+			if index is None:
+				index = cmb.currentIndex()
 			pm.currentUnit(linear=contents[index]) #millimeter | centimeter | meter | kilometer | inch | foot | yard | mile
 
 
@@ -78,7 +57,7 @@ class Preferences(Init):
 		'''
 		Set Working Units: Time
 		'''
-		cmb = self.ui.cmb002
+		cmb = self.parentUi.cmb002
 
 		#store a corresponding value for each item in the comboBox list_.
 		l = [('15 fps: ','game'),('24 fps: ','film'),('25 fps: ','pal'),('30 fps: ','ntsc'),('48 fps: ','show'),('50 fps: ','palf'),('60 fps: ','ntscf')]
@@ -91,6 +70,8 @@ class Preferences(Init):
 			index = values.index(pm.currentUnit(query=1, fullName=1, time=1)) #get/set current time value
 			cmb.setCurrentIndex(index)
 		else:
+			if index is None:
+				index = cmb.currentIndex()
 			pm.currentUnit(time=values[index]) #game | film | pal | ntsc | show | palf | ntscf
 
 
@@ -98,7 +79,7 @@ class Preferences(Init):
 		'''
 		Editors
 		'''
-		cmb = self.ui.cmb003
+		cmb = self.parentUi.cmb003
 		
 		files = ['']
 		contents = cmb.addItems_(files, ' ')
@@ -162,3 +143,26 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
+
+
+
+#deprecated
+
+# def cmb000(self):
+# 	'''
+# 	Custom Menu Set
+# 	'''
+# 	cmb = self.parentUi.cmb000
+	
+# 	list_ = ['Modeling', 'Normals', 'Materials', 'UV'] #combobox list menu corresponding to the button text sets.
+# 	contents = cmb.addItems_(list_, 'Menu Sets')
+
+# 	if not index:
+		# index = cmb.currentIndex()
+# 	buttons = self.getObject(sb.getUi('main'), 'v000-11') #the ui in which the changes are to be made.
+# 	for i, button in enumerate(buttons):
+# 		if index==1: #set the text for each button.
+# 			button.setText(['','','','','','','','','','','',''][i])
+
+# 		if index==2:
+# 			button.setText(['','','','','','','','','','','',''][i])

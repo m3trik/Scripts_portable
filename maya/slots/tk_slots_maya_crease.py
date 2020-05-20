@@ -9,50 +9,48 @@ class Crease(Init):
 	def __init__(self, *args, **kwargs):
 		super(Crease, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
 
 	def chk002(self):
 		'''
 		Un-Crease
 		'''
-		if self.ui.chk002.isChecked():
-			self.ui.s003.setValue(0) #crease value
-			self.ui.s004.setValue(180) #normal angle
-			self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk003')
+		if self.parentUi.chk002.isChecked():
+			self.parentUi.s003.setValue(0) #crease value
+			self.parentUi.s004.setValue(180) #normal angle
+			self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk003')
 		else:
-			self.ui.s003.setValue(7.5) #crease value
-			self.ui.s004.setValue(30) #normal angle
+			self.parentUi.s003.setValue(7.5) #crease value
+			self.parentUi.s004.setValue(30) #normal angle
 
 
 	def chk003(self):
 		'''
 		Crease: Max
 		'''
-		if self.ui.chk003.isChecked():
-			self.ui.s003.setValue(10) #crease value
-			self.ui.s004.setValue(30) #normal angle
-			self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk002')
+		if self.parentUi.chk003.isChecked():
+			self.parentUi.s003.setValue(10) #crease value
+			self.parentUi.s004.setValue(30) #normal angle
+			self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk002')
 		else:
-			self.ui.s003.setValue(7.5) #crease value
-			self.ui.s004.setValue(60) #normal angle
+			self.parentUi.s003.setValue(7.5) #crease value
+			self.parentUi.s004.setValue(60) #normal angle
 
 
 	def chk011(self):
 		'''
 		Crease: Auto
 		'''
-		if self.ui.chk011.isChecked():
-			self.toggleWidgets(self.ui, self.childUi, setEnabled='s005,s006')
+		if self.parentUi.chk011.isChecked():
+			self.toggleWidgets(self.parentUi, self.childUi, setEnabled='s005,s006')
 		else:
-			self.toggleWidgets(self.ui, self.childUi, setDisabled='s005,s006')
+			self.toggleWidgets(self.parentUi, self.childUi, setDisabled='s005,s006')
 
 
 	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 		
 		files = ['Sets']
 		contents = cmb.addItems_(files, ' ')

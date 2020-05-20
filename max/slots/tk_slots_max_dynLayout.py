@@ -10,14 +10,12 @@ class DynLayout(Init):
 	def __init__(self, *args, **kwargs):
 		super(DynLayout, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
 
 	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 		
 		files = ['']
 		contents = cmb.addItems_(files, ' ')

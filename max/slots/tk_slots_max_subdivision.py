@@ -10,14 +10,12 @@ class Subdivision(Init):
 	def __init__(self, *args, **kwargs):
 		super(Subdivision, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
 		#Set 3ds Max specific naming
-		self.ui.gb000.setTitle('TurboSmooth')
-		self.ui.lbl000.setText('Iterations:')
-		self.ui.lbl001.setText('RenderIters:')
-		self.ui.s000.setValue(0)
-		self.ui.s001.setValue(0)
+		self.parentUi.gb000.setTitle('TurboSmooth')
+		self.parentUi.lbl000.setText('Iterations:')
+		self.parentUi.lbl001.setText('RenderIters:')
+		self.parentUi.s000.setValue(0)
+		self.parentUi.s001.setValue(0)
 
 
 
@@ -25,7 +23,7 @@ class Subdivision(Init):
 		'''
 		Editors
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 		
 		selectionSets = [set for set in rt.selectionSets]
 		contents = cmb.addItems_(['TurboSmooth','TurboSmooth Pro','OpenSubDiv','Subdivide','Subdivide (WSM)','MeshSmooth','Optimize','Pro Optimizer','Add Divisions'], ' ')
@@ -103,7 +101,7 @@ class Subdivision(Init):
 		'''
 		Division Level
 		'''
-		value = self.ui.s000.getValue()
+		value = self.parentUi.s000.getValue()
 
 		geometry = rt.selection
 
@@ -117,7 +115,7 @@ class Subdivision(Init):
 		'''
 		Tesselation Level
 		'''
-		value = self.ui.s001.getValue()
+		value = self.parentUi.s001.getValue()
 
 		geometry = rt.selection
 
@@ -167,9 +165,9 @@ class Subdivision(Init):
 		#check shape for an existing output to a smoothProxy
 		attachedSmoothProxies = pm.listConnections (shape[0], type="polySmoothProxy", s=0, d=1)
 		if len(attachedSmoothProxies) == 0: #subdiv on
-			self.toggleWidgets(self.ui, self.childUi, setEnabled='b000', setChecked='b009')
+			self.toggleWidgets(self.parentUi, self.childUi, setEnabled='b000', setChecked='b009')
 		else:
-			self.toggleWidgets(self.ui, self.childUi, setDisabled='b000', setChecked_False='b009')
+			self.toggleWidgets(self.parentUi, self.childUi, setDisabled='b000', setChecked_False='b009')
 			mel.eval("smoothingDisplayToggle 0;")
 
 		#toggle performSmoothProxy

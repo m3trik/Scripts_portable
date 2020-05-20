@@ -10,35 +10,33 @@ class Polygons(Init):
 	def __init__(self, *args, **kwargs):
 		super(Polygons, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
 
 	def chk008(self):
 		'''
 		Split U
 		'''
-		self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk010')
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk010')
 
 
 	def chk009(self):
 		'''
 		Split V
 		'''
-		self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk010')
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk010')
 
 
 	def chk010(self):
 		'''
 		Tris
 		'''
-		self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk008,chk009')
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk008,chk009')
 
 
 	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 
 		files = ['Bridge','Extrude']
 		contents = cmb.addItems_(files, ' ')
@@ -93,7 +91,7 @@ class Polygons(Init):
 
 		if selection:
 			for n, obj in enumerate(selection):
-				if not self.ui.progressBar.step(n, len(selection)): #register progress while checking for cancellation:
+				if not self.parentUi.progressBar.step(n, len(selection)): #register progress while checking for cancellation:
 					break
 
 				vertSelection = rt.getVertSelection(obj)
@@ -189,7 +187,7 @@ class Polygons(Init):
 		width = float(tb.s000.value())
 
 		rt.macros.run('Ribbon - Modeling', 'EPoly_Chamfer')
-		# width = float(self.ui.s000.value())
+		# width = float(self.parentUi.s000.value())
 		# chamfer = True
 
 		# if chamfer:

@@ -9,10 +9,8 @@ class Transform(Init):
 	def __init__(self, *args, **kwargs):
 		super(Transform, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
 		#set input masks for text fields
-		# self.ui.t000.setInputMask("00.00") #change to allow for neg values
+		# self.parentUi.t000.setInputMask("00.00") #change to allow for neg values
 
 
 		try: #chk012, chk013 component constraints. query and set initial value
@@ -21,14 +19,14 @@ class Transform(Init):
 			pass
 
 		if state == 'edge':
-			self.ui.chk012.setChecked(True)
+			self.parentUi.chk012.setChecked(True)
 		else:
-			self.ui.chk012.setChecked(False)
+			self.parentUi.chk012.setChecked(False)
 		#b021 object or world space
 		if state == 'surface':
-			self.ui.chk013.setChecked(True)
+			self.parentUi.chk013.setChecked(True)
 		else:
-			self.ui.chk013.setChecked(False)
+			self.parentUi.chk013.setChecked(False)
 
 
 
@@ -37,9 +35,9 @@ class Transform(Init):
 		Transform: Scale
 
 		'''
-		self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk008-9', setChecked='chk000-2')
-		self.ui.s000.setValue(2)
-		self.ui.s000.setSingleStep(1)
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk008-9', setChecked='chk000-2')
+		self.parentUi.s000.setValue(2)
+		self.parentUi.s000.setSingleStep(1)
 
 
 	def chk008(self):
@@ -47,9 +45,9 @@ class Transform(Init):
 		Transform: Move
 
 		'''
-		self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk005,chk009,chk000-2')
-		self.ui.s000.setValue(0.1)
-		self.ui.s000.setSingleStep(0.1)
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk005,chk009,chk000-2')
+		self.parentUi.s000.setValue(0.1)
+		self.parentUi.s000.setSingleStep(0.1)
 
 
 	def chk009(self):
@@ -57,9 +55,9 @@ class Transform(Init):
 		Transform: Rotate
 
 		'''
-		self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk005,chk008,chk000-2')
-		self.ui.s000.setValue(45)
-		self.ui.s000.setSingleStep(5)
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk005,chk008,chk000-2')
+		self.parentUi.s000.setValue(45)
+		self.parentUi.s000.setSingleStep(5)
 
 
 	def chk010(self):
@@ -67,10 +65,10 @@ class Transform(Init):
 		Align: Auto Align
 
 		'''
-		if self.ui.chk010.isChecked():
-			self.toggleWidgets(self.ui, self.childUi, setDisabled='b029-31')
+		if self.parentUi.chk010.isChecked():
+			self.toggleWidgets(self.parentUi, self.childUi, setDisabled='b029-31')
 		else:
-			self.toggleWidgets(self.ui, self.childUi, setEnabled='b029-31')
+			self.toggleWidgets(self.parentUi, self.childUi, setEnabled='b029-31')
 
 
 	def chk012(self):
@@ -78,8 +76,8 @@ class Transform(Init):
 		Constrain To Edge
 
 		'''
-		if self.ui.chk012.isChecked():
-			self.ui.chk013.setChecked(False)
+		if self.parentUi.chk012.isChecked():
+			self.parentUi.chk013.setChecked(False)
 			# pm.manipMoveSetXformConstraint(edge=True);
 			pm.xformConstraint(type='edge')
 		else:
@@ -92,8 +90,8 @@ class Transform(Init):
 		Constrain To Surface
 
 		'''
-		if self.ui.chk013.isChecked():
-			self.ui.chk012.setChecked(False)
+		if self.parentUi.chk013.isChecked():
+			self.parentUi.chk012.setChecked(False)
 			# pm.manipMoveSetXformConstraint(surface=True);
 			pm.xformConstraint(type='surface')
 		else:
@@ -105,7 +103,7 @@ class Transform(Init):
 		'''
 		Editors
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 		
 		files = ['']
 		contents = cmb.addItems_(files, ' ')
@@ -119,20 +117,20 @@ class Transform(Init):
 
 
 	def transformChecks(self):
-		floatXYZ = float(self.ui.s000.text())
+		floatXYZ = float(self.parentUi.s000.text())
 		floatX=floatY=floatZ = 0
 
-		if self.ui.chk005.isChecked():
+		if self.parentUi.chk005.isChecked():
 			currentScale = pm.xform (query=1, scale=1)
 			floatX = round(currentScale[0], 2)
 			floatY = round(currentScale[1], 2)
 			floatZ = round(currentScale[2], 2)
 
-		if self.ui.chk000.isChecked():
+		if self.parentUi.chk000.isChecked():
 			floatX = floatXYZ
-		if self.ui.chk001.isChecked():
+		if self.parentUi.chk001.isChecked():
 			floatY = floatXYZ
-		if self.ui.chk002.isChecked():
+		if self.parentUi.chk002.isChecked():
 			floatZ = floatXYZ
 
 		xyz = [floatX, floatY, floatZ]
@@ -140,12 +138,12 @@ class Transform(Init):
 
 
 	def transform(self): #transform
-		relative = bool(self.ui.chk003.isChecked())#Move absolute/relative toggle
-		worldspace = bool(self.ui.chk004.isChecked())#Move object/worldspace toggle
+		relative = bool(self.parentUi.chk003.isChecked())#Move absolute/relative toggle
+		worldspace = bool(self.parentUi.chk004.isChecked())#Move object/worldspace toggle
 		xyz = self.transformChecks()
 		
 		#Scale selected.
-		if self.ui.chk005.isChecked():
+		if self.parentUi.chk005.isChecked():
 			if xyz[0] != -1: #negative values are only valid in relative mode and cannot scale relatively by one so prevent the math below which would scale incorrectly in this case.
 				#convert the decimal place system xform uses for negative scale values to an standard negative value
 				if xyz[0] < 0:
@@ -157,11 +155,11 @@ class Transform(Init):
 				pm.xform (relative=relative, worldSpace=worldspace, objectSpace=(not worldspace), scale=(xyz[0], xyz[1], xyz[2]))
 	
 		#Move selected relative/absolute, object/worldspace by specified amount.
-		if self.ui.chk008.isChecked():
+		if self.parentUi.chk008.isChecked():
 			pm.xform (relative=relative, worldSpace=worldspace, objectSpace=(not worldspace), translation=(xyz[0], xyz[1], xyz[2]))
 
 		#Rotate selected
-		if self.ui.chk009.isChecked():
+		if self.parentUi.chk009.isChecked():
 			pm.xform (relative=relative, worldSpace=worldspace, objectSpace=(not worldspace), rotation=(xyz[0], xyz[1], xyz[2]))
 
 
@@ -242,7 +240,7 @@ class Transform(Init):
 		if tb.chk010.isChecked(): #Auto Align: if checked; set coordinates for auto align:
 			sel = pm.ls(selection=1)
 
-			if len(sel)!=0:
+			if not len(sel)==0:
 				point = pm.xform(sel[0], q=True, t=True, ws=True)
 				#vertex point 1
 				x1 = round(point[0], 4)
@@ -259,7 +257,8 @@ class Transform(Init):
 				y = abs(y1-y2)
 				z = abs(z1-z2)
 
-				vertex = pm.polyListComponentConversion(fromEdge=1, toVertexFace=1)[0]
+				vertices = pm.polyListComponentConversion(fromEdge=1, toVertexFace=1)
+				vertex = vertices[0] if vertices else None
 				vertexTangent = pm.polyNormalPerVertex(vertex, query=True, xyz=True)
 
 				tx = abs(round(vertexTangent[0], 4))
@@ -322,10 +321,10 @@ class Transform(Init):
 
 		'''
 		#change the textfield to neg value and call transform
-		textfield = float(self.ui.s000.value())
+		textfield = float(self.parentUi.s000.value())
 		if textfield >=0:
 			newText = -textfield
-			self.ui.s000.setValue(newText)
+			self.parentUi.s000.setValue(newText)
 		self.transform()
 
 
@@ -335,10 +334,10 @@ class Transform(Init):
 
 		'''
 		#change the textfield to pos value and call transform
-		textfield = float(self.ui.s000.value())
+		textfield = float(self.parentUi.s000.value())
 		if textfield <0:
 			newText = abs(textfield)
-			self.ui.s000.setValue(newText)
+			self.parentUi.s000.setValue(newText)
 		self.transform()
 
 

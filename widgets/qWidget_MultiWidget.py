@@ -189,8 +189,13 @@ class QWidget_MultiWidget(QtWidgets.QWidget):
 			event = <QEvent>
 		'''
 		if not __name__=='__main__' and not hasattr(self, 'parentUiName'):
-			self.parentUiName = self.window().sb.getUiName()
-			self.childEvents = self.window().sb.getClassInstance('EventFactoryFilter')
+			p = self.parent()
+			while not hasattr(p.window(), 'sb'):
+				p = p.parent()
+
+			self.sb = p.window().sb
+			self.parentUiName = self.sb.getUiName()
+			self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
 
 			self.childEvents.addWidgets(self.parentUiName, self.childWidgets())
 

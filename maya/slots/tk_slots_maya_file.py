@@ -9,8 +9,6 @@ class File(Init):
 	def __init__(self, *args, **kwargs):
 		super(File, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
 		try:
 			self.cmb006() #refresh cmb006 contents to reflect the current project folder
 		except NameError:
@@ -22,7 +20,7 @@ class File(Init):
 		Recent Files
 
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 		
 		files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in file_]
 		contents = cmb.addItems_(files, "Recent Files")
@@ -40,7 +38,7 @@ class File(Init):
 		Recent Projects
 
 		'''
-		cmb = self.ui.cmb001
+		cmb = self.parentUi.cmb001
 		
 		files = (list(reversed(mel.eval("optionVar -query RecentProjectsList;"))))
 		contents = cmb.addItems_(files, "Recent Projects")
@@ -57,7 +55,7 @@ class File(Init):
 		Recent Autosave
 
 		'''
-		cmb = self.ui.cmb002
+		cmb = self.parentUi.cmb002
 
 		path = os.environ.get('MAYA_AUTOSAVE_FOLDER').split(';')[0] #get autosave dir path from env variable.
 		files = [f for f in os.listdir(path) if f.endswith('.mb') or f.endswith('.ma')] #[file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" in file_]
@@ -79,7 +77,7 @@ class File(Init):
 		Import
 
 		'''
-		cmb = self.ui.cmb003
+		cmb = self.parentUi.cmb003
 
 		contents = cmb.addItems_(["Import file", "Import Options"], "Import")
 
@@ -99,7 +97,7 @@ class File(Init):
 		Export
 
 		'''
-		cmb = self.ui.cmb004
+		cmb = self.parentUi.cmb004
 		
 		list_ = ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ", 'Send to 3dsMax: As New Scene', 'Send to 3dsMax: Update Current', 'Send to 3dsMax: Add to Current']
 		contents = cmb.addItems_(list_, "Export")
@@ -132,7 +130,7 @@ class File(Init):
 		Editors
 
 		'''
-		cmb = self.ui.cmb005
+		cmb = self.parentUi.cmb005
 		
 		files = ['Node Editor', 'Outlinder', 'Content Browser']
 		contents = cmb.addItems_(files, ' ')
@@ -154,7 +152,7 @@ class File(Init):
 		Project Folder
 
 		'''
-		cmb = self.ui.cmb006
+		cmb = self.parentUi.cmb006
 		
 		path = pm.workspace(query=1, rd=1) #current project path.
 		list_ = [f for f in os.listdir(path)]
@@ -316,7 +314,7 @@ class File(Init):
 			comboBox (str) = comboBox name (will also be used as the methods name).
 			text (str) = text of the index to switch to.
 		'''
-		cmb = getattr(self.ui, comboBox)
+		cmb = getattr(self.parentUi, comboBox)
 		method = getattr(self, comboBox)
 		cmb.currentIndexChanged.connect(method)
 		cmb.setCurrentIndex(cmb.findText(text))
@@ -340,10 +338,10 @@ class File(Init):
 		'''
 		Remove String From Object Names.
 		'''
-		from_ = str(self.ui.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
-		to = str(self.ui.t001.text())
-		replace = self.ui.chk004.isChecked()
-		selected = self.ui.chk005.isChecked()
+		from_ = str(self.parentUi.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
+		to = str(self.parentUi.t001.text())
+		replace = self.parentUi.chk004.isChecked()
+		selected = self.parentUi.chk005.isChecked()
 
 		objects = pm.ls (from_) #Stores a list of all objects starting with 'from_'
 		if selected:

@@ -9,14 +9,12 @@ class Rendering(Init):
 	def __init__(self, *args, **kwargs):
 		super(Rendering, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
 
 	def cmb000(self):
 		'''
 		Render: camera
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 
 		# self.cams = [cam for cam in rt.cameras if 'Target' not in str(cam)]
 		# if self.cams:
@@ -28,7 +26,7 @@ class Rendering(Init):
 		'''
 		Editors
 		'''
-		cmb = self.ui.cmb001
+		cmb = self.parentUi.cmb001
 
 		files = ['']
 		contents = cmb.addItems_(files, ' ')
@@ -45,7 +43,7 @@ class Rendering(Init):
 		'''
 		Render Current Frame
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 		index = cmb.currentIndex()
 
 		try:

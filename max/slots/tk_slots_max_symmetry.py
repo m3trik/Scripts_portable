@@ -10,17 +10,15 @@ class Symmetry(Init):
 	def __init__(self, *args, **kwargs):
 		super(Symmetry, self).__init__(*args, **kwargs)
 
-		self.ui = self.parentUi #self.ui = self.sb.getUi(self.__class__.__name__)
-
 		#symmetry: set initial checked state
 		# state = pm.symmetricModelling(query=True, symmetry=True) #application symmetry state
 		# axis = pm.symmetricModelling(query=True, axis=True)
 		# if axis == "x":
-		# 	self.ui.chk000.setChecked(state)
+		# 	self.parentUi.chk000.setChecked(state)
 		# if axis == "y":
-		# 	self.ui.chk001.setChecked(state)
+		# 	self.parentUi.chk001.setChecked(state)
 		# if axis == "z":
-		# 	self.ui.chk002.setChecked(state)
+		# 	self.parentUi.chk002.setChecked(state)
 
 
 
@@ -29,9 +27,9 @@ class Symmetry(Init):
 
 		'''
 		# space = "world" #workd space
-		# if self.ui.chk004.isChecked(): #object space
+		# if self.parentUi.chk004.isChecked(): #object space
 		# 	space = "object"
-		# elif self.ui.chk005.isChecked(): #topological symmetry
+		# elif self.parentUi.chk005.isChecked(): #topological symmetry
 		# 	space = "topo"
 
 		if axis=='x':
@@ -62,8 +60,8 @@ class Symmetry(Init):
 		'''
 		Symmetry X
 		'''
-		self.toggleWidgets(self.ui, self.childUi, self.childUi, setChecked_False='chk001,chk002')
-		state = self.ui.chk000.isChecked() #symmetry button state
+		self.toggleWidgets(self.parentUi, self.childUi, self.childUi, setChecked_False='chk001,chk002')
+		state = self.parentUi.chk000.isChecked() #symmetry button state
 		self.setSymmetry(state, 'x')
 
 
@@ -71,8 +69,8 @@ class Symmetry(Init):
 		'''
 		Symmetry Y
 		'''
-		self.toggleWidgets(self.ui, self.childUi, self.childUi, setChecked_False='chk000,chk002')
-		state = self.ui.chk001.isChecked() #symmetry button state
+		self.toggleWidgets(self.parentUi, self.childUi, self.childUi, setChecked_False='chk000,chk002')
+		state = self.parentUi.chk001.isChecked() #symmetry button state
 		self.setSymmetry(state, 'y')
 
 
@@ -80,8 +78,8 @@ class Symmetry(Init):
 		'''
 		Symmetry Z
 		'''
-		self.toggleWidgets(self.ui, self.childUi, self.childUi, setChecked_False='chk000,chk001')
-		state = self.ui.chk002.isChecked() #symmetry button state
+		self.toggleWidgets(self.parentUi, self.childUi, self.childUi, setChecked_False='chk000,chk001')
+		state = self.parentUi.chk002.isChecked() #symmetry button state
 		self.setSymmetry(state, 'z')
 
 
@@ -89,17 +87,17 @@ class Symmetry(Init):
 		'''
 		Symmetry: Object
 		'''
-		self.ui.chk005.setChecked(False) #uncheck symmetry:topological
+		self.parentUi.chk005.setChecked(False) #uncheck symmetry:topological
 	
 
 	def chk005(self):
 		'''
 		Symmetry: Topo
 		'''
-		self.ui.chk004.setChecked(False) #uncheck symmetry:object space
-		if any ([self.ui.chk000.isChecked(), self.ui.chk001.isChecked(), self.ui.chk002.isChecked()]): #(symmetry)
+		self.parentUi.chk004.setChecked(False) #uncheck symmetry:object space
+		if any ([self.parentUi.chk000.isChecked(), self.parentUi.chk001.isChecked(), self.parentUi.chk002.isChecked()]): #(symmetry)
 			pm.symmetricModelling(edit=True, symmetry=False)
-			self.toggleWidgets(self.ui, self.childUi, setChecked_False='chk000-2')
+			self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk000-2')
 			print("# Warning: First select a seam edge and then check the symmetry button to enable topographic symmetry #")
 
 
@@ -107,7 +105,7 @@ class Symmetry(Init):
 		'''
 		Editors
 		'''
-		cmb = self.ui.cmb000
+		cmb = self.parentUi.cmb000
 		
 		files = ['']
 		contents = cmb.addItems_(files, ' ')

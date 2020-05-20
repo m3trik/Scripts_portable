@@ -1,4 +1,5 @@
 from __future__ import print_function
+from PySide2 import QtCore
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtWidgets import QApplication
 
@@ -14,7 +15,7 @@ import sys, os.path
 # ------------------------------------------------
 #	Manage Ui elements
 # ------------------------------------------------
-class Switchboard(object):
+class Switchboard(QtCore.QObject):
 	'''
 	Get/set elements across modules using convenience methods.
 	
@@ -53,10 +54,12 @@ class Switchboard(object):
 	The widgets is built as needed for each class when addSignals (or any other dependant method) is called.
 	'''
 
-	def __init__(self):
+	def __init__(self, parent):
 		'''
 		Initialize the main dict (_sbDict).
 		'''
+		self.parent = parent
+
 		uiLoader = QUiLoader()
 
 		# register any custom widgets.
@@ -153,7 +156,7 @@ class Switchboard(object):
 		n = name.split('_')[0] #get ie. 'polygons' from 'polygons_submenu' in cases where a submenu shares the same slot class of it's parent menu.
 		# path = 'slots.{0}'.format(n[0].upper()+n[1:]) #ie. slots.Init
 		path = 'tk_slots_{0}_{1}.{2}'.format(self.getMainAppWindow(objectName=True), n, n[0].upper()+n[1:]) #ie. tk_slots_maya_init.Init
-		class_ = self.getClassInstance(path, ui=ui, sb=self) #get the class instance while passing in any keyword arguments.
+		class_ = self.getClassInstance(path, ui=ui, sb=self, tk=self.parent) #get the class instance while passing in any keyword arguments into **kwargs.
 
 
 		signals = { #the default signal to be associated with each widget type.
