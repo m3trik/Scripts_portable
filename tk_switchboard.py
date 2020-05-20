@@ -87,7 +87,7 @@ class Switchboard(QtCore.QObject):
 				self._sbDict[filename.replace('.ui','')] = {'ui':uiLoader.load(path), 'uiLevel':len(d.split('\\'))-1} #ie. {'polygons':{'ui':<ui obj>, uiLevel:<int>}} (the ui level is it's hierarchy)
 
 
-	def buildwidgets(self, name):
+	def addWidgetsAndSetSignals(self, name):
 		'''
 		Add the signal/slot connections for each widget in a given ui.
 
@@ -131,7 +131,7 @@ class Switchboard(QtCore.QObject):
 	def addWidget(self, name, widget, objectName=None):
 		'''
 		Adds a widget to the widgets under the given (ui) name.
-		Decoupling this from 'buildwidgets' allows additional widgets to be added at any time.
+		Decoupling this from 'addWidgetsAndSetSignals' allows additional widgets to be added at any time.
 		The signals dictionary provides both a way to set a default signal for a widget type.
 
 		args:
@@ -209,7 +209,7 @@ class Switchboard(QtCore.QObject):
 	def widgets(self, name):
 		'''
 		Dictionary holding widget information.
-		Used primarily by 'buildwidgets' method to construct signal and slot connections that can later be connected and disconnected by the add/removeSignals methods.
+		Used primarily by 'addWidgetsAndSetSignals' method to construct signal and slot connections that can later be connected and disconnected by the add/removeSignals methods.
 
 		args:
 			name (str) = name of ui/class. ie. 'polygons'
@@ -224,7 +224,7 @@ class Switchboard(QtCore.QObject):
 		'''
 		if not 'widgets' in self._sbDict[name]:
 			self._sbDict[name]['widgets'] = {}
-			self.buildwidgets(name) #construct the signals and slots for the ui
+			self.addWidgetsAndSetSignals(name) #construct the signals and slots for the ui
 
 		return self._sbDict[name]['widgets']
 
@@ -265,6 +265,8 @@ class Switchboard(QtCore.QObject):
 			self.widgets(name) #construct the signals and slots for the ui
 
 		if widget:
+			if not widget in self._sbDict[name]['widgets']:
+				self.addWidget(name, widget)
 			return self._sbDict[name]['widgets'][widget]['signalInstance']
 		else:
 			return [w['signalInstance'] for w in self._sbDict[name]['widgets'].values()]
@@ -743,6 +745,8 @@ class Switchboard(QtCore.QObject):
 			self.widgets(name) #construct the signals and slots for the ui
 
 		if widget:
+			if not widget in self._sbDict[name]['widgets']:
+				self.addWidget(name, widget)
 			return self._sbDict[name]['widgets'][widget]['widgetName']
 
 		if name and not widget: #return all objectNames from ui name.
@@ -774,7 +778,10 @@ class Switchboard(QtCore.QObject):
 			self.widgets(name) #construct the signals and slots for the ui
 		# print(name, widget)
 		try:
+			if not widget in self._sbDict[name]['widgets']:
+				self.addWidget(name, widget)
 			return self._sbDict[name]['widgets'][widget]['widgetType']
+
 		except KeyError:
 			return None
 
@@ -800,7 +807,13 @@ class Switchboard(QtCore.QObject):
 		if not 'widgets' in self._sbDict[name]:
 			self.widgets(name) #construct the signals and slots for the ui
 
-		return self._sbDict[name]['widgets'][widget]['derivedType']
+		try:
+			if not widget in self._sbDict[name]['widgets']:
+				self.addWidget(name, widget)
+			return self._sbDict[name]['widgets'][widget]['derivedType']
+
+		except KeyError:
+			return None
 
 
 	def getMethod(self, name, widget=None):
@@ -820,10 +833,17 @@ class Switchboard(QtCore.QObject):
 			try:
 				if type(widget) is str:
 					return next(w['method'][0] for w in self._sbDict[name]['widgets'].values() if w['widgetName']==widget) #if there are event filters attached (as a list), just get the method (at index 0).
+				
+				if not widget in self._sbDict[name]['widgets']:
+					self.addWidget(name, widget)
 				return self._sbDict[name]['widgets'][widget]['method'][0] #if there are event filters attached (as a list), just get the method (at index 0).
+
 			except:
 				if type(widget) is str:
 					return next((w['method'] for w in self._sbDict[name]['widgets'].values() if w['widgetName']==widget), None)
+				
+				if not widget in self._sbDict[name]['widgets']:
+					self.addWidget(name, widget)
 				return self._sbDict[name]['widgets'][widget]['method']
 		else:
 			return [w['method'] for w in self._sbDict[name]['widgets'].values()]

@@ -9,19 +9,20 @@ class Symmetry(Init):
 	def __init__(self, *args, **kwargs):
 		super(Symmetry, self).__init__(*args, **kwargs)
 
-		#symmetry: set initial checked state
-		state = pm.symmetricModelling(query=True, symmetry=True) #application symmetry state
-		axis = pm.symmetricModelling(query=True, axis=True)
-		if axis == "x":
-			self.parentUi.chk000.setChecked(state)
-			self.childUi.chk000.setChecked(state)
-		if axis == "y":
-			self.parentUi.chk001.setChecked(state)
-			self.childUi.chk001.setChecked(state)
-		if axis == "z":
-			self.parentUi.chk002.setChecked(state)
-			self.childUi.chk002.setChecked(state)
-
+		try: #symmetry: set initial checked state
+			state = pm.symmetricModelling(query=True, symmetry=True) #application symmetry state
+			axis = pm.symmetricModelling(query=True, axis=True)
+			if axis == "x":
+				self.parentUi.chk000.setChecked(state)
+				self.childUi.chk000.setChecked(state)
+			if axis == "y":
+				self.parentUi.chk001.setChecked(state)
+				self.childUi.chk001.setChecked(state)
+			if axis == "z":
+				self.parentUi.chk002.setChecked(state)
+				self.childUi.chk002.setChecked(state)
+		except NameError:
+			pass
 
 
 	def setSymmetry(self, state, axis):

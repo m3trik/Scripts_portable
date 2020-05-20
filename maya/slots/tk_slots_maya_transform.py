@@ -12,22 +12,21 @@ class Transform(Init):
 		#set input masks for text fields
 		# self.parentUi.t000.setInputMask("00.00") #change to allow for neg values
 
-
 		try: #chk012, chk013 component constraints. query and set initial value
 			state = pm.xformConstraint(query=True, type=True)
+		
+			if state == 'edge':
+				self.parentUi.chk012.setChecked(True)
+			else:
+				self.parentUi.chk012.setChecked(False)
+			#b021 object or world space
+			if state == 'surface':
+				self.parentUi.chk013.setChecked(True)
+			else:
+				self.parentUi.chk013.setChecked(False)
+
 		except NameError:
 			pass
-
-		if state == 'edge':
-			self.parentUi.chk012.setChecked(True)
-		else:
-			self.parentUi.chk012.setChecked(False)
-		#b021 object or world space
-		if state == 'surface':
-			self.parentUi.chk013.setChecked(True)
-		else:
-			self.parentUi.chk013.setChecked(False)
-
 
 
 	def chk005(self):
