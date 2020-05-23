@@ -24,73 +24,80 @@ class QComboBox_(QtWidgets.QComboBox):
 	'''
 	
 	'''
-	def __init__(self, parent=None, popupStyle='modelView'):
+	def __init__(self, parent=None, popupStyle='modelView', **kwargs):
 		super(QComboBox_, self).__init__(parent)
 		'''
 		args:
 			popupStyle (str) = specify the type of popup menu. default is the standard 'modelView'.
 		'''
-		self.itemsAdded=False
+		self.initialized=False
 		self.popupStyle = popupStyle
-		self.menu = QMenu_(self, position='bottomLeft')
-		self.menu.visible=False #built-in method isVisible() not working.
+		self.main_menu = QMenu_(self, position='bottomLeft')
+		self.main_menu.visible=False #built-in method isVisible() not working.
+
+		self.setAttributes(kwargs)
 
 
-	def showPopup(self):
+	def setAttributes(self, attributes=None, order=['moveGlobal', 'setVisible'], **kwargs):
 		'''
-		Show the popup menu.
-		'''
-		if not self.popupStyle=='modelView':
-			if not self.menu.visible:
-				self.menu.show()
-				self.menu.visible=True
-			else:
-				self.menu.hide()
-				self.menu.visible=False
-		else:
-			width = self.minimumSizeHint().width()
-			self.view().setMinimumWidth(width)
-
-			super(QComboBox_, self).showPopup()
-
-
-	def hidePopup(self):
-		if not self.popupStyle=='modelView':
-			self.menu.hide()
-			self.menu.visible=False
-		else:
-			super(QComboBox_, self).hidePopup()
-
-
-	def enterEvent(self, event):
-		'''
+		Works with attributes passed in as a dict or kwargs.
+		If attributes are passed in as a dict, kwargs are ignored.
 		args:
-			event=<QEvent>
+			attributes (dict) = keyword attributes and their corresponding values.
+			#order (list) = list of string keywords. ie. ['move', 'show']. attributes in this list will be set last, in order of the list. an example would be setting move positions after setting resize arguments.
+		kwargs:
+			set any keyword arguments.
 		'''
+		if not attributes:
+			attributes = kwargs
 
-		return QtWidgets.QComboBox.enterEvent(self, event)
+		for k in order:
+			v = attributes.pop(k, None)
+			if v:
+				from collections import OrderedDict
+				attributes = OrderedDict(attributes)
+				attributes[k] = v
+
+		for attr, value in attributes.items():
+			try:
+				getattr(self, attr)(value)
+
+			except Exception as error:
+				if type(error)==AttributeError:
+					self.setCustomAttribute(attr, value)
+				else:
+					raise error
 
 
-	def leaveEvent(self, event):
+	def setCustomAttribute(self, attr, value):
 		'''
+		Handle custom keyword arguments.
 		args:
-			event=<QEvent>
+			attr (str) = custom keyword attribute.
+			value (str) = the value corresponding to the given attr.
+		kwargs:
+			copy (obj) = widget to copy certain attributes from.
+			moveGlobal (QPoint) = move to given global location and center.
 		'''
-		# self.hidePopup()
+		if attr=='copy':
+			self.setObjectName(value.objectName())
+			self.resize(value.size())
+			self.setText(value.text())
+			self.setWhatsThis(value.whatsThis())
 
-		return QtWidgets.QComboBox.leaveEvent(self, event)
+		if attr=='moveGlobal':
+			self.move(self.mapFromGlobal(value - self.rect().center())) #move and center
 
 
-	def mousePressEvent(self, event):
+	def addToContext(self, w, title=None, **kwargs):
 		'''
-		args:
-			event=<QEvent>
+		Same as 'add', but instead adds items to the context menu.
 		'''
+		menu=self.contextMenu()
+		self.add(w, title, menu, **kwargs)
 
-		return QtWidgets.QComboBox.mousePressEvent(self, event)
 
-
-	def add(self, w, title=None, **kwargs):
+	def add(self, w, title=None, menu=None, **kwargs):
 		'''
 		Add items to the comboboxes's custom menu (or it's standard modelView).
 
@@ -105,7 +112,7 @@ class QComboBox_(QtWidgets.QComboBox):
 		ex.call:
 		tb.add('QCheckBox', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
 		'''
-		if self.popupStyle=='modelView':
+		if self.popupStyle=='modelView' and menu is None:
 			items = self.addItems_(w, title)
 			return items
 
@@ -117,7 +124,9 @@ class QComboBox_(QtWidgets.QComboBox):
 
 		w.setMinimumHeight(self.minimumSizeHint().height()+1) #set child widget height to that of the toolbutton
 
-		w = self.menu.add(w, **kwargs)
+		if menu is None:
+			menu = self.main_menu
+		w = menu.add(w, **kwargs)
 		setattr(self, w.objectName(), w)
 		return w
 
@@ -169,7 +178,100 @@ class QComboBox_(QtWidgets.QComboBox):
 		'''
 
 		'''
-		return [i for i in self.menu.children() if i.__class__.__name__ not in ['QAction', 'QWidgetAction']]
+		return [i for i in self.main_menu.children() if i.__class__.__name__ not in ['QAction', 'QWidgetAction']]
+
+
+	def contextMenu(self):
+		'''
+		'''
+		if not hasattr(self, '_menu'):
+			self._menu = QMenu_(self, position='cursorPos')
+		return self._menu
+
+
+	def showPopup(self):
+		'''
+		Show the popup menu.
+		'''
+		if not self.popupStyle=='modelView':
+			if not self.main_menu.visible:
+				self.main_menu.show()
+				self.main_menu.visible=True
+			else:
+				self.main_menu.hide()
+				self.main_menu.visible=False
+		else:
+			width = self.minimumSizeHint().width()
+			self.view().setMinimumWidth(width)
+
+			super(QComboBox_, self).showPopup()
+
+
+	def hidePopup(self):
+		if not self.popupStyle=='modelView':
+			self.main_menu.hide()
+			self.main_menu.visible=False
+		else:
+			super(QComboBox_, self).hidePopup()
+
+
+	def enterEvent(self, event):
+		'''
+		args:
+			event=<QEvent>
+		'''
+
+		return QtWidgets.QComboBox.enterEvent(self, event)
+
+
+	def leaveEvent(self, event):
+		'''
+		args:
+			event=<QEvent>
+		'''
+		# self.hidePopup()
+
+		return QtWidgets.QComboBox.leaveEvent(self, event)
+
+
+	def mousePressEvent(self, event):
+		'''
+		args:
+			event=<QEvent>
+		'''
+		if event.button()==QtCore.Qt.RightButton:
+			self.contextMenu().show()
+
+		return QtWidgets.QComboBox.mousePressEvent(self, event)
+
+
+	def mouseDoubleClickEvent(self, event):
+		'''
+		args:
+			event=<QEvent>
+		'''
+		if self.isEditable():
+			self.setEditable(False)
+		else:
+			self.setEditable(True)
+			self.lineEdit().installEventFilter(self)
+
+		return QtWidgets.QComboBox.mouseDoubleClickEvent(self, event)
+
+
+	def eventFilter(self, widget, event):
+		'''
+		Event filter for the lineEdit.
+		'''
+		if event.type()==QtCore.QEvent.MouseButtonDblClick:
+			pass
+		# print (event.type)
+		if event.type()==QtCore.QEvent.KeyPress:
+			print (widget, event, event.key())
+			if event.key()==QtCore.Qt.Key_Enter:
+				self.setEditable(False)
+
+		return super(QComboBox_, self).eventFilter(widget, event)
 
 
 	def showEvent(self, event):
@@ -188,12 +290,11 @@ class QComboBox_(QtWidgets.QComboBox):
 
 			self.sb = p.window().sb
 			self.classMethod = self.sb.getMethod(self.sb.getUiName(), str(self.objectName()))
-			# className = self.window().sb.getUiName(pascalCase=True)
-			# class_ = self.window().sb.getClassInstance(className)
-			# self.classMethod = getattr(class_, str(self.objectName()))
+
 			if callable(self.classMethod):
 				self.classMethod()
-				self.itemsAdded=True
+				self.initialized=True
+
 
 		return QtWidgets.QComboBox.showEvent(self, event)
 

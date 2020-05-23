@@ -138,7 +138,7 @@ class Create(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if not cmb.itemsAdded:
+		if not cmb.initialized:
 			items = ['Polygon', 'NURBS', 'Light']
 			contents = cmb.addItems_(items)
 
@@ -185,7 +185,7 @@ class Create(Init):
 			self.setSpinboxes(cmb, names, values)
 
 			#set signal/slot connections
-			self.connect(names, 'valueChanged', self.sXXX, cmb)
+			self.connect_(names, 'valueChanged', self.sXXX, cmb)
 
 			if show:
 				cmb.showPopup()

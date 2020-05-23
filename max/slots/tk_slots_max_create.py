@@ -145,7 +145,7 @@ class Create(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if not cmb.itemsAdded:
+		if not cmb.initialized:
 			items = ['Mesh', 'Editable Poly', 'Editable Mesh', 'Editable Patch', 'NURBS', 'Light']
 			contents = cmb.addItems_(items)
 
@@ -195,7 +195,7 @@ class Create(Init):
 			self.setSpinboxes(cmb, names, attributes)
 
 			#set signal/slot connections
-			self.connect(names, 'valueChanged', self.sXXX, cmb)
+			self.connect_(names, 'valueChanged', self.sXXX, cmb)
 
 			if show:
 				cmb.showPopup()
@@ -340,8 +340,6 @@ class Create(Init):
 		'''
 		cmb000 = self.parentUi.cmb000
 		cmb001 = self.parentUi.cmb001
-		# self.cmb000() #make sure the comboboxes have been built.
-		# cmb000.itemsAdded = True
 
 		cmb000.setCurrentIndex(cmb000.findText(catagory1))
 		cmb001.setCurrentIndex(cmb001.findText(catagory2))

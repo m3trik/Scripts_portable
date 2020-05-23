@@ -51,7 +51,7 @@ class Mirror(Init):
 			tb.add('QCheckBox', setText='Cut', setObjectName='chk005', setChecked=True, setToolTip='Perform a delete along specified axis before mirror.')
 			tb.add('QDoubleSpinBox', setPrefix='Merge Threshold: ', setObjectName='s000', preset_='0.000-10 step.001', setValue=0.005, setToolTip='Merge vertex distance.')
 
-			self.connect('chk000-3', 'toggled', self.chk000_3, tb)
+			self.connect_('chk000-3', 'toggled', self.chk000_3, tb)
 			return
 
 		axis = self.getAxisFromCheckBoxes('chk000-3')

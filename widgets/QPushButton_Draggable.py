@@ -27,11 +27,11 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 
 	__mousePressPos = QtCore.QPoint()
 
-	def __init__(self, parent=None, rightClickMenu=True):
+	def __init__(self, parent=None, contextMenu=True):
 		super(QPushButton_Draggable, self).__init__(parent)
 
-		self.rightClickMenu = rightClickMenu
-		if self.rightClickMenu:
+		self.contextMenu = contextMenu
+		if self.contextMenu:
 			self.menu = QMenu_(self, position='cursorPos')
 
 		self.setCheckable(True)
@@ -167,7 +167,7 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 
 			self.classMethod = self.sb.getMethod(self.parentUiName, self)
 			if callable(self.classMethod):
-				if self.rightClickMenu:
+				if self.contextMenu:
 					self.classMethod('setMenu')
 
 		return QtWidgets.QPushButton.showEvent(self, event)

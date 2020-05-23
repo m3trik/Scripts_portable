@@ -170,7 +170,7 @@ class Edit(Init):
 			tb.add('QRadioButton', setText='Y', setObjectName='chk008', setToolTip='Perform delete along Y axis.')
 			tb.add('QRadioButton', setText='Z', setObjectName='chk009', setToolTip='Perform delete along Z axis.')
 
-			self.connect('chk006-9', 'toggled', self.chk006_9, tb)
+			self.connect_('chk006-9', 'toggled', self.chk006_9, tb)
 			return
 
 		selection = pm.ls(sl=1, objectsOnly=1)

@@ -16,7 +16,8 @@ class Slots(QtCore.QObject):
 	def getFloatReturnInt(self, f):
 		return int(f)
 	'''
-	def __init__(self, parent=None, **kwargs):
+	def __init__(self, parent=None, *args, **kwargs):
+		super(Slots, self).__init__(parent)
 		'''
 		'''
 		for k,v in kwargs.items():
@@ -28,7 +29,7 @@ class Slots(QtCore.QObject):
 		'''
 		Get the current Ui.
 		'''
-		# print ('self.ui', self.sb.getUiName(self.ui)) #same as current ui
+		# print ('ui', self.sb.getUiName(self.ui)) #same as current ui
 		# print ('currentUi:', self.sb.getUiName(self.sb.getUi()))
 		return self.sb.getUi() #current
 
@@ -37,7 +38,7 @@ class Slots(QtCore.QObject):
 		'''
 		Get the current top level Ui.
 		'''
-		# print ('ui:', self.sb.getUiName(self.sb.getUi(level=3)))
+		# print ('parentUi:', self.sb.getUiName(self.sb.getUi(level=3)))
 		return self.sb.getUi(level=3) #main_menu
 
 	@property
@@ -75,7 +76,7 @@ class Slots(QtCore.QObject):
 		return objects
 
 
-	def connect(self, widgets, signals, slots, class_=None):
+	def connect_(self, widgets, signals, slots, class_=None):
 		'''
 		Connect multiple signals to multiple slots at once.
 
@@ -85,7 +86,7 @@ class Slots(QtCore.QObject):
 			slots (obj)(list) = ie. self.cmb002 or [self.cmb002]
 			class_ (obj)(list) = if the widgets arg is given as a string, then the class_ it belongs to can be explicitly given. else, the current ui will be used.
 
-		ex call: self.connect('chk000-2', 'toggled', self.cmb002, tb) *or self.connect([tb.chk000, tb.chk001], 'toggled', self.cmb002)
+		ex call: self.connect_('chk000-2', 'toggled', self.cmb002, tb) *or self.connect_([tb.chk000, tb.chk001], 'toggled', self.cmb002)
 		'''
 		if isinstance(widgets, (str,unicode)):
 			try:

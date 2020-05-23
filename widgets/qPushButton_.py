@@ -24,11 +24,11 @@ class QPushButton_(QtWidgets.QPushButton):
 	'''
 	
 	'''
-	def __init__(self, parent=None, rightClickMenu=True, **kwargs):
+	def __init__(self, parent=None, contextMenu=True, **kwargs):
 		super(QPushButton_, self).__init__(parent)
 
-		self.rightClickMenu = rightClickMenu
-		if self.rightClickMenu:
+		self.contextMenu = contextMenu
+		if self.contextMenu:
 			self.menu = QMenu_(self, position='cursorPos')
 
 		self.setAttributes(kwargs)
@@ -85,7 +85,7 @@ class QPushButton_(QtWidgets.QPushButton):
 		if attr=='moveGlobal':
 			self.move(self.mapFromGlobal(value - self.rect().center())) #move and center
 
-			
+
 	def add(self, w, **kwargs):
 		'''
 		Add items to the toolbutton's menu.
@@ -127,6 +127,18 @@ class QPushButton_(QtWidgets.QPushButton):
 		return self.menu.childWidgets(index)
 
 
+	def mousePressEvent(self, event):
+		'''
+		args:
+			event=<QEvent>
+		'''
+		if event.button()==QtCore.Qt.RightButton:
+			if self.contextMenu:
+				self.menu.show()
+
+		return QtWidgets.QPushButton.mousePressEvent(self, event)
+
+
 	def showEvent(self, event):
 		'''
 		args:
@@ -143,7 +155,7 @@ class QPushButton_(QtWidgets.QPushButton):
 
 			self.classMethod = self.sb.getMethod(self.parentUiName, self)
 			if callable(self.classMethod):
-				if self.rightClickMenu:
+				if self.contextMenu:
 					self.classMethod('setMenu')
 
 		return QtWidgets.QPushButton.showEvent(self, event)

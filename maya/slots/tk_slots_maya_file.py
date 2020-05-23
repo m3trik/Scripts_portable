@@ -258,8 +258,8 @@ class File(Init):
 		# 	force=False #if sceneName, prompt user to save; else force open
 		# pm.openFile(files[0], open=1, force=force)
 
-		self.tk.hide(force=1)
 		self.cmb000(index=1)
+		self.tk.hide(force=1)
 
 
 	def b002(self):

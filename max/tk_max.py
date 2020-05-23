@@ -105,10 +105,10 @@ if __name__ == "__main__":
 	if not app:
 		app = QApplication(sys.argv)
 
-	#create a parent object to run the code outside of maya.
+	#create a parent object to run the code outside of max.
 	from PySide2.QtWidgets import QWidget
 	dummyParent = QWidget()
-	dummyParent.setObjectName('MayaWindow')
+	dummyParent.setObjectName('MaxWindow')
 	Instance(dummyParent).show_() #Tk_max(p).show()
 
 	sys.exit(app.exec_())

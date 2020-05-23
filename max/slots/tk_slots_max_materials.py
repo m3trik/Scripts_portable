@@ -9,8 +9,6 @@ class Materials(Init):
 	def __init__(self, *args, **kwargs):
 		super(Materials, self).__init__(*args, **kwargs)
 
-		self.parentUi.cmb002.editTextChanged.connect(self.renameMaterial)
-
 		self.currentMaterial=None
 		self.materials=None
 		self.randomMat=None
@@ -41,6 +39,13 @@ class Materials(Init):
 			index (int) = parameter on activated, currentIndexChanged, and highlighted signals.
 		'''
 		cmb = self.parentUi.cmb002
+
+		if not cmb.initialized:
+			cmb.addToContext('QPushButton', setText='Rename', setObjectName='b008', setToolTip='Rename material.')
+
+		if self.parentUi.b008.isChecked(): #prevents refreshing contents when enter is pressed during renaming.
+			return
+
 		try:
 			sceneMaterials = self.parentUi.tb001.chk000.isChecked()
 			idMapMaterials = self.parentUi.tb001.chk001.isChecked()
@@ -168,7 +173,7 @@ class Materials(Init):
 			tb.add('QRadioButton', setText='All Scene Materials', setObjectName='chk000', setChecked=True, setToolTip='List all scene materials.') #Material mode: Stored Materials
 			tb.add('QRadioButton', setText='ID Map Materials', setObjectName='chk001', setToolTip='List ID map materials.') #Material mode: ID Map Materials
 
-			self.connect([tb.chk000, tb.chk001], 'toggled', [self.cmb002, self.tb001])
+			self.connect_([tb.chk000, tb.chk001], 'toggled', [self.cmb002, self.tb001])
 			return
 
 		if tb.chk000.isChecked():
@@ -326,23 +331,17 @@ class Materials(Init):
 		'''
 		Rename Material
 		'''
-		newMatName = self.parentUi.cmb002.currentText()
+		cmb = self.parentUi.cmb002 #scene materials
+		newMatName = cmb.currentText()
 
-		if self.parentUi.tb001.chk001.isChecked(): #Rename ID map Material
-			prefix = 'matID_'
-			newName = newMatName
+		if self.currentMaterial:
+			if self.parentUi.tb001.chk001.isChecked(): #Rename ID map Material
+				prefix = 'matID_'
+				if not newMatName.startswith(prefix):
+					newMatName = prefix+newMatName
 
-			matName = self.currentMatName
-			mat = self.materials[matName] #get object from string key
-			if not newName.startswith(prefix):
-				mat.name = prefix+newName
-			else:
-				mat.name = newName
-		else: #Rename Stored Material
-			if self.currentMaterial:
-				self.currentMaterial.name = newMatName
-
-		self.b008() #uncheck rename, and re-enable widgets.
+			cmb.setItemText(cmb.currentIndex(), newMatName)
+			self.currentMaterial.name = newMatName
 
 
 	def b008(self):
@@ -351,7 +350,7 @@ class Materials(Init):
 		'''
 		b = self.parentUi.b008
 
-		if b.isChecked():
+		if b.isChecked(): #set combobox as editable and disable widgets.
 			self.currentMatName = self.parentUi.cmb002.currentText()
 
 			if self.currentMatName=='ID Map: None' or self.currentMatName=='Current Material: None':
@@ -359,7 +358,9 @@ class Materials(Init):
 			else:
 				self.parentUi.cmb002.setEditable(True)
 				self.toggleWidgets(self.parentUi, setDisabled='b002,b007,tb000,tb002-3')
-		else:
+
+		else: #rename material and re-enable widgets
+			self.renameMaterial()
 			self.parentUi.cmb002.setEditable(False)
 			self.toggleWidgets(self.parentUi, setEnabled='b002,b007,tb000,tb002-3')
 

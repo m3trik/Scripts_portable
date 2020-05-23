@@ -141,7 +141,7 @@ class StyleSheet():
 		/* the subcontrols below are used only in the MenuButtonPopup mode */
 		QToolButton::menu-button {
 			border: 1px solid {COLOR_TEXT1};
-			padding: 0px 0px 0px 4px;
+			/*padding: 0px 0px 0px 4px;*/
 			margin: 4px 2px 4px 0px;
 		}
 

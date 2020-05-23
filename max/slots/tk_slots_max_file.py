@@ -282,8 +282,8 @@ class File(Init):
 		# files = rt.getRecentfiles()
 		# rt.loadMaxFile(str(files[0]))
 
-		self.tk.hide(force=1)
 		self.cmb000(index=1)
+		self.tk.hide(force=1)
 
 
 	def b002(self):
