@@ -41,7 +41,8 @@ class Materials(Init):
 		cmb = self.parentUi.cmb002
 
 		if not cmb.initialized:
-			cmb.addToContext('QPushButton', setText='Rename', setObjectName='b008', setToolTip='Rename material.')
+			b008 = cmb.addToContext('QPushButton', setText='Rename', setObjectName='b008', setToolTip='Rename material.')
+			b008.clicked.connect(self.b008)
 
 		if self.parentUi.b008.isChecked(): #prevents refreshing contents when enter is pressed during renaming.
 			return

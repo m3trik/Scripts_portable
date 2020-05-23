@@ -36,12 +36,21 @@ class QToolButton_(QtWidgets.QToolButton):
 		self.setPopupMode(self.MenuButtonPopup) #DelayedPopup (default), MenuButtonPopup, InstantPopup
 
 
-	def add(self, w, **kwargs):
+	def addToContext(self, w, title=None, **kwargs):
+		'''
+		Same as 'add', but instead adds items to the context menu.
+		'''
+		_menu=self.contextMenu()
+		return self.add(w, title, _menu, **kwargs)
+
+
+	def add(self, w, _menu=None, **kwargs):
 		'''
 		Add items to the toolbutton's menu.
 
 		args:
-			widget (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
+			w (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
+			_menu (obj) = menu to add to. typically internal use only.
 		kwargs:
 			show (bool) = show the menu.
 			insertSeparator (QAction) = insert separator in front of the given action.
@@ -59,12 +68,23 @@ class QToolButton_(QtWidgets.QToolButton):
 
 		w.setMinimumHeight(self.minimumSizeHint().height()+1) #set child widget height to that of the toolbutton
 
-		w = self.menu().add(w, **kwargs)
+		if _menu is None:
+			_menu = self.menu()
+		w = _menu.add(w, **kwargs)
 		setattr(self, w.objectName(), w)
 		return w
 
 
-	def childWidgets(self, index=None):
+	def contextMenu(self):
+		'''
+		Get the context menu.
+		'''
+		if not hasattr(self, '_menu'):
+			self._menu = QMenu_(self, position='cursorPos')
+		return self._menu
+
+
+	def childWidgets(self, index=None, contextMenu=False):
 		'''
 		Get the widget at the given index.
 		If no arg is given all widgets will be returned.
@@ -74,7 +94,15 @@ class QToolButton_(QtWidgets.QToolButton):
 		returns:
 			(QWidget) or (list)
 		'''
-		return self.menu().childWidgets(index)
+		menuWidgets = self.menu().childWidgets(index)
+		contextMenuWidgets = self.contextMenu().childWidgets(index)
+
+		if contextMenu:
+			return contextMenuWidgets
+		if index is None:
+			return menuWidgets + contextMenuWidgets
+		else:
+			return menuWidgets
 
 
 	def enterEvent(self, event):
@@ -86,6 +114,17 @@ class QToolButton_(QtWidgets.QToolButton):
 			self.menu().show()
 
 		return QtWidgets.QToolButton.enterEvent(self, event)
+
+
+	def mousePressEvent(self, event):
+		'''
+		args:
+			event=<QEvent>
+		'''
+		if event.button()==QtCore.Qt.RightButton:
+			self.contextMenu().show()
+
+		return QtWidgets.QToolButton.mousePressEvent(self, event)
 
 
 	def leaveEvent(self, event):
@@ -111,9 +150,8 @@ class QToolButton_(QtWidgets.QToolButton):
 
 			self.sb = p.window().sb
 			self.parentUiName = self.sb.getUiName()
-			self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
-
 			self.classMethod = self.sb.getMethod(self.parentUiName, self)
+
 			if callable(self.classMethod):
 				self.classMethod('setMenu')
 

@@ -24,15 +24,10 @@ class QPushButton_(QtWidgets.QPushButton):
 	'''
 	
 	'''
-	def __init__(self, parent=None, contextMenu=True, **kwargs):
+	def __init__(self, parent=None, **kwargs):
 		super(QPushButton_, self).__init__(parent)
 
-		self.contextMenu = contextMenu
-		if self.contextMenu:
-			self.menu = QMenu_(self, position='cursorPos')
-
 		self.setAttributes(kwargs)
-
 
 
 	def setAttributes(self, attributes=None, order=['moveGlobal', 'setVisible'], **kwargs):
@@ -86,12 +81,12 @@ class QPushButton_(QtWidgets.QPushButton):
 			self.move(self.mapFromGlobal(value - self.rect().center())) #move and center
 
 
-	def add(self, w, **kwargs):
+	def addToContext(self, w, **kwargs):
 		'''
-		Add items to the toolbutton's menu.
+		Add items to the pushbutton's context menu.
 
 		args:
-			widget (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
+			w (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
 		kwargs:
 			show (bool) = show the menu.
 			insertSeparator (QAction) = insert separator in front of the given action.
@@ -107,11 +102,20 @@ class QPushButton_(QtWidgets.QPushButton):
 			if callable(w):
 				w = widget() #ex. QtWidgets.QAction(self) object.
 
-		w.setMinimumHeight(self.minimumSizeHint().height()+1) #set child widget height to that of the toolbutton
+		w.setMinimumHeight(self.minimumSizeHint().height()+1) #set child widget height to that of the button
 
-		w = self.menu.add(w, **kwargs)
+		w = self.contextMenu().add(w, **kwargs)
 		setattr(self, w.objectName(), w)
 		return w
+
+
+	def contextMenu(self):
+		'''
+		Get the context menu.
+		'''
+		if not hasattr(self, '_menu'):
+			self._menu = QMenu_(self, position='cursorPos')
+		return self._menu
 
 
 	def childWidgets(self, index=None):
@@ -124,7 +128,7 @@ class QPushButton_(QtWidgets.QPushButton):
 		returns:
 			(QWidget) or (list)
 		'''
-		return self.menu.childWidgets(index)
+		return self.contextMenu().childWidgets(index)
 
 
 	def mousePressEvent(self, event):
@@ -134,7 +138,7 @@ class QPushButton_(QtWidgets.QPushButton):
 		'''
 		if event.button()==QtCore.Qt.RightButton:
 			if self.contextMenu:
-				self.menu.show()
+				self.contextMenu().show()
 
 		return QtWidgets.QPushButton.mousePressEvent(self, event)
 
@@ -151,9 +155,8 @@ class QPushButton_(QtWidgets.QPushButton):
 
 			self.sb = p.window().sb
 			self.parentUiName = self.sb.getUiName()
-			self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
-
 			self.classMethod = self.sb.getMethod(self.parentUiName, self)
+
 			if callable(self.classMethod):
 				if self.contextMenu:
 					self.classMethod('setMenu')

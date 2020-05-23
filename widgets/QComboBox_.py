@@ -32,8 +32,8 @@ class QComboBox_(QtWidgets.QComboBox):
 		'''
 		self.initialized=False
 		self.popupStyle = popupStyle
-		self.main_menu = QMenu_(self, position='bottomLeft')
-		self.main_menu.visible=False #built-in method isVisible() not working.
+		self.menu = QMenu_(self, position='bottomLeft')
+		self.menu.visible=False #built-in method isVisible() not working.
 
 		self.setAttributes(kwargs)
 
@@ -93,16 +93,18 @@ class QComboBox_(QtWidgets.QComboBox):
 		'''
 		Same as 'add', but instead adds items to the context menu.
 		'''
-		menu=self.contextMenu()
-		self.add(w, title, menu, **kwargs)
+		_menu=self.contextMenu()
+		return self.add(w, title, _menu, **kwargs)
 
 
-	def add(self, w, title=None, menu=None, **kwargs):
+	def add(self, w, title=None, _menu=None, **kwargs):
 		'''
 		Add items to the comboboxes's custom menu (or it's standard modelView).
 
 		args:
-			widget (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
+			w (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
+			title (str) = optional - header string at top when using standard model/view.
+			_menu (obj) = menu to add to. typically internal use only.
 		kwargs:
 			show (bool) = show the menu.
 			insertSeparator (QAction) = insert separator in front of the given action.
@@ -112,7 +114,7 @@ class QComboBox_(QtWidgets.QComboBox):
 		ex.call:
 		tb.add('QCheckBox', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
 		'''
-		if self.popupStyle=='modelView' and menu is None:
+		if self.popupStyle=='modelView' and _menu is None:
 			items = self.addItems_(w, title)
 			return items
 
@@ -124,9 +126,9 @@ class QComboBox_(QtWidgets.QComboBox):
 
 		w.setMinimumHeight(self.minimumSizeHint().height()+1) #set child widget height to that of the toolbutton
 
-		if menu is None:
-			menu = self.main_menu
-		w = menu.add(w, **kwargs)
+		if _menu is None:
+			_menu = self.menu
+		w = _menu.add(w, **kwargs)
 		setattr(self, w.objectName(), w)
 		return w
 
@@ -178,15 +180,37 @@ class QComboBox_(QtWidgets.QComboBox):
 		'''
 
 		'''
-		return [i for i in self.main_menu.children() if i.__class__.__name__ not in ['QAction', 'QWidgetAction']]
+		return [i for i in self.menu.children() if i.__class__.__name__ not in ['QAction', 'QWidgetAction']]
 
 
 	def contextMenu(self):
 		'''
+		Get the context menu.
 		'''
 		if not hasattr(self, '_menu'):
 			self._menu = QMenu_(self, position='cursorPos')
 		return self._menu
+
+
+	def childWidgets(self, index=None, contextMenu=False):
+		'''
+		Get the widget at the given index.
+		If no arg is given all widgets will be returned.
+
+		args:
+			index (int) = widget location.
+		returns:
+			(QWidget) or (list)
+		'''
+		menuWidgets = self.menu.childWidgets(index)
+		contextMenuWidgets = self.contextMenu().childWidgets(index)
+
+		if contextMenu:
+			return contextMenuWidgets
+		if index is None:
+			return menuWidgets + contextMenuWidgets
+		else:
+			return menuWidgets
 
 
 	def showPopup(self):
@@ -194,12 +218,12 @@ class QComboBox_(QtWidgets.QComboBox):
 		Show the popup menu.
 		'''
 		if not self.popupStyle=='modelView':
-			if not self.main_menu.visible:
-				self.main_menu.show()
-				self.main_menu.visible=True
+			if not self.menu.visible:
+				self.menu.show()
+				self.menu.visible=True
 			else:
-				self.main_menu.hide()
-				self.main_menu.visible=False
+				self.menu.hide()
+				self.menu.visible=False
 		else:
 			width = self.minimumSizeHint().width()
 			self.view().setMinimumWidth(width)
@@ -209,8 +233,8 @@ class QComboBox_(QtWidgets.QComboBox):
 
 	def hidePopup(self):
 		if not self.popupStyle=='modelView':
-			self.main_menu.hide()
-			self.main_menu.visible=False
+			self.menu.hide()
+			self.menu.visible=False
 		else:
 			super(QComboBox_, self).hidePopup()
 
@@ -289,12 +313,12 @@ class QComboBox_(QtWidgets.QComboBox):
 				p = p.parent()
 
 			self.sb = p.window().sb
-			self.classMethod = self.sb.getMethod(self.sb.getUiName(), str(self.objectName()))
+			self.parentUiName = self.sb.getUiName()
+			self.classMethod = self.sb.getMethod(self.parentUiName, str(self.objectName()))
 
 			if callable(self.classMethod):
 				self.classMethod()
 				self.initialized=True
-
 
 		return QtWidgets.QComboBox.showEvent(self, event)
 
