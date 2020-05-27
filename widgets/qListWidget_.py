@@ -35,7 +35,7 @@ class QListWidget_(QtWidgets.QListWidget):
 
 
 
-	def setAttributes(self, item=None, attributes=None, order=['moveGlobal'], **kwargs):
+	def setAttributes(self, item=None, attributes=None, order=['globalPos'], **kwargs):
 		'''
 		Works with attributes passed in as a dict or kwargs.
 		If attributes are passed in as a dict, kwargs are ignored.
@@ -78,9 +78,9 @@ class QListWidget_(QtWidgets.QListWidget):
 			attr (str) = custom keyword attribute.
 			value (str) = the value corresponding to the given attr.
 		kwargs:
-			moveGlobal (QPoint) = move to given global location and center.
+			globalPos (QPoint) = move to given global location and center.
 		'''
-		if attr=='moveGlobal':
+		if attr=='globalPos':
 			self.move(self.mapFromGlobal(value - self.rect().center())) #move and center
 
 

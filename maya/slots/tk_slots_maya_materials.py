@@ -1,6 +1,8 @@
 from __future__ import print_function
 from tk_slots_maya_init import *
 
+from widgets.qLabel_ import QLabel_
+
 import os.path
 
 
@@ -42,10 +44,16 @@ class Materials(Init):
 		cmb = self.parentUi.cmb002
 
 		if not cmb.initialized:
-			b008 = cmb.addToContext('QPushButton', setText='Rename', setObjectName='b008', setToolTip='Rename material.')
-			b008.clicked.connect(self.b008)
+			cmb.addToContext(QLabel_(), setText='Open in Editor', setObjectName='lbl000', setToolTip='Open material in editor.')
+			cmb.addToContext(QLabel_(), setText='Rename', setObjectName='lbl001', setToolTip='Rename material')
 
-		if self.parentUi.b008.isChecked(): #prevents refreshing contents when enter is pressed during renaming.
+			cmb.addToContext(QLabel_(), setText='Delete', setObjectName='lbl002', setToolTip='Delete the current material.')
+			cmb.addToContext(QLabel_(), setText='Delete All Unused Materials', setObjectName='lbl003', setToolTip='Delete All unused materials.')
+			cmb.addToContext(QLabel_(), setText='Refresh', setObjectName='cmb002', setToolTip='Refresh materials list')
+
+
+		if cmb.lineEdit():
+			self.renameMaterial()
 			return
 
 		try:
@@ -140,42 +148,9 @@ class Materials(Init):
 
 	def tb002(self, state=None):
 		'''
-		Delete Material
-		'''
-		tb = self.currentUi.tb002
-		if state=='setMenu':
-			tb.add('QRadioButton', setText='Delete Current Material', setObjectName='chk003', setChecked=True, setToolTip='Delete the current material.')
-			tb.add('QRadioButton', setText='Delete Unused Materials', setObjectName='chk004', setToolTip='Delete All unused materials.')
-			return
-
-		if tb.chk003.isChecked():
-			if self.parentUi.tb001.chk001.isChecked: #delete mat ID material
-				mat = self.materials[self.parentUi.cmb002.currentText()] #get object from string key
-				pm.delete(mat)
-			else: #delete stored material
-				pm.delete(self.currentMaterial)
-				self.currentMaterial = None
-
-				self.comboBox(self.parentUi.cmb002, [], 'Stored Material: None') #init combobox
-
-		if tb.chk004.isChecked(): #Delete Unused Materials
-			print('-< no maya version coded >-')
-			# defaultMaterial = rt.Standard(name='Default Material')
-			
-			# for mat in rt.scenematerials:
-			# 	nodes = rt.refs().dependentnodes(mat) 
-			# 	if nodes.count==0:
-			# 		rt.replaceinstances(mat, defaultMaterial)
-					
-			# 	rt.gc()
-			# 	rt.freeSceneBitmaps()
-
-
-	def tb003(self, state=None):
-		'''
 		Assign Material
 		'''
-		tb = self.currentUi.tb003
+		tb = self.currentUi.tb002
 		if state=='setMenu':
 			tb.add('QRadioButton', setText='Current Material', setObjectName='chk007', setChecked=True, setToolTip='Re-Assign the current stored material.')
 			tb.add('QRadioButton', setText='New Random Material', setObjectName='chk008', setToolTip='Assign a new random ID material.')
@@ -222,26 +197,9 @@ class Materials(Init):
 					pm.hyperShade(obj, assign=mat)
 
 
-	def b002(self):
-		'''
-		Store Material
-
-		'''
-		if pm.ls(selection=1):
-			pm.hyperShade("", shaderNetworksSelectMaterialNodes=1) #selects the material node 
-			mat = pm.ls(selection=1, materials=1)[0] #now add the selected node to a variable
-
-			self.currentMaterial = mat #store material
-			self.parentUi.tb001.chk000.setChecked(True) #put combobox in current material mode
-			self.cmb002() #refresh combobox
-		else:
-			print('# Error: Nothing selected. #')
-
-
-	def b007(self):
+	def lbl000(self):
 		'''
 		Open material in editor
-
 		'''
 		if self.parentUi.tb001.chk001.isChecked(): #ID map mode
 			try:
@@ -274,37 +232,80 @@ class Materials(Init):
 		'''
 		Rename Material
 		'''
-		newMatName = self.parentUi.cmb002.currentText()
+		cmb = self.parentUi.cmb002 #scene materials
+		newMatName = cmb.currentText()
 
-		if self.currentMaterial:
+		if self.currentMaterial and self.currentMaterial.name!=newMatName:
 			if self.parentUi.tb001.chk001.isChecked(): #Rename ID map Material
 				prefix = 'matID_'
 				if not newMatName.startswith(prefix):
 					newMatName = prefix+newMatName
 
 			cmb.setItemText(cmb.currentIndex(), newMatName)
-			pm.rename(self.currentMaterial.name(), newMatName)
+			try:
+				pm.rename(self.currentMaterial.name(), newMatName)
+			except RuntimeError as error:
+				cmb.setItemText(cmb.currentIndex(), str(error.strip('\n')))
+
+		#re-enable widgets
+		self.lbl001(setEditable=False)
 
 
-	def b008(self):
+	def lbl001(self, setEditable=True):
 		'''
-		Toggle: Rename Material
+		Rename Material: Set cmb002 as editable and disable widgets.
 		'''
-		b = self.parentUi.b008
-
-		if b.isChecked(): #set combobox as editable and disable widgets.
-			self.currentMatName = self.parentUi.cmb002.currentText()
-
-			if self.currentMatName=='ID Map: None' or self.currentMatName=='Current Material: None':
-				b.setChecked(False)
-			else:
-				self.parentUi.cmb002.setEditable(True)
-				self.toggleWidgets(self.parentUi, setDisabled='b002,b007,tb000,tb002-3')
-
-		else: #rename material and re-enable widgets
-			self.renameMaterial()
+		if setEditable:
+			self.parentUi.cmb002.setEditable(True)
+			# self.parentUi.cmb002.lineEdit().returnPressed.connect(self.renameMaterial)
+			self.toggleWidgets(self.parentUi, setDisabled='b002,lbl000,tb000,tb002')
+		else:
 			self.parentUi.cmb002.setEditable(False)
-			self.toggleWidgets(self.parentUi, setEnabled='b002,b007,tb000,tb002-3')
+			self.toggleWidgets(self.parentUi, setEnabled='b002,lbl000,tb000,tb002')
+
+
+	def lbl002(self):
+		'''
+		Delete Material
+		'''
+		mat = self.currentMaterial
+		mat = pm.delete(mat)
+
+		self.currentMaterial = None
+
+		index = self.parentUi.cmb002.currentIndex()
+		self.parentUi.cmb002.setItemText(index, 'None') #self.parentUi.cmb002.removeItem(index)
+
+
+	def lbl003(self):
+		'''
+		Delete Unused Materials
+		'''
+		defaultMaterial = rt.Standard(name='Default Material')
+
+		for mat in rt.sceneMaterials:
+			nodes = rt.refs().dependentnodes(mat) 
+			if nodes.count==0:
+				rt.replaceinstances(mat, defaultMaterial)
+				
+			rt.gc()
+			rt.freeSceneBitmaps()
+
+
+	def b002(self):
+		'''
+		Store Material
+
+		'''
+		if pm.ls(selection=1):
+			pm.hyperShade("", shaderNetworksSelectMaterialNodes=1) #selects the material node 
+			mat = pm.ls(selection=1, materials=1)[0] #now add the selected node to a variable
+
+			self.currentMaterial = mat #store material
+			self.parentUi.tb001.chk000.setChecked(True) #put combobox in current material mode
+			self.cmb002() #refresh combobox
+		else:
+			print('# Error: Nothing selected. #')
 
 
 

@@ -160,19 +160,19 @@ class Switchboard(QtCore.QObject):
 
 
 		signals = { #the default signal to be associated with each widget type.
-			'QProgressBar':'valueChanged',
+			'QAction':'triggered',
 			'QPushButton':'released',
 			'QToolButton':'released',
 			'QListWidget':'itemClicked',
 			'QTreeWidget':'itemClicked',
-			'QAction':'triggered',
+			'QComboBox':'currentIndexChanged',
 			'QSpinBox':'valueChanged',
 			'QDoubleSpinBox':'valueChanged',
 			'QCheckBox':'released',
 			'QRadioButton':'released',
-			'QComboBox':'currentIndexChanged',
 			'QLineEdit':'returnPressed',
 			'QTextEdit':'textChanged',
+			'QProgressBar':'valueChanged',
 		}
 		# print(widget.__class__.__mro__)
 		for d in widget.__class__.__mro__: #get the directly derived class if a custom widget.

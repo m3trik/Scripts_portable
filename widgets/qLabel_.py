@@ -1,6 +1,6 @@
-from PySide2 import QtWidgets
+from PySide2 import QtWidgets, QtCore
 
-from widgets.qMenu_ import QMenu_
+
 
 
 
@@ -20,12 +20,12 @@ Promoting a widget in designer to use a custom class:
 
 
 
-class QPushButton_(QtWidgets.QPushButton):
+class QLabel_(QtWidgets.QLabel):
 	'''
-	
+
 	'''
 	def __init__(self, parent=None, **kwargs):
-		super(QPushButton_, self).__init__(parent)
+		super(QLabel_, self).__init__(parent)
 
 		self.setAttributes(kwargs)
 
@@ -81,66 +81,18 @@ class QPushButton_(QtWidgets.QPushButton):
 			self.move(self.mapFromGlobal(value - self.rect().center())) #move and center
 
 
-	def addToContext(self, w, **kwargs):
-		'''
-		Add items to the pushbutton's context menu.
-
-		args:
-			w (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
-		kwargs:
-			show (bool) = show the menu.
-			insertSeparator (QAction) = insert separator in front of the given action.
-		returns:
- 			the added widget.
-
-		ex.call:
-		tb.add('QCheckBox', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
-		'''
-		try:
-			w = getattr(QtWidgets, w)() #ex. QtWidgets.QAction(self) object from string.
-		except:
-			if callable(w):
-				w = widget() #ex. QtWidgets.QAction(self) object.
-
-		w.setMinimumHeight(self.minimumSizeHint().height()+1) #set child widget height to that of the button
-
-		w = self.contextMenu().add(w, **kwargs)
-		setattr(self, w.objectName(), w)
-		return w
-
-
-	def contextMenu(self):
-		'''
-		Get the context menu.
-		'''
-		if not hasattr(self, '_menu'):
-			self._menu = QMenu_(self, position='cursorPos')
-		return self._menu
-
-
-	def childWidgets(self, index=None):
-		'''
-		Get the widget at the given index.
-		If no arg is given all widgets will be returned.
-
-		args:
-			index (int) = widget location.
-		returns:
-			(QWidget) or (list)
-		'''
-		return self.contextMenu().childWidgets(index)
-
-
 	def mousePressEvent(self, event):
 		'''
 		args:
 			event=<QEvent>
 		'''
-		if event.button()==QtCore.Qt.RightButton:
-			if self.contextMenu:
-				self.contextMenu().show()
+		if event.button()==QtCore.Qt.LeftButton:
+			try:
+				self.classMethod()
+			except Exception as error:
+				print (error)
 
-		return QtWidgets.QPushButton.mousePressEvent(self, event)
+		return QtWidgets.QLabel.mousePressEvent(self, event)
 
 
 	def showEvent(self, event):
@@ -157,11 +109,11 @@ class QPushButton_(QtWidgets.QPushButton):
 			self.parentUiName = self.sb.getUiName()
 			self.classMethod = self.sb.getMethod(self.parentUiName, self)
 
-			if callable(self.classMethod):
-				if self.contextMenu:
-					self.classMethod('setMenu')
 
-		return QtWidgets.QPushButton.showEvent(self, event)
+		return QtWidgets.QLabel.showEvent(self, event)
+
+
+
 
 
 
@@ -172,6 +124,6 @@ if __name__ == "__main__":
 	import sys
 	from PySide2.QtCore import QSize
 	app = QtWidgets.QApplication(sys.argv)
-	w = QPushButton_(parent=None, setObjectName='b000', resize=QSize(45, 45), setText='QPushButton_', setWhatsThis='', setVisible=True)
+	w = QLabel_(parent=None, setObjectName='lbl000', resize=QSize(45, 45), setText='QLabel_', setWhatsThis='', setVisible=True)
 	w.show()
 	sys.exit(app.exec_())

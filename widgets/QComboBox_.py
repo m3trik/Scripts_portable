@@ -38,7 +38,7 @@ class QComboBox_(QtWidgets.QComboBox):
 		self.setAttributes(kwargs)
 
 
-	def setAttributes(self, attributes=None, order=['moveGlobal', 'setVisible'], **kwargs):
+	def setAttributes(self, attributes=None, order=['globalPos', 'setVisible'], **kwargs):
 		'''
 		Works with attributes passed in as a dict or kwargs.
 		If attributes are passed in as a dict, kwargs are ignored.
@@ -77,7 +77,7 @@ class QComboBox_(QtWidgets.QComboBox):
 			value (str) = the value corresponding to the given attr.
 		kwargs:
 			copy (obj) = widget to copy certain attributes from.
-			moveGlobal (QPoint) = move to given global location and center.
+			globalPos (QPoint) = move to given global location and center.
 		'''
 		if attr=='copy':
 			self.setObjectName(value.objectName())
@@ -85,7 +85,7 @@ class QComboBox_(QtWidgets.QComboBox):
 			self.setText(value.text())
 			self.setWhatsThis(value.whatsThis())
 
-		if attr=='moveGlobal':
+		if attr=='globalPos':
 			self.move(self.mapFromGlobal(value - self.rect().center())) #move and center
 
 
@@ -269,33 +269,34 @@ class QComboBox_(QtWidgets.QComboBox):
 		return QtWidgets.QComboBox.mousePressEvent(self, event)
 
 
-	def mouseDoubleClickEvent(self, event):
-		'''
-		args:
-			event=<QEvent>
-		'''
-		if self.isEditable():
-			self.setEditable(False)
-		else:
-			self.setEditable(True)
-			self.lineEdit().installEventFilter(self)
+	# def mouseDoubleClickEvent(self, event):
+	# 	'''
+	# 	args:
+	# 		event=<QEvent>
+	# 	'''
+	# 	if self.isEditable():
+	# 		self.setEditable(False)
+	# 	else:
+	# 		self.setEditable(True)
+	# 		print('mouseDoubleClickEvent')
+	# 		self.lineEdit().installEventFilter(self)
 
-		return QtWidgets.QComboBox.mouseDoubleClickEvent(self, event)
+	# 	return QtWidgets.QComboBox.mouseDoubleClickEvent(self, event)
 
 
-	def eventFilter(self, widget, event):
-		'''
-		Event filter for the lineEdit.
-		'''
-		if event.type()==QtCore.QEvent.MouseButtonDblClick:
-			pass
-		# print (event.type)
-		if event.type()==QtCore.QEvent.KeyPress:
-			print (widget, event, event.key())
-			if event.key()==QtCore.Qt.Key_Enter:
-				self.setEditable(False)
+	# def eventFilter(self, widget, event):
+	# 	'''
+	# 	Event filter for the lineEdit.
+	# 	'''
+	# 	if event.type()==QtCore.QEvent.MouseButtonDblClick:
+	# 		pass
+	# 	# print (event.type)
+	# 	if event.type()==QtCore.QEvent.KeyPress:
+	# 		print (widget, event, event.key())
+	# 		if event.key()==QtCore.Qt.Key_Enter:
+	# 			self.setEditable(False)
 
-		return super(QComboBox_, self).eventFilter(widget, event)
+	# 	return super(QComboBox_, self).eventFilter(widget, event)
 
 
 	def showEvent(self, event):
