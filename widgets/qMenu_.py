@@ -32,7 +32,7 @@ class QMenu_(QtWidgets.QMenu):
 		self.widget=widget
 		self.position=position
 
-		self.setAttributes(kwargs)
+		self._setAttributes(kwargs)
 		# self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 		self.setStyleSheet('''
 			QMenu {
@@ -46,9 +46,9 @@ class QMenu_(QtWidgets.QMenu):
 			}''')
 
 
-	def setAttributes(self, attributes=None, action=None, order=['show'], **kwargs):
+	def _setAttributes(self, attributes=None, action=None, order=['show'], **kwargs):
 		'''
-		Works with attributes passed in as a dict or kwargs.
+		Internal use. Works with attributes passed in as a dict or kwargs.
 		If attributes are passed in as a dict, kwargs are ignored.
 
 		args:
@@ -74,14 +74,14 @@ class QMenu_(QtWidgets.QMenu):
 
 			except Exception as error:
 				if type(error)==AttributeError:
-					self.setCustomAttribute(action, attr, value)
+					self._setCustomAttribute(action, attr, value)
 				else:
 					raise error
 
 
-	def setCustomAttribute(self, action, attr, value):
+	def _setCustomAttribute(self, action, attr, value):
 		'''
-		Custom attributes can be set using a trailing underscore convention to differentiate them from standard attributes. ie. insertSeparator_=True
+		Internal use. Custom attributes can be set using a trailing underscore convention to differentiate them from standard attributes.
 
 		args:
 			action (obj) = action (obj) = the child action or widgetAction to set attributes for.
@@ -95,21 +95,21 @@ class QMenu_(QtWidgets.QMenu):
 			self.insertSeparator(action)
 
 		elif attr=='setLayoutDirection_':
-			self.setAttributes({'setLayoutDirection':getattr(QtCore.Qt, value)}, action)
+			self._setAttributes({'setLayoutDirection':getattr(QtCore.Qt, value)}, action)
 
 		elif attr=='setAlignment_':
-			self.setAttributes({'setAlignment':getattr(QtCore.Qt, value)}, action)
+			self._setAttributes({'setAlignment':getattr(QtCore.Qt, value)}, action)
 
 		elif attr=='setButtonSymbols_':
-			self.setAttributes({'setButtonSymbols':getattr(QtWidgets.QAbstractSpinBox, value)}, action)
+			self._setAttributes({'setButtonSymbols':getattr(QtWidgets.QAbstractSpinBox, value)}, action)
 
 		#presets
-		elif attr=='preset_':
+		elif attr=='minMax_':
 			minimum = float(value.split('-')[0])
 			maximum = float(value.split('-')[1].split(' ')[0])
 			step = float(value.split(' ')[1].strip('step'))
 
-			self.setAttributes({'setMinimum':minimum, 'setMaximum':maximum, 'setSingleStep':step, 'setButtonSymbols_':'NoButtons'}, action)
+			self._setAttributes({'setMinimum':minimum, 'setMaximum':maximum, 'setSingleStep':step, 'setButtonSymbols_':'NoButtons'}, action)
 
 		else:
 			print('# Error: {} has no attribute {}'.format(action, attr))
@@ -122,20 +122,24 @@ class QMenu_(QtWidgets.QMenu):
 		args:
 			widget (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
 		kwargs:
-			show (bool) = show the menu.
-			insertSeparator (QAction) = insert separator in front of the given action.
+			show_ (bool) = show the menu immediately.
+			insertSeparator_ (bool) = insert a separator before the widget.
+			setLayoutDirection_ (str) = ie. 'LeftToRight'
+			setAlignment_ (str) = ie. 'AlignVCenter'
+			setButtonSymbols_ (str) = ie. 'PlusMinus'
+			minMax_ (str) = Set the min, max, and step values with a string. ie. '1-100 step.1'
 		returns:
  			the added widget.
 
 		ex.call:
 		menu.add('QCheckBox', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
 		'''
-		#set widget
+		#get the widget
 		try:
 			w = getattr(QtWidgets, w)() #ex. QtWidgets.QAction(self) object from string.
 		except:
 			if callable(w):
-				w = widget() #ex. QtWidgets.QAction(self) object.
+				w = w() #ex. QtWidgets.QAction(self) object.
 
 		type_ = w.__class__.__name__
 
@@ -147,7 +151,7 @@ class QMenu_(QtWidgets.QMenu):
 			wAction.setDefaultWidget(w)
 			self.addAction(wAction)
 
-		self.setAttributes(kwargs, w) #set any additional given keyword args for the widget.
+		self._setAttributes(kwargs, w) #set any additional given keyword args for the widget.
 
 		return w
 
@@ -190,6 +194,31 @@ class QMenu_(QtWidgets.QMenu):
 		return QtWidgets.QMenu.leaveEvent(self, event)
 
 
+	def mouseMoveEvent(self, event):
+		'''
+
+		'''
+		if not self.rect().contains(self.mapFromGlobal(QtGui.QCursor.pos())): #if mouse over widget:
+			self.hide()
+
+		return QtWidgets.QMenu.mouseMoveEvent(self, event)
+
+
+	def hide(self, force=False):
+		'''
+		Hide the menu.
+		'''
+		if not force:
+			for child in self.children():
+				try:
+					if child.view().isVisible():
+						return
+				except AttributeError:
+					pass
+
+		return super(QMenu_, self).hide()
+
+
 	def showEvent(self, event):
 		'''
 		args:
@@ -210,7 +239,7 @@ class QMenu_(QtWidgets.QMenu):
 		#set menu position
 		if self.position is 'cursorPos':
 			pos = QtGui.QCursor.pos() #global position
-			self.move(pos)
+			self.move(pos.x()-self.width()/4, pos.y()-10) #move to cursor position and offset slightly.
 
 		elif self.widget: #if a widget is specified:
 			pos = getattr(self.widget.rect(), self.position)
@@ -224,6 +253,9 @@ class QMenu_(QtWidgets.QMenu):
 		self.resize(self.sizeHint().width(), self.sizeHint().height())
 
 		return QtWidgets.QToolButton.showEvent(self, event)
+
+
+
 
 
 
@@ -259,25 +291,25 @@ if __name__ == "__main__":
 
 			# integer
 			# if value=='1-10 step1':
-			# 	self.setAttributes({'setMinimum':1, 'setMaximum':10, 'setSingleStep':1, 'setButtonSymbols_':'NoButtons'}, action)
+			# 	self._setAttributes({'setMinimum':1, 'setMaximum':10, 'setSingleStep':1, 'setButtonSymbols_':'NoButtons'}, action)
 			# if value=='1-100 step1':
-			# 	self.setAttributes({'setMinimum':1, 'setMaximum':100, 'setSingleStep':1, 'setButtonSymbols_':'NoButtons'}, action)
+			# 	self._setAttributes({'setMinimum':1, 'setMaximum':100, 'setSingleStep':1, 'setButtonSymbols_':'NoButtons'}, action)
 			# elif value=='1-180 step1':
-			# 	self.setAttributes({'setMinimum':1, 'setMaximum':180, 'setSingleStep':1, 'setButtonSymbols_':'NoButtons'}, action)
+			# 	self._setAttributes({'setMinimum':1, 'setMaximum':180, 'setSingleStep':1, 'setButtonSymbols_':'NoButtons'}, action)
 			# elif value=='1-360 step1':
-			# 	self.setAttributes({'setMinimum':1, 'setMaximum':360, 'setSingleStep':1, 'setButtonSymbols_':'NoButtons'}, action)
+			# 	self._setAttributes({'setMinimum':1, 'setMaximum':360, 'setSingleStep':1, 'setButtonSymbols_':'NoButtons'}, action)
 			# if value=='0-10000 step1':
-			# 	self.setAttributes({'setMinimum':0, 'setMaximum':10000, 'setSingleStep':1, 'setButtonSymbols_':'NoButtons'}, action)
+			# 	self._setAttributes({'setMinimum':0, 'setMaximum':10000, 'setSingleStep':1, 'setButtonSymbols_':'NoButtons'}, action)
 			# #float
 			# elif value=='0.0-10 step.1':
-			# 	self.setAttributes({'setMinimum':0.0, 'setMaximum':100.0, 'setSingleStep':0.1, 'setDecimals':1, 'setButtonSymbols_':'NoButtons'}, action)
+			# 	self._setAttributes({'setMinimum':0.0, 'setMaximum':100.0, 'setSingleStep':0.1, 'setDecimals':1, 'setButtonSymbols_':'NoButtons'}, action)
 			# elif value=='0.00-1 step.01':
-			# 	self.setAttributes({'setMinimum':0.0, 'setMaximum':1.0, 'setSingleStep':0.01, 'setDecimals':2, 'setButtonSymbols_':'NoButtons'}, action)
+			# 	self._setAttributes({'setMinimum':0.0, 'setMaximum':1.0, 'setSingleStep':0.01, 'setDecimals':2, 'setButtonSymbols_':'NoButtons'}, action)
 			# elif value=='0.00-10 step.05':
-			# 	self.setAttributes({'setMinimum':0.0, 'setMaximum':10.0, 'setSingleStep':0.05, 'setDecimals':2, 'setButtonSymbols_':'NoButtons'}, action)
+			# 	self._setAttributes({'setMinimum':0.0, 'setMaximum':10.0, 'setSingleStep':0.05, 'setDecimals':2, 'setButtonSymbols_':'NoButtons'}, action)
 			# elif value=='0.00-100 step.01':
-			# 	self.setAttributes({'setMinimum':0.0, 'setMaximum':100.0, 'setSingleStep':0.01, 'setDecimals':2, 'setButtonSymbols_':'NoButtons'}, action)
+			# 	self._setAttributes({'setMinimum':0.0, 'setMaximum':100.0, 'setSingleStep':0.01, 'setDecimals':2, 'setButtonSymbols_':'NoButtons'}, action)
 			# elif value=='0.00-100 step1':
-			# 	self.setAttributes({'setMinimum':0.0, 'setMaximum':100.0, 'setSingleStep':1, 'setDecimals':2, 'setButtonSymbols_':'NoButtons'}, action)
+			# 	self._setAttributes({'setMinimum':0.0, 'setMaximum':100.0, 'setSingleStep':1, 'setDecimals':2, 'setButtonSymbols_':'NoButtons'}, action)
 			# elif value=='0.000-10 step.001':
-			# 	self.setAttributes({'setMinimum':0.0, 'setMaximum':10.0, 'setSingleStep':0.001, 'setDecimals':3, 'setButtonSymbols_':'NoButtons'}, action)
+			# 	self._setAttributes({'setMinimum':0.0, 'setMaximum':10.0, 'setSingleStep':0.001, 'setDecimals':3, 'setButtonSymbols_':'NoButtons'}, action)

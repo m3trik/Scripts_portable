@@ -2,7 +2,7 @@ from __future__ import print_function
 from tk_slots_max_init import *
 
 import os.path
-from widgets.qWidget_MultiWidget import QWidget_MultiWidget as MultiWidget
+
 
 
 class Cameras(Init):

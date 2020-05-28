@@ -10,12 +10,16 @@ class Edit(Init):
 		super(Edit, self).__init__(*args, **kwargs)
 
 
-	def chk006_9(self):
+	def pin(self, state=None):
 		'''
-		Set the toolbutton's text according to the checkstates.
+		Context menu
 		'''
-		axis = self.getAxisFromCheckBoxes('chk006-9')
-		self.parentUi.tb003.setText('Along Axis '+axis)
+		pin = self.parentUi.pin
+
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya Editors')
+
+			return
 
 
 	def cmb000(self, index=None):
@@ -25,7 +29,7 @@ class Edit(Init):
 		cmb = self.parentUi.cmb000
 
 		files = ['Cleanup', 'Transfer: Attribute Values', 'Transfer: Shading Sets']
-		contents = cmb.addItems_(files, ' ')
+		contents = cmb.addItems_(files, 'Maya Editors')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -40,6 +44,14 @@ class Edit(Init):
 			cmb.setCurrentIndex(0)
 
 
+	def chk006_9(self):
+		'''
+		Set the toolbutton's text according to the checkstates.
+		'''
+		axis = self.getAxisFromCheckBoxes('chk006-9')
+		self.parentUi.tb003.setText('Along Axis '+axis)
+
+
 	def tb000(self, state=None):
 		'''
 		Mesh Cleanup
@@ -48,7 +60,7 @@ class Edit(Init):
 		if state=='setMenu':
 			# tb.add('QCheckBox', setText='N-Gons', setObjectName='chk002', setToolTip='Find N-gons.')
 			# tb.add('QCheckBox', setText='Isolated Vertex', setObjectName='chk003', setChecked=True, setToolTip='Find isolated vertices within specified angle threshold.')
-			# tb.add('QSpinBox', setPrefix='Loose Vertex Angle: ', setObjectName='s006', preset_='1-360 step1', setValue=15, setToolTip='Loose vertex search: Angle Threshold.')
+			# tb.add('QSpinBox', setPrefix='Loose Vertex Angle: ', setObjectName='s006', minMax_='1-360 step1', setValue=15, setToolTip='Loose vertex search: Angle Threshold.')
 			tb.add('QCheckBox', setText='Repair', setObjectName='chk004', setToolTip='Repair matching geometry. (else: select)')
 			return
 

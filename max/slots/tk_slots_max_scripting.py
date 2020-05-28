@@ -1,5 +1,5 @@
+from __future__ import print_function
 from tk_slots_max_init import *
-
 
 import os.path
 
@@ -19,14 +19,16 @@ class Scripting(Init):
 		# self.parentUi.plainTextEdit.appendPlainText(tk_cmdScrollFieldReporter)
 		
 
-	def chk000(self):
+	def pin(self, state=None):
 		'''
-		Toggle Mel/Python
+		Context menu
 		'''
-		if self.parentUi.chk000.isChecked():
-			self.parentUi.chk000.setText("python")
-		else:
-			self.parentUi.chk000.setText("MEL")
+		pin = self.parentUi.pin
+
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+
+			return
 
 
 	def cmb000(self, index=None):
@@ -44,6 +46,16 @@ class Scripting(Init):
 			if index==contents.index(''):
 				pass
 			cmb.setCurrentIndex(0)
+
+
+	def chk000(self):
+		'''
+		Toggle Mel/Python
+		'''
+		if self.parentUi.chk000.isChecked():
+			self.parentUi.chk000.setText("python")
+		else:
+			self.parentUi.chk000.setText("MEL")
 
 
 	def b000(self):
@@ -126,8 +138,9 @@ class Scripting(Init):
 
 
 
+
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

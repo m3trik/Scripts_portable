@@ -1,10 +1,9 @@
 from __future__ import print_function
 from tk_slots_max_init import *
 
-
 from datetime import datetime
 import os.path
-from widgets.qWidget_MultiWidget import QWidget_MultiWidget as MultiWidget
+
 
 
 class File(Init):
@@ -37,6 +36,18 @@ class File(Init):
 			''')
 
 
+	def pin(self, state=None):
+		'''
+		Context menu
+		'''
+		pin = self.parentUi.pin
+
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb005', setToolTip='3dsMax File Editors')
+
+			return
+
+
 	def cmb000(self, index=None):
 		'''
 		Recent Files
@@ -44,13 +55,13 @@ class File(Init):
 		cmb = self.parentUi.cmb000
 
 		list_ = rt.getRecentfiles()
-		contents = cmb.addItems_(list_, "Recent Files")
+		items = cmb.addItems_(list_, "Recent Files")
 
 		if not index:
 			index = cmb.currentIndex()
 		if index!=0:
 			# force=True; force if maxEval("maxFileName;") else not force #if sceneName prompt user to save; else force open.  also: checkForSave(); If the scene has been modified since the last file save (if any), calling this function displays the message box prompting the user that the scene has been modified and requests to save.
-			rt.loadMaxFile(str(contents[index]))
+			rt.loadMaxFile(str(items[index]))
 			cmb.setCurrentIndex(0)
 
 
@@ -63,12 +74,12 @@ class File(Init):
 		path = ''
 		list_ = []#[f for f in os.listdir(path)]
 
-		contents = cmb.addItems_(list_, "Recent Projects")
+		items = cmb.addItems_(list_, "Recent Projects")
 
 		if not index:
 			index = cmb.currentIndex()
 		if index!=0:
-			maxEval('setProject "'+contents[index]+'"')
+			maxEval('setProject "'+items[index]+'"')
 			cmb.setCurrentIndex(0)
 
 
@@ -82,7 +93,7 @@ class File(Init):
 		files = [f for f in os.listdir(path) if f.endswith('.max') or f.endswith('.bak')] #get list of max autosave files
 
 		list_ = [f+'  '+datetime.fromtimestamp(os.path.getmtime(path+'\\'+f)).strftime('%H:%M  %m-%d-%Y') for f in files] #attach modified timestamp
-		contents = cmb.addItems_(sorted(list_, reverse=1), "Recent Autosave")
+		items = cmb.addItems_(sorted(list_, reverse=1), "Recent Autosave")
 
 		if not index:
 			index = cmb.currentIndex()
@@ -97,7 +108,7 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb003
 
-		contents = cmb.addItems_(['Import file', 'Import Options', 'Merge', 'Replace', 'Link Revit', 'Link FBX', 'Link AutoCAD'], 'Import')
+		items = cmb.addItems_(['Import file', 'Import Options', 'Merge', 'Replace', 'Link Revit', 'Link FBX', 'Link AutoCAD'], 'Import')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -166,13 +177,13 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb005
 
-		files = ['Schematic View']
-		contents = cmb.addItems_(files, ' ')
+		list_ = ['Schematic View']
+		items = cmb.addItems_(list_, '3dsMax File Editors')
 
 		if not index:
 			index = cmb.currentIndex()
 		if index!=0:
-			if index==contents.index('Schematic View'):
+			if index==items.index('Schematic View'):
 				maxEval('schematicView.Open "Schematic View 1"')
 			cmb.setCurrentIndex(0)
 
@@ -188,7 +199,7 @@ class File(Init):
 
 		project = MaxPlus.PathManager.GetProjectFolderDir().split('\\')[-1] #add current project path string to label. strip path and trailing '/'
 
-		contents = cmb.addItems_(list_, project)
+		items = cmb.addItems_(list_, project)
 
 		if not index:
 			index = cmb.currentIndex()
@@ -377,7 +388,7 @@ class File(Init):
 		except:
 			maxEval('macros.run "Tools" "SetProjectFolder"')
 
-		self.cmb006() #refresh cmb006 contents to reflect new project folder
+		self.cmb006() #refresh cmb006 items to reflect new project folder
 
 
 

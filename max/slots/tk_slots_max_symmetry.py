@@ -1,7 +1,6 @@
 from __future__ import print_function
 from tk_slots_max_init import *
 
-
 import os.path
 
 
@@ -20,6 +19,34 @@ class Symmetry(Init):
 		# if axis == "z":
 		# 	self.parentUi.chk002.setChecked(state)
 
+
+	def pin(self, state=None):
+		'''
+		Context menu
+		'''
+		pin = self.parentUi.pin
+
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+
+			return
+
+
+	def cmb000(self, index=None):
+		'''
+		Editors
+		'''
+		cmb = self.parentUi.cmb000
+		
+		files = ['']
+		contents = cmb.addItems_(files, ' ')
+
+		if not index:
+			index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				pass
+			cmb.setCurrentIndex(0)
 
 
 	def setSymmetry(self, state, axis):
@@ -100,22 +127,6 @@ class Symmetry(Init):
 			self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk000-2')
 			print("# Warning: First select a seam edge and then check the symmetry button to enable topographic symmetry #")
 
-
-	def cmb000(self, index=None):
-		'''
-		Editors
-		'''
-		cmb = self.parentUi.cmb000
-		
-		files = ['']
-		contents = cmb.addItems_(files, ' ')
-
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index(''):
-				mel.eval('')
-			cmb.setCurrentIndex(0)
 
 
 

@@ -1,7 +1,6 @@
 from __future__ import print_function
 from tk_slots_max_init import *
 
-
 import os.path
 
 
@@ -32,19 +31,31 @@ class Polygons(Init):
 		self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk008,chk009')
 
 
+	def pin(self, state=None):
+		'''
+		Context menu
+		'''
+		pin = self.parentUi.pin
+
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+
+			return
+
+
 	def cmb000(self, index=None):
 		'''
-		Editors
+		3dsMax Polygon Operations
 		'''
 		cmb = self.parentUi.cmb000
 
 		files = ['Bridge','Extrude']
-		contents = cmb.addItems_(files, ' ')
+		items = cmb.addItems_(files, '3dsMax Polygon Operations')
 
 		if not index:
 			index = cmb.currentIndex()
 		if index!=0:
-			if index==contents.index('Bridge'):
+			if index==items.index('Bridge'):
 				maxEval('''
 				if Ribbon - Modeling.ValidSOMode() and (subObjectLevel == 2 or subObjectLevel == 3) then
 				(
@@ -59,7 +70,7 @@ class Polygons(Init):
 					)
 				)
 				''')
-			if index==contents.index('Extrude'):
+			if index==items.index('Extrude'):
 				maxEval('''
 				If subObjectLevel == undefined then Max Modify Mode
 				-- default to Face level:
@@ -83,7 +94,7 @@ class Polygons(Init):
 		'''
 		tb = self.currentUi.tb000
 		if state=='setMenu':
-			tb.add('QDoubleSpinBox', setPrefix='Distance: ', setObjectName='s002', preset_='0.000-10 step.001', setValue=0.001, setToolTip='Merge Distance.')
+			tb.add('QDoubleSpinBox', setPrefix='Distance: ', setObjectName='s002', minMax_='0.000-10 step.001', setValue=0.001, setToolTip='Merge Distance.')
 			return
 
 		tolerance = float(tb.s002.value())
@@ -112,7 +123,7 @@ class Polygons(Init):
 		'''
 		tb = self.currentUi.tb001
 		if state=='setMenu':
-			tb.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s003', preset_='0-10000 step1', setValue=0.001, setToolTip='Divisions.')
+			tb.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s003', minMax_='0-10000 step1', setValue=0.001, setToolTip='Divisions.')
 			return
 
 		divisions = tb.s003.value()
@@ -181,7 +192,7 @@ class Polygons(Init):
 		'''
 		tb = self.currentUi.tb004
 		if state=='setMenu':
-			tb.add('QDoubleSpinBox', setPrefix='Width: ', setObjectName='s000', preset_='0.00-100 step.01', setValue=0.01, setToolTip='Bevel Width.')
+			tb.add('QDoubleSpinBox', setPrefix='Width: ', setObjectName='s000', minMax_='0.00-100 step.01', setValue=0.01, setToolTip='Bevel Width.')
 			return
 
 		width = float(tb.s000.value())
@@ -232,7 +243,7 @@ class Polygons(Init):
 		'''
 		tb = self.currentUi.tb006
 		if state=='setMenu':
-			tb.add('QDoubleSpinBox', setPrefix='Offset: ', setObjectName='s001', preset_='0.00-100 step.01', setValue=2.00, setToolTip='Offset amount.')
+			tb.add('QDoubleSpinBox', setPrefix='Offset: ', setObjectName='s001', minMax_='0.00-100 step.01', setValue=2.00, setToolTip='Offset amount.')
 			return
 
 		offset = float(tb.s001.value())

@@ -10,6 +10,18 @@ class Normals(Init):
 		super(Normals, self).__init__(*args, **kwargs)
 
 
+	def pin(self, state=None):
+		'''
+		Context menu
+		'''
+		pin = self.parentUi.pin
+
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+
+			return
+
+
 	def cmb000(self, index=None):
 		'''
 		Editors
@@ -23,7 +35,7 @@ class Normals(Init):
 			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index(''):
-				mel.eval('')
+				pass
 			cmb.setCurrentIndex(0)
 
 
@@ -33,7 +45,7 @@ class Normals(Init):
 		'''
 		tb = self.currentUi.tb000
 		if state=='setMenu':
-			tb.add('QSpinBox', setPrefix='Display Size: ', setObjectName='s001', preset_='1-100 step1', setValue=1, setToolTip='Normal display size.')
+			tb.add('QSpinBox', setPrefix='Display Size: ', setObjectName='s001', minMax_='1-100 step1', setValue=1, setToolTip='Normal display size.')
 			return
 
 		size = float(tb.s001.value())
@@ -95,7 +107,7 @@ class Normals(Init):
 		'''
 		tb = self.currentUi.tb002
 		if state=='setMenu':
-			tb.add('QSpinBox', setPrefix='Angle: ', setObjectName='s000', preset_='1-180 step1', setValue=30, setToolTip='Angle degree.')
+			tb.add('QSpinBox', setPrefix='Angle: ', setObjectName='s000', minMax_='1-180 step1', setValue=30, setToolTip='Angle degree.')
 			return
 
 		normalAngle = str(tb.s000.value())

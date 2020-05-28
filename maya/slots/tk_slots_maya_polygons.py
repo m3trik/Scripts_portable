@@ -33,52 +33,49 @@ class Polygons(Init):
 
 	def pin(self, state=None):
 		'''
-		Right click menu
+		Context menu
 		'''
 		pin = self.parentUi.pin
 
 		if state=='setMenu':
-			from widgets.qComboBox_ import QComboBox_
-			pin.add(QComboBox_(), setObjectName='cmb000', setToolTip='')
-			
-			files = ['Extrude Options','Bevel Options','Bridge Options','Combine Options','Merge Vertex Options','Offset Edgeloop','Edit Edgeflow Options','Extract Curve Options','Poke Options','Wedge Options','Assign Invisible Options']
-			contents = pin.cmb000.addItems_(files, '')
+			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+
 			return
 
 
 	def cmb000(self, index=None):
 		'''
-		Header comboBox
+		Maya Polygon Operations
 		'''
 		cmb = self.parentUi.cmb000
 
-		# files = ['Extrude Options','Bevel Options','Bridge Options','Combine Options','Merge Vertex Options','Offset Edgeloop','Edit Edgeflow Options','Extract Curve Options','Poke Options','Wedge Options','Assign Invisible Options']
-		# contents = cmb.addItems_(files, ' ')
+		files = ['Extrude','Bevel','Bridge','Combine','Merge Vertex','Offset Edgeloop','Edit Edgeflow','Extract Curve','Poke','Wedge','Assign Invisible']
+		items = cmb.addItems_(files, 'Maya Polygon Operations')
 
 		if not index:
 			index = cmb.currentIndex()
 		if index!=0:
-			if index==contents.index('Extrude Options'):
+			if index==items.index('Extrude'):
 				mel.eval("PolyExtrudeOptions;")
-			if index==contents.index('Bevel Options'):
+			if index==items.index('Bevel'):
 				mel.eval('BevelPolygonOptions;')
-			if index==contents.index('Bridge Options'):
+			if index==items.index('Bridge'):
 				mel.eval("BridgeEdgeOptions;")
-			if index==contents.index('Combine Options'):
+			if index==items.index('Combine'):
 				mel.eval('CombinePolygonsOptions;')
-			if index==contents.index('Merge Vertex Options'):
+			if index==items.index('Merge Vertex'):
 				mel.eval('PolyMergeOptions;')
-			if index==contents.index('Offset Edgeloop'):
+			if index==items.index('Offset Edgeloop'):
 				mel.eval("DuplicateEdgesOptions;")
-			if index==contents.index('Edit Edgeflow Options'):
+			if index==items.index('Edit Edgeflow'):
 				mel.eval("PolyEditEdgeFlowOptions;")
-			if index==contents.index('Extract Curve Options'):
+			if index==items.index('Extract Curve'):
 				mel.eval('CreateCurveFromPolyOptions;')
-			if index==contents.index('Poke Options'):
+			if index==items.index('Poke'):
 				mel.eval("PokePolygonOptions;")
-			if index==contents.index('Wedge Options'):
+			if index==items.index('Wedge'):
 				mel.eval("WedgePolygonOptions;")
-			if index==contents.index('Assign Invisible Options'):
+			if index==items.index('Assign Invisible'):
 				mel.eval("PolyAssignSubdivHoleOptions;")
 			cmb.setCurrentIndex(0)
 
@@ -89,7 +86,7 @@ class Polygons(Init):
 		'''
 		tb = self.currentUi.tb000
 		if state=='setMenu':
-			tb.add('QDoubleSpinBox', setPrefix='Distance: ', setObjectName='s002', preset_='0.000-10 step.001', setValue=0.001, setToolTip='Merge Distance.')
+			tb.add('QDoubleSpinBox', setPrefix='Distance: ', setObjectName='s002', minMax_='0.000-10 step.001', setValue=0.001, setToolTip='Merge Distance.')
 			return
 
 		tolerance = float(tb.s002.value())
@@ -128,7 +125,7 @@ class Polygons(Init):
 		'''
 		tb = self.currentUi.tb001
 		if state=='setMenu':
-			tb.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s003', preset_='0-10000 step1', setValue=1, setToolTip='Subdivision Amount.')
+			tb.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s003', minMax_='0-10000 step1', setValue=1, setToolTip='Subdivision Amount.')
 			return
 
 		divisions = tb.s003.value()
@@ -163,7 +160,7 @@ class Polygons(Init):
 		tb = self.currentUi.tb003
 		if state=='setMenu':
 			tb.add('QCheckBox', setText='Keep Faces Together', setObjectName='chk002', setChecked=True, setToolTip='Keep edges/faces together.')
-			tb.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s004', preset_='1-10000 step1', setValue=1, setToolTip='Subdivision Amount.')
+			tb.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s004', minMax_='1-10000 step1', setValue=1, setToolTip='Subdivision Amount.')
 			return
 
 		keepFacesTogether = tb.chk002.isChecked() #keep faces/edges together.
@@ -183,7 +180,7 @@ class Polygons(Init):
 		'''
 		tb = self.currentUi.tb004
 		if state=='setMenu':
-			tb.add('QDoubleSpinBox', setPrefix='Width: ', setObjectName='s000', preset_='0.00-100 step.01', setValue=0.01, setToolTip='Bevel Width.')
+			tb.add('QDoubleSpinBox', setPrefix='Width: ', setObjectName='s000', minMax_='0.00-100 step.01', setValue=0.01, setToolTip='Bevel Width.')
 			return
 
 		width = float(tb.s000.value())
@@ -261,7 +258,7 @@ class Polygons(Init):
 		'''
 		tb = self.currentUi.tb006
 		if state=='setMenu':
-			tb.add('QDoubleSpinBox', setPrefix='Offset: ', setObjectName='s001', preset_='0.00-100 step.01', setValue=2.00, setToolTip='Offset amount.')
+			tb.add('QDoubleSpinBox', setPrefix='Offset: ', setObjectName='s001', minMax_='0.00-100 step.01', setValue=2.00, setToolTip='Offset amount.')
 			return
 
 		offset = float(tb.s001.value())

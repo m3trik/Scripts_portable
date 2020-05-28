@@ -10,6 +10,35 @@ class Mirror(Init):
 		super(Mirror, self).__init__(*args, **kwargs)
 
 
+	def pin(self, state=None):
+		'''
+		Context menu
+		'''
+		pin = self.parentUi.pin
+
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+
+			return
+
+
+	def cmb000(self, index=None):
+		'''
+		Editors
+		'''
+		cmb = self.parentUi.cmb000
+		
+		files = ['']
+		contents = cmb.addItems_(files, ' ')
+
+		if not index:
+			index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				pass
+			cmb.setCurrentIndex(0)
+
+
 	def chk000_3(self):
 		'''
 		Set the tb000's text according to the checkstates.
@@ -49,7 +78,7 @@ class Mirror(Init):
 			tb.add('QRadioButton', setText='Z', setObjectName='chk003', setToolTip='Perform mirror along Z axis.')
 			tb.add('QCheckBox', setText='Instance', setObjectName='chk004', setToolTip='Instance object.')
 			tb.add('QCheckBox', setText='Cut', setObjectName='chk005', setChecked=True, setToolTip='Perform a delete along specified axis before mirror.')
-			tb.add('QDoubleSpinBox', setPrefix='Merge Threshold: ', setObjectName='s000', preset_='0.000-10 step.001', setValue=0.005, setToolTip='Merge vertex distance.')
+			tb.add('QDoubleSpinBox', setPrefix='Merge Threshold: ', setObjectName='s000', minMax_='0.000-10 step.001', setValue=0.005, setToolTip='Merge vertex distance.')
 
 			self.connect_('chk000-3', 'toggled', self.chk000_3, tb)
 			return

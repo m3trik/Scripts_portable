@@ -1,6 +1,5 @@
+from __future__ import print_function
 from tk_slots_max_init import *
-
-from widgets.qLabel_ import QLabel_
 
 import os.path
 
@@ -15,21 +14,33 @@ class Materials(Init):
 		self.randomMat=None
 
 
-	# def cmb001(self, index=None):
-	# 	'''
-	# 	Editors
-	# 	'''
-	# 	cmb = self.parentUi.cmb001
+	def pin(self, state=None):
+		'''
+		Context menu
+		'''
+		pin = self.parentUi.pin
 
-	# 	files = ['Material Editor']
-	# 	contents = cmb.addItems_(files, ' ')
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='3dsMax Material Editors')
 
-	# 	if index is None:
-	# 		index = cmb.currentIndex()
-	# 	if index!=0:
-	# 		if index==contents.index('Material Editor'):
-	# 			maxEval('max mtledit')
-	# 		cmb.setCurrentIndex(0)
+			return
+
+
+	def cmb001(self, index=None):
+		'''
+		Editors
+		'''
+		cmb = self.parentUi.cmb001
+
+		files = ['Material Editor']
+		contents = cmb.addItems_(files, '3dsMax Material Editors')
+
+		if index is None:
+			index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index('Material Editor'):
+				maxEval('max mtledit')
+			cmb.setCurrentIndex(0)
 
 
 	def cmb002(self, index=None):
@@ -42,11 +53,11 @@ class Materials(Init):
 		cmb = self.parentUi.cmb002
 
 		if not cmb.initialized:
-			cmb.addToContext(QLabel_(), setText='Open in Editor', setObjectName='lbl000', setToolTip='Open material in editor.')
-			cmb.addToContext(QLabel_(), setText='Rename', setObjectName='lbl001', setToolTip='Rename material')
-			cmb.addToContext(QLabel_(), setText='Delete', setObjectName='lbl002', setToolTip='Delete the current material.')
-			cmb.addToContext(QLabel_(), setText='Delete All Unused Materials', setObjectName='lbl003', setToolTip='Delete All unused materials.')
-			cmb.addToContext(QLabel_(), setText='Refresh', setObjectName='cmb002', setToolTip='Refresh materials list')
+			cmb.addToContext(QLabel_, setText='Open in Editor', setObjectName='lbl000', setToolTip='Open material in editor.')
+			cmb.addToContext(QLabel_, setText='Rename', setObjectName='lbl001', setToolTip='Rename material')
+			cmb.addToContext(QLabel_, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current material.')
+			cmb.addToContext(QLabel_, setText='Delete All Unused Materials', setObjectName='lbl003', setToolTip='Delete All unused materials.')
+			cmb.addToContext(QLabel_, setText='Refresh', setObjectName='cmb002', setToolTip='Refresh materials list')
 
 		if cmb.lineEdit():
 			self.renameMaterial()
@@ -374,7 +385,7 @@ class Materials(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

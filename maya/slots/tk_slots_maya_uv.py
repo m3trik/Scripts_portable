@@ -10,13 +10,26 @@ class Uv(Init):
 		super(Uv, self).__init__(*args, **kwargs)
 
 
+	def pin(self, state=None):
+		'''
+		Context menu
+		'''
+		pin = self.parentUi.pin
+
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya UV Editors')
+
+			return
+
+
 	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
 		cmb = self.parentUi.cmb000
 		
-		contents = cmb.addItems_(['UV Editor','UV Set Editor','UV Tool Kit','UV Linking: Texture-Centric','UV Linking: UV-Centric','UV Linking: Paint Effects/UV','UV Linking: Hair/UV','Flip UV'], ' ')
+		list_ = ['UV Editor','UV Set Editor','UV Tool Kit','UV Linking: Texture-Centric','UV Linking: UV-Centric','UV Linking: Paint Effects/UV','UV Linking: Hair/UV','Flip UV']
+		items = cmb.addItems_(list_, 'Maya UV Editors')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -36,7 +49,7 @@ class Uv(Init):
 				mel.eval('pfxUVLinkingEditor;')
 			if index == 7: #UV Linking: Hair/UV
 				mel.eval('hairUVLinkingEditor;')
-			if index==contents.index('Flip UV'):
+			if index==items.index('Flip UV'):
 				mel.eval("performPolyForceUV flip 1;")
 			cmb.setCurrentIndex(0)
 

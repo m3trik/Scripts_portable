@@ -1,7 +1,6 @@
 from __future__ import print_function
 from tk_slots_max_init import *
 
-
 import os.path
 
 
@@ -21,6 +20,34 @@ class Duplicate(Init):
 		self.parentUi.s008.valueChanged.connect(self.duplicateArray)
 		self.parentUi.s009.valueChanged.connect(self.duplicateArray)
 
+
+	def pin(self, state=None):
+		'''
+		Context menu
+		'''
+		pin = self.parentUi.pin
+
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='')
+
+			return
+
+
+	def cmb001(self, index=None):
+		'''
+		Editors
+		'''
+		cmb = self.parentUi.cmb001
+		
+		files = ['']
+		contents = cmb.addItems_(files, ' ')
+
+		if not index:
+			index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				pass
+			cmb.setCurrentIndex(0)
 
 
 	def radialArray(self):
@@ -319,23 +346,6 @@ class Duplicate(Init):
 			pm.select(duplicateObjList[:1]) #re-select the original object
 			del duplicateObjList[:] #clear the list
 			self.toggleWidgets(self.parentUi, self.childUi, setDisabled='b002')
-
-
-	def cmb001(self, index=None):
-		'''
-		Editors
-		'''
-		cmb = self.parentUi.cmb001
-
-		files = ['']
-		contents = cmb.addItems_(files, ' ')
-
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index(''):
-				pass
-			cmb.setCurrentIndex(0)
 
 
 	def b001(self):

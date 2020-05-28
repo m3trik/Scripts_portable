@@ -1,7 +1,6 @@
 from __future__ import print_function
 from tk_slots_max_init import *
 
-
 import os.path
 
 
@@ -15,6 +14,35 @@ class Create(Init):
 		self.rotation = {'x':[90,0,0], 'y':[0,90,0], 'z':[0,0,90], '-x':[-90,0,0], '-y':[0,-90,0], '-z':[0,0,-90], 'last':[]}
 		self.point=[0,0,0]
 		self.history=[]
+
+
+	def pin(self, state=None):
+		'''
+		Context menu
+		'''
+		pin = self.parentUi.pin
+
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb003', setToolTip='')
+
+			return
+
+
+	def cmb003(self, index=None):
+		'''
+		Editors
+		'''
+		cmb = self.parentUi.cmb000
+		
+		files = ['']
+		contents = cmb.addItems_(files, ' ')
+
+		if not index:
+			index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				pass
+			cmb.setCurrentIndex(0)
 
 
 	def getAxis(self):
@@ -189,7 +217,7 @@ class Create(Init):
 				cmb.menu.clear()
 
 			#add spinboxes
-			[cmb.add('QDoubleSpinBox', setObjectName=name, preset_='0.00-100 step1') for name in self.unpackNames(names)]
+			[cmb.add('QDoubleSpinBox', setObjectName=name, minMax_='0.00-100 step1') for name in self.unpackNames(names)]
 
 			#set values
 			self.setSpinboxes(cmb, names, attributes)
@@ -208,7 +236,9 @@ class Create(Init):
 		args:
 			index(int) = optional index of the spinbox that called this function. ie. 5 from s005
 		'''
-		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.parentUi.cmb002.menuItems()} #current spinbox values. ie. from s000 get the value of six and add it to the list
+		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.parentUi.cmb002.children_()} #current spinbox values. ie. from s000 get the value of six and add it to the list
+		print (self.parentUi.cmb002.children_())
+		print (self.parentUi.cmb002.childWidgets())
 		self.setAttributesMax(self.node, spinboxValues) #set attributes for the history node
 
 

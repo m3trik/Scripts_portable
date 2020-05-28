@@ -1,5 +1,5 @@
+from __future__ import print_function
 from tk_slots_max_init import *
-
 
 import os.path
 
@@ -8,6 +8,35 @@ import os.path
 class Crease(Init):
 	def __init__(self, *args, **kwargs):
 		super(Crease, self).__init__(*args, **kwargs)
+
+
+	def pin(self, state=None):
+		'''
+		Context menu
+		'''
+		pin = self.parentUi.pin
+
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+
+			return
+
+
+	def cmb000(self, index=None):
+		'''
+		Editors
+		'''
+		cmb = self.parentUi.cmb000
+		
+		list_ = ['']
+		items = cmb.addItems_(list_, ' ')
+
+		if not index:
+			index = cmb.currentIndex()
+		if index!=0:
+			if index==items.index(''):
+				pass
+			cmb.setCurrentIndex(0)
 
 
 	def chk002(self):
@@ -36,38 +65,21 @@ class Crease(Init):
 			self.parentUi.s004.setValue(60) #normal angle
 
 
-	def cmb000(self, index=None):
-		'''
-		Editors
-		'''
-		cmb = self.parentUi.cmb000
-
-		files = ['']
-		contents = cmb.addItems_(files, ' ')
-
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index(''):
-				pass
-			cmb.setCurrentIndex(0)
-
-
 	def tb000(self, state=None):
 		'''
 		Crease
 		'''
 		tb = self.currentUi.tb000
 		if state=='setMenu':
-			tb.add('QSpinBox', setPrefix='Crease Amount: ', setObjectName='s003', preset_='0-10 step1', setValue=10, setToolTip='Crease amount 0-10. Overriden if "max" checked.')
+			tb.add('QSpinBox', setPrefix='Crease Amount: ', setObjectName='s003', minMax_='0-10 step1', setValue=10, setToolTip='Crease amount 0-10. Overriden if "max" checked.')
 			tb.add('QCheckBox', setText='Toggle Max', setObjectName='chk003', setChecked=True, setToolTip='Toggle crease amount from it\'s current value to the maximum amount.')
 			tb.add('QCheckBox', setText='Un-Crease', setObjectName='chk002', setToolTip='Un-crease selected components or If in object mode, uncrease all.')
 			tb.add('QCheckBox', setText='Perform Normal Edge Hardness', setObjectName='chk005', setChecked=True, setToolTip='Toggle perform normal edge hardness.')
-			tb.add('QSpinBox', setPrefix='Edge Hardness Angle: ', setObjectName='s004', preset_='0-180 step1', setValue=30, setToolTip='Normal edge hardness 0-180.')
+			tb.add('QSpinBox', setPrefix='Edge Hardness Angle: ', setObjectName='s004', minMax_='0-180 step1', setValue=30, setToolTip='Normal edge hardness 0-180.')
 			tb.add('QCheckBox', setText='Crease Vertex Points', setObjectName='chk004', setChecked=True, setToolTip='Crease vertex points.')
 			tb.add('QCheckBox', setText='Auto Crease', setObjectName='chk011', setToolTip='Auto crease selected object(s) within the set angle tolerance.')
-			tb.add('QSpinBox', setPrefix='Auto Crease: Low: ', setObjectName='s005', preset_='0-180 step1', setValue=85, setToolTip='Auto crease: low angle constraint.')
-			tb.add('QSpinBox', setPrefix='Auto Crease: high: ', setObjectName='s006', preset_='0-180 step1', setValue=95, setToolTip='Auto crease: max angle constraint.')
+			tb.add('QSpinBox', setPrefix='Auto Crease: Low: ', setObjectName='s005', minMax_='0-180 step1', setValue=85, setToolTip='Auto crease: low angle constraint.')
+			tb.add('QSpinBox', setPrefix='Auto Crease: high: ', setObjectName='s006', minMax_='0-180 step1', setValue=95, setToolTip='Auto crease: max angle constraint.')
 			return
 
 		creaseAmount = int(tb.s003.value())
@@ -98,7 +110,7 @@ class Crease(Init):
 						for vertex in edgeVerts:
 							rt.setNormal(obj, vertex, normal)
 		else:
-			print '# Warning: object type '+rt.classOf(obj)+' is not supported. #'
+			print('# Warning: object type '+rt.classOf(obj)+' is not supported. #')
 
 
 
@@ -109,7 +121,7 @@ class Crease(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

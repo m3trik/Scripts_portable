@@ -1,5 +1,5 @@
+from __future__ import print_function
 from tk_slots_max_init import *
-
 
 import os.path
 
@@ -10,13 +10,26 @@ class Uv(Init):
 		super(Uv, self).__init__(*args, **kwargs)
 
 
+	def pin(self, state=None):
+		'''
+		Context menu
+		'''
+		pin = self.parentUi.pin
+
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='3dsMax UV Editors')
+
+			return
+
+
 	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
 		cmb = self.parentUi.cmb000
 
-		contents = cmb.addItems_(["UV Editor", "UV Set Editor", "UV Tool Kit", "UV Linking: Texture-Centric", "UV Linking: UV-Centric", "UV Linking: Paint Effects/UV", "UV Linking: Hair/UV"], ' ')
+		list_ = ["UV Editor", "UV Set Editor", "UV Tool Kit", "UV Linking: Texture-Centric", "UV Linking: UV-Centric", "UV Linking: Paint Effects/UV", "UV Linking: Hair/UV"]
+		items = cmb.addItems_(list_, '3dsMax UV Editors')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -62,7 +75,7 @@ class Uv(Init):
 				uv.V_Flip = v
 				uv.W_Flip = w
 			except Exception as error:
-				print error
+				print(error)
 
 
 	def b002(self):
@@ -147,7 +160,7 @@ class Uv(Init):
 
 		state = uv.localDistortion
 		uv.localDistortion = not state
-		print 'localDistortion:', not state
+		print('localDistortion:', not state)
 
 
 	def b011(self):
@@ -172,7 +185,7 @@ class Uv(Init):
 				uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv modifier.
 				uv.FlattenBySmoothingGroup(scaleMode, False, 0.2)
 			except Exception as error:
-				print error
+				print(error)
 
 
 	def b013(self):
@@ -256,7 +269,7 @@ class Uv(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

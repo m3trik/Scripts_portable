@@ -1,7 +1,6 @@
 from __future__ import print_function
 from tk_slots_max_init import *
 
-
 import os.path
 
 
@@ -27,6 +26,35 @@ class Selection(Init):
 		# else: #selectContext
 		# 	self.cmb004(index=0)
 		# 	self.childUi.chk005.setChecked(True)
+
+
+	def pin(self, state=None):
+		'''
+		Context menu
+		'''
+		pin = self.parentUi.pin
+
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='')
+
+			return
+
+
+	def cmb001(self, index=None):
+		'''
+		Editors
+		'''
+		cmb = self.parentUi.cmb001
+		
+		files = ['']
+		contents = cmb.addItems_(files, ' ')
+
+		if not index:
+			index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				pass
+			cmb.setCurrentIndex(0)
 
 
 	def t000(self):
@@ -176,23 +204,6 @@ class Selection(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def cmb001(self, index=None):
-		'''
-		Editors
-		'''
-		cmb = self.parentUi.cmb001
-
-		files = ['']
-		contents = cmb.addItems_(files, ' ')
-
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index(''):
-				pass
-			cmb.setCurrentIndex(0)
-
-
 	def cmb002(self, index=None):
 		'''
 		Select All Of Type
@@ -276,7 +287,7 @@ class Selection(Init):
 			tb.add('QCheckBox', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
 			tb.add('QCheckBox', setText='Component Loop', setObjectName='chk001', setChecked=True, setToolTip='Select all contiguous components that form a loop with the current selection.')
 			tb.add('QCheckBox', setText='Shortest Path', setObjectName='chk002', setToolTip='Shortest component path between two selected vertices or UV\'s.')
-			tb.add('QSpinBox', setPrefix='Step: ', setObjectName='s003', preset_='1-100 step1', setValue=1, setToolTip='Step Amount.')
+			tb.add('QSpinBox', setPrefix='Step: ', setObjectName='s003', minMax_='1-100 step1', setValue=1, setToolTip='Step Amount.')
 			return
 
 		step = tb.s003.value()
@@ -319,7 +330,7 @@ class Selection(Init):
 		'''
 		tb = self.currentUi.tb001
 		if state=='setMenu':
-			tb.add('QDoubleSpinBox', setPrefix='Tolerance: ', setObjectName='s000', preset_='0.0-10 step.1', setValue=0.3, setToolTip='Select similar objects or components, depending on selection mode.')
+			tb.add('QDoubleSpinBox', setPrefix='Tolerance: ', setObjectName='s000', minMax_='0.0-10 step.1', setValue=0.3, setToolTip='Select similar objects or components, depending on selection mode.')
 			return
 
 		tolerance = str(tb.s000.value()) #string value because mel.eval is sending a command string
@@ -333,9 +344,9 @@ class Selection(Init):
 		tb = self.currentUi.tb002
 		if state=='setMenu':
 			tb.add('QCheckBox', setText='Lock Values', setObjectName='chk003', setChecked=True, setToolTip='Keep values in sync.')
-			tb.add('QDoubleSpinBox', setPrefix='x: ', setObjectName='s002', preset_='0.00-1 step.01', setValue=0.01, setToolTip='Normal X range.')
-			tb.add('QDoubleSpinBox', setPrefix='y: ', setObjectName='s004', preset_='0.00-1 step.01', setValue=0.01, setToolTip='Normal Y range.')
-			tb.add('QDoubleSpinBox', setPrefix='z: ', setObjectName='s005', preset_='0.00-1 step.01', setValue=0.01, setToolTip='Normal Z range.')
+			tb.add('QDoubleSpinBox', setPrefix='x: ', setObjectName='s002', minMax_='0.00-1 step.01', setValue=0.01, setToolTip='Normal X range.')
+			tb.add('QDoubleSpinBox', setPrefix='y: ', setObjectName='s004', minMax_='0.00-1 step.01', setValue=0.01, setToolTip='Normal Y range.')
+			tb.add('QDoubleSpinBox', setPrefix='z: ', setObjectName='s005', minMax_='0.00-1 step.01', setValue=0.01, setToolTip='Normal Z range.')
 			return
 
 		rangeX = float(tb.s002.value())

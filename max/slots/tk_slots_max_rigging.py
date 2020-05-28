@@ -1,5 +1,5 @@
+from widgets.qComboBox_ import QComboBox_
 from tk_slots_max_init import *
-
 
 import os.path
 
@@ -9,8 +9,71 @@ class Rigging(Init):
 	def __init__(self, *args, **kwargs):
 		super(Rigging, self).__init__(*args, **kwargs)
 
-		self.chk000() #init scale joint value
 
+	def pin(self, state=None):
+		'''
+		Context menu
+		'''
+		pin = self.parentUi.pin
+
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+
+			return
+
+
+	def cmb000(self, index=None):
+		'''
+		Editors
+		'''
+		cmb = self.parentUi.cmb000
+
+		list_ = ['Quick Rig','HumanIK','Expression Editor','Shape Editor','Connection Editor','Channel Control Editor','Set Driven Key']
+		items = cmb.addItems_(list_, ' ')
+
+		if not index:
+			index = cmb.currentIndex()
+		if index!=0:
+			if index==items.index('Quick Rig'):
+				mel.eval('QuickRigEditor;') #Quick Rig
+			if index==items.index('HumanIK'):
+				mel.eval('HIKCharacterControlsTool;') #HumanIK
+			if index==items.index('Expression Editor'):
+				mel.eval('ExpressionEditor;') #Expression Editor
+			if index==items.index('Shape Editor'):
+				mel.eval('ShapeEditor;') #Shape Editor
+			if index==items.index('Connection Editor'):
+				mel.eval('ConnectionEditor;') #Connection Editor
+			if index==items.index('Channel Control Editor'):
+				mel.eval('ChannelControlEditor;') #Channel Control Editor
+			if index==items.index('Set Driven Key'):
+				mel.eval('SetDrivenKeyOptions;') #Set Driven Key
+			cmb.setCurrentIndex(0)
+
+
+	def cmb001(self, index=None):
+		'''
+		Create
+		'''
+		cmb = self.parentUi.cmb001
+
+		list_ = ['Joints','Locator','IK Handle', 'Lattice', 'Cluster']
+		items = cmb.addItems_(list_, "Create")
+
+		if not index:
+			index = cmb.currentIndex()
+		if index!=0:
+			if index==items.index('Joints'):
+				pm.setToolTo('jointContext') #create joint tool
+			if index==items.index('Locator'):
+				pm.spaceLocator(p=[0,0,0]) #locator
+			if index==items.index('IK Handle'):
+				pm.setToolTo('ikHandleContext') #create ik handle
+			if index==items.index('Lattice'):
+				pm.lattice(divisions=[2,5,2], objectCentered=1, ldv=[2,2,2]) ##create lattice
+			if index==items.index('Cluster'):
+				mel.eval('CreateCluster;') #create cluster
+			cmb.setCurrentIndex(0)
 
 
 	def chk000(self):
@@ -51,60 +114,6 @@ class Rigging(Init):
 			pm.jointDisplayScale(value, ikfk=1) #set global IKFK display size
 
 
-	def cmb000(self, index=None):
-		'''
-		Editors
-		'''
-		cmb = self.parentUi.cmb000
-
-		files = ['Quick Rig','HumanIK','Expression Editor','Shape Editor','Connection Editor','Channel Control Editor','Set Driven Key']
-		contents = cmb.addItems_(files, ' ')
-
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index('Quick Rig'):
-				mel.eval('QuickRigEditor;') #Quick Rig
-			if index==contents.index('HumanIK'):
-				mel.eval('HIKCharacterControlsTool;') #HumanIK
-			if index==contents.index('Expression Editor'):
-				mel.eval('ExpressionEditor;') #Expression Editor
-			if index==contents.index('Shape Editor'):
-				mel.eval('ShapeEditor;') #Shape Editor
-			if index==contents.index('Connection Editor'):
-				mel.eval('ConnectionEditor;') #Connection Editor
-			if index==contents.index('Channel Control Editor'):
-				mel.eval('ChannelControlEditor;') #Channel Control Editor
-			if index==contents.index('Set Driven Key'):
-				mel.eval('SetDrivenKeyOptions;') #Set Driven Key
-			cmb.setCurrentIndex(0)
-
-
-	def cmb001(self, index=None):
-		'''
-		Create
-		'''
-		cmb = self.parentUi.cmb001
-
-		files = ['Joints','Locator','IK Handle', 'Lattice', 'Cluster']
-		contents = cmb.addItems_(files, "Create")
-
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index('Joints'):
-				pm.setToolTo('jointContext') #create joint tool
-			if index==contents.index('Locator'):
-				pm.spaceLocator(p=[0,0,0]) #locator
-			if index==contents.index('IK Handle'):
-				pm.setToolTo('ikHandleContext') #create ik handle
-			if index==contents.index('Lattice'):
-				pm.lattice(divisions=[2,5,2], objectCentered=1, ldv=[2,2,2]) ##create lattice
-			if index==contents.index('Cluster'):
-				mel.eval('CreateCluster;') #create cluster
-			cmb.setCurrentIndex(0)
-
-
 	def tb000(self, state=None):
 		'''
 		Toggle Display Local Rotation Axes
@@ -114,7 +123,9 @@ class Rigging(Init):
 			tb.add('QCheckBox', setText='Joints', setObjectName='chk000', setChecked=True, setToolTip='Display Joints.')
 			tb.add('QCheckBox', setText='IK', setObjectName='chk001', setChecked=True, setToolTip='Display IK.')
 			tb.add('QCheckBox', setText='IK\\FK', setObjectName='chk002', setChecked=True, setToolTip='Display IK\\FK.')
-			tb.add('QDoubleSpinBox', setPrefix='Tolerance: ', setObjectName='s000', preset_='0.00-10 step.5', setValue=1.0, setToolTip='Global Display Scale for the selected type.')
+			tb.add('QDoubleSpinBox', setPrefix='Tolerance: ', setObjectName='s000', minMax_='0.00-10 step.5', setValue=1.0, setToolTip='Global Display Scale for the selected type.')
+			
+			self.chk000() #init scale joint value
 			return
 
 		joints = pm.ls(type="joint") #get all scene joints
@@ -219,7 +230,7 @@ class Rigging(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

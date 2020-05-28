@@ -12,21 +12,37 @@ class Scene(Init):
 		self.parentUi.t000.returnPressed.connect(self.t001) #preform rename on returnPressed
 
 
+	def pin(self, state=None):
+		'''
+		Context menu
+		'''
+		pin = self.parentUi.pin
+
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya Scene Editors')
+
+			return
+
+
 	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
 		cmb = self.parentUi.cmb000
 		
-		# files = ['']
-		# contents = cmb.addItems_(files, ' ')
+		files = ['Node Editor', 'Outlinder', 'Content Browser']
+		contents = cmb.addItems_(files, 'Maya Scene Editors')
 
-		# if not index:
-		# 	index = cmb.currentIndex()
-		# if index!=0:
-		# 	if index==contents.index(''):
-		# 		mel.eval('')
-		# 	cmb.setCurrentIndex(0)
+		if not index:
+			index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index('Node Editor'):
+				mel.eval('NodeEditorWindow;') #
+			if index==contents.index('Outlinder'):
+				mel.eval('OutlinerWindow;') #
+			if index==contents.index('Content Browser'):
+				mel.eval('ContentBrowserWindow;') #
+			cmb.setCurrentIndex(0)
 
 
 	def getTrailingIntegers(self, string, increment=0):

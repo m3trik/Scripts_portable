@@ -32,10 +32,26 @@ class QComboBox_(QtWidgets.QComboBox):
 		'''
 		self.initialized=False
 		self.popupStyle = popupStyle
+
 		self.menu = QMenu_(self, position='bottomLeft')
 		self.menu.visible=False #built-in method isVisible() not working.
+		self.view().installEventFilter(self)
 
 		self.setAttributes(kwargs)
+
+
+	def eventFilter(self, widget, event):
+		'''
+		Event filter for the standard view.
+
+		QtCore.QEvent.Show, Hide, FocusIn, FocusOut, FocusAboutToChange
+		'''
+		# if not (str(event.type()).split('.')[-1]) in ['QPaintEvent', 'UpdateLater', 'PolishRequest', 'Paint']: print(str(event.type())) #debugging
+		if event.type()==QtCore.QEvent.Hide:
+			if self.parent().__class__.__name__=='QMenu_':
+				self.parent().hide()
+
+		return super(QComboBox_, self).eventFilter(widget, event)
 
 
 	def setAttributes(self, attributes=None, order=['globalPos', 'setVisible'], **kwargs):
@@ -122,7 +138,7 @@ class QComboBox_(QtWidgets.QComboBox):
 			w = getattr(QtWidgets, w)() #ex. QtWidgets.QAction(self) object from string.
 		except:
 			if callable(w):
-				w = widget() #ex. QtWidgets.QAction(self) object.
+				w = w() #ex. QtWidgets.QAction(self) object.
 
 		w.setMinimumHeight(self.minimumSizeHint().height()+1) #set child widget height to that of the toolbutton
 
@@ -159,6 +175,54 @@ class QComboBox_(QtWidgets.QComboBox):
 		return items_
 
 
+	def items(self):
+		'''
+		Get a list of each items's text from the standard model/view.
+		returns:
+			(list)
+		'''
+		return [self.itemText(i) for i in range(self.count())]
+
+
+	def children_(self, contextMenu=False, _exclude=['QAction', 'QWidgetAction']):
+		'''
+		Get a list of child objects from a custom menu, excluding those types listed in '_exclude'.
+
+		args:
+			contextMenu (bool) = get the child widgets for the context menu.
+			_exclude (list) = can be modified to set types to exclude from the returned results.
+		returns:
+			(list)
+		'''
+		if contextMenu:
+			menu = self.contextMenu()
+		else:
+			menu = self.menu
+
+		return [i for i in menu.children() if i.__class__.__name__ not in _exclude]
+
+
+	def childWidgets(self, index=None, contextMenu=False):
+		'''
+		Get the widget at the given index from a custom menu. If no arg is given all widgets will be returned.
+
+		args:
+			index (int) = widget location.
+			contextMenu (bool) = get the child widgets for the context menu.
+		returns:
+			(QWidget) or (list)
+		'''
+		menuWidgets = self.menu.childWidgets(index)
+		contextMenuWidgets = self.contextMenu().childWidgets(index)
+
+		if contextMenu:
+			return contextMenuWidgets
+		if index is None:
+			return menuWidgets + contextMenuWidgets
+		else:
+			return menuWidgets
+
+
 	def setCurrent_(self, i):
 		'''
 		Sets the current item from the given item text or index without triggering any signals.
@@ -176,13 +240,6 @@ class QComboBox_(QtWidgets.QComboBox):
 		self.blockSignals(False)
 
 
-	def menuItems(self):
-		'''
-
-		'''
-		return [i for i in self.menu.children() if i.__class__.__name__ not in ['QAction', 'QWidgetAction']]
-
-
 	def contextMenu(self):
 		'''
 		Get the context menu.
@@ -190,27 +247,6 @@ class QComboBox_(QtWidgets.QComboBox):
 		if not hasattr(self, '_menu'):
 			self._menu = QMenu_(self, position='cursorPos')
 		return self._menu
-
-
-	def childWidgets(self, index=None, contextMenu=False):
-		'''
-		Get the widget at the given index.
-		If no arg is given all widgets will be returned.
-
-		args:
-			index (int) = widget location.
-		returns:
-			(QWidget) or (list)
-		'''
-		menuWidgets = self.menu.childWidgets(index)
-		contextMenuWidgets = self.contextMenu().childWidgets(index)
-
-		if contextMenu:
-			return contextMenuWidgets
-		if index is None:
-			return menuWidgets + contextMenuWidgets
-		else:
-			return menuWidgets
 
 
 	def showPopup(self):
@@ -224,11 +260,12 @@ class QComboBox_(QtWidgets.QComboBox):
 			else:
 				self.menu.hide()
 				self.menu.visible=False
-		else:
-			width = self.minimumSizeHint().width()
-			self.view().setMinimumWidth(width)
+			return	
 
-			super(QComboBox_, self).showPopup()
+		width = self.minimumSizeHint().width()
+		self.view().setMinimumWidth(width)
+
+		super(QComboBox_, self).showPopup()
 
 
 	def hidePopup(self):
@@ -269,6 +306,51 @@ class QComboBox_(QtWidgets.QComboBox):
 		return QtWidgets.QComboBox.mousePressEvent(self, event)
 
 
+	def showEvent(self, event):
+		'''
+		args:
+			event=<QEvent>
+		'''
+		try:
+			if not __name__=='__main__':
+				if callable(self.classMethod):
+					self.classMethod()
+		except:
+			p = self.parent()
+			while not hasattr(p.window(), 'sb'):
+				p = p.parent()
+
+			self.sb = p.window().sb
+			self.parentUiName = self.sb.getUiName()
+			self.classMethod = self.sb.getMethod(self.parentUiName, self)
+			if callable(self.classMethod):
+				self.classMethod()
+				self.initialized=True
+
+		return QtWidgets.QComboBox.showEvent(self, event)
+
+
+
+
+
+
+
+
+
+if __name__ == "__main__":
+	app = QtWidgets.QApplication(sys.argv)
+
+	w=QComboBox_(popupStyle='qmenu')
+	w.show()
+	sys.exit(app.exec_())
+
+
+
+# -----------------------------------------------
+# Notes
+# -----------------------------------------------
+
+
 	# def mouseDoubleClickEvent(self, event):
 	# 	'''
 	# 	args:
@@ -298,51 +380,6 @@ class QComboBox_(QtWidgets.QComboBox):
 
 	# 	return super(QComboBox_, self).eventFilter(widget, event)
 
-
-	def showEvent(self, event):
-		'''
-		args:
-			event=<QEvent>
-		'''
-		try:
-			if not __name__=='__main__':
-				if callable(self.classMethod):
-					self.classMethod()
-		except:
-			p = self.parent()
-			while not hasattr(p.window(), 'sb'):
-				p = p.parent()
-
-			self.sb = p.window().sb
-			self.parentUiName = self.sb.getUiName()
-			self.classMethod = self.sb.getMethod(self.parentUiName, str(self.objectName()))
-
-			if callable(self.classMethod):
-				self.classMethod()
-				self.initialized=True
-
-		return QtWidgets.QComboBox.showEvent(self, event)
-
-
-
-
-
-
-
-
-
-if __name__ == "__main__":
-	app = QtWidgets.QApplication(sys.argv)
-
-	w=QComboBox_(popupStyle='qmenu')
-	w.show()
-	sys.exit(app.exec_())
-
-
-
-# -----------------------------------------------
-# Notes
-# -----------------------------------------------
 
 
 	# def mouseMoveEvent(self, event):

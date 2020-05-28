@@ -100,7 +100,7 @@ class QPushButton_(QtWidgets.QPushButton):
 			w = getattr(QtWidgets, w)() #ex. QtWidgets.QAction(self) object from string.
 		except:
 			if callable(w):
-				w = widget() #ex. QtWidgets.QAction(self) object.
+				w = w() #ex. QtWidgets.QAction(self) object.
 
 		w.setMinimumHeight(self.minimumSizeHint().height()+1) #set child widget height to that of the button
 

@@ -10,6 +10,35 @@ class Rendering(Init):
 		super(Rendering, self).__init__(*args, **kwargs)
 
 
+	def pin(self, state=None):
+		'''
+		Context menu
+		'''
+		pin = self.parentUi.pin
+
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='')
+
+			return
+
+
+	def cmb001(self, index=None):
+		'''
+		Editors
+		'''
+		cmb = self.parentUi.cmb000
+		
+		files = ['']
+		contents = cmb.addItems_(files, ' ')
+
+		if not index:
+			index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				pass
+			cmb.setCurrentIndex(0)
+
+
 	def cmb000(self):
 		'''
 		Render: camera
@@ -20,23 +49,6 @@ class Rendering(Init):
 		# if self.cams:
 		# 	list_ = [str(cam.name) for cam in self.cams] #camera names
 		# 	contents = cmb.addItems_(list_)
-
-
-	def cmb001(self, index=None):
-		'''
-		Editors
-		'''
-		cmb = self.parentUi.cmb001
-
-		files = ['']
-		contents = cmb.addItems_(files, ' ')
-
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index(''):
-				mel.eval('')
-			cmb.setCurrentIndex(0)
 
 
 	def b000(self):

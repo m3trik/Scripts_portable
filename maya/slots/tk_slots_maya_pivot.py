@@ -10,6 +10,18 @@ class Pivot(Init):
 		super(Pivot, self).__init__(*args, **kwargs)
 
 
+	def pin(self, state=None):
+		'''
+		Context menu
+		'''
+		pin = self.parentUi.pin
+
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+
+			return
+
+
 	def cmb000(self, index=None):
 		'''
 		Editors
@@ -23,10 +35,10 @@ class Pivot(Init):
 			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index(''):
-				mel.eval('')
+				pass
 			cmb.setCurrentIndex(0)
 
-		
+
 	def b000(self):
 		'''
 		Center Pivot Object

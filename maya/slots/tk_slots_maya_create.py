@@ -15,6 +15,35 @@ class Create(Init):
 		self.history=[]
 
 
+	def pin(self, state=None):
+		'''
+		Context menu
+		'''
+		pin = self.parentUi.pin
+
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+
+			return
+
+
+	def cmb000(self, index=None):
+		'''
+		Editors
+		'''
+		cmb = self.parentUi.cmb000
+		
+		files = ['']
+		contents = cmb.addItems_(files, ' ')
+
+		if not index:
+			index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				pass
+			cmb.setCurrentIndex(0)
+
+
 	def getAxis(self):
 		'''
 
@@ -179,7 +208,7 @@ class Create(Init):
 				cmb.menu.clear()
 
 			#add spinboxes
-			[cmb.add('QDoubleSpinBox', setObjectName=name, preset_='0.00-100 step1') for name in self.unpackNames(names)]
+			[cmb.add('QDoubleSpinBox', setObjectName=name, minMax_='0.00-100 step1') for name in self.unpackNames(names)]
 
 			#set values
 			self.setSpinboxes(cmb, names, values)
@@ -198,7 +227,7 @@ class Create(Init):
 		args:
 			index(int) = optional index of the spinbox that called this function. ie. 5 from s005
 		'''
-		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.parentUi.cmb002.menuItems()} #get current spinbox values. ie. {width:10} from spinbox prefix and value.
+		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.parentUi.cmb002.children_()} #get current spinbox values. ie. {width:10} from spinbox prefix and value.
 		self.setAttributesMEL(self.node, spinboxValues) #set attributes for the history node
 
 

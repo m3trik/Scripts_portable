@@ -1,5 +1,5 @@
+from __future__ import print_function
 from tk_slots_max_init import *
-
 
 import os.path
 
@@ -9,6 +9,18 @@ import os.path
 class DynLayout(Init):
 	def __init__(self, *args, **kwargs):
 		super(DynLayout, self).__init__(*args, **kwargs)
+
+
+	def pin(self, state=None):
+		'''
+		Context menu
+		'''
+		pin = self.parentUi.pin
+
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+
+			return
 
 
 	def cmb000(self, index=None):
@@ -24,7 +36,7 @@ class DynLayout(Init):
 			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index(''):
-				mel.eval('')
+				pass
 			cmb.setCurrentIndex(0)
 
 

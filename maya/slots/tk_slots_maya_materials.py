@@ -1,8 +1,6 @@
 from __future__ import print_function
 from tk_slots_maya_init import *
 
-from widgets.qLabel_ import QLabel_
-
 import os.path
 
 
@@ -16,22 +14,34 @@ class Materials(Init):
 		self.randomMat=None
 
 
-	# def cmb001(self, index=None):
-	# 	'''
-	# 	Editors
+	def pin(self, state=None):
+		'''
+		Context menu
+		'''
+		pin = self.parentUi.pin
 
-	# 	'''
-	# 	cmb = self.parentUi.cmb001
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='Maya Material Editors')
+
+			return
+
+
+	def cmb001(self, index=None):
+		'''
+		Editors
+
+		'''
+		cmb = self.parentUi.cmb001
 		
-	# 	files = ['Hypershade']
-	# 	contents = cmb.addItems_(files, ' ')
+		files = ['Hypershade']
+		contents = cmb.addItems_(files, 'Maya Material Editors')
 
-	# 	if index is None:
-	# 		index = cmb.currentIndex()
-	# 	if index!=0:
-	# 		if index==contents.index('Hypershade'):
-	# 			mel.eval('HypershadeWindow;')
-	# 		cmb.setCurrentIndex(0)
+		if index is None:
+			index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index('Hypershade'):
+				mel.eval('HypershadeWindow;')
+			cmb.setCurrentIndex(0)
 
 
 	def cmb002(self, index=None):
@@ -44,12 +54,12 @@ class Materials(Init):
 		cmb = self.parentUi.cmb002
 
 		if not cmb.initialized:
-			cmb.addToContext(QLabel_(), setText='Open in Editor', setObjectName='lbl000', setToolTip='Open material in editor.')
-			cmb.addToContext(QLabel_(), setText='Rename', setObjectName='lbl001', setToolTip='Rename material')
+			cmb.addToContext(QLabel_, setText='Open in Editor', setObjectName='lbl000', setToolTip='Open material in editor.')
+			cmb.addToContext(QLabel_, setText='Rename', setObjectName='lbl001', setToolTip='Rename material')
 
-			cmb.addToContext(QLabel_(), setText='Delete', setObjectName='lbl002', setToolTip='Delete the current material.')
-			cmb.addToContext(QLabel_(), setText='Delete All Unused Materials', setObjectName='lbl003', setToolTip='Delete All unused materials.')
-			cmb.addToContext(QLabel_(), setText='Refresh', setObjectName='cmb002', setToolTip='Refresh materials list')
+			cmb.addToContext(QLabel_, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current material.')
+			cmb.addToContext(QLabel_, setText='Delete All Unused Materials', setObjectName='lbl003', setToolTip='Delete All unused materials.')
+			cmb.addToContext(QLabel_, setText='Refresh', setObjectName='cmb002', setToolTip='Refresh materials list')
 
 
 		if cmb.lineEdit():

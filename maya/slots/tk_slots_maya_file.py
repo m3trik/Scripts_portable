@@ -15,6 +15,18 @@ class File(Init):
 			pass
 
 
+	def pin(self, state=None):
+		'''
+		Context menu
+		'''
+		pin = self.parentUi.pin
+
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb005', setToolTip='')
+
+			return
+
+
 	def cmb000(self, index=None):
 		'''
 		Recent Files
@@ -128,29 +140,27 @@ class File(Init):
 	def cmb005(self, index=None):
 		'''
 		Editors
-
 		'''
 		cmb = self.parentUi.cmb005
 		
-		files = ['Node Editor', 'Outlinder', 'Content Browser']
-		contents = cmb.addItems_(files, ' ')
+		files = []
+		contents = cmb.addItems_(files, '')
 
 		if not index:
 			index = cmb.currentIndex()
 		if index!=0:
-			if index==contents.index('Node Editor'):
-				mel.eval('NodeEditorWindow;') #
-			if index==contents.index('Outlinder'):
-				mel.eval('OutlinerWindow;') #
-			if index==contents.index('Content Browser'):
-				mel.eval('ContentBrowserWindow;') #
+			if index==contents.index(''):
+				mel.eval('') #
+			if index==contents.index(''):
+				mel.eval('') #
+			if index==contents.index(''):
+				mel.eval('') #
 			cmb.setCurrentIndex(0)
 
 
 	def cmb006(self, index=None):
 		'''
 		Project Folder
-
 		'''
 		cmb = self.parentUi.cmb006
 		

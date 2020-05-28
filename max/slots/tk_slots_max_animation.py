@@ -1,5 +1,5 @@
+from __future__ import print_function
 from tk_slots_max_init import *
-
 
 import os.path
 
@@ -10,12 +10,24 @@ class Animation(Init):
 		super(Animation, self).__init__(*args, **kwargs)
 
 
+	def pin(self, state=None):
+		'''
+		Context menu
+		'''
+		pin = self.parentUi.pin
+
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+
+			return
+
+
 	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
 		cmb = self.parentUi.cmb000
-
+		
 		files = ['']
 		contents = cmb.addItems_(files, ' ')
 
@@ -104,7 +116,7 @@ class Animation(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

@@ -1,7 +1,6 @@
 from __future__ import print_function
 from tk_slots_max_init import *
 
-
 import os.path
 
 
@@ -19,20 +18,32 @@ class Edit(Init):
 		self.parentUi.tb003.setText('Along Axis '+axis)
 
 
+	def pin(self, state=None):
+		'''
+		Context menu
+		'''
+		pin = self.parentUi.pin
+
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+
+			return
+
+
 	def cmb000(self, index=None):
 		'''
 		Editors
 		'''
 		cmb = self.parentUi.cmb000
-
+		
 		files = ['']
 		contents = cmb.addItems_(files, ' ')
 
 		if not index:
 			index = cmb.currentIndex()
 		if index!=0:
-			# if index==contents.index(''):
-			# 	pass
+			if index==contents.index(''):
+				pass
 			cmb.setCurrentIndex(0)
 
 
@@ -44,7 +55,7 @@ class Edit(Init):
 		if state=='setMenu':
 			tb.add('QCheckBox', setText='N-Gons', setObjectName='chk002', setToolTip='Find N-gons.')
 			tb.add('QCheckBox', setText='Isolated Vertex', setObjectName='chk003', setChecked=True, setToolTip='Find isolated vertices within specified angle threshold.')
-			tb.add('QSpinBox', setPrefix='Loose Vertex Angle: ', setObjectName='s006', preset_='1-360 step1', setValue=15, setToolTip='Loose vertex search: Angle Threshold.')
+			tb.add('QSpinBox', setPrefix='Loose Vertex Angle: ', setObjectName='s006', minMax_='1-360 step1', setValue=15, setToolTip='Loose vertex search: Angle Threshold.')
 			tb.add('QCheckBox', setText='Repair', setObjectName='chk004', setToolTip='Repair matching geometry. (else: select)')
 			return
 

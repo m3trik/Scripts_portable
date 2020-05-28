@@ -1,7 +1,6 @@
 from __future__ import print_function
 from tk_slots_max_init import *
 
-
 import os.path
 
 
@@ -17,18 +16,17 @@ class Rendering(Init):
 		# comboBox.checkIndex(1)
 		# comboBox.checkIndex(2)
 
-		
 
-	def cmb000(self):
+	def pin(self, state=None):
 		'''
-		Render: camera
+		Context menu
 		'''
-		cmb = self.parentUi.cmb000
+		pin = self.parentUi.pin
 
-		self.cams = [cam for cam in rt.cameras if 'Target' not in str(cam)]
-		if self.cams:
-			list_ = [str(cam.name) for cam in self.cams] #camera names
-			cmb.addItems_(list_)
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='')
+
+			return
 
 
 	def cmb001(self, index=None):
@@ -46,6 +44,18 @@ class Rendering(Init):
 			if index==contents.index(''):
 				pass
 			cmb.setCurrentIndex(0)
+
+
+	def cmb000(self):
+		'''
+		Render: camera
+		'''
+		cmb = self.parentUi.cmb000
+
+		self.cams = [cam for cam in rt.cameras if 'Target' not in str(cam)]
+		if self.cams:
+			list_ = [str(cam.name) for cam in self.cams] #camera names
+			cmb.addItems_(list_)
 
 
 	def b000(self):

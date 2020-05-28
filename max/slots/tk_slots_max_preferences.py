@@ -1,7 +1,6 @@
 from __future__ import print_function
 from tk_slots_max_init import *
 
-
 import os.path
 
 
@@ -16,25 +15,33 @@ class Preferences(Init):
 		self.cmb002(init=1) #init cmb002
 
 
+	def pin(self, state=None):
+		'''
+		Context menu
+		'''
+		pin = self.parentUi.pin
 
-	# def cmb000(self, index=None):
-	# 	'''
-	# 	Custom Menu Set
-	# 	'''
-	# 	cmb = self.parentUi.cmb000
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb003', setToolTip='')
+
+			return
+
+
+	def cmb003(self, index=None):
+		'''
+		Editors
+		'''
+		cmb = self.parentUi.cmb003
 		
-	# 	list_ = ['Modeling', 'Normals', 'Materials', 'UV'] #combobox list menu corresponding to the button text sets.
-	# 	contents = cmb.addItems_(list_, 'Menu Sets')
+		files = ['']
+		contents = cmb.addItems_(files, ' ')
 
-	# 	if not index:
-			# index = cmb.currentIndex()
-	# 	buttons = self.getObject(self.sb.getUi('main'), 'v000-11') #the ui in which the changes are to be made.
-	# 	for i, button in enumerate(buttons):
-	# 		if index==1: #set the text for each button.
-	# 			button.setText(['','','','','','','','','','','',''][i])
-
-	# 		if index==2:
-	# 			button.setText(['','','','','','','','','','','',''][i])
+		if not index:
+			index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				pass
+			cmb.setCurrentIndex(0)
 
 
 	def cmb000(self, index=None, init=False):
@@ -93,23 +100,6 @@ class Preferences(Init):
 		# 	pm.currentUnit(time=values[index]) #game | film | pal | ntsc | show | palf | ntscf
 
 
-	def cmb003(self, index=None):
-		'''
-		Editors
-		'''
-		cmb = self.parentUi.cmb003
-
-		files = ['']
-		contents = cmb.addItems_(files, ' ')
-
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index(''):
-				pass
-			cmb.setCurrentIndex(0)
-
-
 	def b000(self):
 		'''
 		Init Tk_Main
@@ -155,3 +145,24 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
+
+
+	# def cmb000(self, index=None):
+	# 	'''
+	# 	Custom Menu Set
+	# 	'''
+	# 	cmb = self.parentUi.cmb000
+		
+	# 	list_ = ['Modeling', 'Normals', 'Materials', 'UV'] #combobox list menu corresponding to the button text sets.
+	# 	contents = cmb.addItems_(list_, 'Menu Sets')
+
+	# 	if not index:
+			# index = cmb.currentIndex()
+	# 	buttons = self.getObject(self.sb.getUi('main'), 'v000-11') #the ui in which the changes are to be made.
+	# 	for i, button in enumerate(buttons):
+	# 		if index==1: #set the text for each button.
+	# 			button.setText(['','','','','','','','','','','',''][i])
+
+	# 		if index==2:
+	# 			button.setText(['','','','','','','','','','','',''][i])
+

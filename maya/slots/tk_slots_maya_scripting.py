@@ -20,15 +20,16 @@ class Scripting(Init):
 
 
 
-	def chk000(self):
+	def pin(self, state=None):
 		'''
-		Toggle Mel/Python
+		Context menu
+		'''
+		pin = self.parentUi.pin
 
-		'''
-		if self.parentUi.chk000.isChecked():
-			self.parentUi.chk000.setText("python")
-		else:
-			self.parentUi.chk000.setText("MEL")
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+
+			return
 
 
 	def cmb000(self, index=None):
@@ -44,8 +45,19 @@ class Scripting(Init):
 			index = cmb.currentIndex()
 		if index!=0:
 			if index==contents.index(''):
-				mel.eval('')
+				pass
 			cmb.setCurrentIndex(0)
+
+
+	def chk000(self):
+		'''
+		Toggle Mel/Python
+
+		'''
+		if self.parentUi.chk000.isChecked():
+			self.parentUi.chk000.setText("python")
+		else:
+			self.parentUi.chk000.setText("MEL")
 
 
 	def b000(self):

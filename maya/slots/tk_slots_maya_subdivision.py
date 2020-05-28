@@ -10,6 +10,18 @@ class Subdivision(Init):
 		super(Subdivision, self).__init__(*args, **kwargs)
 
 
+	def pin(self, state=None):
+		'''
+		Context menu
+		'''
+		pin = self.parentUi.pin
+
+		if state=='setMenu':
+			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya Subdivision Editiors')
+
+			return
+
+
 	def cmb000(self, index=None):
 		'''
 		Editors
@@ -17,7 +29,7 @@ class Subdivision(Init):
 		cmb = self.parentUi.cmb000
 		
 		files = ['Reduce Polygons','Add Divisions','Smooth','SubDiv Proxy']
-		contents = cmb.addItems_(files, ' ')
+		contents = cmb.addItems_(files, 'Maya Subdivision Editiors')
 
 		if not index:
 			index = cmb.currentIndex()
