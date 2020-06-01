@@ -17,15 +17,15 @@ a new layout up and running, is to drop a qt designer ui file into the ui folder
  Structure:
 -----------------------------------------------
 
-## tk_main: ###### *handles main gui construction.*
+###### tk_main: *handles main gui construction.*
 
-## tk_childEvents: ###### *event handling for child widgets.*
+###### tk_childEvents: *event handling for child widgets.*
 
-## tk_overlay: ###### *tracks cursor position and ui hierarchy to generate paint events that overlay the main widget.*
+###### tk_overlay: *tracks cursor position and ui hierarchy to generate paint events that overlay the main widget.*
 
-## tk_switchboard: ###### *contains a master dictionary for widget related info as well as convienience classes for interacting with the dict.*
+###### tk_switchboard: *contains a master dictionary for widget related info as well as convienience classes for interacting with the dict.*
 
-## tk_slots_: ###### *parent class holding methods that are inherited across all app specific slot class modules.*
+###### tk_slots_: *parent class holding methods that are inherited across all app specific slot class modules.*
 
 
 
