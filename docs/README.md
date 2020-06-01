@@ -9,7 +9,7 @@
 ######
 *This is a cross-platform, modular, marking menu style ui based on a QStackedWidget.  Each piece is constructed dynamically
 to allow for as little overhead as possible in development and maintainence.  Literally all you have to do to have 
-a new layout up and running, is to drop a qt designer ui file into the ui folder, add a shortcut somewhere in the main ui(with the ui name in the 'whats this' attribute), and a create corresponding class of the same name.  Naming convention allows for a stacked ui to be constructed, signals added/removed as needed, and a master dictionary (stored within the switchboard module) to be created, which provides convenience methods that allow getting/setting of relevant data across modules.*
+a new layout up and running, is to drop a qt designer ui file into the ui folder, add a shortcut somewhere in the main ui (with the ui name in the 'whats this' attribute), and a create corresponding class of the same name.  Naming convention allows for a stacked ui to be constructed, signals added/removed as needed, and a master dictionary (stored within the switchboard module) to be created, which provides convenience methods that allow getting/setting of relevant data across modules.*
 
 
 ##
