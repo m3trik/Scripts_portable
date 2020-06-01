@@ -46,8 +46,7 @@ class StyleSheet():
 			border-style: outset;
 			border-radius: 1px;
 			border: 1px solid black;
-			padding-left: 5px;
-			padding-right: 5px;
+			padding: 0px 5px 0px 5px; /* top, right, bottom, left */
 			background-color: {COLOR_MEDIUM};
 			color: {COLOR_TEXT1};
 		}
@@ -93,8 +92,7 @@ class StyleSheet():
 			border-style: outset;
 			border-radius: 1px;
 			border: 1px solid black;
-			padding-left: 5px;
-			padding-right: 5px;
+			padding: 0px 5px 0px 5px; /* top, right, bottom, left */
 			background-color: {COLOR_MEDIUM}; /* The background will not appear unless you set the border property. */
 			color: {COLOR_TEXT1};
 		}
@@ -127,22 +125,42 @@ class StyleSheet():
 			color: {COLOR_TEXT1};
 		}
 
-		/* When the QToolButton displays arrows, the ::up-arrow, ::down-arrow, ::left-arrow and ::right-arrow subcontrols are used. */
+		QToolButton[popupMode="1"] { /* only for MenuButtonPopup */
+			padding-right: 2px; /* make way for the popup button */
+		}
+
+		QToolButton:open { /* when the button has its menu open */
+			background-color: dark grey;
+		}
+
+		/* popupMode set to DelayedPopup or InstantPopup */
+		QToolButton::menu-indicator {
+			image: none;
+			subcontrol-origin: padding;
+			subcontrol-position: bottom right;
+			padding: 0px 5px 5px 0px; /* top, right, bottom, left */
+		}
+
+		QToolButton::menu-indicator:pressed, QToolButton::menu-indicator:open {
+			position: relative;
+			top: 2px; left: 2px; /* shift the arrow by 2 px */
+		}
+
+		/* When the Button displays arrows, the ::up-arrow, ::down-arrow, ::left-arrow and ::right-arrow subcontrols are used. */
 		QToolButton::down-arrow, QToolButton::up-arrow, QToolButton::left-arrow, QToolButton::right-arrow {
-			image: url(Resources/ComboBox_Right1.png);
-			padding-right: 15px;
+			image: none;
+			padding: 0px 15px 0px 0px; /* top, right, bottom, left */
 		}
 
 		QToolButton::down-arrow:hover, QToolButton::up-arrow:hover, QToolButton::left-arrow:hover, QToolButton::right-arrow:hover {
 			background-color: {COLOR_ACCENT};
-			padding-right: 5px;
+			padding: 0px 5px 0px 0px; /* top, right, bottom, left */
 		}
 
 		/* the subcontrols below are used only in the MenuButtonPopup mode */
 		QToolButton::menu-button {
 			border: 1px solid {COLOR_TEXT1};
-			/*padding: 0px 0px 0px 4px;*/
-			margin: 4px 2px 4px 0px;
+			margin: 4px 2px 4px 0px; /* top, right, bottom, left */
 		}
 
 		QToolButton::menu-button::enabled {
@@ -166,9 +184,8 @@ class StyleSheet():
 			image: none;
 		}
 
-		QToolButton::menu-indicator {
-			bottom: 5px;
-			right: 5px;
+		QToolButton::menu-arrow:open {
+
 		}''')
 
 	QAbstractButton=f('''
@@ -185,7 +202,7 @@ class StyleSheet():
 			background: {COLOR_MEDIUM};
 			color: {COLOR_TEXT1};
 			border: 1px solid black;
-			padding: 1px 18px 1px 3px;
+			padding: 1px 18px 1px 3px; /* top, right, bottom, left */
 			/* border-radius: 1px; */
 			/* min-width: 0em; */
 		}
@@ -280,8 +297,7 @@ class StyleSheet():
 			border-style: outset;
 			border-radius: 1px;
 			border: 1px solid black;
-			padding-left: 5px;
-			padding-right: 5px;
+			padding: 0px 5px 0px 5px; /* top, right, bottom, left */
 			background-color: {COLOR_MEDIUM};
 			color: {COLOR_TEXT1};
 		}
@@ -323,8 +339,7 @@ class StyleSheet():
 			border-style: outset;
 			border-radius: 1px;
 			border: 1px solid black;
-			padding-left: 5px;
-			padding-right: 5px;
+			padding: 0px 5px 0px 5px; /* top, right, bottom, left */
 			background-color: {COLOR_MEDIUM};
 			color: {COLOR_TEXT1};
 		}
@@ -564,12 +579,12 @@ class StyleSheet():
 
 		QSlider::groove:horizontal {
 			height: 5px;
-			margin: 4px 0px 4px 0px;
+			margin: 4px 0px 4px 0px; /* top, right, bottom, left */
 		}
 
 		QSlider::groove:vertical {
 			width: 5px;
-			margin: 0px 4px 0px 4px;
+			margin: 0px 4px 0px 4px; /* top, right, bottom, left */
 		}
 
 		QSlider::handle {
@@ -579,12 +594,12 @@ class StyleSheet():
 
 		QSlider::handle:horizontal {
 			width: 15px;
-			margin: -4px 0px -4px 0px;
+			margin: -4px 0px -4px 0px; /* top, right, bottom, left */
 		}
 
 		QSlider::handle:vertical {
 			height: 15px;
-			margin: 0px -4px 0px -4px;
+			margin: 0px -4px 0px -4px; /* top, right, bottom, left */
 		}
 
 		QSlider::add-page:vertical, QSlider::sub-page:horizontal {
@@ -603,12 +618,12 @@ class StyleSheet():
 
 		QScrollBar:horizontal {
 			height: 15px;
-			margin: 0px 0px 0px 32px;
+			margin: 0px 0px 0px 32px; /* top, right, bottom, left */
 		}
 
 		QScrollBar:vertical {
 			width: 15px;
-			margin: 32px 0px 0px 0px;
+			margin: 32px 0px 0px 0px; /* top, right, bottom, left */
 		}
 
 		QScrollBar::handle {
@@ -672,7 +687,7 @@ class StyleSheet():
 		QGroupBox {
 			border: 1px transparent;
 			border-radius: 1px;
-			margin-top: 4px; /* leave space at the top for the title */
+			margin: 4px 0px 0px 0px; /* top, right, bottom, left */ /* leave space at the top for the title */
 			background-color: rgba(75,75,75,125);
 		}
 
@@ -687,13 +702,13 @@ class StyleSheet():
 
 	QTabBar=f('''
 		QTabBar {
-			margin-left: 2px;
+			margin: 0px 0px 0px 2px; /* top, right, bottom, left */
 		}
 
 		QTabBar::tab {
 			border-radius: 0px;
-			padding: 1px;
-			margin: 1px;
+			padding-top: 1px;
+			margin-top: 1px;
 		}
 
 		QTabBar::tab:selected {
@@ -707,7 +722,7 @@ class StyleSheet():
 		}
 
 		QMenu::item {
-			padding: 5px 5px 0px 0px;
+			padding: 5px 5px 0px 0px; /* top, right, bottom, left */
 			border: 1px solid transparent; /* reserve space for selection border */
 		}
 
@@ -729,8 +744,7 @@ class StyleSheet():
 		QMenu::separator {
 			height: 2px;
 			background: {COLOR_MEDIUM};
-			margin-left: 10px;
-			margin-right: 5px;
+			margin: 0px 5px 0px 10px; /* top, right, bottom, left */
 		}
 
 		QMenu::indicator {
@@ -744,9 +758,8 @@ class StyleSheet():
 			color: {COLOR_TEXT1};
 			border: 1px solid black;
 			border-radius: 0px;
-			margin-left: 0px;
-			padding-left: 5px;
-			padding-right: 5px;
+			margin: 0px 0px 0px 0px; /* top, right, bottom, left */
+			padding: 0px 5px 0px 5px; /* top, right, bottom, left */
 		}
 
 		QLabel::hover {   
@@ -775,6 +788,7 @@ class StyleSheet():
 			border: 0px solid black;
 			border-radius: 5px;
 			text-align: center;
+			margin: 0px 0px 0px 0px; /* top, right, bottom, left */
 		}
 
 		QProgressBar::chunk {
@@ -784,46 +798,51 @@ class StyleSheet():
 		}''')
 
 	dark=f('''
-			QPushButton, QToolButton {
-				background-color: {COLOR_DARK};
-				color: {COLOR_TEXT3};
-			}
+		/*Start Dark Version */
 
-			QPushButton::enabled, QToolButton::enabled {
-				color: {COLOR_TEXT3};
-			}
+		QPushButton, QToolButton {
+			background-color: {COLOR_DARK};
+			color: {COLOR_TEXT3};
+		}
 
-			QPushButton::disabled, QToolButton::disabled {
-				color: {COLOR_TEXT2};
-			}
+		QPushButton::enabled, QToolButton::enabled {
+			color: {COLOR_TEXT3};
+		}
 
-			QPushButton::checked, QToolButton::checked {
-				background-color: {COLOR_ACCENT};
-				color: {COLOR_TEXT2};
-			}
+		QPushButton::disabled, QToolButton::disabled {
+			color: {COLOR_TEXT2};
+		}
 
-			QPushButton::hover, QToolButton::hover {
-				background-color: {COLOR_ACCENT};
-				color: {COLOR_TEXT1};
-			}
+		QPushButton::checked, QToolButton::checked {
+			background-color: {COLOR_ACCENT};
+			color: {COLOR_TEXT2};
+		}
 
-			QPushButton::checked::hover, QToolButton::checked::hover {
-				background-color: {COLOR_ACCENT};
-				color: {COLOR_TEXT2};
-			}
+		QPushButton::hover, QToolButton::hover {
+			background-color: {COLOR_ACCENT};
+			color: {COLOR_TEXT1};
+		}
 
-			QPushButton::pressed, QToolButton::pressed {
-				background-color: {COLOR_MEDLIGHT};
-				color: {COLOR_TEXT1};
-			}
+		QPushButton::checked::hover, QToolButton::checked::hover {
+			background-color: {COLOR_ACCENT};
+			color: {COLOR_TEXT2};
+		}
 
-			QToolButton::menu-button {
-				border: 1px solid transparent;
-			}
+		QPushButton::pressed, QToolButton::pressed {
+			background-color: {COLOR_MEDLIGHT};
+			color: {COLOR_TEXT1};
+		}
 
-			QToolButton::menu-button::hover {
-				border: 1px solid transparent;
-			}''')
+		QToolButton::menu-button {
+			border: 1px solid transparent;
+		}
+
+		QToolButton::menu-button::hover {
+			border: 1px solid transparent;
+		}
+
+		/*End Dark Version */
+		''')
 
 
 
@@ -965,6 +984,52 @@ lightGray
 color0 (zero pixel value) (transparent, i.e. background)
 color1 (non-zero pixel value) (opaque, i.e. foreground)
 
+
+
+
+
+image urls:
+url(menu_indicator.png);
+url(vline.png) 0;
+url(handle.png);
+url(close.png)
+url(close-hover.png)
+url(rightarrow.png);
+url(leftarrow.png);
+url(downarrow.png);
+url(down_arrow.png);
+url(up_arrow.png);
+url(tear_indicator.png);
+url(scrollbutton.png) 2;
+url(branch-closed.png);
+url(branch-open.png);
+url(branch-more.png) 0;
+url(branch-end.png) 0;
+url(branch-open.png);
+url(images/splitter.png);
+url(images/splitter_pressed.png);
+url(:/images/up_arrow.png);
+url(:/images/up_arrow_disabled.png);
+url(:/images/down_arrow.png);
+url(:/images/down_arrow_disabled.png);
+url(:/images/spindown.png) 1;
+url(:/images/spindown_hover.png) 1;
+url(:/images/spindown_pressed.png) 1;
+url(:/images/sizegrip.png);
+url(:/images/frame.png) 4;
+url(:/images/spinup.png) 1;
+url(:/images/spinup_hover.png) 1;
+url(:/images/spinup_pressed.png) 1;
+url(:/images/checkbox_unchecked.png);
+url(:/images/checkbox_unchecked_hover.png);
+url(:/images/checkbox_checked.png);
+url(:/images/checkbox_checked_hover.png);
+url(:/images/radiobutton_unchecked.png);
+url(:/images/radiobutton_unchecked_hover.png);
+url(:/images/radiobutton_checked.png);
+url(:/images/radiobutton_checked_hover.png);
+url(:/images/checkbox_indeterminate_hover.png);
+url(:/images/checkbox_indeterminate_pressed.png);
 
 
 

@@ -32,13 +32,13 @@ class Materials(Init):
 		'''
 		cmb = self.parentUi.cmb001
 
-		files = ['Material Editor']
-		contents = cmb.addItems_(files, '3dsMax Material Editors')
+		list_ = ['Material Editor']
+		items = cmb.addItems_(list_, '3dsMax Material Editors')
 
 		if index is None:
 			index = cmb.currentIndex()
 		if index!=0:
-			if index==contents.index('Material Editor'):
+			if index==items.index('Material Editor'):
 				maxEval('max mtledit')
 			cmb.setCurrentIndex(0)
 
@@ -70,30 +70,10 @@ class Materials(Init):
 			sceneMaterials = True
 
 		if sceneMaterials:
-			materials=[] #get any scene material that does not start with 'Material'
-			for mat in rt.sceneMaterials:
-				try:
-					if rt.getNumSubMtls(mat): #if material is a submaterial; search submaterials
-						for i in range(1, rt.getNumSubMtls(mat)+1):
-							subMat = rt.getSubMtl(mat, i)
-							if subMat and not subMat.name.startswith('Material'):
-								materials.append(subMat)
-					elif not mat.name.startswith('Material'):
-						materials.append(mat)
-
-				except RuntimeError:
-					pass
+			materials = self.getSceneMaterials()
 
 		elif idMapMaterials:
-			materials=[] #get any scene material that startswith 'matID'
-			for mat in rt.sceneMaterials:
-				if rt.getNumSubMtls(mat): #if material is a submaterial; search submaterials
-					for i in range(1, rt.getNumSubMtls(mat)+1):
-						subMat = rt.getSubMtl(mat, i)
-						if subMat.name.startswith('matID'):
-							materials.append(subMat)
-				elif mat.name.startswith('matID'):
-					materials.append(mat)
+			materials = self.getSceneMaterials(startingWith=['matID'])
 
 		mats = sorted([mat for mat in set(materials)])
 		matNames = [mat.name for mat in mats]
@@ -101,15 +81,20 @@ class Materials(Init):
 
 		#create and set icons with color swatch
 		for i in range(len(mats)): #create icons with color swatch
-			r = int(mats[i].diffuse.r) #convert from float value
-			g = int(mats[i].diffuse.g)
-			b = int(mats[i].diffuse.b)
-			pixmap = QtGui.QPixmap(100,100)
-			pixmap.fill(QtGui.QColor.fromRgb(r, g, b))
-			cmb.setItemIcon(i, QtGui.QIcon(pixmap))
+			try:
+				r = int(mats[i].diffuse.r) #convert from float value
+				g = int(mats[i].diffuse.g)
+				b = int(mats[i].diffuse.b)
+				pixmap = QtGui.QPixmap(100,100)
+				pixmap.fill(QtGui.QColor.fromRgb(r, g, b))
+				cmb.setItemIcon(i, QtGui.QIcon(pixmap))
+			except AttributeError:
+				pass
 
 		if index is None:
 			index = cmb.currentIndex()
+		# else:
+		# 	cmb.setCurrentIndex(index):
 
 		self.materials = {name:mats[i] for i, name in enumerate(matNames)} #add mat objects to materials dictionary. 'mat name'=key, <mat object>=value
 		self.currentMaterial = mats[index] if len(mats)>index and index>=0 else None #store material
@@ -128,57 +113,7 @@ class Materials(Init):
 		shell = tb.chk005.isChecked() #Select by material: shell
 		invert = tb.chk006.isChecked() #Select by material: invert
 
-		if not rt.getNumSubMtls(self.currentMaterial): #if not a multimaterial
-			mat = self.currentMaterial
-		else:
-			return '# Error: No valid stored material. If material is a multimaterial, select a submaterial. #'
-
-		sel = rt.selection
-		if not sel: #if not selection; use all scene geometry
-			sel = rt.geometry
-
-		for obj in sel:
-			if shell: #set to base object level
-				rt.modPanel.setCurrentObject(obj.baseObject)
-			else: #set object level to face
-				self.setSubObjectLevel(4)
-			m = obj.material
-			multimaterial = rt.getNumSubMtls(m)
-
-			same=[] #list of faces with the same material
-			other=[] #list of all other faces
-
-			faces = list(range(1, obj.faces.count))
-			for f in faces:
-				if multimaterial:
-					id = obj.GetFaceMaterial(f) #Returns the material ID of the specified face.
-					m = rt.getSubMtl(m, id) #get the material using the matID index
-
-				if m==mat:
-					if shell: #append obj to same and break loop
-						same.append(obj)
-						break
-					else: #append face ID to same
-						same.append(f)
-				else:
-					if shell: #append obj to other and break loop
-						other.append(obj)
-						break
-					else: #append face ID to other
-						other.append(f)
-
-			if shell:
-				if invert:
-					(rt.select(i) for i in other)
-				else:
-					(rt.select(i) for i in same)
-			else:
-				if invert:
-					rt.polyop.setFaceSelection(obj, other) #select the faces
-				else:
-					rt.polyop.setFaceSelection(obj, same) #select the faces
-			# print same
-			# print other
+		self.selectByMaterialID(self.currentMaterial, rt.selection)
 
 
 	def tb001(self, state=None):
@@ -209,11 +144,10 @@ class Materials(Init):
 			tb.add('QRadioButton', setText='New Random Material', setObjectName='chk008', setToolTip='Assign a new random ID material.')
 			return
 
+		selection = rt.selection
 
 		if tb.chk008.isChecked(): #Assign New random mat ID
 			import random
-
-			selection = rt.selection
 
 			if selection:
 				prefix = 'matID'
@@ -226,8 +160,7 @@ class Materials(Init):
 		 		mat.name = name
 				mat.diffuse = rt.color(rgb[0], rgb[1], rgb[2])
 
-				for obj in selection:
-					obj.material = mat
+				self.assignMaterial(selection, mat)
 
 				#delete previous shader
 				if self.randomMat:
@@ -244,17 +177,9 @@ class Materials(Init):
 				return '# Error: No valid object/s selected. #'
 
 		elif tb.chk007.isChecked(): #Assign current mat
-			name = self.parentUi.cmb002.currentText()
-			mat = self.materials[name]
+			self.assignMaterial(selection, self.currentMaterial)
 
-			for obj in rt.selection:
-				if rt.getNumSubMtls(mat): #if multimaterial
-					mat.materialList.count = mat.numsubs+1 #add slot to multimaterial
-					mat.materialList[-1] = material #assign new material to slot
-				else:
-					obj.material = mat
-
-			rt.redrawViews()
+		rt.redrawViews()
 
 
 	def lbl000(self):
@@ -357,25 +282,172 @@ class Materials(Init):
 
 	def b002(self):
 		'''
-		Store Material: Store the Currently Selected Material
+		Set Material: Set the Currently Selected Material as the currentMaterial.
 		'''
 		try: 
 			obj = rt.selection[0]
-		except:
+		except IndexError:
 			return '# Error: Nothing selected. #'
 
+		mat = self.getMaterial(obj)
+
+		self.parentUi.tb001.chk000.setChecked(True) #set the combobox to show all scene materials
+		cmb = self.parentUi.cmb002
+		self.cmb002() #refresh the combobox
+		cmb.setCurrentIndex(cmb.items().index(mat.name))
+
+
+	@staticmethod
+	def selectByMaterialID(material, objects=None, shell=False, invert=False):
+		'''
+		Select By Material Id
+	
+		material (obj) = The material to search and select for.
+		objects (list) = Faces or mesh objects as a list. If no objects are given, all geometry in the scene will be searched.
+		shell (bool) = Select the entire shell.
+		invert (bool) = Invert the final selection.
+
+		#ex call:
+		currentMaterial = rt.medit.getCurMtl()[1]; print (currentMaterial)
+		selectByMaterialID(currentMaterial)
+		'''
+		if not rt.getNumSubMtls(material): #if not a multimaterial
+			mat = material
+		else:
+			return '# Error: No valid stored material. If material is a multimaterial, select a submaterial. #'
+
+		if not objects: #if not selection; use all scene geometry
+			objects = rt.geometry
+
+		for obj in objects:
+			if not any([rt.isKindOf(obj, rt.Editable_Poly), rt.isKindOf(obj, rt.Editable_mesh)]):
+				print('# Error: '+str(obj.name)+' skipped. Operation requires an Editable_Poly or Editable_mesh. #')
+			else:
+				if shell: #set to base object level
+					rt.modPanel.setCurrentObject(obj.baseObject)
+				else: #set object level to face
+					Init.setSubObjectLevel(4)
+				m = obj.material
+				multimaterial = rt.getNumSubMtls(m)
+
+				same=[] #list of faces with the same material
+				other=[] #list of all other faces
+
+				faces = list(range(1, obj.faces.count))
+				for f in faces:
+					if multimaterial:
+						try: #get material from face
+							index = rt.GetFaceMatID(obj, f) #Returns the material ID of the specified face.
+						except RuntimeError: #try procedure for polygon object
+							index = rt.polyop.GetFaceMatID(obj, f) #Returns the material ID of the specified face.
+						m = obj.material[index-1] #m = rt.getSubMtl(m, id) #get the material using the matID index (account for maxscript arrays starting at index 1)
+
+					if m==mat: #single material
+						if shell: #append obj to same and break loop
+							same.append(obj)
+							break
+						else: #append face ID to same
+							same.append(f)
+					else:
+						if shell: #append obj to other and break loop
+							other.append(obj)
+							break
+						else: #append face ID to other
+							other.append(f)
+
+				if shell:
+					if invert:
+						(rt.select(i) for i in other)
+					else:
+						(rt.select(i) for i in same)
+				else:
+					if invert:
+						try:
+							rt.setFaceSelection(obj, other) #select inverse of the faces for editable mesh.
+						except RuntimeError:
+							rt.polyop.setFaceSelection(obj, other) #select inverse of the faces for polygon object.
+					else:
+						try:
+							rt.setFaceSelection(obj, same) #select the faces for editable mesh.
+						except RuntimeError:
+							rt.polyop.setFaceSelection(obj, same) #select the faces for polygon object.
+				# print same
+				# print other
+
+
+	@staticmethod
+	def getSceneMaterials(startingWith=['']):
+		'''
+		Get All Materials from the current scene.
+
+		args:
+			startingWith (list) = Filters material names starting with any of the strings in the given list. ie. ['matID']
+		returns:
+			(list) materials.
+		'''
+		materials=[] #get any scene material that does not start with 'Material'
+		for mat in rt.sceneMaterials:
+			if rt.getNumSubMtls(mat): #if material is a submaterial; search submaterials
+				for i in range(1, rt.getNumSubMtls(mat)+1):
+					subMat = rt.getSubMtl(mat, i)
+					if subMat and filter(subMat.name.startswith, startingWith):
+						materials.append(subMat)
+			elif filter(mat.name.startswith, startingWith):
+				materials.append(mat)
+
+		return materials
+
+
+	@staticmethod
+	def getMaterial(obj, face=None):
+		'''
+		Get the material from the given object or face components.
+
+		args:
+			obj (obj) = Mesh object.
+			face (int) = Face number.
+		returns:
+			(obj) material
+		'''
 		mat = obj.material #get material from selection
 
-		if rt.subObjectLevel == 4: #if face selection check for multimaterial
+		if rt.subObjectLevel==4: #if face selection check for multimaterial
 			if rt.getNumSubMtls(mat): #if multimaterial; use selected face to get material ID
-				f = rt.bitArrayToArray(rt.getFaceSelection(obj))[0] #get selected faces
-				id_ = obj.GetFaceMaterial(f) #Returns the material ID of the specified face.
+				if face is None:
+					face = rt.bitArrayToArray(rt.getFaceSelection(obj))[0] #get selected face
+
+				if rt.classOf(obj)==rt.Editable_Poly:
+					id_ = rt.polyop.GetFaceMatID(obj, face) #Returns the material ID of the specified face.
+				else:
+					try:
+						id_ = rt.GetFaceMatID(obj, face) #Returns the material ID of the specified face.
+					except RuntimeError:
+						return '# Error: Object must be of type Editable_Poly or Editable_mesh. #'
+
 				mat = rt.getSubMtl(mat, id_) #get material from mat ID
 
-		self.currentMaterial = mat #store material
-		self.parentUi.tb001.chk000.setChecked(True) #put combobox in current material mode
-		self.cmb002() #refresh the combobox
+		return mat
 
+
+	@staticmethod
+	def assignMaterial(objects, mat):
+		'''
+		Assign Material
+
+		objects (list) = Faces or mesh objects as a list.
+		material (obj) = The material to search and select for.
+		'''
+		if not mat:
+			return '# Error: Material Not Assigned. No material given. #'
+
+		for obj in objects:
+			if rt.getNumSubMtls(mat): #if multimaterial
+				mat.materialList.count = mat.numsubs+1 #add slot to multimaterial
+				mat.materialList[-1] = material #assign new material to slot
+			else:
+				obj.material = mat
+
+		rt.redrawViews()
 
 
 
@@ -392,64 +464,3 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 
 
 # deprecated
-
-
-# elif storedMaterial:
-# 	mat = self.currentMaterial
-# 	if not mat:
-# 		cmb.addItems_(['Stored Material: None'])
-# 		return
-
-# 	matName = mat.name
-	
-# 	subMaterials = [rt.getSubMtl(mat, i) for i in range(1, rt.getNumSubMtls(mat)+1)] #get the material using the matID index. modify index range for index starting at 1.
-# 	subMatNames = [s.name for s in subMaterials if s is not None]
-	
-# 	contents = cmb.addItems_(subMatNames, matName)
-
-# 	if index is None:
-# 		index = cmb.currentIndex()
-# 	if index!=0:
-# 		self.currentMaterial = subMaterials[index-1]
-# 	else:
-# 		self.currentMaterial = mat
-
-
-
-	# def cmb000(self, index=None):
-	# 	'''
-	# 	Existing Materials
-	# 	'''
-	# 	cmb = self.parentUi.cmb000
-
-	# 	self.parentUi.tb001.chk001.setChecked(False) #put combobox cmb002 in stored material mode.
-
-	# 	# materials = [mat for mat in rt.sceneMaterials if 'Multimaterial' not in mat.name and 'BlendMtl' not in mat.name and not mat.name.startswith('Material')]
-	# 	materials=[] #get any scene material that doesnt startswith 'Material'
-	# 	for mat in rt.sceneMaterials:
-	# 		try:
-	# 			if rt.getNumSubMtls(mat): #if material is a submaterial; search submaterials
-	# 				for i in range(1, rt.getNumSubMtls(mat)+1):
-	# 					subMat = rt.getSubMtl(mat, i)
-	# 					if subMat and not subMat.name.startswith('Material'):
-	# 						materials.append(subMat)
-	# 			elif not mat.name.startswith('Material'):
-	# 				materials.append(mat)
-
-	# 		except RuntimeError:
-	# 			pass
-
-	# 	materialNames = sorted([mat.name for mat in materials])
-		
-	# 	contents = cmb.addItems_(materialNames, 'Scene Materials:')
-
-	# 	if index is None:
-	# 		index = cmb.currentIndex()
-	# 	if index!=0:
-	# 		mat = [m for m in materials if m.name==contents[index]][0]
-
-	# 		self.currentMaterial = mat #store material
-	# 		self.cmb002() #refresh combobox
-
-	# 		cmb.setCurrentIndex(0)
-

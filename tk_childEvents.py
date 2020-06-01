@@ -37,7 +37,6 @@ class EventFactoryFilter(QtCore.QObject):
 			self.parent.sb.setClassInstance(self)
 
 
-
 	def initWidget(self, name, widgets=None):
 		'''
 		Set Initial widget states.
@@ -101,8 +100,8 @@ class EventFactoryFilter(QtCore.QObject):
 			derivedType = self.parent.sb.getDerivedType(widget, name) #get the derived class type as string.
 			if hasattr(widget, 'styleSheet'):
 				s = getattr(StyleSheet, derivedType, '')
-				if uiLevel==2 and not self.parent.sb.prefix(widget, 'i'): #if submenu and objectName doesn't start with 'i':
-					s = s+getattr(StyleSheet, 'dark') #override with the dark version on submenus.
+				if uiLevel==2 and not self.parent.sb.prefix(widget, 'i'): #if submenu and objectName don't start with 'i':
+					s = s+getattr(StyleSheet, 'dark') #override with the dark version on uiLevel 2 (submenus).
 				if widget.styleSheet(): #if the widget has an existing style sheet, append.
 					s = s+widget.styleSheet()
 				widget.setStyleSheet(s)

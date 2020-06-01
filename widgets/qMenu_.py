@@ -136,7 +136,7 @@ class QMenu_(QtWidgets.QMenu):
 		'''
 		#get the widget
 		try:
-			w = getattr(QtWidgets, w)() #ex. QtWidgets.QAction(self) object from string.
+			w = getattr(QtWidgets, w)(self) #ex. QtWidgets.QAction(self) object from string.
 		except:
 			if callable(w):
 				w = w() #ex. QtWidgets.QAction(self) object.
@@ -163,7 +163,7 @@ class QMenu_(QtWidgets.QMenu):
 		args:
 			menus (list) = list of menus.
 		returns:
-			list. the menuAction() for each menu
+			(list) the menuAction() for each menu
 		'''
 		return [self.addMenu(m) for m in menus]
 
@@ -198,8 +198,8 @@ class QMenu_(QtWidgets.QMenu):
 		'''
 
 		'''
-		if not self.rect().contains(self.mapFromGlobal(QtGui.QCursor.pos())): #if mouse over widget:
-			self.hide()
+		# if not self.rect().contains(self.mapFromGlobal(QtGui.QCursor.pos())): #if mouse over widget:
+		# 	self.hide()
 
 		return QtWidgets.QMenu.mouseMoveEvent(self, event)
 

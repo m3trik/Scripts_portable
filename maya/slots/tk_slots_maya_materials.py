@@ -73,10 +73,10 @@ class Materials(Init):
 			sceneMaterials = True
 
 		if sceneMaterials:
-			materials = [m for m in pm.ls(materials=1) if not pm.nodeType(m)=='standardSurface']
+			materials = self.getSceneMaterials()
 
 		elif idMapMaterials:
-			materials = [m for m in pm.ls(mat=1, flatten=1) if m.name().startswith('matID')]
+			materials = self.getSceneMaterials(startingWith=['matID'])
 
 		mats = sorted([mat for mat in set(materials)])
 		matNames = [m.name() for m in mats]
@@ -84,12 +84,15 @@ class Materials(Init):
 
 		#create and set icons with color swatch
 		for i in range(len(mats)):
-			r = int(pm.getAttr(matNames[i]+'.colorR')*255) #convert from 0-1 to 0-255 value and then to an integer
-			g = int(pm.getAttr(matNames[i]+'.colorG')*255)
-			b = int(pm.getAttr(matNames[i]+'.colorB')*255)
-			pixmap = QtGui.QPixmap(100,100)
-			pixmap.fill(QtGui.QColor.fromRgb(r, g, b))
-			cmb.setItemIcon(i, QtGui.QIcon(pixmap))
+			try:
+				r = int(pm.getAttr(matNames[i]+'.colorR')*255) #convert from 0-1 to 0-255 value and then to an integer
+				g = int(pm.getAttr(matNames[i]+'.colorG')*255)
+				b = int(pm.getAttr(matNames[i]+'.colorB')*255)
+				pixmap = QtGui.QPixmap(100,100)
+				pixmap.fill(QtGui.QColor.fromRgb(r, g, b))
+				cmb.setItemIcon(i, QtGui.QIcon(pixmap))
+			except AttributeError:
+				pass
 
 		if index is None:
 			index = cmb.currentIndex()
@@ -108,34 +111,10 @@ class Materials(Init):
 			tb.add('QCheckBox', setText='Invert', setObjectName='chk006', setToolTip='Invert Selection.')
 			return
 
-		shell = tb.chk005.isChecked() 
-		invert = tb.chk006.isChecked()
+		shell = tb.chk005.isChecked() #Select by material: shell
+		invert = tb.chk006.isChecked() #Select by material: invert
 
-		selection = pm.ls(selection=1)
-
-		if not pm.nodeType(selection)=='VRayMultiSubTex': #if not a multimaterial
-			mat = self.currentMaterial
-		else:
-			return '# Error: No valid stored material. If material is a multimaterial, select a submaterial. #'
-
-		pm.select(mat)
-		pm.hyperShade (objects='') #select all with material. "" defaults to currently selected materials.
-
-		faces = pm.filterExpand (selectionMask=34, expand=1)
-		transforms = [node.replace('Shape','') for node in pm.ls(sl=1, objectsOnly=1, visible=1)] #get transform node name from shape node
-		# pm.select (faces, deselect=1)
-
-		if shell or invert: #deselect so that the selection can be modified.
-			pm.select (faces, deselect=1)
-
-		if shell:
-			for shell in transforms:
-				pm.select (shell, add=1)
-		
-		if invert:
-			for shell in transforms:
-				allFaces = [shell+".f["+str(num)+"]" for num in range(pm.polyEvaluate (shell, face=1))] #create a list of all faces per shell
-				pm.select(list(set(allFaces)-set(faces)), add=1) #get inverse of previously selected faces from allFaces
+		self.selectByMaterialID(self.currentMaterial, pm.ls(selection=1))
 
 
 	def tb001(self, state=None):
@@ -166,11 +145,10 @@ class Materials(Init):
 			tb.add('QRadioButton', setText='New Random Material', setObjectName='chk008', setToolTip='Assign a new random ID material.')
 			return
 
+		selection = pm.ls(selection=1, flatten=1)
 
 		if tb.chk008.isChecked(): #Assign New random mat ID
 			import random
-
-			selection = pm.ls(selection=1, flatten=1)
 
 			if selection:
 				prefix = 'matID'
@@ -184,8 +162,9 @@ class Materials(Init):
 				convertedRGB = [round(float(v)/255, 3) for v in rgb]
 				pm.setAttr(name+'.color', convertedRGB)
 				#assign to selected geometry
-				pm.select(selection) #initial selection is lost upon node creation
-				pm.hyperShade(assign=mat)
+				# pm.select(selection) #initial selection is lost upon node creation
+				# pm.hyperShade(assign=mat)
+				self.assignMaterial(selection, mat)
 
 				#delete previous shader
 				# if self.randomMat:
@@ -202,9 +181,7 @@ class Materials(Init):
 				print('# Error: No valid object/s selected. #')
 
 		elif tb.chk007.isChecked(): #Assign current mat
-				mat = self.materials[self.parentUi.cmb002.currentText()]
-				for obj in pm.ls(selection=1, flatten=1):
-					pm.hyperShade(obj, assign=mat)
+			self.assignMaterial(selection, self.currentMaterial)
 
 
 	def lbl000(self):
@@ -307,15 +284,105 @@ class Materials(Init):
 		Store Material
 
 		'''
-		if pm.ls(selection=1):
-			pm.hyperShade("", shaderNetworksSelectMaterialNodes=1) #selects the material node 
-			mat = pm.ls(selection=1, materials=1)[0] #now add the selected node to a variable
-
-			self.currentMaterial = mat #store material
-			self.parentUi.tb001.chk000.setChecked(True) #put combobox in current material mode
-			self.cmb002() #refresh combobox
-		else:
+		selection = pm.ls(selection=1)
+		if not selection:
 			print('# Error: Nothing selected. #')
+		else:
+			mat = self.getMaterial()
+
+			self.parentUi.tb001.chk000.setChecked(True) #set the combobox to show all scene materials
+			cmb = self.parentUi.cmb002
+			self.cmb002() #refresh the combobox
+			cmb.setCurrentIndex(cmb.items().index(mat.name()))
+
+
+	@staticmethod
+	def selectByMaterialID(material, objects=None, shell=False, invert=False):
+		'''
+		Select By Material Id
+	
+		material (obj) = The material to search and select for.
+		objects (list) = Faces or mesh objects as a list. If no objects are given, all geometry in the scene will be searched.
+		shell (bool) = Select the entire shell.
+		invert (bool) = Invert the final selection.
+
+		#ex call:
+		currentMaterial = rt.medit.getCurMtl()[1]; print (currentMaterial)
+		selectByMaterialID(currentMaterial)
+		'''
+		if pm.nodeType(material)=='VRayMultiSubTex': #if not a multimaterial
+			return '# Error: If material is a multimaterial, select a submaterial. #'
+		else:
+			mat = material
+
+		if not objects: #if not selection; use all scene geometry
+			shapes = pm.ls(type="mesh")
+			transforms = pm.listRelatives(shapes, parent=True)
+			objects = transforms
+
+		pm.select(mat)
+		pm.hyperShade(objects='') #select all with material. "" defaults to currently selected materials.
+
+		faces = pm.filterExpand (selectionMask=34, expand=1)
+		transforms = [node.replace('Shape','') for node in pm.ls(sl=1, objectsOnly=1, visible=1)] #get transform node name from shape node
+		# pm.select (faces, deselect=1)
+
+		if shell or invert: #deselect so that the selection can be modified.
+			pm.select (faces, deselect=1)
+
+		if shell:
+			for shell in transforms:
+				pm.select (shell, add=1)
+		
+		if invert:
+			for shell in transforms:
+				allFaces = [shell+".f["+str(num)+"]" for num in range(pm.polyEvaluate (shell, face=1))] #create a list of all faces per shell
+				pm.select(list(set(allFaces)-set(faces)), add=1) #get inverse of previously selected faces from allFaces
+
+
+	@staticmethod
+	def getSceneMaterials(startingWith=[''], exclude=['standardSurface']):
+		'''
+		Get All Materials from the current scene.
+
+		args:
+			startingWith (list) = Filters material names starting with any of the strings in the given list. ie. ['matID']
+			exclude (list) = Node types to exclude.
+		returns:
+			(list) materials.
+		'''
+		materials = [m for m in pm.ls(mat=1, flatten=1) if filter(str(m.name).startswith, startingWith) and not pm.nodeType(m) in exclude]
+
+		return materials
+
+
+	@staticmethod
+	def getMaterial():
+		'''
+		Get the material from the selected face.
+
+		returns:
+			(list) material
+		'''
+		pm.hyperShade("", shaderNetworksSelectMaterialNodes=1) #selects the material node 
+		mats = pm.ls(selection=1, materials=1) #now add the selected node to a variable
+
+		return mats[0]
+
+
+	@staticmethod
+	def assignMaterial(objects, mat):
+		'''
+		Assign Material
+
+		objects (list) = Faces or mesh objects as a list.
+		material (obj) = The material to search and select for.
+		'''
+		if not mat:
+			return '# Error: Material Not Assigned. No material given. #'
+
+		for obj in objects:
+			pm.hyperShade(obj, assign=mat)
 
 
 

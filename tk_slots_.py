@@ -334,6 +334,18 @@ print (os.path.splitext(os.path.basename(__file__))[0])
 
 #depricated:
 
+	# @staticmethod
+	# def msg(string, prefix='', inView=False):
+	# 	'''
+	# 	args:
+	# 		string (str) = message string.
+	# 	returns:
+	# 		(str) formatted string.
+	# 	'''
+	# 	if prefix:
+	# 		prefix = prefix+':'
+	# 	return '{}{}{}{}'.format('# ',prefix, string, ' #')
+
 
 	# def getUiObject(self, widgets):
 	# 	'''
