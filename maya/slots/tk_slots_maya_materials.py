@@ -351,7 +351,7 @@ class Materials(Init):
 		returns:
 			(list) materials.
 		'''
-		materials = [m for m in pm.ls(mat=1, flatten=1) if filter(str(m.name).startswith, startingWith) and not pm.nodeType(m) in exclude]
+		materials = [m for m in pm.ls(mat=1, flatten=1) if filter(str(m.name()).startswith, startingWith) and not pm.nodeType(m) in exclude]
 
 		return materials
 
