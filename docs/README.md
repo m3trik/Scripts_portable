@@ -2,7 +2,7 @@
 *work in progress..*
 
 ![alt text](https://raw.githubusercontent.com/m3trik/tk/master/docs/toolkit_demo.gif)
-*Example re-opening last scene, renaming, and selecting a material.
+*Example re-opening the last scene, renaming a material, and selecting geometry by that material.
 
 
 ## Design:
