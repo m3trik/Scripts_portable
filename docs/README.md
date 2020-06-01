@@ -41,6 +41,7 @@ a new layout up and running, is to drop a qt designer ui file into the ui folder
 -----------------------------------------------
 
 ######
+*Each ui file has a corresponding slot module containing the same name that it will look to construct it's connections:
 * ui file:     \<name\>.ui
 
 * corresponding class: tk_slots_\<app\>_\<name\>.py
