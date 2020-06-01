@@ -1,9 +1,8 @@
 ###### *PySide marking menu style layered ui and toolkit for maya and max.
 *work in progress..*
 
-![alt text](https://raw.githubusercontent.com/m3trik/tk_tk/master/docs/Screenshot-Camera_navigation.jpg)
-*Example of camera navigation.
-
+![alt text](https://raw.githubusercontent.com/m3trik/tk_tk/master/docs/toolkit_demo.gif)
+*Example re-opening last scene, renaming, and selecting a material.
 
 
 ## Design:
@@ -11,7 +10,6 @@
 *This is a cross-platform, modular, marking menu style ui based on a QStackedWidget.  Each piece is constructed dynamically
 to allow for as little overhead as possible in development and maintainence.  Literally all you have to do to have 
 a new layout up and running, is to drop a qt designer ui file into the ui folder, add a shortcut somewhere in the main ui(with the ui name in the 'whats this' attribute), and a create corresponding class of the same name.  Naming convention allows for a stacked ui to be constructed, signals added/removed as needed, and a master dictionary (stored within the switchboard module) to be created, which provides convenience methods that allow getting/setting of relevant data across modules.*
-
 
 
 ##
@@ -22,35 +20,17 @@ a new layout up and running, is to drop a qt designer ui file into the ui folder
 ## tk_main: 
 ###### *handles main gui construction.*
 
-* set window flags and attributes.
-
-* add each ui to a layout stack.
-
-* store and resize each ui.
-
-* handle coordinates to populate ui at cursor position.
-
-
 ## tk_childEvents: 
 ###### *event handling for child widgets.*
-
 
 ## tk_overlay: 
 ###### *tracks cursor position and ui hierarchy to generate paint events that overlay the main widget.*
 
-
 ## tk_switchboard: 
 ###### *contains a master dictionary for widget related info as well as convienience classes for interacting with the dict.*
 
-* gets dynamic ui files relative to folder location.
-
-* constructs a connection dict for each class with it's corresponding signals and slots.
-
-* handles general signal connections.
-
-
 ## tk_slots_: 
-###### *master class holding methods that are inherited across all app specific slot class modules.*
+###### *parent class holding methods that are inherited across all app specific slot class modules.*
 
 
 
@@ -82,8 +62,6 @@ instance is populated. All of the ui widgets have an event filter attached for h
 
 * QSpinBox      s000    ""
 
-* QtextField    txt000    ""
-
 etc.
 
 
@@ -112,13 +90,13 @@ etc.
 
 * double left mouseclick: repeats last command.
 
-* dragging the top area of the widget moves the window and pins it open.
+* dragging the area at the top of the widget moves the window and pins it open.
 
 * mouse over buttons while window pinned to get a tooltip explanation of its function.
 
 * holding ctrl while using Spinboxes increments/decrements by an extra decimal.
 
-
+* right clicking widgets will bring up their context menu if it exists.
 
 
 ##
