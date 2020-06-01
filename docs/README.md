@@ -1,7 +1,7 @@
 ###### *PySide marking menu style layered ui and toolkit for maya and max.
 *work in progress..*
 
-![alt text](https://raw.githubusercontent.com/m3trik/tk_tk/master/docs/toolkit_demo.gif)
+![alt text](https://raw.githubusercontent.com/m3trik/tk/master/docs/toolkit_demo.gif)
 *Example re-opening last scene, renaming, and selecting a material.
 
 
