@@ -101,16 +101,13 @@ class Uv(Init):
 		Pack UV's
 		'''
 		rotate = self.parentUi.chk001.isChecked() #rotate uv's
-		obj = rt.selection[0]
+		rotateMax = 0.0
+		if rotate:
+			rotateMax = 360.0
 
-		uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv modifier.
-		uv.pack(method=1, spacing=0.2, normalize=True, rotate=rotate, fillholes=True) #Lets you pack the texture vertex elements so that they fit within a square space.
-		# --method - 0 is a linear packing algorithm fast but not that efficient, 1 is a recursive algorithm slower but more efficient.
-		# --spacing - the gap between cluster in percentage of the edge distance of the square
-		# --normalize - determines whether the clusters will be fit to 0 to 1 space.
-		# --rotate - determines whether a cluster will be rotated so it takes up less space.
-		# --fillholes - determines whether smaller clusters will be put in the holes of the larger cluster.
-		
+		obj = pm.ls(sl=1)
+		pm.u3dLayout(obj, resolution=2048, preScaleMode=1, packBox=[0,1,0,1], rotateMax=rotateMax) #layoutScaleMode (int), multiObject (bool), mutations (int), packBox (float, float, float, float), preRotateMode (int), preScaleMode (int), resolution (int), rotateMax (float), rotateMin (float), rotateStep (float), shellSpacing (float), tileAssignMode (int), tileMargin (float), tileU (int), tileV (int), translate (bool)
+
 
 	def b007(self):
 		'''
@@ -252,7 +249,8 @@ class Uv(Init):
 		'''
 		Stack Similar
 		'''
-		pm.polyUVStackSimilarShells (to=0.1)
+		obj = pm.ls(sl=1)
+		pm.polyUVStackSimilarShells(obj, to=0.1)
 
 
 

@@ -30,7 +30,7 @@ class Macros(object):
 		self.setMacro('hk_wireframe', k='5', cat='Display', ann='Toggle wireframe/shaded/shaded w/texture display')
 		self.setMacro('hk_shading', k='6', cat='Display', ann='Toggle viewport shading')
 		self.setMacro('hk_selection_mode', k='sht+q', cat='Edit', ann='Toggle between object selection & last component selection')
-		self.setMacro('hk_paste_and_rename', k='ctl+v', cat='Edit', ann='Paste and rename removing keyword "paste")
+		self.setMacro('hk_paste_and_rename', k='ctl+v', cat='Edit', ann='Paste and rename removing keyword \'paste\'')
 		self.setMacro('hk_multi_component', k='F5', cat='Edit', ann='Multi-Component Selection')
 		self.setMacro('hk_toggle_component_mask', k='F4', cat='Edit', ann='Toggle Component Selection Mask')
 		self.setMacro('hk_tk_show', k='F12', cat='UI', ann='Display tk marking menu')

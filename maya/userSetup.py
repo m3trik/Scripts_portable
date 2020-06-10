@@ -1,5 +1,6 @@
 from __future__ import print_function
 import os, sys
+
 import pymel.core as pm
 import maya.mel as mel
 
@@ -11,20 +12,20 @@ version = versions.current()
 
 #maya python path----------------------------------------------------
 #get %MAYA_SCRIPT_PATH% directories
-dir_ = [s for s in os.environ['MAYA_SCRIPT_PATH'].split(';') if '__portable/_scripts/' in s][0]
-dir_ = dir_.rstrip('/maya')
+dir_ = next((s for s in os.environ['MAYA_SCRIPT_PATH'].split(';') if '__portable/_scripts/' in s), None)
 
-#if path not found, print error and current paths set in maya.env
-if not dir_:
-	print(" Error: in userSetup.py. dir not found in MAYA_SCRIPT_PATH ")
-	print(" MAYA_SCRIPT_PATH:"+ str([s for s in os.environ['MAYA_SCRIPT_PATH'].split(';')]) +" ")
+if dir_:
+	dir_ = dir_.rstrip('/maya')
+else: #if path not found, print error and current paths set in maya.env
+	print('Error: dir not found in MAYA_SCRIPT_PATH. '+os.path.splitext(os.path.basename(__file__))[0]) #print error and module name.
+	print('MAYA_SCRIPT_PATH: '+ str([s for s in os.environ['MAYA_SCRIPT_PATH'].split(';')]))
 
 #append to system path:
 paths = [
 	dir_,
-	dir_+"/ui",
-	dir_+"/maya",
-	dir_+"/maya/slots",
+	dir_+'/ui',
+	dir_+'/maya',
+	dir_+'/maya/slots',
 	]
 
 for path in paths:
