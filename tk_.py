@@ -28,7 +28,6 @@ class Tk(QtWidgets.QStackedWidget):
 	def __init__(self, parent=None):
 		super(Tk, self).__init__(parent)
 
-		self.parent = parent
 		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint|QtCore.Qt.WindowStaysOnTopHint)
 		self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 		self.setAttribute(QtCore.Qt.WA_SetStyle) #Indicates that the widget has a style of its own.
@@ -37,12 +36,11 @@ class Tk(QtWidgets.QStackedWidget):
 		self.preventHide = False
 
 		self.sb = Switchboard(self)
-		self.sb.setMainAppWindow(self.parent)
+		self.sb.setMainAppWindow(self.parent())
 		self.sb.setClassInstance(self, 'tk')
 
 		self.childEvents = EventFactoryFilter(self)
 		self.overlay = OverlayFactoryFilter(self) #Paint events are handled by the overlay module.
-
 
 
 	def setUi(self, name='init'):
@@ -284,7 +282,7 @@ class Tk(QtWidgets.QStackedWidget):
 		try:
 			self.sb.prevCommand()()
 		except:
-			print("# Warning: No recent commands in history. #")
+			print(" Warning: No recent commands in history. ")
 
 
 
@@ -297,7 +295,7 @@ class Tk(QtWidgets.QStackedWidget):
 			cam = self.sb.prevCamera(allowCurrent=True, as_list=1)[-2]
 			self.sb.prevCamera(allowCurrent=True, as_list=1).append(cam) #store the camera view
 		except:
-			print("# Warning: No recent camera views in history. #")
+			print(" Warning: No recent camera views in history. ")
 
 
 
@@ -310,7 +308,7 @@ class Tk(QtWidgets.QStackedWidget):
 			self.setUi(previousName)
 			self.move(self.drawPath[0] - self.rect().center())
 		else:
-			print("# Warning: No recent menus in history. #")
+			print(" Warning: No recent menus in history. ")
 
 
 

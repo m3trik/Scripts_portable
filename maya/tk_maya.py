@@ -22,7 +22,7 @@ class Tk_maya(Tk):
 			try:
 				parent = next(w for w in app.topLevelWidgets() if w.objectName()=='MayaWindow')
 			except:
-				print('# Error: "MayaWindow" object not found in app.topLevelWidgets() #')
+				print('Error: "MayaWindow" object not found in app.topLevelWidgets()')
 
 		super(Tk_maya, self).__init__(parent)
 		self.setUi()

@@ -29,7 +29,7 @@ class Pivot(Init):
 		cmb = self.parentUi.cmb000
 		
 		files = ['']
-		contents = cmb.addItems_(files, ' ')
+		contents = cmb.addItems_(files, '')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -104,5 +104,5 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 
 # maxEval('max tti')
 
-# maxEval('macros.run \"PolyTools\" \"TransformTools\"')
+# maxEval('macros.run \"PolyTools\" \"TransformTools\")
 

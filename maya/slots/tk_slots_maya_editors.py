@@ -46,7 +46,7 @@ class Editors(Init):
 		cmb = self.parentUi.cmb000
 		
 		files = ['']
-		contents = cmb.addItems_(files, ' ')
+		contents = cmb.addItems_(files, '')
 
 		if not index:
 			index = cmb.currentIndex()

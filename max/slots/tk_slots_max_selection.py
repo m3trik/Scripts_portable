@@ -47,7 +47,7 @@ class Selection(Init):
 		cmb = self.parentUi.cmb001
 		
 		files = ['']
-		contents = cmb.addItems_(files, ' ')
+		contents = cmb.addItems_(files, '')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -128,6 +128,7 @@ class Selection(Init):
 		self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk000-1')
 
 
+	@Slots.message
 	def chk004(self):
 		'''
 		Ignore Backfacing (Camera Based Selection)
@@ -135,10 +136,10 @@ class Selection(Init):
 		for obj in rt.selection:
 			if self.parentUi.chk004.isChecked():
 				sel.ignoreBackfacing = True
-				# self.viewPortMessage("Camera-based selection <hl>On</hl>.")
+				return 'Camera-based selection <hl>On</hl>.'
 			else:
 				sel.ignoreBackfacing = False
-				# self.viewPortMessage("Camera-based selection <hl>Off</hl>.")
+				return 'Camera-based selection <hl>Off</hl>.'
 
 
 	def chk005(self):
@@ -168,6 +169,7 @@ class Selection(Init):
 		self.parentUi.cmb004.setCurrentIndex(2)
 
 
+	@Slots.message
 	def setSelectionStyle(self, ctx):
 		'''
 		Set the selection style context.
@@ -185,7 +187,7 @@ class Selection(Init):
 			ctx = pm.artSelectCtx(ctx)
 
 		pm.setToolTo(ctx)
-		self.viewPortMessage('Select Style: <hl>'+ctx+'</hl>')
+		return 'Select Style: <hl>'+ctx+'</hl>'
 
 
 	def cmb000(self, index=None):
@@ -361,10 +363,11 @@ class Selection(Init):
 		# $.selectByAngle = on
 		# sel = $.selectedfaces as bitarray #maintains current single selection. need to reselect with angle contraint active to make work.
 		# $.selectByAngle = off
-		# print sel
+		# print(sel)
 		# setFaceSelection sel #{}
 
 
+	@Slots.message
 	def b000(self):
 		'''
 		Create Selection Set
@@ -381,7 +384,7 @@ class Selection(Init):
 			else:
 				rt.selectionSets[name] #if set exists, overwrite set; else create set
 		else:
-			print('# Warning: No valid objects selected. #')
+			return 'Error: No valid objects selected.'
 
 
 	def b013(self):

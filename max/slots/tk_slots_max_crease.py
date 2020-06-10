@@ -29,7 +29,7 @@ class Crease(Init):
 		cmb = self.parentUi.cmb000
 		
 		list_ = ['']
-		items = cmb.addItems_(list_, ' ')
+		items = cmb.addItems_(list_, '')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -109,8 +109,8 @@ class Crease(Init):
 						normal = rt.averageSelVertNormal(obj)
 						for vertex in edgeVerts:
 							rt.setNormal(obj, vertex, normal)
-		else:
-			print('# Warning: object type '+rt.classOf(obj)+' is not supported. #')
+			else:
+				print('Error: object type '+rt.classOf(obj)+' is not supported.')
 
 
 

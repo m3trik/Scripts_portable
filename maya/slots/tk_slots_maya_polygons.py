@@ -80,6 +80,7 @@ class Polygons(Init):
 			cmb.setCurrentIndex(0)
 
 
+	@Slots.message
 	def tb000(self, state=None):
 		'''
 		Merge Vertices
@@ -115,8 +116,7 @@ class Polygons(Init):
 				for obj in selection:
 					pm.select(obj, add=1)
 		else:
-			print("# Warning: No object selected. Must select an object or component. #")
-			return
+			return 'Warning: No object selected. Must select an object or component.'
 
 
 	def tb001(self, state=None):
@@ -192,6 +192,7 @@ class Polygons(Init):
 			mergeVertices=1, mergeVertexTolerance=0.0001, miteringAngle=180, angleTolerance=180, ch=0)
 
 
+	@Slots.message
 	def tb005(self, state=None):
 		'''
 		Detach
@@ -217,11 +218,11 @@ class Polygons(Init):
 				selObj = pm.ls (objectsOnly=1, noIntermediate=1, sl=1) #to errorcheck if more than 1 obj selected
 
 				if len(selFace) < 1:
-					print("# Warning: Nothing selected. #")
-					return
+					return 'Warning: Nothing selected.'
+
 				if len(selObj) > 1:
-					print("# Warning: Only components from a single object can be extracted. #")
-					return
+					return 'Warning: Only components from a single object can be extracted.'
+
 				else:
 					pm.undoInfo (openChunk=1)
 					sel = str(selFace[0]).split(".") #creates ex. ['polyShape', 'f[553]']
@@ -265,6 +266,7 @@ class Polygons(Init):
 		pm.polyExtrudeFacet (keepFacesTogether=1, pvx=0, pvy=40.55638003, pvz=33.53797107, divisions=1, twist=0, taper=1, offset=offset, thickness=0, smoothingAngle=30)
 
 
+	@Slots.message
 	def tb007(self, state=None):
 		'''
 		Divide Facet
@@ -297,7 +299,7 @@ class Polygons(Init):
 			for face in selectedFaces: #when performing polySubdivideFacet on multiple faces, adjacent subdivided faces will make the next face an n-gon and therefore not able to be subdivided. 
 				pm.polySubdivideFacet(face, divisions=0, divisionsU=2, divisionsV=2, mode=0, subdMethod=1)
 		else:
-			print('# Warning: No faces selected. #')
+			return 'Warning: No faces selected.'
 
 
 	def b000(self):
@@ -325,7 +327,7 @@ class Polygons(Init):
 		'''
 		Slice
 		'''
-		maxEval('macros.run "Ribbon - Modeling" "CutsQuickSlice"')
+		maxEval('macros.run "Ribbon - Modeling" "CutsQuickSlice")
 
 
 	def b009(self):

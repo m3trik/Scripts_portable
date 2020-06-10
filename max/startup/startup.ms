@@ -3,8 +3,8 @@
 -- Maxscipt startup order:
 -- MacroScript (MCR) files in ui\macroscripts --not compiled at this time; rather they are just scanned to identify the MacroScripts that have been defined.
 
--- MAXScript (MS, MSE, and MZP) in the plug-in path directories/subdirectories, and compiles these files. (specified in the Configure System Paths dialog and Configure User Paths dialog) 
--- The base scene and user interface have not been created at this point, so no viewport or scene commands should be executed in these files. 
+-- MAXScript (MS, MSE, and MZP) in the plug-in path directories/subdirectories, and compiles these files. (specified in the Configure System Paths dialog and Configure User Paths dialog)
+-- The base scene and user interface have not been created at this point, so no viewport or scene commands should be executed in these files.
 
 -- You can prevent a nested directory from being scanned by placing its name in parentheses, for example "(old-versions)"
 
@@ -24,7 +24,7 @@
 -- The Windows directory
 -- The directories that are listed in the PATH environment variable
 
--- MAXScript then recursively scans the Startup Scripts directory (defined on the Configure System Paths dialog) and any nested directories for .ms, .mse, and .mzp script files and loads them. 
+-- MAXScript then recursively scans the Startup Scripts directory (defined on the Configure System Paths dialog) and any nested directories for .ms, .mse, and .mzp script files and loads them.
 
 -- If you specify a script to run in the command line (-U MAXScript script_name)
 
@@ -35,7 +35,7 @@
 -- User Startup Scripts directory
 -- Scripts directory
 -- Startup Scripts
--- Windows paths specified by the Path environment variable. 
+-- Windows paths specified by the Path environment variable.
 
 --------------------------------------------------------------------------------
 
@@ -73,7 +73,7 @@ for path_ in paths do
 function PerformDelayedTasks sender evt=
 (
 	sender.enabled = false --important: don't repeat this timer event
-	dotnet.RemoveEventHandler sender "Elapsed" PerformDelayedTasks --for sanity and cleanup    
+	dotnet.RemoveEventHandler sender "Elapsed" PerformDelayedTasks --for sanity and cleanup
 
 	-- commands --
 
@@ -84,7 +84,7 @@ function PerformDelayedTasks sender evt=
 	statusPanel.visible = true
 
 -- 	-- open the layer explorer
--- 	if sceneexplorermanager.ExplorerExists "Layer Explorer" then 
+-- 	if sceneexplorermanager.ExplorerExists "Layer Explorer" then
 -- 	(
 -- 		if (not sceneexplorermanager.ExplorerIsOpen "Layer Explorer") then
 -- 			sceneexplorermanager.OpenExplorer "Layer Explorer"
@@ -98,7 +98,7 @@ function PerformDelayedTasks sender evt=
 	-- hotkeys:
 	kbdx = actionMan.getKeyboardFile()	--get current keyboard file
 	actionMan.loadKeyboardFile (kbdx)		--loadKeyboardFile()
-	-- actionMan.saveKeyboardFile		--saveKeyboardFile()           
+	-- actionMan.saveKeyboardFile		--saveKeyboardFile()
 )
 
 delayTimer= dotnetobject "Windows.Forms.Timer"

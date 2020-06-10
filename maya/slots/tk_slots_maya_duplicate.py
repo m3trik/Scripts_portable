@@ -40,7 +40,7 @@ class Duplicate(Init):
 		cmb = self.parentUi.cmb000
 		
 		files = ['']
-		contents = cmb.addItems_(files, ' ')
+		contents = cmb.addItems_(files, '')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -75,6 +75,7 @@ class Duplicate(Init):
 			self.toggleWidgets(self.parentUi, self.childUi, setDisabled='chk008,b034,cmb000', setEnabled='chk000,chk009,s005')
 
 
+	@Slots.message
 	def chk010(self):
 		'''
 		Radial Array: Set Pivot
@@ -92,9 +93,9 @@ class Duplicate(Init):
 					bb = pm.xform (selection, query=1, boundingBox=1, worldSpace=1)
 					pivot = bb[0]+bb[3]/2, bb[1]+bb[4]/2, bb[2]+bb[5]/2 #get median of bounding box coordinates. from [min xyz, max xyz]
 			else:
-				print("# Warning: Nothing selected. #")
 				self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk010')
-				return
+				return 'Error: Nothing selected.'
+
 			# radialPivot.extend ([pivot[0],pivot[1],pivot[2]])
 			radialPivot.extend(pivot) #extend the list contents
 			text = str(int(pivot[0]))+","+str(int(pivot[1]))+","+str(int(pivot[2]))
@@ -130,6 +131,7 @@ class Duplicate(Init):
 
 	global radialArrayObjList
 	radialArrayObjList=[]
+	@Slots.message
 	def chk015(self, create=False):
 		'''
 		Radial Array: Preview
@@ -173,28 +175,27 @@ class Duplicate(Init):
 							if len(radialPivot):
 								pm.rotate (x, y, z, relative=1, pivot=radialPivot) #euler=1
 							else:
-								print("# Warning: No pivot point set. #")
+								print('Error: No pivot point set.')
 						else:
 							pm.rotate (x, y, z, relative=1) #euler=1
 						radialArrayObjList.append(name)
 					#if in isolate select mode; add object	
 					currentPanel = pm.paneLayout('viewPanes', q=True, pane1=True) #get the current modelPanel view
-					if pm.isolateSelect (currentPanel, query=1, state=1):
+					if pm.isolateSelect(currentPanel, query=1, state=1):
 						for obj_ in radialArrayObjList:
 							pm.isolateSelect (currentPanel, addDagObject=obj_)
 					#re-select the original selected object
-					pm.select (objectName)
+					pm.select(objectName)
 					pm.undoInfo (closeChunk=1)
 			else: #if both lists objects are empty:
-				print("# Warning: Nothing selected. #")
 				self.toggleWidgets(self.parentUi, self.childUi, setDisabled='b003', setChecked_False='chk015')
-				return
+				return 'Error: Nothing selected.'
 		else: #if chk015 is unchecked by user or by create button
 			if create:
 				originalObj = radialArrayObjList[0][:radialArrayObjList[0].rfind("_")] #remove the trailing _ins# or _dup#. ie. pCube1 from pCube1_inst1
 				radialArrayObjList.append(originalObj)
 				pm.polyUnite (radialArrayObjList, name=originalObj+"_array") #combine objects. using the original name results in a duplicate object error on deletion
-				print("# Result: "+str(radialArrayObjList)+" #")
+				print('Result: '+str(radialArrayObjList))
 				pm.delete (radialArrayObjList); del radialArrayObjList[:] #delete all geometry and clear the list
 				return
 			try:
@@ -208,6 +209,7 @@ class Duplicate(Init):
 
 	global duplicateObjList
 	duplicateObjList=[]
+	@Slots.message
 	def chk016(self, create=False):
 		'''
 		Duplicate: Preview
@@ -223,9 +225,12 @@ class Duplicate(Init):
 			translateToComponent = self.parentUi.chk007.isChecked()
 			alignToNormal = self.parentUi.chk008.isChecked()
 			componentList = [self.parentUi.cmb000.itemText(i) for i in range(self.parentUi.cmb000.count())]
-			
-			try: pm.delete(duplicateObjList[1:]) #delete all the geometry in the list, except the original obj
-			except e as error: print(e)
+
+			try:
+				pm.delete(duplicateObjList[1:]) #delete all the geometry in the list, except the original obj
+			except e as error:
+				print(e)
+
 			del duplicateObjList[1:] #clear the list, leaving the original obj
 			selection = pm.ls(selection=1, flatten=1, objectsOnly=1) #there will only be a selection when first called. After, the last selected item will have been deleted with the other duplicated objects, leaving only the original un-selected.
 
@@ -236,7 +241,7 @@ class Duplicate(Init):
 				obj = duplicateObjList[0]
 				pm.select(obj)
 			else:
-				return '# Warning: Nothing selected. #'
+				return 'Error: Nothing selected.'
 
 			pm.undoInfo (openChunk=1)
 			if translateToComponent:
@@ -250,11 +255,11 @@ class Duplicate(Init):
 						if component != componentList[len(componentList)-1]: #if not at the end of the list, create a new instance of the obj.
 							name = str(obj)+"_inst"+str(num)
 							duplicatedObject = pm.instance (obj, name=name)
-						# print "component:",component,"\n", "normal:",normal,"\n", "vertexPoint:",vertexPoint,"\n"
+						# print("component:",component,"\n", "normal:",normal,"\n", "vertexPoint:",vertexPoint,"\n")
 
 						duplicateObjList.append(duplicatedObject) #append duplicated object to list
 				else:
-					return '# Warning: Component list empty. #'
+					return 'Error: Component list empty.'
 			else:
 				for _ in xrange(numOfDuplicates):
 					if ".f" in str(obj): #face
@@ -288,7 +293,7 @@ class Duplicate(Init):
 				# originalObj = duplicateObjList[0][:duplicateObjList[0].rfind("_")] #remove the trailing _ins# or _dup#. ie. pCube1 from pCube1_inst1
 				# duplicateObjList.append(originalObj)
 				# pm.polyUnite (duplicateObjList, name=originalObj+"_array") #combine objects. using the original name results in a duplicate object error on deletion
-				# print("# Result: "+str(duplicateObjList)+" #")
+				print('Result: '+str(duplicateObjList))
 				# pm.delete(duplicateObjList) #delete all duplicated geometry
 				del duplicateObjList[:] #clear the list
 				return
@@ -305,7 +310,7 @@ class Duplicate(Init):
 		cmb = self.parentUi.cmb001
 		
 		files = ['Duplicate Special']
-		contents = cmb.addItems_(files, ' ')
+		contents = cmb.addItems_(files, '')
 
 		if not index:
 			index = cmb.currentIndex()

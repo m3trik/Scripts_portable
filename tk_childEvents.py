@@ -231,7 +231,7 @@ class EventFactoryFilter(QtCore.QObject):
 
 		self.widget = widget
 		self.name = self.parent.sb.getNameFromWidget(self.widget) #get the name of the ui containing the given widget.
-		# if not self.name: print('# Error: tk_childEvents.eventFilter: getNameFrom(widget): {0} Failed on Event: {1} #'.format(self.widget.objectName(), str(event.type()).split('.')[-1]))
+		# if not self.name: print('Error: tk_childEvents.eventFilter: getNameFrom(widget): {0} Failed on Event: {1} #'.format(self.widget.objectName(), str(event.type()).split('.')[-1]))
 		self.widgetName = self.parent.sb.getWidgetName(self.widget, self.name) #get the stored objectName string (pyside objectName() returns unicode).
 		self.widgetType = self.parent.sb.getWidgetType(self.widget, self.name)
 		self.derivedType = self.parent.sb.getDerivedType(self.widget, self.name)

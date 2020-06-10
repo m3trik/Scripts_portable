@@ -149,6 +149,7 @@ class Uv(Init):
 		'''
 
 
+	@Slots.message
 	def b010(self):
 		'''
 		Distortion
@@ -160,7 +161,7 @@ class Uv(Init):
 
 		state = uv.localDistortion
 		uv.localDistortion = not state
-		print('localDistortion:', not state)
+		return '{0}{1}'.format('localDistortion:', not state)
 
 
 	def b011(self):

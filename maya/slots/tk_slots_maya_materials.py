@@ -101,6 +101,7 @@ class Materials(Init):
 		self.currentMaterial = mats[index] if len(mats)>index and index>=0 else None #store material.
 
 
+	@Slots.message
 	def tb000(self, state=None):
 		'''
 		Select By Material Id
@@ -113,6 +114,9 @@ class Materials(Init):
 
 		shell = tb.chk005.isChecked() #Select by material: shell
 		invert = tb.chk006.isChecked() #Select by material: invert
+
+		if not self.currentMaterial:
+			return 'Error: No Material Selection.'
 
 		self.selectByMaterialID(self.currentMaterial, pm.ls(selection=1))
 
@@ -135,6 +139,7 @@ class Materials(Init):
 			self.parentUi.group000.setTitle(tb.chk001.text())
 
 
+	@Slots.message
 	def tb002(self, state=None):
 		'''
 		Assign Material
@@ -148,22 +153,8 @@ class Materials(Init):
 		selection = pm.ls(selection=1, flatten=1)
 
 		if tb.chk008.isChecked(): #Assign New random mat ID
-			import random
-
 			if selection:
-				prefix = 'matID'
-				rgb = [random.randint(0, 255) for _ in range(3)] #generate a list containing 3 values between 0-255
-
-				#format name
-				name = '_'.join([prefix, str(rgb[0]), str(rgb[1]), str(rgb[2])])
-				#create shader
-				mat = pm.shadingNode('lambert', asShader=1, name=name)
-				#convert RGB to 0-1 values and assign to shader
-				convertedRGB = [round(float(v)/255, 3) for v in rgb]
-				pm.setAttr(name+'.color', convertedRGB)
-				#assign to selected geometry
-				# pm.select(selection) #initial selection is lost upon node creation
-				# pm.hyperShade(assign=mat)
+				mat = createRandomMaterial(prefix='matID')
 				self.assignMaterial(selection, mat)
 
 				#delete previous shader
@@ -178,12 +169,13 @@ class Materials(Init):
 					self.parentUi.tb001.chk001.setChecked(True) #set combobox to ID map mode. toggling the checkbox refreshes the combobox.
 				self.parentUi.cmb002.setCurrent_(name) #set the combobox index to the new mat #self.cmb002.setCurrentIndex(self.cmb002.findText(name))
 			else:
-				print('# Error: No valid object/s selected. #')
+				return 'Error: No valid object/s selected.'
 
 		elif tb.chk007.isChecked(): #Assign current mat
 			self.assignMaterial(selection, self.currentMaterial)
 
 
+	@Slots.message
 	def lbl000(self):
 		'''
 		Open material in editor
@@ -192,13 +184,13 @@ class Materials(Init):
 			try:
 				mat = self.materials[self.parentUi.cmb002.currentText()] #get object from string key
 			except:
-				return '# Error: No stored material or no valid object selected. #'
+				return '# Error: No stored material or no valid object selected.'
 		else: #Stored material mode
 			if not self.currentMaterial: #get material from selected scene object
 				if rt.selection:
 					self.currentMaterial = rt.selection[0].material
 				else:
-					return '# Error: No stored material or no valid object selected. #'
+					return '# Error: No stored material or no valid object selected.'
 			mat = self.currentMaterial
 
 		#open the hypershade editor
@@ -279,6 +271,7 @@ class Materials(Init):
 			rt.freeSceneBitmaps()
 
 
+	@Slots.message
 	def b002(self):
 		'''
 		Store Material
@@ -286,18 +279,18 @@ class Materials(Init):
 		'''
 		selection = pm.ls(selection=1)
 		if not selection:
-			print('# Error: Nothing selected. #')
-		else:
-			mat = self.getMaterial()
+			return 'Error: Nothing selected.'
 
-			self.parentUi.tb001.chk000.setChecked(True) #set the combobox to show all scene materials
-			cmb = self.parentUi.cmb002
-			self.cmb002() #refresh the combobox
-			cmb.setCurrentIndex(cmb.items().index(mat.name()))
+		mat = self.getMaterial()
+
+		self.parentUi.tb001.chk000.setChecked(True) #set the combobox to show all scene materials
+		cmb = self.parentUi.cmb002
+		self.cmb002() #refresh the combobox
+		cmb.setCurrentIndex(cmb.items().index(mat.name()))
 
 
-	@staticmethod
-	def selectByMaterialID(material, objects=None, shell=False, invert=False):
+	@Slots.message
+	def selectByMaterialID(self, material, objects=None, shell=False, invert=False):
 		'''
 		Select By Material Id
 	
@@ -307,11 +300,11 @@ class Materials(Init):
 		invert (bool) = Invert the final selection.
 
 		#ex call:
-		currentMaterial = rt.medit.getCurMtl()[1]; print (currentMaterial)
+		currentMaterial = rt.medit.getCurMtl()[1]; print(currentMaterial)
 		selectByMaterialID(currentMaterial)
 		'''
 		if pm.nodeType(material)=='VRayMultiSubTex': #if not a multimaterial
-			return '# Error: If material is a multimaterial, select a submaterial. #'
+			return 'Error: If material is a multimaterial, select a submaterial.'
 		else:
 			mat = material
 
@@ -371,7 +364,37 @@ class Materials(Init):
 
 
 	@staticmethod
-	def assignMaterial(objects, mat):
+	def createRandomMaterial(name=None, prefix=''):
+		'''
+		Creates a random material.
+
+		args:
+			name (str) = material name.
+			prefix (str) = name prefix.
+		returns:
+			(obj) material
+		'''
+		import random
+		rgb = [random.randint(0, 255) for _ in range(3)] #generate a list containing 3 values between 0-255
+
+		if name is None: #create name from rgb values
+			name = '_'.join([str(rgb[0]), str(rgb[1]), str(rgb[2])])
+		name = prefix+name
+
+		#create shader
+		mat = pm.shadingNode('lambert', asShader=1, name=name)
+		#convert RGB to 0-1 values and assign to shader
+		convertedRGB = [round(float(v)/255, 3) for v in rgb]
+		pm.setAttr(name+'.color', convertedRGB)
+		#assign to selected geometry
+		# pm.select(selection) #initial selection is lost upon node creation
+		# pm.hyperShade(assign=mat)
+
+		return mat
+
+
+	@Slots.message
+	def assignMaterial(self, objects, mat):
 		'''
 		Assign Material
 
@@ -379,7 +402,7 @@ class Materials(Init):
 		material (obj) = The material to search and select for.
 		'''
 		if not mat:
-			return '# Error: Material Not Assigned. No material given. #'
+			return 'Error: Material Not Assigned. No material given.'
 
 		for obj in objects:
 			pm.hyperShade(obj, assign=mat)

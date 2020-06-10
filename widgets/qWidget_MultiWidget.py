@@ -84,7 +84,7 @@ class QWidget_MultiWidget(QtWidgets.QWidget):
 			if value=='':
 				pass
 		else:
-			print('# Error: {} has no attribute {}'.format(action, attr))
+			print('Error: {} has no attribute {}'.format(action, attr))
 
 
 	def eventFilter(self, widget, event):

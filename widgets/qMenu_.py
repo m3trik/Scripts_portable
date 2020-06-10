@@ -112,7 +112,7 @@ class QMenu_(QtWidgets.QMenu):
 			self._setAttributes({'setMinimum':minimum, 'setMaximum':maximum, 'setSingleStep':step, 'setButtonSymbols_':'NoButtons'}, action)
 
 		else:
-			print('# Error: {} has no attribute {}'.format(action, attr))
+			print('Error: {} has no attribute {}'.format(action, attr))
 
 
 	def add(self, w, **kwargs):

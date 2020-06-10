@@ -21,7 +21,7 @@ class Tk_max(Tk):
 				parent = MaxPlus.GetQMaxMainWindow()
 				parent.setObjectName('MaxWindow')
 			except:
-				print('# Error: "MaxWindow" object not found by MaxPlus.GetQMaxMainWindow() #')
+				print('Error: "MaxWindow" object not found by MaxPlus.GetQMaxMainWindow()')
 
 		super(Tk_max, self).__init__(parent)
 		self.setUi()

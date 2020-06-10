@@ -48,7 +48,7 @@ class Transform(Init):
 		cmb = self.parentUi.cmb000
 		
 		files = ['']
-		contents = cmb.addItems_(files, ' ')
+		contents = cmb.addItems_(files, '')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -231,6 +231,7 @@ class Transform(Init):
 				pm.select(selection) #retore the original selection
 
 
+	@Slots.message
 	def tb001(self, state=None):
 		'''
 		Align Vertices
@@ -294,8 +295,7 @@ class Transform(Init):
 					if any ([axis==y and tangent==tz, axis==z and tangent==ty]): #"x"
 						self.toggleWidgets(tb, setChecked='chk029', setChecked_False='chk030-31')
 			else:
-				print("# Warning: An edge must be selected. #")
-				return
+				return 'Warning: An edge must be selected.'
 
 		#align
 		x = tb.chk029.isChecked()
@@ -383,6 +383,7 @@ class Transform(Init):
 		source.center = target.center
 
 
+	@Slots.message
 	def b012(self):
 		'''
 		Toggle: Make Live
@@ -392,8 +393,7 @@ class Transform(Init):
 
 		obj = pm.ls(sl=1)[0]
 		if not obj:
-			print("# Error: Nothing Selected. #")
-			return
+			return 'Error: Nothing Selected.'
 
 		if state:
 			pm.makeLive(obj)  #construction planes, nurbs surfaces and polygon meshes can be made live. makeLive supports one live object at a time.

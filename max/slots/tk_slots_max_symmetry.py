@@ -39,7 +39,7 @@ class Symmetry(Init):
 		cmb = self.parentUi.cmb000
 		
 		files = ['']
-		contents = cmb.addItems_(files, ' ')
+		contents = cmb.addItems_(files, '')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -49,6 +49,7 @@ class Symmetry(Init):
 			cmb.setCurrentIndex(0)
 
 
+	@Slots.message
 	def setSymmetry(self, state, axis):
 		'''
 
@@ -80,7 +81,7 @@ class Symmetry(Init):
 			mod.flip = negative
 
 		rt.redrawViews()
-		# self.viewPortMessage("Symmetry:<hl>"+axis+' '+str(state)+"</hl>")
+		return 'Symmetry:<hl>'+axis+' '+str(state)+'</hl>'
 
 
 	def chk000(self):
@@ -117,6 +118,7 @@ class Symmetry(Init):
 		self.parentUi.chk005.setChecked(False) #uncheck symmetry:topological
 	
 
+	@Slots.message
 	def chk005(self):
 		'''
 		Symmetry: Topo
@@ -125,7 +127,7 @@ class Symmetry(Init):
 		if any ([self.parentUi.chk000.isChecked(), self.parentUi.chk001.isChecked(), self.parentUi.chk002.isChecked()]): #(symmetry)
 			pm.symmetricModelling(edit=True, symmetry=False)
 			self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk000-2')
-			print("# Warning: First select a seam edge and then check the symmetry button to enable topographic symmetry #")
+			return 'Note: First select a seam edge and then check the symmetry button to enable topographic symmetry'
 
 
 

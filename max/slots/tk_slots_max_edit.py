@@ -37,7 +37,7 @@ class Edit(Init):
 		cmb = self.parentUi.cmb000
 		
 		files = ['']
-		contents = cmb.addItems_(files, ' ')
+		contents = cmb.addItems_(files, '')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -67,6 +67,7 @@ class Edit(Init):
 		self.meshCleanup(isolatedVerts=isolatedVerts, edgeAngle=edgeAngle, nGons=nGons, repair=repair)
 
 
+	@Slots.message
 	def tb001(self, state=None):
 		'''
 		Delete History
@@ -100,14 +101,14 @@ class Edit(Init):
 		#display viewPort messages
 		if all_:
 			if deformers:
-				self.viewPortMessage("delete <hl>all</hl> history.")
+				return 'Delete <hl>All</hl> History.'
 			else:
-				self.viewPortMessage("delete <hl>all non-deformer</hl> history.")
+				return 'Delete <hl>All Non-Deformer</hl> History.'
 		else:
 			if deformers:
-				self.viewPortMessage("delete history on "+str(objects))
+				return 'Delete history on '+str(objects)
 			else:
-				self.viewPortMessage("delete <hl>non-deformer</hl> history on "+str(objects))
+				return 'Delete <hl>Non-Deformer</hl> history on '+str(objects)
 
 
 	def tb002(self, state=None):
@@ -232,7 +233,7 @@ class Edit(Init):
 			name = set_.replace(oldObject, newObject)
 			pm.select (name, replace=1)
 			pm.polyCrease (value=value, vertexValue=value, createHistory=True)
-			# print "crease:", name
+			# print("crease:", name)
 		pm.undoInfo (closeChunk=1)
 
 		self.toggleWidgets(self.parentUi, self.childUi, setDisabled='b052', setChecked_False='b042')#,self.parentUi.b043])
@@ -267,6 +268,78 @@ class Edit(Init):
 		'''
 		print('no function')
 
+
+	@Slots.message
+	def meshCleanup(self, isolatedVerts=False, edgeAngle=10, nGons=False, repair=False):
+		'''
+		Find mesh artifacts.
+		args:
+			isolatedVerts=bool - find vertices with two edges which fall below a specified angle.
+			edgeAngle(int) = used with isolatedVerts argument to specify the angle tolerance
+			nGons=bool - search for n sided polygon faces.
+			repair=bool - delete or auto repair any of the specified artifacts 
+		'''
+		for obj in rt.selection:
+			if rt.classof(obj) == rt.Editable_poly:
+				obj.selectMode = 2 #multi-component selection preview
+
+
+				if nGons: #Convert N-Sided Faces To Quads
+
+					faces = Init.bitArrayToArray(rt.polyop.getFaceSelection(obj)) #get the selected vertices
+					if not faces: #else get all vertices for the selected object
+						faces = list(range(1, obj.faces.count))
+
+					Init.setSubObjectLevel(4)
+							
+					nGons_ = [f for f in faces if rt.polyop.getFaceDeg(obj, f)>4]
+
+					if repair:
+						maxEval('macros.run \"Modifiers\" \"QuadifyMeshMod\"')
+					else: #Find and select N-gons	
+						rt.setFaceSelection(obj, nGons_)
+
+					print('Found '+str(len(nGons_))+' N-gons.')
+
+
+				if isolatedVerts: #delete loose vertices
+					dict_={}
+
+					vertices = Init.bitArrayToArray(rt.polyop.getVertSelection(obj)) #get the selected vertices
+					if not vertices: #else get all vertices for the selected object
+						vertices = list(range(1, rt.polyop.getNumVerts(obj)))
+
+					for vertex in vertices:
+						edges = Init.bitArrayToArray(rt.polyop.getEdgesUsingVert(obj, vertex)) #get the edges that use the vertice
+
+						if len(edges)==2:
+							vertexPosition = rt.polyop.getVert(obj, vertex)
+
+							edgeVerts = Init.bitArrayToArray([rt.polyop.getVertsUsingEdge(obj, e) for e in edges])
+
+							edgeVerts = [v for v in edgeVerts if not v==vertex]
+
+							vector1 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[0]) - vertexPosition)
+							vector2 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[1]) - vertexPosition)
+
+							vector = rt.length(vector1 + vector2)
+
+							dict_[vertex] = vector
+							
+
+					selection = [vertex for vertex, vector in dict_.iteritems() if vector <= float(edgeAngle) / 50]	
+
+					Init.undo(True)
+					rt.polyop.setVertSelection(obj, selection)
+					print('Found '+str(len(selection))+' isolated vertices.')
+					if repair:
+						obj.EditablePoly.remove(selLevel='Vertex', flag=1)
+						obj.selectMode = 0 #multi-component selection preview off
+					rt.redrawViews()
+					Init.undo(False)
+
+			else:
+				return 'Error: Selection isn\'t an editable poly or nothing is selected.'
 
 
 

@@ -41,7 +41,7 @@ class Editors(Init):
 		cmb = self.parentUi.cmb000
 		
 		files = ['']
-		contents = cmb.addItems_(files, ' ')
+		contents = cmb.addItems_(files, '')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -59,7 +59,7 @@ class Editors(Init):
 		returns:
 			the current widget object from the stacked widget.
 		'''
-		print 8*' -'
+		print(8*' -')
 		self.stackedWidget.addWidget(self.sb.getWidget(name=name))
 		self.stackedWidget.setCurrentWidget(name)
 		currentWidget = self.stackedWidget.currentWidget()
@@ -112,7 +112,7 @@ class Editors(Init):
 
 
 #module name
-print os.path.splitext(os.path.basename(__file__))[0]
+print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------

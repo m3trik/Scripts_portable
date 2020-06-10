@@ -31,7 +31,7 @@ class Scene(Init):
 		cmb = self.parentUi.cmb000
 		
 		list_ = ['']
-		contents = cmb.addItems_(list_, ' ')
+		contents = cmb.addItems_(list_, '')
 
 		if not index:
 			index = cmb.currentIndex()

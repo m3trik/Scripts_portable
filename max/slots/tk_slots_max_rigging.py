@@ -29,7 +29,7 @@ class Rigging(Init):
 		cmb = self.parentUi.cmb000
 
 		list_ = ['Quick Rig','HumanIK','Expression Editor','Shape Editor','Connection Editor','Channel Control Editor','Set Driven Key']
-		items = cmb.addItems_(list_, ' ')
+		items = cmb.addItems_(list_, '')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -114,6 +114,7 @@ class Rigging(Init):
 			pm.jointDisplayScale(value, ikfk=1) #set global IKFK display size
 
 
+	@Slots.message
 	def tb000(self, state=None):
 		'''
 		Toggle Display Local Rotation Axes
@@ -141,7 +142,7 @@ class Rigging(Init):
 		if toggle:
 			pm.toggle(joints, localAxis=1) #set display off
 
-		self.viewPortMessage("Display Local Rotation Axes:<hl>"+str(state)+"</hl>")
+		return 'Display Local Rotation Axes:<hl>'+str(state)+'</hl>'
 
 
 	def tb001(self, state=None):

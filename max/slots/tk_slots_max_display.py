@@ -29,7 +29,7 @@ class Display(Init):
 		cmb = self.parentUi.cmb000
 		
 		files = ['']
-		contents = cmb.addItems_(files, ' ')
+		contents = cmb.addItems_(files, '')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -39,6 +39,7 @@ class Display(Init):
 			cmb.setCurrentIndex(0)
 
 
+	@Slots.message
 	def b000(self):
 		'''
 		Toggle Subdiv Proxy Display
@@ -48,7 +49,7 @@ class Display(Init):
 			mel.eval("smoothingDisplayToggle "+str(state))
 		except:
 			traceback.print_exc()
-			print("# Warning: Nothing Selected. #")
+			return 'Error: Nothing Selected.'
 
 
 	def b001(self):
@@ -153,6 +154,7 @@ class Display(Init):
 		pass
 
 
+	@Slots.message
 	def b011(self):
 		'''
 		Toggle Component ID Display
@@ -179,15 +181,15 @@ class Display(Init):
 				i+=1
 
 		if index == 0:
-			self.viewPortMessage("[1,0,0,0] <hl>vertIDs</hl>.")
-		if index == 1:
-			self.viewPortMessage("[0,1,0,0] <hl>edgeIDs</hl>.")
-		if index == 2:
-			self.viewPortMessage("[0,0,1,0] <hl>faceIDs</hl>.")
-		if index == 3:
-			self.viewPortMessage("[0,0,0,1] <hl>compIDs(UV)</hl>.")
-		if index == 4:
-			self.viewPortMessage("component ID <hl>Off</hl>.")
+			return '<hl>Vertex IDs</hl>.' #[1,0,0,0]
+		elif index == 1:
+			return '<hl>Edge IDs</hl>.' #[0,1,0,0]
+		elif index == 2:
+			return '<hl>Face IDs</hl>.' #[0,0,1,0]
+		elif index == 3:
+			return '<hl>Component IDs (UV)</hl>.' #[0,0,0,1]
+		elif index == 4:
+			return 'Component ID <hl>Off</hl>.'
 
 
 	def b012(self):

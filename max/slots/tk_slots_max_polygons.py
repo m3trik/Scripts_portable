@@ -88,6 +88,7 @@ class Polygons(Init):
 			cmb.setCurrentIndex(0)
 
 
+	@Slots.message
 	def tb000(self, state=None):
 		'''
 		Merge Vertices
@@ -113,8 +114,7 @@ class Polygons(Init):
 				else: #if object mode. merge all vertices on the selected object.
 					rt.polyop.weldVertsByThreshold(obj, obj.verts)
 		else:
-			print("# Warning: No object selected. Must select an object or component #")
-			return
+			return 'Error: No object selected. Must select an object or component.'
 
 
 	def tb001(self, state=None):

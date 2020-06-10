@@ -267,20 +267,20 @@ class File(Init):
 								except:
 									pass
 				except OSError:
-					print("# Warning: could not delete ", currentPath+oldName, " #")
+					print('{0}{1}{2}'.format("Warning: Delete failed (", currentPath+oldName, ")"))
 					pass
 			else:
 				newName = currentName+".001"
 			pm.saveAs (currentPath+newName, force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
-			print("# Result: ", currentPath+newName, " #")
+			print('{0}{1}{2}'.format(" Result: ", currentPath+newName, " "))
 		else:	#save without renaming
 			pm.saveFile (force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
-			print("# Result: ", currentPath+currentName, " #")
+			print('{0}{1}{2}'.format(" Result: ", currentPath+currentName, " "))
 
 		if tb.chk002.isChecked(): #quit
 			import time
 			for timer in range(5):
-				self.viewPortMessage("shutting down:<hl>"+str(timer)+"</hl>")
+				print("Shutting Down:<hl>"+str(timer)+"</hl>")
 				time.sleep(timer)
 			mel.eval("quit;")
 			# pm.Quit()

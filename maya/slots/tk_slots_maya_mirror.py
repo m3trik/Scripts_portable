@@ -29,7 +29,7 @@ class Mirror(Init):
 		cmb = self.parentUi.cmb000
 		
 		files = ['']
-		contents = cmb.addItems_(files, ' ')
+		contents = cmb.addItems_(files, '')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -54,7 +54,7 @@ class Mirror(Init):
 	# 	cmb = self.parentUi.cmb000
 		
 	# 	files = ['Mirror Options', 'Mirror Instance Mesh']
-	# 	contents = cmb.addItems_(files, ' ')
+	# 	contents = cmb.addItems_(files, '')
 
 	# 	if not index:
 	# 		index = cmb.currentIndex()
@@ -66,6 +66,7 @@ class Mirror(Init):
 	# 		cmb.setCurrentIndex(0)
 
 
+	@Slots.message
 	def tb000(self, state=None):
 		'''
 		Mirror Geometry
@@ -131,7 +132,7 @@ class Mirror(Init):
 					pm.polyMirrorFace(obj, mirrorAxis=axisDirection, direction=a, mergeMode=1, mergeThresholdType=1, mergeThreshold=mergeThreshold, worldSpace=0, smoothingAngle=30, flipUVs=0, ch=0) #mirrorPosition x, y, z - This flag specifies the position of the custom mirror axis plane
 			pm.undoInfo(closeChunk=1)
 		else:
-			print('# Warning: Nothing Selected.')
+			return 'Warning: Nothing Selected.'
 
 
 

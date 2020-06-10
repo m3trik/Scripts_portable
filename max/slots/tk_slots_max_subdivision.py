@@ -135,6 +135,7 @@ class Subdivision(Init):
 			except: pass
 
 
+	@Slots.message
 	def b000(self):
 		'''
 		Toggle Subdiv Proxy Display
@@ -144,7 +145,7 @@ class Subdivision(Init):
 			mel.eval("smoothingDisplayToggle "+str(state))
 		except:
 			traceback.print_exc()
-			print("# Warning: Nothing Selected. #")
+			return 'Error: Nothing Selected.'
 
 
 	def b001(self):
@@ -160,7 +161,7 @@ class Subdivision(Init):
 		sel = mel.eval("polyCheckSelection \"polySmoothProxy\" \"o\" 0")
 		
 		if len(sel)==0 and len(polySmoothBaseMesh)==0:
-			print("# Warning: Nothing selected. #")
+			print(" Warning: Nothing selected. ")
 			return
 		if len(sel)!=0:
 			del polySmoothBaseMesh[:]

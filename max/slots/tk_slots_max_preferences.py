@@ -34,7 +34,7 @@ class Preferences(Init):
 		cmb = self.parentUi.cmb003
 		
 		files = ['']
-		contents = cmb.addItems_(files, ' ')
+		contents = cmb.addItems_(files, '')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -104,7 +104,7 @@ class Preferences(Init):
 		'''
 		Init Tk_Main
 		'''
-		print("reload: tk_main module")
+		print('reload: tk_main module')
 		reload(tk_main)
 
 

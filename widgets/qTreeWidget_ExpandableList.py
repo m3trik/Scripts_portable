@@ -131,9 +131,9 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 
 		else:
 			if item:
-				print('# Error: {} has no attribute {}'.format(item, attr))
+				print('Error: {} has no attribute {}'.format(item, attr))
 			else:
-				print('# Error: {} has no attribute {}'.format(self, attr))
+				print('Error: {} has no attribute {}'.format(self, attr))
 
 
 	def add(self, widget, header='root', parentHeader=None, refresh=False, **kwargs):
@@ -932,4 +932,4 @@ if __name__ == '__main__':
 	# try:
 		# self.classMethod = getattr(class_, str(self.objectName()))
 	# except AttributeError as error:
-	# 	print('# Error:', self.__class__.__name__, 'in getattr:', error, '#')
+	# 	print('Error:', self.__class__.__name__, 'in getattr:', error, '')

@@ -119,7 +119,7 @@ class Switchboard(QtCore.QObject):
 			objectName (list) = widget string names.
 		'''
 		if objectNames and not len(widgets)==len(objectNames):
-			raise Exception('# Error: The list of objectNames must be of equal length to that of the given widgets. #')
+			raise Exception('Error: The list of objectNames must be of equal length to that of the given widgets.')
 
 		for i, widget in enumerate(widgets):
 			try:
@@ -309,7 +309,7 @@ class Switchboard(QtCore.QObject):
 						signal.connect(slot) #connect single slot (main and cameras ui)
 
 				except Exception as error:
-					print('# Error: {0} {1} addSignals: {2} {3} #'.format(name, widget.objectName(), signal, slot), '\n', error)
+					print('Error: {0} {1} addSignals: {2} {3} #'.format(name, widget.objectName(), signal, slot), '\n', error)
 
 
 	def removeSignals(self, name, widgets=None):
@@ -338,7 +338,7 @@ class Switchboard(QtCore.QObject):
 						signal.disconnect(slot) #disconnect single slot (main and cameras ui)
 
 				except Exception as error:
-					print('# Error: {0} {1} removeSignals: {2} {3} #'.format(name, widget.objectName(), signal, slot), '\n', error)
+					print('Error: {0} {1} removeSignals: {2} {3} #'.format(name, widget.objectName(), signal, slot), '\n', error)
 
 
 	def uiList(self, name=None, ui=None):

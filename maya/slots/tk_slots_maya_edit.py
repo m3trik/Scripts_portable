@@ -272,7 +272,7 @@ class Edit(Init):
 			name = set_.replace(oldObject, newObject)
 			pm.select (name, replace=1)
 			pm.polyCrease (value=value, vertexValue=value, createHistory=True)
-			# print "crease:", name
+			# print("crease:", name)
 		pm.undoInfo (closeChunk=1)
 
 		self.toggleWidgets(self.parentUi, self.childUi, setDisabled='b052', setChecked_False='b042')#,self.parentUi.b043])

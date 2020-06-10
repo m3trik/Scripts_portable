@@ -40,7 +40,7 @@ class Duplicate(Init):
 		cmb = self.parentUi.cmb001
 		
 		files = ['']
-		contents = cmb.addItems_(files, ' ')
+		contents = cmb.addItems_(files, '')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -75,6 +75,7 @@ class Duplicate(Init):
 			self.toggleWidgets(self.parentUi, self.childUi, setEnabled='chk000,chk009,s005', setDisabled='chk008,b034,cmb000')
 
 
+	@Slots.message
 	def chk010(self):
 		'''
 		Radial Array: Set Pivot
@@ -87,9 +88,9 @@ class Duplicate(Init):
 			try:
 				pivot = pm.xform (selection, query=1, translation=1, relative=1)
 			except:
-				print("# Warning: Nothing selected. #")
 				self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk010')
-				return
+				return 'Error: Nothing Selected.'
+
 			# radialPivot.extend ([pivot[0],pivot[1],pivot[2]])
 			radialPivot.extend (pivot) #extend the list contents
 			text = str(int(pivot[0]))+","+str(int(pivot[1]))+","+str(int(pivot[2])) #convert to int to
@@ -132,6 +133,7 @@ class Duplicate(Init):
 
 	global radialArrayObjList
 	radialArrayObjList=[]
+	@Slots.message
 	def chk015(self, create=False):
 		'''
 		Radial Array: Preview
@@ -175,7 +177,7 @@ class Duplicate(Init):
 							if len(radialPivot):
 								pm.rotate (x, y, z, relative=1, pivot=radialPivot) #euler=1
 							else:
-								print("# Warning: No pivot point set. #")
+								print('Error: No pivot point set.')
 						else:
 							pm.rotate (x, y, z, relative=1) #euler=1
 						radialArrayObjList.append(name)
@@ -188,15 +190,15 @@ class Duplicate(Init):
 					pm.select (objectName)
 					pm.undoInfo (closeChunk=1)
 			else: #if both lists objects are empty:
-				print("# Warning: Nothing selected. #")
 				self.toggleWidgets(self.parentUi, self.childUi, setDisabled='b003', setChecked_False='chk015')
-				return
+				return 'Error: Nothing Selected.'
+
 		else: #if chk015 is unchecked by user or by create button
 			if create:
 				originalObj = radialArrayObjList[0][:radialArrayObjList[0].rfind("_")] #remove the trailing _ins# or _dup#. ie. pCube1 from pCube1_inst1
 				radialArrayObjList.append(originalObj)
 				pm.polyUnite (radialArrayObjList, name=originalObj+"_array") #combine objects. using the original name results in a duplicate object error on deletion
-				print("# Result: "+str(radialArrayObjList)+" #")
+				print('Result: '+str(radialArrayObjList))
 				pm.delete (radialArrayObjList); del radialArrayObjList[:] #delete all geometry and clear the list
 				return
 			try:
@@ -338,7 +340,7 @@ class Duplicate(Init):
 				# originalObj = duplicateObjList[0][:duplicateObjList[0].rfind("_")] #remove the trailing _ins# or _dup#. ie. pCube1 from pCube1_inst1
 				# duplicateObjList.append(originalObj)
 				# pm.polyUnite (duplicateObjList, name=originalObj+"_array") #combine objects. using the original name results in a duplicate object error on deletion
-				# print("# Result: "+str(duplicateObjList)+" #")
+				# print(" Result: "+str(duplicateObjList)+" ")
 				# pm.delete(duplicateObjList) #delete all duplicated geometry
 				del duplicateObjList[:] #clear the list
 				return
@@ -371,6 +373,7 @@ class Duplicate(Init):
 		self.chk015(create=True)
 
 
+	@Slots.message
 	def b004(self):
 		'''
 		Select Instanced Objects
@@ -393,7 +396,7 @@ class Duplicate(Init):
 				shapes = pm.listRelatives (selectedObj, s=1)
 				maxEval('select `listRelatives -ap '+shapes[0]+'`;')
 			except:
-				print("# Warning: No valid object selected. #")
+				return 'Warning: No valid object selected.'
 
 
 	def b005(self):

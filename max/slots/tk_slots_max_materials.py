@@ -100,9 +100,10 @@ class Materials(Init):
 		self.currentMaterial = mats[index] if len(mats)>index and index>=0 else None #store material
 
 
+	@Slots.message
 	def tb000(self, state=None):
 		'''
-		Select By Material Id
+		Select By: Material Id
 		'''
 		tb = self.currentUi.tb000
 		if state=='setMenu':
@@ -112,6 +113,9 @@ class Materials(Init):
 
 		shell = tb.chk005.isChecked() #Select by material: shell
 		invert = tb.chk006.isChecked() #Select by material: invert
+
+		if not self.currentMaterial:
+			return 'Error: No Material Selection.'
 
 		self.selectByMaterialID(self.currentMaterial, rt.selection)
 
@@ -134,6 +138,7 @@ class Materials(Init):
 			self.parentUi.group000.setTitle(tb.chk001.text())
 
 
+	@Slots.message
 	def tb002(self, state=None):
 		'''
 		Assign Material
@@ -147,19 +152,8 @@ class Materials(Init):
 		selection = rt.selection
 
 		if tb.chk008.isChecked(): #Assign New random mat ID
-			import random
-
 			if selection:
-				prefix = 'matID'
-				rgb = [random.randint(0, 255) for _ in range(3)] #generate a list containing 3 values between 0-255
-
-				#format name
-				name = '_'.join([prefix, str(rgb[0]), str(rgb[1]), str(rgb[2])])
-				#create shader
-				mat = rt.StandardMaterial()
-		 		mat.name = name
-				mat.diffuse = rt.color(rgb[0], rgb[1], rgb[2])
-
+				mat = self.createRandomMaterial(prefix='matID')
 				self.assignMaterial(selection, mat)
 
 				#delete previous shader
@@ -174,7 +168,7 @@ class Materials(Init):
 					self.parentUi.tb001.chk001.setChecked(True) #set combobox to ID map mode. toggling the checkbox refreshes the combobox.
 				self.parentUi.cmb002.setCurrent_(name) #set the combobox index to the new mat #self.cmb002.setCurrentIndex(self.cmb002.findText(name))
 			else:
-				return '# Error: No valid object/s selected. #'
+				return 'Error: No valid object/s selected.'
 
 		elif tb.chk007.isChecked(): #Assign current mat
 			self.assignMaterial(selection, self.currentMaterial)
@@ -182,6 +176,7 @@ class Materials(Init):
 		rt.redrawViews()
 
 
+	@Slots.message
 	def lbl000(self):
 		'''
 		Open material in editor
@@ -190,13 +185,13 @@ class Materials(Init):
 			try:
 				mat = self.materials[self.parentUi.cmb002.currentText()] #get object from string key
 			except:
-				return '# Error: No stored material or no valid object selected. #'
+				return 'Error: No stored material or no valid object selected.'
 		else: #Stored material mode
 			if not self.currentMaterial: #get material from selected scene object
 				if rt.selection:
 					self.currentMaterial = rt.selection[0].material
 				else:
-					return '# Error: No stored material or no valid object selected. #'
+					return 'Error: No stored material or no valid object selected.'
 			mat = self.currentMaterial
 
 		#open the slate material editor
@@ -280,6 +275,7 @@ class Materials(Init):
 			rt.freeSceneBitmaps()
 
 
+	@Slots.message
 	def b002(self):
 		'''
 		Set Material: Set the Currently Selected Material as the currentMaterial.
@@ -287,7 +283,7 @@ class Materials(Init):
 		try: 
 			obj = rt.selection[0]
 		except IndexError:
-			return '# Error: Nothing selected. #'
+			return 'Error: Nothing selected.'
 
 		mat = self.getMaterial(obj)
 
@@ -297,8 +293,8 @@ class Materials(Init):
 		cmb.setCurrentIndex(cmb.items().index(mat.name))
 
 
-	@staticmethod
-	def selectByMaterialID(material, objects=None, shell=False, invert=False):
+	@Slots.message
+	def selectByMaterialID(self, material, objects=None, shell=False, invert=False):
 		'''
 		Select By Material Id
 	
@@ -314,14 +310,14 @@ class Materials(Init):
 		if not rt.getNumSubMtls(material): #if not a multimaterial
 			mat = material
 		else:
-			return '# Error: No valid stored material. If material is a multimaterial, select a submaterial. #'
+			return 'Error: No valid stored material. If material is a multimaterial, select a submaterial.'
 
 		if not objects: #if not selection; use all scene geometry
 			objects = rt.geometry
 
 		for obj in objects:
 			if not any([rt.isKindOf(obj, rt.Editable_Poly), rt.isKindOf(obj, rt.Editable_mesh)]):
-				print('# Error: '+str(obj.name)+' skipped. Operation requires an Editable_Poly or Editable_mesh. #')
+				print('Error: '+str(obj.name)+' skipped. Operation requires an Editable_Poly or Editable_mesh.')
 			else:
 				if shell: #set to base object level
 					rt.modPanel.setCurrentObject(obj.baseObject)
@@ -398,8 +394,8 @@ class Materials(Init):
 		return materials
 
 
-	@staticmethod
-	def getMaterial(obj, face=None):
+	@Slots.message
+	def getMaterial(self, obj, face=None):
 		'''
 		Get the material from the given object or face components.
 
@@ -422,7 +418,7 @@ class Materials(Init):
 					try:
 						id_ = rt.GetFaceMatID(obj, face) #Returns the material ID of the specified face.
 					except RuntimeError:
-						return '# Error: Object must be of type Editable_Poly or Editable_mesh. #'
+						return 'Error: Object must be of type Editable_Poly or Editable_mesh.'
 
 				mat = rt.getSubMtl(mat, id_) #get material from mat ID
 
@@ -430,7 +426,33 @@ class Materials(Init):
 
 
 	@staticmethod
-	def assignMaterial(objects, mat):
+	def createRandomMaterial(name=None, prefix=''):
+		'''
+		Creates a random material.
+
+		args:
+			name (str) = material name.
+			prefix (str) = name prefix.
+		returns:
+			(obj) material
+		'''
+		import random
+		rgb = [random.randint(0, 255) for _ in range(3)] #generate a list containing 3 values between 0-255
+
+		if name is None: #create name from rgb values
+			name = '_'.join([prefix, str(rgb[0]), str(rgb[1]), str(rgb[2])])
+		name = prefix+name
+		
+		#create shader
+		mat = rt.StandardMaterial()
+ 		mat.name = name
+		mat.diffuse = rt.color(rgb[0], rgb[1], rgb[2])
+
+		return mat
+
+
+	@Slots.message
+	def assignMaterial(self, objects, mat):
 		'''
 		Assign Material
 
@@ -438,7 +460,7 @@ class Materials(Init):
 		material (obj) = The material to search and select for.
 		'''
 		if not mat:
-			return '# Error: Material Not Assigned. No material given. #'
+			return 'Error: Material Not Assigned. No material given.'
 
 		for obj in objects:
 			if rt.getNumSubMtls(mat): #if multimaterial

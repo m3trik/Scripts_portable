@@ -86,7 +86,7 @@ class Init(Slots):
 			# selectedUVs = ; infoDict.update({"Selected UV's: ":selectedUVs}) #selected uv's
 
 		prevCommand = self.sb.prevCommand(docString=True); infoDict.update({"Prev Command: ":prevCommand})  #get button text from last used command
-		prevUi = self.sb.previousName(allowLevel1=False, allowLevel2=False); infoDict.update({"Prev UI: ":prevUi.replace('_', ' ').title()})  #get the last level 3 ui name string.
+		prevUi = self.sb.previousName(allowLevel1=False, allowLevel2=False); infoDict.update({"Prev UI: ":prevUi.replace('_', '').title()})  #get the last level 3 ui name string.
 		prevCamera = self.sb.prevCamera(docString=True); infoDict.update({"Prev Camera: ":prevCamera})  #get the previously used camera.
 
 		return infoDict
@@ -240,9 +240,8 @@ class Init(Slots):
 
 
 	#Detaches editable_mesh elements into new objects	
-	@staticmethod
-	def detachElement(obj):
-
+	@Slots.message
+	def detachElement(self, obj):
 		elementArray = []
 
 		print(obj[0]) #object
@@ -263,7 +262,7 @@ class Init(Slots):
 			rt.select(elementArray)
 
 		else:
-			print("# Error: Object must be an Editable_Poly. #")
+			return 'Error: Object must be an Editable_Poly.'
 		
 		return elementArray
 
@@ -284,28 +283,25 @@ class Init(Slots):
 	#notes: (align all vertices at once) by putting each vert index and coordinates in a dict (or two arrays) then if when iterating through a vert falls within the tolerance specified in a textfield align that vert in coordinate. then repeat the process for the other coordinates x,y,z specified by checkboxes. using edges may be a better approach. or both with a subObjectLevel check
 	#create edge alignment tool and then use subObjectLevel check to call either that function or this one from the same buttons.
 	#to save ui space; have a single align button, x, y, z, and align 'all' checkboxes and a tolerance textfield.
-	@staticmethod
-	def alignVertices (selection, mode):
-
+	@Slots.message
+	def alignVertices(self, selection, mode):
 		# maxEval('undo "alignVertices" on')
-
 		componentArray = selection.selectedVerts
 		
 		if len(componentArray) == 0:
-			print("# Error: No vertices selected. #")
+			return 'Error: No vertices selected.'
 		
 		if len(componentArray) < 2:
-			return("# Error: Selection must contain at least two vertices. #")
-			
-		
+			return 'Error: Selection must contain at least two vertices.'
+
 		lastSelected = componentArray[-1]#3ds max re-orders array by vert index, so this doesnt work for aligning to last selected
-		#~ print lastSelected.pos
+		#~ print(lastSelected.pos)
 		aX = lastSelected.pos[0]
 		aY = lastSelected.pos[1]
 		aZ = lastSelected.pos[2]
 		
 		for vertex in componentArray:
-			#~ print vertex.pos
+			#~ print(vertex.pos)
 			vX = vertex.pos[0]
 			vY = vertex.pos[1]
 			vZ = vertex.pos[2]
@@ -378,8 +374,8 @@ class Init(Slots):
 			print("align:   ", aX, aY, aZ)
 			
 			rt.alignXYZ(mode, vertex, vX, vY, vZ, aX, aY, aZ)
-			
-			print("result:  ", vertex.pos[0], vertex.pos[1], vertex.pos[2])
+
+			return '{0}{1}{2}{3}'.format("result: ", vertex.pos[0], vertex.pos[1], vertex.pos[2])
 
 
 
@@ -444,7 +440,7 @@ class Init(Slots):
 	# 		classString = classInfo(obj)
 			
 	# 		if (classString[6] == "Editable_Poly" or classString[4] == rt.Editable_mesh): #had to add Editable_mesh explicitly, here and in the error catch, because the keyword was unknown to pymxs.runtime. added it to the called function anyhow in case they fix it at some point
-	# 			maxEval('macros.run "Modifiers" "Face_Extrude"')
+	# 			maxEval('macros.run "Modifiers" "Face_Extrude")
 	# 			print classString[4]
 				
 	# 		if (classString[6] == "Shape"):
@@ -455,7 +451,7 @@ class Init(Slots):
 	# 				macros.run "Modifiers" "Face_Extrude"; --extrude modifier
 	# 				''')
 	# 			else:
-	# 				maxEval('macros.run "Modifiers" "Extrude"')
+	# 				maxEval('macros.run "Modifiers" "Extrude")
 	# 			print classString[4]
 
 	# 		if (classString[6] == "Geometry"):
@@ -529,6 +525,7 @@ class Init(Slots):
 	# )
 
 
+	@Slots.message
 	def deleteAlongAxis(self, obj, axis):
 		'''
 		Delete components of the given mesh object along the specified axis.
@@ -544,7 +541,7 @@ class Init(Slots):
 		# 	else:
 		# 		pm.delete(faces) #else, delete any individual faces.
 
-		# self.viewPortMessage("Delete faces on <hl>"+axis.upper()+"</hl>.")
+		# return 'Delete faces on <hl>'+axis.upper()+'</hl>.'
 
 
 	@staticmethod
@@ -581,7 +578,6 @@ class Init(Slots):
 			''')
 	except Exception as error:
 		print(error)
-
 
 
 	@staticmethod
@@ -754,79 +750,6 @@ class Init(Slots):
 
 
 	@staticmethod
-	def meshCleanup(isolatedVerts=False, edgeAngle=10, nGons=False, repair=False):
-		'''
-		Find mesh artifacts.
-		args:
-			isolatedVerts=bool - find vertices with two edges which fall below a specified angle.
-			edgeAngle(int) = used with isolatedVerts argument to specify the angle tolerance
-			nGons=bool - search for n sided polygon faces.
-			repair=bool - delete or auto repair any of the specified artifacts 
-		'''
-		for obj in rt.selection:
-			if rt.classof(obj) == rt.Editable_poly:
-				obj.selectMode = 2 #multi-component selection preview
-
-
-				if nGons: #Convert N-Sided Faces To Quads
-
-					faces = Init.bitArrayToArray(rt.polyop.getFaceSelection(obj)) #get the selected vertices
-					if not faces: #else get all vertices for the selected object
-						faces = list(range(1, obj.faces.count))
-
-					Init.setSubObjectLevel(4)
-							
-					nGons_ = [f for f in faces if rt.polyop.getFaceDeg(obj, f)>4]
-
-					if repair:
-						maxEval('macros.run \"Modifiers\" \"QuadifyMeshMod\"')
-					else: #Find and select N-gons	
-						rt.setFaceSelection(obj, nGons_)
-
-					print('Found '+str(len(nGons_))+' N-gons.')
-
-
-				if isolatedVerts: #delete loose vertices
-					dict_={}
-
-					vertices = Init.bitArrayToArray(rt.polyop.getVertSelection(obj)) #get the selected vertices
-					if not vertices: #else get all vertices for the selected object
-						vertices = list(range(1, rt.polyop.getNumVerts(obj)))
-
-					for vertex in vertices:
-						edges = Init.bitArrayToArray(rt.polyop.getEdgesUsingVert(obj, vertex)) #get the edges that use the vertice
-
-						if len(edges)==2:
-							vertexPosition = rt.polyop.getVert(obj, vertex)
-
-							edgeVerts = Init.bitArrayToArray([rt.polyop.getVertsUsingEdge(obj, e) for e in edges])
-
-							edgeVerts = [v for v in edgeVerts if not v==vertex]
-
-							vector1 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[0]) - vertexPosition)
-							vector2 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[1]) - vertexPosition)
-
-							vector = rt.length(vector1 + vector2)
-
-							dict_[vertex] = vector
-							
-
-					selection = [vertex for vertex, vector in dict_.iteritems() if vector <= float(edgeAngle) / 50]	
-
-					Init.undo(True)
-					rt.polyop.setVertSelection(obj, selection)
-					print('Found '+str(len(selection))+' isolated vertices.')
-					if repair:
-						obj.EditablePoly.remove(selLevel='Vertex', flag=1)
-						obj.selectMode = 0 #multi-component selection preview off
-					rt.redrawViews()
-					Init.undo(False)
-					
-			else: rt.messagebox("Selection isn't an editable poly or nothing is selected.", title="Vertex Cleaner")
-
-
-
-	@staticmethod
 	def undo(state=True):
 		import pymxs
 		pymxs.undo(state)
@@ -839,10 +762,9 @@ class Init(Slots):
 	# ------------------------------------------------
 
 
-
 	
-	@staticmethod
-	def maxUiSetChecked(id, table, item, state=True, query=False):
+	@Slots.message
+	def maxUiSetChecked(self, id, table, item, state=True, query=False):
 		'''
 		args:
 			id (str) = actionMan ID
@@ -858,24 +780,11 @@ class Init(Slots):
 				if state: #check
 					if not aitm.isChecked:
 						rt.actionMan.executeAction(0, id)
-						print(aitm.isChecked)
+						return aitm.isChecked
 				else: #uncheck
 					if aitm.isChecked:
 						rt.actionMan.executeAction(0, id)
-						print(aitm.isChecked)
-
-
-
-	@staticmethod
-	def viewPortMessage (message='', statusMessage='', assistMessage='', position='topCenter'):
-		'''
-		args:
-			statusMessage (str) = message to display (accepts html formatting).
-			position (str) = position on screen. possible values are: topCenter","topRight","midLeft","midCenter","midCenterTop","midCenterBot","midRight","botLeft","botCenter","botRight"
-		ex. self.viewPortMessage("shutting down:<hl>"+str(timer)+"</hl>")
-		'''
-		message=statusMessage; statusMessage=''
-		pm.inViewMessage(message=message, statusMessage=statusMessage, assistMessage=assistMessage, position=position, fontSize=10, fade=1, fadeInTime=0, fadeStayTime=1000, fadeOutTime=500, alpha=75) #1000ms = 1 sec
+						return aitm.isChecked
 
 
 

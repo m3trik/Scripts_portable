@@ -86,7 +86,7 @@ class Init(Slots):
 			# if type(selectedUvs)==int: infoDict.update({"Selected UV's: ":selectedUVs}) #selected uv's
 
 		prevCommand = self.sb.prevCommand(docString=True); infoDict.update({"Prev Command: ":prevCommand})  #get button text from last used command
-		prevUi = self.sb.previousName(allowLevel1=False, allowLevel2=False); infoDict.update({"Prev UI: ":prevUi.replace('_', ' ').title()})  #get the last level 3 ui name string.
+		prevUi = self.sb.previousName(allowLevel1=False, allowLevel2=False); infoDict.update({"Prev UI: ":prevUi.replace('_', '').title()})  #get the last level 3 ui name string.
 		prevCamera = self.sb.prevCamera(docString=True); infoDict.update({"Prev Camera: ":prevCamera})  #get the previously used camera.
 
 		return infoDict
@@ -233,7 +233,7 @@ class Init(Slots):
 			vertNum = objName[index1+1:index2] #ex. "176"
 			# position = pm.pointPosition(objName) 
 			object_ = objName[:index1-4] #ex. "polyShape"
-			# print object_, index1, index2#, position
+			# print(object_, index1, index2#, position)
 			vertList.append(vertNum)
 
 		if (selectTypeEdge):
@@ -391,7 +391,7 @@ class Init(Slots):
 
 		vertexPoints=[]
 		for _ in range(numPoints):
-			# print "deg:", degree,"\n", "cos:",math.cos(radian),"\n", "sin:",math.sin(radian),"\n", "rad:",radian
+			# print("deg:", degree,"\n", "cos:",math.cos(radian),"\n", "sin:",math.sin(radian),"\n", "rad:",radian)
 			if axis =='x': #x axis
 				y = center[2] + (math.cos(radian) *radius)
 				z = center[1] + (math.sin(radian) *radius)
@@ -406,7 +406,7 @@ class Init(Slots):
 				vertexPoints.append([x,y,0]) #not working.
 
 			radian = radian+math.radians(degree) #increment by original radian value that was converted from degrees
-			#print x,y,"\n"
+			#print(x,y,"\n")
 			
 		pm.undoInfo (openChunk=True)
 		node = pm.polyCreateFacet (point=vertexPoints, name='pCircle')
@@ -481,7 +481,6 @@ class Init(Slots):
 			dict_[key] = value
 
 		return dict_
-
 
 
 	@staticmethod
@@ -753,7 +752,7 @@ class Init(Slots):
 	# 	scrollLayout = str(pm.scrollLayout(verticalScrollBarThickness=16, 
 	# 									horizontalScrollBarThickness=16))
 	# 	pm.columnLayout(adjustableColumn=True)
-	# 	print text
+	# 	print(text)
 	# 	#for item in array:
 	# 	text_field = str(pm.textField(height=20,
 	# 										width=250, 

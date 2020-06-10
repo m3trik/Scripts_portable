@@ -34,7 +34,7 @@ class Create(Init):
 		cmb = self.parentUi.cmb000
 		
 		files = ['']
-		contents = cmb.addItems_(files, ' ')
+		contents = cmb.addItems_(files, '')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -153,8 +153,8 @@ class Create(Init):
 		try:
 			self.point = pm.xform (selection, query=1, translation=1, worldSpace=1, absolute=1)
 		except:
-			print("# Warning: Nothing selected. Point set to origin [0,0,0]. #")
 			self.point = [0,0,0]
+			print('Warning: Nothing selected. Point set to origin [0,0,0].')
 
 		self.parentUi.t000.setText(str(self.point[0]))
 		self.parentUi.t001.setText(str(self.point[1]))
@@ -227,7 +227,7 @@ class Create(Init):
 		args:
 			index(int) = optional index of the spinbox that called this function. ie. 5 from s005
 		'''
-		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.parentUi.cmb002.children_()} #get current spinbox values. ie. {width:10} from spinbox prefix and value.
+		spinboxValues = {s.prefix().rstrip(':'):s.value() for s in self.parentUi.cmb002.children_()} #get current spinbox values. ie. {width:10} from spinbox prefix and value.
 		self.setAttributesMEL(self.node, spinboxValues) #set attributes for the history node
 
 
@@ -238,7 +238,7 @@ class Create(Init):
 	# 	cmb = self.parentUi.cmb002
 		
 	# 	files = ['']
-	# 	contents = cmb.addItems_(files, ' ')
+	# 	contents = cmb.addItems_(files, '')
 
 	# 	if not index:
 	# 		index = cmb.currentIndex()

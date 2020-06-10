@@ -46,7 +46,7 @@ class Cameras(Init):
 			if text=='Set Custom Camera':
 				mel.eval('string $homeName = `cameraView -camera persp`;') #cameraView -edit -camera persp -setCamera $homeName;
 			if text=='Camera From View':
-				mel.eval('print "--no code--"')
+				print('No Maya Version')
 
 		if header=='Cameras':
 			pm.select(text)
@@ -269,7 +269,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	cmb = self.parentUi.cmb000
 		
 	# 	list_ = ['Camera Sequencer', 'Camera Set Editor']
-	# 	contents = cmb.addItems_(list_, ' ')
+	# 	contents = cmb.addItems_(list_, '')
 
 	# 	if not index:
 	# 		index = cmb.currentIndex()
@@ -327,7 +327,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 		if index==2:
 	# 			mel.eval('string $homeName = `cameraView -camera persp`;')
 	# 		if index==3:
-	# 			mel.eval('print "--no code--"')
+	# 			mel.eval('print "--no code--")
 	# 		cmb.setCurrentIndex(0)
 
 

@@ -194,7 +194,7 @@ class Selection(Init):
 		cmb = self.parentUi.cmb001
 		
 		files = ['Selection Constraints']
-		contents = cmb.addItems_(files, ' ')
+		contents = cmb.addItems_(files, '')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -351,6 +351,7 @@ class Selection(Init):
 			self.chk007()
 
 
+	@Slots.message
 	def tb000(self, state=None):
 		'''
 		Select Nth
@@ -366,8 +367,8 @@ class Selection(Init):
 		step = tb.s003.value()
 
 		if tb.chk000.isChecked(): #Select Ring
-			print("# Warning: add correct arguments for this tool. #") 
 			self.shortestEdgePath()
+			return 'Warning: Add correct arguments for this tool.'
 
 		if tb.chk001.isChecked(): #Select contigious
 			# mel.eval('SelectContiguousEdges;')
@@ -408,6 +409,7 @@ class Selection(Init):
 			self.parentUi.t000.clear()
 
 
+	@Slots.message
 	def tb002(self, state=None):
 		'''
 		Select Island: Select Polygon Face Island
@@ -425,8 +427,8 @@ class Selection(Init):
 		rangeZ = float(tb.s005.value())
 		selectedFaces = pm.filterExpand(sm=34)
 
-		pm.undoInfo(openChunk=1)
 		if selectedFaces:
+			pm.undoInfo(openChunk=1)
 			similarFaces = self.getFacesWithSimilarNormals(selectedFaces, rangeX=rangeX, rangeY=rangeY, rangeZ=rangeZ)
 			islands = self.getContigiousIslands(similarFaces)
 
@@ -435,9 +437,9 @@ class Selection(Init):
 					if face in island:
 						pm.select(island, add=1)
 						break
+			pm.undoInfo(closeChunk=1)
 		else:
-			print('# Warning: No faces selected. #')
-		pm.undoInfo(closeChunk=1)
+			return 'Warning: No faces selected.'
 
 
 	def b014(self):

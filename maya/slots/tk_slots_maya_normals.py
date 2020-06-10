@@ -29,7 +29,7 @@ class Normals(Init):
 		cmb = self.parentUi.cmb000
 		
 		files = ['']
-		contents = cmb.addItems_(files, ' ')
+		contents = cmb.addItems_(files, '')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -92,7 +92,7 @@ class Normals(Init):
 			if pm.progressBar ("tk_progressBar", query=1, isCancelled=1):
 				break
 			crease = pm.polyCrease (edge, query=1, value=1)
-			# print edge, crease[0]
+			# print(edge, crease[0])
 			if crease[0]>0:
 				pm.polySoftEdge (edge, angle=30)
 			elif soften:
@@ -115,6 +115,7 @@ class Normals(Init):
 		pm.polySoftEdge (angle=normalAngle) #smooth if angle is lower than specified amount. default 30
 
 
+	@Slots.message
 	def tb003(self, state=None):
 		'''
 		Lock/Unlock Vertex Normals
@@ -152,9 +153,9 @@ class Normals(Init):
 					pm.polyNormalPerVertex(freezeNormal=1)
 					self.viewPortMessage("Normals <hl>Locked</hl>.")
 			else:
-				print("# Warning: Selection must be object or vertex. #")
+				return 'Warning: Selection must be object or vertex.'
 		else:
-			print("# Warning: No object selected. #")
+			return 'Warning: No object selected.'
 
 
 	def b001(self):

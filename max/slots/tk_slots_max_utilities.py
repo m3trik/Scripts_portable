@@ -29,7 +29,7 @@ class Utilities(Init):
 		cmb = self.parentUi.cmb000
 		
 		list_ = ['']
-		items = cmb.addItems_(list_, ' ')
+		items = cmb.addItems_(list_, '')
 
 		if not index:
 			index = cmb.currentIndex()

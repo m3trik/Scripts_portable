@@ -31,7 +31,7 @@ class Normals(Init):
 		cmb = self.parentUi.cmb000
 		
 		files = ['']
-		contents = cmb.addItems_(files, ' ')
+		contents = cmb.addItems_(files, '')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -41,6 +41,7 @@ class Normals(Init):
 			cmb.setCurrentIndex(0)
 
 
+	@Slots.message
 	def tb000(self, state=None):
 		'''
 		Display Face Normals
@@ -56,19 +57,22 @@ class Normals(Init):
 		if state ==0: #off
 			pm.polyOptions (displayNormal=0, sizeNormal=0)
 			pm.polyOptions (displayTangent=False)
-			self.viewPortMessage("Normals Display <hl>Off</hl>.")
-		if state ==1: #facet
+			return 'Normals Display <hl>Off</hl>.'
+
+		elif state ==1: #facet
 			pm.polyOptions (displayNormal=1, facet=True, sizeNormal=size)
 			pm.polyOptions (displayTangent=False)
-			self.viewPortMessage("<hl>Facet</hl> Normals Display <hl>On</hl>.")
-		if state ==2: #Vertex
+			return '<hl>Facet</hl> Normals Display <hl>On</hl>.'
+
+		elif state ==2: #Vertex
 			pm.polyOptions (displayNormal=1, point=True, sizeNormal=size)
 			pm.polyOptions (displayTangent=False)
-			self.viewPortMessage("<hl>Vertex</hl> Normals Display <hl>On</hl>.")
-		if state ==3: #tangent
+			return '<hl>Vertex</hl> Normals Display <hl>On</hl>.'
+
+		elif state ==3: #tangent
 			pm.polyOptions (displayTangent=True)
 			pm.polyOptions (displayNormal=0)
-			self.viewPortMessage("<hl>Tangent</hl> Display <hl>On</hl>.")
+			return '<hl>Tangent</hl> Display <hl>On</hl>.'
 
 
 	def tb001(self, state=None):
@@ -94,7 +98,7 @@ class Normals(Init):
 			if pm.progressBar ("tk_progressBar", query=1, isCancelled=1):
 				break
 			crease = pm.polyCrease (edge, query=1, value=1)
-			# print edge, crease[0]
+			# print(edge, crease[0])
 			if crease[0]>0:
 				pm.polySoftEdge (edge, angle=30)
 			elif soften:
@@ -146,37 +150,39 @@ class Normals(Init):
 			tb.add('QCheckBox', setText='All', setObjectName='chk001', setChecked=True, setToolTip='Lock/Unlock: all.')
 			return
 
-		all_ = tb.chk001.isChecked()
-		state = self.parentUi.chk002.isChecked()#pm.polyNormalPerVertex(vertex, query=1, freezeNormal=1)
-		selection = pm.ls (selection=1, objectsOnly=1)
-		maskObject = pm.selectMode (query=1, object=1)
-		maskVertex = pm.selectType (query=1, vertex=1)
+		print('Error: No 3ds Version.')
+		tb.setDisabled(True)
+		# all_ = tb.chk001.isChecked()
+		# state = self.parentUi.chk002.isChecked()#pm.polyNormalPerVertex(vertex, query=1, freezeNormal=1)
+		# selection = pm.ls (selection=1, objectsOnly=1)
+		# maskObject = pm.selectMode (query=1, object=1)
+		# maskVertex = pm.selectType (query=1, vertex=1)
 
-		if len(selection)>0:
-			if (all_ and maskVertex) or maskObject:
-				for obj in selection:
-					count = pm.polyEvaluate(obj, vertex=1) #get number of vertices
-					vertices = [vertices.append(str(obj) + ".vtx ["+str(num)+"]") for num in xrange(count)] #geometry.vtx[0]
-					for vertex in vertices:
-						if state:
-							pm.polyNormalPerVertex(vertex, unFreezeNormal=1)
-						else:
-							pm.polyNormalPerVertex(vertex, freezeNormal=1)
-					if state:
-						self.viewPortMessage("Normals <hl>UnLocked</hl>.")
-					else:
-						self.viewPortMessage("Normals <hl>Locked</hl>.")
-			elif maskVertex and not maskObject:
-				if state:
-					pm.polyNormalPerVertex(unFreezeNormal=1)
-					self.viewPortMessage("Normals <hl>UnLocked</hl>.")
-				else:
-					pm.polyNormalPerVertex(freezeNormal=1)
-					self.viewPortMessage("Normals <hl>Locked</hl>.")
-			else:
-				print("# Warning: Selection must be object or vertex. #")
-		else:
-			print("# Warning: No object selected. #")
+		# if len(selection)>0:
+		# 	if (all_ and maskVertex) or maskObject:
+		# 		for obj in selection:
+		# 			count = pm.polyEvaluate(obj, vertex=1) #get number of vertices
+		# 			vertices = [vertices.append(str(obj) + ".vtx ["+str(num)+"]") for num in xrange(count)] #geometry.vtx[0]
+		# 			for vertex in vertices:
+		# 				if state:
+		# 					pm.polyNormalPerVertex(vertex, unFreezeNormal=1)
+		# 				else:
+		# 					pm.polyNormalPerVertex(vertex, freezeNormal=1)
+		# 			if state:
+		# 				return 'Normals <hl>UnLocked</hl>.'
+		# 			else:
+		# 				return 'Normals <hl>Locked</hl>.'
+		# 	elif maskVertex and not maskObject:
+		# 		if state:
+		# 			pm.polyNormalPerVertex(unFreezeNormal=1)
+		# 			return 'Normals <hl>UnLocked</hl>.'
+		# 		else:
+		# 			pm.polyNormalPerVertex(freezeNormal=1)
+		# 			return 'Normals <hl>Locked</hl>.'
+		# 	else:
+		# 		return 'Error: Selection must be object or vertex.'
+		# else:
+		# 	return Error: No object selected.'
 
 
 	def b001(self):

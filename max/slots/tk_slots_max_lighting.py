@@ -29,7 +29,7 @@ class Lighting(Init):
 		cmb = self.parentUi.cmb000
 		
 		files = ['']
-		items = cmb.addItems_(files, ' ')
+		items = cmb.addItems_(files, '')
 
 		if not index:
 			index = cmb.currentIndex()

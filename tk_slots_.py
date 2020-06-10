@@ -50,6 +50,40 @@ class Slots(QtCore.QObject):
 		return self.sb.getUi(level=2) #submenu
 
 
+	@classmethod
+	def message(cls, fn):
+		'''
+		Decorator that populates a messageBox with the string returned by the given function.
+		'''
+		def wrapper(self, *args, **kwargs):
+			self.messageBox(fn(self, *args, **kwargs))
+		return wrapper
+
+
+	def messageBox(self, string, location='topMiddle', timeout=1):
+		'''
+		Spawns a message box with the given text.
+		Prints a formatted version of the given string, stripped of html tags, to the console.
+
+		args:
+			location (str)(point) = move the messagebox to the specified location. Can be given as a qpoint or string value. default is: 'topMiddle'
+			timeout (int) = time in seconds before the messagebox auto closes.
+		'''
+		if not hasattr(self, '_messageBox'):
+			from widgets.qMessageBox_ import QMessageBox_
+			self._messageBox = QMessageBox_(self.tk.parent())
+
+		self._messageBox.location = location
+		self._messageBox.timeout = timeout
+
+		if isinstance(string, (str, unicode)):
+			from re import sub
+			print(''+sub('<.*?>', '', string)+'') #strip everything between '<' and '>' (html tags)
+
+			self._messageBox.setText(string)
+			self._messageBox.exec_()
+
+
 	def getObject(self, class_, objectNames, showError_=False):
 		'''
 		Get a list of corresponding objects from a single string.
@@ -71,7 +105,7 @@ class Slots(QtCore.QObject):
 				objects.append(getattr(class_, name)) #equivilent to:(self.ui.m000)
 			except: 
 				if showError_:
-					print("# Error: in getObject(): "+str(class_)+" has no attribute "+str(name)+" #")
+					print(" Error: in getObject(): "+str(class_)+" has no attribute "+str(name)+" ")
 				else: pass
 		return objects
 
@@ -182,14 +216,14 @@ class Slots(QtCore.QObject):
 				if value<0: spinboxes[index].setMinimum(-100)
 				decimals = str(value)[::-1].find('.') #get decimal places
 				spinboxes[index].setDecimals(decimals)
-				spinboxes[index].setPrefix(key+':  ')
+				spinboxes[index].setPrefix(key+': ')
 				spinboxes[index].setValue(value)
 				spinboxes[index].setSuffix('')
 
 			elif isinstance(value, int):
 				if value<0: spinboxes[index].setMinimum(-100)
 				spinboxes[index].setDecimals(0)
-				spinboxes[index].setPrefix(key+':  ')
+				spinboxes[index].setPrefix(key+': ')
 				spinboxes[index].setValue(value)
 				spinboxes[index].setSuffix('')
 
@@ -197,7 +231,7 @@ class Slots(QtCore.QObject):
 				value = int(value)
 				spinboxes[index].setMinimum(0)
 				spinboxes[index].setMaximum(1)
-				spinboxes[index].setSuffix(' <bool>')
+				spinboxes[index].setSuffix('<bool>')
 
 			# spinboxes[index].setEnabled(True)
 			spinboxes[index].blockSignals(False)
@@ -344,7 +378,7 @@ print (os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	if prefix:
 	# 		prefix = prefix+':'
-	# 	return '{}{}{}{}'.format('# ',prefix, string, ' #')
+	# 	return '{}{}{}{}'.format('',prefix, string, '')
 
 
 	# def getUiObject(self, widgets):
@@ -430,7 +464,7 @@ print (os.path.splitext(os.path.basename(__file__))[0])
 # 		spinboxes[i].setVisible(True)
 # 		spinboxes[i].setEnabled(True)
 # 		if type(value) == tuple:
-# 			spinboxes[i].setPrefix(value[0]+':  ')
+# 			spinboxes[i].setPrefix(value[0]+': ')
 # 			spinboxes[i].setValue(value[1])
 # 			values_.append(value[1])
 # 		else:

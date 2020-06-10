@@ -34,7 +34,7 @@ class Preferences(Init):
 		cmb = self.parentUi.cmb000
 		
 		files = ['']
-		contents = cmb.addItems_(files, ' ')
+		contents = cmb.addItems_(files, '')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -111,7 +111,7 @@ class Preferences(Init):
 		cmb = self.parentUi.cmb003
 		
 		files = ['']
-		contents = cmb.addItems_(files, ' ')
+		contents = cmb.addItems_(files, '')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -121,13 +121,14 @@ class Preferences(Init):
 			cmb.setCurrentIndex(0)
 
 
+	@Slots.message
 	def b000(self):
 		'''
 		Init Tk_Main
 
 		'''
-		print("reload: tk_main")
 		reload(tk_main)
+		return 'reload: tk_main'
 
 
 	def b001(self):

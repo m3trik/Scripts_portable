@@ -35,7 +35,7 @@ class Create(Init):
 		cmb = self.parentUi.cmb000
 		
 		files = ['']
-		contents = cmb.addItems_(files, ' ')
+		contents = cmb.addItems_(files, '')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -159,7 +159,7 @@ class Create(Init):
 			else:
 				self.point = obj.position
 		else:
-			print("# Warning: Nothing selected. Point set to origin [0,0,0]. #")
+			print('Error: Nothing selected. Point set to origin [0,0,0].')
 			self.point = [0,0,0]
 
 		self.parentUi.t000.setText(str(self.point[0]))
@@ -236,7 +236,7 @@ class Create(Init):
 		args:
 			index(int) = optional index of the spinbox that called this function. ie. 5 from s005
 		'''
-		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.parentUi.cmb002.children_()} #current spinbox values. ie. from s000 get the value of six and add it to the list
+		spinboxValues = {s.prefix().rstrip(':'):s.value() for s in self.parentUi.cmb002.children_()} #current spinbox values. ie. from s000 get the value of six and add it to the list
 		print (self.parentUi.cmb002.children_())
 		print (self.parentUi.cmb002.childWidgets())
 		self.setAttributesMax(self.node, spinboxValues) #set attributes for the history node
@@ -249,7 +249,7 @@ class Create(Init):
 	# 	cmb = self.parentUi.cmb002
 
 	# 	files = ['']
-	# 	contents = cmb.addItems_(files, ' ')
+	# 	contents = cmb.addItems_(files, '')
 
 	# 	if not index:
 	# 		index = cmb.currentIndex()

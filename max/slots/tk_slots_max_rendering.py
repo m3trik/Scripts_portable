@@ -36,7 +36,7 @@ class Rendering(Init):
 		cmb = self.parentUi.cmb001
 		
 		files = ['']
-		contents = cmb.addItems_(files, ' ')
+		contents = cmb.addItems_(files, '')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -118,6 +118,7 @@ class Rendering(Init):
 			currentID+=1
 
 
+	@Slots.message
 	def b006(self):
 		'''
 		Load Vray Plugin
@@ -127,8 +128,8 @@ class Rendering(Init):
 			try:
 				pm.unloadPlugin(vray)
 			except:
-				print("# Result: Force unloadPlugin:"+str(vray)+" #")
 				pm.unloadPlugin(vray, force=1)
+				return 'Result: Force unloadPlugin:'+str(vray)
 		else:
 			pm.loadPlugin (vray)
 

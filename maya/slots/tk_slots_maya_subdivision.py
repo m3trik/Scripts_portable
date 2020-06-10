@@ -64,6 +64,7 @@ class Subdivision(Init):
 		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=value)
 
 
+	@Slots.message
 	def b000(self):
 		'''
 		Toggle Subdiv Proxy Display
@@ -74,8 +75,9 @@ class Subdivision(Init):
 			mel.eval("smoothingDisplayToggle "+str(state))
 		except:
 			traceback.print_exc()
-			print("# Warning: Nothing Selected. #")
+			return 'Error: Nothing Selected.'
 
+	@Slots.message
 	def b001(self):
 		'''
 		Subdiv Proxy
@@ -90,8 +92,8 @@ class Subdivision(Init):
 		sel = mel.eval("polyCheckSelection \"polySmoothProxy\" \"o\" 0")
 		
 		if len(sel)==0 and len(polySmoothBaseMesh)==0:
-			print("# Warning: Nothing selected. #")
-			return
+			return 'Error: Nothing selected.'
+
 		if len(sel)!=0:
 			del polySmoothBaseMesh[:]
 			for object_ in sel:

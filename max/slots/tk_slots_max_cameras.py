@@ -199,7 +199,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	cmb = self.parentUi.cmb000
 		
 	# 	files = ['']
-	# 	contents = cmb.addItems_(files, ' ')
+	# 	contents = cmb.addItems_(files, '')
 
 	# 	if not index:
 	# 		index = cmb.currentIndex()
@@ -245,7 +245,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 		if index==2:
 	# 			maxEval('Try(viewport.setcamera $) Catch()')
 	# 		if index==3:
-	# 			maxEval('macros.run "Lights and Cameras" "PhysicalCamera_CreateFromView"')
+	# 			maxEval('macros.run "Lights and Cameras" "PhysicalCamera_CreateFromView")
 	# 		cmb.setCurrentIndex(0)
 
 

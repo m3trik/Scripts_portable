@@ -155,6 +155,9 @@ class QToolButton_(QtWidgets.QToolButton):
 			if callable(self.classMethod):
 				self.classMethod('setMenu')
 
+			if not self.childWidgets(): #if no menu items present, disable the menu button.
+				self.setPopupMode(self.DelayedPopup) #DelayedPopup (default), MenuButtonPopup, InstantPopup
+
 		return QtWidgets.QToolButton.showEvent(self, event)
 
 
