@@ -327,7 +327,10 @@ class Polygons(Init):
 		'''
 		Slice
 		'''
-		maxEval('macros.run "Ribbon - Modeling" "CutsQuickSlice")
+		cuttingDirection = 'Y' #valid values: 'x','y','z' A value of 'x' will cut the object along the YZ plane cutting through the center of the bounding box. 'y':ZX. 'z':XY.
+
+		sel = pm.ls(sl=1)
+		pm.polyCut(sel, cuttingDirection=cuttingDirection, ch=1)
 
 
 	def b009(self):
