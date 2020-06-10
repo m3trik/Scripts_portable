@@ -166,7 +166,7 @@ class Materials(Init):
 					self.cmb002() #refresh the combobox
 				else:
 					self.parentUi.tb001.chk001.setChecked(True) #set combobox to ID map mode. toggling the checkbox refreshes the combobox.
-				self.parentUi.cmb002.setCurrent_(name) #set the combobox index to the new mat #self.cmb002.setCurrentIndex(self.cmb002.findText(name))
+				self.parentUi.cmb002.setCurrentItem(name) #set the combobox index to the new mat #self.cmb002.setCurrentIndex(self.cmb002.findText(name))
 			else:
 				return 'Error: No valid object/s selected.'
 

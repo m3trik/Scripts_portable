@@ -54,12 +54,15 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
+		if not cmb.initialized:
+			cmb.addToContext('QPushButton', setObjectName='b001', setText='Last', setToolTip='Open the most recent file.')
+
 		list_ = rt.getRecentfiles()
 		items = cmb.addItems_(list_, "Recent Files")
 
 		if not index:
 			index = cmb.currentIndex()
-		if index!=0:
+		if index>0:
 			# force=True; force if maxEval("maxFileName;") else not force #if sceneName prompt user to save; else force open.  also: checkForSave(); If the scene has been modified since the last file save (if any), calling this function displays the message box prompting the user that the scene has been modified and requests to save.
 			rt.loadMaxFile(str(items[index]))
 			cmb.setCurrentIndex(0)
@@ -194,6 +197,13 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb006
 
+		if not cmb.initialized:
+			cmb.addToContext(QComboBox_, setObjectName='cmb001', setToolTip='Current project directory root.')
+			cmb.addToContext(QLabel_, setObjectName='lbl000', setText='Set', setToolTip='Set the project directory.')
+			cmb.addToContext(QLabel_, setObjectName='lbl001', setText='Minimize App', setToolTip='Minimize the main application.')
+			cmb.addToContext(QLabel_, setObjectName='lbl002', setText='Maximize App', setToolTip='Restore the main application.')
+			cmb.addToContext(QLabel_, setObjectName='lbl003', setText='Close App', setToolTip='Close the main application.')
+
 		path = MaxPlus.PathManager.GetProjectFolderDir() #current project path.
 		list_ = [f for f in os.listdir(path)]
 
@@ -311,7 +321,7 @@ class File(Init):
 		maxEval('FBXUICallBack -1 editExportPresetInNewWindow obj;')
 
 
-	def b004(self):
+	def lbl003(self):
 		'''
 		Close Main Application
 		'''
@@ -322,7 +332,7 @@ class File(Init):
 		# pm.quit (force=force, exitcode=exitcode)
 
 
-	def b005(self):
+	def lbl001(self):
 		'''
 		Minimize Main Application
 		'''
@@ -333,7 +343,7 @@ class File(Init):
 		self.tk.hide(force=1)
 
 
-	def b006(self):
+	def lbl002(self):
 		'''
 		Restore Main Application
 		'''
@@ -379,7 +389,7 @@ class File(Init):
 			pm.rename(obj, newName) #Rename the object with the new name
 
 
-	def b017(self):
+	def lbl000(self):
 		'''
 		Set Project
 		'''

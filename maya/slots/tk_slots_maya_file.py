@@ -9,10 +9,6 @@ class File(Init):
 	def __init__(self, *args, **kwargs):
 		super(File, self).__init__(*args, **kwargs)
 
-		try:
-			self.cmb006() #refresh cmb006 contents to reflect the current project folder
-		except NameError:
-			pass
 
 
 	def pin(self, state=None):
@@ -33,15 +29,18 @@ class File(Init):
 
 		'''
 		cmb = self.parentUi.cmb000
-		
-		files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in file_]
-		contents = cmb.addItems_(files, "Recent Files")
+
+		if not cmb.initialized:
+			cmb.addToContext('QPushButton', setObjectName='b001', setText='Last', setToolTip='Open the most recent file.')
+
+		files = [f for f in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in f]
+		items = cmb.addItems_(files, "Recent Files")
 
 		if not index:
 			index = cmb.currentIndex()
 		if index!=0:
 			force=True; force if str(mel.eval("file -query -sceneName -shortName;")) else not force #if sceneName prompt user to save; else force open
-			pm.openFile(contents[index], open=1, force=force)
+			pm.openFile(items[index], open=1, force=force)
 			cmb.setCurrentIndex(0)
 
 
@@ -53,12 +52,12 @@ class File(Init):
 		cmb = self.parentUi.cmb001
 		
 		files = (list(reversed(mel.eval("optionVar -query RecentProjectsList;"))))
-		contents = cmb.addItems_(files, "Recent Projects")
+		items = cmb.addItems_(files, "Recent Projects")
 
 		if not index:
 			index = cmb.currentIndex()
-		if index!=0:
-			mel.eval('setProject "'+contents[index]+'"')
+		if index>0:
+			mel.eval('setProject "'+items[index]+'"')
 			cmb.setCurrentIndex(0)
 
 
@@ -72,7 +71,7 @@ class File(Init):
 
 		path = os.environ.get('MAYA_AUTOSAVE_FOLDER').split(';')[0] #get autosave dir path from env variable.
 		files = [f for f in os.listdir(path) if f.endswith('.mb') or f.endswith('.ma')] #[file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" in file_]
-		contents = cmb.addItems_(files, "Recent Autosave")
+		items = cmb.addItems_(files, "Recent Autosave")
 
 		if not index:
 			index = cmb.currentIndex()
@@ -80,9 +79,9 @@ class File(Init):
 			force=True
 			if str(mel.eval("file -query -sceneName -shortName;")):
 				force=False #if sceneName, prompt user to save; else force open
-			pm.openFile(path+contents[index], open=1, force=force)
+			pm.openFile(path+items[index], open=1, force=force)
 			cmb.setCurrentIndex(0)
-			return path+contents[index]
+			return path+items[index]
 
 
 	def cmb003(self, index=None):
@@ -92,7 +91,7 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb003
 
-		contents = cmb.addItems_(["Import file", "Import Options"], "Import")
+		items = cmb.addItems_(["Import file", "Import Options"], "Import")
 
 		if not index:
 			index = cmb.currentIndex()
@@ -113,7 +112,7 @@ class File(Init):
 		cmb = self.parentUi.cmb004
 		
 		list_ = ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ", 'Send to 3dsMax: As New Scene', 'Send to 3dsMax: Update Current', 'Send to 3dsMax: Add to Current']
-		contents = cmb.addItems_(list_, "Export")
+		items = cmb.addItems_(list_, "Export")
 
 		if not index:
 			index = cmb.currentIndex()
@@ -144,17 +143,17 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb005
 		
-		files = []
-		contents = cmb.addItems_(files, '')
+		list_ = []
+		items = cmb.addItems_(list_, '')
 
 		if not index:
 			index = cmb.currentIndex()
 		if index!=0:
-			if index==contents.index(''):
+			if index==items.index(''):
 				mel.eval('') #
-			if index==contents.index(''):
+			if index==items.index(''):
 				mel.eval('') #
-			if index==contents.index(''):
+			if index==items.index(''):
 				mel.eval('') #
 			cmb.setCurrentIndex(0)
 
@@ -164,13 +163,20 @@ class File(Init):
 		Project Folder
 		'''
 		cmb = self.parentUi.cmb006
-		
+
+		if not cmb.initialized:
+			cmb.addToContext(QComboBox_, setObjectName='cmb001', setToolTip='Current project directory root.')
+			cmb.addToContext(QLabel_, setObjectName='lbl000', setText='Set', setToolTip='Set the project directory.')
+			cmb.addToContext(QLabel_, setObjectName='lbl001', setText='Minimize App', setToolTip='Minimize the main application.')
+			cmb.addToContext(QLabel_, setObjectName='lbl002', setText='Maximize App', setToolTip='Restore the main application.')
+			cmb.addToContext(QLabel_, setObjectName='lbl003', setText='Close App', setToolTip='Close the main application.')
+
 		path = pm.workspace(query=1, rd=1) #current project path.
 		list_ = [f for f in os.listdir(path)]
 
 		project = pm.workspace(query=1, rd=1).split('/')[-2] #add current project path string to label. strip path and trailing '/'
 
-		contents = cmb.addItems_(list_, project)
+		items = cmb.addItems_(list_, project)
 
 		if not index:
 			index = cmb.currentIndex()
@@ -289,7 +295,7 @@ class File(Init):
 		mel.eval('FBXUICallBack -1 editExportPresetInNewWindow obj;')
 
 
-	def b004(self):
+	def lbl003(self):
 		'''
 		Close Main Application
 
@@ -301,7 +307,7 @@ class File(Init):
 		# pm.quit (force=force, exitcode=exitcode)
 
 
-	def b005(self):
+	def lbl001(self):
 		'''
 		Minimize Main Application
 
@@ -310,7 +316,7 @@ class File(Init):
 		self.tk.hide(force=1)
 
 
-	def b006(self):
+	def lbl002(self):
 		'''
 		Restore Main Application
 
@@ -370,14 +376,14 @@ class File(Init):
 			pm.rename(obj, newName) #Rename the object with the new name
 
 
-	def b017(self):
+	def lbl000(self):
 		'''
 		Set Project
 
 		'''
 		newProject = mel.eval("SetProject;")
 
-		self.cmb006() #refresh cmb006 contents to reflect new project folder
+		self.cmb006() #refresh cmb006 items to reflect new project folder
 
 
 

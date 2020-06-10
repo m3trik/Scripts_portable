@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>252</width>
-    <height>226</height>
+    <height>243</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -86,13 +86,13 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>105</width>
+              <width>111</width>
               <height>0</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>9999</width>
+              <width>111</width>
               <height>19</height>
              </size>
             </property>
@@ -140,34 +140,6 @@
               <string>Recent Files</string>
              </property>
             </item>
-           </widget>
-           <widget class="QPushButton" name="b001">
-            <property name="geometry">
-             <rect>
-              <x>85</x>
-              <y>15</y>
-              <width>26</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Open most recent file.</string>
-            </property>
-            <property name="text">
-             <string>Last</string>
-            </property>
            </widget>
           </widget>
          </item>
@@ -396,73 +368,6 @@
            </property>
           </spacer>
          </item>
-         <item>
-          <widget class="QGroupBox" name="groupBox_2">
-           <property name="minimumSize">
-            <size>
-             <width>111</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>111</width>
-             <height>999</height>
-            </size>
-           </property>
-           <property name="title">
-            <string/>
-           </property>
-           <widget class="QPushButton" name="b004">
-            <property name="geometry">
-             <rect>
-              <x>95</x>
-              <y>10</y>
-              <width>17</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="toolTip">
-             <string>Close main application</string>
-            </property>
-            <property name="text">
-             <string>☠</string>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="b006">
-            <property name="geometry">
-             <rect>
-              <x>79</x>
-              <y>10</y>
-              <width>17</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="toolTip">
-             <string>Restore main application</string>
-            </property>
-            <property name="text">
-             <string>☐</string>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="b005">
-            <property name="geometry">
-             <rect>
-              <x>63</x>
-              <y>10</y>
-              <width>17</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="toolTip">
-             <string>Minimize main application</string>
-            </property>
-            <property name="text">
-             <string>—</string>
-            </property>
-           </widget>
-          </widget>
-         </item>
         </layout>
        </item>
       </layout>
@@ -537,40 +442,12 @@
        <property name="title">
         <string>Project</string>
        </property>
-       <widget class="QPushButton" name="b017">
-        <property name="geometry">
-         <rect>
-          <x>208</x>
-          <y>15</y>
-          <width>26</width>
-          <height>19</height>
-         </rect>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>19</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>19</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>Set Project Directory</string>
-        </property>
-        <property name="text">
-         <string>Set</string>
-        </property>
-       </widget>
        <widget class="QComboBox_" name="cmb006">
         <property name="geometry">
          <rect>
           <x>0</x>
           <y>15</y>
-          <width>231</width>
+          <width>236</width>
           <height>19</height>
          </rect>
         </property>
@@ -601,42 +478,6 @@
          </property>
         </item>
        </widget>
-       <widget class="QComboBox_" name="cmb001">
-        <property name="geometry">
-         <rect>
-          <x>160</x>
-          <y>15</y>
-          <width>65</width>
-          <height>19</height>
-         </rect>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>65</width>
-          <height>19</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>65</width>
-          <height>19</height>
-         </size>
-        </property>
-        <property name="sizeAdjustPolicy">
-         <enum>QComboBox::AdjustToContents</enum>
-        </property>
-        <property name="frame">
-         <bool>false</bool>
-        </property>
-        <item>
-         <property name="text">
-          <string>Recent</string>
-         </property>
-        </item>
-       </widget>
-       <zorder>cmb006</zorder>
-       <zorder>cmb001</zorder>
-       <zorder>b017</zorder>
       </widget>
      </item>
     </layout>
@@ -644,6 +485,11 @@
   </widget>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>QToolButton_</class>
+   <extends>QToolButton</extends>
+   <header>widgets.qtoolbutton_.h</header>
+  </customwidget>
   <customwidget>
    <class>QPushButton_Draggable</class>
    <extends>QPushButton</extends>
@@ -653,11 +499,6 @@
    <class>QProgressBar_</class>
    <extends>QProgressBar</extends>
    <header>widgets.qprogressbar_.h</header>
-  </customwidget>
-  <customwidget>
-   <class>QToolButton_</class>
-   <extends>QToolButton</extends>
-   <header>widgets.qtoolbutton_.h</header>
   </customwidget>
   <customwidget>
    <class>QComboBox_</class>

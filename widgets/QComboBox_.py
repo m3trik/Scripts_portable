@@ -223,7 +223,7 @@ class QComboBox_(QtWidgets.QComboBox):
 			return menuWidgets
 
 
-	def setCurrent_(self, i):
+	def setCurrentItem(self, i):
 		'''
 		Sets the current item from the given item text or index without triggering any signals.
 
@@ -325,6 +325,7 @@ class QComboBox_(QtWidgets.QComboBox):
 			self.classMethod = self.sb.getMethod(self.parentUiName, self)
 			if callable(self.classMethod):
 				self.classMethod()
+				self.setCurrentItem(0)
 				self.initialized=True
 
 		return QtWidgets.QComboBox.showEvent(self, event)
