@@ -37,11 +37,10 @@ class Init(Slots):
 				{dict} - current object attributes.
 		'''
 		infoDict={}
-		if __name__ is not "__main__":
+		try:
+			selection = pm.ls(selection=1)
+		except NameError:
 			return infoDict
-
-
-		selection = pm.ls(selection=1)
 
 		symmetry = pm.symmetricModelling(query=1, symmetry=1);
 		if symmetry: axis = pm.symmetricModelling(query=1, axis=1); infoDict.update({'Symmetry Axis: ':axis.upper()}) #symmetry axis

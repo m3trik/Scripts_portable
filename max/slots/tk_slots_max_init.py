@@ -37,11 +37,11 @@ class Init(Slots):
 				{dict} - current object attributes.
 		'''
 		infoDict={}
-		if __name__ is not "__main__":
+		try:
+			selection = rt.selection
+		except AttributeError:
 			return infoDict
 
-
-		selection = rt.selection
 
 		level = rt.subObjectLevel
 		if not level: #object level 0
