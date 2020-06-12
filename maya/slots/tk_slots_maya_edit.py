@@ -58,26 +58,30 @@ class Edit(Init):
 		'''
 		tb = self.currentUi.tb000
 		if state=='setMenu':
-			# tb.add('QCheckBox', setText='N-Gons', setObjectName='chk002', setToolTip='Find N-gons.')
-			# tb.add('QCheckBox', setText='Isolated Vertex', setObjectName='chk003', setChecked=True, setToolTip='Find isolated vertices within specified angle threshold.')
-			# tb.add('QSpinBox', setPrefix='Loose Vertex Angle: ', setObjectName='s006', minMax_='1-360 step1', setValue=15, setToolTip='Loose vertex search: Angle Threshold.')
+			tb.add('QCheckBox', setText='N-Gons', setObjectName='chk002', setToolTip='Find N-gons.')
+			tb.add('QCheckBox', setText='Isolated Vertex', setObjectName='chk003', setChecked=True, setToolTip='Find isolated vertices within specified angle threshold.')
+			tb.add('QSpinBox', setPrefix='Loose Vertex Angle: ', setObjectName='s006', minMax_='1-360 step1', setValue=15, setToolTip='Loose vertex search: Angle Threshold.')
 			tb.add('QCheckBox', setText='Repair', setObjectName='chk004', setToolTip='Repair matching geometry. (else: select)')
+			tb.add('QCheckBox', setText='All Geometry', setObjectName='chk005', setToolTip='Clean All scene geometry.')
 			return
 
-		# isolatedVerts = tb.chk003.isChecked() #isolated vertices
-		# edgeAngle = tb.s006.value()
-		# nGons = tb.chk002.isChecked() #n-sided polygons
+		isolatedVerts = tb.chk003.isChecked() #isolated vertices
+		edgeAngle = tb.s006.value()
+		nGons = tb.chk002.isChecked() #n-sided polygons
 		repair = tb.chk004.isChecked() #attempt auto repair errors
+		allGeometry = tb.chk005.isChecked() #clean all scene geometry
 
 		#Select components for cleanup from all visible geometry in the scene
-		scene = pm.ls(visible=1, geometry=1)
-		[pm.select (geometry, add=1) for geometry in scene]
+		if allGeometry:
+			scene = pm.ls(visible=1, geometry=1)
+			[pm.select (geometry, add=1) for geometry in scene]
+
 		if repair: #auto repair errors
 			mel.eval(r'polyCleanupArgList 4 { "0","1","1","0","1","0","1","0","0","1e-005","1","0.0001","0","1e-005","0","1","1","0" };')
 		else:
 			mel.eval(r'polyCleanupArgList 3 { "0","2","1","0","1","0","0","0","0","1e-005","1","1e-005","0","1e-005","0","1","1" };')
 
-		if self.parentUi.chk002.isChecked(): #N-Sided Faces
+		if nGons: #N-Sided Faces
 			if repair: #Maya Bonus Tools: Convert N-Sided Faces To Quads
 				mel.eval('bt_polyNSidedToQuad;')
 			else: #Find And Select N-Gons
@@ -199,85 +203,6 @@ class Edit(Init):
 
 		'''
 		pass
-
-
-	def b009(self):
-		'''
-		Crease Set Transfer: Transform Node
-		'''
-		if self.parentUi.b043.isChecked():
-			newObject = str(pm.ls(selection=1)) #ex. [nt.Transform(u'pSphere1')]
-
-			index1 = newObject.find("u")
-			index2 = newObject.find(")")
-			newObject = newObject[index1+1:index2].strip("'") #ex. pSphere1
-
-			if newObject != "[":
-				self.parentUi.b043.setText(newObject)
-			else:
-				self.parentUi.b043.setText("must select obj first")
-				self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='b043')
-			if self.parentUi.b042.isChecked():
-				self.toggleWidgets(self.parentUi, self.childUi, setEnabled='b052')
-		else:
-			self.parentUi.b043.setText("Object")
-
-
-	def b010(self):
-		'''
-		Crease Set Transfer: Crease Set
-		'''
-		if self.parentUi.b042.isChecked():
-			creaseSet = str(pm.ls(selection=1)) #ex. [nt.CreaseSet(u'creaseSet1')]
-
-			index1 = creaseSet.find("u")
-			index2 = creaseSet.find(")")
-			creaseSet = creaseSet[index1+1:index2].strip("'") #ex. creaseSet1
-
-			if creaseSet != "[":
-				self.parentUi.b042.setText(creaseSet)
-			else:
-				self.parentUi.b042.setText("must select set first")
-				self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='b042')
-			if self.parentUi.b043.isChecked():
-				self.toggleWidgets(self.parentUi, self.childUi, setEnabled='b052')
-		else:
-			self.parentUi.b042.setText("Crease Set")
-
-
-	def b011(self):
-		'''
-		Transfer Crease Edges
-		'''
-		# an updated version of this is in the maya python projects folder
-		# the use of separate buttons for donor and target mesh are obsolete
-		# add pm.polySoftEdge (angle=0, constructionHistory=0); #harden edge, when applying crease
-		
-		creaseSet = str(self.parentUi.b042.text())
-		newObject = str(self.parentUi.b043.text())
-
-		sets = pm.sets (creaseSet, query=1)
-
-		setArray = []
-		for set_ in sets:
-			name = str(set_)
-			setArray.append(name)
-		print(setArray)
-
-		pm.undoInfo (openChunk=1)
-		for set_ in setArray:
-			oldObject = ''.join(set_.partition('.')[:1]) #ex. pSphereShape1 from pSphereShape1.e[260:299]
-			pm.select (set_, replace=1)
-			value = pm.polyCrease (query=1, value=1)[0]
-			name = set_.replace(oldObject, newObject)
-			pm.select (name, replace=1)
-			pm.polyCrease (value=value, vertexValue=value, createHistory=True)
-			# print("crease:", name)
-		pm.undoInfo (closeChunk=1)
-
-		self.toggleWidgets(self.parentUi, self.childUi, setDisabled='b052', setChecked_False='b042')#,self.parentUi.b043])
-		self.parentUi.b042.setText("Crease Set")
-		# self.parentUi.b043.setText("Object")
 
 
 	def b021(self):

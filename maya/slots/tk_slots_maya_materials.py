@@ -154,7 +154,7 @@ class Materials(Init):
 
 		if tb.chk008.isChecked(): #Assign New random mat ID
 			if selection:
-				mat = createRandomMaterial(prefix='matID')
+				mat = self.createRandomMaterial(prefix='matID')
 				self.assignMaterial(selection, mat)
 
 				#delete previous shader

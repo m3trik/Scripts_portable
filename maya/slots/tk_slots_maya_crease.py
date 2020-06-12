@@ -126,6 +126,85 @@ class Crease(Init):
 			pm.polySelectConstraint( angle=False ) # turn off angle constraint
 
 
+	def b000(self):
+		'''
+		Crease Set Transfer: Transform Node
+		'''
+		if self.parentUi.b001.isChecked():
+			newObject = str(pm.ls(selection=1)) #ex. [nt.Transform(u'pSphere1')]
+
+			index1 = newObject.find("u")
+			index2 = newObject.find(")")
+			newObject = newObject[index1+1:index2].strip("'") #ex. pSphere1
+
+			if newObject != "[":
+				self.parentUi.b001.setText(newObject)
+			else:
+				self.parentUi.b001.setText("must select obj first")
+				self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='b001')
+			if self.parentUi.b000.isChecked():
+				self.toggleWidgets(self.parentUi, self.childUi, setEnabled='b052')
+		else:
+			self.parentUi.b001.setText("Object")
+
+
+	def b001(self):
+		'''
+		Crease Set Transfer: Crease Set
+		'''
+		if self.parentUi.b000.isChecked():
+			creaseSet = str(pm.ls(selection=1)) #ex. [nt.CreaseSet(u'creaseSet1')]
+
+			index1 = creaseSet.find("u")
+			index2 = creaseSet.find(")")
+			creaseSet = creaseSet[index1+1:index2].strip("'") #ex. creaseSet1
+
+			if creaseSet != "[":
+				self.parentUi.b000.setText(creaseSet)
+			else:
+				self.parentUi.b000.setText("must select set first")
+				self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='b000')
+			if self.parentUi.b001.isChecked():
+				self.toggleWidgets(self.parentUi, self.childUi, setEnabled='b052')
+		else:
+			self.parentUi.b000.setText("Crease Set")
+
+
+	def b002(self):
+		'''
+		Transfer Crease Edges
+		'''
+		# an updated version of this is in the maya python projects folder
+		# the use of separate buttons for donor and target mesh are obsolete
+		# add pm.polySoftEdge (angle=0, constructionHistory=0); #harden edge, when applying crease
+		
+		creaseSet = str(self.parentUi.b000.text())
+		newObject = str(self.parentUi.b001.text())
+
+		sets = pm.sets (creaseSet, query=1)
+
+		setArray = []
+		for set_ in sets:
+			name = str(set_)
+			setArray.append(name)
+		print(setArray)
+
+		pm.undoInfo (openChunk=1)
+		for set_ in setArray:
+			oldObject = ''.join(set_.partition('.')[:1]) #ex. pSphereShape1 from pSphereShape1.e[260:299]
+			pm.select (set_, replace=1)
+			value = pm.polyCrease (query=1, value=1)[0]
+			name = set_.replace(oldObject, newObject)
+			pm.select (name, replace=1)
+			pm.polyCrease (value=value, vertexValue=value, createHistory=True)
+			# print("crease:", name)
+		pm.undoInfo (closeChunk=1)
+
+		self.toggleWidgets(self.parentUi, self.childUi, setDisabled='b052', setChecked_False='b000')#,self.parentUi.b001])
+		self.parentUi.b000.setText("Crease Set")
+		# self.parentUi.b001.setText("Object")
+
+
 
 
 
