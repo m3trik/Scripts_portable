@@ -277,11 +277,15 @@ class Tk(QtWidgets.QStackedWidget):
 
 	def repeatLastCommand(self):
 		'''
-		Repeat the last used command.
+		Repeat the last stored command.
 		'''
-		try:
-			self.sb.prevCommand()()
-		except:
+		method = self.sb.prevCommand()
+		if callable(method):
+			name = self.sb.getNameFromMethod(method)
+			self.setUi(name)
+			# print (self.sb.getUiName(), name, method)
+			method()
+		else:
 			print(" Warning: No recent commands in history. ")
 
 
@@ -290,11 +294,13 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		Show the previous camera view.
 		'''
-		try:
-			self.sb.prevCamera()()
+		camera = self.sb.prevCamera()
+		if callable(camera):
+			camera()
+
 			cam = self.sb.prevCamera(allowCurrent=True, as_list=1)[-2]
 			self.sb.prevCamera(allowCurrent=True, as_list=1).append(cam) #store the camera view
-		except:
+		else:
 			print(" Warning: No recent camera views in history. ")
 
 

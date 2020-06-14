@@ -594,6 +594,24 @@ class Switchboard(QtCore.QObject):
 		return next((k for k,v in self._sbDict.items() if type(v) is dict and 'widgets' in v and widget in v['widgets']), None)
 
 
+	def getNameFromMethod(self, method):
+		'''
+		Get the ui name from the given method.
+
+		args:
+			widget (obj) = QWidget
+		returns:
+			 (str) ui name. ie. 'polygons' from <somewidget>
+		'''
+		for name, value in self._sbDict.items():
+			if type(value)==dict:
+				try:
+					if next((v for v in value['widgets'].values() if v['method'] is method), None):
+						return name
+				except KeyError:
+					pass
+
+
 	def setMainAppWindow(self, app):
 		'''
 		Property.
@@ -1041,8 +1059,9 @@ class Switchboard(QtCore.QObject):
 		return self._sbDict['gcProtect']
 
 
-	def dict_(self, key=None):
+	def sbDict(self, key=None):
 		'''
+		Property.
 		Get the full switchboard dict or one of it's values from a given key.
 
 		args:
@@ -1327,6 +1346,7 @@ class Switchboard(QtCore.QObject):
 	mainAppWindow = property(getMainAppWindow, setMainAppWindow)
 	getWidgets = property(getWidget)
 	getWidgetNames = property(getWidgetName)
+	dict_ = property(sbDict)
 
 
 

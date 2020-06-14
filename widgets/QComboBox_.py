@@ -306,6 +306,19 @@ class QComboBox_(QtWidgets.QComboBox):
 		return QtWidgets.QComboBox.mousePressEvent(self, event)
 
 
+	def addContextMenuItemsToToolTip(self):
+		'''
+		'''
+		if hasattr(self, '_menu'):
+			contextMenuToolTip = '<br><b>*context menu:</b>'
+			for child in self.childWidgets():
+				try:
+					contextMenuToolTip = '{0}<br>  {1} - {2}'.format(contextMenuToolTip, child.text(), child.toolTip())
+				except AttributeError:
+					pass
+			self.setToolTip(self.toolTip()+contextMenuToolTip)
+
+
 	def showEvent(self, event):
 		'''
 		args:
@@ -327,6 +340,8 @@ class QComboBox_(QtWidgets.QComboBox):
 				self.classMethod()
 				self.setCurrentItem(0)
 				self.initialized=True
+
+			self.addContextMenuItemsToToolTip()
 
 		return QtWidgets.QComboBox.showEvent(self, event)
 
