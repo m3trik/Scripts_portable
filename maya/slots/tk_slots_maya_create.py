@@ -228,24 +228,8 @@ class Create(Init):
 			index(int) = optional index of the spinbox that called this function. ie. 5 from s005
 		'''
 		spinboxValues = {s.prefix().rstrip(':'):s.value() for s in self.parentUi.cmb002.children_()} #get current spinbox values. ie. {width:10} from spinbox prefix and value.
-		self.setAttributesMEL(self.node, spinboxValues) #set attributes for the history node
-
-
-	# def cmb002(self, index=None):
-	# 	'''
-	# 	Editors
-	# 	'''
-	# 	cmb = self.parentUi.cmb002
-		
-	# 	files = ['']
-	# 	contents = cmb.addItems_(files, '')
-
-	# 	if not index:
-	# 		index = cmb.currentIndex()
-	# 	if index!=0:
-	# 		if index==contents.index(''):
-	# 			mel.eval('')
-	# 		cmb.setCurrentIndex(0)
+		historyNode = self.getHistoryNode(self.node, name=True)
+		self.setAttributesMEL(historyNode, spinboxValues) #set attributes for the history node
 
 
 	def b000(self):

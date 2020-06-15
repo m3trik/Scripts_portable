@@ -51,8 +51,13 @@ class Subdivision(Init):
 		'''
 		value = self.parentUi.s000.value()
 
-		self.setAttributesOnSelected (attribute=".smoothLevel", value=value)
-		pm.optionVar (intValue=["proxyDivisions",1]) #subDiv proxy options: 'divisions'
+		shapes = pm.ls(sl=1, dag=1, leaf=1)
+		transforms = pm.listRelatives(shapes, p=True)
+		for obj in transforms:
+			if hasattr(obj, 'smoothLevel'):
+				self.setAttributesMEL(obj, {'smoothLevel':value})
+				pm.optionVar(intValue=['proxyDivisions', 1]) #subDiv proxy options: 'divisions'
+				print(obj+': Division Level: <hl>'+str(value)+'</hl>')
 
 
 	def s001(self):
@@ -61,7 +66,12 @@ class Subdivision(Init):
 		'''
 		value = self.parentUi.s001.value()
 
-		self.setAttributesOnSelected (attribute=".smoothTessLevel", value=value)
+		shapes = pm.ls(sl=1, dag=1, leaf=1)
+		transforms = pm.listRelatives(shapes, p=True)
+		for obj in transforms:
+			if hasattr(obj, 'smoothLevel'):
+				self.setAttributesMEL(obj, {'smoothTessLevel':value})
+				print(obj+': Tesselation Level: <hl>'+str(value)+'</hl>')
 
 
 	@Slots.message
@@ -76,6 +86,7 @@ class Subdivision(Init):
 		except:
 			traceback.print_exc()
 			return 'Error: Nothing Selected.'
+
 
 	@Slots.message
 	def b001(self):

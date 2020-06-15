@@ -563,6 +563,37 @@ class Init(Slots):
 		return transforms
 
 
+	@staticmethod
+	def isGroup(node):
+		'''
+		Check if the given node is a group (has a transform AND has no shape children).
+		'''
+		if (pm.objectType(node, isType='transform')) and (not len(pm.listRelatives(node, shapes=1))):
+			return True
+
+		return False
+
+
+	@staticmethod
+	def getHistoryNode(transform, name=False):
+		'''
+		Get the history node of the given transform. 
+
+		args:
+			node (obj) = Transform node.
+			name (bool) = Return the node name.
+
+		returns:
+			(str) node or node name
+		'''
+		#get shape node from transform:
+		shapes = pm.listRelatives(transform, children=1, shapes=1) #returns list ie. [nt.Mesh(u'pConeShape1')]
+		#incoming connections:
+		historyNode = pm.listConnections(shapes, source=1, destination=0) #returns list ie. [nt.PolyCone(u'polyCone1')]
+		if name:
+			return historyNode[0].name() #get the string name from the history node
+		return historyNode[0]
+
 
 	@staticmethod
 	def getAttributesMEL(node, exclude=None):
@@ -576,12 +607,6 @@ class Init(Slots):
 		returns:
 			(dict) {'string attribute': current value}
 		'''
-		#get shape node from transform:
-		shapes = pm.listRelatives(node, children=1, shapes=1) #returns list ie. [nt.Mesh(u'pConeShape1')]
-		#incoming connections:
-		historyNode = pm.listConnections(shapes, source=1, destination=0) #returns list ie. [nt.PolyCone(u'polyCone1')]
-		node = historyNode[0].name() #get the string name from the history node
-
 		return {attr:pm.getAttr(node+'.'+attr) for attr in pm.listAttr(node) if attr not in exclude}
 
 
@@ -593,13 +618,10 @@ class Init(Slots):
 		args:
 			node (obj) = Transform node.
 			attributes (dict) = Attributes and their correponding value to set. ie. {'string attribute': value}
-		'''
-		#get shape node from transform:
-		shapes = pm.listRelatives(node, children=1, shapes=1) #returns list ie. [nt.Mesh(u'pConeShape1')]
-		#incoming connections:
-		historyNode = pm.listConnections(shapes, source=1, destination=0) #returns list ie. [nt.PolyCone(u'polyCone1')]
-		node = historyNode[0].name() #get the string name from the history node
 
+		ex call:
+		self.setAttributesMEL(obj, {'smoothLevel':1})
+		'''
 		[pm.setAttr(node+'.'+attr, value) for attr, value in attributes.items() if attr and value]
 
 

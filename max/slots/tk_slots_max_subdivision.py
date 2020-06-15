@@ -11,8 +11,8 @@ class Subdivision(Init):
 
 		#Set 3ds Max specific naming
 		self.parentUi.gb000.setTitle('TurboSmooth')
-		self.parentUi.lbl000.setText('Iterations:')
-		self.parentUi.lbl001.setText('RenderIters:')
+		self.parentUi.s000.setPrefix('Iterations:  ')
+		self.parentUi.s001.setPrefix('RenderIters: ')
 		self.parentUi.s000.setValue(0)
 		self.parentUi.s001.setValue(0)
 

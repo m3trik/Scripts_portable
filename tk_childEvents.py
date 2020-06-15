@@ -52,13 +52,14 @@ class EventFactoryFilter(QtCore.QObject):
 		for widget in widgets: #get all widgets for the given ui name.
 			widgetName = self.parent.sb.getWidgetName(widget, name)
 			widgetType = self.parent.sb.getWidgetType(widget, name) #get the class type as string.
+			derivedType = self.parent.sb.getDerivedType(widget, name) #get the derived class type as string.
 			uiLevel = self.parent.sb.getUiLevel(name)
 
 			self.setStyleSheet_(name, widget)
 			widget.installEventFilter(self)
 
 
-			if widgetType=='QPushButton' and uiLevel<3:
+			if derivedType in ['QPushButton','QToolButton'] and uiLevel<3:
 				if self.parent.sb.prefix(widget, ['b', 'v', 'i', 'tb']):
 					self.resizeAndCenterWidget(widget)
 
@@ -133,7 +134,7 @@ class EventFactoryFilter(QtCore.QObject):
 		'''
 		# print([i.objectName() for i in self.parent.sb.getWidget(name=name) if name=='cameras']), '---'
 		ui = self.parent.sb.getUi(name)
-		widgetsUnderMouse=[] #list of widgets currently under the mouse cursor and their parents. in hierarchical order.
+		widgetsUnderMouse=[] #list of widgets currently under the mouse cursor and their parents. in hierarchical order. ie. [[<widgets.qPushButton_.QPushButton_ object at 0x00000000045F6948>, <PySide2.QtWidgets.QMainWindow object at 0x00000000045AA8C8>, <__main__.Tk_max object at 0x000000000361F508>, <PySide2.QtWidgets.QWidget object at 0x00000000036317C8>]]
 		for widget in self.parent.sb.getWidget(name=name): #all widgets from the current ui.
 			if not shiboken2.isValid(widget):
 				self.parent.sb.removeWidgets(widget) #remove any widgets from the main dict if the c++ object no longer exists.
@@ -172,6 +173,7 @@ class EventFactoryFilter(QtCore.QObject):
 			for widgetList in widgetsUnderMouse:
 				widget = widgetList[0]
 				widget.grabMouse() #set widget to receive mouse events.
+				# print (widget.objectName())
 				# print('grab:', widget.mouseGrabber().objectName(), '(tk_childEvents)')
 				self._mouseGrabber = widget
 

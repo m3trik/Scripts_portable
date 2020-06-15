@@ -291,6 +291,27 @@ class Polygons(Init):
 			pm.polySubdivideFacet(face, divisions=0, divisionsU=2, divisionsV=2, mode=0, subdMethod=1)
 
 
+	def tb008(self, state=None):
+		'''
+		Boolean Operation
+		'''
+		tb = self.currentUi.tb008
+		if state=='setMenu':
+			tb.add('QRadioButton', setText='Union', setObjectName='chk011', setToolTip='Fuse two objects together.')
+			tb.add('QRadioButton', setText='Difference', setObjectName='chk012', setChecked=True, setToolTip='Indents one object with the shape of another at the point of their intersection.')
+			tb.add('QRadioButton', setText='Intersection', setObjectName='chk013', setToolTip='Keep only the interaction point of two objects.')
+			return
+
+		if tb.chk011.isChecked(): #union
+			mel.eval("polyPerformBooleanAction 1 o 0;") #PolygonBooleanIntersection;
+
+		if tb.chk012.isChecked(): #difference
+			mel.eval("polyPerformBooleanAction 2 o 0;") #PolygonBooleanDifference;
+
+		if tb.chk013.isChecked(): #intersection
+			mel.eval("polyPerformBooleanAction 3 o 0;") #PolygonBooleanIntersection;
+
+
 	def b000(self):
 		'''
 		
@@ -379,13 +400,6 @@ class Polygons(Init):
 		Attach
 		'''
 		rt.macros.run('Ribbon - Modeling', 'AttachMode')
-
-
-	def b023(self):
-		'''
-		Boolean
-		'''
-		mel.eval("PolygonBooleanUnion;")
 
 
 	def b028(self):

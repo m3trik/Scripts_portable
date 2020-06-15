@@ -150,29 +150,28 @@ class Materials(Init):
 			tb.add('QRadioButton', setText='New Random Material', setObjectName='chk008', setToolTip='Assign a new random ID material.')
 			return
 
-		selection = pm.ls(selection=1, flatten=1)
+		selection = pm.ls(selection=1, objectsOnly=1, flatten=1) #shapes = pm.ls(sl=1, dag=1, leaf=1); transforms = pm.listRelatives(shapes, p=True)
+		if not selection:
+			return 'Error: No valid object/s selected.'
 
-		if tb.chk008.isChecked(): #Assign New random mat ID
-			if selection:
-				mat = self.createRandomMaterial(prefix='matID')
-				self.assignMaterial(selection, mat)
-
-				#delete previous shader
-				# if self.randomMat:
-				# 	pm.delete(self.randomMat)
-
-				self.randomMat = mat
-
-				if self.parentUi.tb001.chk001.isChecked():
-					self.cmb002() #refresh the combobox
-				else:
-					self.parentUi.tb001.chk001.setChecked(True) #set combobox to ID map mode. toggling the checkbox refreshes the combobox.
-				self.parentUi.cmb002.setCurrentItem(name) #set the combobox index to the new mat #self.cmb002.setCurrentIndex(self.cmb002.findText(name))
-			else:
-				return 'Error: No valid object/s selected.'
-
-		elif tb.chk007.isChecked(): #Assign current mat
+		if tb.chk007.isChecked(): #Assign current mat
 			self.assignMaterial(selection, self.currentMaterial)
+
+		elif tb.chk008.isChecked(): #Assign New random mat ID
+			mat = self.createRandomMaterial(prefix='matID')
+			self.assignMaterial(selection, mat)
+
+			#delete previous shader
+			# if self.randomMat:
+			# 	pm.delete(self.randomMat)
+
+			self.randomMat = mat
+
+			if self.parentUi.tb001.chk001.isChecked():
+				self.cmb002() #refresh the combobox
+			else:
+				self.parentUi.tb001.chk001.setChecked(True) #set combobox to ID map mode. toggling the checkbox refreshes the combobox.
+			self.parentUi.cmb002.setCurrentItem(mat.name()) #set the combobox index to the new mat #self.cmb002.setCurrentIndex(self.cmb002.findText(name))
 
 
 	@Slots.message

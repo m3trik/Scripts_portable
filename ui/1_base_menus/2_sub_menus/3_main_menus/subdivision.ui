@@ -331,19 +331,6 @@
            <property name="title">
             <string>Smooth Preview</string>
            </property>
-           <widget class="QLabel" name="lbl001">
-            <property name="geometry">
-             <rect>
-              <x>1</x>
-              <y>35</y>
-              <width>81</width>
-              <height>21</height>
-             </rect>
-            </property>
-            <property name="text">
-             <string>Adaptive lvl:</string>
-            </property>
-           </widget>
            <widget class="QPushButton" name="b011">
             <property name="enabled">
              <bool>true</bool>
@@ -378,9 +365,9 @@
            <widget class="QSpinBox" name="s000">
             <property name="geometry">
              <rect>
-              <x>80</x>
+              <x>0</x>
               <y>15</y>
-              <width>31</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -399,11 +386,14 @@
             <property name="toolTip">
              <string>Smooth Preview: Division Level</string>
             </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
             <property name="buttonSymbols">
              <enum>QAbstractSpinBox::NoButtons</enum>
             </property>
             <property name="prefix">
-             <string/>
+             <string>Division level:    </string>
             </property>
             <property name="minimum">
              <number>0</number>
@@ -415,25 +405,12 @@
              <number>1</number>
             </property>
            </widget>
-           <widget class="QLabel" name="lbl000">
-            <property name="geometry">
-             <rect>
-              <x>1</x>
-              <y>15</y>
-              <width>81</width>
-              <height>22</height>
-             </rect>
-            </property>
-            <property name="text">
-             <string>Division lvl:</string>
-            </property>
-           </widget>
            <widget class="QSpinBox" name="s001">
             <property name="geometry">
              <rect>
-              <x>80</x>
+              <x>0</x>
               <y>35</y>
-              <width>31</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -452,11 +429,14 @@
             <property name="toolTip">
              <string>Smooth Preview: Division Level</string>
             </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
             <property name="buttonSymbols">
              <enum>QAbstractSpinBox::NoButtons</enum>
             </property>
             <property name="prefix">
-             <string/>
+             <string>Adaptive level:   </string>
             </property>
             <property name="minimum">
              <number>0</number>
