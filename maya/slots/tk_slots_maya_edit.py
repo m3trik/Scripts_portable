@@ -58,43 +58,54 @@ class Edit(Init):
 		'''
 		tb = self.currentUi.tb000
 		if state=='setMenu':
-			tb.add('QCheckBox', setText='N-Gons', setObjectName='chk002', setToolTip='Find N-gons.')
-			tb.add('QCheckBox', setText='Isolated Vertex', setObjectName='chk003', setChecked=True, setToolTip='Find isolated vertices within specified angle threshold.')
-			tb.add('QSpinBox', setPrefix='Loose Vertex Angle: ', setObjectName='s006', minMax_='1-360 step1', setValue=15, setToolTip='Loose vertex search: Angle Threshold.')
-			tb.add('QCheckBox', setText='Repair', setObjectName='chk004', setToolTip='Repair matching geometry. (else: select)')
 			tb.add('QCheckBox', setText='All Geometry', setObjectName='chk005', setToolTip='Clean All scene geometry.')
+			tb.add('QCheckBox', setText='Repair', setObjectName='chk004', setToolTip='Repair matching geometry. (else: select)')
+			tb.add('QCheckBox', setText='N-Gons', setObjectName='chk002', setChecked=True, setToolTip='Find N-gons.')
+			tb.add('QCheckBox', setText='Non-Manifold Geometry', setObjectName='chk017', setChecked=True, setToolTip='Check for nonmanifold polys.')
+			tb.add('QCheckBox', setText='Quads', setObjectName='chk010', setToolTip='Check for quad sided polys.')
+			tb.add('QCheckBox', setText='Concave', setObjectName='chk011', setToolTip='Check for concave polys.')
+			tb.add('QCheckBox', setText='Non-Planar', setObjectName='chk003', setToolTip='Check for non-planar polys.')
+			tb.add('QCheckBox', setText='Holed', setObjectName='chk012', setToolTip='Check for holed polys.')
+			tb.add('QCheckBox', setText='Lamina', setObjectName='chk018', setToolTip='Check for lamina polys.')
+			tb.add('QCheckBox', setText='Shared UV\'s', setObjectName='chk016', setToolTip='Unshare uvs that are shared across vertices.')
+			# tb.add('QCheckBox', setText='Invalid Components', setObjectName='chk019', setToolTip='Check for invalid components.')
+			tb.add('QCheckBox', setText='Zero Face Area', setObjectName='chk013', setToolTip='Check for 0 area faces.')
+			tb.add('QDoubleSpinBox', setPrefix='Face Area Tolerance:   ', setObjectName='s006', minMax_='0.0-10 step.001', setValue=0.001, setToolTip='Tolerance for face areas.')
+			tb.add('QCheckBox', setText='Zero Length Edges', setObjectName='chk014', setToolTip='Check for 0 length edges.')
+			tb.add('QDoubleSpinBox', setPrefix='Edge Length Tolerance: ', setObjectName='s007', minMax_='0.0-10 step.001', setValue=0.001, setToolTip='Tolerance for edge length.')
+			tb.add('QCheckBox', setText='Zero UV Face Area', setObjectName='chk015', setToolTip='Check for 0 uv face area.')
+			tb.add('QDoubleSpinBox', setPrefix='UV Face Area Tolerance:', setObjectName='s008', minMax_='0.0-10 step.001', setValue=0.001, setToolTip='Tolerance for uv face areas.')
 			return
 
-		isolatedVerts = tb.chk003.isChecked() #isolated vertices
-		edgeAngle = tb.s006.value()
-		nGons = tb.chk002.isChecked() #n-sided polygons
-		repair = tb.chk004.isChecked() #attempt auto repair errors
-		allGeometry = tb.chk005.isChecked() #clean all scene geometry
+		allMeshes = int(tb.chk005.isChecked()) #[0] All selectable meshes
+		selectOnly = int(not tb.chk004.isChecked())+1 #[1] Only perform a selection [0:clean, 1:select and clean, 2:select]
+		historyOn = 1 #[2] keep construction history
+		quads = int(tb.chk010.isChecked()) #[3] check for quads polys
+		nsided = int(tb.chk002.isChecked()) #[4] check for n-sided polys
+		concave = int(tb.chk011.isChecked()) #[5] check for concave polys
+		holed = int(tb.chk012.isChecked()) #[6] check for holed polys
+		nonplanar = int(tb.chk003.isChecked()) #[7] check for non-planar polys
+		zeroGeom = int(tb.chk013.isChecked()) #[8] check for 0 area faces
+		zeroGeomTol = tb.s006.value() #[9] tolerance for face areas
+		zeroEdge = int(tb.chk014.isChecked()) #[10] check for 0 length edges
+		zeroEdgeTol = tb.s007.value() #[11] tolerance for edge length
+		zeroMap = int(tb.chk015.isChecked()) #[12] check for 0 uv face area
+		zeroMapTol = tb.s008.value() #[13] tolerance for uv face areas
+		sharedUVs = int(tb.chk016.isChecked()) #[14] Unshare uvs that are shared across vertices
+		nonmanifold = int(tb.chk017.isChecked()) #[15] check for nonmanifold polys
+		lamina = -int(tb.chk018.isChecked()) #[16] check for lamina polys [default -1]
+		invalidComponents = 0 #int(tb.chk019.isChecked()) #[17] a guess what this arg does. not checked. default is 0.
 
-		#Select components for cleanup from all visible geometry in the scene
-		if allGeometry:
-			scene = pm.ls(visible=1, geometry=1)
-			[pm.select (geometry, add=1) for geometry in scene]
+		# if tb.chk005.isChecked(): #All Geometry. Select components for cleanup from all visible geometry in the scene
+		# 	scene = pm.ls(visible=1, geometry=1)
+		# 	[pm.select (geometry, add=1) for geometry in scene]
 
-		if repair: #auto repair errors
-			mel.eval(r'polyCleanupArgList 4 { "0","1","1","0","1","0","1","0","0","1e-005","1","0.0001","0","1e-005","0","1","1","0" };')
-		else:
-			mel.eval(r'polyCleanupArgList 3 { "0","2","1","0","1","0","0","0","0","1e-005","1","1e-005","0","1e-005","0","1","1" };')
-
-		if nGons: #N-Sided Faces
-			if repair: #Maya Bonus Tools: Convert N-Sided Faces To Quads
-				mel.eval('bt_polyNSidedToQuad;')
-			else: #Find And Select N-Gons
-				#Change to Component mode to retain object highlighting for better visibility
-				pm.changeSelectMode (component=1)
-				#Change to Face Component Mode
-				pm.selectType (smp=0, sme=1, smf=0, smu=0, pv=0, pe=1, pf=0, puv=0)
-				#Select Object/s and Run Script to highlight N-Gons
-				pm.polySelectConstraint (mode=3, type=0x0008, size=3)
-				pm.polySelectConstraint (disable=1)
-				#Populate an in-view message
-				nGons = pm.polyEvaluate (faceComponent=1)
-				self.viewPortMessage("<hl>"+str(nGons[0])+"</hl> N-Gon(s) found.")
+		arg_list = '"{0}","{1}","{2}","{3}","{4}","{5}","{6}","{7}","{8}","{9}","{10}","{11}","{12}","{13}","{14}","{15}","{16}","{17}"'.format(
+				allMeshes, selectOnly, historyOn, quads, nsided, concave, holed, nonplanar, zeroGeom, 
+				zeroGeomTol, zeroEdge, zeroEdgeTol, zeroMap, zeroMapTol, sharedUVs, nonmanifold, lamina, invalidComponents)
+		command = 'polyCleanupArgList 4 {'+arg_list+'}' # command = 'polyCleanup '+arg_list #(not used because of arg count error, also the quotes in the arg list would need to be removed). 
+		print (command)
+		mel.eval(command)
 
 
 	def tb001(self, state=None):

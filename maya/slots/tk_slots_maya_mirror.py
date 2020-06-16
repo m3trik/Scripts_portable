@@ -28,13 +28,13 @@ class Mirror(Init):
 		'''
 		cmb = self.parentUi.cmb000
 		
-		files = ['']
-		contents = cmb.addItems_(files, '')
+		list_ = ['']
+		items = cmb.addItems_(list_, '')
 
 		if not index:
 			index = cmb.currentIndex()
 		if index!=0:
-			if index==contents.index(''):
+			if index==items.index(''):
 				pass
 			cmb.setCurrentIndex(0)
 
@@ -45,25 +45,6 @@ class Mirror(Init):
 		'''
 		axis = self.getAxisFromCheckBoxes('chk000-3')
 		self.parentUi.tb000.setText('Mirror '+axis)
-
-
-	# def cmb000(self, index=None):
-	# 	'''
-	# 	Editors
-	# 	'''
-	# 	cmb = self.parentUi.cmb000
-		
-	# 	files = ['Mirror Options', 'Mirror Instance Mesh']
-	# 	contents = cmb.addItems_(files, '')
-
-	# 	if not index:
-	# 		index = cmb.currentIndex()
-	# 	if index!=0:
-	# 		if index==contents.index('Mirror Options'):
-	# 			mel.eval('MirrorPolygonGeometryOptions;')
-	# 		if index==contents.index('Mirror Instance Mesh'):
-	# 			mel.eval('bt_mirrorInstanceMesh;')
-	# 		cmb.setCurrentIndex(0)
 
 
 	@Slots.message
@@ -120,19 +101,19 @@ class Mirror(Init):
 			x=1; y=1; z=-1
 
 		selection = pm.ls(sl=1, objectsOnly=1)
-		if selection:
-			pm.undoInfo(openChunk=1)
-			for obj in [n for n in pm.listRelatives(selection, allDescendents=1) if pm.objectType(n, isType='mesh')]: #get any mesh type child nodes of obj.
-				if cutMesh:
-					self.deleteAlongAxis(obj, axis) #delete mesh faces that fall inside the specified axis.
-				if instance: #create instance and scale negatively
-					inst = pm.instance(obj) # bt_convertToMirrorInstanceMesh(0); #x=0, y=1, z=2, -x=3, -y=4, -z=5
-					pm.xform(inst, scale=[x,y,z]) #pm.scale(z,x,y, pivot=(0,0,0), relative=1) #swap the xyz values to transform the instanced node
-				else: #mirror
-					pm.polyMirrorFace(obj, mirrorAxis=axisDirection, direction=a, mergeMode=1, mergeThresholdType=1, mergeThreshold=mergeThreshold, worldSpace=0, smoothingAngle=30, flipUVs=0, ch=0) #mirrorPosition x, y, z - This flag specifies the position of the custom mirror axis plane
-			pm.undoInfo(closeChunk=1)
-		else:
+		if not selection:
 			return 'Warning: Nothing Selected.'
+
+		pm.undoInfo(openChunk=1)
+		for obj in [n for n in pm.listRelatives(selection, allDescendents=1) if pm.objectType(n, isType='mesh')]: #get any mesh type child nodes of obj.
+			if cutMesh:
+				self.deleteAlongAxis(obj, axis) #delete mesh faces that fall inside the specified axis.
+			if instance: #create instance and scale negatively
+				inst = pm.instance(obj) # bt_convertToMirrorInstanceMesh(0); #x=0, y=1, z=2, -x=3, -y=4, -z=5
+				pm.xform(inst, scale=[x,y,z]) #pm.scale(z,x,y, pivot=(0,0,0), relative=1) #swap the xyz values to transform the instanced node
+			else: #mirror
+				pm.polyMirrorFace(obj, mirrorAxis=axisDirection, direction=a, mergeMode=1, mergeThresholdType=1, mergeThreshold=mergeThreshold, worldSpace=0, smoothingAngle=30, flipUVs=0, ch=0) #mirrorPosition x, y, z - This flag specifies the position of the custom mirror axis plane
+		pm.undoInfo(closeChunk=1)
 
 
 

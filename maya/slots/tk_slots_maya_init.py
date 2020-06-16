@@ -100,6 +100,32 @@ class Init(Slots):
 
 
 	@staticmethod
+	def getNGons(obj, repair=False):
+		'''
+		Get any N-Gons from the given object.
+		'''
+		if nGons: #N-Sided Faces
+			if repair: #Maya Bonus Tools: Convert N-Sided Faces To Quads
+				try:
+					mel.eval('bt_polyNSidedToQuad;')
+				except:
+					print('Maya Bonus Tools: Convert N-Sided Faces To Quads not installed. (bt_polyNSidedToQuad;)')
+
+			else: #Find And Select N-Gons
+				pm.select(obj)
+				#Change to Component mode to retain object highlighting for better visibility
+				pm.changeSelectMode(component=1)
+				#Change to Face Component Mode
+				pm.selectType(smp=0, sme=1, smf=0, smu=0, pv=0, pe=1, pf=0, puv=0)
+				#Select Object/s and Run Script to highlight N-Gons
+				pm.polySelectConstraint(mode=3, type=0x0008, size=3)
+				pm.polySelectConstraint(disable=1)
+				#Populate an in-view message
+				nGons = pm.polyEvaluate(faceComponent=1)
+				self.viewPortMessage("<hl>"+str(nGons[0])+"</hl> N-Gon(s) found.")
+
+
+	@staticmethod
 	def getBorderFaces(faces, includeBordered=False):
 		'''
 		Get any faces attached to the given faces.
