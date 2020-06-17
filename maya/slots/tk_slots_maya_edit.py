@@ -49,7 +49,7 @@ class Edit(Init):
 		Set the toolbutton's text according to the checkstates.
 		'''
 		axis = self.getAxisFromCheckBoxes('chk006-9')
-		self.parentUi.tb003.setText('Along Axis '+axis)
+		self.parentUi.tb003.setText('Delete '+axis)
 
 
 	def tb000(self, state=None):
@@ -242,6 +242,9 @@ class Edit(Init):
 		Shading Sets
 		'''
 		mel.eval('performTransferShadingSets 0;')
+
+
+
 
 
 

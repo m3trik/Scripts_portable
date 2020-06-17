@@ -230,7 +230,7 @@
    <widget class="QToolButton_" name="tb001">
     <property name="geometry">
      <rect>
-      <x>165</x>
+      <x>155</x>
       <y>210</y>
       <width>86</width>
       <height>19</height>
@@ -306,6 +306,43 @@
     </property>
     <property name="text">
      <string>Delete</string>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>18</width>
+      <height>18</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QToolButton_" name="tb003">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>200</y>
+      <width>66</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>19</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>111</width>
+      <height>19</height>
+     </size>
+    </property>
+    <property name="toolTip">
+     <string>Delete Component or if object selected, along axis</string>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="text">
+     <string>Delete -X</string>
     </property>
     <property name="iconSize">
      <size>

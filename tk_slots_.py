@@ -110,6 +110,27 @@ class Slots(QtCore.QObject):
 		return objects
 
 
+	def callMethod(self, name, method, *args, **kwargs):
+		'''
+		Call a method from a class outside of the current ui.
+		Temporarily switches to the ui of the given method for the call, then returns to the previous menu.
+
+		args:
+			name (str) = ui name.
+			method (str) = method name.
+		'''
+		ui = self.sb.getUi()
+		temp = self.tk.setUi(name)
+		method = self.sb.getMethod(name, method)
+
+		try:
+			method(*args, **kwargs)
+		except Exception as error:
+			print(error)
+
+		self.tk.setUi(ui)
+
+
 	def connect_(self, widgets, signals, slots, class_=None):
 		'''
 		Connect multiple signals to multiple slots at once.
@@ -166,6 +187,29 @@ class Slots(QtCore.QObject):
 				[getattr(w, property_)(state) for w in widgets] #set the property state for each widget in the list.
 
 
+	def setAxisForCheckBoxes(self, checkboxes, axis, ui=None):
+		'''
+		Set the given checkbox's check states to reflect the specified axis.
+
+		args:
+			checkboxes (str)(list) = 3 or 4 (or six with explicit negative values) checkboxes.
+			axis (str) = Axis to set. Valid text: '-','X','Y','Z','-X','-Y','-Z' ('-' indicates a negative axis in a four checkbox setup)
+
+		ex call: self.setAxisForCheckBoxes('chk000-3', '-X') #optional ui arg for the checkboxes
+		'''
+		if isinstance(checkboxes, (str, unicode)):
+			if ui is None:
+				ui = self.currentUi
+			checkboxes = self.getObject(ui, checkboxes)
+
+		prefix = '-' if '-' in axis else '' #separate the prefix and axis
+		coord = axis.strip('-')
+
+		for chk in checkboxes:
+			if any([chk.text()==prefix, chk.text()==coord, chk.text()==prefix+coord]):
+				chk.setChecked(True)
+
+
 	def getAxisFromCheckBoxes(self, checkboxes, ui=None):
 		'''
 		Get the intended axis value as a string from the given checkbox's check states.
@@ -173,7 +217,7 @@ class Slots(QtCore.QObject):
 		args:
 			checkboxes (str)(list) = 3 or 4 (or six with explicit negative values) checkboxes. Valid text: '-','X','Y','Z','-X','-Y','-Z' ('-' indicates a negative axis in a four checkbox setup)
 
-		ex call: self.getAxis('chk000-3')
+		ex call: self.getAxisFromCheckBoxes('chk000-3')
 		'''
 		if isinstance(checkboxes, (str, unicode)):
 			if ui is None:

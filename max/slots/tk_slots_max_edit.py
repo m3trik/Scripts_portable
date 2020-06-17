@@ -10,14 +10,6 @@ class Edit(Init):
 		super(Edit, self).__init__(*args, **kwargs)
 
 
-	def chk006_9(self):
-		'''
-		Set the toolbutton's text according to the checkstates.
-		'''
-		axis = self.getAxisFromCheckBoxes('chk006-9')
-		self.parentUi.tb003.setText('Along Axis '+axis)
-
-
 	def pin(self, state=None):
 		'''
 		Context menu
@@ -26,7 +18,6 @@ class Edit(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
-
 			return
 
 
@@ -36,15 +27,23 @@ class Edit(Init):
 		'''
 		cmb = self.parentUi.cmb000
 		
-		files = ['']
-		contents = cmb.addItems_(files, '')
+		list_ = ['']
+		items = cmb.addItems_(list_, '')
 
 		if not index:
 			index = cmb.currentIndex()
 		if index!=0:
-			if index==contents.index(''):
+			if index==items.index(''):
 				pass
 			cmb.setCurrentIndex(0)
+	
+
+	def chk006_9(self):
+		'''
+		Set the toolbutton's text according to the checkstates.
+		'''
+		axis = self.getAxisFromCheckBoxes('chk006-9')
+		self.parentUi.tb003.setText('Delete '+axis)
 
 
 	def tb000(self, state=None):
@@ -137,29 +136,6 @@ class Edit(Init):
 			if level==4: #faces
 				faces = rt.polyop.getFaceSelection(obj)
 				rt.polyop.deleteFaces(obj, faces, delIsoVerts=1)
-
-
-	def tb003(self, state=None):
-		'''
-		Delete Along Axis
-		'''
-		tb = self.currentUi.tb003
-		if state=='setMenu':
-			tb.add('QCheckBox', setText='-', setObjectName='chk006', setChecked=True, setToolTip='Perform delete along negative axis.')
-			tb.add('QRadioButton', setText='X', setObjectName='chk007', setChecked=True, setToolTip='Perform delete along X axis.')
-			tb.add('QRadioButton', setText='Y', setObjectName='chk008', setToolTip='Perform delete along Y axis.')
-			tb.add('QRadioButton', setText='Z', setObjectName='chk009', setToolTip='Perform delete along Z axis.')
-
-			self.connect_('chk006-9', 'toggled', self.chk006_9, tb)
-			return
-
-		selection = pm.ls(sl=1, objectsOnly=1)
-		axis = self.getAxisFromCheckBoxes('chk006-9')
-
-		pm.undoInfo(openChunk=1)
-		for obj in selection:
-			self.deleteAlongAxis(obj, axis) #Init.deleteAlongAxis - no max version.
-		pm.undoInfo(closeChunk=1)
 
 
 	def b021(self):
@@ -261,6 +237,29 @@ class Edit(Init):
 
 			else:
 				return 'Error: Selection isn\'t an editable poly or nothing is selected.'
+
+
+	def tb003(self, state=None):
+		'''
+		Delete Along Axis
+		'''
+		tb = self.currentUi.tb003
+		if state=='setMenu':
+			tb.add('QCheckBox', setText='-', setObjectName='chk006', setChecked=True, setToolTip='Perform delete along negative axis.')
+			tb.add('QRadioButton', setText='X', setObjectName='chk007', setChecked=True, setToolTip='Perform delete along X axis.')
+			tb.add('QRadioButton', setText='Y', setObjectName='chk008', setToolTip='Perform delete along Y axis.')
+			tb.add('QRadioButton', setText='Z', setObjectName='chk009', setToolTip='Perform delete along Z axis.')
+
+			self.connect_('chk006-9', 'toggled', self.chk006_9, tb)
+			return
+
+		selection = pm.ls(sl=1, objectsOnly=1)
+		axis = self.getAxisFromCheckBoxes('chk006-9')
+
+		pm.undoInfo(openChunk=1)
+		for obj in selection:
+			self.deleteAlongAxis(obj, axis) #Init.deleteAlongAxis - no max version.
+		pm.undoInfo(closeChunk=1)
 
 
 

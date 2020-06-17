@@ -18,7 +18,6 @@ class Mirror(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
-
 			return
 
 

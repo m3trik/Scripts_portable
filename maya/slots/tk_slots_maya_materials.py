@@ -22,14 +22,13 @@ class Materials(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='Maya Material Editors')
-
+			pin.add(QLabel_, setText='Material Attributes', setObjectName='lbl004', setToolTip='Show the material attributes in the attribute editor.')
 			return
 
 
 	def cmb001(self, index=None):
 		'''
 		Editors
-
 		'''
 		cmb = self.parentUi.cmb001
 		
@@ -69,6 +68,7 @@ class Materials(Init):
 		try:
 			sceneMaterials = self.parentUi.tb001.chk000.isChecked()
 			idMapMaterials = self.parentUi.tb001.chk001.isChecked()
+			favoriteMaterials = self.parentUi.tb001.chk002.isChecked()
 		except: #if the toolbox hasn't been constructed yet: default to sceneMaterials
 			sceneMaterials = True
 
@@ -76,10 +76,17 @@ class Materials(Init):
 			materials = self.getSceneMaterials()
 
 		elif idMapMaterials:
-			materials = self.getSceneMaterials(startingWith=['matID'])
+			materials = self.getSceneMaterials(startingWith=['ID_'])
+
+		elif favoriteMaterials:
+			import maya.app.general.tlfavorites as _fav
+			path = os.path.expandvars(r"%USERPROFILE%/Documents/maya/2020/prefs/renderNodeTypeFavorites")
+			renderNodeTypeFavorites = _fav.readFavorites(path)
+			materials = [i for i in renderNodeTypeFavorites if '/' not in i]
+			del _fav
 
 		mats = sorted([mat for mat in set(materials)])
-		matNames = [m.name() for m in mats]
+		matNames = [m.name() if hasattr(m,'name') else str(m) for m in mats]
 		contents = cmb.addItems_(matNames)
 
 		#create and set icons with color swatch
@@ -129,7 +136,8 @@ class Materials(Init):
 		if state=='setMenu':
 			tb.add('QRadioButton', setText='All Scene Materials', setObjectName='chk000', setChecked=True, setToolTip='List all scene materials.') #Material mode: Scene Materials
 			tb.add('QRadioButton', setText='ID Map Materials', setObjectName='chk001', setToolTip='List ID map materials.') #Material mode: ID Map Materials
-			
+			tb.add('QRadioButton', setText='Favorite Materials', setObjectName='chk002', setToolTip='List Favorite materials.') #Material mode: Favorite Materials
+
 			self.connect_([tb.chk000, tb.chk001], 'toggled', [self.cmb002, self.tb001])
 			return
 
@@ -147,18 +155,19 @@ class Materials(Init):
 		tb = self.currentUi.tb002
 		if state=='setMenu':
 			tb.add('QRadioButton', setText='Current Material', setObjectName='chk007', setChecked=True, setToolTip='Re-Assign the current stored material.')
+			tb.add('QRadioButton', setText='New Material', setObjectName='chk009', setToolTip='Assign a new material.')
 			tb.add('QRadioButton', setText='New Random Material', setObjectName='chk008', setToolTip='Assign a new random ID material.')
 			return
 
-		selection = pm.ls(selection=1, objectsOnly=1, flatten=1) #shapes = pm.ls(sl=1, dag=1, leaf=1); transforms = pm.listRelatives(shapes, p=True)
+		selection = pm.ls(selection=1, flatten=1)
 		if not selection:
-			return 'Error: No valid object/s selected.'
+			return 'Error: No renderable object is selected for assignment.'
 
 		if tb.chk007.isChecked(): #Assign current mat
 			self.assignMaterial(selection, self.currentMaterial)
 
 		elif tb.chk008.isChecked(): #Assign New random mat ID
-			mat = self.createRandomMaterial(prefix='matID')
+			mat = self.createRandomMaterial(prefix='ID_')
 			self.assignMaterial(selection, mat)
 
 			#delete previous shader
@@ -173,6 +182,9 @@ class Materials(Init):
 				self.parentUi.tb001.chk001.setChecked(True) #set combobox to ID map mode. toggling the checkbox refreshes the combobox.
 			self.parentUi.cmb002.setCurrentItem(mat.name()) #set the combobox index to the new mat #self.cmb002.setCurrentIndex(self.cmb002.findText(name))
 
+		elif tb.chk009.isChecked(): #Assign New Material
+			mel.eval('createAssignNewMaterialTreeLister "";')
+
 
 	@Slots.message
 	def lbl000(self):
@@ -186,24 +198,15 @@ class Materials(Init):
 				return '# Error: No stored material or no valid object selected.'
 		else: #Stored material mode
 			if not self.currentMaterial: #get material from selected scene object
-				if rt.selection:
-					self.currentMaterial = rt.selection[0].material
+				if pm.ls(sl=1, objectsOnly=1):
+					pm.hyperShade('', shaderNetworksSelectMaterialNodes=1) #selects the material node. doesnt return anything. optional first argument=obj with material.
+					self.currentMaterial = pm.ls(selection=1, materials=1)[0]
 				else:
 					return '# Error: No stored material or no valid object selected.'
 			mat = self.currentMaterial
 
 		#open the hypershade editor
 		mel.eval("HypershadeWindow;")
-
-		# #create a temp view in the material editor
-		# if rt.SME.GetViewByName('temp'):
-		# 	rt.SME.DeleteView(rt.SME.GetViewByName('temp'), False)
-		# index = rt.SME.CreateView('temp')
-		# view = rt.SME.GetView(index)
-
-		# #show node and corresponding parameter rollout
-		# node = view.CreateNode(mat, rt.point2(0, 0))
-		# rt.SME.SetMtlInParamEditor(mat)
 
 
 	def renameMaterial(self):
@@ -215,7 +218,7 @@ class Materials(Init):
 
 		if self.currentMaterial and self.currentMaterial.name!=newMatName:
 			if self.parentUi.tb001.chk001.isChecked(): #Rename ID map Material
-				prefix = 'matID_'
+				prefix = 'ID_'
 				if not newMatName.startswith(prefix):
 					newMatName = prefix+newMatName
 
@@ -259,15 +262,16 @@ class Materials(Init):
 		'''
 		Delete Unused Materials
 		'''
-		defaultMaterial = rt.Standard(name='Default Material')
+		mel.eval('hyperShadePanelMenuCommand("hyperShadePanel1", "deleteUnusedNodes");')
+		self.cmb002() #refresh the combobox
 
-		for mat in rt.sceneMaterials:
-			nodes = rt.refs().dependentnodes(mat) 
-			if nodes.count==0:
-				rt.replaceinstances(mat, defaultMaterial)
-				
-			rt.gc()
-			rt.freeSceneBitmaps()
+
+	def lbl004(self):
+		'''
+		Material Attributes: Show Material Attributes in the Attribute Editor.
+		'''
+		if self.currentMaterial and hasattr(self.currentMaterial, 'name'):
+			mel.eval('showSG '+self.currentMaterial.name())
 
 
 	@Slots.message
@@ -296,10 +300,10 @@ class Materials(Init):
 		material (obj) = The material to search and select for.
 		objects (list) = Faces or mesh objects as a list. If no objects are given, all geometry in the scene will be searched.
 		shell (bool) = Select the entire shell.
-		invert (bool) = Invert the final selection.
+		invert (bool) = Invert the final selection.R
 
 		#ex call:
-		currentMaterial = rt.medit.getCurMtl()[1]; print(currentMaterial)
+		currentMaterial = rt.medit.getCurMtl()[1]
 		selectByMaterialID(currentMaterial)
 		'''
 		if pm.nodeType(material)=='VRayMultiSubTex': #if not a multimaterial
@@ -307,24 +311,22 @@ class Materials(Init):
 		else:
 			mat = material
 
-		if not objects: #if not selection; use all scene geometry
-			shapes = pm.ls(type="mesh")
-			transforms = pm.listRelatives(shapes, parent=True)
-			objects = transforms
+		# if not objects: #if not selection; use all scene geometry
+		# 	shapes = pm.ls(type="mesh")
+		# 	objects = pm.listRelatives(shapes, parent=True) #transforms
 
 		pm.select(mat)
 		pm.hyperShade(objects='') #select all with material. "" defaults to currently selected materials.
 
-		faces = pm.filterExpand (selectionMask=34, expand=1)
-		transforms = [node.replace('Shape','') for node in pm.ls(sl=1, objectsOnly=1, visible=1)] #get transform node name from shape node
-		# pm.select (faces, deselect=1)
+		faces = pm.filterExpand(selectionMask=34, expand=1)
+		transforms = pm.listRelatives(faces, p=True) #[node.replace('Shape','') for node in pm.ls(sl=1, objectsOnly=1, visible=1)] #get transform node name from shape node
 
 		if shell or invert: #deselect so that the selection can be modified.
-			pm.select (faces, deselect=1)
+			pm.select(faces, deselect=1)
 
 		if shell:
 			for shell in transforms:
-				pm.select (shell, add=1)
+				pm.select(shell, add=1)
 		
 		if invert:
 			for shell in transforms:
@@ -338,7 +340,7 @@ class Materials(Init):
 		Get All Materials from the current scene.
 
 		args:
-			startingWith (list) = Filters material names starting with any of the strings in the given list. ie. ['matID']
+			startingWith (list) = Filters material names starting with any of the strings in the given list. ie. ['ID_']
 			exclude (list) = Node types to exclude.
 		returns:
 			(list) materials.
@@ -403,8 +405,16 @@ class Materials(Init):
 		if not mat:
 			return 'Error: Material Not Assigned. No material given.'
 
+		try: #if the mat is a not a known type; try and create the material.
+			pm.nodeType(mat)
+		except:
+			mat = pm.shadingNode(mat, asShader=1)
+
+		pm.undoInfo(openChunk=1)
 		for obj in objects:
+			pm.select(obj) #hyperShade works more reliably with an explicit selection.
 			pm.hyperShade(obj, assign=mat)
+		pm.undoInfo(closeChunk=1)
 
 
 
@@ -487,9 +497,9 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # 		string $rgb = ("_"+$r+"_"+$g+"_"+$b);
 # 		$rgb = substituteAllString($rgb, "0.", "");
 
-# 		$name = ("matID"+$rgb);
+# 		$name = ("ID_"+$rgb);
 
-# 		string $matID = `shadingNode -asShader lambert -name $name`;
+# 		string $ID_ = `shadingNode -asShader lambert -name $name`;
 # 		setAttr ($name + ".colorR") $r;
 # 		setAttr ($name + ".colorG") $g;
 # 		setAttr ($name + ".colorB") $b;
@@ -497,7 +507,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # 		for ($object in $selection)
 # 			{
 # 			select $object;
-# 			hyperShade -assign $matID;
+# 			hyperShade -assign $ID_;
 # 			}
 # 		 ''')
 
@@ -530,9 +540,9 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 		# string $rgb = ("_"+$r+"_"+$g+"_"+$b+"");
 		# $rgb = substituteAllString($rgb, "0.", "");
 
-		# $name = ("matID"+$rgb);
+		# $name = ("ID_"+$rgb);
 
-		# string $matID = `shadingNode -asShader lambert -name $name`;
+		# string $ID_ = `shadingNode -asShader lambert -name $name`;
 		# setAttr ($name + ".colorR") $r;
 		# setAttr ($name + ".colorG") $g;
 		# setAttr ($name + ".colorB") $b;
@@ -540,6 +550,6 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 		# for ($object in $selection)
 		# 	{
 		# 	select $object;
-		# 	hyperShade -assign $matID;
+		# 	hyperShade -assign $ID_;
 		# 	}
 		# ''')

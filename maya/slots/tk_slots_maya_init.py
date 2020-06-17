@@ -51,12 +51,15 @@ class Init(Slots):
 		if selection:
 			if pm.selectMode(query=1, object=1): #object mode:
 				if pm.selectType(query=1, allObjects=1): #get object/s
+
 					selectedObjects = pm.ls(selection=1, objectsOnly=1)
-					dict_={}; [dict_.setdefault(str(pm.objectType(s)),[]).append(str(s)) for s in selectedObjects] #for any selected objects, set object type as key and append object names as value. if key doesn't exist, use setdefault to initialize an empty list and append. ie. {'joint': ['joint_root_0', 'joint_lower_L8', 'joint_lower_L3']}
-					infoDict.update({'Selection: ':selectedObjects}) #currently selected objects
+					name_and_type = [str(i.name())+':'+str(pm.objectType(i)) for i in selectedObjects] #ie. ['pCube1:transform', 'pSphere1:transform']
+					infoDict.update({'Selection: ':name_and_type}) #currently selected objects by name and type.
+
 					objectFaces = pm.polyEvaluate(selectedObjects, face=True)
 					if type(objectFaces)==int:
 						infoDict.update({'Faces: ':format(objectFaces, ',d')}) #add commas each 3 decimal places.
+
 					# objectTris = pm.polyEvaluate(selectedObjects, triangle=True)
 					# if type(objectTris)==int:
 					# 	infoDict.update({'Tris: ':format(objectTris, ',d')}) #add commas each 3 decimal places.
@@ -649,6 +652,36 @@ class Init(Slots):
 		self.setAttributesMEL(obj, {'smoothLevel':1})
 		'''
 		[pm.setAttr(node+'.'+attr, value) for attr, value in attributes.items() if attr and value]
+
+
+	@staticmethod
+	def connectAttributes(attr, place, file):
+		'''
+		A convenience procedure for connecting common attributes between two nodes.
+
+		args:
+			attr () = 
+			place () = 
+			file () = 
+
+		// Use convenience command to connect attributes which share 
+		// their names for both the placement and file nodes.
+		self.connectAttributes('coverage', 'place2d', fileNode')
+		self.connectAttributes('translateFrame', 'place2d', fileNode')
+		self.connectAttributes('rotateFrame', 'place2d', fileNode')
+		self.connectAttributes('mirror', 'place2d', fileNode')
+		self.connectAttributes('stagger', 'place2d', fileNode')
+		self.connectAttributes('wrapU', 'place2d', fileNode')
+		self.connectAttributes('wrapV', 'place2d', fileNode')
+		self.connectAttributes('repeatUV', 'place2d', fileNode')
+		self.connectAttributes('offset', 'place2d', fileNode')
+		self.connectAttributes('rotateUV', 'place2d', fileNode')
+
+		// These two are named differently.
+		connectAttr -f ( $place2d + ".outUV" ) ( $fileNode + ".uv" );
+		connectAttr -f ( $place2d + ".outUvFilterSize" ) ( $fileNode + ".uvFilterSize" );
+		'''
+		pm.connectAttr((place + "." + attr), (file + "." + attr), f=1)
 
 
 

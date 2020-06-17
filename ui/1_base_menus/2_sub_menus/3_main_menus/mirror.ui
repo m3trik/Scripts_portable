@@ -68,7 +68,7 @@
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>40</height>
+             <height>39</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -88,6 +88,12 @@
               <width>111</width>
               <height>19</height>
              </rect>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>111</width>
+              <height>19</height>
+             </size>
             </property>
             <property name="maximumSize">
              <size>
@@ -183,6 +189,11 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>QToolButton_</class>
+   <extends>QToolButton</extends>
+   <header>widgets.qtoolbutton_.h</header>
+  </customwidget>
+  <customwidget>
    <class>QPushButton_Draggable</class>
    <extends>QPushButton</extends>
    <header>widgets.qpushbutton_draggable.h</header>
@@ -191,11 +202,6 @@
    <class>QProgressBar_</class>
    <extends>QProgressBar</extends>
    <header>widgets.qprogressbar_.h</header>
-  </customwidget>
-  <customwidget>
-   <class>QToolButton_</class>
-   <extends>QToolButton</extends>
-   <header>widgets.qtoolbutton_.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

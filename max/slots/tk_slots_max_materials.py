@@ -73,7 +73,7 @@ class Materials(Init):
 			materials = self.getSceneMaterials()
 
 		elif idMapMaterials:
-			materials = self.getSceneMaterials(startingWith=['matID'])
+			materials = self.getSceneMaterials(startingWith=['ID_'])
 
 		mats = sorted([mat for mat in set(materials)])
 		matNames = [mat.name for mat in mats]
@@ -153,7 +153,7 @@ class Materials(Init):
 
 		if tb.chk008.isChecked(): #Assign New random mat ID
 			if selection:
-				mat = self.createRandomMaterial(prefix='matID')
+				mat = self.createRandomMaterial(prefix='ID_')
 				self.assignMaterial(selection, mat)
 
 				#delete previous shader
@@ -220,7 +220,7 @@ class Materials(Init):
 
 		if self.currentMaterial and self.currentMaterial.name!=newMatName:
 			if self.parentUi.tb001.chk001.isChecked(): #Rename ID map Material
-				prefix = 'matID_'
+				prefix = 'ID_'
 				if not newMatName.startswith(prefix):
 					newMatName = prefix+newMatName
 
@@ -333,10 +333,10 @@ class Materials(Init):
 				for f in faces:
 					if multimaterial:
 						try: #get material from face
-							index = rt.GetFaceMatID(obj, f) #Returns the material ID of the specified face.
+							index = rt.GetFaceId_(obj, f) #Returns the material ID of the specified face.
 						except RuntimeError: #try procedure for polygon object
-							index = rt.polyop.GetFaceMatID(obj, f) #Returns the material ID of the specified face.
-						m = obj.material[index-1] #m = rt.getSubMtl(m, id) #get the material using the matID index (account for maxscript arrays starting at index 1)
+							index = rt.polyop.GetFaceId_(obj, f) #Returns the material ID of the specified face.
+						m = obj.material[index-1] #m = rt.getSubMtl(m, id) #get the material using the ID_ index (account for maxscript arrays starting at index 1)
 
 					if m==mat: #single material
 						if shell: #append obj to same and break loop
@@ -377,7 +377,7 @@ class Materials(Init):
 		Get All Materials from the current scene.
 
 		args:
-			startingWith (list) = Filters material names starting with any of the strings in the given list. ie. ['matID']
+			startingWith (list) = Filters material names starting with any of the strings in the given list. ie. ['ID_']
 		returns:
 			(list) materials.
 		'''
@@ -413,14 +413,14 @@ class Materials(Init):
 					face = rt.bitArrayToArray(rt.getFaceSelection(obj))[0] #get selected face
 
 				if rt.classOf(obj)==rt.Editable_Poly:
-					id_ = rt.polyop.GetFaceMatID(obj, face) #Returns the material ID of the specified face.
+					ID_ = rt.polyop.GetFaceId_(obj, face) #Returns the material ID of the specified face.
 				else:
 					try:
-						id_ = rt.GetFaceMatID(obj, face) #Returns the material ID of the specified face.
+						ID_ = rt.GetFaceId_(obj, face) #Returns the material ID of the specified face.
 					except RuntimeError:
 						return 'Error: Object must be of type Editable_Poly or Editable_mesh.'
 
-				mat = rt.getSubMtl(mat, id_) #get material from mat ID
+				mat = rt.getSubMtl(mat, ID_) #get material from mat ID
 
 		return mat
 

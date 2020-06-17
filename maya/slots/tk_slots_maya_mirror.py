@@ -18,7 +18,6 @@ class Mirror(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
-
 			return
 
 
@@ -145,7 +144,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	if self.parentUi.chk000.isChecked():
 	# 		axis = '-'+axis
 	# 	self.parentUi.tb000.setText('Mirror '+axis)
-	# 	self.parentUi.tb001.setText('Delete '+axis)
+	# 	self.parentUi.tb003.setText('Delete '+axis)
 
 
 	# #set check states
@@ -158,7 +157,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	if self.parentUi.chk000.isChecked():
 	# 		axis = '-'+axis
 	# 	self.parentUi.tb000.setText('Mirror '+axis)
-	# 	self.parentUi.tb001.setText('Delete '+axis)
+	# 	self.parentUi.tb003.setText('Delete '+axis)
 
 
 	# def chk002(self):
@@ -170,7 +169,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	if self.parentUi.chk000.isChecked():
 	# 		axis = '-'+axis
 	# 	self.parentUi.tb000.setText('Mirror '+axis)
-	# 	self.parentUi.tb001.setText('Delete '+axis)
+	# 	self.parentUi.tb003.setText('Delete '+axis)
 
 
 	# def chk003(self):
@@ -182,7 +181,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	if self.parentUi.chk000.isChecked():
 	# 		axis = '-'+axis
 	# 	self.parentUi.tb000.setText('Mirror '+axis)
-	# 	self.parentUi.tb001.setText('Delete '+axis)
+	# 	self.parentUi.tb003.setText('Delete '+axis)
 
 
 	# def chk005(self):
