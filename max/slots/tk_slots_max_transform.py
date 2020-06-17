@@ -174,11 +174,12 @@ class Transform(Init):
 		Drop To Grid
 		'''
 		tb = self.currentUi.tb000
-		if state=='setMenu':
+		if not tb.containsMenuItems:
 			tb.add('QCheckBox', setText='Move to Origin', setObjectName='chk014', setChecked=True, setToolTip='Move to origin (xyz 0,0,0).')
 			tb.add('QCheckBox', setText='Use Lowest Point', setObjectName='chk015', setToolTip='Use Lowest bounding box point (else mid point).')
 			tb.add('QCheckBox', setText='Center Pivot', setObjectName='chk016', setChecked=True, setToolTip='Center pivot on objects bounding box.')
-			return
+			if state=='setMenu':
+				return
 
 		origin = tb.chk014.isChecked()
 		bBoxLowestPoint = tb.chk015.isChecked()
@@ -234,7 +235,7 @@ class Transform(Init):
 		Auto Align finds the axis with the largest variance, and set the axis checkboxes accordingly before performing a regular align.
 		'''
 		tb = self.currentUi.tb001
-		if state=='setMenu':
+		if not tb.containsMenuItems:
 			tb.add('QCheckBox', setText='X Axis', setObjectName='chk029', setToolTip='Align X axis')
 			tb.add('QCheckBox', setText='Y Axis', setObjectName='chk030', setToolTip='Align Y axis')
 			tb.add('QCheckBox', setText='Z Axis', setObjectName='chk031', setToolTip='Align Z axis')
@@ -242,7 +243,8 @@ class Transform(Init):
 			tb.add('QCheckBox', setText='Average', setObjectName='chk006', setChecked=True, setToolTip='Align to last selected object or average.')
 			tb.add('QCheckBox', setText='Auto Align', setObjectName='chk010', setChecked=True, setToolTip='')
 			tb.add('QCheckBox', setText='Auto Align: Two Axes', setObjectName='chk011', setToolTip='')
-			return
+			if state=='setMenu':
+				return
 
 		#a previous version of this has been translated to max
 		if tb.chk010.isChecked(): #Auto Align: if checked; set coordinates for auto align:

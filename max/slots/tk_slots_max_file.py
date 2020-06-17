@@ -54,7 +54,7 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if not cmb.initialized:
+		if not cmb.containsMenuItems:
 			cmb.addToContext('QPushButton', setObjectName='b001', setText='Last', setToolTip='Open the most recent file.')
 
 		list_ = rt.getRecentfiles()
@@ -197,7 +197,7 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb006
 
-		if not cmb.initialized:
+		if not cmb.containsMenuItems:
 			cmb.addToContext(QComboBox_, setObjectName='cmb001', setToolTip='Current project directory root.')
 			cmb.addToContext(QLabel_, setObjectName='lbl000', setText='Set', setToolTip='Set the project directory.')
 			cmb.addToContext(QLabel_, setObjectName='lbl001', setText='Minimize App', setToolTip='Minimize the main application.')
@@ -226,12 +226,13 @@ class File(Init):
 		Save
 		'''
 		tb = self.currentUi.tb000
-		if state=='setMenu':
+		if not tb.containsMenuItems:
 			tb.add('QCheckBox', setText='ASCII', setObjectName='chk003', setChecked=True, setToolTip='Toggle ASCII or binary file type.')
 			tb.add('QCheckBox', setText='Wireframe', setObjectName='chk000', setChecked=True, setToolTip='Set view to wireframe before save.')
 			tb.add('QCheckBox', setText='Increment', setObjectName='chk001', setChecked=True, setToolTip='Append and increment a unique integer value.')
 			tb.add('QCheckBox', setText='Quit', setObjectName='chk002', setToolTip='Quit after save.')
-			return
+			if state=='setMenu':
+				return
 
 		preSaveScript = ""
 		postSaveScript = ""

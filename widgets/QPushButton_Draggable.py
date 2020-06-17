@@ -53,6 +53,16 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 		self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
 
 
+	@property
+	def containsContextMenuItems(self):
+		'''
+		Query whether a menu has been constructed.
+		'''
+		if not self.children_():
+			return False
+		return True
+
+
 	def add(self, w, **kwargs):
 		'''
 		Add items to the toolbutton's menu.
@@ -81,7 +91,7 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 		return w
 
 
-	def childWidgets(self, index=None):
+	def children_(self, index=None):
 		'''
 		Get the widget at the given index.
 		If no arg is given all widgets will be returned.
@@ -91,7 +101,7 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 		returns:
 			(QWidget) or (list)
 		'''
-		return self.menu.childWidgets(index)
+		return self.menu.children_(index)
 
 
 	def mousePressEvent(self, event):

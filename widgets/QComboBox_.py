@@ -30,7 +30,6 @@ class QComboBox_(QtWidgets.QComboBox):
 		args:
 			popupStyle (str) = specify the type of popup menu. default is the standard 'modelView'.
 		'''
-		self.initialized=False
 		self.popupStyle = popupStyle
 
 		self.menu = QMenu_(self, position='bottomLeft')
@@ -38,6 +37,26 @@ class QComboBox_(QtWidgets.QComboBox):
 		self.view().installEventFilter(self)
 
 		self.setAttributes(kwargs)
+
+
+	@property
+	def containsMenuItems(self):
+		'''
+		Query whether a menu has been constructed.
+		'''
+		if not self.children_():
+			return False
+		return True
+
+
+	@property
+	def containsContextMenuItems(self):
+		'''
+		Query whether a menu has been constructed.
+		'''
+		if not self.children_(contextMenu=True):
+			return False
+		return True
 
 
 	def eventFilter(self, widget, event):
@@ -105,6 +124,15 @@ class QComboBox_(QtWidgets.QComboBox):
 			self.move(self.mapFromGlobal(value - self.rect().center())) #move and center
 
 
+	def contextMenu(self):
+		'''
+		Get the context menu.
+		'''
+		if not hasattr(self, '_menu'):
+			self._menu = QMenu_(self, position='cursorPos')
+		return self._menu
+
+
 	def addToContext(self, w, title=None, **kwargs):
 		'''
 		Same as 'add', but instead adds items to the context menu.
@@ -145,7 +173,9 @@ class QComboBox_(QtWidgets.QComboBox):
 		if _menu is None:
 			_menu = self.menu
 		w = _menu.add(w, **kwargs)
+
 		setattr(self, w.objectName(), w)
+
 		return w
 
 
@@ -212,8 +242,8 @@ class QComboBox_(QtWidgets.QComboBox):
 		returns:
 			(QWidget) or (list)
 		'''
-		menuWidgets = self.menu.childWidgets(index)
-		contextMenuWidgets = self.contextMenu().childWidgets(index)
+		menuWidgets = self.menu.children_(index)
+		contextMenuWidgets = self.contextMenu().children_(index)
 
 		if contextMenu:
 			return contextMenuWidgets
@@ -238,15 +268,6 @@ class QComboBox_(QtWidgets.QComboBox):
 			self.setCurrentText(i)
 
 		self.blockSignals(False)
-
-
-	def contextMenu(self):
-		'''
-		Get the context menu.
-		'''
-		if not hasattr(self, '_menu'):
-			self._menu = QMenu_(self, position='cursorPos')
-		return self._menu
 
 
 	def showPopup(self):
@@ -339,7 +360,6 @@ class QComboBox_(QtWidgets.QComboBox):
 			if callable(self.classMethod):
 				self.classMethod()
 				self.setCurrentItem(0)
-				self.initialized=True
 
 			self.addContextMenuItemsToToolTip()
 

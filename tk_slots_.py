@@ -1,6 +1,6 @@
 from __future__ import print_function
 from PySide2 import QtCore
-import os.path
+import os.path, sys
 
 
 
@@ -36,18 +36,24 @@ class Slots(QtCore.QObject):
 	@property
 	def parentUi(self):
 		'''
-		Get the current top level Ui.
+		Get the calling module's top level Ui.
 		'''
 		# print ('parentUi:', self.sb.getUiName(self.sb.getUi(level=3)))
-		return self.sb.getUi(level=3) #main_menu
+		caller = sys._getframe(1)  # Obtain calling frame
+		callingModule = caller.f_globals['__name__']
+		name = callingModule.split('_')[-1] #get name from the module name.
+		return self.sb.getUi(name, level=3) #main_menu
 
 	@property
 	def childUi(self):
 		'''
-		Get the current Ui's submenu.
+		Get the calling module's submenu.
 		'''
 		# print ('submenu:', self.sb.getUiName(self.sb.getUi(level=2)))
-		return self.sb.getUi(level=2) #submenu
+		caller = sys._getframe(1)  # Obtain calling frame
+		callingModule = caller.f_globals['__name__']
+		name = callingModule.split('_')[-1] #get name from the module name.
+		return self.sb.getUi(name, level=2) #submenu
 
 
 	@classmethod
@@ -84,28 +90,28 @@ class Slots(QtCore.QObject):
 			self._messageBox.exec_()
 
 
-	def getObject(self, class_, objectNames, showError_=False):
+	def getObjects(self, class_, objectNames, showError_=False):
 		'''
 		Get a list of corresponding objects from a single string.
-		ie. 's000,b002,cmb011-15' would get objects with objectNames: s000, b002, and cmb011-cmb015
+		ie. 's000,b002,cmb011-15' would return object list: [<s000>, <b002>, <cmb011>, <cmb012>, <cmb013>, <cmb014>, <cmb015>]
 
 		args:
-			class_ = class object
-			objectNames (str) = names separated by ','. ie. 's000,b004-7'. b004-7 specifies buttons b004-b007.  
-			showError (bool) = show attribute error if item doesnt exist
+			class_ (obj) = Class object
+			objectNames (str) = Names separated by ','. ie. 's000,b004-7'. b004-7 specifies buttons b004-b007.  
+			showError (bool) = Show attribute error if item doesnt exist
 
 		returns:
-			list of corresponding objects
+			(list) of corresponding objects
 
-		#ex call: getObject(self.ui, 's000,b002,cmb011-15')
+		#ex call: getObjects(self.ui, 's000,b002,cmb011-15')
 		'''
 		objects=[]
 		for name in Slots.unpackNames(objectNames):
 			try:
 				objects.append(getattr(class_, name)) #equivilent to:(self.ui.m000)
-			except: 
+			except Exception as error: 
 				if showError_:
-					print(" Error: in getObject(): "+str(class_)+" has no attribute "+str(name)+" ")
+					print(error)
 				else: pass
 		return objects
 
@@ -113,7 +119,7 @@ class Slots(QtCore.QObject):
 	def callMethod(self, name, method, *args, **kwargs):
 		'''
 		Call a method from a class outside of the current ui.
-		Temporarily switches to the ui of the given method for the call, then returns to the previous menu.
+		Momentarily switches to the ui of the given method for the call, before returning to the previous ui.
 
 		args:
 			name (str) = ui name.
@@ -145,9 +151,9 @@ class Slots(QtCore.QObject):
 		'''
 		if isinstance(widgets, (str,unicode)):
 			try:
-				widgets = self.getObject(class_, widgets, showError_=True) #getObject returns a widget list from a string of objectNames.
+				widgets = self.getObjects(class_, widgets, showError_=True) #getObjects returns a widget list from a string of objectNames.
 			except:
-				widgets = self.getObject(self.sb.getUi(), widgets, showError_=True)
+				widgets = self.getObjects(self.sb.getUi(), widgets, showError_=True)
 
 		#if the variables are not of a list type; convert them.
 		widgets = self.sb.list_(widgets)
@@ -175,7 +181,7 @@ class Slots(QtCore.QObject):
 		'''
 		for ui in args:
 			for property_ in kwargs: #ie. property_ could be setChecked_False
-				widgets = self.getObject(ui, kwargs[property_]) #getObject returns a widget list from a string of objectNames.
+				widgets = self.getObjects(ui, kwargs[property_]) #getObjects returns a widget list from a string of objectNames.
 
 				if '_False' in property_: #set state to False if '_False' is appended to the keyword.
 					property_ = property_.rstrip('_False')
@@ -200,7 +206,7 @@ class Slots(QtCore.QObject):
 		if isinstance(checkboxes, (str, unicode)):
 			if ui is None:
 				ui = self.currentUi
-			checkboxes = self.getObject(ui, checkboxes)
+			checkboxes = self.getObjects(ui, checkboxes)
 
 		prefix = '-' if '-' in axis else '' #separate the prefix and axis
 		coord = axis.strip('-')
@@ -222,7 +228,7 @@ class Slots(QtCore.QObject):
 		if isinstance(checkboxes, (str, unicode)):
 			if ui is None:
 				ui = self.currentUi
-			checkboxes = self.getObject(ui, checkboxes)
+			checkboxes = self.getObjects(ui, checkboxes, showError_=1)
 
 		prefix=axis=''
 		for chk in checkboxes:
@@ -247,7 +253,7 @@ class Slots(QtCore.QObject):
 		ex. self.setSpinboxes (self.ui, spinboxNames='s000', attributes={'size':5} #explicit;  set single s000 with a label 'size' and value of 5
 		'''
 		if isinstance(spinboxes, (str, unicode)):
-			spinboxes = self.getObject(ui, spinboxes) #get spinbox objects
+			spinboxes = self.getObjects(ui, spinboxes) #get spinbox objects
 
 		#clear previous values
 		for spinbox in spinboxes:
@@ -340,7 +346,7 @@ class Slots(QtCore.QObject):
 	def unpackNames(nameString):
 		'''
 		Get a list of individual names from a single name string.
-		If you are looking to get multiple objects from a name string, call 'getObject' directly instead.
+		If you are looking to get multiple objects from a name string, call 'getObjects' directly instead.
 
 		args:
 			nameString = string consisting of widget names separated by commas. ie. 'v000, b004-6'
@@ -455,27 +461,27 @@ print (os.path.splitext(os.path.basename(__file__))[0])
 	# 	ex.	setButtons(self.ui, disable='b000', unchecked='chk009-12', invisible='b015')
 	# 	'''
 	# 	if checked:
-	# 		checked = self.getObject(ui, checked)
+	# 		checked = self.getObjects(ui, checked)
 	# 		[button.setChecked(True) for button in checked]
 			
 	# 	if unchecked:
-	# 		unchecked = self.getObject(ui, unchecked)
+	# 		unchecked = self.getObjects(ui, unchecked)
 	# 		[button.setChecked(False) for button in unchecked]
 			
 	# 	if enable:
-	# 		enable = self.getObject(ui, enable)
+	# 		enable = self.getObjects(ui, enable)
 	# 		[button.setEnabled(True) for button in enable]
 			
 	# 	if disable:
-	# 		disable = self.getObject(ui, disable)
+	# 		disable = self.getObjects(ui, disable)
 	# 		[button.setDisabled(True) for button in disable]
 			
 	# 	if visible:
-	# 		visible = self.getObject(ui, visible)
+	# 		visible = self.getObjects(ui, visible)
 	# 		[button.setVisible(True) for button in visible]
 			
 	# 	if invisible:
-	# 		invisible = self.getObject(ui, invisible)
+	# 		invisible = self.getObjects(ui, invisible)
 	# 		[button.setVisible(False) for button in invisible]
 
 
@@ -492,7 +498,7 @@ print (os.path.splitext(os.path.basename(__file__))[0])
 # 	ex. self.setSpinboxes (self.ui, values=[("width",1),("length ratio",1),("patches U",1),("patches V",1)]) #range. dict 'value's will be added to corresponding spinbox starting at s000 through s003.
 # 	ex. self.setSpinboxes (self.ui, spinboxNames='s000', values=[('size',5)]) #explicit;  set single s000 with a label 'size' and value of 5. multiple spinboxes can be set this way. specify a range of spinboxes using 's010-18'.
 # 	'''
-# 	spinboxes = self.getObject(ui, spinboxNames) #get spinbox objects
+# 	spinboxes = self.getObjects(ui, spinboxNames) #get spinbox objects
 
 # 	#clear previous values
 # 	for spinbox in spinboxes:

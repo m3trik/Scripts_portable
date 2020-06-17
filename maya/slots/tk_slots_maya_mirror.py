@@ -52,7 +52,7 @@ class Mirror(Init):
 		Mirror Geometry
 		'''
 		tb = self.currentUi.tb000
-		if state=='setMenu':
+		if not tb.containsMenuItems:
 			tb.add('QCheckBox', setText='-', setObjectName='chk000', setChecked=True, setToolTip='Perform mirror along negative axis.')
 			tb.add('QRadioButton', setText='X', setObjectName='chk001', setChecked=True, setToolTip='Perform mirror along X axis.')
 			tb.add('QRadioButton', setText='Y', setObjectName='chk002', setToolTip='Perform mirror along Y axis.')
@@ -62,10 +62,11 @@ class Mirror(Init):
 			tb.add('QDoubleSpinBox', setPrefix='Merge Threshold: ', setObjectName='s000', minMax_='0.000-10 step.001', setValue=0.005, setToolTip='Merge vertex distance.')
 
 			self.connect_('chk000-3', 'toggled', self.chk000_3, tb)
-			return
+			if state=='setMenu':
+				return
 
-		axis = self.getAxisFromCheckBoxes('chk000-3')
-		cutMesh = tb.chk005.isChecked() #cut
+		axis = self.getAxisFromCheckBoxes('chk000-3', tb)
+		cutMesh = tb.chk005.isChecked() #cut mesh on axis before mirror.
 		instance = tb.chk004.isChecked()
 		mergeThreshold = tb.s000.value()
 

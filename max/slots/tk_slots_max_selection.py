@@ -285,12 +285,13 @@ class Selection(Init):
 		Select Nth
 		'''
 		tb = self.currentUi.tb000
-		if state=='setMenu':
+		if not tb.containsMenuItems:
 			tb.add('QCheckBox', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
 			tb.add('QCheckBox', setText='Component Loop', setObjectName='chk001', setChecked=True, setToolTip='Select all contiguous components that form a loop with the current selection.')
 			tb.add('QCheckBox', setText='Shortest Path', setObjectName='chk002', setToolTip='Shortest component path between two selected vertices or UV\'s.')
 			tb.add('QSpinBox', setPrefix='Step: ', setObjectName='s003', minMax_='1-100 step1', setValue=1, setToolTip='Step Amount.')
-			return
+			if state=='setMenu':
+				return
 
 		step = tb.s003.value()
 
@@ -331,9 +332,10 @@ class Selection(Init):
 		Select Similar
 		'''
 		tb = self.currentUi.tb001
-		if state=='setMenu':
+		if not tb.containsMenuItems:
 			tb.add('QDoubleSpinBox', setPrefix='Tolerance: ', setObjectName='s000', minMax_='0.0-10 step.1', setValue=0.3, setToolTip='Select similar objects or components, depending on selection mode.')
-			return
+			if state=='setMenu':
+				return
 
 		tolerance = str(tb.s000.value()) #string value because mel.eval is sending a command string
 		mel.eval("doSelectSimilar 1 {\""+ tolerance +"\"}")
@@ -344,12 +346,13 @@ class Selection(Init):
 		Select Island: Select Polygon Face Island
 		'''
 		tb = self.currentUi.tb002
-		if state=='setMenu':
+		if not tb.containsMenuItems:
 			tb.add('QCheckBox', setText='Lock Values', setObjectName='chk003', setChecked=True, setToolTip='Keep values in sync.')
 			tb.add('QDoubleSpinBox', setPrefix='x: ', setObjectName='s002', minMax_='0.00-1 step.01', setValue=0.01, setToolTip='Normal X range.')
 			tb.add('QDoubleSpinBox', setPrefix='y: ', setObjectName='s004', minMax_='0.00-1 step.01', setValue=0.01, setToolTip='Normal Y range.')
 			tb.add('QDoubleSpinBox', setPrefix='z: ', setObjectName='s005', minMax_='0.00-1 step.01', setValue=0.01, setToolTip='Normal Z range.')
-			return
+			if state=='setMenu':
+				return
 
 		rangeX = float(tb.s002.value())
 		rangeY = float(tb.s004.value())

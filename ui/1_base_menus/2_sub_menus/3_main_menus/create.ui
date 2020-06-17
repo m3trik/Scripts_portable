@@ -91,7 +91,7 @@
            <property name="minimumSize">
             <size>
              <width>137</width>
-             <height>139</height>
+             <height>137</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -257,46 +257,6 @@
               <string>Light</string>
              </property>
             </item>
-           </widget>
-           <widget class="QPushButton" name="b000">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>95</y>
-              <width>136</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>999</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Create the specified object. If a point is set, the object will be created at that coordinate.</string>
-            </property>
-            <property name="layoutDirection">
-             <enum>Qt::RightToLeft</enum>
-            </property>
-            <property name="text">
-             <string>Create</string>
-            </property>
-            <property name="checkable">
-             <bool>false</bool>
-            </property>
-            <property name="autoDefault">
-             <bool>false</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-            <property name="bnabled" stdset="0">
-             <bool>true</bool>
-            </property>
            </widget>
            <widget class="QPushButton" name="chk000">
             <property name="geometry">
@@ -491,7 +451,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>115</y>
+              <y>95</y>
               <width>136</width>
               <height>22</height>
              </rect>
@@ -532,9 +492,48 @@
              </property>
             </item>
            </widget>
+           <widget class="QPushButton" name="b000">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>117</y>
+              <width>136</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>999</width>
+              <height>19</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>Create the specified object. If a point is set, the object will be created at that coordinate.</string>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::RightToLeft</enum>
+            </property>
+            <property name="text">
+             <string>Create</string>
+            </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
+            <property name="autoDefault">
+             <bool>false</bool>
+            </property>
+            <property name="default">
+             <bool>false</bool>
+            </property>
+            <property name="flat">
+             <bool>false</bool>
+            </property>
+            <property name="bnabled" stdset="0">
+             <bool>true</bool>
+            </property>
+           </widget>
            <zorder>cmb000</zorder>
            <zorder>cmb001</zorder>
-           <zorder>b000</zorder>
            <zorder>chk000</zorder>
            <zorder>chk002</zorder>
            <zorder>chk001</zorder>
@@ -545,6 +544,7 @@
            <zorder>chk005</zorder>
            <zorder>chk003</zorder>
            <zorder>cmb002</zorder>
+           <zorder>b000</zorder>
           </widget>
          </item>
          <item>

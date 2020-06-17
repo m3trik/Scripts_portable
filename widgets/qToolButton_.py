@@ -36,6 +36,35 @@ class QToolButton_(QtWidgets.QToolButton):
 		self.setPopupMode(self.MenuButtonPopup) #DelayedPopup (default), MenuButtonPopup, InstantPopup
 
 
+	@property
+	def containsMenuItems(self):
+		'''
+		Query whether a menu has been constructed.
+		'''
+		if not self.children_():
+			return False
+		return True
+
+
+	@property
+	def containsContextMenuItems(self):
+		'''
+		Query whether a menu has been constructed.
+		'''
+		if not self.children_(contextMenu=True):
+			return False
+		return True
+
+
+	def contextMenu(self):
+		'''
+		Get the context menu.
+		'''
+		if not hasattr(self, '_menu'):
+			self._menu = QMenu_(self, position='cursorPos')
+		return self._menu
+
+
 	def addToContext(self, w, title=None, **kwargs):
 		'''
 		Same as 'add', but instead adds items to the context menu.
@@ -72,19 +101,11 @@ class QToolButton_(QtWidgets.QToolButton):
 			_menu = self.menu()
 		w = _menu.add(w, **kwargs)
 		setattr(self, w.objectName(), w)
+
 		return w
 
 
-	def contextMenu(self):
-		'''
-		Get the context menu.
-		'''
-		if not hasattr(self, '_menu'):
-			self._menu = QMenu_(self, position='cursorPos')
-		return self._menu
-
-
-	def childWidgets(self, index=None, contextMenu=False):
+	def children_(self, index=None, contextMenu=False):
 		'''
 		Get the widget at the given index.
 		If no arg is given all widgets will be returned.
@@ -94,8 +115,8 @@ class QToolButton_(QtWidgets.QToolButton):
 		returns:
 			(QWidget) or (list)
 		'''
-		menuWidgets = self.menu().childWidgets(index)
-		contextMenuWidgets = self.contextMenu().childWidgets(index)
+		menuWidgets = self.menu().children_(index)
+		contextMenuWidgets = self.contextMenu().children_(index)
 
 		if contextMenu:
 			return contextMenuWidgets
@@ -155,7 +176,7 @@ class QToolButton_(QtWidgets.QToolButton):
 			if callable(self.classMethod):
 				self.classMethod('setMenu')
 
-			if not self.childWidgets(): #if no menu items present, disable the menu button.
+			if not self.containsMenuItems: #if no menu items present, disable the menu button.
 				self.setPopupMode(self.DelayedPopup) #DelayedPopup (default), MenuButtonPopup, InstantPopup
 
 		return QtWidgets.QToolButton.showEvent(self, event)

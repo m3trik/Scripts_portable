@@ -86,9 +86,10 @@ class Polygons(Init):
 		Merge Vertices
 		'''
 		tb = self.currentUi.tb000
-		if state=='setMenu':
+		if not tb.containsMenuItems:
 			tb.add('QDoubleSpinBox', setPrefix='Distance: ', setObjectName='s002', minMax_='0.000-10 step.001', setValue=0.001, setToolTip='Merge Distance.')
-			return
+			if state=='setMenu':
+				return
 
 		tolerance = float(tb.s002.value())
 		selection = pm.ls(selection=1, objectsOnly=1)
@@ -124,9 +125,10 @@ class Polygons(Init):
 		Bridge
 		'''
 		tb = self.currentUi.tb001
-		if state=='setMenu':
+		if not tb.containsMenuItems:
 			tb.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s003', minMax_='0-10000 step1', setValue=1, setToolTip='Subdivision Amount.')
-			return
+			if state=='setMenu':
+				return
 
 		divisions = tb.s003.value()
 
@@ -142,9 +144,10 @@ class Polygons(Init):
 		Combine
 		'''
 		tb = self.currentUi.tb002
-		if state=='setMenu':
+		if not tb.containsMenuItems:
 			tb.add('QCheckBox', setText='Merge', setObjectName='chk000', setChecked=True, setToolTip='Combine selected meshes and merge any coincident verts/edges.')
-			return
+			if state=='setMenu':
+				return
 
 		# pm.polyUnite( 'plg1', 'plg2', 'plg3', name='result' ) #for future reference. if more functionality is needed use polyUnite
 		if tb.chk000.isChecked():
@@ -158,10 +161,11 @@ class Polygons(Init):
 		Extrude
 		'''
 		tb = self.currentUi.tb003
-		if state=='setMenu':
+		if not tb.containsMenuItems:
 			tb.add('QCheckBox', setText='Keep Faces Together', setObjectName='chk002', setChecked=True, setToolTip='Keep edges/faces together.')
 			tb.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s004', minMax_='1-10000 step1', setValue=1, setToolTip='Subdivision Amount.')
-			return
+			if state=='setMenu':
+				return
 
 		keepFacesTogether = tb.chk002.isChecked() #keep faces/edges together.
 		divisions = tb.s004.value()
@@ -179,9 +183,10 @@ class Polygons(Init):
 		Bevel (Chamfer)
 		'''
 		tb = self.currentUi.tb004
-		if state=='setMenu':
+		if not tb.containsMenuItems:
 			tb.add('QDoubleSpinBox', setPrefix='Width: ', setObjectName='s000', minMax_='0.00-100 step.01', setValue=0.01, setToolTip='Bevel Width.')
-			return
+			if state=='setMenu':
+				return
 
 		width = float(tb.s000.value())
 		chamfer = True
@@ -198,9 +203,10 @@ class Polygons(Init):
 		Detach
 		'''
 		tb = self.currentUi.tb005
-		if state=='setMenu':
+		if not tb.containsMenuItems:
 			tb.add('QCheckBox', setText='Delete Original', setObjectName='chk007', setChecked=True, setToolTip='Delete original selected faces.')
-			return
+			if state=='setMenu':
+				return
 
 		vertexMask = pm.selectType (query=True, vertex=True)
 		edgeMask = pm.selectType (query=True, edge=True)
@@ -258,9 +264,10 @@ class Polygons(Init):
 		Inset Face Region
 		'''
 		tb = self.currentUi.tb006
-		if state=='setMenu':
+		if not tb.containsMenuItems:
 			tb.add('QDoubleSpinBox', setPrefix='Offset: ', setObjectName='s001', minMax_='0.00-100 step.01', setValue=2.00, setToolTip='Offset amount.')
-			return
+			if state=='setMenu':
+				return
 
 		offset = float(tb.s001.value())
 		pm.polyExtrudeFacet (keepFacesTogether=1, pvx=0, pvy=40.55638003, pvz=33.53797107, divisions=1, twist=0, taper=1, offset=offset, thickness=0, smoothingAngle=30)
@@ -272,11 +279,12 @@ class Polygons(Init):
 		Divide Facet
 		'''
 		tb = self.currentUi.tb007
-		if state=='setMenu':
+		if not tb.containsMenuItems:
 			tb.add('QCheckBox', setText='U', setObjectName='chk008', setChecked=True, setToolTip='Divide facet: U coordinate.')
 			tb.add('QCheckBox', setText='V', setObjectName='chk009', setChecked=True, setToolTip='Divide facet: V coordinate.')
 			tb.add('QCheckBox', setText='Tris', setObjectName='chk010', setToolTip='Divide facet: Tris.')
-			return
+			if state=='setMenu':
+				return
 
 		dv=u=v=0
 		if tb.chk008.isChecked(): #Split U
@@ -307,11 +315,12 @@ class Polygons(Init):
 		Boolean Operation
 		'''
 		tb = self.currentUi.tb008
-		if state=='setMenu':
+		if not tb.containsMenuItems:
 			tb.add('QRadioButton', setText='Union', setObjectName='chk011', setToolTip='Fuse two objects together.')
 			tb.add('QRadioButton', setText='Difference', setObjectName='chk012', setChecked=True, setToolTip='Indents one object with the shape of another at the point of their intersection.')
 			tb.add('QRadioButton', setText='Intersection', setObjectName='chk013', setToolTip='Keep only the interaction point of two objects.')
-			return
+			if state=='setMenu':
+				return
 
 		if tb.chk011.isChecked(): #union
 			mel.eval("polyPerformBooleanAction 1 o 0;") #PolygonBooleanIntersection;

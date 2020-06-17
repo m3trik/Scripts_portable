@@ -53,7 +53,7 @@ class Init(Slots):
 				if pm.selectType(query=1, allObjects=1): #get object/s
 
 					selectedObjects = pm.ls(selection=1, objectsOnly=1)
-					name_and_type = [str(i.name())+':'+str(pm.objectType(i)) for i in selectedObjects] #ie. ['pCube1:transform', 'pSphere1:transform']
+					name_and_type = [str(i.name())+'|'+str(pm.objectType(i)) for i in selectedObjects] #ie. ['pCube1:transform', 'pSphere1:transform']
 					infoDict.update({'Selection: ':name_and_type}) #currently selected objects by name and type.
 
 					objectFaces = pm.polyEvaluate(selectedObjects, face=True)
@@ -604,45 +604,41 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getHistoryNode(transform, name=False):
+	def getHistoryNode(node):
 		'''
 		Get the history node of the given transform. 
 
 		args:
 			node (obj) = Transform node.
-			name (bool) = Return the node name.
 
 		returns:
-			(str) node or node name
+			(str) node
 		'''
-		#get shape node from transform:
-		shapes = pm.listRelatives(transform, children=1, shapes=1) #returns list ie. [nt.Mesh(u'pConeShape1')]
-		#incoming connections:
-		historyNode = pm.listConnections(shapes, source=1, destination=0) #returns list ie. [nt.PolyCone(u'polyCone1')]
-		if name:
-			return historyNode[0].name() #get the string name from the history node
-		return historyNode[0]
+		shapes = pm.listRelatives(node, children=1, shapes=1) #get shape node from transform: returns list ie. [nt.Mesh(u'pConeShape1')]
+		connections = pm.listConnections(shapes, source=1, destination=0) #get incoming connections: returns list ie. [nt.PolyCone(u'polyCone1')]
+		return connections[0]
 
 
 	@staticmethod
-	def getAttributesMEL(node, exclude=None):
+	def getAttributesMEL(node, exclude=[]):
 		'''
-		Get history node attributes:values using the transform node. 
+		Get node attributes and their corresponding values as a dict.
 
 		args:
 			node (obj) = Transform node.
-			exclude (list) = Attributes to exclude from the returned dictionay. ie. ['Position','Rotation','Scale','renderable','isHidden','isFrozen','selected']
+			exclude (list) = Attributes to exclude from the returned dictionay. ie. [u'Position',u'Rotation',u'Scale',u'renderable',u'isHidden',u'isFrozen',u'selected']
 
 		returns:
 			(dict) {'string attribute': current value}
 		'''
-		return {attr:pm.getAttr(node+'.'+attr) for attr in pm.listAttr(node) if attr not in exclude}
+		# print('node:', node); print('attr:', pm.listAttr(node))
+		return {attr:pm.getAttr(node+'.'+attr) for attr in pm.listAttr(node) if attr not in exclude} #ie. pm.getAttr('polyCube1.subdivisionsDepth')
 
 
 	@staticmethod
 	def setAttributesMEL(node, attributes):
 		'''
-		Set history node attributes using the transform node.
+		Set node attribute values using a dict. 
 
 		args:
 			node (obj) = Transform node.
@@ -651,7 +647,7 @@ class Init(Slots):
 		ex call:
 		self.setAttributesMEL(obj, {'smoothLevel':1})
 		'''
-		[pm.setAttr(node+'.'+attr, value) for attr, value in attributes.items() if attr and value]
+		[pm.setAttr(node+'.'+attr, value) for attr, value in attributes.items() if attr and value] #ie. pm.setAttr('polyCube1.subdivisionsDepth', 5)
 
 
 	@staticmethod

@@ -96,7 +96,7 @@ class QWidget_MultiWidget(QtWidgets.QWidget):
 
 		if event.type()==QtCore.QEvent.HoverMove:
 			try:
-				w = next(w for w in self.childWidgets() if w.rect().contains(w.mapFromGlobal(QtGui.QCursor.pos())) and w.isVisible())
+				w = next(w for w in self.children_() if w.rect().contains(w.mapFromGlobal(QtGui.QCursor.pos())) and w.isVisible())
 			except StopIteration:
 				return QtWidgets.QApplication.sendEvent(self._mouseGrabber, self.hoverLeave_)
 
@@ -133,7 +133,7 @@ class QWidget_MultiWidget(QtWidgets.QWidget):
 	def mouseMoveEvent(self, event):
 		'''
 		'''
-		for w in self.childWidgets():
+		for w in self.children_():
 			if w.rect().contains(w.mapFromGlobal(QtGui.QCursor.pos())) and w.isVisible():
 				w.grabMouse()
 
@@ -150,7 +150,7 @@ class QWidget_MultiWidget(QtWidgets.QWidget):
 		return QtWidgets.QWidget.leaveEvent(self, event)
 
 
-	def childWidgets(self, index=None):
+	def children_(self, index=None):
 		'''
 		Get the widget at the given index.
 		If no arg is given all widgets will be returned.
@@ -197,7 +197,7 @@ class QWidget_MultiWidget(QtWidgets.QWidget):
 			self.parentUiName = self.sb.getUiName()
 			self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
 
-			self.childEvents.addWidgets(self.parentUiName, self.childWidgets())
+			self.childEvents.addWidgets(self.parentUiName, self.children_())
 
 		self.resize(self.sizeHint().width(), self.sizeHint().height())
 
@@ -213,8 +213,8 @@ if __name__ == "__main__":
 	qApp = QtWidgets.QApplication(sys.argv)
 
 	m = QWidget_MultiWidget([QtWidgets.QPushButton('Cameras'), 'QPushButton'])
-	m.setAsOptionBox(m.childWidgets(1))
-	print(m.childWidgets(0).text())
+	m.setAsOptionBox(m.children_(1))
+	print(m.children_(0).text())
 
 	m.show()
 	sys.exit(qApp.exec_())
@@ -223,7 +223,7 @@ if __name__ == "__main__":
 
 # adding a Multi-Widget row to a custom tree widget:
 # m = MultiWidget(['QPushButton', 'QPushButton'])
-# m.childWidgets(0).setText('ButtonText')
-# m.setAsOptionBox(m.childWidgets(1)) #set button 2 to be an option box style
+# m.children_(0).setText('ButtonText')
+# m.setAsOptionBox(m.children_(1)) #set button 2 to be an option box style
 # tree.add(m, 'Cameras') #add the widgets to the tree under the parent header 'Cameras'
 

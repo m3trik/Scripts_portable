@@ -149,7 +149,7 @@ class Create(Init):
 
 		'''
 		#add support for averaging multiple components.
-		selection = pm.ls (selection=1, flatten=1)
+		selection = pm.ls(selection=1, flatten=1)
 		try:
 			self.point = pm.xform (selection, query=1, translation=1, worldSpace=1, absolute=1)
 		except:
@@ -167,7 +167,7 @@ class Create(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if not cmb.initialized:
+		if not cmb.containsMenuItems:
 			items = ['Polygon', 'NURBS', 'Light']
 			contents = cmb.addItems_(items)
 
@@ -227,8 +227,8 @@ class Create(Init):
 		args:
 			index(int) = optional index of the spinbox that called this function. ie. 5 from s005
 		'''
-		spinboxValues = {s.prefix().rstrip(':'):s.value() for s in self.parentUi.cmb002.children_()} #get current spinbox values. ie. {width:10} from spinbox prefix and value.
-		historyNode = self.getHistoryNode(self.node, name=True)
+		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.parentUi.cmb002.children_()} #get current spinbox values. ie. {width:10} from spinbox prefix and value.
+		historyNode = self.getHistoryNode(self.node[0])
 		self.setAttributesMEL(historyNode, spinboxValues) #set attributes for the history node
 
 
@@ -345,8 +345,10 @@ class Create(Init):
 		#translate the newly created node
 		pm.xform (self.node, translation=self.point, worldSpace=1, absolute=1)
 
-		exclude = [u'message', u'caching', u'frozen', u'isHistoricallyInteresting', u'nodeState', u'binMembership', u'output', u'axis', u'axisX', u'axisY', u'axisZ', u'paramWarn', u'uvSetName', 'maya70']
-		attributes = self.getAttributesMEL(self.node, exclude) #get dict of attributes and their values using the transform node.
+		exclude = [u'message', u'caching', u'frozen', u'isHistoricallyInteresting', u'nodeState', u'binMembership', u'output', 
+					u'axis', u'axisX', u'axisY', u'axisZ', u'paramWarn', u'uvSetName', u'createUVs', u'texture', u'maya70']
+		historyNode = self.getHistoryNode(self.node[0]) #get the history node using the transform
+		attributes = self.getAttributesMEL(historyNode, exclude) #get dict containing attributes:values of the history node.
 		self.cmb002(values=attributes, clear=True, show=True)
 
 		pm.select(self.node) #select the transform node so that you can see any edits

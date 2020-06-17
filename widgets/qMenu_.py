@@ -46,6 +46,16 @@ class QMenu_(QtWidgets.QMenu):
 			}''')
 
 
+	@property
+	def containsMenuItems(self):
+		'''
+		Query whether a menu has been constructed.
+		'''
+		if not self.children_():
+			return False
+		return True
+
+
 	def _setAttributes(self, attributes=None, action=None, order=['show'], **kwargs):
 		'''
 		Internal use. Works with attributes passed in as a dict or kwargs.
@@ -168,7 +178,7 @@ class QMenu_(QtWidgets.QMenu):
 		return [self.addMenu(m) for m in menus]
 
 
-	def childWidgets(self, index=None):
+	def children_(self, index=None):
 		'''
 		Get the widget at the given index.
 		If no arg is given all widgets will be returned.
@@ -226,15 +236,17 @@ class QMenu_(QtWidgets.QMenu):
 		'''
 		if not __name__=='__main__' and not hasattr(self, 'parentUiName'):
 			p = self.parent()
-			while not hasattr(p.window(), 'sb'):
-				p = p.parent()
+			try:
+				while not hasattr(p.window(), 'sb'):
+					p = p.parent()
 
-			self.sb = p.window().sb
-			self.parentUiName = self.sb.getUiName()
-			self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
+				self.sb = p.window().sb
+				self.parentUiName = self.sb.getUiName()
+				self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
 
-			self.childEvents.addWidgets(self.parentUiName, self.children()+[self])
-
+				self.childEvents.addWidgets(self.parentUiName, self.children()+[self])
+			except AttributeError:
+				pass
 
 		#set menu position
 		if self.position is 'cursorPos':

@@ -173,7 +173,7 @@ class Create(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if not cmb.initialized:
+		if not cmb.containsMenuItems:
 			items = ['Mesh', 'Editable Poly', 'Editable Mesh', 'Editable Patch', 'NURBS', 'Light']
 			contents = cmb.addItems_(items)
 
@@ -236,9 +236,7 @@ class Create(Init):
 		args:
 			index(int) = optional index of the spinbox that called this function. ie. 5 from s005
 		'''
-		spinboxValues = {s.prefix().rstrip(':'):s.value() for s in self.parentUi.cmb002.children_()} #current spinbox values. ie. from s000 get the value of six and add it to the list
-		print (self.parentUi.cmb002.children_())
-		print (self.parentUi.cmb002.childWidgets())
+		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.parentUi.cmb002.children_()} #current spinbox values. ie. from s000 get the value of six and add it to the list
 		self.setAttributesMax(self.node, spinboxValues) #set attributes for the history node
 
 

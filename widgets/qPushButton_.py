@@ -30,6 +30,16 @@ class QPushButton_(QtWidgets.QPushButton):
 		self.setAttributes(kwargs)
 
 
+	@property
+	def containsContextMenuItems(self):
+		'''
+		Query whether a menu has been constructed.
+		'''
+		if not self.children_():
+			return False
+		return True
+
+
 	def setAttributes(self, attributes=None, order=['globalPos', 'setVisible'], **kwargs):
 		'''
 		Works with attributes passed in as a dict or kwargs.
@@ -81,6 +91,15 @@ class QPushButton_(QtWidgets.QPushButton):
 			self.move(self.mapFromGlobal(value - self.rect().center())) #move and center
 
 
+	def contextMenu(self):
+		'''
+		Get the context menu.
+		'''
+		if not hasattr(self, '_menu'):
+			self._menu = QMenu_(self, position='cursorPos')
+		return self._menu
+
+
 	def addToContext(self, w, **kwargs):
 		'''
 		Add items to the pushbutton's context menu.
@@ -109,16 +128,7 @@ class QPushButton_(QtWidgets.QPushButton):
 		return w
 
 
-	def contextMenu(self):
-		'''
-		Get the context menu.
-		'''
-		if not hasattr(self, '_menu'):
-			self._menu = QMenu_(self, position='cursorPos')
-		return self._menu
-
-
-	def childWidgets(self, index=None):
+	def children_(self, index=None):
 		'''
 		Get the widget at the given index.
 		If no arg is given all widgets will be returned.
@@ -128,7 +138,7 @@ class QPushButton_(QtWidgets.QPushButton):
 		returns:
 			(QWidget) or (list)
 		'''
-		return self.contextMenu().childWidgets(index)
+		return self.contextMenu().children_(index)
 
 
 	def mousePressEvent(self, event):

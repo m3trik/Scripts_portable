@@ -244,17 +244,18 @@ class Edit(Init):
 		Delete Along Axis
 		'''
 		tb = self.currentUi.tb003
-		if state=='setMenu':
+		if not tb.containsMenuItems:
 			tb.add('QCheckBox', setText='-', setObjectName='chk006', setChecked=True, setToolTip='Perform delete along negative axis.')
 			tb.add('QRadioButton', setText='X', setObjectName='chk007', setChecked=True, setToolTip='Perform delete along X axis.')
 			tb.add('QRadioButton', setText='Y', setObjectName='chk008', setToolTip='Perform delete along Y axis.')
 			tb.add('QRadioButton', setText='Z', setObjectName='chk009', setToolTip='Perform delete along Z axis.')
 
 			self.connect_('chk006-9', 'toggled', self.chk006_9, tb)
-			return
+			if state=='setMenu':
+				return
 
 		selection = pm.ls(sl=1, objectsOnly=1)
-		axis = self.getAxisFromCheckBoxes('chk006-9')
+		axis = self.getAxisFromCheckBoxes('chk006-9', tb)
 
 		pm.undoInfo(openChunk=1)
 		for obj in selection:

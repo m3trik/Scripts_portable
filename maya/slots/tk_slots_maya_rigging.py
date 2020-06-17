@@ -119,14 +119,15 @@ class Rigging(Init):
 		Toggle Display Local Rotation Axes
 		'''
 		tb = self.currentUi.tb000
-		if state=='setMenu':
+		if not tb.containsMenuItems:
 			tb.add('QCheckBox', setText='Joints', setObjectName='chk000', setChecked=True, setToolTip='Display Joints.')
 			tb.add('QCheckBox', setText='IK', setObjectName='chk001', setChecked=True, setToolTip='Display IK.')
 			tb.add('QCheckBox', setText='IK\\FK', setObjectName='chk002', setChecked=True, setToolTip='Display IK\\FK.')
 			tb.add('QDoubleSpinBox', setPrefix='Tolerance: ', setObjectName='s000', minMax_='0.00-10 step.5', setValue=1.0, setToolTip='Global Display Scale for the selected type.')
 			
 			self.chk000() #init scale joint value
-			return
+			if state=='setMenu':
+				return
 
 		joints = pm.ls(type="joint") #get all scene joints
 
@@ -149,9 +150,10 @@ class Rigging(Init):
 		Orient Joints
 		'''
 		tb = self.currentUi.tb001
-		if state=='setMenu':
+		if not tb.containsMenuItems:
 			tb.add('QCheckBox', setText='Align world', setObjectName='chk003', setToolTip='Align joints with the worlds transform.')
-			return
+			if state=='setMenu':
+				return
 
 		orientJoint = 'xyz' #orient joints
 		if tb.isChecked():

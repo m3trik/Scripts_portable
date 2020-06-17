@@ -383,7 +383,8 @@ class Init(Slots):
 
 	#'s' argument is a textfield scale amount
 	#'x,y,z' arguments are checkbox boolean values. 
-	#basically working except for final 'obj.scale([s, s, s])' command in python. variable definitions included for debugging. to get working an option is to use the maxEval method in the alignVertices function.
+	#basically working except for final 'obj.scale([s, s, s])' command in python. variable definitions included for debugging. 
+	#to get working an option is to use the maxEval method in the alignVertices function.
 	@staticmethod
 	def scaleObject (size, x, y ,z):
 
@@ -398,7 +399,7 @@ class Init(Slots):
 		z = tk_isChecked_004
 		#-------------------------
 		s = size
-		selection = self.getObjects ("Current", 0)
+		selection = rt.selection
 
 		for obj in selection:
 			if (tk_isChecked_002 and tk_isChecked_003 and tk_isChecked_004):
