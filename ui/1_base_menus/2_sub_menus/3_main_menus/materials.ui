@@ -96,9 +96,9 @@
         </property>
         <property name="geometry">
          <rect>
-          <x>80</x>
+          <x>40</x>
           <y>35</y>
-          <width>76</width>
+          <width>111</width>
           <height>19</height>
          </rect>
         </property>
@@ -112,7 +112,7 @@
          <string>Assign stored material shader ID</string>
         </property>
         <property name="text">
-         <string>Assign To</string>
+         <string>Assign Current</string>
         </property>
        </widget>
        <widget class="QPushButton" name="b002">
@@ -123,7 +123,7 @@
          <rect>
           <x>0</x>
           <y>35</y>
-          <width>81</width>
+          <width>41</width>
           <height>19</height>
          </rect>
         </property>
@@ -137,7 +137,7 @@
          <string>Set material shader ID from selection.</string>
         </property>
         <property name="text">
-         <string>Set From</string>
+         <string>Get</string>
         </property>
         <property name="iconSize">
          <size>
@@ -152,9 +152,9 @@
         </property>
         <property name="geometry">
          <rect>
-          <x>155</x>
+          <x>150</x>
           <y>35</y>
-          <width>76</width>
+          <width>81</width>
           <height>19</height>
          </rect>
         </property>
@@ -174,7 +174,7 @@
  If nothing is selected; search all geometry.</string>
         </property>
         <property name="text">
-         <string>Select By</string>
+         <string>Select</string>
         </property>
         <property name="iconSize">
          <size>

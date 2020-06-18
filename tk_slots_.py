@@ -173,22 +173,20 @@ class Slots(QtCore.QObject):
 		If the ui has a submenu with the same widget, then the value will be set there as well. It can be set on additional ui's by passing them in explicitly in *args.
 		args:
 			*args = dynamic ui object/s
-			*kwargs = keyword: - the property to modify. ex. setChecked, setChecked_False, setEnabled, setDisabled, setVisible, setHidden
+			*kwargs = keyword: - the property to modify. ex. setChecked, setUnChecked, setEnabled, setDisabled, setVisible, setHidden
 								Optionally appending '_False' or '_True' to the attribute name, will set the attribute accordingly. (The default state is True)
 					argument: string of objectNames - objectNames separated by ',' ie. 'b000-12,b022'
 
-		ex.	self.toggleWidgets(self.ui1, self.ui2, setDisabled='b000', setChecked_False='chk009-12', setVisible='b015,b017')
+		ex.	self.toggleWidgets(self.ui1, self.ui2, setDisabled='b000', setUnChecked='chk009-12', setVisible='b015,b017')
 		'''
 		for ui in args:
-			for property_ in kwargs: #ie. property_ could be setChecked_False
+			for property_ in kwargs: #ie. property_ could be setUnChecked
 				widgets = self.getObjects(ui, kwargs[property_]) #getObjects returns a widget list from a string of objectNames.
 
-				if '_False' in property_: #set state to False if '_False' is appended to the keyword.
-					property_ = property_.rstrip('_False')
+				state = True
+				if 'Un' in property_: #set state to False if '_False' is appended to the keyword.
+					property_ = property_.replace('Un', '')
 					state = False
-				else:
-					property_ = property_.rstrip('_True')
-					state = True
 
 				[getattr(w, property_)(state) for w in widgets] #set the property state for each widget in the list.
 

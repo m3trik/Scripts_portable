@@ -111,7 +111,7 @@ class Duplicate(Init):
 		'''
 		Radial Array: X Axis
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk012', setChecked_False='chk013,chk014')
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk012', setUnChecked='chk013,chk014')
 		self.chk015()
 
 
@@ -119,7 +119,7 @@ class Duplicate(Init):
 		'''
 		Radial Array: Y Axis
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk013', setChecked_False='chk012,chk014')
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk013', setUnChecked='chk012,chk014')
 		self.chk015()
 
 
@@ -127,7 +127,7 @@ class Duplicate(Init):
 		'''
 		Radial Array: Z Axis
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk014', setChecked_False='chk012,chk013')
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk014', setUnChecked='chk012,chk013')
 		self.chk015()
 
 
@@ -190,7 +190,7 @@ class Duplicate(Init):
 					pm.select (objectName)
 					pm.undoInfo (closeChunk=1)
 			else: #if both lists objects are empty:
-				self.toggleWidgets(self.parentUi, self.childUi, setDisabled='b003', setChecked_False='chk015')
+				self.toggleWidgets(self.parentUi, self.childUi, setDisabled='b003', setUnChecked='chk015')
 				return 'Error: Nothing Selected.'
 
 		else: #if chk015 is unchecked by user or by create button

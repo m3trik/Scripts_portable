@@ -9,11 +9,9 @@ class Selection(Init):
 	def __init__(self, *args, **kwargs):
 		super(Selection, self).__init__(*args, **kwargs)
 
-		try:
-			#set checked button states
-			#chk004 ignore backfacing (camera based selection)
+		try: #set initial checked button states
 			state = pm.selectPref(query=True, useDepth=True)
-			self.parentUi.chk004.setChecked(state)
+			self.childUi.chk004.setChecked(state) #chk004 ignore backfacing (camera based selection)
 
 			#selection style: set initial checked state
 			ctx = pm.currentCtx() #flags (ctx, c=True) get the context's class.
@@ -98,33 +96,34 @@ class Selection(Init):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk001-2')
+		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk001-2')
 
 
 	def chk001(self):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk000,chk002')
+		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk000,chk002')
 
 
 	def chk002(self):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk000-1')
+		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk000-1')
 
 
+	@Slots.message
 	def chk004(self):
 		'''
 		Ignore Backfacing (Camera Based Selection)
 		'''
-		if self.parentUi.chk004.isChecked():
+		if self.childUi.chk004.isChecked():
 			pm.selectPref(useDepth=True)
-			self.viewPortMessage("Camera-based selection <hl>On</hl>.")
+			return 'Camera-based selection <hl>On</hl>.'
 		else:
 			pm.selectPref(useDepth=False)
-			self.viewPortMessage("Camera-based selection <hl>Off</hl>.")
+			return 'Camera-based selection <hl>Off</hl>.'
 
 
 	def chk005(self):
@@ -132,7 +131,7 @@ class Selection(Init):
 		Select Style: Marquee
 		'''
 		self.setSelectionStyle('selectContext')
-		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk005', setChecked_False='chk006-7')
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk005', setUnChecked='chk006-7')
 		self.parentUi.cmb004.setCurrentIndex(0)
 
 
@@ -141,7 +140,7 @@ class Selection(Init):
 		Select Style: Lasso
 		'''
 		self.setSelectionStyle('lassoContext')
-		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk006', setChecked_False='chk005,chk007')
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk006', setUnChecked='chk005,chk007')
 		self.parentUi.cmb004.setCurrentIndex(1)
 
 
@@ -150,7 +149,7 @@ class Selection(Init):
 		Select Style: Paint
 		'''
 		self.setSelectionStyle('paintContext')
-		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk007', setChecked_False='chk005-6')
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk007', setUnChecked='chk005-6')
 		self.parentUi.cmb004.setCurrentIndex(2)
 
 
@@ -428,19 +427,6 @@ class Selection(Init):
 		mel.eval("doSelectSimilar 1 {\""+ tolerance +"\"}")
 
 
-	def b000(self):
-		'''
-		Create Selection Set
-		'''
-		name = str(self.parentUi.t000.text())+"Set"
-		if pm.objExists (name):
-			pm.sets (name, clear=1)
-			pm.sets (name, add=1) #if set exists; clear set and add current selection 
-		else: #create set
-			pm.sets (name=name, text="gCharacterSet")
-			self.parentUi.t000.clear()
-
-
 	@Slots.message
 	def tb002(self, state=None):
 		'''
@@ -473,6 +459,19 @@ class Selection(Init):
 			pm.undoInfo(closeChunk=1)
 		else:
 			return 'Warning: No faces selected.'
+
+
+	def b000(self):
+		'''
+		Create Selection Set
+		'''
+		name = str(self.parentUi.t000.text())+"Set"
+		if pm.objExists (name):
+			pm.sets (name, clear=1)
+			pm.sets (name, add=1) #if set exists; clear set and add current selection 
+		else: #create set
+			pm.sets (name=name, text="gCharacterSet")
+			self.parentUi.t000.clear()
 
 
 	def b014(self):

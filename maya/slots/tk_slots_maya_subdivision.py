@@ -120,7 +120,7 @@ class Subdivision(Init):
 		if len(attachedSmoothProxies) == 0: #subdiv on
 			self.toggleWidgets(self.parentUi, self.childUi, setEnabled='b000', setChecked='b009')
 		else:
-			self.toggleWidgets(self.parentUi, self.childUi, setDisabled='b000', setChecked_False='b009')
+			self.toggleWidgets(self.parentUi, self.childUi, setDisabled='b000', setUnChecked='b009')
 			mel.eval("smoothingDisplayToggle 0;")
 
 		#toggle performSmoothProxy

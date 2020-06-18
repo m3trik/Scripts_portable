@@ -94,7 +94,7 @@ class Transform(Init):
 		Transform: Scale
 
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk008-9', setChecked='chk000-2')
+		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk008-9', setChecked='chk000-2')
 		self.parentUi.s000.setValue(2)
 		self.parentUi.s000.setSingleStep(1)
 
@@ -104,7 +104,7 @@ class Transform(Init):
 		Transform: Move
 
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk005,chk009,chk000-2')
+		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk005,chk009,chk000-2')
 		self.parentUi.s000.setValue(0.1)
 		self.parentUi.s000.setSingleStep(0.1)
 
@@ -114,7 +114,7 @@ class Transform(Init):
 		Transform: Rotate
 
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk005,chk008,chk000-2')
+		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk005,chk008,chk000-2')
 		self.parentUi.s000.setValue(45)
 		self.parentUi.s000.setSingleStep(5)
 
@@ -287,18 +287,18 @@ class Transform(Init):
 
 				if tb.chk011.isChecked(): #Auto Align: Two Axes
 					if axis==x: #"yz"
-						self.toggleWidgets(tb, setChecked='chk030-31', setChecked_False='chk029')
+						self.toggleWidgets(tb, setChecked='chk030-31', setUnChecked='chk029')
 					if axis==y: #"xz"
-						self.toggleWidgets(tb, setChecked='chk029,chk031', setChecked_False='chk030')
+						self.toggleWidgets(tb, setChecked='chk029,chk031', setUnChecked='chk030')
 					if axis==z: #"xy"
-						self.toggleWidgets(tb, setChecked='chk029-30', setChecked_False='chk031')
+						self.toggleWidgets(tb, setChecked='chk029-30', setUnChecked='chk031')
 				else:
 					if any ([axis==x and tangent==ty, axis==y and tangent==tx]): #"z"
-						self.toggleWidgets(tb, setChecked='chk031', setChecked_False='chk029-30')
+						self.toggleWidgets(tb, setChecked='chk031', setUnChecked='chk029-30')
 					if any ([axis==x and tangent==tz, axis==z and tangent==tx]): #"y"
-						self.toggleWidgets(tb, setChecked='chk030', setChecked_False='chk029,chk031')
+						self.toggleWidgets(tb, setChecked='chk030', setUnChecked='chk029,chk031')
 					if any ([axis==y and tangent==tz, axis==z and tangent==ty]): #"x"
-						self.toggleWidgets(tb, setChecked='chk029', setChecked_False='chk030-31')
+						self.toggleWidgets(tb, setChecked='chk029', setUnChecked='chk030-31')
 			else:
 				return 'Warning: An edge must be selected.'
 

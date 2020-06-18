@@ -14,6 +14,15 @@ class Materials(Init):
 		self.randomMat=None
 
 
+	@property
+	def currentMaterial(self):
+		'''
+		Get the current material using the current index of the materials combobox.
+		'''
+		index = self.parentUi.cmb002.currentIndex()
+		return self.materials[index] if len(self.materials)>index and index>=0 else None #store material.
+
+
 	def pin(self, state=None):
 		'''
 		Context menu
@@ -24,6 +33,18 @@ class Materials(Init):
 			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='3dsMax Material Editors')
 
 			return
+
+
+	def chk007(self):
+		'''
+		'''
+		self.parentUi.tb002.setText('Assign Current')
+
+
+	def chk008(self):
+		'''
+		'''
+		self.parentUi.tb002.setText('Assign Random')
 
 
 	def cmb001(self, index=None):
@@ -52,7 +73,7 @@ class Materials(Init):
 		'''
 		cmb = self.parentUi.cmb002
 
-		if not cmb.containsMenuItems:
+		if not cmb.containsContextMenuItems:
 			cmb.addToContext(QLabel_, setText='Open in Editor', setObjectName='lbl000', setToolTip='Open material in editor.')
 			cmb.addToContext(QLabel_, setText='Rename', setObjectName='lbl001', setToolTip='Rename material')
 			cmb.addToContext(QLabel_, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current material.')
@@ -97,7 +118,6 @@ class Materials(Init):
 		# 	cmb.setCurrentIndex(index):
 
 		self.materials = {name:mats[i] for i, name in enumerate(matNames)} #add mat objects to materials dictionary. 'mat name'=key, <mat object>=value
-		self.currentMaterial = mats[index] if len(mats)>index and index>=0 else None #store material
 
 
 	@Slots.message
@@ -257,8 +277,6 @@ class Materials(Init):
 		mat = self.currentMaterial
 		mat = rt.Standard(name="Default Material") #replace with standard material
 
-		self.currentMaterial = None
-
 		index = self.parentUi.cmb002.currentIndex()
 		self.parentUi.cmb002.setItemText(index, mat.name) #self.parentUi.cmb002.removeItem(index)
 
@@ -307,8 +325,7 @@ class Materials(Init):
 		invert (bool) = Invert the final selection.
 
 		#ex call:
-		currentMaterial = rt.medit.getCurMtl()[1]; print (currentMaterial)
-		selectByMaterialID(currentMaterial)
+		selectByMaterialID(material)
 		'''
 		if not rt.getNumSubMtls(material): #if not a multimaterial
 			mat = material

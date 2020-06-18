@@ -9,9 +9,17 @@ class Materials(Init):
 	def __init__(self, *args, **kwargs):
 		super(Materials, self).__init__(*args, **kwargs)
 
-		self.currentMaterial=None
 		self.materials=None
 		self.randomMat=None
+
+
+	@property
+	def currentMaterial(self):
+		'''
+		Get the current material using the current index of the materials combobox.
+		'''
+		index = self.parentUi.cmb002.currentIndex()
+		return self.materials[index] if len(self.materials)>index and index>=0 else None #store material.
 
 
 	def pin(self, state=None):
@@ -24,6 +32,24 @@ class Materials(Init):
 			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='Maya Material Editors')
 			pin.add(QLabel_, setText='Material Attributes', setObjectName='lbl004', setToolTip='Show the material attributes in the attribute editor.')
 			return
+
+
+	def chk007(self):
+		'''
+		'''
+		self.parentUi.tb002.setText('Assign Current')
+
+
+	def chk008(self):
+		'''
+		'''
+		self.parentUi.tb002.setText('Assign Random')
+
+
+	def chk009(self):
+		'''
+		'''
+		self.parentUi.tb002.setText('Assign New')
 
 
 	def cmb001(self, index=None):
@@ -52,10 +78,9 @@ class Materials(Init):
 		'''
 		cmb = self.parentUi.cmb002
 
-		if not cmb.containsMenuItems:
+		if not cmb.containsContextMenuItems:
 			cmb.addToContext(QLabel_, setText='Open in Editor', setObjectName='lbl000', setToolTip='Open material in editor.')
 			cmb.addToContext(QLabel_, setText='Rename', setObjectName='lbl001', setToolTip='Rename material')
-
 			cmb.addToContext(QLabel_, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current material.')
 			cmb.addToContext(QLabel_, setText='Delete All Unused Materials', setObjectName='lbl003', setToolTip='Delete All unused materials.')
 			cmb.addToContext(QLabel_, setText='Refresh', setObjectName='cmb002', setToolTip='Refresh materials list')
@@ -105,7 +130,6 @@ class Materials(Init):
 			index = cmb.currentIndex()
 
 		self.materials = {name:mats[i] for i, name in enumerate(matNames)} #add mat objects to materials dictionary. 'mat name'=key, <mat object>=value
-		self.currentMaterial = mats[index] if len(mats)>index and index>=0 else None #store material.
 
 
 	@Slots.message
@@ -147,6 +171,8 @@ class Materials(Init):
 			self.parentUi.group000.setTitle(tb.chk000.text())
 		elif tb.chk001.isChecked():
 			self.parentUi.group000.setTitle(tb.chk001.text())
+		elif tb.chk002.isChecked():
+			self.parentUi.group000.setTitle(tb.chk002.text())
 
 
 	@Slots.message
@@ -255,8 +281,6 @@ class Materials(Init):
 		mat = self.currentMaterial
 		mat = pm.delete(mat)
 
-		self.currentMaterial = None
-
 		index = self.parentUi.cmb002.currentIndex()
 		self.parentUi.cmb002.setItemText(index, 'None') #self.parentUi.cmb002.removeItem(index)
 
@@ -306,8 +330,7 @@ class Materials(Init):
 		invert (bool) = Invert the final selection.R
 
 		#ex call:
-		currentMaterial = rt.medit.getCurMtl()[1]
-		selectByMaterialID(currentMaterial)
+		selectByMaterialID(material)
 		'''
 		if pm.nodeType(material)=='VRayMultiSubTex': #if not a multimaterial
 			return 'Error: If material is a multimaterial, select a submaterial.'

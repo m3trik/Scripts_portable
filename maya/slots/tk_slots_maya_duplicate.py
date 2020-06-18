@@ -93,7 +93,7 @@ class Duplicate(Init):
 					bb = pm.xform (selection, query=1, boundingBox=1, worldSpace=1)
 					pivot = bb[0]+bb[3]/2, bb[1]+bb[4]/2, bb[2]+bb[5]/2 #get median of bounding box coordinates. from [min xyz, max xyz]
 			else:
-				self.toggleWidgets(self.parentUi, self.childUi, setChecked_False='chk010')
+				self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk010')
 				return 'Error: Nothing selected.'
 
 			# radialPivot.extend ([pivot[0],pivot[1],pivot[2]])
@@ -109,7 +109,7 @@ class Duplicate(Init):
 		'''
 		Radial Array: X Axis
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk012', setChecked_False='chk013,chk014')
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk012', setUnChecked='chk013,chk014')
 		self.chk015()
 
 
@@ -117,7 +117,7 @@ class Duplicate(Init):
 		'''
 		Radial Array: Y Axis
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk013', setChecked_False='chk012,chk014')
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk013', setUnChecked='chk012,chk014')
 		self.chk015()
 
 
@@ -125,7 +125,7 @@ class Duplicate(Init):
 		'''
 		Radial Array: Z Axis
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk014', setChecked_False='chk012,chk013')
+		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk014', setUnChecked='chk012,chk013')
 		self.chk015()
 
 
@@ -188,7 +188,7 @@ class Duplicate(Init):
 					pm.select(objectName)
 					pm.undoInfo (closeChunk=1)
 			else: #if both lists objects are empty:
-				self.toggleWidgets(self.parentUi, self.childUi, setDisabled='b003', setChecked_False='chk015')
+				self.toggleWidgets(self.parentUi, self.childUi, setDisabled='b003', setUnChecked='chk015')
 				return 'Error: Nothing selected.'
 		else: #if chk015 is unchecked by user or by create button
 			if create:

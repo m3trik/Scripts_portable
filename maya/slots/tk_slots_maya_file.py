@@ -30,7 +30,7 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if not cmb.containsMenuItems:
+		if not cmb.containsContextMenuItems:
 			cmb.addToContext('QPushButton', setObjectName='b001', setText='Last', setToolTip='Open the most recent file.')
 
 		files = [f for f in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in f]
@@ -164,7 +164,7 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb006
 
-		if not cmb.containsMenuItems:
+		if not cmb.containsContextMenuItems:
 			cmb.addToContext(QComboBox_, setObjectName='cmb001', setToolTip='Current project directory root.')
 			cmb.addToContext(QLabel_, setObjectName='lbl000', setText='Set', setToolTip='Set the project directory.')
 			cmb.addToContext(QLabel_, setObjectName='lbl001', setText='Minimize App', setToolTip='Minimize the main application.')
