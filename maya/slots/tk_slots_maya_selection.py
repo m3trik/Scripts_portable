@@ -38,7 +38,9 @@ class Selection(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='')
-
+			pin.add('QCheckBox', setText='Ignore Backfacing', setObjectName='chk004', setToolTip='Ignore backfacing components during selection.')
+			pin.add(QLabel_, setText='Grow Selection', setObjectName='b014', setToolTip='Grow the current selection.')
+			pin.add(QLabel_, setText='Shrink Selection', setObjectName='b014', setToolTip='Shrink the current selection.')
 			return
 
 
@@ -193,13 +195,13 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb001
 		
-		files = ['Selection Constraints']
+		files = ['Polygon Selection Constraints']
 		contents = cmb.addItems_(files, '')
 
 		if not index:
 			index = cmb.currentIndex()
 		if index!=0:
-			if index==contents.index('Selection Constraints'):
+			if index==contents.index('Polygon Selection Constraints'):
 				mel.eval('PolygonSelectionConstraints;')
 			cmb.setCurrentIndex(0)
 
@@ -349,6 +351,34 @@ class Selection(Init):
 			self.chk006()
 		if index==contents.index('Paint'): #
 			self.chk007()
+
+
+	def cmb005(self, index=None):
+		'''
+		Selection Contraints
+		'''
+		cmb = self.parentUi.cmb005
+
+		list_ = ['Off', 'Angle', 'Border', 'Edge Loop', 'Edge Ring', 'Shell', 'UV Edge Loop']
+		contents = cmb.addItems_(list_)
+
+		if not index:
+			index = cmb.currentIndex()
+
+		if index==contents.index('Off'):
+			mel.eval('dR_selConstraintOff;') #dR_DoCmd("selConstraintOff");
+		if index==contents.index('Angle'):
+			mel.eval('dR_selConstraintAngle;') #dR_DoCmd("selConstraintAngle");
+		if index==contents.index('Border'):
+			mel.eval('dR_selConstraintBorder;') #dR_DoCmd("selConstraintBorder");
+		if index==contents.index('Edge Loop'):
+			mel.eval('dR_selConstraintEdgeLoop;') #dR_DoCmd("selConstraintEdgeLoop");
+		if index==contents.index('Edge Ring'):
+			mel.eval('dR_selConstraintEdgeRing;') #dR_DoCmd("selConstraintEdgeRing");
+		if index==contents.index('Shell'):
+			mel.eval('dR_selConstraintElement;') #dR_DoCmd("selConstraintElement");
+		if index==contents.index('UV Edge Loop'):
+			mel.eval('dR_selConstraintUVEdgeLoop;') #dR_DoCmd("selConstraintUVEdgeLoop");
 
 
 	@Slots.message

@@ -12,18 +12,14 @@ class Transform(Init):
 		#set input masks for text fields
 		# self.parentUi.t000.setInputMask("00.00") #change to allow for neg values
 
-		try: #chk012, chk013 component constraints. query and set initial value
+		try: #component constraints. query and set initial value
 			state = pm.xformConstraint(query=True, type=True)
-		
+			'''
 			if state == 'edge':
-				self.parentUi.chk012.setChecked(True)
-			else:
-				self.parentUi.chk012.setChecked(False)
-			#b021 object or world space
+				self.parentUi.cmb001.
 			if state == 'surface':
-				self.parentUi.chk013.setChecked(True)
-			else:
-				self.parentUi.chk013.setChecked(False)
+				self.parentUi.cmb001.
+			'''
 
 		except NameError:
 			pass
@@ -56,6 +52,41 @@ class Transform(Init):
 			if index==contents.index(''):
 				pass
 			cmb.setCurrentIndex(0)
+
+
+	def cmb001(self, index=None):
+		'''
+		Transform Contraints
+
+		constrain along normals #checkbox option for edge amd surface constaints
+		setXformConstraintAlongNormal false;
+		'''
+		cmb = self.parentUi.cmb001
+
+		list_ = ['Off', 'Edge', 'Surface', 'Make Live']
+		contents = cmb.addItems_(list_)
+
+		if not index:
+			index = cmb.currentIndex()
+
+		if index==contents.index('Off'):
+			pm.xformConstraint(type='none') #pm.manipMoveSetXformConstraint(none=True);
+			if hasattr(self, '_makeLiveState') and self._makeLiveState:
+				pm.makeLive(none=True)
+				self._makeLiveStat = False
+				self.viewPortMessage('{0}:<hl>makeLive: Off</hl>'.format(obj))
+		if index==contents.index('Edge'):
+			pm.xformConstraint(type='edge') #pm.manipMoveSetXformConstraint(edge=True);
+		if index==contents.index('Surface'):
+			pm.xformConstraint(type='surface') #pm.manipMoveSetXformConstraint(surface=True);
+		if index==contents.index('Make Live'):
+			selection = pm.ls(sl=1, objectsOnly=1)
+			if not selection:
+				cmb.setCurrentIndex(0)
+				return 'Error: Nothing Selected.'
+			pm.makeLive(selection[0]) #construction planes, nurbs surfaces and polygon meshes can be made live. makeLive supports one live object at a time.
+			self.viewPortMessage('{0}:<hl>makeLive: On</hl>'.format(selection[0].name()))
+			self._makeLiveState = True
 
 
 	def chk005(self):
@@ -97,34 +128,6 @@ class Transform(Init):
 			self.toggleWidgets(self.parentUi, self.childUi, setDisabled='b029-31')
 		else:
 			self.toggleWidgets(self.parentUi, self.childUi, setEnabled='b029-31')
-
-
-	def chk012(self):
-		'''
-		Constrain To Edge
-
-		'''
-		if self.parentUi.chk012.isChecked():
-			self.parentUi.chk013.setChecked(False)
-			# pm.manipMoveSetXformConstraint(edge=True);
-			pm.xformConstraint(type='edge')
-		else:
-			# pm.manipMoveSetXformConstraint(none=True);
-			pm.xformConstraint(type='none')
-
-
-	def chk013(self):
-		'''
-		Constrain To Surface
-
-		'''
-		if self.parentUi.chk013.isChecked():
-			self.parentUi.chk012.setChecked(False)
-			# pm.manipMoveSetXformConstraint(surface=True);
-			pm.xformConstraint(type='surface')
-		else:
-			# pm.manipMoveSetXformConstraint(none=True);
-			pm.xformConstraint(type='none')
 
 
 	def transformChecks(self):
@@ -383,26 +386,6 @@ class Transform(Init):
 		target = sel[1]
 		#move object to center of the last selected items bounding box
 		source.center = target.center
-
-
-	@Slots.message
-	def b012(self):
-		'''
-		Toggle: Make Live
-
-		'''
-		state = self.cycle([1,0], 'toggleMakeLive')
-
-		obj = pm.ls(sl=1)[0]
-		if not obj:
-			return 'Error: Nothing Selected.'
-
-		if state:
-			pm.makeLive(obj)  #construction planes, nurbs surfaces and polygon meshes can be made live. makeLive supports one live object at a time.
-			self.viewPortMessage('{0}:<hl>makeLive: On</hl>'.format(obj))
-		else:
-			pm.makeLive(none=True)
-			self.viewPortMessage('{0}:<hl>makeLive: Off</hl>'.format(obj))
 
 
 	def b014(self):

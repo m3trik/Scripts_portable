@@ -9,23 +9,24 @@ class Selection(Init):
 	def __init__(self, *args, **kwargs):
 		super(Selection, self).__init__(*args, **kwargs)
 
-		#set checked button states
-		#chk004 ignore backfacing (camera based selection)
-		# sel = rt.Filters.GetModOrObj()
-		# state = sel.ignoreBackfacing
-		# self.parentUi.chk004.setChecked(state)
+		# try: #set checked button states
+		# 	sel = rt.Filters.GetModOrObj()
+		# 	state = sel.ignoreBackfacing
+		# 	self.parentUi.chk004.setChecked(state) #chk004 ignore backfacing (camera based selection)
 
-		# #selection style: set initial checked state
-		# ctx = pm.currentCtx() #flags (ctx, c=True) get the context's class.
-		# if ctx == 'lassoContext':
-		# 	self.cmb004(index=1)
-		# 	self.childUi.chk006.setChecked(True)
-		# elif ctx == 'paintContext':
-		# 	self.cmb004(index=2)
-		# 	self.childUi.chk007.setChecked(True)
-		# else: #selectContext
-		# 	self.cmb004(index=0)
-		# 	self.childUi.chk005.setChecked(True)
+		# 	#selection style: set initial checked state
+		# 	ctx = pm.currentCtx() #flags (ctx, c=True) get the context's class.
+		# 	if ctx == 'lassoContext':
+		# 		self.cmb004(index=1)
+		# 		self.childUi.chk006.setChecked(True)
+		# 	elif ctx == 'paintContext':
+		# 		self.cmb004(index=2)
+		# 		self.childUi.chk007.setChecked(True)
+		# 	else: #selectContext
+		# 		self.cmb004(index=0)
+		# 		self.childUi.chk005.setChecked(True)
+		# except NameError:
+		# 	pass
 
 
 	def pin(self, state=None):
@@ -36,25 +37,10 @@ class Selection(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='')
-
+			pin.add('QCheckBox', setText='Ignore Backfacing', setObjectName='chk004', setToolTip='Ignore backfacing components during selection.')
+			pin.add(QLabel_, setText='Grow Selection', setObjectName='b014', setToolTip='Grow the current selection.')
+			pin.add(QLabel_, setText='Shrink Selection', setObjectName='b014', setToolTip='Shrink the current selection.')
 			return
-
-
-	def cmb001(self, index=None):
-		'''
-		Editors
-		'''
-		cmb = self.parentUi.cmb001
-		
-		files = ['']
-		contents = cmb.addItems_(files, '')
-
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index(''):
-				pass
-			cmb.setCurrentIndex(0)
 
 
 	def t000(self):
@@ -206,6 +192,23 @@ class Selection(Init):
 			cmb.setCurrentIndex(0)
 
 
+	def cmb001(self, index=None):
+		'''
+		Editors
+		'''
+		cmb = self.parentUi.cmb001
+		
+		files = ['']
+		contents = cmb.addItems_(files, '')
+
+		if not index:
+			index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index(''):
+				pass
+			cmb.setCurrentIndex(0)
+
+
 	def cmb002(self, index=None):
 		'''
 		Select All Of Type
@@ -278,6 +281,34 @@ class Selection(Init):
 			self.chk006()
 		if index==contents.index('Paint'): #
 			self.chk007()
+
+
+	def cmb005(self, index=None):
+		'''
+		Selection Contraints
+		'''
+		cmb = self.parentUi.cmb005
+
+		list_ = ['Off', 'Angle', 'Border', 'Edge Loop', 'Edge Ring', 'Shell', 'UV Edge Loop']
+		contents = cmb.addItems_(list_)
+
+		if not index:
+			index = cmb.currentIndex()
+
+		if index==contents.index('Off'):
+			mel.eval('dR_selConstraintOff;') #dR_DoCmd("selConstraintOff");
+		if index==contents.index('Angle'):
+			mel.eval('dR_selConstraintAngle;') #dR_DoCmd("selConstraintAngle");
+		if index==contents.index('Border'):
+			mel.eval('dR_selConstraintBorder;') #dR_DoCmd("selConstraintBorder");
+		if index==contents.index('Edge Loop'):
+			mel.eval('dR_selConstraintEdgeLoop;') #dR_DoCmd("selConstraintEdgeLoop");
+		if index==contents.index('Edge Ring'):
+			mel.eval('dR_selConstraintEdgeRing;') #dR_DoCmd("selConstraintEdgeRing");
+		if index==contents.index('Shell'):
+			mel.eval('dR_selConstraintElement;') #dR_DoCmd("selConstraintElement");
+		if index==contents.index('UV Edge Loop'):
+			mel.eval('dR_selConstraintUVEdgeLoop;') #dR_DoCmd("selConstraintUVEdgeLoop");
 
 
 	def tb000(self, state=None):

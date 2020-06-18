@@ -657,7 +657,7 @@
            <property name="minimumSize">
             <size>
              <width>111</width>
-             <height>56</height>
+             <height>35</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -667,62 +667,22 @@
             </size>
            </property>
            <property name="title">
-            <string>Constrain</string>
+            <string>Constraints</string>
            </property>
-           <widget class="QPushButton" name="chk013">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>60</x>
-              <y>15</y>
-              <width>51</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Constrain to surface</string>
-            </property>
-            <property name="layoutDirection">
-             <enum>Qt::LeftToRight</enum>
-            </property>
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Surface</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="chk012">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
+           <widget class="QComboBox_" name="cmb001">
             <property name="geometry">
              <rect>
               <x>0</x>
               <y>15</y>
-              <width>61</width>
+              <width>111</width>
               <height>19</height>
              </rect>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>111</width>
+              <height>0</height>
+             </size>
             </property>
             <property name="maximumSize">
              <size>
@@ -731,63 +691,19 @@
              </size>
             </property>
             <property name="toolTip">
-             <string>Constrain to edge</string>
+             <string>Transform constraints.</string>
             </property>
-            <property name="layoutDirection">
-             <enum>Qt::LeftToRight</enum>
-            </property>
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Edge</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
+            <property name="editable">
              <bool>false</bool>
             </property>
-           </widget>
-           <widget class="QPushButton" name="b012">
-            <property name="enabled">
-             <bool>true</bool>
+            <property name="sizeAdjustPolicy">
+             <enum>QComboBox::AdjustToContents</enum>
             </property>
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>35</y>
-              <width>111</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Make the selected object live</string>
-            </property>
-            <property name="text">
-             <string>Make Live</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>false</bool>
-            </property>
+            <item>
+             <property name="text">
+              <string>Constraints</string>
+             </property>
+            </item>
            </widget>
           </widget>
          </item>
@@ -1162,6 +1078,11 @@
    <class>QToolButton_</class>
    <extends>QToolButton</extends>
    <header>widgets.qtoolbutton_.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QComboBox_</class>
+   <extends>QComboBox</extends>
+   <header>widgets.qcombobox_.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
