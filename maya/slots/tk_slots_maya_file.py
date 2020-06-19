@@ -91,7 +91,7 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb003
 
-		items = cmb.addItems_(["Import file", "Import Options"], "Import")
+		items = cmb.addItems_(['Import file', 'Import Options', 'FBX Import Presets', 'Obj Import Presets'], "Import")
 
 		if not index:
 			index = cmb.currentIndex()
@@ -101,6 +101,10 @@ class File(Init):
 				mel.eval('Import;')
 			if index == 2: #Import options
 				mel.eval('ImportOptions;')
+			if index == 3: #FBX Import Presets
+				mel.eval('FBXUICallBack -1 editImportPresetInNewWindow fbx;') #Fbx Presets
+			if index == 4: #Obj Import Presets
+				mel.eval('FBXUICallBack -1 editImportPresetInNewWindow obj;') #Obj Presets
 			cmb.setCurrentIndex(0)
 
 
@@ -111,8 +115,9 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb004
 		
-		list_ = ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ", 'Send to 3dsMax: As New Scene', 'Send to 3dsMax: Update Current', 'Send to 3dsMax: Add to Current']
-		items = cmb.addItems_(list_, "Export")
+		list_ = ['Export Selection', 'Send to Unreal', 'Send to Unity', 'GoZ', 'Send to 3dsMax: As New Scene', 'Send to 3dsMax: Update Current', 
+				'Send to 3dsMax: Add to Current', 'Export Options', 'FBX Export Presets', 'Obj Export Presets']
+		items = cmb.addItems_(list_, 'Export')
 
 		if not index:
 			index = cmb.currentIndex()
@@ -120,20 +125,24 @@ class File(Init):
 			self.tk.hide(force=1)
 			if index==1: #Export selection
 				mel.eval('ExportSelection;')
-			if index==2: #Export options
-				mel.eval('ExportSelectionOptions;')
-			if index==3: #Unreal
+			if index==2: #Unreal
 				mel.eval('SendToUnrealSelection;')
-			if index==4: #Unity 
+			if index==3: #Unity 
 				mel.eval('SendToUnitySelection;')
-			if index==5: #GoZ
+			if index==4: #GoZ
 				mel.eval('print("GoZ"); source"C:/Users/Public/Pixologic/GoZApps/Maya/GoZBrushFromMaya.mel"; source "C:/Users/Public/Pixologic/GoZApps/Maya/GoZScript.mel";')
-			if index==6: #Send to 3dsMax: As New Scene
+			if index==5: #Send to 3dsMax: As New Scene
 				mel.eval('SendAsNewScene3dsMax;') #OneClickMenuExecute ("3ds Max", "SendAsNewScene"); doMaxFlow { "sendNew","perspShape","1" };
-			if index==7: #Send to 3dsMax: Update Current
+			if index==6: #Send to 3dsMax: Update Current
 				mel.eval('UpdateCurrentScene3dsMax;') #OneClickMenuExecute ("3ds Max", "UpdateCurrentScene"); doMaxFlow { "update","perspShape","1" };
-			if index==8: #Send to 3dsMax: Add to Current
+			if index==7: #Send to 3dsMax: Add to Current
 				mel.eval('AddToCurrentScene3dsMax;') #OneClickMenuExecute ("3ds Max", "AddToScene"); doMaxFlow { "add","perspShape","1" };
+			if index==8: #Export options
+				mel.eval('ExportSelectionOptions;')
+			if index==9: #FBX Export Presets
+				mel.eval('FBXUICallBack -1 editExportPresetInNewWindow fbx;') #Fbx Presets
+			if index==10: #Obj Export Presets
+				mel.eval('FBXUICallBack -1 editExportPresetInNewWindow obj;') #Obj Presets
 			cmb.setCurrentIndex(0)
 
 
@@ -265,53 +274,18 @@ class File(Init):
 			# pm.Quit()
 
 
-	def b001(self):
+	def lbl000(self):
 		'''
-		Recent Files: Open Last
+		Set Project
 		'''
-		# files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in file_]
+		newProject = mel.eval("SetProject;")
 
-		# force=True
-		# if str(mel.eval("file -query -sceneName -shortName;")):
-		# 	force=False #if sceneName, prompt user to save; else force open
-		# pm.openFile(files[0], open=1, force=force)
-
-		self.cmb000(index=1)
-		self.tk.hide(force=1)
-
-
-	def b002(self):
-		'''
-		Fbx Presets
-
-		'''
-		mel.eval('FBXUICallBack -1 editExportPresetInNewWindow fbx;')
-
-
-	def b003(self):
-		'''
-		Obj Presets
-
-		'''
-		mel.eval('FBXUICallBack -1 editExportPresetInNewWindow obj;')
-
-
-	def lbl003(self):
-		'''
-		Close Main Application
-
-		'''
-		# force=false #pymel has no attribute quit error.
-		# exitcode=""
-		sceneName = str(mel.eval("file -query -sceneName -shortName;")) #if sceneName prompt user to save; else force close
-		mel.eval("quit;") if sceneName else mel.eval("quit -f;")
-		# pm.quit (force=force, exitcode=exitcode)
+		self.cmb006() #refresh cmb006 items to reflect new project folder
 
 
 	def lbl001(self):
 		'''
 		Minimize Main Application
-
 		'''
 		mel.eval("minimizeApp;")
 		self.tk.hide(force=1)
@@ -320,9 +294,19 @@ class File(Init):
 	def lbl002(self):
 		'''
 		Restore Main Application
-
 		'''
 		pass
+
+
+	def lbl003(self):
+		'''
+		Close Main Application
+		'''
+		# force=false #pymel has no attribute quit error.
+		# exitcode=""
+		sceneName = str(mel.eval("file -query -sceneName -shortName;")) #if sceneName prompt user to save; else force close
+		mel.eval("quit;") if sceneName else mel.eval("quit -f;")
+		# pm.quit (force=force, exitcode=exitcode)
 
 
 	def setComboBox(self, comboBox, text):
@@ -336,6 +320,21 @@ class File(Init):
 		method = getattr(self, comboBox)
 		cmb.currentIndexChanged.connect(method)
 		cmb.setCurrentIndex(cmb.findText(text))
+
+
+	def b001(self):
+		'''
+		Recent Files: Open Last
+		'''
+		# files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in file_]
+
+		# force=True
+		# if str(mel.eval("file -query -sceneName -shortName;")):
+		# 	force=False #if sceneName, prompt user to save; else force open
+		# pm.openFile(files[0], open=1, force=force)
+
+		self.cmb000(index=1)
+		self.tk.hide(force=1)
 
 
 	def b007(self):
@@ -377,14 +376,6 @@ class File(Init):
 			pm.rename(obj, newName) #Rename the object with the new name
 
 
-	def lbl000(self):
-		'''
-		Set Project
-
-		'''
-		newProject = mel.eval("SetProject;")
-
-		self.cmb006() #refresh cmb006 items to reflect new project folder
 
 
 

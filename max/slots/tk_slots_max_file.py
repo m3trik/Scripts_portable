@@ -297,40 +297,16 @@ class File(Init):
 			# pm.Quit()
 
 
-	def b001(self):
+	def lbl000(self):
 		'''
-		Recent Files: Open Last
+		Set Project
 		'''
-		# files = rt.getRecentfiles()
-		# rt.loadMaxFile(str(files[0]))
+		try:
+			MaxPlus.PathManager.SetProjectFolderDir()
+		except:
+			maxEval('macros.run "Tools" "SetProjectFolder"')
 
-		self.cmb000(index=1)
-		self.tk.hide(force=1)
-
-
-	def b002(self):
-		'''
-		Fbx Presets
-		'''
-		maxEval('FBXUICallBack -1 editExportPresetInNewWindow fbx;')
-
-
-	def b003(self):
-		'''
-		Obj Presets
-		'''
-		maxEval('FBXUICallBack -1 editExportPresetInNewWindow obj;')
-
-
-	def lbl003(self):
-		'''
-		Close Main Application
-		'''
-		# force=false #pymel has no attribute quit error.
-		# exitcode=""
-		sceneName = str(mel.eval("file -query -sceneName -shortName;")) #if sceneName prompt user to save; else force close
-		mel.eval("quit;") if sceneName else mel.eval("quit -f;")
-		# pm.quit (force=force, exitcode=exitcode)
+		self.cmb006() #refresh cmb006 items to reflect new project folder
 
 
 	def lbl001(self):
@@ -349,6 +325,28 @@ class File(Init):
 		Restore Main Application
 		'''
 		pass
+
+
+	def lbl003(self):
+		'''
+		Close Main Application
+		'''
+		# force=false #pymel has no attribute quit error.
+		# exitcode=""
+		sceneName = str(mel.eval("file -query -sceneName -shortName;")) #if sceneName prompt user to save; else force close
+		mel.eval("quit;") if sceneName else mel.eval("quit -f;")
+		# pm.quit (force=force, exitcode=exitcode)
+
+
+	def b001(self):
+		'''
+		Recent Files: Open Last
+		'''
+		# files = rt.getRecentfiles()
+		# rt.loadMaxFile(str(files[0]))
+
+		self.cmb000(index=1)
+		self.tk.hide(force=1)
 
 
 	def b007(self):
@@ -390,16 +388,7 @@ class File(Init):
 			pm.rename(obj, newName) #Rename the object with the new name
 
 
-	def lbl000(self):
-		'''
-		Set Project
-		'''
-		try:
-			MaxPlus.PathManager.SetProjectFolderDir()
-		except:
-			maxEval('macros.run "Tools" "SetProjectFolder"')
 
-		self.cmb006() #refresh cmb006 items to reflect new project folder
 
 
 
