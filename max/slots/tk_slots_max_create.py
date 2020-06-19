@@ -10,10 +10,24 @@ class Create(Init):
 		super(Create, self).__init__(*args, **kwargs)
 
 
-		self.node=None
 		self.rotation = {'x':[90,0,0], 'y':[0,90,0], 'z':[0,0,90], '-x':[-90,0,0], '-y':[0,-90,0], '-z':[0,0,-90], 'last':[]}
 		self.point=[0,0,0]
 		self.history=[]
+
+
+	@property
+	def node(self):
+		'''
+		Get the Transform Node
+		'''
+		selection = rt.selection
+		if not selection:
+			return 'Error: Nothing Selected.'
+
+		transform = selection[0]
+		if not self.parentUi.t003.text()==transform.name: #make sure the same field reflects the current working node.
+			self.parentUi.t003.setText(transform.name)
+		return transform
 
 
 	def pin(self, state=None):
@@ -60,21 +74,22 @@ class Create(Init):
 		return axis
 
 
-	def rotateAbsolute(self, axis):
+	def rotateAbsolute(self, axis, node):
 		'''
 		Undo previous rotation and rotate on the specified axis.
 		uses an external rotation dictionary.
 		args:
 			axis (str) = axis to rotate on. ie. '-x'
+			node (obj) = transform node.
 		'''
 		angle = [a for a in self.rotation[axis] if a!=0][0] #get angle. ie. 90 or -90
 		axis = self.rotation[axis] #get axis list from string key. In 3ds max, the axis key is used as bool values, ie. [0, 90, 0] will essentially be used as [0,1,0]
 
 		last = self.rotation['last']
 		if last: #if previous rotation stored: undo previous rotation
-			rt.rotate(self.node, rt.angleaxis(angle*-1, rt.point3(last[0], last[1], last[2]))) #multiplying the angle *1 inverts it. ie. -90 becomes 90
+			rt.rotate(node, rt.angleaxis(angle*-1, rt.point3(last[0], last[1], last[2]))) #multiplying the angle *1 inverts it. ie. -90 becomes 90
 		
-		rt.rotate(self.node, rt.angleaxis(angle, rt.point3(axis[0], axis[1], axis[2]))) #perform new rotation
+		rt.rotate(node, rt.angleaxis(angle, rt.point3(axis[0], axis[1], axis[2]))) #perform new rotation
 		self.rotation['last'] = axis #store rotation
 		rt.redrawViews()
 
@@ -115,8 +130,7 @@ class Create(Init):
 		Rotate X Axis
 		'''
 		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk000', setUnChecked='chk001,chk002')
-		if self.node:
-			self.rotateAbsolute(self.getAxis())
+		self.rotateAbsolute(self.getAxis(), self.node)
 			
 
 	def chk001(self):
@@ -124,8 +138,7 @@ class Create(Init):
 		Rotate Y Axis
 		'''
 		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk001', setUnChecked='chk000,chk002')
-		if self.node:
-			self.rotateAbsolute(self.getAxis())
+		self.rotateAbsolute(self.getAxis(), self.node)
 
 
 	def chk002(self):
@@ -133,16 +146,14 @@ class Create(Init):
 		Rotate Z Axis
 		'''
 		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk002', setUnChecked='chk001,chk000')
-		if self.node:
-			self.rotateAbsolute(self.getAxis())
+		self.rotateAbsolute(self.getAxis(), self.node)
 
 
 	def chk003(self):
 		'''
 		Rotate Negative Axis
 		'''
-		if self.node:
-			self.rotateAbsolute(self.getAxis())
+		self.rotateAbsolute(self.getAxis(), self.node)
 
 
 	def chk005(self):
@@ -269,45 +280,45 @@ class Create(Init):
 
 			#cube:
 			if index==0:
-				self.node = rt.Box(width=15, length=15, height=15, lengthsegs=1, widthsegs=1, heightsegs=1)
+				node = rt.Box(width=15, length=15, height=15, lengthsegs=1, widthsegs=1, heightsegs=1)
 
 			#sphere:
 			if index==1:
-				self.node = rt.Sphere(radius=5, segs=12)
+				node = rt.Sphere(radius=5, segs=12)
 
 			#cylinder:
 			if index==2:
-				self.node = rt.Cylinder(radius=5, height=10, sides=5, heightsegs=1, capsegs=1, smooth=True)
+				node = rt.Cylinder(radius=5, height=10, sides=5, heightsegs=1, capsegs=1, smooth=True)
 
 			#plane:
 			if index==3:
-				self.node = rt.Plane(width=5, length=5, widthsegs=1, lengthsegs=1)
+				node = rt.Plane(width=5, length=5, widthsegs=1, lengthsegs=1)
 
 			#circle:
 			if index==4:
 				mode = None
 				axis = next(key for key, value in self.rotation.items() if value==axis and key!='last') #get key from value as createCircle takes the key argument
-				self.node = self.createCircle(axis=axis, numPoints=5, radius=5, mode=mode)
+				node = self.createCircle(axis=axis, numPoints=5, radius=5, mode=mode)
 
 			#Cone:
 			if index==5:
-				self.node = rt.Cone(radius1=5, radius2=1, height=5, capsegs=1, heightsegs=1, sides=12, smooth=True)
+				node = rt.Cone(radius1=5, radius2=1, height=5, capsegs=1, heightsegs=1, sides=12, smooth=True)
 
 			#Pyramid
 			if index==6:
-				self.node = rt.Pyramid(width=5, depth=3, height=5, widthsegs=1, depthSegs=1, heightsegs=1)
+				node = rt.Pyramid(width=5, depth=3, height=5, widthsegs=1, depthSegs=1, heightsegs=1)
 
 			#Torus:
 			if index==7:
-				self.node = rt.Torus(radius1=10, radius2=5, segs=5)
+				node = rt.Torus(radius1=10, radius2=5, segs=5)
 
 			#Pipe
 			if index==8:
-				self.node = rt.Tube(radius1=5, radius2=8, height=25, sides=12, capSegs=1, hightSegs=1)
+				node = rt.Tube(radius1=5, radius2=8, height=25, sides=12, capSegs=1, hightSegs=1)
 
 			#Soccer ball
 			if index==9:
-				self.node = rt.GeoSphere(radius=5, segs=2, baseType=2, smooth=True)
+				node = rt.GeoSphere(radius=5, segs=2, baseType=2, smooth=True)
 
 			#Platonic solids
 			if index==10:
@@ -315,16 +326,16 @@ class Create(Init):
 
 		#convert to the type selected in cmb000
 		if type_ in ['Editable Poly', 'Polygons']: #Polygons
-			rt.convertTo(self.node, rt.PolyMeshObject)
+			rt.convertTo(node, rt.PolyMeshObject)
 
 		elif type_=='NURBS': #NURBS
-			rt.convertTo(self.node, rt.NURBSSurf)
+			rt.convertTo(node, rt.NURBSSurf)
 
 		elif type_=='Editable Mesh': #Mesh
-			rt.convertTo(self.node, rt.TriMeshGeometry)
+			rt.convertTo(node, rt.TriMeshGeometry)
 
 		elif type_=='Editable Patch': #Patch
-			rt.convertTo(self.node, rt.Editable_Patch)
+			rt.convertTo(node, rt.Editable_Patch)
 		
 		# lights
 		elif type_=='Light': #Lights
@@ -335,27 +346,27 @@ class Create(Init):
 
 
 		#set name
-		if isinstance(self.node, (str,unicode)): #is type of:
-			self.parentUi.t003.setText(self.node)
+		if isinstance(node, (str,unicode)): #is type of:
+			self.parentUi.t003.setText(node)
 		else:
-			self.parentUi.t003.setText(self.node.name)
+			self.parentUi.t003.setText(node.name)
 
-		self.history.extend(self.node) #save current node to history
+		self.history.extend(node) #save current node to history
 		self.rotation['last']=[] #reset rotation history
 
 		#translate the newly created node
-		self.node.pos = rt.point3(self.point[0], self.point[1], self.point[2])
+		node.pos = rt.point3(self.point[0], self.point[1], self.point[2])
 		#rotate
-		self.rotateAbsolute(axis)
+		self.rotateAbsolute(axis, node)
 
 		exclude = ['getmxsprop', 'setmxsprop', 'typeInHeight', 'typeInLength', 'typeInPos', 'typeInWidth', 'typeInDepth', 'typeInRadius', 'typeInRadius1', 'typeInRadius2', 'typeinCreationMethod', 'edgeChamferQuadIntersections', 'edgeChamferType', 'hemisphere', 'realWorldMapSize', 'mapcoords']	
-		attributes = self.getAttributesMax(self.node, exclude)
+		attributes = self.getAttributesMax(node, exclude)
 		self.cmb002(attributes=attributes, clear=True, show=True)
 
 		# if self.parentUi.cmb000.currentIndex() == 0: #if create type: polygon; convert to editable poly
-		# 	rt.convertTo(self.node, rt.PolyMeshObject) #convert after adding primitive attributes to spinboxes
+		# 	rt.convertTo(node, rt.PolyMeshObject) #convert after adding primitive attributes to spinboxes
 
-		rt.select(self.node) #select the transform node so that you can see any edits
+		rt.select(node) #select the transform node so that you can see any edits
 		rt.redrawViews()
 
 

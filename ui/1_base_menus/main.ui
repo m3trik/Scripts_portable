@@ -77,6 +77,65 @@
        <height>211</height>
       </rect>
      </property>
+     <widget class="QTreeWidget_ExpandableList" name="tree000">
+      <property name="geometry">
+       <rect>
+        <x>85</x>
+        <y>10</y>
+        <width>116</width>
+        <height>191</height>
+       </rect>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="sizeAdjustPolicy">
+       <enum>QAbstractScrollArea::AdjustToContents</enum>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::NoSelection</enum>
+      </property>
+      <property name="indentation">
+       <number>0</number>
+      </property>
+      <property name="itemsExpandable">
+       <bool>false</bool>
+      </property>
+      <property name="headerHidden">
+       <bool>true</bool>
+      </property>
+      <property name="expandsOnDoubleClick">
+       <bool>false</bool>
+      </property>
+      <property name="columnCount">
+       <number>1</number>
+      </property>
+      <attribute name="headerVisible">
+       <bool>false</bool>
+      </attribute>
+      <column>
+       <property name="text">
+        <string notr="true">root</string>
+       </property>
+      </column>
+      <item>
+       <property name="text">
+        <string>Recent Commands</string>
+       </property>
+      </item>
+     </widget>
     </widget>
     <widget class="QWidget" name="main" native="true">
      <property name="geometry">
@@ -371,6 +430,13 @@
    </widget>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QTreeWidget_ExpandableList</class>
+   <extends>QTreeWidget</extends>
+   <header>qtreewidget_expandablelist.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
  <designerdata>

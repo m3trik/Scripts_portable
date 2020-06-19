@@ -9,10 +9,24 @@ class Create(Init):
 	def __init__(self, *args, **kwargs):
 		super(Create, self).__init__(*args, **kwargs)
 
-		self.node=None
 		self.rotation = {'x':[90,0,0], 'y':[0,90,0], 'z':[0,0,90], '-x':[-90,0,0], '-y':[0,-90,0], '-z':[0,0,-90], 'last':[]}
 		self.point=[0,0,0]
 		self.history=[]
+
+
+	@property
+	def node(self):
+		'''
+		Get the Transform Node
+		'''
+		selection = pm.ls(sl=1, objectsOnly=1)
+		if not selection:
+			return 'Error: Nothing Selected.'
+
+		transform = selection[0]
+		if not self.parentUi.t003.text()==transform.name(): #make sure the same field reflects the current working node.
+			self.parentUi.t003.setText(transform.name())
+		return transform
 
 
 	def pin(self, state=None):
@@ -23,7 +37,6 @@ class Create(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
-
 			return
 
 
@@ -59,16 +72,19 @@ class Create(Init):
 		return axis
 
 
-	def rotateAbsolute(self, axis):
+	def rotateAbsolute(self, axis, node):
 		'''
 		undo previous rotation and rotate on the specified axis.
 		uses an external rotation dictionary.
-		args:	axis (str) = axis to rotate on. ie. '-x'
+
+		args:
+			axis (str) = axis to rotate on. ie. '-x'
+			node (obj) = transform node.
 		'''
 		axis = self.rotation[axis]
 
-		rotateOrder = pm.xform (self.node, query=1, rotateOrder=1)
-		pm.xform (self.node, preserve=1, rotation=axis, rotateOrder=rotateOrder, absolute=1)
+		rotateOrder = pm.xform (node, query=1, rotateOrder=1)
+		pm.xform (node, preserve=1, rotation=axis, rotateOrder=rotateOrder, absolute=1)
 		self.rotation['last'] = axis
 
 
@@ -101,8 +117,7 @@ class Create(Init):
 		Set Name
 
 		'''
-		transform = self.node[0]
-		pm.rename(transform.name() ,self.parentUi.t003.text())
+		pm.rename(self.node.name(), self.parentUi.t003.text())
 
 
 	def chk000(self):
@@ -111,8 +126,7 @@ class Create(Init):
 
 		'''
 		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk000', setUnChecked='chk001, chk002')
-		if self.node:
-			self.rotateAbsolute(self.getAxis())
+		self.rotateAbsolute(self.getAxis(), self.node)
 
 
 	def chk001(self):
@@ -121,8 +135,7 @@ class Create(Init):
 
 		'''
 		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk001', setUnChecked='chk000, chk002')
-		if self.node:
-			self.rotateAbsolute(self.getAxis())
+		self.rotateAbsolute(self.getAxis(), self.node)
 
 
 	def chk002(self):
@@ -131,16 +144,14 @@ class Create(Init):
 
 		'''
 		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk002', setUnChecked='chk000, chk001')
-		if self.node:
-			self.rotateAbsolute(self.getAxis())
+		self.rotateAbsolute(self.getAxis(), self.node)
 
 
 	def chk003(self):
 		'''
 		Rotate Negative Axis
 		'''
-		if self.node:
-			self.rotateAbsolute(self.getAxis())
+		self.rotateAbsolute(self.getAxis(), self.node)
 
 
 	def chk005(self):
@@ -228,8 +239,7 @@ class Create(Init):
 			index(int) = optional index of the spinbox that called this function. ie. 5 from s005
 		'''
 		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.parentUi.cmb002.children_()} #get current spinbox values. ie. {width:10} from spinbox prefix and value.
-		historyNode = self.getHistoryNode(self.node[0])
-		self.setAttributesMEL(historyNode, spinboxValues) #set attributes for the history node
+		self.setAttributesMEL(self.node.history()[-1], spinboxValues) #set attributes for the history node
 
 
 	def b000(self):
@@ -245,48 +255,48 @@ class Create(Init):
 
 			#cube:
 			if index==0:
-				self.node = pm.polyCube (axis=axis, width=5, height=5, depth=5, subdivisionsX=1, subdivisionsY=1, subdivisionsZ=1)
+				node = pm.polyCube (axis=axis, width=5, height=5, depth=5, subdivisionsX=1, subdivisionsY=1, subdivisionsZ=1)
 
 			#sphere:
 			if index==1:
-				self.node = pm.polySphere (axis=axis, radius=5, subdivisionsX=12, subdivisionsY=12)
+				node = pm.polySphere (axis=axis, radius=5, subdivisionsX=12, subdivisionsY=12)
 
 			#cylinder:
 			if index==2:
-				self.node = pm.polyCylinder (axis=axis, radius=5, height=10, subdivisionsX=1, subdivisionsY=1, subdivisionsZ=1)
+				node = pm.polyCylinder (axis=axis, radius=5, height=10, subdivisionsX=1, subdivisionsY=1, subdivisionsZ=1)
 
 			#plane:
 			if index==3:
-				self.node = pm.polyPlane (axis=axis, width=5, height=5, subdivisionsX=1, subdivisionsY=1)
+				node = pm.polyPlane (axis=axis, width=5, height=5, subdivisionsX=1, subdivisionsY=1)
 
 			#circle:
 			if index==4:
 				axis = next(key for key, value in self.rotation.items() if value==axis and key!='last') #get key from value, as createCircle takes the key (ie. 'x') as an argument.
-				self.node = self.createCircle(axis=axis, numPoints=5, radius=5, mode=0)
+				node = self.createCircle(axis=axis, numPoints=5, radius=5, mode=0)
 
 			#Cone:
 			if index==5:
-				self.node = pm.polyCone (axis=axis, radius=5, height=5, subdivisionsX=1, subdivisionsY=1, subdivisionsZ=1)
+				node = pm.polyCone (axis=axis, radius=5, height=5, subdivisionsX=1, subdivisionsY=1, subdivisionsZ=1)
 
 			#Pyramid
 			if index==6:
-				self.node = pm.polyPyramid (axis=axis, sideLength=5, numberOfSides=5, subdivisionsHeight=1, subdivisionsCaps=1)
+				node = pm.polyPyramid (axis=axis, sideLength=5, numberOfSides=5, subdivisionsHeight=1, subdivisionsCaps=1)
 
 			#Torus:
 			if index==7:
-				self.node = pm.polyTorus (axis=axis, radius=10, sectionRadius=5, twist=0, subdivisionsX=5, subdivisionsY=5)
+				node = pm.polyTorus (axis=axis, radius=10, sectionRadius=5, twist=0, subdivisionsX=5, subdivisionsY=5)
 
 			#Pipe
 			if index==8:
-				self.node = pm.polyPipe (axis=axis, radius=5, height=5, thickness=2, subdivisionsHeight=1, subdivisionsCaps=1)
+				node = pm.polyPipe (axis=axis, radius=5, height=5, thickness=2, subdivisionsHeight=1, subdivisionsCaps=1)
 
 			#Soccer ball
 			if index==9:
-				self.node = pm.polyPrimitive(axis=axis, radius=5, sideLength=5, polyType=0)
+				node = pm.polyPrimitive(axis=axis, radius=5, sideLength=5, polyType=0)
 
 			#Platonic solids
 			if index==10:
-				self.node = mel.eval("performPolyPrimitive PlatonicSolid 0;")
+				node = mel.eval("performPolyPrimitive PlatonicSolid 0;")
 
 
 		#nurbs
@@ -294,35 +304,35 @@ class Create(Init):
 
 			#Cube
 			if index==0:
-				self.node = pm.nurbsCube (ch=1, d=3, hr=1, p=(0, 0, 0), lr=1, w=1, v=1, ax=(0, 1, 0), u=1)
+				node = pm.nurbsCube (ch=1, d=3, hr=1, p=(0, 0, 0), lr=1, w=1, v=1, ax=(0, 1, 0), u=1)
 
 			#Sphere
 			if index==1:
-				self.node = pm.sphere (esw=360, ch=1, d=3, ut=0, ssw=0, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=4, ax=(0, 1, 0))
+				node = pm.sphere (esw=360, ch=1, d=3, ut=0, ssw=0, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=4, ax=(0, 1, 0))
 
 			#Cylinder
 			if index==2:
-				self.node = pm.cylinder (esw=360, ch=1, d=3, hr=2, ut=0, ssw=0, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=1, ax=(0, 1, 0))
+				node = pm.cylinder (esw=360, ch=1, d=3, hr=2, ut=0, ssw=0, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=1, ax=(0, 1, 0))
 
 			#Cone
 			if index==3:
-				self.node = pm.cone (esw=360, ch=1, d=3, hr=2, ut=0, ssw=0, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=1, ax=(0, 1, 0))
+				node = pm.cone (esw=360, ch=1, d=3, hr=2, ut=0, ssw=0, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=1, ax=(0, 1, 0))
 
 			#Plane
 			if index==4:
-				self.node = pm.nurbsPlane (ch=1, d=3, v=1, p=(0, 0, 0), u=1, w=1, ax=(0, 1, 0), lr=1)
+				node = pm.nurbsPlane (ch=1, d=3, v=1, p=(0, 0, 0), u=1, w=1, ax=(0, 1, 0), lr=1)
 
 			#Torus
 			if index==5:
-				self.node = pm.torus (esw=360, ch=1, d=3, msw=360, ut=0, ssw=0, hr=0.5, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=4, ax=(0, 1, 0))
+				node = pm.torus (esw=360, ch=1, d=3, msw=360, ut=0, ssw=0, hr=0.5, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=4, ax=(0, 1, 0))
 
 			#Circle
 			if index==6:
-				self.node = pm.circle (c=(0, 0, 0), ch=1, d=3, ut=0, sw=360, s=8, r=1, tol=0.01, nr=(0, 1, 0))
+				node = pm.circle (c=(0, 0, 0), ch=1, d=3, ut=0, sw=360, s=8, r=1, tol=0.01, nr=(0, 1, 0))
 
 			#Square
 			if index==7:
-				self.node = pm.nurbsSquare (c=(0, 0, 0), ch=1, d=3, sps=1, sl1=1, sl2=1, nr=(0, 1, 0))
+				node = pm.nurbsSquare (c=(0, 0, 0), ch=1, d=3, sps=1, sl1=1, sl2=1, nr=(0, 1, 0))
 
 
 		#lights
@@ -334,24 +344,23 @@ class Create(Init):
 
 
 		#set name
-		if isinstance(self.node[0], (str,unicode)): #is type of:
-			self.parentUi.t003.setText(self.node[0])
+		if isinstance(node[0], (str,unicode)): #is type of:
+			self.parentUi.t003.setText(node[0])
 		else:
-			self.parentUi.t003.setText(self.node[0].name())
+			self.parentUi.t003.setText(node[0].name())
 
-		self.history.extend(self.node) #save current node to history
+		self.history.extend(node) #save current node to history
 		self.rotation['last']=[] #reset rotation history
 
 		#translate the newly created node
-		pm.xform (self.node, translation=self.point, worldSpace=1, absolute=1)
+		pm.xform (node, translation=self.point, worldSpace=1, absolute=1)
 
 		exclude = [u'message', u'caching', u'frozen', u'isHistoricallyInteresting', u'nodeState', u'binMembership', u'output', 
 					u'axis', u'axisX', u'axisY', u'axisZ', u'paramWarn', u'uvSetName', u'createUVs', u'texture', u'maya70']
-		historyNode = self.getHistoryNode(self.node[0]) #get the history node using the transform
-		attributes = self.getAttributesMEL(historyNode, exclude) #get dict containing attributes:values of the history node.
+		attributes = self.getAttributesMEL(self.node.history()[-1], exclude) #get dict containing attributes:values of the history node.
 		self.cmb002(values=attributes, clear=True, show=True)
 
-		pm.select(self.node) #select the transform node so that you can see any edits
+		pm.select(node) #select the transform node so that you can see any edits
 
 
 	def create(self, catagory1, catagory2):

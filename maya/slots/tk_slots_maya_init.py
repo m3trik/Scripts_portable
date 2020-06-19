@@ -613,10 +613,22 @@ class Init(Slots):
 
 		returns:
 			(str) node
+
+		alt method: node.history()[-1]
 		'''
 		shapes = pm.listRelatives(node, children=1, shapes=1) #get shape node from transform: returns list ie. [nt.Mesh(u'pConeShape1')]
 		connections = pm.listConnections(shapes, source=1, destination=0) #get incoming connections: returns list ie. [nt.PolyCone(u'polyCone1')]
 		return connections[0]
+
+
+	@staticmethod
+	def getAllParents(node):
+		'''
+		List ALL parents of an object
+		'''
+		objects = pm.ls(node, l=1)
+		tokens=[]
+		return objects[0].split("|")
 
 
 	@staticmethod

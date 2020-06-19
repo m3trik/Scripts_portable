@@ -104,11 +104,7 @@ class Materials(Init):
 			materials = self.getSceneMaterials(startingWith=['ID_'])
 
 		elif favoriteMaterials:
-			import maya.app.general.tlfavorites as _fav
-			path = os.path.expandvars(r"%USERPROFILE%/Documents/maya/2020/prefs/renderNodeTypeFavorites")
-			renderNodeTypeFavorites = _fav.readFavorites(path)
-			materials = [i for i in renderNodeTypeFavorites if '/' not in i]
-			del _fav
+			materials = self.getFavoriteMaterials()
 
 		mats = sorted([mat for mat in set(materials)])
 		matNames = [m.name() if hasattr(m,'name') else str(m) for m in mats]
@@ -373,6 +369,22 @@ class Materials(Init):
 		'''
 		materials = [m for m in pm.ls(mat=1, flatten=1) if filter(str(m.name()).startswith, startingWith) and not pm.nodeType(m) in exclude]
 
+		return materials
+
+
+	@staticmethod
+	def getFavoriteMaterials():
+		'''
+		Get Maya Favorite Materials List.
+
+		returns:
+			(list) materials.
+		'''
+		import maya.app.general.tlfavorites as _fav
+		path = os.path.expandvars(r"%USERPROFILE%/Documents/maya/2020/prefs/renderNodeTypeFavorites")
+		renderNodeTypeFavorites = _fav.readFavorites(path)
+		materials = [i for i in renderNodeTypeFavorites if '/' not in i]
+		del _fav
 		return materials
 
 

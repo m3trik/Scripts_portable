@@ -359,6 +359,28 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			return None
 
 
+	def getIndexFromWItem(self, wItem, column=None, topLevel=False):
+		'''
+		Get an item's index.
+
+		args:
+			wItem (obj) = The widget item to get the index for.
+			column (int) = Column containing the widget item.
+			topLevel (bool) = Specifies whether the item is a topLevel item or not. With a top level item, the column arg is not needed.
+		
+		returns:
+			(int) index
+		'''
+		try:
+			if topLevel:
+				index = self.indexFromItem(wItem, column)
+			else:
+				index = self.indexOfTopLevelItem(wItem)
+			return index
+		except TypeError:
+			return None
+
+
 	def _setHeader(self, header, column=None):
 		'''
 		Set new header and column or modify an existing.

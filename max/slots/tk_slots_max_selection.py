@@ -38,7 +38,7 @@ class Selection(Init):
 			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='')
 			pin.add('QCheckBox', setText='Ignore Backfacing', setObjectName='chk004', setToolTip='Ignore backfacing components during selection.')
 			pin.add(QLabel_, setText='Grow Selection', setObjectName='b014', setToolTip='Grow the current selection.')
-			pin.add(QLabel_, setText='Shrink Selection', setObjectName='b014', setToolTip='Shrink the current selection.')
+			pin.add(QLabel_, setText='Shrink Selection', setObjectName='b015', setToolTip='Shrink the current selection.')
 			return
 
 
