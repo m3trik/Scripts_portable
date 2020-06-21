@@ -47,9 +47,7 @@ to allow for as little overhead as possible in development and maintainence.  Na
 * corresponding class: tk_slots_\<app\>_\<name\>.py
  
 
-*Each ui widget looks to connect to a corresponding class method of the same name: ie. widget b021 connects to method b021. The following naming convention isn't required, but using something like it helps keep things organized.*
-*The docstring of each method houses a user friendly name that is stored with all other widget info in the switchboard dict when an
-instance is populated. All of the ui widgets have an event filter attached for handling of specific events.*
+*Each ui widget looks to connect to a corresponding class method of the same name: ie. widget b021 connects to method b021. The following naming convention isn't explicitly required, but in some instances checks are in place to look for specific prefixes (ie. cmb) and handle widget events accordingly.*
 
 * QPushButton             b000    (b000-b999)
 * QPushButton             v000    triggered on mouse release when hovered.
