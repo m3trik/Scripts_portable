@@ -112,8 +112,8 @@ In 3ds Max:
  main menu> customize> additional startup scripts
 
 Adding additional ui's:
-Drop the qt designer ui file into the ui folder.
-Add a shortcut somewhere in the main ui (with the ui name in the 'whats this' attribute).
-Create corresponding class of the same name following the naming convention and inheritance of existing slot modules.  
+* Drop the qt designer ui file into the ui folder.
+* Add a shortcut somewhere in the main ui (with the ui name in the 'whats this' attribute).
+* Create corresponding class of the same name following the naming convention and inheritance of existing slot modules.  
 
 The default hotkey for launching the menu set is f12. This is because I usually remap f12 to the windows key. This can be changed in the tk_main module.
