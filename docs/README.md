@@ -116,4 +116,4 @@ Adding additional ui's:
 * Add a shortcut somewhere in the main ui (with the ui name in the 'whats this' attribute).
 * Create corresponding class of the same name following the naming convention and inheritance of existing slot modules.  
 
-The default hotkey for launching the menu set is f12. This is because I usually remap f12 to the windows key. This can be changed in the tk_main module.
+The default hotkey for launching the menu set is f12. This is because I usually remap f12 to the windows key. This can be changed in the tk_ module.
