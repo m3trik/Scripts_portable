@@ -268,24 +268,62 @@ class Init(Slots):
 		return elementArray
 
 
+	@staticmethod
+	def getVertices(obj):
+		'''
+		Get a list of vertices of a given object whether it is an editable mesh or polygon.
+		If there is a selection then only the selected verts will be returned, else all of the objects verts.
 
-	#--alignVertices-------------------------------------------------------------------------
+		args:
+			obj (obj) = polygon or mesh object.
 
-	#align vertices
-	# 'vertex.pos.x = vertPosX' ect doesnt work. had to use maxscript
-	# selection: as array
-	# mode:
-	# 0 - YZ
-	# 1 - XZ
-	# 2 - XY
-	# 3 -  X
-	# 4 -  Y
-	# 5 -  Z
-	#notes: (align all vertices at once) by putting each vert index and coordinates in a dict (or two arrays) then if when iterating through a vert falls within the tolerance specified in a textfield align that vert in coordinate. then repeat the process for the other coordinates x,y,z specified by checkboxes. using edges may be a better approach. or both with a subObjectLevel check
-	#create edge alignment tool and then use subObjectLevel check to call either that function or this one from the same buttons.
-	#to save ui space; have a single align button, x, y, z, and align 'all' checkboxes and a tolerance textfield.
+		returns:
+			(list) vertex list.		
+		'''
+		if rt.classof(obj)==rt.Editable_poly:
+			vertices = Init.bitArrayToArray(rt.polyop.getVertSelection(obj)) #get the selected vertices
+		else:
+			vertices = Init.bitArrayToArray(rt.getVertSelection(obj)) #get the selected vertices
+
+		return vertices
+
+
+	@staticmethod
+	def getSelectedVertices(obj):
+		'''
+		Get a list of selected vertices of a given object whether it is an editable mesh or polygon.
+		If there is a selection then only the selected verts will be returned, else all of the objects verts.
+
+		args:
+			obj (obj) = polygon or mesh object.
+
+		returns:
+			(list) vertex list.		
+		'''
+		if rt.classof(obj)==rt.Editable_poly:
+			vertices = list(range(1, rt.polyop.getNumVerts(obj)))
+		else:
+			vertices = list(range(1, rt.getNumVerts(obj)))
+
+		return vertices
+
+
 	@Slots.message
 	def alignVertices(self, selection, mode):
+		'''
+		Align Vertices
+
+		Align all vertices at once by putting each vert index and coordinates in a dict (or two arrays) then if when iterating through a vert falls within the tolerance specified in a textfield align that vert in coordinate. then repeat the process for the other coordinates x,y,z specified by checkboxes. using edges may be a better approach. or both with a subObjectLevel check
+		create edge alignment tool and then use subObjectLevel check to call either that function or this one from the same buttons.
+		to save ui space; have a single align button, x, y, z, and align 'all' checkboxes and a tolerance textfield.
+
+		args:
+			selection (list) = vertex selection
+			mode (int) = valid values are: 0 (YZ), 1 (XZ), 2 (XY), 3 (X), 4 (Y), 5 (Z)
+
+		notes:
+		'vertex.pos.x = vertPosX' ect doesnt work. had to use maxscript
+		'''
 		# maxEval('undo "alignVertices" on')
 		componentArray = selection.selectedVerts
 		

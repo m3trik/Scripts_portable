@@ -85,13 +85,13 @@ class Normals(Init):
 		edges = pm.ls (edges, flatten=1)
 
 		pm.undoInfo (openChunk=1)
-		self.mainProgressBar (len(edges))
+		self.mainProgressBar(len(edges))
 
 		soften = tb.chk000.isChecked()
 
 		for edge in edges:
-			pm.progressBar ("tk_progressBar", edit=1, step=1)
-			if pm.progressBar ("tk_progressBar", query=1, isCancelled=1):
+			pm.progressBar("tk_progressBar", edit=1, step=1)
+			if pm.progressBar("tk_progressBar", query=1, isCancelled=1):
 				break
 			crease = pm.polyCrease (edge, query=1, value=1)
 			# print(edge, crease[0])
@@ -99,8 +99,8 @@ class Normals(Init):
 				pm.polySoftEdge (edge, angle=30)
 			elif soften:
 				pm.polySoftEdge (edge, angle=180)
-		pm.progressBar ("tk_progressBar", edit=1, endProgress=1)
-		pm.undoInfo (closeChunk=1)
+		pm.progressBar("tk_progressBar", edit=1, endProgress=1)
+		pm.undoInfo(closeChunk=1)
 
 
 	def tb002(self, state=None):

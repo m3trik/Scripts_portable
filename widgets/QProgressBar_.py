@@ -35,7 +35,6 @@ class QProgressBar_(QtWidgets.QProgressBar):
 		# self.connect(QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Escape), self), self.cancel())
 
 
-
 	def cancel(self):
 		'''
 		cancel the procedure.

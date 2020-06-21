@@ -166,77 +166,111 @@ class Edit(Init):
 		print('no function')
 
 
+	@staticmethod
+	def findNGons(obj):
+		'''
+		Get a list of faces of a given object having more than four sides.
+
+		args:
+			obj (obj) = polygonal object.
+
+		returns:
+			(list) list containing any found N-Gons		
+		'''
+		faces = Init.bitArrayToArray(rt.polyop.getFaceSelection(obj)) #get the selected vertices
+		if not faces: #else get all vertices for the selected object
+			faces = list(range(1, obj.faces.count))
+
+		Init.setSubObjectLevel(4)
+				
+		nGons = [f for f in faces if rt.polyop.getFaceDeg(obj, f)>4]
+		return nGons
+
+
+	@staticmethod
+	def getVertexVectors(obj):
+		'''
+		Generator
+		'''
+		for vertex in vertices:
+			edges = Init.bitArrayToArray(rt.polyop.getEdgesUsingVert(obj, vertex)) #get the edges that use the vertice
+
+			if len(edges)==2:
+				vertexPosition = rt.polyop.getVert(obj, vertex)
+
+				edgeVerts = Init.bitArrayToArray([rt.polyop.getVertsUsingEdge(obj, e) for e in edges])
+
+				edgeVerts = [v for v in edgeVerts if not v==vertex]
+
+				vector1 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[0]) - vertexPosition)
+				vector2 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[1]) - vertexPosition)
+
+				vector = rt.length(vector1 + vector2)
+				yield vector
+
+
+	@staticmethod
+	def findIsolatedVertices(obj):
+		'''
+		Get a list of isolated vertices of a given object.
+
+		args:
+			obj (obj) = polygonal object.
+
+		returns:
+			(list) list containing any found isolated verts.		
+		'''
+		vertices = Init.getVertices(obj) #else get all vertices for the selected object
+
+		isolatedVerts=[]
+		vectors = Edit.getVertexVectors(obj)
+		for _ in range(len(vertices)):
+			vector = vectors.next()
+			if vector and vector <= float(edgeAngle) / 50:
+				isolatedVerts.append(vector)
+
+		return isolatedVerts
+
+
 	@Slots.message
 	def meshCleanup(self, isolatedVerts=False, edgeAngle=10, nGons=False, repair=False):
 		'''
 		Find mesh artifacts.
+
 		args:
-			isolatedVerts=bool - find vertices with two edges which fall below a specified angle.
-			edgeAngle(int) = used with isolatedVerts argument to specify the angle tolerance
-			nGons=bool - search for n sided polygon faces.
-			repair=bool - delete or auto repair any of the specified artifacts 
+			isolatedVerts (bool) = find vertices with two edges which fall below a specified angle.
+			edgeAngle (int) = used with isolatedVerts argument to specify the angle tolerance
+			nGons (bool) = search for n sided polygon faces.
+			repair (bool) = delete or auto repair any of the specified artifacts 
 		'''
 		for obj in rt.selection:
-			if rt.classof(obj) == rt.Editable_poly:
-				obj.selectMode = 2 #multi-component selection preview
+			if not rt.classof(obj)==rt.Editable_poly:
+				print('Error: '+obj.name+' isn\'t an editable poly or nothing is selected.')
+
+			obj.selectMode = 2 #multi-component selection preview
+
+			if nGons: #Convert N-Sided Faces To Quads
+				nGons_ = Edit.findNGons(obj)
+
+				if repair:
+					maxEval('macros.run \"Modifiers\" \"QuadifyMeshMod\"')
+				else: #Find and select N-gons	
+					rt.setFaceSelection(obj, nGons_)
+
+				print('Found '+str(len(nGons_))+' N-gons.')
 
 
-				if nGons: #Convert N-Sided Faces To Quads
+			if isolatedVerts: #delete loose vertices
+				isolatedVerts_ = Edit.findIsolatedVertices(obj)
 
-					faces = Init.bitArrayToArray(rt.polyop.getFaceSelection(obj)) #get the selected vertices
-					if not faces: #else get all vertices for the selected object
-						faces = list(range(1, obj.faces.count))
-
-					Init.setSubObjectLevel(4)
-							
-					nGons_ = [f for f in faces if rt.polyop.getFaceDeg(obj, f)>4]
-
-					if repair:
-						maxEval('macros.run \"Modifiers\" \"QuadifyMeshMod\"')
-					else: #Find and select N-gons	
-						rt.setFaceSelection(obj, nGons_)
-
-					print('Found '+str(len(nGons_))+' N-gons.')
-
-
-				if isolatedVerts: #delete loose vertices
-					dict_={}
-
-					vertices = Init.bitArrayToArray(rt.polyop.getVertSelection(obj)) #get the selected vertices
-					if not vertices: #else get all vertices for the selected object
-						vertices = list(range(1, rt.polyop.getNumVerts(obj)))
-
-					for vertex in vertices:
-						edges = Init.bitArrayToArray(rt.polyop.getEdgesUsingVert(obj, vertex)) #get the edges that use the vertice
-
-						if len(edges)==2:
-							vertexPosition = rt.polyop.getVert(obj, vertex)
-
-							edgeVerts = Init.bitArrayToArray([rt.polyop.getVertsUsingEdge(obj, e) for e in edges])
-
-							edgeVerts = [v for v in edgeVerts if not v==vertex]
-
-							vector1 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[0]) - vertexPosition)
-							vector2 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[1]) - vertexPosition)
-
-							vector = rt.length(vector1 + vector2)
-
-							dict_[vertex] = vector
-							
-
-					selection = [vertex for vertex, vector in dict_.iteritems() if vector <= float(edgeAngle) / 50]	
-
-					Init.undo(True)
-					rt.polyop.setVertSelection(obj, selection)
-					print('Found '+str(len(selection))+' isolated vertices.')
-					if repair:
-						obj.EditablePoly.remove(selLevel='Vertex', flag=1)
-						obj.selectMode = 0 #multi-component selection preview off
-					rt.redrawViews()
-					Init.undo(False)
-
-			else:
-				return 'Error: Selection isn\'t an editable poly or nothing is selected.'
+				Init.undo(True)
+				rt.polyop.setVertSelection(obj, isolatedVerts_)
+				print('Found '+str(len(isolatedVerts_))+' isolated vertices.')
+				if repair:
+					obj.EditablePoly.remove(selLevel='Vertex', flag=1)
+					obj.selectMode = 0 #multi-component selection preview off
+				rt.redrawViews()
+				Init.undo(False)
 
 
 	def tb003(self, state=None):

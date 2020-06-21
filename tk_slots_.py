@@ -56,6 +56,33 @@ class Slots(QtCore.QObject):
 		return self.sb.getUi(name, level=2) #submenu
 
 
+	# @classmethod
+	# def progress(cls, fn):
+	# 	'''
+	# 	Decorator that populates a messageBox with the string returned by the given function.
+	# 	'''
+	# 	def wrapper(self, *args, **kwargs):
+	# 		self.progressBar(fn(self, *args, **kwargs))
+	# 	return wrapper
+
+
+	def progressBar(self):
+		'''
+		'''
+		if not hasattr(self, '_progressBar'):
+			from widgets.qProgressBar_ import QProgressBar_
+			self._progressBar = QProgressBar_(self.tk)
+
+		try:
+			self.currentUi.progressBar.step1
+		except AttributeError:
+			pass
+
+		# self._progressBar
+
+		return self._progressBar
+
+
 	@classmethod
 	def message(cls, fn):
 		'''

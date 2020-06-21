@@ -723,6 +723,7 @@ class Init(Slots):
 		args:
 			name (str) = name of a Maya UI element of any type.
 			type_ = <qt object type> - default is QWidget
+
 		returns:
 			the corresponding QWidget or QAction.
 			If the object does not exist, returns None
@@ -738,33 +739,35 @@ class Init(Slots):
 
 
 	@staticmethod
-	def mainProgressBar (size, name="tk_progressBar", stepAmount=1):
+	def mainProgressBar(size, name="tk_progressBar", stepAmount=1):
 		'''
+		#add esc key pressed return False
+
 		args:
 			size (int) = total amount
 			name (str) = name of progress bar created
 	  		stepAmount(int) = increment amount
+
+		example use-case:
+		mainProgressBar (len(edges), progressCount)
+			pm.progressBar ("tk_progressBar", edit=1, step=1)
+			if pm.progressBar ("tk_progressBar", query=1, isCancelled=1):
+				break
+		pm.progressBar ("tk_progressBar", edit=1, endProgress=1)
+
 	  	to use main progressBar: name=string $gMainProgressBar
 	  	'''
 		status = "processing: "+str(size)+"."
 		edit=0
-		if pm.progressBar (name, exists=1):
+		if pm.progressBar(name, exists=1):
 			edit=1
-		pm.progressBar (name, edit=edit,
+		pm.progressBar(name, edit=edit,
 						beginProgress=1,
 						isInterruptable=True,
 						status=status,
 						maxValue=size,
 						step=stepAmount)
 
-		#add esc key pressed return False
-
-		# example use-case:
-		# mainProgressBar (len(edges), progressCount)
-		# 	pm.progressBar ("tk_progressBar", edit=1, step=1)
-		# 	if pm.progressBar ("tk_progressBar", query=1, isCancelled=1):
-		# 		break
-		# pm.progressBar ("tk_progressBar", edit=1, endProgress=1)
 
 
 	@staticmethod
@@ -791,6 +794,7 @@ class Init(Slots):
 			statusMessage (str) = The status info message to be displayed (accepts html formatting).
 			assistMessage (str) = The user assistance message to be displayed, (accepts html formatting).
 			position (str) = position on screen. possible values are: topCenter","topRight","midLeft","midCenter","midCenterTop","midCenterBot","midRight","botLeft","botCenter","botRight"
+
 		ex. self.viewPortMessage("shutting down:<hl>"+str(timer)+"</hl>")
 		'''
 		fontSize=10
