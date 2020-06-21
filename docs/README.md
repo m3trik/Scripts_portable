@@ -12,7 +12,7 @@ a new layout up and running, is to drop a qt designer ui file into the ui folder
 *Example re-opening the last scene, renaming a material, and selecting geometry by that material.
 
 
-![alt text](https://raw.githubusercontent.com/m3trik/tk/master/docs/dependacy_graph.jpg)
+![alt text](https://raw.githubusercontent.com/m3trik/tk/master/docs/dependancy_graph.jpg)
 
 
 ##
