@@ -12,9 +12,6 @@ a new layout up and running, is to drop a qt designer ui file into the ui folder
 *Example re-opening the last scene, renaming a material, and selecting geometry by that material.
 
 
-![alt text](https://raw.githubusercontent.com/m3trik/tk/master/docs/dependancy_graph.jpg)
-
-
 ##
 -----------------------------------------------
  Structure:
@@ -36,6 +33,7 @@ a new layout up and running, is to drop a qt designer ui file into the ui folder
 ###### *parent class holding methods that are inherited across all app specific slot class modules.*
 
 
+![alt text](https://raw.githubusercontent.com/m3trik/tk/master/docs/dependancy_graph.jpg)
 
 
 ##
