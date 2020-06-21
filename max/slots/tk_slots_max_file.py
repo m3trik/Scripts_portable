@@ -57,7 +57,7 @@ class File(Init):
 		if not cmb.containsContextMenuItems:
 			cmb.addToContext('QPushButton', setObjectName='b001', setText='Last', setToolTip='Open the most recent file.')
 
-		list_ = rt.getRecentfiles()
+		list_ = [f for f in rt.getRecentfiles()]
 		items = cmb.addItems_(list_, "Recent Files")
 
 		if not index:

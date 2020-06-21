@@ -9,7 +9,6 @@ class Materials(Init):
 	def __init__(self, *args, **kwargs):
 		super(Materials, self).__init__(*args, **kwargs)
 
-		self.currentMaterial=None
 		self.materials=None
 		self.randomMat=None
 
@@ -19,8 +18,8 @@ class Materials(Init):
 		'''
 		Get the current material using the current index of the materials combobox.
 		'''
-		index = self.parentUi.cmb002.currentIndex()
-		return self.materials[index] if len(self.materials)>index and index>=0 else None #store material.
+		text = self.parentUi.cmb002.currentText()
+		return self.materials[text]
 
 
 	def pin(self, state=None):
@@ -31,7 +30,6 @@ class Materials(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='3dsMax Material Editors')
-
 			return
 
 

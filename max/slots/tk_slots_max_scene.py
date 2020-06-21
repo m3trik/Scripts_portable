@@ -29,16 +29,16 @@ class Scene(Init):
 		Editors
 		'''
 		cmb = self.parentUi.cmb000
-		
-		list_ = ['']
-		contents = cmb.addItems_(list_, '')
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index(''):
-				pass
-			cmb.setCurrentIndex(0)
+		# list_ = ['']
+		# contents = cmb.addItems_(list_, '')
+
+		# if not index:
+		# 	index = cmb.currentIndex()
+		# if index!=0:
+		# 	if index==contents.index(''):
+		# 		pass
+		# 	cmb.setCurrentIndex(0)
 
 
 	def getTrailingIntegers(self, string, increment=0):

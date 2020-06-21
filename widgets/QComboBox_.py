@@ -133,21 +133,21 @@ class QComboBox_(QtWidgets.QComboBox):
 		return self._menu
 
 
-	def addToContext(self, w, title=None, **kwargs):
+	def addToContext(self, w, header=None, **kwargs):
 		'''
 		Same as 'add', but instead adds items to the context menu.
 		'''
 		_menu=self.contextMenu()
-		return self.add(w, title, _menu, **kwargs)
+		return self.add(w, header, _menu, **kwargs)
 
 
-	def add(self, w, title=None, _menu=None, **kwargs):
+	def add(self, w, header=None, _menu=None, **kwargs):
 		'''
-		Add items to the comboboxes's custom menu (or it's standard modelView).
+		Add items to the comboboxes's menu. (custom or the standard modelView).
 
 		args:
 			w (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
-			title (str) = optional - header string at top when using standard model/view.
+			header (str) = optional - header string at top when using standard model/view.
 			_menu (obj) = menu to add to. typically internal use only.
 		kwargs:
 			show (bool) = show the menu.
@@ -159,7 +159,7 @@ class QComboBox_(QtWidgets.QComboBox):
 		tb.add('QCheckBox', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
 		'''
 		if self.popupStyle=='modelView' and _menu is None:
-			items = self.addItems_(w, title)
+			items = self.addItems_(w, header)
 			return items
 
 		try:
@@ -179,16 +179,16 @@ class QComboBox_(QtWidgets.QComboBox):
 		return w
 
 
-	def addItems_(self, items, title=None):
+	def addItems_(self, items, header=None):
 		'''
 		Add items to the combobox's standard modelView without triggering any signals.
 
 		args:
-			items (list) = list of strings to fill the comboBox with
-			title (str) = optional value for the first index of the comboBox's list
+			items (str)(list) = A string or list of strings to fill the comboBox with.
+			header (str) = An optional value for the first index of the comboBox's list.
 
 		returns:
-			comboBox's current item list minus any title.
+			(list) comboBox's current item list minus any header.
 
 		ex call: comboBox.addItems_(["Import file", "Import Options"], "Import")
 		'''
@@ -196,7 +196,11 @@ class QComboBox_(QtWidgets.QComboBox):
 		index = self.currentIndex() #get current index before refreshing list
 		self.clear()
 
-		items_ = [str(i) for i in [title]+items if i]
+		# print (type(items))
+		if not isinstance(items, (list, tuple, set)):
+			items = [items]
+
+		items_ = [str(i) for i in [header]+items if i]
 		self.addItems(items_) 
 
 		self.setCurrentIndex(index)
@@ -431,13 +435,4 @@ if __name__ == "__main__":
 
 
 
-	# def mouseReleaseEvent(self, event):
-	# 	'''
-	# 	args:
-	# 		event=<QEvent>
-	# 	'''
-	# 	# print '__mouseReleaseEvent_1'
-	# 	if self.rect().contains(self.mapFromGlobal(QtGui.QCursor.pos())): #if mouse over widget:
-	# 		self.showPopup()
 
-	# 	return QtWidgets.QComboBox.mouseReleaseEvent(self, event)

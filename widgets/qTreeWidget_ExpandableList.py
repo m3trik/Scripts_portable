@@ -143,7 +143,7 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 
 		args:
 			widget (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
-			header (str) = header.
+			header (str)(obj) = header or parent widget.
 			parentHeader (str) = parent header.
 		returns:
  			the parent header string.
@@ -155,6 +155,9 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			options = tree.add('QPushButton', create, parentHeader='Options', setText='Options')
 			tree.add('QPushButton', options, setText='Opt1')
 		'''
+		if not isinstance(header, (str, unicode)): #if the header is passed in as a widget:
+			header = self.getParentHeaderFromWidget(header)
+
 		#if header doesn't contain the refresh column flag: return the parent header.
 		if self.refresh and self.isRefreshedHeader(header)==False:
 			return self.getParentHeaderFromHeader(header)
@@ -189,7 +192,7 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 
 		self.setAttributes(widget, kwargs) #set any additional given keyword args for the widget.
 
-		return parentHeader
+		return widget
 
 
 	def eventFilter(self, widget, event):
@@ -728,6 +731,18 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			return next(w.text() for w in self.getWidgets(wItem) if self.getColumnFromWidget(w)==column)
 		except:
 			return None
+
+
+	def getWidgetsFromText(self, textList):
+		'''
+		Get any widget(s) with text matching those in the given list.
+
+		args:
+			textList (list) = String list of possible widget text matches.
+		returns:
+			(list) matching widget(s)
+		'''
+		return [w for w in self.getWidgets() if w and w.text() in textList]
 
 
 	def isParent(self, widget):

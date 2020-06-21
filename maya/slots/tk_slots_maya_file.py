@@ -116,7 +116,7 @@ class File(Init):
 		cmb = self.parentUi.cmb004
 		
 		list_ = ['Export Selection', 'Send to Unreal', 'Send to Unity', 'GoZ', 'Send to 3dsMax: As New Scene', 'Send to 3dsMax: Update Current', 
-				'Send to 3dsMax: Add to Current', 'Export Options', 'FBX Export Presets', 'Obj Export Presets']
+				'Send to 3dsMax: Add to Current', 'Export to Offline File', 'Export Options', 'FBX Export Presets', 'Obj Export Presets']
 		items = cmb.addItems_(list_, 'Export')
 
 		if not index:
@@ -137,11 +137,13 @@ class File(Init):
 				mel.eval('UpdateCurrentScene3dsMax;') #OneClickMenuExecute ("3ds Max", "UpdateCurrentScene"); doMaxFlow { "update","perspShape","1" };
 			if index==7: #Send to 3dsMax: Add to Current
 				mel.eval('AddToCurrentScene3dsMax;') #OneClickMenuExecute ("3ds Max", "AddToScene"); doMaxFlow { "add","perspShape","1" };
-			if index==8: #Export options
+			if index==8: #Export to Offline File
+				mel.eval('ExportOfflineFileOptions;') #ExportOfflineFile
+			if index==9: #Export options
 				mel.eval('ExportSelectionOptions;')
-			if index==9: #FBX Export Presets
+			if index==10: #FBX Export Presets
 				mel.eval('FBXUICallBack -1 editExportPresetInNewWindow fbx;') #Fbx Presets
-			if index==10: #Obj Export Presets
+			if index==11: #Obj Export Presets
 				mel.eval('FBXUICallBack -1 editExportPresetInNewWindow obj;') #Obj Presets
 			cmb.setCurrentIndex(0)
 

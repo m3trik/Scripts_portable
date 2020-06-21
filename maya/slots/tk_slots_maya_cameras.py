@@ -10,6 +10,76 @@ class Cameras(Init):
 		super(Cameras, self).__init__(*args, **kwargs)
 
 
+	@property
+	def clippingMenu(self):
+		'''
+		'''
+		if not hasattr(self, '_clippingMenu'):
+			self._clippingMenu = QMenu_(self.parentUi, position='cursorPos')
+
+			self._clippingMenu.add('QPushButton', setText='Auto Clip', setObjectName='b000', setCheckable=True, setToolTip='When Auto Clip is ON, geometry closer to the camera than 3 units is not displayed. Turn OFF to manually define.')
+			self._clippingMenu.add('QDoubleSpinBox', setPrefix='Far Clip:  ', setObjectName='s000', minMax_='.01-10 step.1', setToolTip='Adjust the current cameras near clipping plane.')
+			self._clippingMenu.add('QSpinBox', setPrefix='Near Clip: ', setObjectName='s001', minMax_='10-10000 step1', setToolTip='Adjust the current cameras far clipping plane.')
+
+		#set widget states for the current activeCamera
+		activeCamera = self.getCurrentCam()
+		if not activeCamera:
+			self.toggleWidgets(self._clippingMenu, setDisabled='s000-1,b000')
+		elif pm.viewClipPlane(activeCamera, query=1, autoClipPlane=1): #if autoClipPlane is active:
+			self._clippingMenu.chk000.setChecked(True)
+			self.toggleWidgets(self._clippingMenu, setDisabled='s000-1')
+		nearClip = pm.viewClipPlane(activeCamera, query=1, nearClipPlane=1) if activeCamera else 1.0
+		farClip = pm.viewClipPlane(activeCamera, query=1, farClipPlane=1) if activeCamera else 1000.0
+
+		self._clippingMenu.s000.setValue(nearClip)
+		self._clippingMenu.s001.setValue(farClip)
+
+		return self._clippingMenu
+
+
+	@Slots.message
+	def b000(self):
+		'''
+		Camera Clipping: Auto Clip
+		'''
+		if self.clippingMenu.chk000.isChecked():
+			self.toggleWidgets(self.clippingMenu, setDisabled='s000-1')
+		else:
+			self.toggleWidgets(self.clippingMenu, setEnabled='s000-1')
+
+		activeCamera = self.getCurrentCam()
+		if not activeCamera:
+			return 'Error: No Active Camera.'
+
+		pm.viewClipPlane(activeCamera, autoClipPlane=True)
+
+
+	def s000(self):
+		'''
+		Camera Clipping: Near Clip
+		'''
+		value = self.clippingMenu.s000.value()
+
+		activeCamera = self.getCurrentCam()
+		if not activeCamera:
+			return 'Error: No Active Camera.'
+
+		pm.viewClipPlane(activeCamera, nearClipPlane=widget.value())
+
+
+	def s001(self):
+		'''
+		Camera Clipping: Far Clip
+		'''
+		value = self.clippingMenu.s001.value()
+
+		activeCamera = self.getCurrentCam()
+		if not activeCamera:
+			return 'Error: No Active Camera.'
+
+		pm.viewClipPlane(activeCamera, farClipPlane=widget.value())
+
+
 	def tree000(self, wItem=None, column=None):
 		'''
 
@@ -17,10 +87,15 @@ class Cameras(Init):
 		tree = self.parentUi.tree000
 
 		if not any([wItem, column]):
-			if not tree.refresh:
+			if not tree.refresh: #static list items -----------
 				tree.expandOnHover = True
 				tree.convert(tree.getTopLevelItems(), 'QLabel') #construct the tree using the existing contents.
 
+				l = []
+				[tree.add('QLabel', 'Editors', setText=s) for s in l]
+	
+
+			#refreshed list items -----------------------------
 			try:
 				cameras = pm.ls(type=('camera'), l=True) #Get all cameras
 				startup_cameras = [camera for camera in cameras if pm.camera(camera.parent(0), startupCamera=True, q=True)] #filter all startup / default cameras
@@ -35,7 +110,7 @@ class Cameras(Init):
 			[tree.add('QLabel', 'Editors', setText=s) for s in l]
 			return
 
-		# widget = tree.getWidget(wItem, column)
+		widget = tree.getWidget(wItem, column)
 		text = tree.getWidgetText(wItem, column)
 		header = tree.getHeaderFromColumn(column)
 		print(header, text, column)
@@ -60,39 +135,16 @@ class Cameras(Init):
 
 		if header=='Options':
 			if text=='Group Cameras':
-				mel.eval('''
-				if (`objExists cameras`)
-				{
-				  print "Group 'cameras' already exists";
-				}
-				else
-				{
-				  group -world -name cameras side front top persp;
-				  hide cameras;
-				  // Now add non-default cameras to group
-				  if (`objExists back`)
-				  {
-				  	parent back cameras;
-				  }
-				  if (`objExists bottom`)
-				  {
-				  	parent bottom cameras;
-				  }
-				  if (`objExists left`)
-				  {
-				  	parent left cameras;
-				  }
-				  if (`objExists alignToPoly`)
-				  {
-				  	parent alignToPoly cameras;
-				  }
-				}''')
+				self.groupCameras()
+			if text=='Adjust Clipping':
+				self.clippingMenu.show()
+			if text=='Toggle Safe Frames': #Viewport Safeframes Toggle
+				self.toggleSafeFrames()
 
 
 	def v000(self):
 		'''
 		Cameras: Back View
-
 		'''
 		mel.eval('''
 		if (`objExists back`)
@@ -121,24 +173,24 @@ class Cameras(Init):
 		}
 		''')
 
+
 	def v001(self):
 		'''
 		Cameras: Top View
-
 		'''
 		pm.lookThru ("topShape")
+
 
 	def v002(self):
 		'''
 		Cameras: Right View
-
 		'''
 		pm.lookThru ("sideShape")
+
 
 	def v003(self):
 		'''
 		Cameras: Left View
-
 		'''
 		mel.eval('''
 		if (`objExists left`)
@@ -165,24 +217,24 @@ class Cameras(Init):
 		}
 		''')
 
+
 	def v004(self):
 		'''
 		Cameras: Perspective View
-
 		'''
 		pm.lookThru ("perspShape")
+
 
 	def v005(self):
 		'''
 		Cameras: Front View
-
 		'''
 		pm.lookThru ("frontShape")
+
 
 	def v006(self):
 		'''
 		Cameras: Bottom View
-
 		'''
 		mel.eval('''
 		if (`objExists bottom`)
@@ -211,10 +263,10 @@ class Cameras(Init):
 		}
 		''')
 
+
 	def v007(self):
 		'''
 		Cameras: Align View
-
 		'''
 		mel.eval('''
 		$cameraExists = `objExists alignToPoly`; //check exists if not create camera
@@ -245,8 +297,67 @@ class Cameras(Init):
 		''')
 
 
+	@staticmethod
+	def groupCameras():
+		'''
+		Group Cameras
+		'''
+		mel.eval('''
+			if (`objExists cameras`)
+			{
+			  print "Group 'cameras' already exists";
+			}
+			else
+			{
+			  group -world -name cameras side front top persp;
+			  hide cameras;
+			  // Now add non-default cameras to group
+			  if (`objExists back`)
+			  {
+			  	parent back cameras;
+			  }
+			  if (`objExists bottom`)
+			  {
+			  	parent bottom cameras;
+			  }
+			  if (`objExists left`)
+			  {
+			  	parent left cameras;
+			  }
+			  if (`objExists alignToPoly`)
+			  {
+			  	parent alignToPoly cameras;
+			  }
+			}''')
 
 
+	@staticmethod
+	def toggleSafeFrames():
+		'''
+		Toggle display of the film gate for the current camera.
+		'''
+		camera = self.getCurrentCam()
+
+		state = pm.camera(camera, query=1, displayResolution=1)
+		if state:
+			pm.camera(camera, edit=1, displayFilmGate=False, displayResolution=False, overscan=1.0)
+		else:
+			pm.camera(camera, edit=1, displayFilmGate=False, displayResolution=True, overscan=1.3)
+
+
+	@staticmethod
+	def getCurrentCam():
+		'''
+		Get the currently active camera.
+		'''
+		import maya.OpenMaya as OpenMaya
+		import maya.OpenMayaUI as OpenMayaUI
+
+		view = OpenMayaUI.M3dView.active3dView()
+		cam = OpenMaya.MDagPath()
+		view.getCamera(cam)
+		camPath = cam.fullPathName()
+		return camPath
 
 
 #module name

@@ -10,6 +10,85 @@ class Cameras(Init):
 		super(Cameras, self).__init__(*args, **kwargs)
 
 
+	@property
+	def clippingMenu(self):
+		'''
+		'''
+		if not hasattr(self, '_clippingMenu'):
+			self._clippingMenu = QMenu_(self.currentUi, position='cursorPos')
+
+			self._clippingMenu.add(QLabel_, setText='Viewport Clip', setObjectName='lbl000', setToolTip='Toggle the clipping controls for the current viewport camera.')
+			self._clippingMenu.add('QPushButton', setText='Auto Clip', setObjectName='b000', setCheckable=True, setToolTip='When Auto Clip is ON, geometry closer to the camera than 3 units is not displayed. Turn OFF to manually define.')
+			self._clippingMenu.add('QDoubleSpinBox', setPrefix='Far Clip:  ', setObjectName='s000', minMax_='.01-10 step.1', setToolTip='Adjust the current cameras near clipping plane.')
+			self._clippingMenu.add('QSpinBox', setPrefix='Near Clip: ', setObjectName='s001', minMax_='10-10000 step1', setToolTip='Adjust the current cameras far clipping plane.')
+
+		#set widget states for the current activeCamera
+		activeCamera = rt.getActiveCamera()
+		if not activeCamera:
+			self.toggleWidgets(self._clippingMenu, setDisabled='s000-1,b000')
+		elif activeCamera.clipManually: #if clipManually is active:
+			self._clippingMenu.chk000.setChecked(True)
+			self.toggleWidgets(self._clippingMenu, setDisabled='s000-1')
+		nearClip = activeCamera.nearClip if activeCamera else 1.0
+		farClip = activeCamera.farClip  if activeCamera else 1000.0
+
+		self._clippingMenu.s000.setValue(nearClip)
+		self._clippingMenu.s001.setValue(farClip)
+
+		return self._clippingMenu
+
+
+	def lbl000(self):
+		'''
+		Camera Clipping: Viewport
+		'''
+		maxEval('actionMan.executeAction 0 "374"') #Tools: Viewport Clipping
+
+
+	@Slots.message
+	def b000(self):
+		'''
+		Camera Clipping: Auto Clip
+		'''
+		print('chk000')
+		if self.clippingMenu.chk000.isChecked():
+			self.toggleWidgets(self.clippingMenu, setDisabled='s000-1')
+		else:
+			self.toggleWidgets(self.clippingMenu, setEnabled='s000-1')
+
+		activeCamera = rt.getActiveCamera()
+		if not activeCamera:
+			return 'Error: No Active Camera.'
+
+		activeCamera.clipManually(False)
+
+
+	def s000(self):
+		'''
+		Camera Clipping: Near Clip
+		'''
+		value = self.clippingMenu.s000.value()
+
+		activeCamera = rt.getActiveCamera()
+		if not activeCamera:
+			return 'Error: No Active Camera.'
+
+		activeCamera.nearClip = value
+
+
+	def s001(self):
+		'''
+		Camera Clipping: Far Clip
+		'''
+		value = self.clippingMenu.s001.value()
+
+		activeCamera = rt.getActiveCamera()
+		if not activeCamera:
+			return 'Error: No Active Camera.'
+
+		activeCamera.farClip = value
+
+
 	def tree000(self, wItem=None, column=None):
 		'''
 		
@@ -17,20 +96,22 @@ class Cameras(Init):
 		tree = self.parentUi.tree000
 
 		if not any([wItem, column]): #populate the tree columns.
-			if not tree.refresh:
+			if not tree.refresh: #static list items -----------
 				tree.expandOnHover = True
 				tree.convert(tree.getTopLevelItems(), 'QLabel') #convert any existing contents.
 
+				l = []
+				[tree.add('QLabel', 'Editors', setText=s) for s in l]
+
+			#refreshed list items -----------------------------
 			try:
 				l = [str(cam.name) for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
 			except AttributeError: l=[]
 			[tree.add('QLabel', 'Cameras', refresh=True, setText=s) for s in l]
 
-			l = []
-			[tree.add('QLabel', 'Editors', setText=s) for s in l]
 			return
 
-		# widget = tree.getWidget(wItem, column)
+		widget = tree.getWidget(wItem, column)
 		text = tree.getWidgetText(wItem, column)
 		header = tree.getHeaderFromColumn(column)
 
@@ -48,16 +129,13 @@ class Cameras(Init):
 			rt.viewport.setCamera(cam) #set viewport to camera
 			rt.redrawViews()
 
-		if header=='Create':
+		if header=='Options':
 			if text=='Group Cameras':
-				cameras = [cam for cam in rt.cameras] #List scene Cameras
-
-				layer = rt.LayerManager.getLayerFromName ("Cameras")
-				if not layer:
-					layer = rt.LayerManager.NewLayerFromName("Cameras")
-
-				for cam in cameras:
-					layer.addnode(cam)
+				self.groupCameras()
+			if text=='Adjust Clipping':
+				self.clippingMenu.show()
+			if text=='Toggle Safe Frames':
+				maxEval('actionMan.executeAction 0 "219"') #Tools: Viewport Safeframes Toggle
 
 
 	def v000(self):
@@ -175,7 +253,19 @@ class Cameras(Init):
 		pass
 
 
+	@staticmethod
+	def groupCameras():
+		'''
+		Group Cameras
+		'''
+		cameras = [cam for cam in rt.cameras] #List scene Cameras
 
+		layer = rt.LayerManager.getLayerFromName("Cameras")
+		if not layer:
+			layer = rt.LayerManager.NewLayerFromName("Cameras")
+
+		for cam in cameras:
+			layer.addnode(cam)
 
 
 

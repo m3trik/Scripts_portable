@@ -23,7 +23,7 @@ Promoting a widget in designer to use a custom class:
 class QMenu_(QtWidgets.QMenu):
 	'''
 	args:
-		widget (obj) = Setting a widget to this property allows the menu to be positioned in relation to the widget. If nothing is given, the parent widget 
+		widget (obj) = Setting a widget to this property allows the menu to be positioned in relation to a widget. If nothing is given, the parent widget is used.
 		position (str) = Desired menu position relative to it's parent. 'cursorPos', 'topRight' etc.
 	'''
 	def __init__(self, parent=None, widget=None, position='topRight', **kwargs):
@@ -162,6 +162,7 @@ class QMenu_(QtWidgets.QMenu):
 			self.addAction(wAction)
 
 		self._setAttributes(kwargs, w) #set any additional given keyword args for the widget.
+		setattr(self, w.objectName(), w) #add the widget's objectName as a QMenu attribute.
 
 		return w
 

@@ -18,8 +18,8 @@ class Materials(Init):
 		'''
 		Get the current material using the current index of the materials combobox.
 		'''
-		index = self.parentUi.cmb002.currentIndex()
-		return self.materials[index] if len(self.materials)>index and index>=0 else None #store material.
+		text = self.parentUi.cmb002.currentText()
+		return self.materials[text]
 
 
 	def pin(self, state=None):
@@ -234,29 +234,6 @@ class Materials(Init):
 		mel.eval("HypershadeWindow;")
 
 
-	def renameMaterial(self):
-		'''
-		Rename Material
-		'''
-		cmb = self.parentUi.cmb002 #scene materials
-		newMatName = cmb.currentText()
-
-		if self.currentMaterial and self.currentMaterial.name!=newMatName:
-			if self.parentUi.tb001.chk001.isChecked(): #Rename ID map Material
-				prefix = 'ID_'
-				if not newMatName.startswith(prefix):
-					newMatName = prefix+newMatName
-
-			cmb.setItemText(cmb.currentIndex(), newMatName)
-			try:
-				pm.rename(self.currentMaterial.name(), newMatName)
-			except RuntimeError as error:
-				cmb.setItemText(cmb.currentIndex(), str(error.strip('\n')))
-
-		#re-enable widgets
-		self.lbl001(setEditable=False)
-
-
 	def lbl001(self, setEditable=True):
 		'''
 		Rename Material: Set cmb002 as editable and disable widgets.
@@ -313,6 +290,29 @@ class Materials(Init):
 		cmb = self.parentUi.cmb002
 		self.cmb002() #refresh the combobox
 		cmb.setCurrentIndex(cmb.items().index(mat.name()))
+
+
+	def renameMaterial(self):
+		'''
+		Rename Material
+		'''
+		cmb = self.parentUi.cmb002 #scene materials
+		newMatName = cmb.currentText()
+
+		if self.currentMaterial and self.currentMaterial.name!=newMatName:
+			if self.parentUi.tb001.chk001.isChecked(): #Rename ID map Material
+				prefix = 'ID_'
+				if not newMatName.startswith(prefix):
+					newMatName = prefix+newMatName
+
+			cmb.setItemText(cmb.currentIndex(), newMatName)
+			try:
+				pm.rename(self.currentMaterial.name(), newMatName)
+			except RuntimeError as error:
+				cmb.setItemText(cmb.currentIndex(), str(error.strip('\n')))
+
+		#re-enable widgets
+		self.lbl001(setEditable=False)
 
 
 	@Slots.message

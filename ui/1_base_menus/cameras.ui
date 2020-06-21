@@ -175,7 +175,7 @@
         <string>Set Custom Camera</string>
        </property>
        <property name="text">
-        <string/>
+        <string>Adjust Clipping</string>
        </property>
       </item>
       <item>
@@ -192,7 +192,7 @@
         <string>Camera From View</string>
        </property>
        <property name="text">
-        <string/>
+        <string>Toggle Safe Frames</string>
        </property>
       </item>
       <item>

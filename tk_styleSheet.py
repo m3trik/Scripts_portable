@@ -254,6 +254,10 @@ class StyleSheet():
 		border: 1px solid black;
 		}
 
+		QSpinBox::disabled {
+			color: {COLOR_TEXT3};
+		}
+
 		QSpinBox::hover {
 			background-color: {COLOR_ACCENT};
 			color: {COLOR_TEXT1};
@@ -265,6 +269,10 @@ class StyleSheet():
 		background: {COLOR_MEDIUM};
 		color: {COLOR_TEXT1};
 		border: 1px solid black;
+		}
+
+		QDoubleSpinBox::disabled {
+			color: {COLOR_TEXT3};
 		}
 
 		QDoubleSpinBox::hover {

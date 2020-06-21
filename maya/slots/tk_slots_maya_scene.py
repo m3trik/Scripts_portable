@@ -20,7 +20,6 @@ class Scene(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya Scene Editors')
-
 			return
 
 
@@ -30,7 +29,7 @@ class Scene(Init):
 		'''
 		cmb = self.parentUi.cmb000
 		
-		files = ['Node Editor', 'Outlinder', 'Content Browser']
+		files = ['Node Editor', 'Outlinder', 'Content Browser', 'Optimize Scene Size']
 		contents = cmb.addItems_(files, 'Maya Scene Editors')
 
 		if not index:
@@ -42,6 +41,8 @@ class Scene(Init):
 				mel.eval('OutlinerWindow;') #
 			if index==contents.index('Content Browser'):
 				mel.eval('ContentBrowserWindow;') #
+			if index==contents.index('Optimize Scene Size'):
+				mel.eval('cleanUpScene 2;')
 			cmb.setCurrentIndex(0)
 
 
