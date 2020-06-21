@@ -4,8 +4,7 @@
 ## Design:
 ######
 *This is a cross-platform, modular, marking menu style ui based on a QStackedWidget.  Each piece is constructed dynamically
-to allow for as little overhead as possible in development and maintainence.  Literally all you have to do to have 
-a new layout up and running, is to drop a qt designer ui file into the ui folder, add a shortcut somewhere in the main ui (with the ui name in the 'whats this' attribute), and a create corresponding class of the same name.  Naming convention allows for a stacked ui to be constructed, signals added/removed as needed, and a master dictionary (stored within the switchboard module) to be created, which provides convenience methods that allow getting/setting of relevant data across modules.*
+to allow for as little overhead as possible in development and maintainence.  Naming convention and directory structure allows for a stacked ui to be constructed, signals added/removed as needed, and a master dictionary (stored within the switchboard module) to be created, which provides convenience methods that allow getting/setting of relevant data across modules.*
 
 
 ![alt text](https://raw.githubusercontent.com/m3trik/tk/master/docs/toolkit_demo.gif)
@@ -52,21 +51,19 @@ a new layout up and running, is to drop a qt designer ui file into the ui folder
 *The docstring of each method houses a user friendly name that is stored with all other widget info in the switchboard dict when an
 instance is populated. All of the ui widgets have an event filter attached for handling of specific events.*
 
-* QPushButton   b000    (b000-b999) can contain 1000 buttons of one type max per class using this convention.
-
-* QPushButton   v000    triggered on mouse release when hovered.
-
-* QPushButton   i000    triggered on mouse release when hovered. changes the ui index.
-
-* QComboBox     cmb000  ""
-
-* QCheckBox     chk000  ""
-
-* QSpinBox      s000    ""
-
-etc.
-
-
+* QPushButton             b000    (b000-b999)
+* QPushButton             v000    triggered on mouse release when hovered.
+* QPushButton             i000    triggered on mouse enter. changes the ui index.
+* QToolButton             tb000   ""
+* QComboBox               cmb000  ""
+* QCheckBox|QRadioButton|QPushButton(checkable) chk000  ""
+* QSpinBox|QDoubleSpinBox s000    ""
+* QLabel                  lbl000  ""
+* QWidget                 w000    ""
+* QTreeWidget             tree000 ""
+* QListWidget             list000 ""
+* QLineEdit               line000 ""
+* QTextEdit               text000 ""
 
 ##
 -----------------------------------------------
@@ -112,8 +109,13 @@ In maya:
 * add \maya\tk_slots_maya directory to maya.env
  (MAYA_SCRIPT_PATH=<dir>)
  
-In 3ds Max
+In 3ds Max:
 * add \max\startup directory to system path by navigating in app to:
  main menu> customize> additional startup scripts
- 
+
+Adding additional ui's:
+Drop the qt designer ui file into the ui folder.
+Add a shortcut somewhere in the main ui (with the ui name in the 'whats this' attribute).
+Create corresponding class of the same name following the naming convention and inheritance of existing slot modules.  
+
 The default hotkey for launching the menu set is f12. This is because I usually remap f12 to the windows key. This can be changed in the tk_main module.
