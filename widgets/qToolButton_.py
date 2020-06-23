@@ -105,25 +105,27 @@ class QToolButton_(QtWidgets.QToolButton):
 		return w
 
 
-	def children_(self, index=None, contextMenu=False):
+	def children_(self, of_type=[], contextMenu=False, _exclude=['QAction', 'QWidgetAction']):
 		'''
-		Get the widget at the given index.
-		If no arg is given all widgets will be returned.
+		Get a list of child objects from a custom menu, excluding those types listed in '_exclude'.
 
 		args:
-			index (int) = widget location.
+			contextMenu (bool) = Get the child widgets for the context menu.
+			of_type (list) = Widget types as strings. Types of widgets to return. Any types listed in _exclude will still be excluded.
+			_exclude (list) = Widget types as strings. Can be modified to set types to exclude from the returned results.
 		returns:
-			(QWidget) or (list)
+			(list)
 		'''
-		menuWidgets = self.menu().children_(index)
-		contextMenuWidgets = self.contextMenu().children_(index)
-
 		if contextMenu:
-			return contextMenuWidgets
-		if index is None:
-			return menuWidgets + contextMenuWidgets
+			menu = self.contextMenu()
 		else:
-			return menuWidgets
+			menu = self.menu()
+
+		if of_type:
+			children = [i for i in menu.children() if i.__class__.__name__ in of_type and i.__class__.__name__ not in _exclude]
+		else:
+			children = [i for i in menu.children() if i.__class__.__name__ not in _exclude]
+		return children
 
 
 	def enterEvent(self, event):

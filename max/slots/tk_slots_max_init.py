@@ -35,7 +35,7 @@ class Init(Slots):
 		'''
 		Get current scene attributes. Only those with relevant values will be displayed.
 		returns:
-				{dict} - current object attributes.
+			(dict) current object attributes.
 		'''
 		infoDict={}
 		try:
@@ -143,58 +143,13 @@ class Init(Slots):
 	# ------------------------------------------------
 
 
-	#--setSnapState--------------------------------------------------------------------------
-
-	#set grid and snap settings on or off
-	#state = string: "true", "false"
-	@staticmethod
-	def setSnapState(state):
-		'''
-		/*grid and snap settings*/
-
-		/*body shapes*/
-		snapmode.setOSnapItemActive 1 1 (state);
-		snapmode.setOSnapItemActive 1 2 (state);
-		snapmode.setOSnapItemActive 1 3 (state);
-		snapmode.setOSnapItemActive 1 4 (state);
-		snapmode.setOSnapItemActive 1 5 (state);
-		/*nurbs*/	
-		snapmode.setOSnapItemActive 2 1 (state);
-		snapmode.setOSnapItemActive 2 2 (state);
-		snapmode.setOSnapItemActive 2 3 (state);
-		snapmode.setOSnapItemActive 2 4 (state);
-		snapmode.setOSnapItemActive 2 5 (state);
-		snapmode.setOSnapItemActive 2 6 (state);
-		snapmode.setOSnapItemActive 2 7 (state);
-		snapmode.setOSnapItemActive 2 8 (state);
-		snapmode.setOSnapItemActive 2 9 (state);
-		snapmode.setOSnapItemActive 2 10 (state);
-		/*Point Cloud Shapes*/
-		snapmode.setOSnapItemActive 3 1 (state);
-		/*standard*/
-		snapmode.setOSnapItemActive 4 1 (state);
-		snapmode.setOSnapItemActive 4 2 (state);
-		/*standard*/
-		snapmode.setOSnapItemActive 5 1 (state);
-		snapmode.setOSnapItemActive 5 2 (state);
-		/*standard*/
-		snapmode.setOSnapItemActive 6 1 (state);
-		snapmode.setOSnapItemActive 6 2 (state);
-		/*standard*/
-		snapmode.setOSnapItemActive 7 1 (state);
-		snapmode.setOSnapItemActive 7 2 (state);
-		snapmode.setOSnapItemActive 7 3 (state);
-		snapmode.setOSnapItemActive 7 4 (state);
-		snapmode.setOSnapItemActive 7 5 (state);
-		snapmode.setOSnapItemActive 7 6 (state);
-		'''
-		pass
-
-
-
 	@staticmethod
 	def selectFaceLoop(tolerance, includeOpenEdges=False):
-
+		'''
+		args:
+			tolerance (float) = Face normal tolerance.
+			includeOpenEdges (bool) = 
+		'''
 		maxEval('''
 		selEdges = #{}
 		theObj = $
@@ -220,9 +175,18 @@ class Init(Slots):
 		''')
 
 
-	#Get edges between min and max angle
 	@staticmethod
 	def getEdgesByAngle(minAngle, maxAngle):
+		'''
+		Get edges between min and max angle.
+
+		args:
+			minAngle (float) = minimum search angle tolerance.
+			maxAngle (float) = maximum search angle tolerance.
+
+		returns:
+			(list) edges within the given range.
+		'''
 		edgelist=[]
 		for obj in rt.selection:
 
@@ -240,9 +204,17 @@ class Init(Slots):
 			return edgelist
 
 
-	#Detaches editable_mesh elements into new objects	
 	@Slots.message
 	def detachElement(self, obj):
+		'''
+		Detach editable_mesh elements into new objects.
+
+		args:
+			obj (obj) = polygon object.
+
+		returns:
+			(list) detached objects.
+		'''
 		elementArray = []
 
 		print(obj[0]) #object
@@ -272,7 +244,6 @@ class Init(Slots):
 	def getVertices(obj):
 		'''
 		Get a list of vertices of a given object whether it is an editable mesh or polygon.
-		If there is a selection then only the selected verts will be returned, else all of the objects verts.
 
 		args:
 			obj (obj) = polygon or mesh object.
@@ -280,10 +251,10 @@ class Init(Slots):
 		returns:
 			(list) vertex list.		
 		'''
-		if rt.classof(obj)==rt.Editable_poly:
-			vertices = Init.bitArrayToArray(rt.polyop.getVertSelection(obj)) #get the selected vertices
-		else:
-			vertices = Init.bitArrayToArray(rt.getVertSelection(obj)) #get the selected vertices
+		try:
+			vertices = Init.bitArrayToArray(rt.polyop.getVertSelection(obj)) #polygon
+		except:
+			vertices = Init.bitArrayToArray(rt.getVertSelection(obj)) #mesh
 
 		return vertices
 
@@ -291,8 +262,7 @@ class Init(Slots):
 	@staticmethod
 	def getSelectedVertices(obj):
 		'''
-		Get a list of selected vertices of a given object whether it is an editable mesh or polygon.
-		If there is a selection then only the selected verts will be returned, else all of the objects verts.
+		Get a list of the selected vertices of a given object whether it is an editable mesh or polygon.
 
 		args:
 			obj (obj) = polygon or mesh object.
@@ -300,12 +270,88 @@ class Init(Slots):
 		returns:
 			(list) vertex list.		
 		'''
-		if rt.classof(obj)==rt.Editable_poly:
+		try:
 			vertices = list(range(1, rt.polyop.getNumVerts(obj)))
-		else:
+		except:
 			vertices = list(range(1, rt.getNumVerts(obj)))
 
 		return vertices
+
+
+	@staticmethod
+	def getEdges(obj):
+		'''
+		Get a list of faces of a given object whether it is an editable mesh or polygon.
+
+		args:
+			obj (obj) = polygon or mesh object.
+
+		returns:
+			(list) edge list.		
+		'''
+		try:
+			edges = list(range(1, rt.polyop.getNumEdges(obj)))
+		except:
+			edges = list(range(1, obj.edges.count))
+
+		return edges
+
+
+	@staticmethod
+	def getSelectedEdges(obj):
+		'''
+		Get a list of the selected edges of a given object whether it is an editable mesh or polygon.
+
+		args:
+			obj (obj) = polygon or mesh object.
+
+		returns:
+			(list) edge list.		
+		'''
+		try:
+			edges = Init.bitArrayToArray(rt.polyop.getEdgeSelection(obj)) #polygon
+		except:
+			edges = Init.bitArrayToArray(rt.getEdgeSelection(obj)) #mesh
+
+		return edges
+
+
+	@staticmethod
+	def getFaces(obj):
+		'''
+		Get a list of faces of a given object whether it is an editable mesh or polygon.
+
+		args:
+			obj (obj) = polygon or mesh object.
+
+		returns:
+			(list) facet list.		
+		'''
+		try:
+			faces = list(range(1, rt.polyop.getNumFaces(obj)))
+		except:
+			faces = list(range(1, obj.faces.count))
+
+		return faces
+
+
+	@staticmethod
+	def getSelectedFaces(obj):
+		'''
+		Get a list of the selected faces of a given object whether it is an editable mesh or polygon.
+
+		args:
+			obj (obj) = polygon or mesh object.
+
+		returns:
+			(list) facet list.		
+		'''
+		try:
+			faces = Init.bitArrayToArray(rt.polyop.getFaceSelection(obj)) #polygon
+		except:
+			faces = Init.bitArrayToArray(rt.getFaceSelection(obj)) #mesh
+
+		return faces
 
 
 	@Slots.message
@@ -417,16 +463,18 @@ class Init(Slots):
 			return '{0}{1}{2}{3}'.format("result: ", vertex.pos[0], vertex.pos[1], vertex.pos[2])
 
 
-
-	#--scaleObject--------------------------------------------------------------------------
-
-	#'s' argument is a textfield scale amount
-	#'x,y,z' arguments are checkbox boolean values. 
-	#basically working except for final 'obj.scale([s, s, s])' command in python. variable definitions included for debugging. 
-	#to get working an option is to use the maxEval method in the alignVertices function.
 	@staticmethod
 	def scaleObject (size, x, y ,z):
+		'''
+		args:
+			size (float) = Scale amount
+			x (bool) = Scale in the x direction.
+			y (bool) = Scale in the y direction.
+			z (bool) = Scale in the z direction.
 
+		Basically working except for final 'obj.scale([s, s, s])' command in python. variable definitions included for debugging.
+		to get working an option is to use the maxEval method in the alignVertices function.
+		'''
 		tk_textField_000 = 1.50
 		tk_isChecked_002 = True
 		tk_isChecked_003 = True
@@ -587,12 +635,12 @@ class Init(Slots):
 	@staticmethod
 	def bitArrayToArray(bitArray):
 		'''
-		#args:
-				bitArray=bit array
-						*or list of bit arrays
+		args:
+			bitArray=bit array
+				*or list of bit arrays
 
-		#returns:
-				list containing indices of on (True) bits
+		returns:
+			list containing indices of on (True) bits
 		'''
 		if len(bitArray):
 			if type(bitArray[0])!=bool: #if list of bitArrays: flatten
@@ -607,7 +655,7 @@ class Init(Slots):
 
 	try: #alternate bitArray to array function.
 		'''
-		#args:
+		args:
 			bitArray=bit array
 		
 		ie. rt.bitArrayToArray(bitArray)
@@ -643,6 +691,9 @@ class Init(Slots):
 
 	@staticmethod
 	def toggleXraySelected():
+		'''
+
+		'''
 		toggle = Slots.cycle([0,1], 'toggleXraySelected') #toggle 0/1
 
 		for obj in rt.selection:
@@ -652,6 +703,9 @@ class Init(Slots):
 
 	@staticmethod
 	def toggleBackfaceCull():
+		'''
+
+		'''
 		toggle = Slots.cycle([0,1], 'toggleBackfaceCull') #toggle 0/1
 
 		for obj in rt.Geometry:
@@ -661,6 +715,12 @@ class Init(Slots):
 
 	@staticmethod
 	def toggleMaterialOverride(checker=False):
+		'''
+		Toggle override all materials in the scene.
+
+		args:
+			checker (bool) = Override with UV checkered material.
+		'''
 		state = Slots.cycle([0,1], 'OverrideMateridal') #toggle 0/1
 		if state:
 			rt.actionMan.executeAction(0, "63574") #Views: Override Off	
@@ -694,6 +754,9 @@ class Init(Slots):
 	previousSmoothPreviewLevel=int
 	@staticmethod
 	def toggleSmoothPreview():
+		'''
+		
+		'''
 		global previousSmoothPreviewLevel
 		toggle = Slots.cycle([0,1], 'toggleSmoothPreview') #toggle 0/1
 
@@ -732,20 +795,13 @@ class Init(Slots):
 		rt.redrawViews() #refresh viewport. only those parts of the view that have changed are redrawn.
 
 
-
 	@staticmethod
 	def setSubObjectLevel(level):
 		'''
 		args:
-			level=int  - set component mode
-						0 - object mode
-						1 - vertex
-						2 - edge
-						3 - border
-						4 - face
-						5 - element
+			level (int) = set component mode. 0(object), 1(vertex), 2(edge), 3(border), 4(face), 5(element)
 		'''
-		maxEval ('max modify mode')#set focus: modifier panel.
+		maxEval ('max modify mode') #set focus: modifier panel.
 
 		selection = rt.selection
 

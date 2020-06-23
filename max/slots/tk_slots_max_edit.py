@@ -177,9 +177,7 @@ class Edit(Init):
 		returns:
 			(list) list containing any found N-Gons		
 		'''
-		faces = Init.bitArrayToArray(rt.polyop.getFaceSelection(obj)) #get the selected vertices
-		if not faces: #else get all vertices for the selected object
-			faces = list(range(1, obj.faces.count))
+		faces = Init.getFaces(obj)
 
 		Init.setSubObjectLevel(4)
 				
@@ -188,22 +186,40 @@ class Edit(Init):
 
 
 	@staticmethod
-	def getVertexVectors(obj):
+	def getVertexVectors(obj, vertices):
 		'''
-		Generator
+		Generator to query vertex vector angles.
+
+		ex.
+		vectors = Edit.getVertexVectors(obj, vertices)
+		for _ in range(len(vertices)):
+			vector = vectors.next()
 		'''
 		for vertex in vertices:
-			edges = Init.bitArrayToArray(rt.polyop.getEdgesUsingVert(obj, vertex)) #get the edges that use the vertice
+			try:
+				edges = Init.bitArrayToArray(rt.polyop.getEdgesUsingVert(obj, vertex)) #get the edges that use the vertice
+			except:
+				edges = Init.bitArrayToArray(rt.getEdgesUsingVert(obj, vertex)) #get the edges that use the vertice
 
 			if len(edges)==2:
-				vertexPosition = rt.polyop.getVert(obj, vertex)
+				try:
+					vertexPosition = rt.polyop.getVert(obj, vertex)
+				except:
+					vertexPosition = rt.getVert(obj, vertex)
 
-				edgeVerts = Init.bitArrayToArray([rt.polyop.getVertsUsingEdge(obj, e) for e in edges])
+				try:
+					edgeVerts = Init.bitArrayToArray([rt.polyop.getVertsUsingEdge(obj, e) for e in edges])
+				except:
+					edgeVerts = Init.bitArrayToArray([rt.getVertsUsingEdge(obj, e) for e in edges])
 
 				edgeVerts = [v for v in edgeVerts if not v==vertex]
 
-				vector1 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[0]) - vertexPosition)
-				vector2 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[1]) - vertexPosition)
+				try:
+					vector1 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[0]) - vertexPosition)
+					vector2 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[1]) - vertexPosition)
+				except:
+					vector1 = rt.normalize(rt.getVert(obj, edgeVerts[0]) - vertexPosition)
+					vector2 = rt.normalize(rt.getVert(obj, edgeVerts[1]) - vertexPosition)
 
 				vector = rt.length(vector1 + vector2)
 				yield vector
@@ -220,10 +236,10 @@ class Edit(Init):
 		returns:
 			(list) list containing any found isolated verts.		
 		'''
-		vertices = Init.getVertices(obj) #else get all vertices for the selected object
+		vertices = Init.getVertices(obj) #get all vertices for the given object
 
 		isolatedVerts=[]
-		vectors = Edit.getVertexVectors(obj)
+		vectors = Edit.getVertexVectors(obj, vertices)
 		for _ in range(len(vertices)):
 			vector = vectors.next()
 			if vector and vector <= float(edgeAngle) / 50:
@@ -232,7 +248,6 @@ class Edit(Init):
 		return isolatedVerts
 
 
-	@Slots.message
 	def meshCleanup(self, isolatedVerts=False, edgeAngle=10, nGons=False, repair=False):
 		'''
 		Find mesh artifacts.
@@ -250,22 +265,27 @@ class Edit(Init):
 			obj.selectMode = 2 #multi-component selection preview
 
 			if nGons: #Convert N-Sided Faces To Quads
-				nGons_ = Edit.findNGons(obj)
+				_nGons = Edit.findNGons(obj)
+
+				print('Found '+str(len(_nGons))+' N-gons.')
 
 				if repair:
-					maxEval('macros.run \"Modifiers\" \"QuadifyMeshMod\"')
+					maxEval('macros.run \"Modifiers\" \"QuadifyMeshMod\"') #add the quadify mesh modifier to the stack
 				else: #Find and select N-gons	
-					rt.setFaceSelection(obj, nGons_)
-
-				print('Found '+str(len(nGons_))+' N-gons.')
+					rt.setFaceSelection(obj, _nGons)
 
 
 			if isolatedVerts: #delete loose vertices
-				isolatedVerts_ = Edit.findIsolatedVertices(obj)
+				_isolatedVerts = Edit.findIsolatedVertices(obj)
 
 				Init.undo(True)
-				rt.polyop.setVertSelection(obj, isolatedVerts_)
-				print('Found '+str(len(isolatedVerts_))+' isolated vertices.')
+				try:
+					rt.polyop.setVertSelection(obj, _isolatedVerts)
+				except:
+					rt.setVertSelection(obj, _isolatedVerts)
+
+				print('Found '+str(len(_isolatedVerts))+' isolated vertices.')
+				
 				if repair:
 					obj.EditablePoly.remove(selLevel='Vertex', flag=1)
 					obj.selectMode = 0 #multi-component selection preview off

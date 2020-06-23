@@ -46,12 +46,12 @@ class Transform(Init):
 		files = ['']
 		contents = cmb.addItems_(files, '')
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index(''):
-				pass
-			cmb.setCurrentIndex(0)
+		# if not index:
+		# 	index = cmb.currentIndex()
+		# if index!=0:
+		# 	if index==contents.index(''):
+		# 		pass
+		# 	cmb.setCurrentIndex(0)
 
 
 	def cmb001(self, index=None):
@@ -62,31 +62,90 @@ class Transform(Init):
 		setXformConstraintAlongNormal false;
 		'''
 		cmb = self.parentUi.cmb001
+		cmb.popupStyle = 'qmenu'
 
-		list_ = ['Off', 'Edge', 'Surface', 'Make Live']
-		contents = cmb.addItems_(list_)
+		if not cmb.containsContextMenuItems:
+			cmb.addToContext('QRadioButton', setObjectName='chk017', setText='Standard', setChecked=True, setToolTip='')
+			cmb.addToContext('QRadioButton', setObjectName='chk018', setText='Body Shapes', setToolTip='')
+			cmb.addToContext('QRadioButton', setObjectName='chk019', setText='NURBS', setToolTip='')
+			cmb.addToContext('QRadioButton', setObjectName='chk020', setText='Point Cloud Shapes', setToolTip='')
+			cmb.addToContext(QLabel_, setObjectName='lbl000', setText='Disable All', setToolTip='Disable all constraints.')
+			self.connect_('chk017-20', 'toggled', self.cmb001, cmb) #connect to this method on toggle
 
-		if not index:
-			index = cmb.currentIndex()
+		cmb.menu.clear()
+		if cmb.chk017.isChecked(): #Standard
+			cmb.setItemText(0,'Standard') #set cetagory title in standard model/view
+			list_ = ['Grid Points', 'Pivot', 'Perpendicular', 'Vertex', 'Edge/Segment', 'Face', 'Grid Lines', 'Bounding Box', 'Tangent', 'Endpoint', 'Midpoint', 'Center Face']
+		if cmb.chk018.isChecked(): #Body Shapes
+			cmb.setItemText(0,'Body Shapes') #set category title in standard model/view
+			list_ = ['Vertex_', 'Edge', 'Face_', 'End Edge', 'Edge Midpoint']
+		if cmb.chk019.isChecked(): #NURBS
+			cmb.setItemText(0,'NURBS') #set category title in standard model/view
+			list_ = ['CV', 'Curve Center', 'Curve Tangent', 'Curve End', 'Surface Normal', 'Point', 'Curve Normal', 'Curve Edge', 'Surface Center','Surface Edge']
+		if cmb.chk020.isChecked(): #Point Cloud Shapes
+			cmb.setItemText(0,'Point Cloud Shapes') #set category title in standard model/view
+			list_ = ['Point Cloud Vertex']
 
-		if index==contents.index('Off'):
-			pm.xformConstraint(type='none') #pm.manipMoveSetXformConstraint(none=True);
-			if hasattr(self, '_makeLiveState') and self._makeLiveState:
-				pm.makeLive(none=True)
-				self._makeLiveStat = False
-				self.viewPortMessage('{0}:<hl>makeLive: Off</hl>'.format(obj))
-		if index==contents.index('Edge'):
-			pm.xformConstraint(type='edge') #pm.manipMoveSetXformConstraint(edge=True);
-		if index==contents.index('Surface'):
-			pm.xformConstraint(type='surface') #pm.manipMoveSetXformConstraint(surface=True);
-		if index==contents.index('Make Live'):
-			selection = pm.ls(sl=1, objectsOnly=1)
-			if not selection:
-				cmb.setCurrentIndex(0)
-				return 'Error: Nothing Selected.'
-			pm.makeLive(selection[0]) #construction planes, nurbs surfaces and polygon meshes can be made live. makeLive supports one live object at a time.
-			self.viewPortMessage('{0}:<hl>makeLive: On</hl>'.format(selection[0].name()))
-			self._makeLiveState = True
+		widgets = [cmb.add('QCheckBox', setText=t) for t in list_]
+
+		for w in widgets:
+			try:
+				w.disconnect() #disconnect all previous connections.
+			except TypeError:
+				pass #if no connections are present; pass
+			w.toggled.connect(lambda state, widget=w: self.chkxxx(state=state, widget=widget))
+
+
+	def lbl000(self):
+		'''
+		Transform Constraints: Disable All
+		'''
+		widgets = self.parentUi.cmb001.children_(of_type=['QCheckBox'])
+		[w.setChecked(False) for w in widgets if w.isChecked()]
+
+
+	def chkxxx(self, **kwargs):
+		'''
+		Transform Constraints: Constraint CheckBoxes
+		'''
+		try:
+			Transform.setSnapState(kwargs['widget'].text(), kwargs['state'])
+		except KeyError:
+			pass
+
+
+	@staticmethod
+	def setSnapState(fn, state):
+		'''
+		Grid and Snap Settings: Modify grid and snap states.
+
+		args:
+			fn (str) = Snap string name.
+			state (bool) = Desired snap state.
+
+		Valid fn arguments for snap name:
+			Body Shapes: (1) 'Vertex_', 'Edge', 'Face_', 'End Edge', 'Edge Midpoint'
+			NURBS: (2) 'CV', 'Curve Center', 'Curve Tangent', 'Curve End', 'Surface Normal', 'Point', 'Curve Normal', 'Curve Edge', 'Surface Center','Surface Edge'
+			Point Cloud Shapes: (3) 'Point Cloud Vertex'
+			Standard: (4,5,6,7) 'Grid Points', 'Pivot', 'Perpendicular', 'Vertex', 'Edge/Segment', 'Face', 'Grid Lines', 'Bounding Box', 'Tangent', 'Endpoint', 'Midpoint', 'Center Face'
+
+		ex. setSnapState('Edge', True)
+		'''
+		snaps = {
+			1:['Vertex_', 'Edge', 'Face_', 'End Edge', 'Edge Midpoint'], #Body Shapes
+			2:['CV', 'Curve Center', 'Curve Tangent', 'Curve End', 'Surface Normal', 'Point', 'Curve Normal', 'Curve Edge', 'Surface Center','Surface Edge'], #NURBS
+			3:['Point Cloud Vertex'], #Point Cloud Shapes
+			4:['Grid Points', 'Pivot'], #Standard
+			5:['Perpendicular', 'Vertex'], #Standard
+			6:['Edge/Segment', 'Face'], #Standard
+			7:['Grid Lines', 'Bounding Box', 'Tangent', 'Endpoint', 'Midpoint', 'Center Face'] #Standard
+		}
+
+		for category, list_ in snaps.items():
+			if fn in list_:
+				index = list_.index(fn)+1 #add 1 to align with max array.
+				rt.snapmode.setOSnapItemActive(category, index, state)
+				print (fn, '|', state)
 
 
 	def chk005(self):

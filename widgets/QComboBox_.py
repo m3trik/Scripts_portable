@@ -218,13 +218,14 @@ class QComboBox_(QtWidgets.QComboBox):
 		return [self.itemText(i) for i in range(self.count())]
 
 
-	def children_(self, contextMenu=False, _exclude=['QAction', 'QWidgetAction']):
+	def children_(self, of_type=[], contextMenu=False, _exclude=['QAction', 'QWidgetAction']):
 		'''
 		Get a list of child objects from a custom menu, excluding those types listed in '_exclude'.
 
 		args:
-			contextMenu (bool) = get the child widgets for the context menu.
-			_exclude (list) = can be modified to set types to exclude from the returned results.
+			contextMenu (bool) = Get the child widgets for the context menu.
+			of_type (list) = Widget types as strings. Types of widgets to return. Any types listed in _exclude will still be excluded.
+			_exclude (list) = Widget types as strings. Can be modified to set types to exclude from the returned results.
 		returns:
 			(list)
 		'''
@@ -233,28 +234,11 @@ class QComboBox_(QtWidgets.QComboBox):
 		else:
 			menu = self.menu
 
-		return [i for i in menu.children() if i.__class__.__name__ not in _exclude]
-
-
-	def childWidgets(self, index=None, contextMenu=False):
-		'''
-		Get the widget at the given index from a custom menu. If no arg is given all widgets will be returned.
-
-		args:
-			index (int) = widget location.
-			contextMenu (bool) = get the child widgets for the context menu.
-		returns:
-			(QWidget) or (list)
-		'''
-		menuWidgets = self.menu.children_(index)
-		contextMenuWidgets = self.contextMenu().children_(index)
-
-		if contextMenu:
-			return contextMenuWidgets
-		if index is None:
-			return menuWidgets + contextMenuWidgets
+		if of_type:
+			children = [i for i in menu.children() if i.__class__.__name__ in of_type and i.__class__.__name__ not in _exclude]
 		else:
-			return menuWidgets
+			children = [i for i in menu.children() if i.__class__.__name__ not in _exclude]
+		return children
 
 
 	def setCurrentItem(self, i):
@@ -336,7 +320,7 @@ class QComboBox_(QtWidgets.QComboBox):
 		'''
 		if hasattr(self, '_menu'):
 			contextMenuToolTip = '<br><b>*context menu:</b>'
-			for child in self.childWidgets():
+			for child in self.children_(contextMenu=True):
 				try:
 					contextMenuToolTip = '{0}<br>  {1} - {2}'.format(contextMenuToolTip, child.text(), child.toolTip())
 				except AttributeError:
@@ -389,6 +373,29 @@ if __name__ == "__main__":
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
+
+
+
+
+	# def childWidgets(self, index=None, contextMenu=False):
+	# 	'''
+	# 	Get the widget at the given index from a custom menu. If no arg is given all widgets will be returned.
+
+	# 	args:
+	# 		index (int) = widget location.
+	# 		contextMenu (bool) = get the child widgets for the context menu.
+	# 	returns:
+	# 		(QWidget) or (list)
+	# 	'''
+	# 	menuWidgets = self.menu.children_(index)
+	# 	contextMenuWidgets = self.contextMenu().children_(index)
+
+	# 	if contextMenu:
+	# 		return contextMenuWidgets
+	# 	if index is None:
+	# 		return menuWidgets + contextMenuWidgets
+	# 	else:
+	# 		return menuWidgets
 
 
 	# def mouseDoubleClickEvent(self, event):
