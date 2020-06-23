@@ -16,7 +16,7 @@ to allow for as little overhead as possible in development and maintainence.  Na
  Structure:
 -----------------------------------------------
 
-#### tk_main:
+#### tk_:
 ###### *handles main gui construction.*
 
 #### tk_childEvents:
@@ -47,7 +47,7 @@ to allow for as little overhead as possible in development and maintainence.  Na
 * corresponding class: tk_slots_\<app\>_\<name\>.py
  
 
-*Each ui widget looks to connect to a corresponding class method of the same name: ie. widget b021 connects to method b021. The following naming convention isn't explicitly required, but in some instances checks are in place to look for specific prefixes (ie. cmb) and handle widget events accordingly.*
+*Each ui widget looks to connect to a corresponding class method of the same name: ie. widget b021 connects to method b021. The following naming convention isn't explicitly required, but generally used throughout the code when handling widgets.*
 
 * QPushButton             b000    (b000-b999)
 * QPushButton             v000    triggered on mouse release when hovered.
@@ -101,7 +101,7 @@ to allow for as little overhead as possible in development and maintainence.  Na
  Installation:
 -----------------------------------------------
 ######
-(Assuming the directory structure is left intact).
+(Assuming the default windows directory structure).
 
 In maya:
 * add \maya\tk_slots_maya directory to maya.env
