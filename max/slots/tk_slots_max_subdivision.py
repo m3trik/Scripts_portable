@@ -24,7 +24,7 @@ class Subdivision(Init):
 		pin = self.parentUi.pin
 
 		if state=='setMenu':
-			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='3dsMax Subdivision Modifiers')
+			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='Subdivision Modifiers')
 
 			return
 
@@ -133,56 +133,6 @@ class Subdivision(Init):
 			try:
 				obj.modifiers['TurboSmooth'].renderIterations = value
 			except: pass
-
-
-	@Slots.message
-	def b000(self):
-		'''
-		Toggle Subdiv Proxy Display
-		'''
-		state = self.cycle([1,1,0], 'subdivProxy')
-		try:
-			mel.eval("smoothingDisplayToggle "+str(state))
-		except:
-			traceback.print_exc()
-			return 'Error: Nothing Selected.'
-
-
-	def b001(self):
-		'''
-		Subdiv Proxy
-		'''
-		global polySmoothBaseMesh
-		polySmoothBaseMesh=[]
-		#disable creating seperate layers for subdiv proxy
-		pm.optionVar (intValue=["polySmoothLoInLayer",0])
-		pm.optionVar (intValue=["polySmoothHiInLayer",0])
-		#query smooth proxy state.
-		sel = mel.eval("polyCheckSelection \"polySmoothProxy\" \"o\" 0")
-		
-		if len(sel)==0 and len(polySmoothBaseMesh)==0:
-			print(" Warning: Nothing selected. ")
-			return
-		if len(sel)!=0:
-			del polySmoothBaseMesh[:]
-			for object_ in sel:
-				polySmoothBaseMesh.append(object_)
-		elif len(polySmoothBaseMesh) != 0:
-			sel = polySmoothBaseMesh
-
-		transform = pm.listRelatives (sel[0], fullPath=1, parent=1)
-		shape = pm.listRelatives (transform[0], pa=1, shapes=1)
-
-		#check shape for an existing output to a smoothProxy
-		attachedSmoothProxies = pm.listConnections (shape[0], type="polySmoothProxy", s=0, d=1)
-		if len(attachedSmoothProxies) == 0: #subdiv on
-			self.toggleWidgets(self.parentUi, self.childUi, setEnabled='b000', setChecked='b009')
-		else:
-			self.toggleWidgets(self.parentUi, self.childUi, setDisabled='b000', setUnChecked='b009')
-			mel.eval("smoothingDisplayToggle 0;")
-
-		#toggle performSmoothProxy
-		mel.eval("performSmoothProxy 0;") #toggle SubDiv Proxy;
 
 
 	def b004(self):

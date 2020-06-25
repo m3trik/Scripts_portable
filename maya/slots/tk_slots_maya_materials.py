@@ -208,6 +208,7 @@ class Materials(Init):
 			self.parentUi.cmb002.setCurrentItem(mat.name()) #set the combobox index to the new mat #self.cmb002.setCurrentIndex(self.cmb002.findText(name))
 
 		elif tb.chk009.isChecked(): #Assign New Material
+			mel.eval('buildObjectMenuItemsNow "MainPane|viewPanes|modelPanel4|modelPanel4|modelPanel4|modelPanel4ObjectPop";')
 			mel.eval('createAssignNewMaterialTreeLister "";')
 
 

@@ -144,7 +144,7 @@ class Transform(Init):
 		for category, list_ in snaps.items():
 			if fn in list_:
 				index = list_.index(fn)+1 #add 1 to align with max array.
-				rt.snapmode.setOSnapItemActive(category, index, state)
+				rt.snapmode.setOSnapItemActive(category, index, state) #ie. rt.snapmode.setOSnapItemActive(3, 1, False) #'Point Cloud Shapes'->'Point Cloud Vertex'->Off
 				print (fn, '|', state)
 
 

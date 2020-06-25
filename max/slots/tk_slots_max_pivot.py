@@ -18,7 +18,6 @@ class Pivot(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
-
 			return
 
 
@@ -28,63 +27,100 @@ class Pivot(Init):
 		'''
 		cmb = self.parentUi.cmb000
 		
-		files = ['']
-		contents = cmb.addItems_(files, '')
+		list_ = ['']
+		items = cmb.addItems_(list_, '')
+
+		# if not index:
+		# 	index = cmb.currentIndex()
+		# if index!=0:
+		# 	if index==items.index(''):
+		# 		pass
+		# 	cmb.setCurrentIndex(0)
+
+
+	def cmb001(self, index=None):
+		'''
+		Center Pivot
+		'''
+		cmb = self.parentUi.cmb001
+
+		list_ = ['Component', 'Object', 'World']
+		items = cmb.addItems_(list_, 'Center Pivot')
 
 		if not index:
 			index = cmb.currentIndex()
 		if index!=0:
-			if index==contents.index(''):
-				pass
+			if index==items.index('Component'):
+				self.centerPivot(rt.selection)
+			if index==items.index('Object'):
+				self.centerPivot(rt.selection)
+			if index==items.index('World'):
+				rt.selection.pivot = [0,0,0]
 			cmb.setCurrentIndex(0)
+
+
+	@Slots.message
+	def tb000(self, state=None):
+		'''
+		Reset Pivot
+		'''
+		tb = self.currentUi.tb000
+		# if not tb.containsMenuItems:
+		# 	tb.add('QCheckBox', setText='Reset Pivot Position', setObjectName='chk000', setChecked=True, setToolTip='')
+		# 	tb.add('QCheckBox', setText='Reset Pivot Orientation', setObjectName='chk001', setChecked=True, setToolTip='')
+		# 	if state=='setMenu':
+		# 		return
+
+		# resetPivotPosition = tb.chk000.isChecked() #Reset Pivot Position
+		# resetPivotOrientation = tb.chk001.isChecked() #Reset Pivot Orientation
+		print ('no function')
+		# pm.manipPivotReset(resetPivotPosition, resetPivotOrientation)
+		# return 'Reset Pivot Position <hl>{0}</hl>.\nReset Pivot Orientation <hl>{1}</hl>.'.format(int(resetPivotPosition), int(resetPivotOrientation)).replace('0', 'Off').replace('1', 'On')
 
 
 	def b000(self):
 		'''
-		Center Pivot Object
+		Center Pivot: Object
 		'''
-		for obj in rt.selection:
-			rt.toolMode.coordsys(obj)
-			obj.pivot = obj.center
+		self.cmb001(index=2)
 
 
 	def b001(self):
 		'''
-		Center Pivot Component
+		Center Pivot: Component
 		'''
-		[pm.xform (s, centerPivot=1) for s in pm.ls (sl=1, objectsOnly=1, flatten=1)]
-		# mel.eval("moveObjectPivotToComponentCentre;")
+		self.cmb001(index=1)
 
 
 	def b002(self):
 		'''
-		Center Pivot World
+		Center Pivot: World
 		'''
-		mel.eval("xform -worldSpace -pivots 0 0 0;")
+		self.cmb001(index=3)
 
 
 	def b003(self):
 		'''
-		Set To Bounding Box
+		Center Pivot: Bounding Box
 		'''
-		mel.eval("bt_alignPivotToBoundingBoxWin;")
+		self.cmb001(index=4)
 
 
 	def b004(self):
 		'''
 		Bake Pivot
 		'''
-		mel.eval("BakeCustomPivot;")
+		print ('no function')
 
 
-	def b005(self):
+	@staticmethod
+	def centerPivot(objects):
 		'''
-		Reset Pivot Transforms
+		Center the rotation pivot on the given objects.
 		'''
-		maxEval('''
-			{ string $objs[] = `ls -sl -type transform -type geometryShape`;
-			if (size($objs) > 0) { xform -cp; } manipPivot -rp -ro; };
-			''')
+		for obj in objects:
+			rt.toolMode.coordsys(obj) #Center Pivot Object
+			obj.pivot = obj.center
 
 
 

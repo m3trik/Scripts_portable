@@ -94,7 +94,7 @@
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>76</height>
+             <height>74</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -106,87 +106,7 @@
            <property name="title">
             <string>Pivot</string>
            </property>
-           <widget class="QPushButton" name="b000">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>40</x>
-              <y>15</y>
-              <width>31</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Move the pivot point to the center of the selected object</string>
-            </property>
-            <property name="text">
-             <string>Obj</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-            <property name="autoDefault">
-             <bool>false</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="b001">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>15</y>
-              <width>41</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Move the pivot point of the object to the center of the selected components</string>
-            </property>
-            <property name="text">
-             <string>Cmpnt</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-            <property name="autoDefault">
-             <bool>false</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="b003">
+           <widget class="QPushButton" name="b004">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -195,46 +115,6 @@
               <x>0</x>
               <y>35</y>
               <width>111</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Align pivots of selected objects to thier bounding box(s)</string>
-            </property>
-            <property name="text">
-             <string>Set to Bounding Box</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-            <property name="autoDefault">
-             <bool>false</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="b004">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>55</y>
-              <width>71</width>
               <height>19</height>
              </rect>
             </property>
@@ -257,46 +137,15 @@
              </size>
             </property>
            </widget>
-           <widget class="QPushButton" name="b002">
+           <widget class="QToolButton_" name="tb000">
             <property name="enabled">
              <bool>true</bool>
             </property>
             <property name="geometry">
              <rect>
-              <x>70</x>
-              <y>15</y>
-              <width>41</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Set selected objects pivot point to world space 0,0,0</string>
-            </property>
-            <property name="text">
-             <string>World</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="b005">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>70</x>
+              <x>0</x>
               <y>55</y>
-              <width>41</width>
+              <width>111</width>
               <height>19</height>
              </rect>
             </property>
@@ -318,6 +167,39 @@
               <height>18</height>
              </size>
             </property>
+           </widget>
+           <widget class="QComboBox_" name="cmb001">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>15</y>
+              <width>111</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>111</width>
+              <height>19</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>999</width>
+              <height>19</height>
+             </size>
+            </property>
+            <property name="sizeAdjustPolicy">
+             <enum>QComboBox::AdjustToContents</enum>
+            </property>
+            <property name="frame">
+             <bool>false</bool>
+            </property>
+            <item>
+             <property name="text">
+              <string>Center Pivot</string>
+             </property>
+            </item>
            </widget>
           </widget>
          </item>
@@ -374,6 +256,16 @@
    <class>QProgressBar_</class>
    <extends>QProgressBar</extends>
    <header>widgets.qprogressbar_.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QToolButton_</class>
+   <extends>QToolButton</extends>
+   <header>widgets.qtoolbutton_.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QComboBox_</class>
+   <extends>QComboBox</extends>
+   <header>widgets.qcombobox_.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

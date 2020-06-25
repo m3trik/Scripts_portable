@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>271</width>
-    <height>219</height>
+    <height>222</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -267,34 +267,6 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="b003">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>111</width>
-             <height>19</height>
-            </size>
-           </property>
-           <property name="toolTip">
-            <string>Open the option box with all of the options for polygon display.</string>
-           </property>
-           <property name="text">
-            <string>Poly Display Opt</string>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>18</width>
-             <height>18</height>
-            </size>
-           </property>
-           <property name="checkable">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
           <spacer name="verticalSpacer">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
@@ -446,93 +418,6 @@
             </property>
             <property name="value">
              <number>6</number>
-            </property>
-           </widget>
-          </widget>
-         </item>
-         <item>
-          <widget class="QGroupBox" name="groupBox_2">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>56</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>111</width>
-             <height>51</height>
-            </size>
-           </property>
-           <property name="title">
-            <string>SubDiv Proxy</string>
-           </property>
-           <widget class="QPushButton" name="b001">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>35</y>
-              <width>111</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Subdiv Proxy</string>
-            </property>
-            <property name="text">
-             <string>SubDiv Proxy</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="b000">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>15</y>
-              <width>111</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Toggle subdiv proxy display</string>
-            </property>
-            <property name="text">
-             <string>Toggle Subd Proxy</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>false</bool>
             </property>
            </widget>
           </widget>

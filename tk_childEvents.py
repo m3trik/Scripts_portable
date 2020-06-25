@@ -75,7 +75,7 @@ class EventFactoryFilter(QtCore.QObject):
 
 	def addWidgets(self, name, widgets):
 		'''
-		Store widget widgets in the switchboard dict for referencing.
+		Store any additional widgets in the switchboard dict for referencing.
 		Set Event filters, stylesheets, and connections for the widgets.
 
 		args:

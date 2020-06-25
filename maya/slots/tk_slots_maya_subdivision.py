@@ -18,7 +18,7 @@ class Subdivision(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya Subdivision Editiors')
-
+			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='Smooth Proxy')
 			return
 
 
@@ -28,20 +28,43 @@ class Subdivision(Init):
 		'''
 		cmb = self.parentUi.cmb000
 		
-		files = ['Reduce Polygons','Add Divisions','Smooth','SubDiv Proxy']
-		contents = cmb.addItems_(files, 'Maya Subdivision Editiors')
+		list_ = ['Polygon Display Options', 'Reduce Polygons','Add Divisions','Smooth','SubDiv Proxy']
+		contents = cmb.addItems_(list_, 'Subdivision Editiors')
 
 		if not index:
 			index = cmb.currentIndex()
 		if index!=0:
+			if index==contents.index('Polygon Display Options'):
+				mel.eval("CustomPolygonDisplayOptions") #Polygon Display Options #mel.eval("polysDisplaySetup 1;")
 			if index==contents.index('Reduce Polygons'):
 				mel.eval("ReducePolygonOptions;")
 			if index==contents.index('Add Divisions'):
 				mel.eval("SubdividePolygonOptions")
-			if index==contents.index('Smooth'):
-				mel.eval("SmoothPolygonOptions;")
-			if index==contents.index('SubDiv Proxy'):
-				mel.eval('performSmoothProxy 1;') #SubDiv Proxy Options;
+			cmb.setCurrentIndex(0)
+
+
+	def cmb001(self, index=None):
+		'''
+		Smooth Proxy
+		'''
+		cmb = self.parentUi.cmb001
+		
+		list_ = ['Create Subdiv Proxy', 'Remove Subdiv Proxy Mirror', 'Crease Tool', 'Toggle Subdiv Proxy Display', 'Both Proxy and Subdiv Display']
+		contents = cmb.addItems_(list_, 'Smooth Proxy')
+
+		if not index:
+			index = cmb.currentIndex()
+		if index!=0:
+			if index==contents.index('Create Subdiv Proxy'):
+				mel.eval('SmoothProxyOptions;') #'Add polygons to the selected proxy objects.' #performSmoothProxy 1;
+			if index==contents.index('Remove Subdiv Proxy Mirror'):
+				mel.eval('UnmirrorSmoothProxyOptions;') #'Create a single low resolution mesh for a mirrored proxy setup.' #performUnmirrorSmoothProxy 1;
+			if index==contents.index('Crease Tool'):
+				mel.eval('polyCreaseProperties;') #'Harden or soften the edges of a smooth mesh preview.' #polyCreaseValues polyCreaseContext;
+			if index==contents.index('Toggle Subdiv Proxy Display'):
+				mel.eval('SmoothingDisplayToggle;')	#'Toggle the display of smooth shapes.' #smoothingDisplayToggle 1;
+			if index==contents.index('Both Proxy and Subdiv Display'):
+				mel.evel('SmoothingDisplayShowBoth;') #'Display both smooth shapes' #smoothingDisplayToggle 0;
 			cmb.setCurrentIndex(0)
 
 
@@ -73,72 +96,6 @@ class Subdivision(Init):
 				self.setAttributesMEL(obj, {'smoothTessLevel':value})
 				print(obj+': Tesselation Level: <hl>'+str(value)+'</hl>')
 
-
-	@Slots.message
-	def b000(self):
-		'''
-		Toggle Subdiv Proxy Display
-
-		'''
-		state = self.cycle([1,1,0], 'subdivProxy')
-		try:
-			mel.eval("smoothingDisplayToggle "+str(state))
-		except:
-			traceback.print_exc()
-			return 'Error: Nothing Selected.'
-
-
-	@Slots.message
-	def b001(self):
-		'''
-		Subdiv Proxy
-
-		'''
-		global polySmoothBaseMesh
-		polySmoothBaseMesh=[]
-		#disable creating seperate layers for subdiv proxy
-		pm.optionVar (intValue=["polySmoothLoInLayer",0])
-		pm.optionVar (intValue=["polySmoothHiInLayer",0])
-		#query smooth proxy state.
-		sel = mel.eval("polyCheckSelection \"polySmoothProxy\" \"o\" 0")
-		
-		if len(sel)==0 and len(polySmoothBaseMesh)==0:
-			return 'Error: Nothing selected.'
-
-		if len(sel)!=0:
-			del polySmoothBaseMesh[:]
-			for object_ in sel:
-				polySmoothBaseMesh.append(object_)
-		elif len(polySmoothBaseMesh) != 0:
-			sel = polySmoothBaseMesh
-
-		transform = pm.listRelatives (sel[0], fullPath=1, parent=1)
-		shape = pm.listRelatives (transform[0], pa=1, shapes=1)
-
-		#check shape for an existing output to a smoothProxy
-		attachedSmoothProxies = pm.listConnections (shape[0], type="polySmoothProxy", s=0, d=1)
-		if len(attachedSmoothProxies) == 0: #subdiv on
-			self.toggleWidgets(self.parentUi, self.childUi, setEnabled='b000', setChecked='b009')
-		else:
-			self.toggleWidgets(self.parentUi, self.childUi, setDisabled='b000', setUnChecked='b009')
-			mel.eval("smoothingDisplayToggle 0;")
-
-		#toggle performSmoothProxy
-		mel.eval("performSmoothProxy 0;") #toggle SubDiv Proxy;
-
-	def b002(self):
-		'''
-		
-		'''
-		pass
-
-	def b003(self):
-		'''
-		Polygon Display Options
-
-		'''
-		mel.eval("CustomPolygonDisplayOptions")
-		# mel.eval("polysDisplaySetup 1;")
 
 	def b004(self):
 		'''
@@ -194,6 +151,46 @@ class Subdivision(Init):
 
 		'''
 		mel.eval("performSmoothMeshPreviewToPolygon;") #convert smooth mesh preview to polygons
+
+
+	@staticmethod
+	def smoothProxy():
+		'''
+		Subdiv Proxy
+		'''
+		global polySmoothBaseMesh
+		polySmoothBaseMesh=[]
+		#disable creating seperate layers for subdiv proxy
+		pm.optionVar (intValue=["polySmoothLoInLayer",0])
+		pm.optionVar (intValue=["polySmoothHiInLayer",0])
+		#query smooth proxy state.
+		sel = mel.eval("polyCheckSelection \"polySmoothProxy\" \"o\" 0")
+		
+		if len(sel)==0 and len(polySmoothBaseMesh)==0:
+			return 'Error: Nothing selected.'
+
+		if len(sel)!=0:
+			del polySmoothBaseMesh[:]
+			for object_ in sel:
+				polySmoothBaseMesh.append(object_)
+		elif len(polySmoothBaseMesh) != 0:
+			sel = polySmoothBaseMesh
+
+		transform = pm.listRelatives (sel[0], fullPath=1, parent=1)
+		shape = pm.listRelatives (transform[0], pa=1, shapes=1)
+
+		#check shape for an existing output to a smoothProxy
+		attachedSmoothProxies = pm.listConnections(shape[0], type="polySmoothProxy", s=0, d=1)
+		if len(attachedSmoothProxies) != 0: #subdiv off
+			mel.eval("smoothingDisplayToggle 0;")
+
+		#toggle performSmoothProxy
+		mel.eval("performSmoothProxy 0;") #toggle SubDiv Proxy;
+
+
+
+
+
 
 
 

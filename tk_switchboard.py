@@ -153,39 +153,10 @@ class Switchboard(QtCore.QObject):
 		if not hasattr(ui, objectName):
 			setattr(ui, objectName, widget)
 
-		n = name.split('_')[0] #get ie. 'polygons' from 'polygons_submenu' in cases where a submenu shares the same slot class of it's parent menu.
-		# path = 'slots.{0}'.format(n[0].upper()+n[1:]) #ie. slots.Init
-		path = 'tk_slots_{0}_{1}.{2}'.format(self.getMainAppWindow(objectName=True), n, n[0].upper()+n[1:]) #ie. tk_slots_maya_init.Init
-		class_ = self.getClassInstance(path, ui=ui, sb=self, tk=self.parent) #get the class instance while passing in any keyword arguments into **kwargs.
-
-
-		signals = { #the default signal to be associated with each widget type.
-			'QAction':'triggered',
-			'QPushButton':'released',
-			'QToolButton':'released',
-			'QListWidget':'itemClicked',
-			'QTreeWidget':'itemClicked',
-			'QComboBox':'currentIndexChanged',
-			'QSpinBox':'valueChanged',
-			'QDoubleSpinBox':'valueChanged',
-			'QCheckBox':'released',
-			'QRadioButton':'released',
-			'QLineEdit':'returnPressed',
-			'QTextEdit':'textChanged',
-			'QProgressBar':'valueChanged',
-		}
-		# print(widget.__class__.__mro__)
-		for d in widget.__class__.__mro__: #get the directly derived class if a custom widget.
-			if d.__module__=='PySide2.QtWidgets': #check for the first built-in class. Then use it as the derived class.
-				derivedType = d.__name__
-				break
-
-		try: #if the widget type has a default signal assigned in the signals dict; get the signal.
-			signal = signals[derivedType]
-		except:
-			signal = ''
-
-		signalInstance = getattr(widget, signal, None) #add signal to widget. ie. signalInstance == widget.valueChanged
+		class_ = self.getClassFromUiName(name) #get the corresponding slot class from the ui name.
+		derivedType = self._getDerivedType(widget) #the base class of any custom widgets.  ie. 'QPushButton' from 'QPushButton_'
+		signalType = self.getDefaultSignalType(derivedType) #get the default signal type for the widget as a string. ie. 'released' from 'QPushButton'
+		signalInstance = getattr(widget, signalType, None) #add signal to widget. ie. <widget.valueChanged>
 		method = getattr(class_, objectName, None) #use 'objectName' to get the corresponding method of the same name. ie. get method <b006> from widget 'b006' else None
 		docString = getattr(method, '__doc__', None)
 		prefix = self.prefix(objectName) #returns an string alphanumberic prefix if objectName startswith a series of alphanumberic chars, and is followed by three integers. ie. 'cmb' from 'cmb015'
@@ -200,7 +171,6 @@ class Switchboard(QtCore.QObject):
 						'method': method,
 						'prefix':prefix,
 						'docString':docString}})
-
 
 		# print(self._sbDict[name]['widgets'][widget])
 		return self._sbDict[name]['widgets'][widget] #return the stored widget.
@@ -250,6 +220,59 @@ class Switchboard(QtCore.QObject):
 			except: pass
 
 
+	def getClassFromUiName(self, name):
+		'''
+		Get the slot class corresponding to the given ui name.  ie. <Polygons> from 'polygons'
+		If the name is a submenu, the parent class will be returned. ie. <Polygons> from 'polygons_submenu'		
+
+		args:
+			name (str) = ui name. ie. 'polygons'
+		returns:
+			(obj) class obj
+		'''
+		n = name.split('_')[0] #get ie. 'polygons' from 'polygons_submenu' in cases where a submenu shares the same slot class of it's parent menu.
+		ui = self.getUi(name)
+		# path = 'slots.{0}'.format(n[0].upper()+n[1:]) #ie. slots.Init
+		path = 'tk_slots_{0}_{1}.{2}'.format(self.getMainAppWindow(objectName=True), n, n[0].upper()+n[1:]) #ie. tk_slots_maya_init.Init
+		class_ = self.getClassInstance(path, ui=ui, sb=self, tk=self.parent) #get the class instance while passing in any keyword arguments into **kwargs.
+
+		return class_
+
+
+	def getDefaultSignalType(self, widgetType):
+		'''
+		Get the default signal type associated with a widget type.
+
+		args:
+			widgetType (str) = Widget class name. ie. 'QPushButton'
+
+		returns:
+			(str) signal ie. 'released'
+		'''
+		signals = { #the default signal to be associated with each widget type.
+			'QAction':'triggered',
+			'QPushButton':'released',
+			'QToolButton':'released',
+			'QListWidget':'itemClicked',
+			'QTreeWidget':'itemClicked',
+			'QComboBox':'currentIndexChanged',
+			'QSpinBox':'valueChanged',
+			'QDoubleSpinBox':'valueChanged',
+			'QCheckBox':'released',
+			'QRadioButton':'released',
+			'QLineEdit':'returnPressed',
+			'QTextEdit':'textChanged',
+			'QProgressBar':'valueChanged',
+		}
+
+		try: #if the widget type has a default signal assigned in the signals dict; get the signal.
+			signal = signals[widgetType]
+		except KeyError:
+			signal = ''
+
+		return signal
+
+
 	def getSignal(self, name, widget=None):
 		'''
 		Get the widget object with attached signal (ie. b001.onPressed) from the given widget name.
@@ -282,7 +305,6 @@ class Switchboard(QtCore.QObject):
 		self.addSignals(name)
 
 
-
 	def addSignals(self, name, widgets=None):
 		'''
 		Connects signals/slots from the widgets for the given ui.
@@ -304,12 +326,12 @@ class Switchboard(QtCore.QObject):
 			if slot and signal:
 				try:
 					if isinstance(slot, (list, set, tuple)):
-						map(signal.connect, slot) #connect multiple slots from a list.
+						map(signal.connect, slot) #connect to multiple slots from a list.
 					else:
 						signal.connect(slot) #connect single slot (main and cameras ui)
 
 				except Exception as error:
-					print('Error: {0} {1} addSignals: {2} {3} #'.format(name, widget.objectName(), signal, slot), '\n', error)
+					print('Error: {0} {1} addSignals: {2} {3}'.format(name, widget.objectName(), signal, slot), '\n', error)
 
 
 	def removeSignals(self, name, widgets=None):
@@ -804,16 +826,35 @@ class Switchboard(QtCore.QObject):
 			return None
 
 
-	def getDerivedType(self, widget, name=None):
+	def _getDerivedType(self, widget):
 		'''
-		Get widget derived type class name as a string.
-		ie. 'QPushButton' from a custom subclassed pushbutton.
+		Internal use. Get the base class of a custom widget.
+		If the type is a standard widget, the derived type will be that widget's type.
 
 		args:
-			widget (str)(obj) = widget or objectName.
-			name (str) = ui name.
+			widget (obj) = QWidget. ie. widget with class name: 'QPushButton_'
+
 		returns:
-			'string' - the corresponding widget derived class name
+			(string) base class name. ie. 'QPushButton'
+		'''
+		# print(widget.__class__.__mro__)
+		for c in widget.__class__.__mro__:
+			if c.__module__=='PySide2.QtWidgets': #check for the first built-in class.
+				derivedType = c.__name__ #Then use it as the derived class.
+				return derivedType
+
+
+	def getDerivedType(self, widget, name=None):
+		'''
+		Get the base class of a custom widget.
+		If the type is a standard widget, the derived type will be that widget's type.
+
+		args:
+			widget (str)(obj) = QWidget or it's objectName.
+			name (str) = ui name.
+
+		returns:
+			(string) base class name. ie. 'QPushButton' from a custom widget with class name: 'QPushButton_'
 		'''
 		if isinstance(widget, (str, unicode)):
 			objectName = self._sbDict[name]['widgets'][widget] #use the stored objectName as a more reliable key.
@@ -836,12 +877,16 @@ class Switchboard(QtCore.QObject):
 
 	def getMethod(self, name, widget=None):
 		'''
+		Get the method(s) associated with the given ui / widget.
+
 		args:
 			name (str) = name of class. ie. 'polygons'
 			widget (str)(obj) = widget, widget's objectName, or method name.
+
 		returns:
 			if widget: corresponding method object to given widget.
 			else: all of the methods associated to the given ui name as a list.
+
 		ex. sb.getMethod('polygons', <b022>)() #call method <b022> of the 'polygons' class
 		'''
 		if not 'widgets' in self._sbDict[name]:
