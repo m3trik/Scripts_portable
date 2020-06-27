@@ -149,7 +149,7 @@ class File(Init):
 		if index !=0: #hide then perform operation
 			self.tk.hide(force=1)
 			if index==1: #Export selection
-				maxEval('max file export')
+				maxEval('actionMan.executeAction 0 "40373"') #max file export
 			if index==2: #Export options
 				maxEval('')
 			if index==3: #Unreal: File: Game Exporter

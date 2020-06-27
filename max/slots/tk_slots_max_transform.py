@@ -253,15 +253,13 @@ class Transform(Init):
 		bBoxLowestPoint = tb.chk015.isChecked()
 		centerPivot = tb.chk016.isChecked()
 
-		selection = pm.ls(selection=1, objectsOnly=1)
-
-		for obj in selection:
+		for obj in rt.selection:
 			osPivot = pm.xform (obj, query=1, rotatePivot=1, objectSpace=1) #save the object space obj pivot
 			wsPivot = pm.xform (obj, query=1, rotatePivot=1, worldSpace=1) #save the world space obj pivot
 			if origin:
-				pm.undoInfo (openChunk=1)
+				self.undo(True)
 				#position the pivot
-				pm.xform (obj, centerPivots=1) #center pivot
+				pm.xform(obj, centerPivots=1) #center pivot
 				plane = pm.polyPlane (name='alignTo_temp')
 				if not bBoxLowestPoint:
 					y = 'Mid' #possible values are: 'Max','Mid','Min'
@@ -272,7 +270,7 @@ class Transform(Init):
 					pm.xform (obj, rotatePivot=osPivot, objectSpace=1) #return pivot to orig position
 				pm.delete (plane)
 				pm.select(obj)
-				pm.undoInfo (closeChunk=1)
+				self.undo(False)
 			else:
 				pm.makeIdentity (obj, apply=1, t=1, r=1, s=1, n=0, pn=1) #freeze transforms to ensure the bounding box is not rotated
 				bBox = pm.exactWorldBoundingBox(obj) #get bounding box world space coords

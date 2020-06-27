@@ -22,11 +22,11 @@ class Create(Init):
 		'''
 		selection = rt.selection
 		if not selection:
-			return 'Error: Nothing Selected.'
+			return None
 
 		transform = selection[0]
-		if not self.parentUi.t003.text()==transform.name: #make sure the same field reflects the current working node.
-			self.parentUi.t003.setText(transform.name)
+		if not self.parentUi.txt003.text()==transform.name: #make sure the same field reflects the current working node.
+			self.parentUi.txt003.setText(transform.name)
 		return transform
 
 
@@ -94,35 +94,35 @@ class Create(Init):
 		rt.redrawViews()
 
 
-	def t000(self):
+	def s000(self):
 		'''
 		Set Translate X
 		'''
-		self.point[0] = float(self.parentUi.t000.text())
+		self.point[0] = float(self.parentUi.s000.value())
 		self.node.pos = rt.point3(self.point[0], self.point[1], self.point[2])
 
 
-	def t001(self):
+	def s001(self):
 		'''
 		Set Translate Y
 		'''
-		self.point[1] = float(self.parentUi.t001.text())
+		self.point[1] = float(self.parentUi.s001.value())
 		self.node.pos = rt.point3(self.point[0], self.point[1], self.point[2])
 
 
-	def t002(self):
+	def s002(self):
 		'''
 		Set Translate Z
 		'''
-		self.point[2] = float(self.parentUi.t002.text())
+		self.point[2] = float(self.parentUi.s002.value())
 		self.node.pos = rt.point3(self.point[0], self.point[1], self.point[2])
 
 
-	def t003(self):
+	def txt003(self):
 		'''
 		Set Name
 		'''
-		self.node.name = self.parentUi.t003.text()
+		self.node.name = self.parentUi.txt003.text()
 
 
 	def chk000(self):
@@ -173,9 +173,9 @@ class Create(Init):
 			print('Error: Nothing selected. Point set to origin [0,0,0].')
 			self.point = [0,0,0]
 
-		self.parentUi.t000.setText(str(self.point[0]))
-		self.parentUi.t001.setText(str(self.point[1]))
-		self.parentUi.t002.setText(str(self.point[2]))
+		self.parentUi.s000.setValue(self.point[0])
+		self.parentUi.s001.setValue(self.point[1])
+		self.parentUi.s002.setValue(self.point[2])
 
 
 	def cmb000(self, index=None):
@@ -347,9 +347,9 @@ class Create(Init):
 
 		#set name
 		if isinstance(node, (str,unicode)): #is type of:
-			self.parentUi.t003.setText(node)
+			self.parentUi.txt003.setText(node)
 		else:
-			self.parentUi.t003.setText(node.name)
+			self.parentUi.txt003.setText(node.name)
 
 		self.history.extend(node) #save current node to history
 		self.rotation['last']=[] #reset rotation history

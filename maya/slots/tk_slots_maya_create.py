@@ -19,13 +19,18 @@ class Create(Init):
 		'''
 		Get the Transform Node
 		'''
-		selection = pm.ls(sl=1, objectsOnly=1)
-		if not selection:
-			return 'Error: Nothing Selected.'
+		transforms = pm.ls(sl=1, type='transform')
+		if not transforms:
+			try:
+				shapeNodes = pm.ls(sl=1, objectsOnly=1)
+				transforms = pm.listRelatives(shapeNodes, parent=1)
+			except:
+				return None
 
-		transform = selection[0]
-		if not self.parentUi.t003.text()==transform.name(): #make sure the same field reflects the current working node.
-			self.parentUi.t003.setText(transform.name())
+		transform = transforms[0]
+		if not self.parentUi.txt003.text()==transform.name(): #make sure the same field reflects the current working node.
+			self.parentUi.txt003.setText(transform.name())
+
 		return transform
 
 
@@ -83,93 +88,92 @@ class Create(Init):
 		'''
 		axis = self.rotation[axis]
 
-		rotateOrder = pm.xform (node, query=1, rotateOrder=1)
-		pm.xform (node, preserve=1, rotation=axis, rotateOrder=rotateOrder, absolute=1)
+		rotateOrder = pm.xform(node, query=1, rotateOrder=1)
+		pm.xform(node, preserve=1, rotation=axis, rotateOrder=rotateOrder, absolute=1)
 		self.rotation['last'] = axis
 
 
-	def t000(self):
+	def s000(self):
 		'''
 		Set Translate X
 		'''
-		self.point[0] = float(self.parentUi.t000.text())
+		self.point[0] = float(self.parentUi.s000.value())
 		pm.xform (self.node, translation=self.point, worldSpace=1, absolute=1)
 
 
-	def t001(self):
+	def s001(self):
 		'''
 		Set Translate Y
 		'''
-		self.point[1] = float(self.parentUi.t001.text())
+		self.point[1] = float(self.parentUi.s001.value())
 		pm.xform (self.node, translation=self.point, worldSpace=1, absolute=1)
 
 
-	def t002(self):
+	def s002(self):
 		'''
 		Set Translate Z
 		'''
-		self.point[2] = float(self.parentUi.t002.text())
+		self.point[2] = float(self.parentUi.s002.value())
 		pm.xform (self.node, translation=self.point, worldSpace=1, absolute=1)
 
 
-	def t003(self):
+	def txt003(self):
 		'''
 		Set Name
-
 		'''
-		pm.rename(self.node.name(), self.parentUi.t003.text())
+		pm.rename(self.node.name(), self.parentUi.txt003.text())
 
 
 	def chk000(self):
 		'''
 		Rotate X Axis
-
 		'''
 		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk000', setUnChecked='chk001, chk002')
-		self.rotateAbsolute(self.getAxis(), self.node)
+		if self.node:
+			self.rotateAbsolute(self.getAxis(), self.node)
 
 
 	def chk001(self):
 		'''
 		Rotate Y Axis
-
 		'''
 		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk001', setUnChecked='chk000, chk002')
-		self.rotateAbsolute(self.getAxis(), self.node)
+		if self.node:
+			self.rotateAbsolute(self.getAxis(), self.node)
 
 
 	def chk002(self):
 		'''
 		Rotate Z Axis
-
 		'''
 		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk002', setUnChecked='chk000, chk001')
-		self.rotateAbsolute(self.getAxis(), self.node)
+		if self.node:
+			self.rotateAbsolute(self.getAxis(), self.node)
 
 
 	def chk003(self):
 		'''
 		Rotate Negative Axis
 		'''
-		self.rotateAbsolute(self.getAxis(), self.node)
+		if self.node:
+			self.rotateAbsolute(self.getAxis(), self.node)
 
 
 	def chk005(self):
 		'''
 		Set Point
-
 		'''
 		#add support for averaging multiple components.
 		selection = pm.ls(selection=1, flatten=1)
 		try:
-			self.point = pm.xform (selection, query=1, translation=1, worldSpace=1, absolute=1)
+			self.point = pm.xform(selection, query=1, translation=1, worldSpace=1, absolute=1)
 		except:
 			self.point = [0,0,0]
 			print('Warning: Nothing selected. Point set to origin [0,0,0].')
 
-		self.parentUi.t000.setText(str(self.point[0]))
-		self.parentUi.t001.setText(str(self.point[1]))
-		self.parentUi.t002.setText(str(self.point[2]))
+		self.parentUi.s000.setValue(self.point[0])
+		self.parentUi.s001.setValue(self.point[1])
+		self.parentUi.s002.setValue(self.point[2])
 
 
 	def cmb000(self, index=None):
@@ -345,9 +349,9 @@ class Create(Init):
 
 		#set name
 		if isinstance(node[0], (str,unicode)): #is type of:
-			self.parentUi.t003.setText(node[0])
+			self.parentUi.txt003.setText(node[0])
 		else:
-			self.parentUi.t003.setText(node[0].name())
+			self.parentUi.txt003.setText(node[0].name())
 
 		self.history.extend(node) #save current node to history
 		self.rotation['last']=[] #reset rotation history

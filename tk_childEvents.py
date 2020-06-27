@@ -64,13 +64,8 @@ class EventFactoryFilter(QtCore.QObject):
 					self.resizeAndCenterWidget(widget)
 
 			elif widgetType=='QWidget':
-				if self.parent.sb.prefix(widget, 'r'): #prefix returns True if widgetName startswith the given prefix, and is followed by three integers.
+				if self.parent.sb.prefix(widget, 'w'): #prefix returns True if widgetName startswith the given prefix, and is followed by three integers.
 					widget.setVisible(False)
-
-			elif widgetType=='QDoubleSpinBox':
-				if name=='create':
-					if self.parent.sb.prefix(widget, 's'):
-						widget.setVisible(False)
 
 
 	def addWidgets(self, name, widgets):
@@ -285,7 +280,7 @@ class EventFactoryFilter(QtCore.QObject):
 		self._mouseHover.emit(True)
 
 		if self.widgetType=='QWidget':
-			if self.parent.sb.prefix(self.widget, 'r'):
+			if self.parent.sb.prefix(self.widget, 'w'):
 				self.widget.setVisible(True) #set visibility
 
 		elif self.derivedType=='QPushButton':
@@ -310,7 +305,7 @@ class EventFactoryFilter(QtCore.QObject):
 		self._mouseHover.emit(False)
 
 		if self.widgetType=='QWidget':
-			if self.parent.sb.prefix(self.widget, 'r'):
+			if self.parent.sb.prefix(self.widget, 'w'):
 				self.widget.setVisible(False) #set visibility
 
 

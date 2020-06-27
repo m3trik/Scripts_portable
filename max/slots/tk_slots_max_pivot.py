@@ -44,18 +44,35 @@ class Pivot(Init):
 		'''
 		cmb = self.parentUi.cmb001
 
-		list_ = ['Component', 'Object', 'World']
+		list_ = ['Component', 'Object', 'World', 'Object Top', 'Object Bottom', 'Object Center Left', 
+			'Object Center Right', 'Object Bottom Left', 'Object Bottom Right', 'Object Top Left', 'Object Top Right']
 		items = cmb.addItems_(list_, 'Center Pivot')
 
 		if not index:
 			index = cmb.currentIndex()
 		if index!=0:
 			if index==items.index('Component'):
-				self.centerPivot(rt.selection)
+				rt.CenterPivot(rt.selection) #Same as Hierarchy/Pivot/Affect Pivot Only - Center to Object.
 			if index==items.index('Object'):
 				self.centerPivot(rt.selection)
 			if index==items.index('World'):
-				rt.selection.pivot = [0,0,0]
+				rt.selection.pivot = [0,0,0] #center pivot world 0,0,0
+			if index==items.index('Object Top'):
+				[setattr(obj, 'pivot', [obj.position.x, obj.position.y, obj.max.z]) for obj in rt.selection] #Move the pivot to the top of the object
+			if index==items.index('Object Bottom'):
+				[setattr(obj, 'pivot', [obj.position.x, obj.position.y, obj.min.z]) for obj in rt.selection] #Move the pivot to the bottom of the object
+			if index==items.index('Object Center Left'):
+				[setattr(obj, 'pivot', [obj.min.x, obj.position.y, obj.position.z]) for obj in rt.selection] #Move the pivot to the Center left of the object
+			if index==items.index('Object Center Right'):
+				[setattr(obj, 'pivot', [obj.max.x, obj.position.y, obj.position.z]) for obj in rt.selection] #Move the pivot to the Center right of the object
+			if index==items.index('Object Bottom Left'):
+				[setattr(obj, 'pivot', [obj.min.x, obj.position.y, obj.min.z]) for obj in rt.selection] #Move the pivot to the Bottom left of the object
+			if index==items.index('Object Bottom Right'):
+				[setattr(obj, 'pivot', [obj.max.x, obj.position.y, obj.min.z]) for obj in rt.selection] #Move the pivot to the Bottom right of the object
+			if index==items.index('Object Top Left'):
+				[setattr(obj, 'pivot', [obj.min.x, obj.position.y, obj.max.z]) for obj in rt.selection] #Move the pivot to the Top left of the object
+			if index==items.index('Object Top Right'):
+				[setattr(obj, 'pivot', [obj.max.x, obj.position.y, obj.max.z]) for obj in rt.selection] #Move the pivot to the Topright of the object
 			cmb.setCurrentIndex(0)
 
 
@@ -65,17 +82,24 @@ class Pivot(Init):
 		Reset Pivot
 		'''
 		tb = self.currentUi.tb000
-		# if not tb.containsMenuItems:
-		# 	tb.add('QCheckBox', setText='Reset Pivot Position', setObjectName='chk000', setChecked=True, setToolTip='')
-		# 	tb.add('QCheckBox', setText='Reset Pivot Orientation', setObjectName='chk001', setChecked=True, setToolTip='')
-		# 	if state=='setMenu':
-		# 		return
+		if not tb.containsMenuItems:
+			tb.add('QCheckBox', setText='Reset Pivot Scale', setObjectName='chk000', setChecked=True, setToolTip='')
+			tb.add('QCheckBox', setText='Reset Pivot Transform', setObjectName='chk001', setChecked=True, setToolTip='')
+			tb.add('QCheckBox', setText='Reset XForm', setObjectName='chk002', setToolTip='')
+			if state=='setMenu':
+				return
 
-		# resetPivotPosition = tb.chk000.isChecked() #Reset Pivot Position
-		# resetPivotOrientation = tb.chk001.isChecked() #Reset Pivot Orientation
-		print ('no function')
-		# pm.manipPivotReset(resetPivotPosition, resetPivotOrientation)
-		# return 'Reset Pivot Position <hl>{0}</hl>.\nReset Pivot Orientation <hl>{1}</hl>.'.format(int(resetPivotPosition), int(resetPivotOrientation)).replace('0', 'Off').replace('1', 'On')
+		if tb.chk000: #Reset Pivot Scale
+			rt.ResetScale(rt.selection) #Same as Hierarchy/Pivot/Reset Scale.
+		
+		if tb.chk001: #Reset Pivot Transform
+			rt.ResetTransform(rt.selection) #Same as Hierarchy/Pivot/Reset Transform.
+
+		if tb.chk002: #reset XForm
+			rt.ResetXForm(rt.selection) #Same as the Reset XForm utility in the Utilities tab - applies XForm modifier to node, stores the current transformations in the gizmo and resets the object transformations.
+			return 'Result: ResetXForm '+str([obj.name for obj in rt.selection])
+
+		# rt.ResetPivot(rt.selection) #Same as Hierarchy/Pivot/Reset Pivot.
 
 
 	def b000(self):

@@ -62,7 +62,7 @@
       <height>601</height>
      </rect>
     </property>
-    <widget class="QWidget" name="r001" native="true">
+    <widget class="QWidget" name="w001" native="true">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -424,7 +424,7 @@
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="r000" native="true">
+    <widget class="QWidget" name="w000" native="true">
      <property name="geometry">
       <rect>
        <x>185</x>

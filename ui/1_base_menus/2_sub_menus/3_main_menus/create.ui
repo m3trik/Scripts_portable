@@ -91,7 +91,7 @@
            <property name="minimumSize">
             <size>
              <width>137</width>
-             <height>137</height>
+             <height>175</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -264,7 +264,7 @@
               <x>15</x>
               <y>55</y>
               <width>21</width>
-              <height>18</height>
+              <height>19</height>
              </rect>
             </property>
             <property name="toolTip">
@@ -286,7 +286,7 @@
               <x>55</x>
               <y>55</y>
               <width>21</width>
-              <height>18</height>
+              <height>19</height>
              </rect>
             </property>
             <property name="toolTip">
@@ -305,7 +305,7 @@
               <x>35</x>
               <y>55</y>
               <width>21</width>
-              <height>18</height>
+              <height>19</height>
              </rect>
             </property>
             <property name="toolTip">
@@ -321,7 +321,7 @@
              <bool>true</bool>
             </property>
            </widget>
-           <widget class="QLineEdit" name="t003">
+           <widget class="QLineEdit" name="txt003">
             <property name="geometry">
              <rect>
               <x>0</x>
@@ -335,54 +335,6 @@
             </property>
             <property name="placeholderText">
              <string>name:</string>
-            </property>
-           </widget>
-           <widget class="QLineEdit" name="t002">
-            <property name="geometry">
-             <rect>
-              <x>90</x>
-              <y>75</y>
-              <width>46</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="toolTip">
-             <string>Set Point: Z coordinate</string>
-            </property>
-            <property name="placeholderText">
-             <string>z:</string>
-            </property>
-           </widget>
-           <widget class="QLineEdit" name="t001">
-            <property name="geometry">
-             <rect>
-              <x>45</x>
-              <y>75</y>
-              <width>46</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="toolTip">
-             <string>Set Point: Y coordinate</string>
-            </property>
-            <property name="placeholderText">
-             <string>y:</string>
-            </property>
-           </widget>
-           <widget class="QLineEdit" name="t000">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>75</y>
-              <width>46</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="toolTip">
-             <string>Set Point: X coordinate</string>
-            </property>
-            <property name="placeholderText">
-             <string>x:</string>
             </property>
            </widget>
            <widget class="QPushButton" name="chk005">
@@ -401,13 +353,13 @@
              </size>
             </property>
             <property name="toolTip">
-             <string>Create: set the point in worldspace to where the new object will be created. The point will be set from the center of the selected objects bounding box.</string>
+             <string>Set the object and point coordinates to the current selection.</string>
             </property>
             <property name="layoutDirection">
              <enum>Qt::RightToLeft</enum>
             </property>
             <property name="text">
-             <string>Set Point</string>
+             <string>Set</string>
             </property>
             <property name="checkable">
              <bool>false</bool>
@@ -431,7 +383,7 @@
               <x>0</x>
               <y>55</y>
               <width>16</width>
-              <height>18</height>
+              <height>19</height>
              </rect>
             </property>
             <property name="toolTip">
@@ -451,7 +403,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>95</y>
+              <y>135</y>
               <width>136</width>
               <height>22</height>
              </rect>
@@ -496,7 +448,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>117</y>
+              <y>155</y>
               <width>136</width>
               <height>19</height>
              </rect>
@@ -532,18 +484,147 @@
              <bool>true</bool>
             </property>
            </widget>
+           <widget class="QDoubleSpinBox" name="s000">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>75</y>
+              <width>136</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>19</height>
+             </size>
+            </property>
+            <property name="baseSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>Translate: X</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::NoButtons</enum>
+            </property>
+            <property name="prefix">
+             <string>X:    </string>
+            </property>
+            <property name="decimals">
+             <number>4</number>
+            </property>
+            <property name="minimum">
+             <double>-99999.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>99999.000000000000000</double>
+            </property>
+           </widget>
+           <widget class="QDoubleSpinBox" name="s001">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>95</y>
+              <width>136</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>19</height>
+             </size>
+            </property>
+            <property name="baseSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>Translate: Y</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::NoButtons</enum>
+            </property>
+            <property name="prefix">
+             <string>Y:    </string>
+            </property>
+            <property name="decimals">
+             <number>4</number>
+            </property>
+            <property name="minimum">
+             <double>-99999.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>99999.000000000000000</double>
+            </property>
+           </widget>
+           <widget class="QDoubleSpinBox" name="s002">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>115</y>
+              <width>136</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>19</height>
+             </size>
+            </property>
+            <property name="baseSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>Translate: Z</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::NoButtons</enum>
+            </property>
+            <property name="prefix">
+             <string>Z:    </string>
+            </property>
+            <property name="decimals">
+             <number>4</number>
+            </property>
+            <property name="minimum">
+             <double>-99999.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>99999.000000000000000</double>
+            </property>
+           </widget>
            <zorder>cmb000</zorder>
            <zorder>cmb001</zorder>
            <zorder>chk000</zorder>
            <zorder>chk002</zorder>
            <zorder>chk001</zorder>
-           <zorder>t003</zorder>
-           <zorder>t002</zorder>
-           <zorder>t001</zorder>
-           <zorder>t000</zorder>
+           <zorder>txt003</zorder>
            <zorder>chk005</zorder>
            <zorder>chk003</zorder>
            <zorder>cmb002</zorder>
+           <zorder>s000</zorder>
+           <zorder>s001</zorder>
+           <zorder>s002</zorder>
            <zorder>b000</zorder>
           </widget>
          </item>
