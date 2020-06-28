@@ -939,13 +939,13 @@ class Switchboard(QtCore.QObject):
 		It does so by pulling from the 'name' list which keeps a list of the ui names as they are called. ie. ['previousName2', 'previousName1', 'currentName']
 
 		args:
-			previousIndex (bool) = return the index of the last valid previously opened ui name.
-			allowDuplicates (bool) = applicable when returning as_list. Returns the list allowing for duplicate names.
-			allowLevel0 (bool) = allow instances of init menu in the results. Default is Off.
-			allowLevel1 (bool) = allow instances of base level menus in the results. Default is On.
-			allowLevel2 (bool) = allow instances of submenu's in the results. Default is On.
-			allowCurrent (bool) = allow the currentName. Default is off.
-			as_list (bool) = returns the full list of previously called names. By default duplicates are removed.
+			previousIndex (bool) = Return the index of the last valid previously opened ui name.
+			allowDuplicates (bool) = Applicable when returning as_list. Allows for duplicate names in the returned list.
+			allowLevel0 (bool) = Allow instances of init menu in the results. Default is Off.
+			allowLevel1 (bool) = Allow instances of base level menus in the results. Default is On.
+			allowLevel2 (bool) = Allow instances of submenu's in the results. Default is On.
+			allowCurrent (bool) = Allow the currentName. Default is off.
+			as_list (bool) = Returns the full list of previously called names. By default duplicates are removed.
 		returns:
 			with no arguments given - string name of previously opened ui.
 			if previousIndex: int - index of previously opened ui

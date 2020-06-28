@@ -166,20 +166,8 @@ class QToolButton_(QtWidgets.QToolButton):
 		args:
 			event = <QEvent>
 		'''
-		if not __name__=='__main__' and not hasattr(self, 'parentUiName'):
-			p = self.parent()
-			while not hasattr(p.window(), 'sb'):
-				p = p.parent()
-
-			self.sb = p.window().sb
-			self.parentUiName = self.sb.getUiName()
-			self.classMethod = self.sb.getMethod(self.parentUiName, self)
-
-			if callable(self.classMethod):
-				self.classMethod('setMenu')
-
-			if not self.containsMenuItems: #if no menu items present, disable the menu button.
-				self.setPopupMode(self.DelayedPopup) #DelayedPopup (default), MenuButtonPopup, InstantPopup
+		if not self.containsMenuItems: #if no menu items present, disable the menu button.
+			self.setPopupMode(self.DelayedPopup) #DelayedPopup (default), MenuButtonPopup, InstantPopup
 
 		return QtWidgets.QToolButton.showEvent(self, event)
 
@@ -211,6 +199,20 @@ if __name__ == "__main__":
 
 
 # deprecated ---------------------------------------------------
+
+# 	if not __name__=='__main__' and not hasattr(self, 'parentUiName'):
+# 		p = self.parent()
+# 		while not hasattr(p.window(), 'sb'):
+# 			p = p.parent()
+
+# 		self.sb = p.window().sb
+# 		self.parentUiName = self.sb.getUiName()
+# 		self.classMethod = self.sb.getMethod(self.parentUiName, self)
+
+# 		if callable(self.classMethod):
+# 			self.classMethod('setMenu')
+
+
 
 	# def mouseMoveEvent(self, event):
 	# 	'''

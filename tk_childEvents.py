@@ -54,18 +54,35 @@ class EventFactoryFilter(QtCore.QObject):
 			widgetType = self.parent.sb.getWidgetType(widget, name) #get the class type as string.
 			derivedType = self.parent.sb.getDerivedType(widget, name) #get the derived class type as string.
 			uiLevel = self.parent.sb.getUiLevel(name)
+			classMethod = self.parent.sb.getMethod(name, widgetName)
 
 			self.setStyleSheet_(name, widget)
 			widget.installEventFilter(self)
 
-
-			if derivedType in ['QPushButton','QToolButton'] and uiLevel<3:
-				if self.parent.sb.prefix(widget, ['b', 'v', 'i', 'tb']):
+			#type specific:
+			if derivedType in ['QPushButton', 'QToolButton']:
+				if widgetType in ['QToolButton_', 'QPushButton_Draggable']:
+					if callable(classMethod):
+						classMethod('setMenu')
+				if uiLevel<3:
 					self.resizeAndCenterWidget(widget)
 
-			elif widgetType=='QWidget':
-				if self.parent.sb.prefix(widget, 'w'): #prefix returns True if widgetName startswith the given prefix, and is followed by three integers.
+			elif derivedType=='QComboBox':
+				if callable(classMethod):
+					classMethod()
+					widget.setCurrentItem(0)
+
+			elif derivedType=='QWidget':
+				if self.parent.sb.prefix(widget, 'w') and uiLevel==1: #prefix returns True if widgetName startswith the given prefix, and is followed by three integers.
 					widget.setVisible(False)
+
+			elif derivedType=='QTreeWidget':
+				if widgetType=='QTreeWidget_ExpandableList':
+					if callable(classMethod):
+						classMethod()
+
+			#add any of the widget's children not already stored in widgets (now that menus and such have been initialized).
+			[self.addWidgets(name, w) for w in widget.children() if w not in widgets]
 
 
 	def addWidgets(self, name, widgets):
@@ -81,6 +98,21 @@ class EventFactoryFilter(QtCore.QObject):
 		self.parent.sb.addWidgets(name, widgets)
 		self.parent.sb.addSignals(name, widgets)
 		self.initWidget(name, widgets) #initialize the widget to set things like the event filter and styleSheet.
+
+
+	def syncWidgets(self, from_widget, to_widget):
+		'''
+		Set one widget's values to the values of the second.
+		If the second widget does not have an attribute it will silently skip it.
+		Attributes starting with '__' are ignored.
+		Useful for keeping certain widgets in sync across menus.
+
+		args:
+			from_widget (obj) = QWidget to get the attributes from.
+			to_widget (obj) = QWidget to assign the attributes to.
+		'''
+		attributes = {attr:getattr(from_widget, attr) for attr in dir(from_widget) if not attr.startswith('__')} #get the first widget's attributes:values.
+		[setattr(to_widget, attr, value) for attr, value in attributes.items() if hasattr(to_widget, attr)] #[getattr(to_widget, attr)(value) for attr, value in attributes.items() if hasattr(to_widget, attr)] #set the second widget's attributes from the first.
 
 
 	def setStyleSheet_(self, name, widgets):
@@ -259,6 +291,20 @@ class EventFactoryFilter(QtCore.QObject):
 
 		if self.widgetName=='info':
 			self.resizeAndCenterWidget(self.widget)
+
+		if self.widgetType=='QTreeWidget_ExpandableList':
+			if self.widget.refresh:
+				widgets = self.widget.getWidgets(refreshedWidgets=1) #get only any newly created widgets on each refresh.
+			else:
+				widgets = self.widget.getWidgets(removeNoneValues=1) #get all widgets on first show.
+			self.addWidgets(self.parent.sb.getUiName(), widgets) #removeWidgets=self.widget._gcWidgets.keys()
+
+		if self.derivedType=='QToolButton':
+				previousNames = self.parent.sb.previousName(allowCurrent=True, as_list=True) #previous ui names.
+				current = previousNames[-1]
+				previous = next((n for n in previousNames[:-1] if n.split('_')[0] in current), None)
+				if previous and current:
+					self.syncWidgets(self.parent.sb.getWidget(previous, current), self.widget)
 
 
 	def hideEvent(self, event):

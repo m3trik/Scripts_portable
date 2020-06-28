@@ -10,6 +10,26 @@ class Crease(Init):
 		super(Crease, self).__init__(*args, **kwargs)
 
 
+	@property
+	def creaseValue(self):
+		'''
+		
+		'''
+		if not hasattr(self, '_creaseValue'):
+			self._creaseValue = 7.5 #obj.EditablePoly.getEdgeData(1)
+
+		return self._creaseValue
+
+
+	def s000(self):
+		'''
+		Crease Amount
+		'''
+		if not self.parentUi.tb000.chk002.isChecked(): #un-crease
+			if not self.parentUi.tb000.chk003.isChecked(): #toggle max
+				self.creaseValue = self.parentUi.tb000.s000.value()
+
+
 	def pin(self, state=None):
 		'''
 		Context menu
@@ -31,12 +51,12 @@ class Crease(Init):
 		list_ = ['']
 		items = cmb.addItems_(list_, '')
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==items.index(''):
-				pass
-			cmb.setCurrentIndex(0)
+		# if not index:
+		# 	index = cmb.currentIndex()
+		# if index!=0:
+		# 	if index==items.index(''):
+		# 		pass
+		# 	cmb.setCurrentIndex(0)
 
 
 	def chk002(self):
@@ -47,9 +67,11 @@ class Crease(Init):
 			self.parentUi.s003.setValue(0) #crease value
 			self.parentUi.s004.setValue(180) #normal angle
 			self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk002', setUnChecked='chk003')
+			self.setWidgetAttr('tb000', self.parentUi, self.childUi, setText='Un-Crease')
 		else:
-			self.parentUi.s003.setValue(5) #crease value
+			self.parentUi.s003.setValue(self.creaseValue) #crease value
 			self.parentUi.s004.setValue(60) #normal angle
+			self.setWidgetAttr('tb000', self.parentUi, self.childUi, setText='Crease')
 
 
 	def chk003(self):
@@ -57,12 +79,22 @@ class Crease(Init):
 		Crease: Max
 		'''
 		if self.parentUi.chk003.isChecked():
-			self.parentUi.s003.setValue(10) #crease value
+			self.parentUi.s003.setValue(100) #crease value
 			self.parentUi.s004.setValue(30) #normal angle
 			self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk003', setUnChecked='chk002')
 		else:
-			self.parentUi.s003.setValue(5) #crease value
+			self.parentUi.s003.setValue(self.creaseValue) #crease value
 			self.parentUi.s004.setValue(60) #normal angle
+
+
+	def chk011(self):
+		'''
+		Crease: Auto
+		'''
+		if self.parentUi.chk011.isChecked():
+			self.toggleWidgets(self.parentUi, self.childUi, setEnabled='s005,s006')
+		else:
+			self.toggleWidgets(self.parentUi, self.childUi, setDisabled='s005,s006')
 
 
 	def tb000(self, state=None):
@@ -71,12 +103,12 @@ class Crease(Init):
 		'''
 		tb = self.currentUi.tb000
 		if not tb.containsMenuItems:
-			tb.add('QSpinBox', setPrefix='Crease Amount: ', setObjectName='s003', minMax_='0-10 step1', setValue=10, setToolTip='Crease amount 0-10. Overriden if "max" checked.')
+			tb.add('QSpinBox', setPrefix='Crease Amount: ', setObjectName='s003', minMax_='0-100 step1', setValue=100, setToolTip='Crease amount 0-10. Overriden if "max" checked.')
 			tb.add('QCheckBox', setText='Toggle Max', setObjectName='chk003', setChecked=True, setToolTip='Toggle crease amount from it\'s current value to the maximum amount.')
 			tb.add('QCheckBox', setText='Un-Crease', setObjectName='chk002', setToolTip='Un-crease selected components or If in object mode, uncrease all.')
 			tb.add('QCheckBox', setText='Perform Normal Edge Hardness', setObjectName='chk005', setChecked=True, setToolTip='Toggle perform normal edge hardness.')
 			tb.add('QSpinBox', setPrefix='Edge Hardness Angle: ', setObjectName='s004', minMax_='0-180 step1', setValue=30, setToolTip='Normal edge hardness 0-180.')
-			tb.add('QCheckBox', setText='Crease Vertex Points', setObjectName='chk004', setChecked=True, setToolTip='Crease vertex points.')
+			tb.add('QCheckBox', setText='Crease Vertex Points', setObjectName='chk004', setToolTip='Crease vertex points.')
 			tb.add('QCheckBox', setText='Auto Crease', setObjectName='chk011', setToolTip='Auto crease selected object(s) within the set angle tolerance.')
 			tb.add('QSpinBox', setPrefix='Auto Crease: Low: ', setObjectName='s005', minMax_='0-180 step1', setValue=85, setToolTip='Auto crease: low angle constraint.')
 			tb.add('QSpinBox', setPrefix='Auto Crease: high: ', setObjectName='s006', minMax_='0-180 step1', setValue=95, setToolTip='Auto crease: max angle constraint.')
@@ -85,6 +117,13 @@ class Crease(Init):
 
 		creaseAmount = int(tb.s003.value())
 		normalAngle = int(tb.s004.value())
+
+		# if tb.chk011.isChecked(): #crease: Auto
+		# 	angleLow = int(tb.s005.value()) 
+		# 	angleHigh = int(tb.s006.value()) 
+
+		# 	mel.eval("PolySelectConvert 2;") #convert selection to edges
+		# 	contraint = pm.polySelectConstraint( mode=3, type=0x8000, angle=True, anglebound=(angleLow, angleHigh) ) # to get edges with angle between two degrees. mode=3 (All and Next) type=0x8000 (edge). 
 
 		creaseAmount = creaseAmount*0.1 #convert to max 0-1 range
 
@@ -99,7 +138,7 @@ class Crease(Init):
 					rt.polyOp.setEdgeSelection(obj, edgelist)
 
 				if tb.chk004.isChecked(): #crease vertex point
-					pass
+					obj.EditablePoly.setVertexData(1, creaseAmount)
 				else: #crease edge
 					obj.EditablePoly.setEdgeData(1, creaseAmount)
 

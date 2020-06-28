@@ -10,6 +10,26 @@ class Crease(Init):
 		super(Crease, self).__init__(*args, **kwargs)
 
 
+	@property
+	def creaseValue(self):
+		'''
+		
+		'''
+		if not hasattr(self, '_creaseValue'):
+			self._creaseValue = 7.5 #pm.polyCrease(query=1, value=1)
+
+		return self._creaseValue
+
+
+	def s000(self):
+		'''
+		Crease Amount
+		'''
+		if not self.parentUi.tb000.chk002.isChecked(): #un-crease
+			if not self.parentUi.tb000.chk003.isChecked(): #toggle max
+				self.creaseValue = self.parentUi.tb000.s000.value()
+
+
 	def pin(self, state=None):
 		'''
 		Context menu
@@ -28,13 +48,13 @@ class Crease(Init):
 		'''
 		cmb = self.parentUi.cmb000
 		
-		files = ['Sets']
-		contents = cmb.addItems_(files, 'Maya Crease Editors')
+		list_ = ['Crease Set Editor']
+		items = cmb.addItems_(list_, 'Maya Crease Editors')
 
 		if not index:
 			index = cmb.currentIndex()
 		if index!=0:
-			if index==contents.index('Crease Set Editor'):
+			if index==items.index('Crease Set Editor'):
 				from maya.app.general import creaseSetEditor
 				creaseSetEditor.showCreaseSetEditor()
 
@@ -45,25 +65,28 @@ class Crease(Init):
 		'''
 		Un-Crease
 		'''
-		if self.parentUi.chk002.isChecked():
+		if self.currentUi.chk002.isChecked():
 			self.parentUi.s003.setValue(0) #crease value
 			self.parentUi.s004.setValue(180) #normal angle
-			self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk003')
+			self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk002', setUnChecked='chk003')
+			self.setWidgets('tb000', self.parentUi, self.childUi, setText='Un-Crease')
 		else:
-			self.parentUi.s003.setValue(7.5) #crease value
+			self.parentUi.s003.setValue(self.creaseValue) #crease value
 			self.parentUi.s004.setValue(30) #normal angle
+			self.parentUi.tb000.setText('Crease')
+			self.setWidgets('tb000', self.parentUi, self.childUi, setText='Crease')
 
 
 	def chk003(self):
 		'''
 		Crease: Max
 		'''
-		if self.parentUi.chk003.isChecked():
+		if self.currentUi.chk003.isChecked():
 			self.parentUi.s003.setValue(10) #crease value
 			self.parentUi.s004.setValue(30) #normal angle
 			self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk002')
 		else:
-			self.parentUi.s003.setValue(7.5) #crease value
+			self.parentUi.s003.setValue(self.creaseValue) #crease value
 			self.parentUi.s004.setValue(60) #normal angle
 
 
@@ -71,7 +94,7 @@ class Crease(Init):
 		'''
 		Crease: Auto
 		'''
-		if self.parentUi.chk011.isChecked():
+		if self.currentUi.chk011.isChecked():
 			self.toggleWidgets(self.parentUi, self.childUi, setEnabled='s005,s006')
 		else:
 			self.toggleWidgets(self.parentUi, self.childUi, setDisabled='s005,s006')

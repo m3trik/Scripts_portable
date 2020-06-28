@@ -158,20 +158,11 @@ class QPushButton_(QtWidgets.QPushButton):
 		args:
 			event=<QEvent>
 		'''
-		if not __name__=='__main__' and not hasattr(self, 'parentUiName'):
-			p = self.parent()
-			while not hasattr(p.window(), 'sb'):
-				p = p.parent()
-
-			self.sb = p.window().sb
-			self.parentUiName = self.sb.getUiName()
-			self.classMethod = self.sb.getMethod(self.parentUiName, self)
-
-			if callable(self.classMethod):
-				if self.contextMenu:
-					self.classMethod('setMenu')
 
 		return QtWidgets.QPushButton.showEvent(self, event)
+
+
+
 
 
 
@@ -185,3 +176,23 @@ if __name__ == "__main__":
 	w = QPushButton_(parent=None, setObjectName='b000', resize=QSize(45, 45), setText='QPushButton_', setWhatsThis='', setVisible=True)
 	w.show()
 	sys.exit(app.exec_())
+
+
+
+
+
+
+# Deprecated ------------------------------------------------------
+
+# if not __name__=='__main__' and not hasattr(self, 'parentUiName'):
+# 	p = self.parent()
+# 	while not hasattr(p.window(), 'sb'):
+# 		p = p.parent()
+
+# 	self.sb = p.window().sb
+# 	self.parentUiName = self.sb.getUiName()
+# 	self.classMethod = self.sb.getMethod(self.parentUiName, self)
+
+# 	if callable(self.classMethod):
+# 		if self.contextMenu:
+# 			self.classMethod('setMenu')

@@ -22,26 +22,9 @@ class Preferences(Init):
 		pin = self.parentUi.pin
 
 		if state=='setMenu':
-			pin.add(QComboBox_, setObjectName='cmb004', setToolTip='')
+			pin.add(QComboBox_, setObjectName='cmb003', setToolTip='')
 
 			return
-
-
-	def cmb004(self, index=None):
-		'''
-		Editors
-		'''
-		cmb = self.parentUi.cmb000
-		
-		files = ['']
-		contents = cmb.addItems_(files, '')
-
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index(''):
-				pass
-			cmb.setCurrentIndex(0)
 
 
 	def cmb000(self, index=None, init=False):
@@ -113,12 +96,12 @@ class Preferences(Init):
 		files = ['']
 		contents = cmb.addItems_(files, '')
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index(''):
-				pass
-			cmb.setCurrentIndex(0)
+		# if not index:
+		# 	index = cmb.currentIndex()
+		# if index!=0:
+		# 	if index==contents.index(''):
+		# 		pass
+		# 	cmb.setCurrentIndex(0)
 
 
 	@Slots.message

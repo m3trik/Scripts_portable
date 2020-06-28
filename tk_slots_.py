@@ -143,6 +143,31 @@ class Slots(QtCore.QObject):
 		return objects
 
 
+	@staticmethod
+	def getAttributes(obj, exclude=None):
+		'''
+		Get existing object attributes.
+		args:
+			obj = object
+			exclude = 'string list' - attributes to exclude from returned dictionay
+
+		returns:
+			dictionary {'string attribute': value}
+		'''
+		return {attr:getattr(obj, attr) for attr in dir(obj) if attr not in exclude}
+
+
+	@staticmethod
+	def setAttributes(obj, attributes):
+		'''
+		Set object attributes.
+		args:
+			obj = object
+			attributes = dictionary {'string attribute': value} - attributes and their correponding value to set
+		'''
+		[setattr(obj, attr, value) for attr, value in attributes.iteritems() if attr and value]
+
+
 	def callMethod(self, name, method, *args, **kwargs):
 		'''
 		Call a method from a class outside of the current ui.
@@ -197,17 +222,16 @@ class Slots(QtCore.QObject):
 	def toggleWidgets(self, *args, **kwargs):
 		'''
 		Set multiple boolean properties, for multiple widgets, on multiple ui's at once.
-		If the ui has a submenu with the same widget, then the value will be set there as well. It can be set on additional ui's by passing them in explicitly in *args.
+
 		args:
 			*args = dynamic ui object/s
 			*kwargs = keyword: - the property to modify. ex. setChecked, setUnChecked, setEnabled, setDisabled, setVisible, setHidden
-								Optionally appending '_False' or '_True' to the attribute name, will set the attribute accordingly. (The default state is True)
-					argument: string of objectNames - objectNames separated by ',' ie. 'b000-12,b022'
+					value: string of objectNames - objectNames separated by ',' ie. 'b000-12,b022'
 
 		ex.	self.toggleWidgets(self.ui1, self.ui2, setDisabled='b000', setUnChecked='chk009-12', setVisible='b015,b017')
 		'''
 		for ui in args:
-			for property_ in kwargs: #ie. property_ could be setUnChecked
+			for property_ in kwargs: #property_ ie. setUnChecked
 				widgets = self.getObjects(ui, kwargs[property_]) #getObjects returns a widget list from a string of objectNames.
 
 				state = True
@@ -216,6 +240,71 @@ class Slots(QtCore.QObject):
 					state = False
 
 				[getattr(w, property_)(state) for w in widgets] #set the property state for each widget in the list.
+
+
+	def setWidgets(self, *args, **kwargs):
+		'''
+		Set multiple properties, for multiple widgets, on multiple ui's at once.
+
+		args:
+			*args = arg [0] (str) String of objectNames. - objectNames separated by ',' ie. 'b000-12,b022'
+					arg [1:] dynamic ui object/s
+			*kwargs = keyword: - the property to modify. ex. setText, setValue, setEnabled, setDisabled, setVisible, setHidden
+					value: - intended value.
+
+		ex.	self.setWidgetAttr('chk003', self.parentUi, self.childUi, setText='Un-Crease')
+		'''
+		for ui in args[1:]:
+			widgets = self.getObjects(ui, args[0]) #getObjects returns a widget list from a string of objectNames.
+			for property_, value in kwargs.items():
+				[getattr(w, property_)(value) for w in widgets] #set the property state for each widget in the list.
+
+
+	def setSpinboxes(self, ui, spinboxes, attributes={}):
+		'''
+		Set multiple spinbox values.
+
+		args:
+			ui = <dynamic ui>
+			spinboxes (str)(list) = Packed spinbox names or object list. ie. 's001-4, s007' or [<s001>, <s002>, <s003>, <s004>, <s007>]
+			attributes = {'string key':value}
+
+		ex. self.setSpinboxes (self.ui, spinboxNames='s000-15', attributes={'width':1, 'length ratio':1, 'patches U':1, 'patches V':1})
+		ex. self.setSpinboxes (self.ui, spinboxNames='s000', attributes={'size':5} #explicit;  set single s000 with a label 'size' and value of 5
+		'''
+		if isinstance(spinboxes, (str, unicode)):
+			spinboxes = self.getObjects(ui, spinboxes) #get spinbox objects
+
+		#clear previous values
+		for spinbox in spinboxes:
+			spinbox.blockSignals(True)
+			# spinbox.setEnabled(False)
+
+		#set values
+		for index, (key, value) in enumerate(attributes.items()):
+			if isinstance(value, float):
+				if value<0: spinboxes[index].setMinimum(-100)
+				decimals = str(value)[::-1].find('.') #get decimal places
+				spinboxes[index].setDecimals(decimals)
+				spinboxes[index].setPrefix(key+': ')
+				spinboxes[index].setValue(value)
+				spinboxes[index].setSuffix('')
+
+			elif isinstance(value, int):
+				if value<0: spinboxes[index].setMinimum(-100)
+				spinboxes[index].setDecimals(0)
+				spinboxes[index].setPrefix(key+': ')
+				spinboxes[index].setValue(value)
+				spinboxes[index].setSuffix('')
+
+			elif isinstance(value, bool):
+				value = int(value)
+				spinboxes[index].setMinimum(0)
+				spinboxes[index].setMaximum(1)
+				spinboxes[index].setSuffix('<bool>')
+
+			# spinboxes[index].setEnabled(True)
+			spinboxes[index].blockSignals(False)
 
 
 	def setAxisForCheckBoxes(self, checkboxes, axis, ui=None):
@@ -264,77 +353,6 @@ class Slots(QtCore.QObject):
 					axis = chk.text()
 
 		return prefix+axis #ie. '-X'
-
-
-	def setSpinboxes(self, ui, spinboxes, attributes={}):
-		'''
-		Set multiple spinbox values.
-		args:
-			ui = <dynamic ui>
-			spinboxes (str)(list) = Packed spinbox names or object list. ie. 's001-4, s007' or [<s001>, <s002>, <s003>, <s004>, <s007>]
-			attributes = {'string key':value}
-
-		ex. self.setSpinboxes (self.ui, spinboxNames='s000-15', attributes={'width':1, 'length ratio':1, 'patches U':1, 'patches V':1})
-		ex. self.setSpinboxes (self.ui, spinboxNames='s000', attributes={'size':5} #explicit;  set single s000 with a label 'size' and value of 5
-		'''
-		if isinstance(spinboxes, (str, unicode)):
-			spinboxes = self.getObjects(ui, spinboxes) #get spinbox objects
-
-		#clear previous values
-		for spinbox in spinboxes:
-			spinbox.blockSignals(True)
-			# spinbox.setEnabled(False)
-
-		#set values
-		for index, (key, value) in enumerate(attributes.items()):
-			if isinstance(value, float):
-				if value<0: spinboxes[index].setMinimum(-100)
-				decimals = str(value)[::-1].find('.') #get decimal places
-				spinboxes[index].setDecimals(decimals)
-				spinboxes[index].setPrefix(key+': ')
-				spinboxes[index].setValue(value)
-				spinboxes[index].setSuffix('')
-
-			elif isinstance(value, int):
-				if value<0: spinboxes[index].setMinimum(-100)
-				spinboxes[index].setDecimals(0)
-				spinboxes[index].setPrefix(key+': ')
-				spinboxes[index].setValue(value)
-				spinboxes[index].setSuffix('')
-
-			elif isinstance(value, bool):
-				value = int(value)
-				spinboxes[index].setMinimum(0)
-				spinboxes[index].setMaximum(1)
-				spinboxes[index].setSuffix('<bool>')
-
-			# spinboxes[index].setEnabled(True)
-			spinboxes[index].blockSignals(False)
-
-
-	@staticmethod
-	def getAttributes(node, exclude=None):
-		'''
-		Get existing node attributes.
-		args:
-			node = object
-			exclude = 'string list' - attributes to exclude from returned dictionay
-
-		returns:
-			dictionary {'string attribute': value}
-		'''
-		return {attr:getattr(node, attr) for attr in dir(node) if attr not in exclude}
-
-
-	@staticmethod
-	def setAttributes(node, attributes):
-		'''
-		Set node attributes.
-		args:
-			node = object
-			attributes = dictionary {'string attribute': value} - attributes and their correponding value to set
-		'''
-		[setattr(node, attr, value) for attr, value in attributes.iteritems() if attr and value]
 
 
 	global cycleDict

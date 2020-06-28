@@ -333,25 +333,10 @@ class QComboBox_(QtWidgets.QComboBox):
 		args:
 			event=<QEvent>
 		'''
-		try:
-			if not __name__=='__main__':
-				if callable(self.classMethod):
-					self.classMethod()
-		except:
-			p = self.parent()
-			while not hasattr(p.window(), 'sb'):
-				p = p.parent()
-
-			self.sb = p.window().sb
-			self.parentUiName = self.sb.getUiName()
-			self.classMethod = self.sb.getMethod(self.parentUiName, self)
-			if callable(self.classMethod):
-				self.classMethod()
-				self.setCurrentItem(0)
-
-			self.addContextMenuItemsToToolTip()
+		self.addContextMenuItemsToToolTip()
 
 		return QtWidgets.QComboBox.showEvent(self, event)
+
 
 
 
@@ -370,10 +355,25 @@ if __name__ == "__main__":
 
 
 
-# -----------------------------------------------
-# Notes
-# -----------------------------------------------
+# Deprecated -----------------------------------------------
 
+# try:
+# 	if not __name__=='__main__':
+# 		if callable(self.classMethod):
+# 			self.classMethod()
+# except:
+# 	p = self.parent()
+# 	while not hasattr(p.window(), 'sb'):
+# 		p = p.parent()
+
+# 	self.sb = p.window().sb
+# 	self.parentUiName = self.sb.getUiName()
+# 	self.classMethod = self.sb.getMethod(self.parentUiName, self)
+# 	if callable(self.classMethod):
+# 		self.classMethod()
+# 		self.setCurrentItem(0)
+
+# 	self.addContextMenuItemsToToolTip()
 
 
 

@@ -148,6 +148,7 @@ class File(Init):
 			cmb.setCurrentIndex(0)
 
 
+
 	def cmb005(self, index=None):
 		'''
 		Editors
@@ -157,16 +158,16 @@ class File(Init):
 		list_ = []
 		items = cmb.addItems_(list_, '')
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==items.index(''):
-				mel.eval('') #
-			if index==items.index(''):
-				mel.eval('') #
-			if index==items.index(''):
-				mel.eval('') #
-			cmb.setCurrentIndex(0)
+		# if not index:
+		# 	index = cmb.currentIndex()
+		# if index!=0:
+		# 	if index==items.index(''):
+		# 		mel.eval('') #
+		# 	if index==items.index(''):
+		# 		mel.eval('') #
+		# 	if index==items.index(''):
+		# 		mel.eval('') #
+		# 	cmb.setCurrentIndex(0)
 
 
 	def cmb006(self, index=None):

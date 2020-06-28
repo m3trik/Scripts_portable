@@ -41,12 +41,12 @@ class Symmetry(Init):
 		files = ['']
 		contents = cmb.addItems_(files, '')
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index(''):
-				pass
-			cmb.setCurrentIndex(0)
+		# if not index:
+		# 	index = cmb.currentIndex()
+		# if index!=0:
+		# 	if index==contents.index(''):
+		# 		pass
+		# 	cmb.setCurrentIndex(0)
 
 
 	@Slots.message

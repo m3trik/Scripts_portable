@@ -166,21 +166,11 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 		args:
 			event=<QEvent>
 		'''
-		if not __name__=='__main__' and not hasattr(self, 'parentUiName'):
-			p = self.parent()
-			while not hasattr(p.window(), 'sb'):
-				p = p.parent()
-
-			self.sb = p.window().sb
-			self.parentUiName = self.sb.getUiName()
-			self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
-
-			self.classMethod = self.sb.getMethod(self.parentUiName, self)
-			if callable(self.classMethod):
-				if self.contextMenu:
-					self.classMethod('setMenu')
 
 		return QtWidgets.QPushButton.showEvent(self, event)
+
+
+
 
 
 
@@ -192,3 +182,24 @@ if __name__ == "__main__":
 		
 	QPushButton_Draggable().show()
 	sys.exit(app.exec_())
+
+
+
+
+
+
+# Deprecated ---------------------------------------------------------------
+
+		# if not __name__=='__main__' and not hasattr(self, 'parentUiName'):
+		# 	p = self.parent()
+		# 	while not hasattr(p.window(), 'sb'):
+		# 		p = p.parent()
+
+		# 	self.sb = p.window().sb
+		# 	self.parentUiName = self.sb.getUiName()
+		# 	self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
+
+		# 	self.classMethod = self.sb.getMethod(self.parentUiName, self)
+		# 	if callable(self.classMethod):
+		# 		if self.contextMenu:
+		# 			self.classMethod('setMenu')

@@ -38,7 +38,6 @@ class Create(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb003', setToolTip='')
-
 			return
 
 
@@ -51,12 +50,12 @@ class Create(Init):
 		files = ['']
 		contents = cmb.addItems_(files, '')
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index(''):
-				pass
-			cmb.setCurrentIndex(0)
+		# if not index:
+		# 	index = cmb.currentIndex()
+		# if index!=0:
+		# 	if index==contents.index(''):
+		# 		pass
+		# 	cmb.setCurrentIndex(0)
 
 
 	def getAxis(self):
@@ -249,23 +248,6 @@ class Create(Init):
 		'''
 		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.parentUi.cmb002.children_()} #current spinbox values. ie. from s000 get the value of six and add it to the list
 		self.setAttributesMax(self.node, spinboxValues) #set attributes for the history node
-
-
-	# def cmb002(self, index=None):
-	# 	'''
-	# 	Editors
-	# 	'''
-	# 	cmb = self.parentUi.cmb002
-
-	# 	files = ['']
-	# 	contents = cmb.addItems_(files, '')
-
-	# 	if not index:
-	# 		index = cmb.currentIndex()
-	# 	if index!=0:
-	# 		if index==contents.index(''):
-	# 			pass
-	# 		cmb.setCurrentIndex(0)
 
 
 	def b000(self):

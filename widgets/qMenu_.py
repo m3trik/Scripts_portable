@@ -235,20 +235,6 @@ class QMenu_(QtWidgets.QMenu):
 		args:
 			event = <QEvent>
 		'''
-		if not __name__=='__main__' and not hasattr(self, 'parentUiName'):
-			p = self.parent()
-			try:
-				while not hasattr(p.window(), 'sb'):
-					p = p.parent()
-
-				self.sb = p.window().sb
-				self.parentUiName = self.sb.getUiName()
-				self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
-
-				self.childEvents.addWidgets(self.parentUiName, self.children()+[self])
-			except AttributeError:
-				pass
-
 		#set menu position
 		if self.position is 'cursorPos':
 			pos = QtGui.QCursor.pos() #global position
@@ -300,6 +286,22 @@ if __name__ == "__main__":
 
 
 # depricated ------------------------------------------------------------------------
+
+
+# if not __name__=='__main__' and not hasattr(self, 'parentUiName'):
+# 	p = self.parent()
+# 	try:
+# 		while not hasattr(p.window(), 'sb'):
+# 			p = p.parent()
+
+# 		self.sb = p.window().sb
+# 		self.parentUiName = self.sb.getUiName()
+# 		self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
+
+# 		self.childEvents.addWidgets(self.parentUiName, self.children()+[self])
+# 	except AttributeError:
+# 		pass
+
 
 
 			# integer

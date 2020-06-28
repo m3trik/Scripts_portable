@@ -188,20 +188,12 @@ class QWidget_MultiWidget(QtWidgets.QWidget):
 		args:
 			event = <QEvent>
 		'''
-		if not __name__=='__main__' and not hasattr(self, 'parentUiName'):
-			p = self.parent()
-			while not hasattr(p.window(), 'sb'):
-				p = p.parent()
-
-			self.sb = p.window().sb
-			self.parentUiName = self.sb.getUiName()
-			self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
-
-			self.childEvents.addWidgets(self.parentUiName, self.children_())
-
 		self.resize(self.sizeHint().width(), self.sizeHint().height())
 
 		return QtWidgets.QWidget.showEvent(self, event)
+
+
+
 
 
 
@@ -227,3 +219,18 @@ if __name__ == "__main__":
 # m.setAsOptionBox(m.children_(1)) #set button 2 to be an option box style
 # tree.add(m, 'Cameras') #add the widgets to the tree under the parent header 'Cameras'
 
+# deprecated ------------------------------------------------
+
+
+# if not __name__=='__main__' and not hasattr(self, 'parentUiName'):
+# 	p = self.parent()
+# 	while not hasattr(p.window(), 'sb'):
+# 		p = p.parent()
+
+# 	self.sb = p.window().sb
+# 	self.parentUiName = self.sb.getUiName()
+# 	self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
+
+# 	self.childEvents.addWidgets(self.parentUiName, self.children_())
+
+# self.resize(self.sizeHint().width(), self.sizeHint().height())

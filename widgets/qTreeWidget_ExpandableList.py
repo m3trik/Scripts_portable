@@ -811,26 +811,6 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		args:
 			event = <QEvent>
 		'''
-		try:
-			if not __name__=='__main__':
-				self.classMethod()
-
-		except:
-			p = self.parent()
-			while not hasattr(p.window(), 'sb'):
-				p = p.parent()
-
-			self.sb = p.window().sb
-			self.parentUiName = self.sb.getUiName()
-			self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
-			self.classMethod = self.sb.getMethod(self.parentUiName, self)
-			self.classMethod()
-
-		if self.refresh:
-			widgets = self.getWidgets(refreshedWidgets=1) #get only any newly created widgets on each refresh.
-		else:
-			widgets = self.getWidgets(removeNoneValues=1) #get all widgets on first show.
-		self.childEvents.addWidgets(self.parentUiName, widgets) #removeWidgets=self._gcWidgets.keys()
 
 		return QtWidgets.QTreeWidget.showEvent(self, event)
 
@@ -846,6 +826,9 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			self.clear_(refreshedColumns)
 
 		return QtWidgets.QTreeWidget.hideEvent(self, event)
+
+
+
 
 
 
@@ -911,6 +894,29 @@ if __name__ == '__main__':
 
 
 # depricated: ---------------------------------------------------------------------------
+
+
+# try:
+# 	if not __name__=='__main__':
+# 		self.classMethod()
+
+# except:
+# 	p = self.parent()
+# 	while not hasattr(p.window(), 'sb'):
+# 		p = p.parent()
+
+# 	self.sb = p.window().sb
+# 	self.parentUiName = self.sb.getUiName()
+# 	self.childEvents = self.sb.getClassInstance('EventFactoryFilter')
+# 	self.classMethod = self.sb.getMethod(self.parentUiName, self)
+# 	self.classMethod()
+
+# if self.refresh:
+# 	widgets = self.getWidgets(refreshedWidgets=1) #get only any newly created widgets on each refresh.
+# else:
+# 	widgets = self.getWidgets(removeNoneValues=1) #get all widgets on first show.
+# self.childEvents.addWidgets(self.parentUiName, widgets) #removeWidgets=self._gcWidgets.keys()
+
 
 
 
