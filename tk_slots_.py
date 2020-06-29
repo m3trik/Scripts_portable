@@ -242,7 +242,7 @@ class Slots(QtCore.QObject):
 				[getattr(w, property_)(state) for w in widgets] #set the property state for each widget in the list.
 
 
-	def setWidgets(self, *args, **kwargs):
+	def setWidgetKwargs(self, *args, **kwargs):
 		'''
 		Set multiple properties, for multiple widgets, on multiple ui's at once.
 

@@ -9,25 +9,19 @@ class Crease(Init):
 	def __init__(self, *args, **kwargs):
 		super(Crease, self).__init__(*args, **kwargs)
 
-
-	@property
-	def creaseValue(self):
-		'''
-		
-		'''
-		if not hasattr(self, '_creaseValue'):
-			self._creaseValue = 7.5 #pm.polyCrease(query=1, value=1)
-
-		return self._creaseValue
+		self.creaseValue = 10
 
 
-	def s000(self):
+	def s003(self):
 		'''
 		Crease Amount
+		Tracks the standard crease amount while toggles such as un-crease, and crease max temporarily change the spinbox value. 
 		'''
-		if not self.parentUi.tb000.chk002.isChecked(): #un-crease
-			if not self.parentUi.tb000.chk003.isChecked(): #toggle max
-				self.creaseValue = self.parentUi.tb000.s000.value()
+		if not self.parentUi.chk002.isChecked(): #un-crease
+			if not self.parentUi.chk003.isChecked(): #toggle max
+				self.creaseValue = self.parentUi.s003.value()
+				text = self.currentUi.tb000.text().split(' ')[0]
+				self.setWidgetKwargs('tb000', self.parentUi, self.childUi, setText='{} {}'.format(text, self.creaseValue))
 
 
 	def pin(self, state=None):
@@ -69,12 +63,13 @@ class Crease(Init):
 			self.parentUi.s003.setValue(0) #crease value
 			self.parentUi.s004.setValue(180) #normal angle
 			self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk002', setUnChecked='chk003')
-			self.setWidgets('tb000', self.parentUi, self.childUi, setText='Un-Crease')
+			self.parentUi.s003.setDisabled(True)
+			self.setWidgetKwargs('tb000', self.parentUi, self.childUi, setText='Un-Crease 0')
 		else:
 			self.parentUi.s003.setValue(self.creaseValue) #crease value
 			self.parentUi.s004.setValue(30) #normal angle
-			self.parentUi.tb000.setText('Crease')
-			self.setWidgets('tb000', self.parentUi, self.childUi, setText='Crease')
+			self.parentUi.s003.setEnabled(True)
+			self.setWidgetKwargs('tb000', self.parentUi, self.childUi, setText='{} {}'.format('Crease', self.creaseValue))
 
 
 	def chk003(self):
@@ -84,10 +79,14 @@ class Crease(Init):
 		if self.currentUi.chk003.isChecked():
 			self.parentUi.s003.setValue(10) #crease value
 			self.parentUi.s004.setValue(30) #normal angle
-			self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk002')
+			self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk003', setUnChecked='chk002')
+			self.parentUi.s003.setDisabled(True)
+			self.setWidgetKwargs('tb000', self.parentUi, self.childUi, setText='Crease 10')
 		else:
 			self.parentUi.s003.setValue(self.creaseValue) #crease value
 			self.parentUi.s004.setValue(60) #normal angle
+			self.parentUi.s003.setEnabled(True)
+			self.setWidgetKwargs('tb000', self.parentUi, self.childUi, setText='{} {}'.format('Crease', self.creaseValue))
 
 
 	def chk011(self):
@@ -107,7 +106,7 @@ class Crease(Init):
 		tb = self.currentUi.tb000
 		if not tb.containsMenuItems:
 			tb.add('QSpinBox', setPrefix='Crease Amount: ', setObjectName='s003', minMax_='0-10 step1', setValue=10, setToolTip='Crease amount 0-10. Overriden if "max" checked.')
-			tb.add('QCheckBox', setText='Toggle Max', setObjectName='chk003', setChecked=True, setToolTip='Toggle crease amount from it\'s current value to the maximum amount.')
+			tb.add('QCheckBox', setText='Toggle Max', setObjectName='chk003', setToolTip='Toggle crease amount from it\'s current value to the maximum amount.')
 			tb.add('QCheckBox', setText='Un-Crease', setObjectName='chk002', setToolTip='Un-crease selected components or If in object mode, uncrease all.')
 			tb.add('QCheckBox', setText='Perform Normal Edge Hardness', setObjectName='chk005', setChecked=True, setToolTip='Toggle perform normal edge hardness.')
 			tb.add('QSpinBox', setPrefix='Edge Hardness Angle: ', setObjectName='s004', minMax_='0-180 step1', setValue=30, setToolTip='Normal edge hardness 0-180.')
@@ -115,6 +114,8 @@ class Crease(Init):
 			tb.add('QCheckBox', setText='Auto Crease', setObjectName='chk011', setToolTip='Auto crease selected object(s) within the set angle tolerance.')
 			tb.add('QSpinBox', setPrefix='Auto Crease: Low: ', setObjectName='s005', minMax_='0-180 step1', setValue=85, setToolTip='Auto crease: low angle constraint.')
 			tb.add('QSpinBox', setPrefix='Auto Crease: high: ', setObjectName='s006', minMax_='0-180 step1', setValue=95, setToolTip='Auto crease: max angle constraint.')
+			
+			self.toggleWidgets(tb, setDisabled='s005,s006')
 			if state=='setMenu':
 				return
 

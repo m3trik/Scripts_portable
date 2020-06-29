@@ -302,7 +302,7 @@ class EventFactoryFilter(QtCore.QObject):
 		if self.derivedType=='QToolButton':
 				previousNames = self.parent.sb.previousName(allowCurrent=True, as_list=True) #previous ui names.
 				current = previousNames[-1]
-				previous = next((n for n in previousNames[:-1] if n.split('_')[0] in current), None)
+				previous = next((n for n in previousNames[:-1] if n.split('_')[0] in current), None) #either submenu or main_menu of the current. ie. 'polygons' from 'polygons_submenu'
 				if previous and current:
 					self.syncWidgets(self.parent.sb.getWidget(previous, current), self.widget)
 

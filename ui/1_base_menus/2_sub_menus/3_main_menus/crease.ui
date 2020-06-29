@@ -229,7 +229,7 @@
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Edit the crease value of any selected components&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
-             <string>Crease</string>
+             <string>Crease 10</string>
             </property>
             <property name="iconSize">
              <size>
