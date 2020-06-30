@@ -50,16 +50,13 @@ class Tk(QtWidgets.QStackedWidget):
 		args:
 			name (str) = name of ui.
 		'''
-		ui = self.sb.getUi(name, setAsCurrent=True) #Get the ui of the given name, and set it as the current ui.
+		ui = self.sb.getUi(name, setAsCurrent=True) #Get the ui of the given name, and set it as the current ui in the switchboard module, which amoung other things, sets connections.
 
-		if not name in self.sb.previousName(allowLevel0=1, as_list=1): #if ui(name) hasn't been set before, init the ui for the given name.
-		# self.sb.setUiSize(name) #Set the size info for each ui (allows for resizing a stacked widget where ordinarily resizing is constrained by the largest widget in the stack)
-			self.addWidget(ui) #add each ui to the stackedLayout.
-			self.childEvents.initWidget(name)
+		if not name in self.sb.previousName(as_list=1): #if ui(name) hasn't been set before:
+			self.addWidget(ui) #add the ui to the stackedLayout.
+			self.childEvents.initWidgets(name)
 
-		self.sb.setSignals(name)#self.sb.setSignals = name #connect new signals while disconnecting any previous.
-
-		self.resize(self.sb.sizeX, self.sb.sizeY)  #Set the size info for each ui (allows for resizing a stacked widget where ordinarily resizing is constrained by the largest widget in the stack)
+		self.resize(self.sb.sizeX, self.sb.sizeY)  #Set the size info for each ui (allows for resizing a stacked widget where otherwise resizing is constrained by the largest widget in the stack)
 		# if self.sb.uiLevel<3:
 		# 	self.showFullScreen()
 		# print('keyboardGrabber:', self.keyboardGrabber())
@@ -72,7 +69,7 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		Return the stacked widget to it's starting index.
 		'''
-		previous = self.sb.previousName(allowLevel2=False)
+		previous = self.sb.previousName(omitLevel=[2,3])
 		self.setUi(previous) #return the stacked widget to it's previous ui.
 
 		#Reset the lists that make up the draw and widget paths.
@@ -82,13 +79,10 @@ class Tk(QtWidgets.QStackedWidget):
 		self.move(self.drawPath[0] - self.rect().center())
 
 
-
 	def setSubUi(self, widget, name):
 		'''
 		Set the stacked widgets index to the submenu associated with the given widget.
-		Moves the new ui to line up with the previous ui's children.
-		Re-constructs the relevant buttons from the previous ui for the new ui, and positions them.
-		Initializes the new buttons to receive events through the childEvents filter.
+		Positions the new ui to line up with the previous ui's button that called the new ui.
 
 		args:
 			widget (QWidget) = the widget that called this method.
@@ -96,43 +90,84 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		p1 = widget.mapToGlobal(widget.rect().center()) #widget position before submenu change.
 
-		try: #open a submenu on mouse enter (if it exists).
+		try: #set the ui to the submenu (if it exists).
+			self.initParentUi(name) #initialize the parent ui if not done so already.
 			self.setUi(name) #switch the stacked widget to the given submenu.
 		except ValueError: #if no submenu exists: ignore and return.
 			return None
 
 		w = getattr(self.currentWidget(), widget.objectName()) #get the widget of the same name in the new ui.
-		#maintain the correct contents of the widgetPath and drawPath lists by removing elements when moving back up levels in the ui.
-		if len(self.sb.previousName(as_list=1, allowDuplicates=1))>2:
-			if name in self.sb.previousName(as_list=1, allowDuplicates=1)[:-1]: #if index is that of the previous ui, remove the information associated with that ui from the list.
-				widgets = [i[2] for i in self.widgetPath] #get the names associated with the widgets in widgetPath. ie. 'edit_submenu'
-				if name in widgets:
-					i = widgets[::-1].index(name) #reverse the list and get the index of the last occurrence of name.
-					del self.drawPath[-i-1:]
-					del self.widgetPath[-2:]
 
-		self.widgetPath.append([widget, p1, name]) #add the widget (and its position) from the old ui to the widgetPath list so that it can be re-created in the new ui (in the same position).
+		#remove entrys from widget and draw paths when moving back down levels in the ui.
+		if len(self.sb.previousName(as_list=1))>2:
+			if name in self.sb.previousName(as_list=1): #if name is that of a previous ui:
+				print ('removeFromPath:', name)
+				self.removeFromPath(name)
+
+		self.widgetPath.append([widget, p1, name]) #add the widget (<widget>, position, 'ui name') from the old ui to the widgetPath list so that it can be re-created in the new ui (in the same position).
 		self.drawPath.append(QtGui.QCursor.pos()) #add the global cursor position to the drawPath list so that paint events can draw the path tangents.
+		print ('widgetPath:', [i[2] for i in self.widgetPath])
 
 		p2 = w.mapToGlobal(w.rect().center()) #widget position after submenu change.
 		currentPos = self.mapToGlobal(self.pos())
 		self.move(self.mapFromGlobal(currentPos +(p1 - p2))) #currentPos + difference
 
+		if name not in self.sb.previousName(as_list=1): #if the submenu ui called for the first time:
+			print ('cloneWidgets:', name)
+			self.cloneWidgets(name) #re-construct any widgets from the previous ui that fall along the plotted path.
 
-		#recreate any relevant buttons from the previous ui on first show.
-		if name not in self.sb.previousName(as_list=1, allowDuplicates=1)[:-1]: #if submenu ui called for the first time, construct widgets from the previous ui that fall along the plotted path.
-			w0 = QPushButton_(parent=self.sb.getUi(name), setObjectName='return_', resize=QtCore.QSize(45, 45), globalPos=self.drawPath[0]) #create an invisible return button at the start point.
-			self.childEvents.addWidgets(name, w0) #initialize the widget to set things like the event filter and styleSheet.
 
-			if self.sb.getUiLevel(self.sb.previousName())==2: #if submenu: recreate widget/s from the previous ui that are in the current path.
-				for i in range(2, len(self.widgetPath)+1): #index starting at 2:
-					prevWidget = self.widgetPath[-i][0] #give index neg value.
-					w1 = QPushButton_(parent=self.sb.getUi(name), copy=prevWidget, globalPos=self.widgetPath[-i][1], setVisible=True)
-					self.childEvents.addWidgets(name, w1) #initialize the widget to set things like the event filter and styleSheet.
-					# QtWidgets.QApplication.sendEvent(w1, self.childEvents.enterEvent_)
-					self.childEvents._mouseOver.append(w1)
-					w1.grabMouse() #set widget to receive mouse events.
-					self.childEvents._mouseGrabber = w1
+	def initParentUi(self, name):
+		'''
+		Sets the parent ui of a submenu, if it has not been set before.
+		Setting the parent ui first constructs dependancies needed for the submenu.
+
+		args:
+			name (str) = name of the child ui. ie. 'polygons_component_submenu'
+
+		returns:
+			(obj) the parent ui.
+		'''
+		parentUi = self.sb.getUi(name, level=3) #get the parent ui.
+		parentUiName = self.sb.getUiName(parentUi, level=3) #get the parent ui name.
+		if not parentUiName in self.sb.previousName(as_list=1):
+			return self.setUi(parentUiName)
+
+
+	def removeFromPath(self, name):
+		'''
+		Remove the last entry from the widget and draw paths for the given ui name.
+
+		args:
+			name (str) = name of ui to remove entry for.
+		'''
+		names = [i[2] for i in self.widgetPath] #get the ui names in widgetPath. ie. 'edit_submenu'
+		if name in names:
+			i = names[::-1].index(name) #reverse the list and get the index of the last occurrence of name.
+			del self.drawPath[-i-1:]
+			del self.widgetPath[-2:]
+
+
+	def cloneWidgets(self, name):
+		'''
+		Re-constructs the relevant buttons from the previous ui for the new ui, and positions them.
+		Initializes the new buttons by adding them to the switchboard dict, setting connections, event filters, and stylesheets.
+		The previous widget information is derived from the widget and draw paths.
+
+		args:
+			name (str) = name of ui to duplicate the widgets to.
+		'''
+		w0 = QPushButton_(parent=self.sb.getUi(name), setObjectName='return_', resize=QtCore.QSize(45, 45), globalPos=self.drawPath[0]) #create an invisible return button at the start point.
+		self.childEvents.addWidgets(name, w0) #initialize the widget to set things like the event filter and styleSheet.
+
+		if self.sb.getUiLevel(self.sb.previousName(omitLevel=3))==2: #if submenu: recreate widget/s from the previous ui that are in the current path.
+			for i in range(2, len(self.widgetPath)+1): #for index in widgetPath starting at 2:
+				prevWidget = self.widgetPath[-i][0] #assign the index a neg value to count from the back of the list (starting at -2).
+				w1 = QPushButton_(parent=self.sb.getUi(name), copy=prevWidget, globalPos=self.widgetPath[-i][1], setVisible=True)
+				self.childEvents.addWidgets(name, w1) #initialize the widget to set things like the event filter and styleSheet.
+				self.childEvents._mouseOver.append(w1)
+				w1.grabMouse() #set widget to receive mouse events.
+				self.childEvents._mouseGrabber = w1
 
 
 	# ------------------------------------------------
@@ -286,7 +321,7 @@ class Tk(QtWidgets.QStackedWidget):
 			# print (self.sb.getUiName(), name, method)
 			method()
 		else:
-			print(" Warning: No recent commands in history. ")
+			print('Warning: No recent commands in history.')
 
 
 
@@ -301,7 +336,7 @@ class Tk(QtWidgets.QStackedWidget):
 			cam = self.sb.prevCamera(allowCurrent=True, as_list=1)[-2]
 			self.sb.prevCamera(allowCurrent=True, as_list=1).append(cam) #store the camera view
 		else:
-			print(" Warning: No recent camera views in history. ")
+			print('Warning: No recent camera views in history.')
 
 
 
@@ -309,12 +344,12 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		Open the last used level 3 menu.
 		'''
-		previousName = self.sb.previousName(allowLevel1=False, allowLevel2=False)
+		previousName = self.sb.previousName(omitLevel=[0,1,2])
 		if previousName:
 			self.setUi(previousName)
 			self.move(self.drawPath[0] - self.rect().center())
 		else:
-			print(" Warning: No recent menus in history. ")
+			print('Warning: No recent menus in history.')
 
 
 
@@ -343,13 +378,27 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # Notes
 # -----------------------------------------------
 
-		# if any([self.sb.name=='main', self.sb.name=='cameras', self.sb.name=='editors']):
-		# 	drag = QtGui.QDrag(self)
-		# 	drag.setMimeData(QtCore.QMimeData())
-		# 	# drag.setHotSpot(event.pos())
-		# 	# drag.setDragCursor(QtGui.QCursor(QtCore.Qt.CrossCursor).pixmap(), QtCore.Qt.MoveAction) #QtCore.Qt.CursorShape(2) #QtCore.Qt.DropAction
-		# 	drag.start(QtCore.Qt.MoveAction) #drag.exec_(QtCore.Qt.MoveAction)
-		# 	print(drag.target() #the widget where the drag object was dropped.)
+
+
+
+
+# Deprecated ----------------------------------------------------------------
+
+# self.sb.setUiSize(name) #Set the size info for each ui (allows for resizing a stacked widget where otherwise resizing is constrained by the largest widget in the stack)
+	# if self.sb.getUiLevel(name)==2: #initialize the parent ui
+	# 	parentUi = self.sb.getUi(name, level=3) #get the parent ui.
+	# 	parentUiName = self.sb.getUiName(parentUi, level=3) #get the parent ui name.
+		# if not parentUiName in self.sb.previousName(as_list=1):
+			# self.addWidget(parentUi) #add the ui to the stackedLayout.
+			# self.childEvents.initWidgets(parentUiName)
+
+# if any([self.sb.name=='main', self.sb.name=='cameras', self.sb.name=='editors']):
+# 	drag = QtGui.QDrag(self)
+# 	drag.setMimeData(QtCore.QMimeData())
+# 	# drag.setHotSpot(event.pos())
+# 	# drag.setDragCursor(QtGui.QCursor(QtCore.Qt.CrossCursor).pixmap(), QtCore.Qt.MoveAction) #QtCore.Qt.CursorShape(2) #QtCore.Qt.DropAction
+# 	drag.start(QtCore.Qt.MoveAction) #drag.exec_(QtCore.Qt.MoveAction)
+# 	print(drag.target() #the widget where the drag object was dropped.)
 
 # @property
 # 	def sb(self):

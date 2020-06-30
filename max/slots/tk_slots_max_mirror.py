@@ -30,12 +30,12 @@ class Mirror(Init):
 		list_ = ['']
 		items = cmb.addItems_(list_, '')
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==items.index(''):
-				pass
-			cmb.setCurrentIndex(0)
+		# if not index:
+		# 	index = cmb.currentIndex()
+		# if index!=0:
+		# 	if index==items.index(''):
+		# 		pass
+		# 	cmb.setCurrentIndex(0)
 
 
 	def chk000_3(self):

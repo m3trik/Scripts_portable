@@ -87,7 +87,7 @@ class Init(Slots):
 			# selectedUVs = ; infoDict.update({"Selected UV's: ":selectedUVs}) #selected uv's
 
 		prevCommand = self.sb.prevCommand(docString=True); infoDict.update({"Prev Command: ":prevCommand})  #get button text from last used command
-		# prevUi = self.sb.previousName(allowLevel1=False, allowLevel2=False); infoDict.update({"Prev UI: ":prevUi.replace('_', '').title()})  #get the last level 3 ui name string.
+		# prevUi = self.sb.previousName(omitLevel=[0,1,2]); infoDict.update({"Prev UI: ":prevUi.replace('_', '').title()})  #get the last level 3 ui name string.
 		# prevCamera = self.sb.prevCamera(docString=True); infoDict.update({"Prev Camera: ":prevCamera})  #get the previously used camera.
 
 		return infoDict

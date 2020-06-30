@@ -24,7 +24,6 @@ class Tk_max(Tk):
 				print('Error: "MaxWindow" object not found by MaxPlus.GetQMaxMainWindow()')
 
 		super(Tk_max, self).__init__(parent)
-		self.setUi()
 
 
 	def showEvent(self, event):

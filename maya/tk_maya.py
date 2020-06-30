@@ -25,7 +25,6 @@ class Tk_maya(Tk):
 				print('Error: "MayaWindow" object not found in app.topLevelWidgets()')
 
 		super(Tk_maya, self).__init__(parent)
-		self.setUi()
 
 
 	def showEvent(self, event):

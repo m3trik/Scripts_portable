@@ -168,25 +168,25 @@ class Slots(QtCore.QObject):
 		[setattr(obj, attr, value) for attr, value in attributes.iteritems() if attr and value]
 
 
-	def callMethod(self, name, method, *args, **kwargs):
-		'''
-		Call a method from a class outside of the current ui.
-		Momentarily switches to the ui of the given method for the call, before returning to the previous ui.
+	# def callMethod(self, name, method, *args, **kwargs):
+	# 	'''
+	# 	Call a method from a class outside of the current ui.
+	# 	Momentarily switches to the ui of the given method for the call, before returning to the previous ui.
 
-		args:
-			name (str) = ui name.
-			method (str) = method name.
-		'''
-		ui = self.sb.getUi()
-		temp = self.tk.setUi(name)
-		method = self.sb.getMethod(name, method)
+	# 	args:
+	# 		name (str) = ui name.
+	# 		method (str) = method name.
+	# 	'''
+	# 	ui = self.sb.getUi()
+	# 	temp = self.tk.setUi(name)
+	# 	method = self.sb.getMethod(name, method)
 
-		try:
-			method(*args, **kwargs)
-		except Exception as error:
-			print(error)
+	# 	try:
+	# 		method(*args, **kwargs)
+	# 	except Exception as error:
+	# 		print(error)
 
-		self.tk.setUi(ui)
+	# 	self.tk.setUi(ui)
 
 
 	def connect_(self, widgets, signals, slots, class_=None):
@@ -208,9 +208,9 @@ class Slots(QtCore.QObject):
 				widgets = self.getObjects(self.sb.getUi(), widgets, showError_=True)
 
 		#if the variables are not of a list type; convert them.
-		widgets = self.sb.list_(widgets)
-		signals = self.sb.list_(signals)
-		slots = self.sb.list_(slots)
+		widgets = self.sb.list(widgets)
+		signals = self.sb.list(signals)
+		slots = self.sb.list(slots)
 
 		for widget in widgets:
 			for signal in signals:

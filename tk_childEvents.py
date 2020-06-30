@@ -11,17 +11,15 @@ from tk_styleSheet import StyleSheet
 
 
 
-
-
 class EventFactoryFilter(QtCore.QObject):
 	'''
 	Event filter for dynamic ui objects.
 
 	args:
-		parent=<parent>
+		parent (obj) = parent widget.
 	'''
-	_mouseOver = [] #list of widgets currently under the mouse cursor.
-	_mouseGrabber = None
+	_mouseOver=[] #list of widgets currently under the mouse cursor.
+	_mouseGrabber=None
 	_mouseHover = QtCore.Signal(bool)
 	_mousePressPos = QtCore.QPoint()
 
@@ -29,15 +27,14 @@ class EventFactoryFilter(QtCore.QObject):
 	leaveEvent_ = QtCore.QEvent(QtCore.QEvent.Leave)
 
 
-	def __init__(self, parent=None):
+	def __init__(self, parent):
 		super(EventFactoryFilter, self).__init__(parent)
 
-		if parent:
-			self.parent = parent
-			self.parent.sb.setClassInstance(self)
+		self.parent = parent
+		self.parent.sb.setClassInstance(self)
 
 
-	def initWidget(self, name, widgets=None):
+	def initWidgets(self, name, widgets=None):
 		'''
 		Set Initial widget states.
 
@@ -47,7 +44,7 @@ class EventFactoryFilter(QtCore.QObject):
 		'''
 		if widgets is None:
 			widgets = self.parent.sb.getWidget(name=name) #get all widgets for the given ui name.
-		widgets = self.parent.sb.list_(widgets) #if 'widgets' isn't a list, convert it to one.
+		widgets = self.parent.sb.list(widgets) #if 'widgets' isn't a list, convert it to one.
 
 		for widget in widgets: #get all widgets for the given ui name.
 			widgetName = self.parent.sb.getWidgetName(widget, name)
@@ -82,22 +79,23 @@ class EventFactoryFilter(QtCore.QObject):
 						classMethod()
 
 			#add any of the widget's children not already stored in widgets (now that menus and such have been initialized).
-			[self.addWidgets(name, w) for w in widget.children() if w not in widgets]
+			if not widgetType=='QTreeWidget_ExpandableList':
+				[self.addWidgets(name, w) for w in widget.children() if w not in widgets]
 
 
 	def addWidgets(self, name, widgets):
 		'''
-		Store any additional widgets in the switchboard dict for referencing.
-		Set Event filters, stylesheets, and connections for the widgets.
+		Convenience method for adding additional widgets to the switchboard dict,
+		and initializing them by setting connections, event filters, and stylesheets.
 
 		args:
 			name (str) = name of the parent ui.
 			widgets (obj)(list) = widget or list of widgets.
 		'''
-		widgets = self.parent.sb.list_(widgets) #if 'widgets' isn't a list, convert it to one.
+		widgets = self.parent.sb.list(widgets) #if 'widgets' isn't a list, convert it to one.
 		self.parent.sb.addWidgets(name, widgets)
-		self.parent.sb.addSignals(name, widgets)
-		self.initWidget(name, widgets) #initialize the widget to set things like the event filter and styleSheet.
+		self.parent.sb.connectSlots(name, widgets)
+		self.initWidgets(name, widgets) #initialize the widget to set things like the event filter and styleSheet.
 
 
 	def syncWidgets(self, from_widget, to_widget):
@@ -124,7 +122,7 @@ class EventFactoryFilter(QtCore.QObject):
 			widgets (obj)(list) = widget or list of widgets.
 		'''
 		uiLevel = self.parent.sb.getUiLevel(name)
-		for widget in self.parent.sb.list_(widgets):
+		for widget in self.parent.sb.list(widgets):
 			derivedType = self.parent.sb.getDerivedType(widget, name) #get the derived class type as string.
 			if hasattr(widget, 'styleSheet'):
 				s = getattr(StyleSheet, derivedType, '')
@@ -431,8 +429,8 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 
 
 
-# print(name, self.parent.sb.previousName(as_list=1)[-3])
-					# if name==self.parent.sb.previousName(as_list=1, allowDuplicates=1)[-3]: #if index is changed to the previous ui, remove the last widget.
+# print(name, self.parent.sb.previousName(omitLevel=0, as_list=1)[-3])
+					# if name==self.parent.sb.previousName(omitLevel=0, as_list=1, allowDuplicates=1)[-3]: #if index is changed to the previous ui, remove the last widget.
 						# del self.prevWidget[-1:]
 
 

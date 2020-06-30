@@ -51,7 +51,7 @@ class Switchboard(QtCore.QObject):
 		'gcProtect' : [items protected from garbage collection]
 	}
 
-	The widgets is built as needed for each class when addSignals (or any other dependant method) is called.
+	The widgets is built as needed for each class when connectSlots (or any other dependant method) is called.
 	'''
 
 	def __init__(self, parent):
@@ -78,13 +78,22 @@ class Switchboard(QtCore.QObject):
 		uiPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ui') #get absolute path from dir of this module + relative path to directory
 
 		# initialize _sbDict by setting keys for the ui files.
-		self._sbDict={}
 		for dirpath, dirnames, filenames in os.walk(uiPath):
 			for filename in (f for f in filenames if f.endswith(".ui")):
 				path = os.path.join(dirpath, filename)
 				name = filename.replace('.ui','')
 				d = dirpath[dirpath.rfind('ui\\'):] #slice the absolute path from 'ui\' ie. ui\base_menus_1\sub_menus_2\main_menus_3 from fullpath\ui\base_menus_1\sub_menus_2\main_menus_3
-				self._sbDict[filename.replace('.ui','')] = {'ui':uiLoader.load(path), 'uiLevel':len(d.split('\\'))-1} #ie. {'polygons':{'ui':<ui obj>, uiLevel:<int>}} (the ui level is it's hierarchy)
+				self.sbDict[filename.replace('.ui','')] = {'ui':uiLoader.load(path), 'uiLevel':len(d.split('\\'))-1} #ie. {'polygons':{'ui':<ui obj>, uiLevel:<int>}} (the ui level is it's hierarchy)
+
+	@property
+	def sbDict(self):
+		'''
+		Get the full switchboard dict or one of it's values from a given key.
+		'''
+		if not hasattr(self, '_sbDict'):
+			self._sbDict={}
+
+		return self._sbDict
 
 
 	def addWidgetsAndSetSignals(self, name):
@@ -172,14 +181,14 @@ class Switchboard(QtCore.QObject):
 						'prefix':prefix,
 						'docString':docString}})
 
-		# print(self._sbDict[name]['widgets'][widget])
-		return self._sbDict[name]['widgets'][widget] #return the stored widget.
+		# print(self.sbDict[name]['widgets'][widget])
+		return self.sbDict[name]['widgets'][widget] #return the stored widget.
 
 
 	def widgets(self, name):
 		'''
 		Dictionary holding widget information.
-		Used primarily by 'addWidgetsAndSetSignals' method to construct signal and slot connections that can later be connected and disconnected by the add/removeSignals methods.
+		Used primarily by 'addWidgetsAndSetSignals' method to construct signal and slot connections that can later be connected and disconnected by the connect/disconnectSlots methods.
 
 		args:
 			name (str) = name of ui/class. ie. 'polygons'
@@ -192,11 +201,11 @@ class Switchboard(QtCore.QObject):
 		'docString': string description of command from method docString.  ie. 'Multi-Cut Tool'}
 		#ie. {'b001':{'widget':b001, 'signalInstance':b001.onPressed, 'method':main.b001, 'docString':'Multi-Cut Tool'}},
 		'''
-		if not 'widgets' in self._sbDict[name]:
-			self._sbDict[name]['widgets'] = {}
+		if not 'widgets' in self.sbDict[name]:
+			self.sbDict[name]['widgets'] = {}
 			self.addWidgetsAndSetSignals(name) #construct the signals and slots for the ui
 
-		return self._sbDict[name]['widgets']
+		return self.sbDict[name]['widgets']
 
 
 	def removeWidgets(self, widgets, name=None):
@@ -210,9 +219,9 @@ class Switchboard(QtCore.QObject):
 		if not name:
 			name = self.getUiName()
 
-		widgets = self.list_(widgets) #if 'widgets' isn't a list, convert it to one.
+		widgets = self.list(widgets) #if 'widgets' isn't a list, convert it to one.
 		for widget in widgets:
-			w = self._sbDict[name]['widgets'].pop(widget, None)
+			w = self.sbDict[name]['widgets'].pop(widget, None)
 			self.gcProtect(w)
 
 			try: #remove the widget attribute from the ui if it exists.
@@ -284,28 +293,28 @@ class Switchboard(QtCore.QObject):
 			if objectName: (obj) widget object with attached signal (ie. b001.onPressed) of the given widget name.
 			else: (list) all of the signals associated with the given name as a list.
 		'''
-		if not 'widgets' in self._sbDict[name]:
+		if not 'widgets' in self.sbDict[name]:
 			self.widgets(name) #construct the signals and slots for the ui
 
 		if widget:
-			if not widget in self._sbDict[name]['widgets']:
+			if not widget in self.sbDict[name]['widgets']:
 				self.addWidget(name, widget)
-			return self._sbDict[name]['widgets'][widget]['signalInstance']
+			return self.sbDict[name]['widgets'][widget]['signalInstance']
 		else:
-			return [w['signalInstance'] for w in self._sbDict[name]['widgets'].values()]
+			return [w['signalInstance'] for w in self.sbDict[name]['widgets'].values()]
 
 
-	def setSignals(self, name):
+	def setConnections(self, name):
 		'''
-		Replace any signals of a previous ui with the set for the ui of the given name.
+		Replace any signal connections of a previous ui with the set for the ui of the given name.
 		'''
-		previousName = self.previousName(allowLevel0=True, allowDuplicates=1)
+		previousName = self.previousName(allowDuplicates=True)
 		if previousName:
-			self.removeSignals(previousName) #remove signals from the previous ui.
-		self.addSignals(name)
+			self.disconnectSlots(previousName) #remove signals from the previous ui.
+		self.connectSlots(name)
 
 
-	def addSignals(self, name, widgets=None):
+	def connectSlots(self, name, widgets=None):
 		'''
 		Connects signals/slots from the widgets for the given ui.
 		Works with both single slots or multiple slots given as a list.
@@ -317,12 +326,12 @@ class Switchboard(QtCore.QObject):
 		if widgets is None:
 			widgets = self.widgets(name)
 		else:
-			widgets = self.list_(widgets) #convert 'widgets' to a list if it is not one already.
+			widgets = self.list(widgets) #convert 'widgets' to a list if it is not one already.
 
 		for widget in widgets:
 			signal = self.getSignal(name, widget)
 			slot = self.getMethod(name, widget)
-			# print('addSignals: ', name, widget.objectName(), signal, slot)
+			# print('connectSlots: ', name, widget.objectName(), signal, slot)
 			if slot and signal:
 				try:
 					if isinstance(slot, (list, set, tuple)):
@@ -331,10 +340,10 @@ class Switchboard(QtCore.QObject):
 						signal.connect(slot) #connect single slot (main and cameras ui)
 
 				except Exception as error:
-					print('Error: {0} {1} addSignals: {2} {3}'.format(name, widget.objectName(), signal, slot), '\n', error)
+					print('Error: {0} {1} connectSlots: {2} {3}'.format(name, widget.objectName(), signal, slot), '\n', error)
 
 
-	def removeSignals(self, name, widgets=None):
+	def disconnectSlots(self, name, widgets=None):
 		'''
 		Disconnects signals/slots from the widgets for the given ui.
 		Works with both single slots or multiple slots given as a list.
@@ -351,7 +360,7 @@ class Switchboard(QtCore.QObject):
 		for widget in widgets:
 			signal = self.getSignal(name, widget)
 			slot = self.getMethod(name, widget)
-			# print('removeSignals: ', name, widget.objectName(), signal, slot)
+			# print('disconnectSlots: ', name, widget.objectName(), signal, slot)
 			if slot and signal:
 				try:
 					if isinstance(slot, (list, set, tuple)):
@@ -360,10 +369,10 @@ class Switchboard(QtCore.QObject):
 						signal.disconnect(slot) #disconnect single slot (main and cameras ui)
 
 				except Exception as error:
-					print('Error: {0} {1} removeSignals: {2} {3} #'.format(name, widget.objectName(), signal, slot), '\n', error)
+					print('Error: {0} {1} disconnectSlots: {2} {3} #'.format(name, widget.objectName(), signal, slot), '\n', error)
 
 
-	def uiList(self, name=None, ui=None):
+	def uiList(self, name=False, ui=False):
 		'''
 		Get a list of either all ui names, all ui object's, or both as key/value pairs in a dict.
 
@@ -376,16 +385,15 @@ class Switchboard(QtCore.QObject):
 			else: dict of ui names strings as keys, and corresponding ui objects as values. ie. {'ui name':<ui object>}
 			'''
 		if name:
-			return [k for k,v in self._sbDict.items() if type(v)==dict and 'ui' in v]
+			return [k for k,v in self.sbDict.items() if type(v)==dict and 'ui' in v]
 		elif ui:
-			return [v['ui'] for k,v in self._sbDict.items() if type(v)==dict and 'ui' in v]
+			return [v['ui'] for k,v in self.sbDict.items() if type(v)==dict and 'ui' in v]
 		else:
-			return {k:v['ui'] for k,v in self._sbDict.items() if type(v)==dict and 'ui' in v}
+			return {k:v['ui'] for k,v in self.sbDict.items() if type(v)==dict and 'ui' in v}
 
-
+	#Property
 	def getUi(self, name=None, setAsCurrent=False, level=None):
 		'''
-		Property.
 		Get the dynamic ui using its string name, or if no argument is given, return the current ui.
 
 		args:
@@ -406,45 +414,45 @@ class Switchboard(QtCore.QObject):
 				name = name+'_submenu'
 
 		if level==3: #main menu
-			name = name.split('_')[0] #polygons from polygons_component_submenu
+			name = name.split('_')[0] #'polygons' from 'polygons_component_submenu'
 
 		if setAsCurrent:
 			self.name = name #set the property for the current ui name.
+			self.setConnections(name) #connect signal/slot connections for the current ui, while disconnecting any previous.
 
 		try:
-			return self._sbDict[name]['ui'] #self.uiList(ui=True)[self.getUiIndex(name)]
-		except (ValueError, KeyError): #if the ui key doesn't exist, try lowercasing the first letter in name.
+			return self.sbDict[name]['ui']
+		except (ValueError, KeyError):
 			try:
-				name = name[0].lower()+name[1:]
-				return self._sbDict[name]['ui'] #self.uiList(ui=True)[self.getUiIndex(name)]
-			except (ValueError, KeyError): #if the ui key doesn't exist; return None.
+				name = name[0].lower()+name[1:] #if the ui key doesn't exist, try lowercasing the first letter in name.
+				return self.sbDict[name]['ui']
+			except (ValueError, KeyError):
 				return None
 
-
+	#Property
 	def setUiName(self, index):
 		'''
-		The 'name' list is used for various things such as; maintaining a history of ui's that have been called previously.
+		The 'name' list is used for various things such as; maintaining a history of ui's that have been called.
 
 		args:
-			index (str) = name
-				*or (int) - index of ui name
+			index (int)(str) = index or name of the ui.
+
 		returns:
 			(str) corresponding ui name.
 		'''
-		if not 'name' in self._sbDict:
-			self._sbDict['name']=[]
+		if not 'name' in self.sbDict:
+			self.sbDict['name']=[]
 
 		if not type(index)==int:
 			index = self.getUiIndex(index) #get index using name
 
-		self._sbDict['name'].append(self.uiList(name=True)[index])
+		self.sbDict['name'].append(self.uiList(name=True)[index])
 
-		return self._sbDict['name'][-1]
+		return self.sbDict['name'][-1]
 
-
-	def getUiName(self, ui=None, camelCase=False, pascalCase=False):
+	#Property
+	def getUiName(self, ui=None, camelCase=False, pascalCase=False, level=None):
 		'''
-		Property.
 		Get the ui name as a string.
 		If no argument is given, the name for the current ui will be returned.
 
@@ -452,20 +460,27 @@ class Switchboard(QtCore.QObject):
 			ui (obj) = Use ui object to get its corresponding name. (the default behavior is to return the current ui name)
 			camelCase (bool) = Return name with first letter lowercase. (default: False)
 			pascalCase (bool) = Return name with first letter capitalized. (default: False)
+			level (int) = Get the ui of the given level. (2:submenu, 3:main_menu)
 		returns:
 			(str) - ui name.
 		'''
-		if not 'name' in self._sbDict:
-			self._sbDict['name']=[]
+		if not 'name' in self.sbDict:
+			self.sbDict['name']=[]
 
 		if ui is None:
 			try:
-				name = self._sbDict['name'][-1]
+				name = self.sbDict['name'][-1]
 			except IndexError: #if index out of range (no value exists): return None
 				return None
-
 		else: #get the ui name string key from the ui value in uiList.
 			name = next(k for k, v in self.uiList().items() if v==ui)
+
+		if level==2: #submenu
+			if 'submenu' not in name:
+				name = name+'_submenu'
+
+		if level==3: #main menu
+			name = name.split('_')[0] #polygons from polygons_component_submenu
 
 		if pascalCase:
 			name = name[:1].capitalize()+name[1:] #capitalize the first letter
@@ -474,10 +489,9 @@ class Switchboard(QtCore.QObject):
 
 		return name
 
-
+	#Property
 	def getUiIndex(self, name=False):
 		'''
-		Property.
 		Get the index of the given ui name in the uiList.
 
 		args:
@@ -512,13 +526,12 @@ class Switchboard(QtCore.QObject):
 			ui = self.getUi(name)
 			size = [ui.frameGeometry().width(), ui.frameGeometry().height()]
 
-		self._sbDict[name]['size'] = size
-		return self._sbDict[name]['size']
+		self.sbDict[name]['size'] = size
+		return self.sbDict[name]['size']
 
-
+	#Property
 	def setUiSizeX(self, width, name=None):
 		'''
-		Property.
 		Set the X (width) value for the current ui.
 
 		args:
@@ -528,10 +541,9 @@ class Switchboard(QtCore.QObject):
 		height = self.getUiSize(name=name, height=True) #get the hight value.
 		self.setUiSize(name=name, width=width, height=height)
 
-
+	#Property
 	def setUiSizeY(self, height, name=None):
 		'''
-		Property.
 		Set the Y (height) value for the current ui.
 
 		args:
@@ -541,10 +553,9 @@ class Switchboard(QtCore.QObject):
 		width = self.getUiSize(name=name, width=True) #get the width value.
 		self.setUiSize(name=name, height=height, width=width)
 
-
+	#Property
 	def getUiSize(self, name=None, width=None, percentWidth=None, height=None, percentHeight=None): #get current ui size info.
 		'''
-		Property.
 		Get the size info for each ui (allows for resizing a stacked widget where ordinarily resizing is constrained by the largest widget in the stack)
 
 		args:
@@ -563,24 +574,23 @@ class Switchboard(QtCore.QObject):
 		if not name:
 			name = self.getUiName()
 
-		if not 'size' in self._sbDict[name]:
+		if not 'size' in self.sbDict[name]:
 			self.setUiSize(name)
 
 		if width:
-			return self._sbDict[name]['size'][0]
+			return self.sbDict[name]['size'][0]
 		elif height:
-			return self._sbDict[name]['size'][1]
+			return self.sbDict[name]['size'][1]
 		elif percentWidth:
-			return self._sbDict[name]['size'][0] *percentWidth /100
+			return self.sbDict[name]['size'][0] *percentWidth /100
 		elif percentHeight:
-			return self._sbDict[name]['size'][1] *percentHeight /100
+			return self.sbDict[name]['size'][1] *percentHeight /100
 		else:
-			return self._sbDict[name]['size']
+			return self.sbDict[name]['size']
 
-
+	#Property
 	def getUiSizeX(self, name=None):
 		'''
-		Property.
 		Get the X (width) value for the current ui.
 
 		args:
@@ -590,10 +600,9 @@ class Switchboard(QtCore.QObject):
 		'''
 		return self.getUiSize(name=name, width=True)
 
-
+	#Property
 	def getUiSizeY(self, name=None):
 		'''
-		Property.
 		Get the Y (height) value for the current ui.
 
 		args:
@@ -613,7 +622,7 @@ class Switchboard(QtCore.QObject):
 		returns:
 			 (str) ui name. ie. 'polygons' from <somewidget>
 		'''
-		return next((k for k,v in self._sbDict.items() if type(v) is dict and 'widgets' in v and widget in v['widgets']), None)
+		return next((k for k,v in self.sbDict.items() if type(v) is dict and 'widgets' in v and widget in v['widgets']), None)
 
 
 	def getNameFromMethod(self, method):
@@ -625,7 +634,7 @@ class Switchboard(QtCore.QObject):
 		returns:
 			 (str) ui name. ie. 'polygons' from <somewidget>
 		'''
-		for name, value in self._sbDict.items():
+		for name, value in self.sbDict.items():
 			if type(value)==dict:
 				try:
 					if next((v for v in value['widgets'].values() if v['method'] is method), None):
@@ -633,10 +642,9 @@ class Switchboard(QtCore.QObject):
 				except KeyError:
 					pass
 
-
+	#Property
 	def setMainAppWindow(self, app):
 		'''
-		Property.
 		Set parent application.
 
 		args:
@@ -644,14 +652,13 @@ class Switchboard(QtCore.QObject):
 		returns:
 			string name of app
 		'''
-		self._sbDict['mainAppWindow'] = app
+		self.sbDict['mainAppWindow'] = app
 
-		return self._sbDict['mainAppWindow']
+		return self.sbDict['mainAppWindow']
 
-
+	#Property
 	def getMainAppWindow(self, objectName=False):
 		'''
-		Property.
 		Get parent application if any.
 
 		args:
@@ -659,10 +666,10 @@ class Switchboard(QtCore.QObject):
 		returns:
 			app object or string name
 		'''
-		if not 'mainAppWindow' in self._sbDict:
-			self._sbDict['mainAppWindow'] = None
+		if not 'mainAppWindow' in self.sbDict:
+			self.sbDict['mainAppWindow'] = None
 		
-		app = self._sbDict['mainAppWindow']
+		app = self.sbDict['mainAppWindow']
 
 		if objectName:
 			if not app: #if app is None, return an empty string value.
@@ -673,10 +680,9 @@ class Switchboard(QtCore.QObject):
 		else:
 			return app
 
-
+	#Property
 	def setClassInstance(self, class_, name=None, **kwargs):
 		'''
-		Property.
 		Case insensitive. Class string keys are stored lowercase regardless of how they are recieved.
 
 		args:
@@ -694,23 +700,22 @@ class Switchboard(QtCore.QObject):
 
 		name = name[0].lower()+name[1:] #lowercase the first letter.
 
-		if not name in self._sbDict:
-			self._sbDict[name] = {}
+		if not name in self.sbDict:
+			self.sbDict[name] = {}
 
 		if callable(class_):
-			self._sbDict[name]['class'] = class_(**kwargs)
+			self.sbDict[name]['class'] = class_(**kwargs)
 		else:
-			self._sbDict[name]['class'] = class_
+			self.sbDict[name]['class'] = class_
 
 
-		return self._sbDict[name]['class']
+		return self.sbDict[name]['class']
 
-
+	#Property
 	def getClassInstance(self, class_, **kwargs):
 		'''
-		Property.
 		Case insensitive. (Class string keys are lowercase and any given string will be converted automatically)
-		If class is not in self._sbDict, getClassInstance will attempt to use setClassInstance() to first store the class.
+		If class is not in self.sbDict, getClassInstance will attempt to use setClassInstance() to first store the class.
 
 		args:
 			class_ (str)(obj) = module name.class to import and store class.
@@ -728,19 +733,18 @@ class Switchboard(QtCore.QObject):
 		name = name[0].lower()+name[1:] #lowercase the first letter.
 
 		try:
-			if not 'class' in self._sbDict[name]:
+			if not 'class' in self.sbDict[name]:
 				return self.setClassInstance(class_, **kwargs) #construct the signals and slots for the ui
 
-			return self._sbDict[name]['class']
+			return self.sbDict[name]['class']
 
 		except KeyError as error:
 			print(error)
 			return None
 
-
+	#Property
 	def getWidget(self, objectName=None, name=None):
 		'''
-		Property.
 		Case insensitive. Get the widget object/s from the given ui and objectName.
 
 		args:
@@ -754,18 +758,17 @@ class Switchboard(QtCore.QObject):
 		if not name:
 			name = self.getUiName()
 
-		if not 'widgets' in self._sbDict[name]:
+		if not 'widgets' in self.sbDict[name]:
 			self.widgets(name) #construct the signals and slots for the ui
 
 		if objectName:
-			return next((w for w in self._sbDict[name]['widgets'].values() if w['widgetName']==objectName), None)
+			return next((w for w in self.sbDict[name]['widgets'].values() if w['widgetName']==objectName), None)
 		else:
-			return [w for w in self._sbDict[name]['widgets'].keys()]
+			return [w for w in self.sbDict[name]['widgets'].keys()]
 
-
+	#Property
 	def getWidgetName(self, widget=None, name=None):
 		'''
-		Property.
 		Get the widget's stored string objectName.
 
 		args:
@@ -781,18 +784,18 @@ class Switchboard(QtCore.QObject):
 		if not name:
 			name = self.getUiName()
 
-		if not 'widgets' in self._sbDict[name]:
+		if not 'widgets' in self.sbDict[name]:
 			self.widgets(name) #construct the signals and slots for the ui
 
 		if widget:
-			if not widget in self._sbDict[name]['widgets']:
+			if not widget in self.sbDict[name]['widgets']:
 				self.addWidget(name, widget)
-			return self._sbDict[name]['widgets'][widget]['widgetName']
+			return self.sbDict[name]['widgets'][widget]['widgetName']
 
 		if name and not widget: #return all objectNames from ui name.
-			return [w['widgetName'] for w in self._sbDict[name]['widgets'].values()]
+			return [w['widgetName'] for w in self.sbDict[name]['widgets'].values()]
 		else: #return all objectNames:
-			return [w['widgetName'] for k,w in self._sbDict.items() if k=='widgets']
+			return [w['widgetName'] for k,w in self.sbDict.items() if k=='widgets']
 
 
 	def getWidgetType(self, widget, name=None):
@@ -808,19 +811,19 @@ class Switchboard(QtCore.QObject):
 			'string' - the corresponding widget class name
 		'''
 		if isinstance(widget, (str, unicode)):
-			objectName = self._sbDict[name]['widgets'][widget] #use the stored objectName as a more reliable key.
+			objectName = self.sbDict[name]['widgets'][widget] #use the stored objectName as a more reliable key.
 			widget = self.getWidget(objectName, name) #use the objectName to get a string key for 'widget'
 
 		if not name:
 			name = self.getUiName()
 
-		if not 'widgets' in self._sbDict[name]:
+		if not 'widgets' in self.sbDict[name]:
 			self.widgets(name) #construct the signals and slots for the ui
 		# print(name, widget)
 		try:
-			if not widget in self._sbDict[name]['widgets']:
+			if not widget in self.sbDict[name]['widgets']:
 				self.addWidget(name, widget)
-			return self._sbDict[name]['widgets'][widget]['widgetType']
+			return self.sbDict[name]['widgets'][widget]['widgetType']
 
 		except KeyError:
 			return None
@@ -857,19 +860,19 @@ class Switchboard(QtCore.QObject):
 			(string) base class name. ie. 'QPushButton' from a custom widget with class name: 'QPushButton_'
 		'''
 		if isinstance(widget, (str, unicode)):
-			objectName = self._sbDict[name]['widgets'][widget] #use the stored objectName as a more reliable key.
+			objectName = self.sbDict[name]['widgets'][widget] #use the stored objectName as a more reliable key.
 			widget = self.getWidget(objectName, name) #use the objectName to get a string key for 'widget'
 
 		if not name:
 			name = self.getUiName()
 
-		if not 'widgets' in self._sbDict[name]:
+		if not 'widgets' in self.sbDict[name]:
 			self.widgets(name) #construct the signals and slots for the ui
 
 		try:
-			if not widget in self._sbDict[name]['widgets']:
+			if not widget in self.sbDict[name]['widgets']:
 				self.addWidget(name, widget)
-			return self._sbDict[name]['widgets'][widget]['derivedType']
+			return self.sbDict[name]['widgets'][widget]['derivedType']
 
 		except KeyError:
 			return None
@@ -889,27 +892,27 @@ class Switchboard(QtCore.QObject):
 
 		ex. sb.getMethod('polygons', <b022>)() #call method <b022> of the 'polygons' class
 		'''
-		if not 'widgets' in self._sbDict[name]:
+		if not 'widgets' in self.sbDict[name]:
 			self.widgets(name) #construct the signals and slots for the ui
 
 		if widget:
 			try:
 				if type(widget) is str:
-					return next(w['method'][0] for w in self._sbDict[name]['widgets'].values() if w['widgetName']==widget) #if there are event filters attached (as a list), just get the method (at index 0).
+					return next(w['method'][0] for w in self.sbDict[name]['widgets'].values() if w['widgetName']==widget) #if there are event filters attached (as a list), just get the method (at index 0).
 				
-				if not widget in self._sbDict[name]['widgets']:
+				if not widget in self.sbDict[name]['widgets']:
 					self.addWidget(name, widget)
-				return self._sbDict[name]['widgets'][widget]['method'][0] #if there are event filters attached (as a list), just get the method (at index 0).
+				return self.sbDict[name]['widgets'][widget]['method'][0] #if there are event filters attached (as a list), just get the method (at index 0).
 
 			except:
 				if type(widget) is str:
-					return next((w['method'] for w in self._sbDict[name]['widgets'].values() if w['widgetName']==widget), None)
+					return next((w['method'] for w in self.sbDict[name]['widgets'].values() if w['widgetName']==widget), None)
 				
-				if not widget in self._sbDict[name]['widgets']:
+				if not widget in self.sbDict[name]['widgets']:
 					self.addWidget(name, widget)
-				return self._sbDict[name]['widgets'][widget]['method']
+				return self.sbDict[name]['widgets'][widget]['method']
 		else:
-			return [w['method'] for w in self._sbDict[name]['widgets'].values()]
+			return [w['method'] for w in self.sbDict[name]['widgets'].values()]
 
 
 	def getDocString(self, name, widgetName, all_=False):
@@ -922,28 +925,25 @@ class Switchboard(QtCore.QObject):
 			if all_: the entire stored docString
 			else: edited docString; name of method
 		'''
-		if not 'widgets' in self._sbDict[name]:
+		if not 'widgets' in self.sbDict[name]:
 			self.widgets(name) #construct the signals and slots for the ui
 
-		docString = next(w['docString'] for w in self._sbDict[name]['widgets'].values() if w['widgetName']==widgetName)
+		docString = next(w['docString'] for w in self.sbDict[name]['widgets'].values() if w['widgetName']==widgetName)
 		if docString and not all_:
 			return docString.strip('\n\t') #return formatted docString
 		else:
 			return docString #return entire unformatted docString, or 'None' is docString==None.
 
-
-	def previousName(self, previousIndex=False, allowDuplicates=False, allowLevel0=False, allowLevel1=True, allowLevel2=True, allowCurrent=False, as_list=False):
+	#Property
+	def previousName(self, previousIndex=False, allowDuplicates=False, allowCurrent=False, omitLevel=[], as_list=False):
 		'''
-		Property.
 		Get the previously called ui name string, or a list of ui name strings ordered by use.
 		It does so by pulling from the 'name' list which keeps a list of the ui names as they are called. ie. ['previousName2', 'previousName1', 'currentName']
 
 		args:
 			previousIndex (bool) = Return the index of the last valid previously opened ui name.
 			allowDuplicates (bool) = Applicable when returning as_list. Allows for duplicate names in the returned list.
-			allowLevel0 (bool) = Allow instances of init menu in the results. Default is Off.
-			allowLevel1 (bool) = Allow instances of base level menus in the results. Default is On.
-			allowLevel2 (bool) = Allow instances of submenu's in the results. Default is On.
+			omitLevel (int)(list) = Remove instances of the given ui level(s) from the results. Default is [] which omits nothing.
 			allowCurrent (bool) = Allow the currentName. Default is off.
 			as_list (bool) = Returns the full list of previously called names. By default duplicates are removed.
 		returns:
@@ -951,24 +951,18 @@ class Switchboard(QtCore.QObject):
 			if previousIndex: int - index of previously opened ui
 			if as_list: returns [list of string names]
 		'''
-		if not 'name' in self._sbDict:
-			self._sbDict['name'] = []
+		if not 'name' in self.sbDict:
+			self.sbDict['name'] = []
 
-		self._sbDict['name'] = self._sbDict['name'][-200:] #keep original list length restricted to last 200 elements
+		self.sbDict['name'] = self.sbDict['name'][-200:] #keep original list length restricted to last 200 elements
 
-		list_ = self._sbDict['name'] #work on a copy of the list, keeping the original intact
+		list_ = self.sbDict['name'] #work on a copy of the list, keeping the original intact
 
 		if not allowCurrent:
 			list_ = list_[:-1] #remove the last index. (currentName)
 
-		if not allowLevel0:
-			list_ = [i for i in list_ if not self.getUiLevel(i)==0] #remove 'init' menu.
-
-		if not allowLevel1:
-			list_ = [i for i in list_ if not self.getUiLevel(i)==1] #remove base level menus.
-
-		if not allowLevel2:
-			list_ = [i for i in list_ if not self.getUiLevel(i)==2] #remove any submenus.
+		omitLevel = self.list(omitLevel) #if omitLevel is not a list, convert it to one.
+		list_ = [i for i in list_ if not self.getUiLevel(i) in omitLevel] #remove any items having a uiLevel of those in the omitLevel list.
 
 		if not allowDuplicates:
 			[list_.remove(l) for l in list_[:] if list_.count(l)>1] #remove any previous duplicates if they exist; keeping the last added element.
@@ -998,12 +992,12 @@ class Switchboard(QtCore.QObject):
 			if as_list: list of lists with <method object> as first element and <docString> as second. ie. [[b001, 'multi-cut tool']]
 			else : <method object> of the last used command
 		'''
-		if not 'prevCommand' in self._sbDict:
-			self._sbDict['prevCommand'] = [] #initialize list
+		if not 'prevCommand' in self.sbDict:
+			self.sbDict['prevCommand'] = [] #initialize list
 
-		self._sbDict['prevCommand'] = self._sbDict['prevCommand'][-20:] #keep original list length restricted to last 20 elements
+		self.sbDict['prevCommand'] = self.sbDict['prevCommand'][-20:] #keep original list length restricted to last 20 elements
 
-		list_ = self._sbDict['prevCommand']
+		list_ = self.sbDict['prevCommand']
 		[list_.remove(l) for l in list_[:] if list_.count(l)>1] #remove any previous duplicates if they exist; keeping the last added element.
 
 		if as_list:
@@ -1045,12 +1039,12 @@ class Switchboard(QtCore.QObject):
 			if as_list: list of lists with <method object> as first element and <docString> as second. ie. [[<v001>, 'camera: persp']]
 			else : <method object> of the last used command
 		'''
-		if not 'prevCamera' in self._sbDict:
-			self._sbDict['prevCamera'] = [] #initialize list
+		if not 'prevCamera' in self.sbDict:
+			self.sbDict['prevCamera'] = [] #initialize list
 
-		self._sbDict['prevCamera'] = self._sbDict['prevCamera'][-20:] #keep original list length restricted to last 20 elements
+		self.sbDict['prevCamera'] = self.sbDict['prevCamera'][-20:] #keep original list length restricted to last 20 elements
 
-		list_ = self._sbDict['prevCamera']
+		list_ = self.sbDict['prevCamera']
 		[list_.remove(l) for l in list_[:] if list_.count(l)>1] #remove any previous duplicates if they exist; keeping the last added element.
 
 		if not allowCurrent:
@@ -1092,34 +1086,16 @@ class Switchboard(QtCore.QObject):
 		returns:
 			(list) of protected objects.
 		'''
-		if not 'gcProtect' in self._sbDict:
-			self._sbDict['gcProtect']=[]
+		if not 'gcProtect' in self.sbDict:
+			self.sbDict['gcProtect']=[]
 
 		if clear:
-			return self._sbDict['gcProtect'][:]
+			return self.sbDict['gcProtect'][:]
 
-		if obj and obj not in self._sbDict['gcProtect']:
-			self._sbDict['gcProtect'].append(obj)
+		if obj and obj not in self.sbDict['gcProtect']:
+			self.sbDict['gcProtect'].append(obj)
 
-		return self._sbDict['gcProtect']
-
-
-	def sbDict(self, key=None):
-		'''
-		Property.
-		Get the full switchboard dict or one of it's values from a given key.
-
-		args:
-			key (str) =	'<ui name>' returns (dict) ie. 'polygons'
-						'name' returns (list) [string list]
-						'prevCommand' returns (list) [list of 2 element lists]
-						'prevCamera' returns (list) [list of 2 element lists]
-						'mainAppWindow' returns (obj)
-						'gcProtect' returns (list)
-		'''
-		if key:
-			return self._sbDict[key]
-		return self._sbDict
+		return self.sbDict['gcProtect']
 
 
 	def hasKey(self, *args): #check if key exists in switchboard dict.
@@ -1132,19 +1108,19 @@ class Switchboard(QtCore.QObject):
 			bool
 		'''
 		if len(args)==1:
-			if args[0] in self._sbDict:
+			if args[0] in self.sbDict:
 				return True
 
 		elif len(args)==2:
-			if args[1] in self._sbDict[args[0]]:
+			if args[1] in self.sbDict[args[0]]:
 				return True
 
 		elif len(args)==3:
-			if args[2] in self._sbDict[args[0]][args[1]]:
+			if args[2] in self.sbDict[args[0]][args[1]]:
 				return True
 
 		elif len(args)==4:
-			if args[3] in self._sbDict[args[0]][args[1]][args[2]]:
+			if args[3] in self.sbDict[args[0]][args[1]][args[2]]:
 				return True
 		else:
 			return False
@@ -1185,7 +1161,7 @@ class Switchboard(QtCore.QObject):
 			(list) keys or values.
 
 		ex. call:
-		self.get(self._sbDict, 'cmb002', 'nameFromValue') #returns a list of all ui names containing 'cmb002' values.
+		self.get(self.sbDict, 'cmb002', 'nameFromValue') #returns a list of all ui names containing 'cmb002' values.
 		'''
 		for k,v in nested_dict.items():
 			if type_ is 'valuesFromKey': 
@@ -1198,7 +1174,7 @@ class Switchboard(QtCore.QObject):
 
 			elif type_ is 'namesFromValue':
 				if v==obj: #found value
-					nested_list.append(self.getParentKeys(self._sbDict, v)[0])
+					nested_list.append(self.getParentKeys(self.sbDict, v)[0])
 
 			if type(v) is dict: #found dict
 				p = get(v, obj, type_, nested_list) #recursive call
@@ -1206,10 +1182,9 @@ class Switchboard(QtCore.QObject):
 					return p
 		return nested_list
 
-
+	#Property
 	def getUiLevel(self, name=False):
 		'''
-		Property.
 		Get the hierarcical level of a ui from its string name.
 		If no argument is given, the level of current ui will be returned.
 
@@ -1228,7 +1203,7 @@ class Switchboard(QtCore.QObject):
 			name = name[0].lower()+name[1:] #lowercase the first letter of name.
 
 		try:
-			return self._sbDict[name]['uiLevel']
+			return self.sbDict[name]['uiLevel']
 		except ValueError:
 			return None
 
@@ -1253,15 +1228,15 @@ class Switchboard(QtCore.QObject):
 		ex call: sb.prefix(widget, ['b', 'v', 'i'])
 		'''
 		if prefix is not None: #check the actual prefix against the given prefix and return bool.
-			prefix = self.list_(prefix) #if 'widgets' isn't a list, convert it to one.
+			prefix = self.list(prefix) #if 'widgets' isn't a list, convert it to one.
 
 			name = self.getUiName()
 			for p in prefix:
 				try:
 					if isinstance(widget, (str, unicode)): #get the prefix using the widget's objectName.
-						prefix_ = next(w['prefix'] for w in self._sbDict[name]['widgets'].values() if w['widgetName']==widget)
+						prefix_ = next(w['prefix'] for w in self.sbDict[name]['widgets'].values() if w['widgetName']==widget)
 					else:
-						prefix_ = self._sbDict[name]['widgets'][widget]['prefix']
+						prefix_ = self.sbDict[name]['widgets'][widget]['prefix']
 					if prefix_==p:
 						return True
 
@@ -1292,7 +1267,7 @@ class Switchboard(QtCore.QObject):
 
 
 	@staticmethod
-	def list_(x):
+	def list(x):
 		'''
 		Convert a given obj to a list if it isn't a list, set, or tuple already.
 
@@ -1377,8 +1352,7 @@ class Switchboard(QtCore.QObject):
 			return widgets
 
 
-
-	#set properties
+	#assign properties
 	name = property(getUiName, setUiName)
 	prevName = property(previousName)
 	ui = property(getUi)
@@ -1391,13 +1365,12 @@ class Switchboard(QtCore.QObject):
 	mainAppWindow = property(getMainAppWindow, setMainAppWindow)
 	getWidgets = property(getWidget)
 	getWidgetNames = property(getWidgetName)
-	dict_ = property(sbDict)
 
 
 
 
 
-# ------------------------------------------------------------------------------------------
+
 
 
 
@@ -1406,8 +1379,6 @@ if __name__=='__main__':
 	app = QApplication.instance() #get the app instance if it exists (required by the QUiLoader)
 	if not app:
 		app = QApplication(sys.argv)
-
-
 
 
 
@@ -1497,7 +1468,6 @@ sbDict = {
 
 	# def getWidgets(self, name=None):
 	# 	'''
-	# 	Get Property.
 	# 	Get all widgets for a ui.
 
 	# 	args:
@@ -1539,7 +1509,7 @@ sbDict = {
 # 		 'string' - the corresponding method name from the given object.
 # 		 ex. 'polygons' from <widget>
 # 	'''
-# 	for name, v in self._sbDict.items():
+# 	for name, v in self.sbDict.items():
 # 		if type(v)==dict:
 # 			for k, v in v.items():
 # 				if type(v)==dict:
