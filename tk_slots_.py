@@ -219,6 +219,40 @@ class Slots(QtCore.QObject):
 					signal.connect(slot)
 
 
+	def syncWidgets(self, widgets, ui=None):
+		'''
+		Sync widget values of one ui to it's parent or submenu.
+		If the second widget does not have an attribute it will silently skip it.
+		Attributes starting with '__' are ignored.
+
+		args:
+			widgets (str)(list) = QWidget list (string objectNames) to get the attributes from. string shorthand style: ie. 'b000-12,b022'
+			ui (obj) = ui to sync to. default is the current ui.
+
+		self.syncWidgets('chk002-6')
+		'''
+		if not ui:
+			from_ui = self.sb.getUi()
+
+		if self.sb.getUiLevel(ui)==3: #self.sb.getUiLevel(from_widget)==3
+			to_ui = self.sb.getUi(self.sb.getUiName(from_ui), level=2) #get either it's parent or submenu, depending on the given ui.
+		else:
+			to_ui = self.sb.getUi(self.sb.getUiName(from_ui), level=3)
+
+		if isinstance(widgets, (str, unicode)):
+			from_widgets = self.getObjects(from_ui, widgets) #getObjects returns a widget list from a string of objectNames.
+
+		if isinstance(widgets, (str, unicode)):
+			to_widgets = self.getObjects(to_ui, widgets) #getObjects returns a widget list from a string of objectNames.
+
+		_widgets = dict(zip(from_widgets, to_widgets)) #{<from_widget>:<to_widget>}
+		for from_widget, to_widget in _widgets.items():
+			gettr_settr = {'isChecked':'setChecked', 'isDisabled':'setDisabled', 'isEnabled':'setEnabled', 'value':'setValue', 'text':'setText', 'icon':'setIcon'}
+			attributes = {settr:getattr(from_widget, gettr)() for gettr,settr in gettr_settr.items() if hasattr(from_widget, gettr)} #get the first widget's attributes:values.
+			# [setattr(to_widget, attr, value) for attr, value in attributes.items() if hasattr(to_widget, attr)] #
+			[getattr(to_widget, attr)(value) for attr, value in attributes.items() if hasattr(to_widget, attr)] #set the second widget's attributes from the first.
+
+
 	def toggleWidgets(self, *args, **kwargs):
 		'''
 		Set multiple boolean properties, for multiple widgets, on multiple ui's at once.

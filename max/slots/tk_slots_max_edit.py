@@ -82,32 +82,32 @@ class Edit(Init):
 		unusedNodes = tb.chk019.isChecked()
 		deformers = tb.chk020.isChecked()
 
-		objects = pm.ls(selection=1)
-		if all_:
-			objects = pm.ls(typ="mesh")
+		# objects = pm.ls(selection=1)
+		# if all_:
+		# 	objects = pm.ls(typ="mesh")
 
-		for obj in objects:
-			try:
-				if all_:
-					pm.delete (obj, constructionHistory=1)
-				else:
-					pm.bakePartialHistory (obj, prePostDeformers=1)
-			except:
-				pass
-		if unusedNodes:
-			maxEval('hyperShadePanelMenuCommand("hyperShadePanel1", "deleteUnusedNodes");')
+		# for obj in objects:
+		# 	try:
+		# 		if all_:
+		# 			pm.delete (obj, constructionHistory=1)
+		# 		else:
+		# 			pm.bakePartialHistory (obj, prePostDeformers=1)
+		# 	except:
+		# 		pass
+		# if unusedNodes:
+		# 	maxEval('hyperShadePanelMenuCommand("hyperShadePanel1", "deleteUnusedNodes");')
 
-		#display viewPort messages
-		if all_:
-			if deformers:
-				return 'Delete <hl>All</hl> History.'
-			else:
-				return 'Delete <hl>All Non-Deformer</hl> History.'
-		else:
-			if deformers:
-				return 'Delete history on '+str(objects)
-			else:
-				return 'Delete <hl>Non-Deformer</hl> history on '+str(objects)
+		# #display viewPort messages
+		# if all_:
+		# 	if deformers:
+		# 		return 'Delete <hl>All</hl> History.'
+		# 	else:
+		# 		return 'Delete <hl>All Non-Deformer</hl> History.'
+		# else:
+		# 	if deformers:
+		# 		return 'Delete history on '+str(objects)
+		# 	else:
+		# 		return 'Delete <hl>Non-Deformer</hl> history on '+str(objects)
 
 
 	def tb002(self, state=None):
@@ -308,13 +308,13 @@ class Edit(Init):
 			if state=='setMenu':
 				return
 
-		selection = pm.ls(sl=1, objectsOnly=1)
-		axis = self.getAxisFromCheckBoxes('chk006-9', tb)
+		# selection = pm.ls(sl=1, objectsOnly=1)
+		# axis = self.getAxisFromCheckBoxes('chk006-9', tb)
 
-		pm.undoInfo(openChunk=1)
-		for obj in selection:
-			self.deleteAlongAxis(obj, axis) #Init.deleteAlongAxis - no max version.
-		pm.undoInfo(closeChunk=1)
+		# pm.undoInfo(openChunk=1)
+		# for obj in selection:
+		# 	self.deleteAlongAxis(obj, axis) #Init.deleteAlongAxis - no max version.
+		# pm.undoInfo(closeChunk=1)
 
 
 

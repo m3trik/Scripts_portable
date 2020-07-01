@@ -85,6 +85,7 @@ class Switchboard(QtCore.QObject):
 				d = dirpath[dirpath.rfind('ui\\'):] #slice the absolute path from 'ui\' ie. ui\base_menus_1\sub_menus_2\main_menus_3 from fullpath\ui\base_menus_1\sub_menus_2\main_menus_3
 				self.sbDict[filename.replace('.ui','')] = {'ui':uiLoader.load(path), 'uiLevel':len(d.split('\\'))-1} #ie. {'polygons':{'ui':<ui obj>, uiLevel:<int>}} (the ui level is it's hierarchy)
 
+
 	@property
 	def sbDict(self):
 		'''
@@ -106,6 +107,7 @@ class Switchboard(QtCore.QObject):
 
 		args:
 			name (str) = name of the ui to construct connections for.
+
 		returns:
 			dict - 'objectName':{'widget':<widget>,'signalInstance':<signalInstance>,'method':<method>,'docString':'docString','widgetClassInstance':<class object>,'widgetClassName':'class name'}
 		'''
@@ -147,6 +149,7 @@ class Switchboard(QtCore.QObject):
 			name (str) = name of the parent ui to construct connections for.
 			widget (obj) = widget to be added.
 			objectName (str) = widget's name.
+
 		returns:
 			<widget object>
 		'''
@@ -192,14 +195,20 @@ class Switchboard(QtCore.QObject):
 
 		args:
 			name (str) = name of ui/class. ie. 'polygons'
+
 		returns:
 			connection dict of given name with widget/method name string as key.
-		ex.
-		'widget':ui object.  ie. b001
-		'signalInstance':ui object with signal attached. ie. b001.connect
-		'method':class method object for the corresponding ui widget. ie. main.b001
-		'docString': string description of command from method docString.  ie. 'Multi-Cut Tool'}
-		#ie. {'b001':{'widget':b001, 'signalInstance':b001.onPressed, 'method':main.b001, 'docString':'Multi-Cut Tool'}},
+		ex. {'widgets' : {
+						'<widget>':{
+									'widgetName':'objectName',
+									'signalInstance':<widget.signal>,
+									'widgetType':'<widgetClassName>',
+									'derivedType':'<derivedClassName>',
+									'method':<method>,
+									'prefix':'alphanumeric prefix',
+									'docString':'method docString'
+						}
+			}
 		'''
 		if not 'widgets' in self.sbDict[name]:
 			self.sbDict[name]['widgets'] = {}
@@ -236,6 +245,7 @@ class Switchboard(QtCore.QObject):
 
 		args:
 			name (str) = ui name. ie. 'polygons'
+
 		returns:
 			(obj) class obj
 		'''
@@ -250,7 +260,7 @@ class Switchboard(QtCore.QObject):
 
 	def getDefaultSignalType(self, widgetType):
 		'''
-		Get the default signal type associated with a widget type.
+		Get the default signal type for a given widget type.
 
 		args:
 			widgetType (str) = Widget class name. ie. 'QPushButton'
@@ -289,6 +299,7 @@ class Switchboard(QtCore.QObject):
 		args:
 			name (str) = name of ui. ie. 'polygons'
 			objectName (str) = optional widget name. ie. 'b001'
+
 		returns:
 			if objectName: (obj) widget object with attached signal (ie. b001.onPressed) of the given widget name.
 			else: (list) all of the signals associated with the given name as a list.
@@ -379,6 +390,7 @@ class Switchboard(QtCore.QObject):
 		args:
 			name (bool) = return string ui list
 			ui (bool) =	return dynamic ui list
+
 		returns:
 			if name: return list of ui names
 			if ui: return list of dynamic ui objects
@@ -400,6 +412,7 @@ class Switchboard(QtCore.QObject):
 			name (str) = Name of class. ie. 'polygons' (by default getUi returns the current ui)
 			setAsCurrent (bool) = Set the ui name as the currently active ui. (default: False)
 			level (int) = Get the ui of the given level. (2:submenu, 3:main_menu)
+
 		returns:
 			if name: corresponding dynamic ui object of given name from the key 'uiList'.
 			else: current dynamic ui object
@@ -428,6 +441,19 @@ class Switchboard(QtCore.QObject):
 				return self.sbDict[name]['ui']
 			except (ValueError, KeyError):
 				return None
+
+
+	def getUiFromWidget(self, widget):
+		'''
+		Get the ui for the given widget.
+
+		args:
+			widget (obj) = QWidget
+
+		returns:
+			 (obj) ui. ie. <polygons> from <somewidget>
+		'''
+		return next((self.getUi(k) for k,v in self.sbDict.items() if type(v) is dict and 'widgets' in v and widget in v['widgets']), None)
 
 	#Property
 	def setUiName(self, index):
@@ -461,6 +487,7 @@ class Switchboard(QtCore.QObject):
 			camelCase (bool) = Return name with first letter lowercase. (default: False)
 			pascalCase (bool) = Return name with first letter capitalized. (default: False)
 			level (int) = Get the ui of the given level. (2:submenu, 3:main_menu)
+
 		returns:
 			(str) - ui name.
 		'''
@@ -489,6 +516,84 @@ class Switchboard(QtCore.QObject):
 
 		return name
 
+
+	def getUiNameFromWidget(self, widget):
+		'''
+		Get the ui name from the given widget.
+
+		args:
+			widget (obj) = QWidget
+
+		returns:
+			 (str) ui name. ie. 'polygons' from <somewidget>
+		'''
+		return next((k for k,v in self.sbDict.items() if type(v) is dict and 'widgets' in v and widget in v['widgets']), None)
+
+
+	def getUiNameFromMethod(self, method):
+		'''
+		Get the ui name from the given method.
+
+		args:
+			widget (obj) = QWidget
+
+		returns:
+			 (str) ui name. ie. 'polygons' from <somewidget>
+		'''
+		for name, value in self.sbDict.items():
+			if type(value)==dict:
+				try:
+					if next((v for v in value['widgets'].values() if v['method'] is method), None):
+						return name
+				except KeyError:
+					pass
+
+	#Generator
+	def getUiNameFromKey(self, nestedKey, _uiName=None, _nested_dict=None):
+		'''
+		Get the ui name from a given nested key.
+
+		args:
+			nestedKey (key) = The key of a nested dict to get the ui of.
+			_uiName (key) = internal use. The key from the top-level dict. (ie. 'polygons') which is later returned as the uiName if a key match is found in a directly nested dict.
+			_nested_dict (dict) = internal use. Recursive call.
+
+		ex. next(self.getUiNameFromKey(<widget>), None) #returns the first ui name with a nested dict containing the given key if found; else None.
+		'''
+		if _nested_dict is None:
+			_nested_dict = self.sbDict
+
+		for k,v in _nested_dict.items():
+			if type(v) is dict:
+				if nestedKey in v.keys():
+					if not self.sbDict.get(k): #if the key is not top level:
+						k = _uiName #re-assign and keep passing the top level key so that it can eventually be returned.
+					yield _uiName
+				else:
+					n = next(self.getUiNameFromKey(nestedKey, k, v), None)
+					if n:
+						yield n
+
+
+	def getUiNamesFromValue(self, nestedValue):
+		'''
+		Get the ui name from a given nested Value.
+
+			args:
+				nestedValue (value) = The value of a nested dict to get the ui of.
+
+			returns:
+				(list) of uiNames that contain the given nestedValue.
+
+			ex. self.getUiNameFromValue('cmb002') #returns the names of all ui with a dict containing value 'cmb002'.
+		'''
+		_uiNames=[]
+		for uiName, value in self.sbDict.items():
+			if type(value)==dict: #for each top-level dict in sbDict:
+				if self.getParentKeys(nestedValue, value): #if a nested dict contains the nested value: (getParentKeys returns a list containing the hierarchical key path of the nestedValue)
+					_uiNames.append(uiName)
+		return _uiNames
+
 	#Property
 	def getUiIndex(self, name=False):
 		'''
@@ -496,6 +601,7 @@ class Switchboard(QtCore.QObject):
 
 		args:
 			name (str) = name of class. ie. 'polygons'
+
 		returns:
 			if name: index of given name from the key 'uiList'.
 			else: index of current ui
@@ -516,6 +622,7 @@ class Switchboard(QtCore.QObject):
 		args:
 			name (str) = optional ui name
 			size = [int, int] - optional width and height as an integer list. [width, height]
+
 		returns:
 			ui size info as integer values in a list. [width, hight]
 		'''
@@ -564,6 +671,7 @@ class Switchboard(QtCore.QObject):
 			height (int) = returns hight of current ui
 			percentWidth (int) = returns a percentage of the width
 			percentHeight = int returns a percentage of the height
+
 		returns:
 			if width: returns width as int
 			if height: returns height as int
@@ -595,6 +703,7 @@ class Switchboard(QtCore.QObject):
 
 		args:
 			name (str) = ui name to get size from.
+
 		returns:
 			returns width as int
 		'''
@@ -607,40 +716,11 @@ class Switchboard(QtCore.QObject):
 
 		args:
 			name (str) = ui name to get size from.
+
 		returns:
 			returns width as int
 		'''
 		return self.getUiSize(name=name, height=True)
-
-
-	def getNameFromWidget(self, widget):
-		'''
-		Get the ui name from the given widget.
-
-		args:
-			widget (obj) = QWidget
-		returns:
-			 (str) ui name. ie. 'polygons' from <somewidget>
-		'''
-		return next((k for k,v in self.sbDict.items() if type(v) is dict and 'widgets' in v and widget in v['widgets']), None)
-
-
-	def getNameFromMethod(self, method):
-		'''
-		Get the ui name from the given method.
-
-		args:
-			widget (obj) = QWidget
-		returns:
-			 (str) ui name. ie. 'polygons' from <somewidget>
-		'''
-		for name, value in self.sbDict.items():
-			if type(value)==dict:
-				try:
-					if next((v for v in value['widgets'].values() if v['method'] is method), None):
-						return name
-				except KeyError:
-					pass
 
 	#Property
 	def setMainAppWindow(self, app):
@@ -649,6 +729,7 @@ class Switchboard(QtCore.QObject):
 
 		args:
 			app = app object.
+
 		returns:
 			string name of app
 		'''
@@ -663,6 +744,7 @@ class Switchboard(QtCore.QObject):
 
 		args:
 			objectName (bool) = get string name of app. (by default getMainAppWindow returns app object)
+
 		returns:
 			app object or string name
 		'''
@@ -689,6 +771,7 @@ class Switchboard(QtCore.QObject):
 			class_ (str)(obj) = module name.class to import and store class. 
 					ie.  ie. 'polygons', 'tk_slots_max_polygons.Polygons', or <tk_slots_max_polygons.Polygons>
 			name (str) = optional name key to store the class under (else the class name will be used).
+
 		returns:
 			class object.
 		'''
@@ -720,6 +803,7 @@ class Switchboard(QtCore.QObject):
 		args:
 			class_ (str)(obj) = module name.class to import and store class.
 				ie. 'polygons', 'tk_slots_max_polygons.Polygons', or <tk_slots_max_polygons.Polygons>
+
 		returns:
 			class object.
 		'''
@@ -750,6 +834,7 @@ class Switchboard(QtCore.QObject):
 		args:
 			name (str) = name of ui. ie. 'polygons'. If no name is given, the current ui will be used.
 			objectName (str) = optional name of widget. ie. 'b000'
+
 		returns:
 			if objectName:  widget object with the given name from the current ui.
 			if name and objectName: widget object with the given name from the given ui name.
@@ -774,6 +859,7 @@ class Switchboard(QtCore.QObject):
 		args:
 			widget (obj) = QWidget
 			name (str) = name of ui. ie. 'polygons'. If no name is given, the current ui will be used.
+
 		returns:
 			if widget: (str) the stored objectName for the given widget.
 			if not widget: (list) all names.
@@ -807,6 +893,7 @@ class Switchboard(QtCore.QObject):
 			widget = 'string'  - name of widget/widget
 				*or <object> -widget
 			name (str) = name of dynamic ui (else use current ui)
+
 		returns:
 			'string' - the corresponding widget class name
 		'''
@@ -915,21 +1002,33 @@ class Switchboard(QtCore.QObject):
 			return [w['method'] for w in self.sbDict[name]['widgets'].values()]
 
 
-	def getDocString(self, name, widgetName, all_=False):
+	def getDocString(self, name, widgetName, first_line_only=True, unformatted=False):
 		'''
 		args:
 			name (str) = optional name of class. ie. 'polygons'. else, use current name.
 			widgetName (str) = name of method. ie. 'b001'
-			all_ = bool return entire unedited docString
+			unformatted = bool return entire unedited docString
+
 		returns:
-			if all_: the entire stored docString
+			if unformatted: the entire stored docString
 			else: edited docString; name of method
 		'''
 		if not 'widgets' in self.sbDict[name]:
 			self.widgets(name) #construct the signals and slots for the ui
 
 		docString = next(w['docString'] for w in self.sbDict[name]['widgets'].values() if w['widgetName']==widgetName)
-		if docString and not all_:
+
+		lines = docString.split('\n')
+		if first_line_only:
+			i=0
+			while not docString:
+				try:
+					docString = lines[i]
+					i+=1
+				except IndexError:
+					break
+
+		if docString and not unformatted:
 			return docString.strip('\n\t') #return formatted docString
 		else:
 			return docString #return entire unformatted docString, or 'None' is docString==None.
@@ -946,6 +1045,7 @@ class Switchboard(QtCore.QObject):
 			omitLevel (int)(list) = Remove instances of the given ui level(s) from the results. Default is [] which omits nothing.
 			allowCurrent (bool) = Allow the currentName. Default is off.
 			as_list (bool) = Returns the full list of previously called names. By default duplicates are removed.
+
 		returns:
 			with no arguments given - string name of previously opened ui.
 			if previousIndex: int - index of previously opened ui
@@ -986,6 +1086,7 @@ class Switchboard(QtCore.QObject):
 		args:
 			docString (bool) = return the docString of last command. Default is off.
 			method (bool) = return the method of last command. Default is off.
+
 		returns:
 			if docString: 'string' description (derived from the last used command method's docString) (as_list: [string list] all docStrings, in order of use)
 			if method: method of last used command. (as_list: [<method object> list} all methods, in order of use)
@@ -1033,6 +1134,7 @@ class Switchboard(QtCore.QObject):
 			docString (bool) = return the docString of last camera command. Default is off.
 			method (bool) = return the method of last camera command. Default is off.
 			allowCurrent (bool) = allow the current camera. Default is off.
+
 		returns:
 			if docString: 'string' description (derived from the last used camera command's docString) (as_list: [string list] all docStrings, in order of use)
 			if method: method of last used camera command. (as_list: [<method object> list} all methods, in order of use)
@@ -1083,6 +1185,7 @@ class Switchboard(QtCore.QObject):
 
 		args:
 			obj (obj) = obj to add to the protected list.
+
 		returns:
 			(list) of protected objects.
 		'''
@@ -1098,89 +1201,69 @@ class Switchboard(QtCore.QObject):
 		return self.sbDict['gcProtect']
 
 
-	def hasKey(self, *args): #check if key exists in switchboard dict.
+	def get(self, obj, type_='value', _nested_dict=None, _nested_list=[]):
 		'''
-		ie. hasKey('polygons', 'widgets', 'objectName')
+		Get objects from any nested object in _nested_dict using a given key or value.
 
 		args:
-			'string' dict keys in order of hierarchy.  ie. 'polygons', 'widgets', 'b001', 'method'
+			obj (key)(value) = Key or Value. The object to get the 'type_' of return value from.
+			type_ (str) = Desired return type. valid values are: 'value', 'valuesFromKey', 'keysFromValue', 'namesFromValue'
+			_nested_dict (dict) = internal use. default is sbDict
+			_nested_list (list) = internal use.
+
 		returns:
-			bool
+			(list) depending on the specified type.
+
+		ex. call:
+		self.get('cmb002', 'nameFromValue') #returns a list of all ui names containing 'cmb002' values.
 		'''
-		if len(args)==1:
-			if args[0] in self.sbDict:
-				return True
+		if _nested_dict is None:
+			_nested_dict = self.sbDict
 
-		elif len(args)==2:
-			if args[1] in self.sbDict[args[0]]:
-				return True
+		for k,v in _nested_dict.items():
+			if type_ is 'valuesFromKey': 
+				if k==obj: #found key
+					_nested_list.append(v)
 
-		elif len(args)==3:
-			if args[2] in self.sbDict[args[0]][args[1]]:
-				return True
+			elif type_ is 'keysFromValue':
+				if v==obj: #found value
+					_nested_list.append(k)
 
-		elif len(args)==4:
-			if args[3] in self.sbDict[args[0]][args[1]][args[2]]:
-				return True
-		else:
-			return False
+			elif type_ is 'namesFromValue':
+				if v==obj: #found value
+					_nested_list.append(self.getParentKeys(v)[0])
+
+			if type(v) is dict: #found dict
+				p = self.get(obj, type_, v, _nested_list) #recursive call
+				if p:
+					return p
+		return _nested_list
 
 
-	def getParentKeys(self, nested_dict, value):
+	def getParentKeys(self, value, _nested_dict=None):
 		'''
 		Get all parent keys from a nested value.
 
 		args:
-			nested_dict (dict) = 
-			value (value) = 
+			value (value) = The nested value to get keys for.
+			_nested_dict (dict) = internal use.
+
 		returns:
 			(list) parent keys
 
 		ex. call:
-		getParentKeys(_sbDict, 'cmb002') returns all parent keys of the given value. ex. ['polygons', 'widgets', '<widgets.QComboBox_.QComboBox_ object at 0x0000016B6C078908>', 'widgetName'] ...
+		getParentKeys('cmb002') returns all parent keys of the given value. ex. ['polygons', 'widgets', '<widgets.QComboBox_.QComboBox_ object at 0x0000016B6C078908>', 'widgetName'] ...
 		'''
-		for k,v in nested_dict.items():
+		if _nested_dict is None:
+			_nested_dict = self.sbDict
+
+		for k,v in _nested_dict.items():
 			if type(v) is dict:
-				p = self.getParentKeys(v, value)
+				p = self.getParentKeys(value, v)
 				if p:
 					return [k]+p
 			elif v==value:
 				return [k]
-
-
-	def get(self, nested_dict, obj, type_='value', nested_list=[]):
-		'''
-		Get objects from any nested dict in _sbDict using a given key or value.
-
-		args:
-			nested_dict (dict) = 
-			obj (key)(value) = 
-			type_ (str) = 
-			nested_list (list) = 
-		returns:
-			(list) keys or values.
-
-		ex. call:
-		self.get(self.sbDict, 'cmb002', 'nameFromValue') #returns a list of all ui names containing 'cmb002' values.
-		'''
-		for k,v in nested_dict.items():
-			if type_ is 'valuesFromKey': 
-				if k==obj: #found key
-					nested_list.append(v)
-
-			elif type_ is 'keysFromValue':
-				if v==obj: #found value
-					nested_list.append(k)
-
-			elif type_ is 'namesFromValue':
-				if v==obj: #found value
-					nested_list.append(self.getParentKeys(self.sbDict, v)[0])
-
-			if type(v) is dict: #found dict
-				p = get(v, obj, type_, nested_list) #recursive call
-				if p:
-					return p
-		return nested_list
 
 	#Property
 	def getUiLevel(self, name=False):
@@ -1195,6 +1278,7 @@ class Switchboard(QtCore.QObject):
 
 		args:
 			name (str) = ui name to get level of. ie. 'polygons'
+
 		returns:
 			ui level as an integer.
 		'''
@@ -1219,6 +1303,7 @@ class Switchboard(QtCore.QObject):
 		args:
 			widget (str)(obj) = widget or it's objectName.
 			prefix (str)(list) = optional; check if the given objectName startwith this prefix.
+
 		returns:
 			if prefix arg given:
 				(bool) - True if correct format else; False.
@@ -1273,6 +1358,7 @@ class Switchboard(QtCore.QObject):
 
 		args:
 			x () = unknown object type.
+
 		returns:
 			(list)
 		'''
@@ -1289,6 +1375,7 @@ class Switchboard(QtCore.QObject):
 		args:
 			widget (obj) = QWidget
 			index (int) = (optional) index. Last index is top level.
+
 		returns:
 			(list)
 		'''
@@ -1310,6 +1397,7 @@ class Switchboard(QtCore.QObject):
 		args:
 			widget (obj) = QWidget
 			index (int) = (optional) index. Last index is top level.
+
 		returns:
 			(QWidget)
 		'''
@@ -1323,6 +1411,7 @@ class Switchboard(QtCore.QObject):
 
 		args:
 			name (str) = optional name of window (widget.objectName)
+
 		returns:
 			if name: corresponding <window object>
 			else: return a dictionary of all windows {windowName:window}
@@ -1341,6 +1430,7 @@ class Switchboard(QtCore.QObject):
 
 		args:
 			name (str) = optional name of widget (widget.objectName)
+
 		returns:
 			if name: corresponding <widget object>
 			else: return a dictionary of all widgets {objectName:widget}
@@ -1446,7 +1536,33 @@ sbDict = {
 # deprecated: -----------------------------------
 
 
+# def hasKey(self, *args): #check if key exists in switchboard dict.
+# 	'''
+# 	Check if a nested key exists .
 
+# 	args:
+# 		(str) dict keys in order of hierarchy.  ie. 'polygons', 'widgets', 'b001', 'method'
+
+# 	returns:
+# 		(bool)
+# 	'''
+# 	if len(args)==1:
+# 		if args[0] in self.sbDict:
+# 			return True
+
+# 	elif len(args)==2:
+# 		if args[1] in self.sbDict[args[0]]:
+# 			return True
+
+# 	elif len(args)==3:
+# 		if args[2] in self.sbDict[args[0]][args[1]]:
+# 			return True
+
+# 	elif len(args)==4:
+# 		if args[3] in self.sbDict[args[0]][args[1]][args[2]]:
+# 			return True
+# 	else:
+# 		return False
 
 	# def getSubmenu(self, ui=None):
 	# 	'''

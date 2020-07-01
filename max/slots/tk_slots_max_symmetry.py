@@ -28,7 +28,6 @@ class Symmetry(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
-
 			return
 
 
@@ -61,11 +60,11 @@ class Symmetry(Init):
 		# 	space = "topo"
 
 		if axis=='x':
-			axis=0 #0(x), 1,(y), 2(z)
+			_axis=0 #0(x), 1,(y), 2(z)
 		if axis=='y':
-			axis=1
+			_axis=1
 		if axis=='z':
-			axis=2
+			_axis=2
 
 		for obj in rt.selection:
 			#check if modifier exists
@@ -77,11 +76,12 @@ class Symmetry(Init):
 			#set attributes
 			mod.enabled = state
 			mod.threshold = 0.01
-			mod.axis = axis
+			mod.axis = _axis
 			mod.flip = negative
 
 		rt.redrawViews()
-		return 'Symmetry:<hl>'+axis+' '+str(state)+'</hl>'
+		self.syncWidgets('chk000-5')
+		return 'Symmetry: '+axis.capitalize()+' <hl>'+str(state)+'</hl>'
 
 
 	def chk000(self):
@@ -124,10 +124,10 @@ class Symmetry(Init):
 		Symmetry: Topo
 		'''
 		self.parentUi.chk004.setChecked(False) #uncheck symmetry:object space
-		if any ([self.parentUi.chk000.isChecked(), self.parentUi.chk001.isChecked(), self.parentUi.chk002.isChecked()]): #(symmetry)
-			pm.symmetricModelling(edit=True, symmetry=False)
-			self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk000-2')
-			return 'Note: First select a seam edge and then check the symmetry button to enable topographic symmetry'
+		# if any ([self.parentUi.chk000.isChecked(), self.parentUi.chk001.isChecked(), self.parentUi.chk002.isChecked()]): #(symmetry)
+		# 	pm.symmetricModelling(edit=True, symmetry=False)
+		# 	self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk000-2')
+		# 	return 'Note: First select a seam edge and then check the symmetry button to enable topographic symmetry'
 
 
 

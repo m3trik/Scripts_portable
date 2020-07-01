@@ -18,7 +18,6 @@ class Rigging(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
-
 			return
 
 
@@ -31,24 +30,24 @@ class Rigging(Init):
 		list_ = ['Quick Rig','HumanIK','Expression Editor','Shape Editor','Connection Editor','Channel Control Editor','Set Driven Key']
 		items = cmb.addItems_(list_, '')
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==items.index('Quick Rig'):
-				mel.eval('QuickRigEditor;') #Quick Rig
-			if index==items.index('HumanIK'):
-				mel.eval('HIKCharacterControlsTool;') #HumanIK
-			if index==items.index('Expression Editor'):
-				mel.eval('ExpressionEditor;') #Expression Editor
-			if index==items.index('Shape Editor'):
-				mel.eval('ShapeEditor;') #Shape Editor
-			if index==items.index('Connection Editor'):
-				mel.eval('ConnectionEditor;') #Connection Editor
-			if index==items.index('Channel Control Editor'):
-				mel.eval('ChannelControlEditor;') #Channel Control Editor
-			if index==items.index('Set Driven Key'):
-				mel.eval('SetDrivenKeyOptions;') #Set Driven Key
-			cmb.setCurrentIndex(0)
+		# if not index:
+		# 	index = cmb.currentIndex()
+		# if index!=0:
+		# 	if index==items.index('Quick Rig'):
+		# 		mel.eval('QuickRigEditor;') #Quick Rig
+		# 	if index==items.index('HumanIK'):
+		# 		mel.eval('HIKCharacterControlsTool;') #HumanIK
+		# 	if index==items.index('Expression Editor'):
+		# 		mel.eval('ExpressionEditor;') #Expression Editor
+		# 	if index==items.index('Shape Editor'):
+		# 		mel.eval('ShapeEditor;') #Shape Editor
+		# 	if index==items.index('Connection Editor'):
+		# 		mel.eval('ConnectionEditor;') #Connection Editor
+		# 	if index==items.index('Channel Control Editor'):
+		# 		mel.eval('ChannelControlEditor;') #Channel Control Editor
+		# 	if index==items.index('Set Driven Key'):
+		# 		mel.eval('SetDrivenKeyOptions;') #Set Driven Key
+		# 	cmb.setCurrentIndex(0)
 
 
 	def cmb001(self, index=None):
@@ -60,20 +59,20 @@ class Rigging(Init):
 		list_ = ['Joints','Locator','IK Handle', 'Lattice', 'Cluster']
 		items = cmb.addItems_(list_, "Create")
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==items.index('Joints'):
-				pm.setToolTo('jointContext') #create joint tool
-			if index==items.index('Locator'):
-				pm.spaceLocator(p=[0,0,0]) #locator
-			if index==items.index('IK Handle'):
-				pm.setToolTo('ikHandleContext') #create ik handle
-			if index==items.index('Lattice'):
-				pm.lattice(divisions=[2,5,2], objectCentered=1, ldv=[2,2,2]) ##create lattice
-			if index==items.index('Cluster'):
-				mel.eval('CreateCluster;') #create cluster
-			cmb.setCurrentIndex(0)
+		# if not index:
+		# 	index = cmb.currentIndex()
+		# if index!=0:
+		# 	if index==items.index('Joints'):
+		# 		pm.setToolTo('jointContext') #create joint tool
+		# 	if index==items.index('Locator'):
+		# 		pm.spaceLocator(p=[0,0,0]) #locator
+		# 	if index==items.index('IK Handle'):
+		# 		pm.setToolTo('ikHandleContext') #create ik handle
+		# 	if index==items.index('Lattice'):
+		# 		pm.lattice(divisions=[2,5,2], objectCentered=1, ldv=[2,2,2]) ##create lattice
+		# 	if index==items.index('Cluster'):
+		# 		mel.eval('CreateCluster;') #create cluster
+		# 	cmb.setCurrentIndex(0)
 
 
 	def chk000(self):
@@ -81,7 +80,7 @@ class Rigging(Init):
 		Scale Joint
 		'''
 		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk001-2')
-		self.parentUi.s000.setValue(pm.jointDisplayScale(query=1)) #init global joint display size
+		# self.parentUi.s000.setValue(pm.jointDisplayScale(query=1)) #init global joint display size
 
 
 	def chk001(self):
@@ -89,7 +88,7 @@ class Rigging(Init):
 		Scale IK
 		'''
 		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk000, chk002')
-		self.parentUi.s000.setValue(pm.ikHandleDisplayScale(query=1)) #init IK handle display size
+		# self.parentUi.s000.setValue(pm.ikHandleDisplayScale(query=1)) #init IK handle display size
 		
 
 	def chk002(self):
@@ -97,7 +96,7 @@ class Rigging(Init):
 		Scale IK/FK
 		'''
 		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk000-1')
-		self.parentUi.s000.setValue(pm.jointDisplayScale(query=1, ikfk=1)) #init IKFK display size
+		# self.parentUi.s000.setValue(pm.jointDisplayScale(query=1, ikfk=1)) #init IKFK display size
 
 
 	def s000(self):
@@ -106,12 +105,12 @@ class Rigging(Init):
 		'''
 		value = self.parentUi.s000.value()
 
-		if self.parentUi.chk000.isChecked():
-			pm.jointDisplayScale(value) #set global joint display size
-		elif self.parentUi.chk001.isChecked():
-			pm.ikHandleDisplayScale(value) #set global IK handle display size
-		else: #self.parentUi.chk002.isChecked():
-			pm.jointDisplayScale(value, ikfk=1) #set global IKFK display size
+		# if self.parentUi.chk000.isChecked():
+		# 	pm.jointDisplayScale(value) #set global joint display size
+		# elif self.parentUi.chk001.isChecked():
+		# 	pm.ikHandleDisplayScale(value) #set global IK handle display size
+		# else: #self.parentUi.chk002.isChecked():
+		# 	pm.jointDisplayScale(value, ikfk=1) #set global IKFK display size
 
 
 	@Slots.message
@@ -130,20 +129,20 @@ class Rigging(Init):
 			if state=='setMenu':
 				return
 
-		joints = pm.ls(type="joint") #get all scene joints
+		# joints = pm.ls(type="joint") #get all scene joints
 
-		state = pm.toggle(joints[0], query=1, localAxis=1)
-		if tb.isChecked():
-			if not state:
-				toggle=True
-		else:
-			if state:
-				toggle=True
+		# state = pm.toggle(joints[0], query=1, localAxis=1)
+		# if tb.isChecked():
+		# 	if not state:
+		# 		toggle=True
+		# else:
+		# 	if state:
+		# 		toggle=True
 
-		if toggle:
-			pm.toggle(joints, localAxis=1) #set display off
+		# if toggle:
+		# 	pm.toggle(joints, localAxis=1) #set display off
 
-		return 'Display Local Rotation Axes:<hl>'+str(state)+'</hl>'
+		# return 'Display Local Rotation Axes:<hl>'+str(state)+'</hl>'
 
 
 	def tb001(self, state=None):
@@ -156,11 +155,11 @@ class Rigging(Init):
 			if state=='setMenu':
 				return
 
-		orientJoint = 'xyz' #orient joints
-		if tb.isChecked():
-			orientJoint = 'none' #orient joint to world
+		# orientJoint = 'xyz' #orient joints
+		# if tb.isChecked():
+		# 	orientJoint = 'none' #orient joint to world
 
-		pm.joint(edit=1, orientJoint=orientJoint, zeroScaleOrient=1, ch=1)
+		# pm.joint(edit=1, orientJoint=orientJoint, zeroScaleOrient=1, ch=1)
 
 
 	def b001(self):

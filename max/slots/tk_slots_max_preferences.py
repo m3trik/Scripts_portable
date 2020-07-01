@@ -50,8 +50,8 @@ class Preferences(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		from PySide2 import QtGui, QtCore
-		list_ = QtGui.QStyleFactory.keys() #get styles from QStyleFactory
+		from PySide2 import QtWidgets, QtCore
+		list_ = QtWidgets.QStyleFactory.keys() #get styles from QStyleFactory
 		contents = cmb.addItems_(list_)
 
 		if init: #temp.  move main function to shared Slots class

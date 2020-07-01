@@ -44,7 +44,6 @@ class File(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb005', setToolTip='3dsMax File Editors')
-
 			return
 
 
@@ -79,11 +78,11 @@ class File(Init):
 
 		items = cmb.addItems_(list_, "Recent Projects")
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			maxEval('setProject "'+items[index]+'"')
-			cmb.setCurrentIndex(0)
+		# if not index:
+		# 	index = cmb.currentIndex()
+		# if index!=0:
+		# 	maxEval('setProject "'+items[index]+'"')
+		# 	cmb.setCurrentIndex(0)
 
 
 	def cmb002(self, index=None):
@@ -237,64 +236,63 @@ class File(Init):
 		preSaveScript = ""
 		postSaveScript = ""
 
-		type_ = "mayaBinary"
-		if tb.chk003.isChecked(): #toggle ascii/ binary
-			type_ = "mayaAscii" #type: mayaAscii, mayaBinary, mel, OBJ, directory, plug-in, audio, move, EPS, Adobe(R) Illustrator(R)
+		# type_ = "mayaBinary"
+		# if tb.chk003.isChecked(): #toggle ascii/ binary
+		# 	type_ = "mayaAscii" #type: mayaAscii, mayaBinary, mel, OBJ, directory, plug-in, audio, move, EPS, Adobe(R) Illustrator(R)
 
-		if tb.chk000.isChecked():
-			mel.eval("DisplayWireframe;")
+		# if tb.chk000.isChecked():
+		# 	mel.eval("DisplayWireframe;")
 
-		#get scene name and file path
-		fullPath = str(mel.eval("file -query -sceneName;")) #ie. O:/Cloud/____Graphics/______project_files/elise.proj/elise.scenes/.maya/elise_mid.009.mb
-		index = fullPath.rfind("/")+1
-		curFullName = fullPath[index:] #ie. elise_mid.009.mb
-		currentPath = fullPath[:index] #ie. O:/Cloud/____Graphics/______project_files/elise.proj/elise.scenes/.maya/
+		# #get scene name and file path
+		# fullPath = str(mel.eval("file -query -sceneName;")) #ie. O:/Cloud/____Graphics/______project_files/elise.proj/elise.scenes/.maya/elise_mid.009.mb
+		# index = fullPath.rfind("/")+1
+		# curFullName = fullPath[index:] #ie. elise_mid.009.mb
+		# currentPath = fullPath[:index] #ie. O:/Cloud/____Graphics/______project_files/elise.proj/elise.scenes/.maya/
 		
-		if tb.chk001.isChecked(): #increment filename
-			import re, os, fnmatch, shutil
-			incrementAmount = 5
+		# if tb.chk001.isChecked(): #increment filename
+		# 	import re, os, fnmatch, shutil
+		# 	incrementAmount = 5
 
-			#remove filetype extention
-			currentName = curFullName[:curFullName.rfind(".")] #name without extension ie. elise_mid.009 from elise_mid.009.mb
-			#rename
-			numExt = re.search(r'\d+$', currentName) #check if the last chars are numberic
-			if numExt is not None:
-				name = currentName[:currentName.rfind('.')] #strip off the number ie. elise_mid from elise_mid.009
-				num = int(numExt.group())+1 #get file number and add 1 ie. 9 becomes 10
-				prefix = '000'[:-len(str(num))]+str(num) #prefix '000' removing zeros according to num length ie. 009 becomes 010
-				newName = name+'.'+prefix #ie. elise_mid.010
+		# 	#remove filetype extention
+		# 	currentName = curFullName[:curFullName.rfind(".")] #name without extension ie. elise_mid.009 from elise_mid.009.mb
+		# 	#rename
+		# 	numExt = re.search(r'\d+$', currentName) #check if the last chars are numberic
+		# 	if numExt is not None:
+		# 		name = currentName[:currentName.rfind('.')] #strip off the number ie. elise_mid from elise_mid.009
+		# 		num = int(numExt.group())+1 #get file number and add 1 ie. 9 becomes 10
+		# 		prefix = '000'[:-len(str(num))]+str(num) #prefix '000' removing zeros according to num length ie. 009 becomes 010
+		# 		newName = name+'.'+prefix #ie. elise_mid.010
 
-				#delete older files if they exist:
-				oldNum = num-incrementAmount
-				oldPrefix = '000'[:-len(str(oldNum))]+str(oldNum) #prefix the appropriate amount of zeros in front of the old number
-				oldName = name+'.'+oldPrefix #ie. elise_mid.007
-				try: #search recursively through the project folder and delete any old folders with the old filename
-					dir_ =  os.path.abspath(os.path.join(currentPath, "../.."))
-					for root, directories, files in os.walk(dir_):
-						for filename in files:
-							if all([filename==oldName+ext for ext in ('.ma','.ma.swatches','.mb','.mb.swatches')]):
-								try:
-									os.remove(filename)
-								except:
-									pass
-				except OSError:
-					print('{0}{1}{2}'.format("Warning: Delete failed (", currentPath+oldName, ")"))
-					pass
-			else:
-				newName = currentName+".001"
-			pm.saveAs (currentPath+newName, force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
-			print('{0}{1}{2}'.format(" Result: ", currentPath+newName, " "))
-		else:	#save without renaming
-			pm.saveFile (force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
-			print('{0}{1}{2}'.format(" Result: ", currentPath+currentName, " "))
+		# 		#delete older files if they exist:
+		# 		oldNum = num-incrementAmount
+		# 		oldPrefix = '000'[:-len(str(oldNum))]+str(oldNum) #prefix the appropriate amount of zeros in front of the old number
+		# 		oldName = name+'.'+oldPrefix #ie. elise_mid.007
+		# 		try: #search recursively through the project folder and delete any old folders with the old filename
+		# 			dir_ =  os.path.abspath(os.path.join(currentPath, "../.."))
+		# 			for root, directories, files in os.walk(dir_):
+		# 				for filename in files:
+		# 					if all([filename==oldName+ext for ext in ('.ma','.ma.swatches','.mb','.mb.swatches')]):
+		# 						try:
+		# 							os.remove(filename)
+		# 						except:
+		# 							pass
+		# 		except OSError:
+		# 			print('{0}{1}{2}'.format("Warning: Delete failed (", currentPath+oldName, ")"))
+		# 			pass
+		# 	else:
+		# 		newName = currentName+".001"
+		# 	pm.saveAs (currentPath+newName, force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
+		# 	print('{0}{1}{2}'.format(" Result: ", currentPath+newName, " "))
+		# else:	#save without renaming
+		# 	pm.saveFile (force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
+		# 	print('{0}{1}{2}'.format(" Result: ", currentPath+currentName, " "))
 
-		if tb.chk002.isChecked(): #quit
-			import time
-			for timer in range(5):
-				print("Shutting Down:<hl>"+str(timer)+"</hl>")
-				time.sleep(timer)
-			mel.eval("quit;")
-			# pm.Quit()
+		# if tb.chk002.isChecked(): #quit
+		# 	import time
+		# 	for timer in range(5):
+		# 		print("Shutting Down:<hl>"+str(timer)+"</hl>")
+		# 		time.sleep(timer)
+		# 	mel.eval("quit;")
 
 
 	def lbl000(self):
@@ -333,8 +331,8 @@ class File(Init):
 		'''
 		# force=false #pymel has no attribute quit error.
 		# exitcode=""
-		sceneName = str(mel.eval("file -query -sceneName -shortName;")) #if sceneName prompt user to save; else force close
-		mel.eval("quit;") if sceneName else mel.eval("quit -f;")
+		# sceneName = str(mel.eval("file -query -sceneName -shortName;")) #if sceneName prompt user to save; else force close
+		# mel.eval("quit;") if sceneName else mel.eval("quit -f;")
 		# pm.quit (force=force, exitcode=exitcode)
 
 
@@ -372,20 +370,20 @@ class File(Init):
 		replace = self.parentUi.chk004.isChecked()
 		selected = self.parentUi.chk005.isChecked()
 
-		objects = pm.ls (from_) #Stores a list of all objects starting with 'from_'
-		if selected:
-			objects = pm.ls (selection=1) #if use selection option; get user selected objects instead
-		from_ = from_.strip('*') #strip modifier asterisk from user input
+		# objects = pm.ls (from_) #Stores a list of all objects starting with 'from_'
+		# if selected:
+		# 	objects = pm.ls (selection=1) #if use selection option; get user selected objects instead
+		# from_ = from_.strip('*') #strip modifier asterisk from user input
 
-		for obj in objects:
-			relatives = pm.listRelatives(obj, parent=1) #Get a list of it's direct parent
-			if 'group*' in relatives: #If that parent starts with group, it came in root level and is pasted in a group, so ungroup it
-				relatives[0].ungroup()
+		# for obj in objects:
+		# 	relatives = pm.listRelatives(obj, parent=1) #Get a list of it's direct parent
+		# 	if 'group*' in relatives: #If that parent starts with group, it came in root level and is pasted in a group, so ungroup it
+		# 		relatives[0].ungroup()
 
-			newName = to
-			if replace:
-				newName = obj.replace(from_, to)
-			pm.rename(obj, newName) #Rename the object with the new name
+		# 	newName = to
+		# 	if replace:
+		# 		newName = obj.replace(from_, to)
+		# 	pm.rename(obj, newName) #Rename the object with the new name
 
 
 

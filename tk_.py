@@ -101,19 +101,16 @@ class Tk(QtWidgets.QStackedWidget):
 		#remove entrys from widget and draw paths when moving back down levels in the ui.
 		if len(self.sb.previousName(as_list=1))>2:
 			if name in self.sb.previousName(as_list=1): #if name is that of a previous ui:
-				print ('removeFromPath:', name)
 				self.removeFromPath(name)
 
 		self.widgetPath.append([widget, p1, name]) #add the widget (<widget>, position, 'ui name') from the old ui to the widgetPath list so that it can be re-created in the new ui (in the same position).
 		self.drawPath.append(QtGui.QCursor.pos()) #add the global cursor position to the drawPath list so that paint events can draw the path tangents.
-		print ('widgetPath:', [i[2] for i in self.widgetPath])
 
 		p2 = w.mapToGlobal(w.rect().center()) #widget position after submenu change.
 		currentPos = self.mapToGlobal(self.pos())
 		self.move(self.mapFromGlobal(currentPos +(p1 - p2))) #currentPos + difference
 
 		if name not in self.sb.previousName(as_list=1): #if the submenu ui called for the first time:
-			print ('cloneWidgets:', name)
 			self.cloneWidgets(name) #re-construct any widgets from the previous ui that fall along the plotted path.
 
 
@@ -316,7 +313,7 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		method = self.sb.prevCommand()
 		if callable(method):
-			name = self.sb.getNameFromMethod(method)
+			name = self.sb.getUiNameFromMethod(method)
 			self.setUi(name)
 			# print (self.sb.getUiName(), name, method)
 			method()

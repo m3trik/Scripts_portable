@@ -295,8 +295,8 @@ class Polygons(Init):
 			u=v=0
 		#perform operation
 		selectedFaces = rt.getFaceSelection()
-		for face in selectedFaces: #when performing polySubdivideFacet on multiple faces, adjacent subdivided faces will make the next face an n-gon and therefore not able to be subdivided. 
-			pm.polySubdivideFacet(face, divisions=0, divisionsU=2, divisionsV=2, mode=0, subdMethod=1)
+		# for face in selectedFaces: #when performing polySubdivideFacet on multiple faces, adjacent subdivided faces will make the next face an n-gon and therefore not able to be subdivided. 
+		# 	pm.polySubdivideFacet(face, divisions=0, divisionsU=2, divisionsV=2, mode=0, subdMethod=1)
 
 
 	def tb008(self, state=None):
@@ -311,14 +311,14 @@ class Polygons(Init):
 			if state=='setMenu':
 				return
 
-		if tb.chk011.isChecked(): #union
-			mel.eval("polyPerformBooleanAction 1 o 0;") #PolygonBooleanIntersection;
+		# if tb.chk011.isChecked(): #union
+		# 	mel.eval("polyPerformBooleanAction 1 o 0;") #PolygonBooleanIntersection;
 
-		if tb.chk012.isChecked(): #difference
-			mel.eval("polyPerformBooleanAction 2 o 0;") #PolygonBooleanDifference;
+		# if tb.chk012.isChecked(): #difference
+		# 	mel.eval("polyPerformBooleanAction 2 o 0;") #PolygonBooleanDifference;
 
-		if tb.chk013.isChecked(): #intersection
-			mel.eval("polyPerformBooleanAction 3 o 0;") #PolygonBooleanIntersection;
+		# if tb.chk013.isChecked(): #intersection
+		# 	mel.eval("polyPerformBooleanAction 3 o 0;") #PolygonBooleanIntersection;
 
 
 	def b000(self):
@@ -451,13 +451,13 @@ class Polygons(Init):
 		'''
 		Re-Order Vertices
 		'''
-		symmetryOn = pm.symmetricModelling(query=True, symmetry=True) #query symmetry state
+		# symmetryOn = pm.symmetricModelling(query=True, symmetry=True) #query symmetry state
 		
-		if symmetryOn:
-			pm.symmetricModelling(symmetry=False)
-		mel.eval("setPolygonDisplaySettings(\"vertIDs\");") #set vertex id on
-		mel.eval("doBakeNonDefHistory( 1, {\"pre\"});") #history must be deleted
-		mel.eval("performPolyReorderVertex;") #start vertex reorder ctx
+		# if symmetryOn:
+		# 	pm.symmetricModelling(symmetry=False)
+		# mel.eval("setPolygonDisplaySettings(\"vertIDs\");") #set vertex id on
+		# mel.eval("doBakeNonDefHistory( 1, {\"pre\"});") #history must be deleted
+		# mel.eval("performPolyReorderVertex;") #start vertex reorder ctx
 
 
 	def b046(self):

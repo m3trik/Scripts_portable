@@ -127,52 +127,34 @@ class Selection(Init):
 				return 'Camera-based selection <hl>Off</hl>.'
 
 
+	@Slots.message
 	def chk005(self):
 		'''
 		Select Style: Marquee
 		'''
-		self.setSelectionStyle('selectContext')
 		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk005', setUnChecked='chk006-7')
 		self.parentUi.cmb004.setCurrentIndex(0)
+		return 'Select Style: <hl>Marquee</hl>'
 
 
+	@Slots.message
 	def chk006(self):
 		'''
 		Select Style: Lasso
 		'''
-		self.setSelectionStyle('lassoContext')
 		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk006', setUnChecked='chk005,chk007')
-		self.parentUi.cmb004.setCurrentIndex(1)
+		self.parentUi.cmb004.setCurrentIndex(3)
+		return 'Select Style: <hl>Lasso</hl>'
 
 
+	@Slots.message
 	def chk007(self):
 		'''
 		Select Style: Paint
 		'''
-		self.setSelectionStyle('paintContext')
 		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk007', setUnChecked='chk005-6')
-		self.parentUi.cmb004.setCurrentIndex(2)
-
-
-	@Slots.message
-	def setSelectionStyle(self, ctx):
-		'''
-		Set the selection style context.
-		args:
-			ctx (str) = Selection style context. Possible values include: 'marquee', 'lasso', 'drag'.
-		'''
-		if pm.contextInfo(ctx, exists=True):
-			pm.deleteUI(ctx)
-
-		if ctx=='selectContext':
-			ctx = pm.selectContext(ctx)
-		elif ctx=='lassoContext':
-			ctx = pm.lassoContext(ctx)
-		elif ctx=='paintContext':
-			ctx = pm.artSelectCtx(ctx)
-
-		pm.setToolTo(ctx)
-		return 'Select Style: <hl>'+ctx+'</hl>'
+		self.parentUi.cmb004.setCurrentIndex(4)
+		return 'Select Style: <hl>Paint</hl>'
 
 
 	def cmb000(self, index=None):
@@ -181,8 +163,8 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		selectionSets = [set for set in rt.selectionSets]
-		contents = cmb.addItems_([set.name for set in selectionSets], "Sets")
+		selectionSets = [s for s in rt.selectionSets]
+		contents = cmb.addItems_([s.name for s in selectionSets], "Sets")
 
 		if not index:
 			index = cmb.currentIndex()
@@ -267,19 +249,22 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb004
 
-		list_ = ['Marquee', 'Lasso', 'Paint'] 
-
-		contents = cmb.addItems_(list_)
+		list_ = ['Marquee', 'Circular', 'Fence', 'Lasso', 'Paint'] 
+		items = cmb.addItems_(list_)
 
 		if not index:
 			index = cmb.currentIndex()
 
-		if index==contents.index('Marquee'): #
-			self.chk005()
-		if index==contents.index('Lasso'): #
-			self.chk006()
-		if index==contents.index('Paint'): #
-			self.chk007()
+		if index==items.index('Marquee'):
+			maxEval('actionMan.executeAction 0 "59232"') #Rectangular select region
+		if index==items.index('Circular'):
+			maxEval('actionMan.executeAction 0 "59233"') #Circular select region
+		if index==items.index('Fence'):
+			maxEval('actionMan.executeAction 0 "59234"') #Fence select region
+		if index==items.index('Lasso'):
+			maxEval('actionMan.executeAction 0 "59235"') #Lasso select region
+		if index==items.index('Paint'):
+			maxEval('actionMan.executeAction 0 "59236"') #Paint select region
 
 
 	def cmb005(self, index=None):
@@ -294,20 +279,20 @@ class Selection(Init):
 		if not index:
 			index = cmb.currentIndex()
 
-		if index==contents.index('Off'):
-			mel.eval('dR_selConstraintOff;') #dR_DoCmd("selConstraintOff");
-		if index==contents.index('Angle'):
-			mel.eval('dR_selConstraintAngle;') #dR_DoCmd("selConstraintAngle");
-		if index==contents.index('Border'):
-			mel.eval('dR_selConstraintBorder;') #dR_DoCmd("selConstraintBorder");
-		if index==contents.index('Edge Loop'):
-			mel.eval('dR_selConstraintEdgeLoop;') #dR_DoCmd("selConstraintEdgeLoop");
-		if index==contents.index('Edge Ring'):
-			mel.eval('dR_selConstraintEdgeRing;') #dR_DoCmd("selConstraintEdgeRing");
-		if index==contents.index('Shell'):
-			mel.eval('dR_selConstraintElement;') #dR_DoCmd("selConstraintElement");
-		if index==contents.index('UV Edge Loop'):
-			mel.eval('dR_selConstraintUVEdgeLoop;') #dR_DoCmd("selConstraintUVEdgeLoop");
+		# if index==contents.index('Off'):
+		# 	mel.eval('dR_selConstraintOff;') #dR_DoCmd("selConstraintOff");
+		# if index==contents.index('Angle'):
+		# 	mel.eval('dR_selConstraintAngle;') #dR_DoCmd("selConstraintAngle");
+		# if index==contents.index('Border'):
+		# 	mel.eval('dR_selConstraintBorder;') #dR_DoCmd("selConstraintBorder");
+		# if index==contents.index('Edge Loop'):
+		# 	mel.eval('dR_selConstraintEdgeLoop;') #dR_DoCmd("selConstraintEdgeLoop");
+		# if index==contents.index('Edge Ring'):
+		# 	mel.eval('dR_selConstraintEdgeRing;') #dR_DoCmd("selConstraintEdgeRing");
+		# if index==contents.index('Shell'):
+		# 	mel.eval('dR_selConstraintElement;') #dR_DoCmd("selConstraintElement");
+		# if index==contents.index('UV Edge Loop'):
+		# 	mel.eval('dR_selConstraintUVEdgeLoop;') #dR_DoCmd("selConstraintUVEdgeLoop");
 
 
 	def tb000(self, state=None):
@@ -368,7 +353,7 @@ class Selection(Init):
 				return
 
 		tolerance = str(tb.s000.value()) #string value because mel.eval is sending a command string
-		mel.eval("doSelectSimilar 1 {\""+ tolerance +"\"}")
+		# mel.eval("doSelectSimilar 1 {\""+ tolerance +"\"}")
 
 
 	def tb002(self, state=None):
@@ -418,13 +403,6 @@ class Selection(Init):
 				rt.selectionSets[name] #if set exists, overwrite set; else create set
 		else:
 			return 'Error: No valid objects selected.'
-
-
-	def b013(self):
-		'''
-		Lasso Select
-		'''
-		mel.eval("LassoTool;")
 
 
 	def b014(self):
