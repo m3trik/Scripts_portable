@@ -94,7 +94,7 @@ class Transform(Init):
 		Transform: Scale
 
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk008-9', setChecked='chk000-2')
+		self.toggleWidgets(setUnChecked='chk008-9', setChecked='chk000-2')
 		self.parentUi.s000.setValue(2)
 		self.parentUi.s000.setSingleStep(1)
 
@@ -104,7 +104,7 @@ class Transform(Init):
 		Transform: Move
 
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk005,chk009,chk000-2')
+		self.toggleWidgets(setUnChecked='chk005,chk009,chk000-2')
 		self.parentUi.s000.setValue(0.1)
 		self.parentUi.s000.setSingleStep(0.1)
 
@@ -114,7 +114,7 @@ class Transform(Init):
 		Transform: Rotate
 
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk005,chk008,chk000-2')
+		self.toggleWidgets(setUnChecked='chk005,chk008,chk000-2')
 		self.parentUi.s000.setValue(45)
 		self.parentUi.s000.setSingleStep(5)
 
@@ -125,9 +125,9 @@ class Transform(Init):
 
 		'''
 		if self.parentUi.chk010.isChecked():
-			self.toggleWidgets(self.parentUi, self.childUi, setDisabled='b029-31')
+			self.toggleWidgets(setDisabled='b029-31')
 		else:
-			self.toggleWidgets(self.parentUi, self.childUi, setEnabled='b029-31')
+			self.toggleWidgets(setEnabled='b029-31')
 
 
 	def transformChecks(self):

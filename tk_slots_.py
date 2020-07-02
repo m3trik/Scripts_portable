@@ -29,8 +29,6 @@ class Slots(QtCore.QObject):
 		'''
 		Get the current Ui.
 		'''
-		# print ('ui', self.sb.getUiName(self.ui)) #same as current ui
-		# print ('currentUi:', self.sb.getUiName(self.sb.getUi()))
 		return self.sb.getUi() #current
 
 	@property
@@ -38,10 +36,7 @@ class Slots(QtCore.QObject):
 		'''
 		Get the calling module's top level Ui.
 		'''
-		# print ('parentUi:', self.sb.getUiName(self.sb.getUi(level=3)))
-		caller = sys._getframe(1)  # Obtain calling frame
-		callingModule = caller.f_globals['__name__']
-		name = callingModule.split('_')[-1] #get name from the module name.
+		name = self.sb.getUiName(self.currentUi)
 		return self.sb.getUi(name, level=3) #main_menu
 
 	@property
@@ -49,72 +44,8 @@ class Slots(QtCore.QObject):
 		'''
 		Get the calling module's submenu.
 		'''
-		# print ('submenu:', self.sb.getUiName(self.sb.getUi(level=2)))
-		caller = sys._getframe(1)  # Obtain calling frame
-		callingModule = caller.f_globals['__name__']
-		name = callingModule.split('_')[-1] #get name from the module name.
+		name = self.sb.getUiName(self.currentUi)
 		return self.sb.getUi(name, level=2) #submenu
-
-
-	# @classmethod
-	# def progress(cls, fn):
-	# 	'''
-	# 	Decorator that populates a messageBox with the string returned by the given function.
-	# 	'''
-	# 	def wrapper(self, *args, **kwargs):
-	# 		self.progressBar(fn(self, *args, **kwargs))
-	# 	return wrapper
-
-
-	def progressBar(self):
-		'''
-		'''
-		if not hasattr(self, '_progressBar'):
-			from widgets.qProgressBar_ import QProgressBar_
-			self._progressBar = QProgressBar_(self.tk)
-
-		try:
-			self.currentUi.progressBar.step1
-		except AttributeError:
-			pass
-
-		# self._progressBar
-
-		return self._progressBar
-
-
-	@classmethod
-	def message(cls, fn):
-		'''
-		Decorator that populates a messageBox with the string returned by the given function.
-		'''
-		def wrapper(self, *args, **kwargs):
-			self.messageBox(fn(self, *args, **kwargs))
-		return wrapper
-
-
-	def messageBox(self, string, location='topMiddle', timeout=1):
-		'''
-		Spawns a message box with the given text.
-		Prints a formatted version of the given string, stripped of html tags, to the console.
-
-		args:
-			location (str)(point) = move the messagebox to the specified location. Can be given as a qpoint or string value. default is: 'topMiddle'
-			timeout (int) = time in seconds before the messagebox auto closes.
-		'''
-		if not hasattr(self, '_messageBox'):
-			from widgets.qMessageBox_ import QMessageBox_
-			self._messageBox = QMessageBox_(self.tk.parent())
-
-		self._messageBox.location = location
-		self._messageBox.timeout = timeout
-
-		if isinstance(string, (str, unicode)):
-			from re import sub
-			print(''+sub('<.*?>', '', string)+'') #strip everything between '<' and '>' (html tags)
-
-			self._messageBox.setText(string)
-			self._messageBox.exec_()
 
 
 	def getObjects(self, class_, objectNames, showError_=False):
@@ -219,9 +150,19 @@ class Slots(QtCore.QObject):
 					signal.connect(slot)
 
 
+	@classmethod
+	def sync(cls, fn):
+		'''
+		Decorator for syncWidgets.
+		'''
+		def wrapper(self, *args, **kwargs):
+			fn(self, *args, **kwargs) #execute the method normally.
+			self.syncWidgets(fn.__name__) #Get the state of the widget in the current ui and set any widgets (having the methods name) in child or parent ui's accordingly.
+		return wrapper
+
 	def syncWidgets(self, widgets, ui=None):
 		'''
-		Sync widget values of one ui to it's parent or submenu.
+		Keep widgets (having the same objectName) in sync across parent and child uis
 		If the second widget does not have an attribute it will silently skip it.
 		Attributes starting with '__' are ignored.
 
@@ -247,8 +188,8 @@ class Slots(QtCore.QObject):
 
 		_widgets = dict(zip(from_widgets, to_widgets)) #{<from_widget>:<to_widget>}
 		for from_widget, to_widget in _widgets.items():
-			gettr_settr = {'isChecked':'setChecked', 'isDisabled':'setDisabled', 'isEnabled':'setEnabled', 'value':'setValue', 'text':'setText', 'icon':'setIcon'}
-			attributes = {settr:getattr(from_widget, gettr)() for gettr,settr in gettr_settr.items() if hasattr(from_widget, gettr)} #get the first widget's attributes:values.
+			attributeTypes = {'isChecked':'setChecked', 'isDisabled':'setDisabled', 'isEnabled':'setEnabled', 'value':'setValue', 'text':'setText', 'icon':'setIcon'}
+			attributes = {settr:getattr(from_widget, gettr)() for gettr,settr in attributeTypes.items() if hasattr(from_widget, gettr)} #get the first widget's attributes:values.
 			# [setattr(to_widget, attr, value) for attr, value in attributes.items() if hasattr(to_widget, attr)] #
 			[getattr(to_widget, attr)(value) for attr, value in attributes.items() if hasattr(to_widget, attr)] #set the second widget's attributes from the first.
 
@@ -258,12 +199,15 @@ class Slots(QtCore.QObject):
 		Set multiple boolean properties, for multiple widgets, on multiple ui's at once.
 
 		args:
-			*args = dynamic ui object/s
+			*args = dynamic ui object/s. If no ui's are given, then the parent and child uis will be used.
 			*kwargs = keyword: - the property to modify. ex. setChecked, setUnChecked, setEnabled, setDisabled, setVisible, setHidden
 					value: string of objectNames - objectNames separated by ',' ie. 'b000-12,b022'
 
-		ex.	self.toggleWidgets(self.ui1, self.ui2, setDisabled='b000', setUnChecked='chk009-12', setVisible='b015,b017')
+		ex.	self.toggleWidgets(<ui1>, <ui2>, setDisabled='b000', setUnChecked='chk009-12', setVisible='b015,b017')
 		'''
+		if not args:
+			args = [self.parentUi, self.childUi]
+
 		for ui in args:
 			for property_ in kwargs: #property_ ie. setUnChecked
 				widgets = self.getObjects(ui, kwargs[property_]) #getObjects returns a widget list from a string of objectNames.
@@ -282,12 +226,15 @@ class Slots(QtCore.QObject):
 
 		args:
 			*args = arg [0] (str) String of objectNames. - objectNames separated by ',' ie. 'b000-12,b022'
-					arg [1:] dynamic ui object/s
+					arg [1:] dynamic ui object/s.  If no ui's are given, then the parent and child uis will be used.
 			*kwargs = keyword: - the property to modify. ex. setText, setValue, setEnabled, setDisabled, setVisible, setHidden
 					value: - intended value.
 
-		ex.	self.setWidgetAttr('chk003', self.parentUi, self.childUi, setText='Un-Crease')
+		ex.	self.setWidgetAttr('chk003', <ui1>, <ui2>, setText='Un-Crease')
 		'''
+		if not args[1:]:
+			args = args+[self.parentUi, self.childUi]
+
 		for ui in args[1:]:
 			widgets = self.getObjects(ui, args[0]) #getObjects returns a widget list from a string of objectNames.
 			for property_, value in kwargs.items():
@@ -477,6 +424,65 @@ class Slots(QtCore.QObject):
 			return l
 		else:
 			return collapsedList
+
+
+	# @classmethod
+	# def progress(cls, fn):
+	# 	'''
+	# 	Decorator for progressBar.
+	# 	'''
+	# 	def wrapper(self, *args, **kwargs):
+	# 		self.progressBar(fn(self, *args, **kwargs))
+	# 	return wrapper
+
+	def progressBar(self):
+		'''
+		'''
+		if not hasattr(self, '_progressBar'):
+			from widgets.qProgressBar_ import QProgressBar_
+			self._progressBar = QProgressBar_(self.tk)
+
+		try:
+			self.currentUi.progressBar.step1
+		except AttributeError:
+			pass
+
+		# self._progressBar
+
+		return self._progressBar
+
+
+	@classmethod
+	def message(cls, fn):
+		'''
+		Decorator for messageBox.
+		'''
+		def wrapper(self, *args, **kwargs):
+			self.messageBox(fn(self, *args, **kwargs))
+		return wrapper
+
+	def messageBox(self, string, location='topMiddle', timeout=1):
+		'''
+		Spawns a message box with the given text.
+		Prints a formatted version of the given string, stripped of html tags, to the console.
+
+		args:
+			location (str)(point) = move the messagebox to the specified location. Can be given as a qpoint or string value. default is: 'topMiddle'
+			timeout (int) = time in seconds before the messagebox auto closes.
+		'''
+		if not hasattr(self, '_messageBox'):
+			from widgets.qMessageBox_ import QMessageBox_
+			self._messageBox = QMessageBox_(self.tk.parent())
+
+		self._messageBox.location = location
+		self._messageBox.timeout = timeout
+
+		if isinstance(string, (str, unicode)):
+			from re import sub
+			print(''+sub('<.*?>', '', string)+'') #strip everything between '<' and '>' (html tags)
+
+			self._messageBox.setText(string)
+			self._messageBox.exec_()
 
 
 

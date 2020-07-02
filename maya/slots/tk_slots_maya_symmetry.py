@@ -66,30 +66,33 @@ class Symmetry(Init):
 		self.viewPortMessage("Symmetry:<hl>"+axis+' '+str(state)+"</hl>")
 
 
+	@Slots.sync
 	def chk000(self):
 		'''
 		Symmetry X
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk001,chk002')
-		state = self.parentUi.chk000.isChecked() #symmetry button state
+		self.toggleWidgets(setUnChecked='chk001,chk002')
+		state = self.currentUi.chk000.isChecked() #symmetry button state
 		self.setSymmetry(state, 'x')
 
 
+	@Slots.sync
 	def chk001(self):
 		'''
 		Symmetry Y
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk000,chk002')
-		state = self.parentUi.chk001.isChecked() #symmetry button state
+		self.toggleWidgets(setUnChecked='chk000,chk002')
+		state = self.currentUi.chk001.isChecked() #symmetry button state
 		self.setSymmetry(state, 'y')
 
 
+	@Slots.sync
 	def chk002(self):
 		'''
 		Symmetry Z
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk000,chk001')
-		state = self.parentUi.chk002.isChecked() #symmetry button state
+		self.toggleWidgets(setUnChecked='chk000,chk001')
+		state = self.currentUi.chk002.isChecked() #symmetry button state
 		self.setSymmetry(state, 'z')
 
 
@@ -108,7 +111,7 @@ class Symmetry(Init):
 		self.parentUi.chk004.setChecked(False) #uncheck symmetry:object space
 		if any ([self.parentUi.chk000.isChecked(), self.parentUi.chk001.isChecked(), self.parentUi.chk002.isChecked()]): #(symmetry)
 			pm.symmetricModelling(edit=True, symmetry=False)
-			self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk000,chk001,chk002')
+			self.toggleWidgets(setUnChecked='chk000,chk001,chk002')
 			return 'Note: First select a seam edge and then check the symmetry button to enable topographic symmetry'
 
 

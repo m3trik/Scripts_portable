@@ -143,7 +143,7 @@
      <string>Materials</string>
     </property>
    </widget>
-   <widget class="QToolButton_" name="tb002_2">
+   <widget class="QToolButton_" name="tb002">
     <property name="enabled">
      <bool>true</bool>
     </property>
@@ -236,37 +236,6 @@
      </size>
     </property>
    </widget>
-   <widget class="QToolButton_" name="tb002">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>240</x>
-      <y>350</y>
-      <width>46</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>111</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="toolTip">
-     <string>Delete Material</string>
-    </property>
-    <property name="text">
-     <string>Delete</string>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>18</width>
-      <height>18</height>
-     </size>
-    </property>
-   </widget>
    <widget class="QPushButton" name="b007">
     <property name="enabled">
      <bool>true</bool>
@@ -296,6 +265,34 @@
       <width>18</width>
       <height>18</height>
      </size>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl002">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>350</y>
+      <width>56</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>19</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>19</height>
+     </size>
+    </property>
+    <property name="text">
+     <string>Delete</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
   </widget>

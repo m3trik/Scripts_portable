@@ -46,6 +46,14 @@ class Mirror(Init):
 		self.parentUi.tb000.setText('Mirror '+axis)
 
 
+	@Slots.sync
+	def chk005(self):
+		'''
+		Mirror: Cut
+		'''
+		pass
+
+
 	@Slots.message
 	def tb000(self, state=None):
 		'''
@@ -152,7 +160,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	Delete: X Axis
 	# 	'''
-	# 	self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk002,chk003')
+	# 	self.toggleWidgets(setUnChecked='chk002,chk003')
 	# 	axis = "X"
 	# 	if self.parentUi.chk000.isChecked():
 	# 		axis = '-'+axis
@@ -164,7 +172,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	Delete: Y Axis
 	# 	'''
-	# 	self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk001,chk003')
+	# 	self.toggleWidgets(setUnChecked='chk001,chk003')
 	# 	axis = "Y"
 	# 	if self.parentUi.chk000.isChecked():
 	# 		axis = '-'+axis
@@ -176,7 +184,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	Delete: Z Axis
 	# 	'''
-	# 	self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk001,chk002')
+	# 	self.toggleWidgets(setUnChecked='chk001,chk002')
 	# 	axis = "Z"
 	# 	if self.parentUi.chk000.isChecked():
 	# 		axis = '-'+axis

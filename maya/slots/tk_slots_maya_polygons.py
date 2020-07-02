@@ -14,21 +14,21 @@ class Polygons(Init):
 		'''
 		Split U
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk010')
+		self.toggleWidgets(setUnChecked='chk010')
 
 
 	def chk009(self):
 		'''
 		Split V
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk010')
+		self.toggleWidgets(setUnChecked='chk010')
 
 
 	def chk010(self):
 		'''
 		Tris
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk008-9')
+		self.toggleWidgets(setUnChecked='chk008-9')
 
 
 	def pin(self, state=None):

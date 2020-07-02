@@ -97,53 +97,26 @@ class Switchboard(QtCore.QObject):
 		return self._sbDict
 
 
-	def addWidgetsAndSetSignals(self, name):
+	def addWidgets(self, name, widgets=None, **kwargs):
 		'''
-		Add the signal/slot connections for each widget in a given ui.
+		Extends the fuctionality of the 'addWidget' method to support adding multiple widgets.
+		If widgets is None; the method will attempt to add all widgets from the ui of the given name.
 
-		The signals dict establishes what type widgets will be added to the widgets, and what associated signal to apply.
-		Following that, the items in the ui are looped over, and the widgets' method resolution order is checked against the signals keys
-		to determine the correct derived class type (used in the case of a custom widget).
-
-		args:
-			name (str) = name of the ui to construct connections for.
-
-		returns:
-			dict - 'objectName':{'widget':<widget>,'signalInstance':<signalInstance>,'method':<method>,'docString':'docString','widgetClassInstance':<class object>,'widgetClassName':'class name'}
-		'''
-		ui = self.getUi(name)
-
-		for objectName, widget in ui.__dict__.items(): #for each object in the ui:
-			self.addWidget(name, widget, objectName)
-
-		# print(self.widgets(name))
-		return self.widgets(name)
-
-
-	def addWidgets(self, name, widgets, objectNames=[]):
-		'''
-		Extends the fuctionality of the 'addWidget' method to allow a list (of widgets) to be passed in.
-		
 		args:
 			name (str) = name of the parent ui to construct connections for.
-			widgets (list) = widget objects to be added.
-			objectName (list) = widget string names.
+			widgets (list) = widget objects to be added. If none are given all objects from the ui will be added.
 		'''
-		if objectNames and not len(widgets)==len(objectNames):
-			raise Exception('Error: The list of objectNames must be of equal length to that of the given widgets.')
+		if widgets is None:
+			ui = self.getUi(name)
+			widgets = ui.__dict__.values() #each object in the ui:
 
-		for i, widget in enumerate(widgets):
-			try:
-				self.addWidget(name, widget, objectNames[i])
-			except:
-				self.addWidget(name, widget)
+		for widget in widgets:
+			self.addWidget(name, widget, **kwargs)
 
 
-	def addWidget(self, name, widget, objectName=None):
+	def addWidget(self, name, widget, **kwargs):
 		'''
-		Adds a widget to the widgets under the given (ui) name.
-		Decoupling this from 'addWidgetsAndSetSignals' allows additional widgets to be added at any time.
-		The signals dictionary provides both a way to set a default signal for a widget type.
+		Adds a widget to the widgets dict under the given (ui) name.
 
 		args:
 			name (str) = name of the parent ui to construct connections for.
@@ -155,10 +128,9 @@ class Switchboard(QtCore.QObject):
 		'''
 		name = str(name) #prevent unicode
 
-		if objectName:
-			widget.setObjectName(objectName) #assure the widget has an object name.
-		else:
-			objectName = str(widget.objectName())
+		self.setAttributes(kwargs) #set any passed in keyword args for the widget.
+
+		objectName = str(widget.objectName())
 
 		#add the widget as an attribute of the ui if it is not already.
 		ui = self.getUi(name)
@@ -188,10 +160,30 @@ class Switchboard(QtCore.QObject):
 		return self.sbDict[name]['widgets'][widget] #return the stored widget.
 
 
+	def removeWidgets(self, widgets, name=None):
+		'''
+		Remove widget keys from the widgets dict.
+
+		args:
+			widgets (obj)(list) = single or list of QWidgets.
+			name (str) = ui name.
+		'''
+		if not name:
+			name = self.getUiName()
+
+		widgets = self.list(widgets) #if 'widgets' isn't a list, convert it to one.
+		for widget in widgets:
+			w = self.sbDict[name]['widgets'].pop(widget, None)
+			self.gcProtect(w)
+
+			try: #remove the widget attribute from the ui if it exists.
+				delattr(ui, w.objectName())
+			except: pass
+
+
 	def widgets(self, name):
 		'''
 		Dictionary holding widget information.
-		Used primarily by 'addWidgetsAndSetSignals' method to construct signal and slot connections that can later be connected and disconnected by the connect/disconnectSlots methods.
 
 		args:
 			name (str) = name of ui/class. ie. 'polygons'
@@ -212,30 +204,60 @@ class Switchboard(QtCore.QObject):
 		'''
 		if not 'widgets' in self.sbDict[name]:
 			self.sbDict[name]['widgets'] = {}
-			self.addWidgetsAndSetSignals(name) #construct the signals and slots for the ui
+			self.addWidgets(name) #construct the signals and slots for the ui
 
 		return self.sbDict[name]['widgets']
 
 
-	def removeWidgets(self, widgets, name=None):
+	def setAttributes(self, attributes=None, order=['globalPos', 'setVisible'], **kwargs):
 		'''
-		Remove widget keys from the 'widgets'.
-
+		Works with attributes passed in as a dict or kwargs.
+		If attributes are passed in as a dict, kwargs are ignored.
 		args:
-			widgets (obj)(list) = single or list of QWidgets.
-			name (str) = ui name.
+			attributes (dict) = keyword attributes and their corresponding values.
+			#order (list) = list of string keywords. ie. ['move', 'show']. attributes in this list will be set last, in order of the list. an example would be setting move positions after setting resize arguments.
+		kwargs:
+			set any keyword arguments.
 		'''
-		if not name:
-			name = self.getUiName()
+		if not attributes:
+			attributes = kwargs
 
-		widgets = self.list(widgets) #if 'widgets' isn't a list, convert it to one.
-		for widget in widgets:
-			w = self.sbDict[name]['widgets'].pop(widget, None)
-			self.gcProtect(w)
+		for k in order:
+			v = attributes.pop(k, None)
+			if v:
+				from collections import OrderedDict
+				attributes = OrderedDict(attributes)
+				attributes[k] = v
 
-			try: #remove the widget attribute from the ui if it exists.
-				delattr(ui, w.objectName())
-			except: pass
+		for attr, value in attributes.items():
+			try:
+				getattr(self, attr)(value)
+
+			except Exception as error:
+				if type(error)==AttributeError:
+					self.setCustomAttribute(attr, value)
+				else:
+					raise error
+
+
+	def setCustomAttribute(self, attr, value):
+		'''
+		Handle custom keyword arguments.
+		args:
+			attr (str) = custom keyword attribute.
+			value (str) = the value corresponding to the given attr.
+		kwargs:
+			copy (obj) = widget to copy certain attributes from.
+			globalPos (QPoint) = move to given global location and center.
+		'''
+		if attr=='copy':
+			self.setObjectName(value.objectName())
+			self.resize(value.size())
+			self.setText(value.text())
+			self.setWhatsThis(value.whatsThis())
+
+		if attr=='globalPos':
+			self.move(self.mapFromGlobal(value - self.rect().center())) #move and center
 
 
 	def getClassFromUiName(self, name):
@@ -252,7 +274,9 @@ class Switchboard(QtCore.QObject):
 		n = name.split('_')[0] #get ie. 'polygons' from 'polygons_submenu' in cases where a submenu shares the same slot class of it's parent menu.
 		ui = self.getUi(name)
 		# path = 'slots.{0}'.format(n[0].upper()+n[1:]) #ie. slots.Init
-		path = 'tk_slots_{0}_{1}.{2}'.format(self.getMainAppWindow(objectName=True), n, n[0].upper()+n[1:]) #ie. tk_slots_maya_init.Init
+		mainAppWindowName = self.getMainAppWindow(objectName=True)
+		className = n[0].upper()+n[1:] #capitalize the first char of name to get the class name.
+		path = 'tk_slots_{0}_{1}.{2}'.format(mainAppWindowName, n, className) #ie. 'tk_slots_maya_init.Init'
 		class_ = self.getClassInstance(path, ui=ui, sb=self, tk=self.parent) #get the class instance while passing in any keyword arguments into **kwargs.
 
 		return class_
@@ -1495,7 +1519,7 @@ sbDict={
 									'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000016B62BC5780>',
 									'prefix':'cmb', 
 									'docString': '\n\t\tSelect All Of Type\n\t\t',
-									'method': '<bound method Selection.cmb002 of <tk_slots_max_selection.Selection object at 0x0000016B6BC26470>>'}, }},
+									'method': '<bound method Polygons.cmb002 of <tk_slots_max_polygons.Polygons object at 0x0000016B6BC26470>>'}, }},
 	'mainAppWindow': None,
 	'name': ['polygons'],
 	'prevCommand': [['b000', 'multi-cut tool']],
@@ -1534,6 +1558,12 @@ sbDict = {
 
 
 # deprecated: -----------------------------------
+
+
+
+
+	
+
 
 
 # def hasKey(self, *args): #check if key exists in switchboard dict.

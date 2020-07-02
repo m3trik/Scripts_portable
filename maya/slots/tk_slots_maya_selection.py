@@ -96,21 +96,21 @@ class Selection(Init):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk001-2')
+		self.toggleWidgets(setUnChecked='chk001-2')
 
 
 	def chk001(self):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk000,chk002')
+		self.toggleWidgets(setUnChecked='chk000,chk002')
 
 
 	def chk002(self):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk000-1')
+		self.toggleWidgets(setUnChecked='chk000-1')
 
 
 	@Slots.message
@@ -131,7 +131,7 @@ class Selection(Init):
 		Select Style: Marquee
 		'''
 		self.setSelectionStyle('selectContext')
-		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk005', setUnChecked='chk006-7')
+		self.toggleWidgets(setChecked='chk005', setUnChecked='chk006-7')
 		self.parentUi.cmb004.setCurrentIndex(0)
 
 
@@ -140,7 +140,7 @@ class Selection(Init):
 		Select Style: Lasso
 		'''
 		self.setSelectionStyle('lassoContext')
-		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk006', setUnChecked='chk005,chk007')
+		self.toggleWidgets(setChecked='chk006', setUnChecked='chk005,chk007')
 		self.parentUi.cmb004.setCurrentIndex(1)
 
 
@@ -149,7 +149,7 @@ class Selection(Init):
 		Select Style: Paint
 		'''
 		self.setSelectionStyle('paintContext')
-		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk007', setUnChecked='chk005-6')
+		self.toggleWidgets(setChecked='chk007', setUnChecked='chk005-6')
 		self.parentUi.cmb004.setCurrentIndex(2)
 
 

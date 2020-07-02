@@ -808,16 +808,16 @@ class StyleSheet():
 	dark=f('''
 		/*Start Dark Version */
 
-		QPushButton, QToolButton {
+		QPushButton, QToolButton, QLabel {
 			background-color: {COLOR_DARK};
 			color: {COLOR_TEXT3};
 		}
 
-		QPushButton::enabled, QToolButton::enabled {
+		QPushButton::enabled, QToolButton::enabled, QLabel::enabled {
 			color: {COLOR_TEXT3};
 		}
 
-		QPushButton::disabled, QToolButton::disabled {
+		QPushButton::disabled, QToolButton::disabled, QLabel::disabled {
 			color: {COLOR_TEXT2};
 		}
 
@@ -826,17 +826,17 @@ class StyleSheet():
 			color: {COLOR_TEXT2};
 		}
 
-		QPushButton::hover, QToolButton::hover {
+		QPushButton::hover, QToolButton::hover, QLabel::hover {
 			background-color: {COLOR_ACCENT};
 			color: {COLOR_TEXT1};
 		}
 
-		QPushButton::checked::hover, QToolButton::checked::hover {
+		QPushButton::checked::hover, QToolButton::checked::hover, QLabel::checked::hover {
 			background-color: {COLOR_ACCENT};
 			color: {COLOR_TEXT2};
 		}
 
-		QPushButton::pressed, QToolButton::pressed {
+		QPushButton::pressed, QToolButton::pressed, QLabel::pressed {
 			background-color: {COLOR_MEDLIGHT};
 			color: {COLOR_TEXT1};
 		}

@@ -11,7 +11,7 @@ class Selection(Init):
 
 		# try: #set initial checked button states
 		# 	state = pm.selectPref(query=True, useDepth=True)
-		# 	self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk004') #chk004 ignore backfacing (camera based selection)
+		# 	self.toggleWidgets(setChecked='chk004') #chk004 ignore backfacing (camera based selection)
 
 		# 	#selection style: set initial checked state
 		# 	ctx = pm.currentCtx() #flags (ctx, c=True) get the context's class.
@@ -96,21 +96,21 @@ class Selection(Init):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk001-2')
+		self.toggleWidgets(setUnChecked='chk001-2')
 
 
 	def chk001(self):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk000,chk002')
+		self.toggleWidgets(setUnChecked='chk000,chk002')
 
 
 	def chk002(self):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk000-1')
+		self.toggleWidgets(setUnChecked='chk000-1')
 
 
 	@Slots.message
@@ -132,7 +132,7 @@ class Selection(Init):
 		'''
 		Select Style: Marquee
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk005', setUnChecked='chk006-7')
+		self.toggleWidgets(setChecked='chk005', setUnChecked='chk006-7')
 		self.parentUi.cmb004.setCurrentIndex(0)
 		return 'Select Style: <hl>Marquee</hl>'
 
@@ -142,7 +142,7 @@ class Selection(Init):
 		'''
 		Select Style: Lasso
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk006', setUnChecked='chk005,chk007')
+		self.toggleWidgets(setChecked='chk006', setUnChecked='chk005,chk007')
 		self.parentUi.cmb004.setCurrentIndex(3)
 		return 'Select Style: <hl>Lasso</hl>'
 
@@ -152,7 +152,7 @@ class Selection(Init):
 		'''
 		Select Style: Paint
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk007', setUnChecked='chk005-6')
+		self.toggleWidgets(setChecked='chk007', setUnChecked='chk005-6')
 		self.parentUi.cmb004.setCurrentIndex(4)
 		return 'Select Style: <hl>Paint</hl>'
 

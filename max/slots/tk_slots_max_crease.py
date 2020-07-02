@@ -12,6 +12,7 @@ class Crease(Init):
 		self.creaseValue = 10
 
 
+	@Slots.sync
 	def s003(self):
 		'''
 		Crease Amount
@@ -21,7 +22,7 @@ class Crease(Init):
 			if not self.parentUi.chk003.isChecked(): #toggle max
 				self.creaseValue = self.parentUi.s003.value()
 				text = self.currentUi.tb000.text().split(' ')[0]
-				self.setWidgetKwargs('tb000', self.parentUi, self.childUi, setText='{} {}'.format(text, self.creaseValue))
+				self.currentUi.tb000.setText('{} {}'.format(text, self.creaseValue))
 
 
 	def pin(self, state=None):
@@ -53,6 +54,7 @@ class Crease(Init):
 		# 	cmb.setCurrentIndex(0)
 
 
+	@Slots.sync
 	def chk002(self):
 		'''
 		Un-Crease
@@ -60,16 +62,17 @@ class Crease(Init):
 		if self.currentUi.chk002.isChecked():
 			self.parentUi.s003.setValue(0) #crease value
 			self.parentUi.s004.setValue(180) #normal angle
-			self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk002', setUnChecked='chk003')
+			self.toggleWidgets(setChecked='chk002', setUnChecked='chk003')
 			self.parentUi.s003.setDisabled(True)
-			self.setWidgetKwargs('tb000', self.parentUi, self.childUi, setText='Un-Crease 0')
+			self.currentUi.tb000.setText('Un-Crease 0')
 		else:
 			self.parentUi.s003.setValue(self.creaseValue) #crease value
 			self.parentUi.s004.setValue(30) #normal angle
 			self.parentUi.s003.setEnabled(True)
-			self.setWidgetKwargs('tb000', self.parentUi, self.childUi, setText='{} {}'.format('Crease', self.creaseValue))
+			self.currentUi.tb000.setText('{} {}'.format('Crease', self.creaseValue))
 
 
+	@Slots.sync
 	def chk003(self):
 		'''
 		Crease: Max
@@ -77,24 +80,25 @@ class Crease(Init):
 		if self.currentUi.chk003.isChecked():
 			self.parentUi.s003.setValue(10) #crease value
 			self.parentUi.s004.setValue(30) #normal angle
-			self.toggleWidgets(self.parentUi, self.childUi, setChecked='chk003', setUnChecked='chk002')
+			self.toggleWidgets(setChecked='chk003', setUnChecked='chk002')
 			self.parentUi.s003.setDisabled(True)
-			self.setWidgetKwargs('tb000', self.parentUi, self.childUi, setText='Crease 10')
+			self.currentUi.tb000.setText('Crease 10')
 		else:
 			self.parentUi.s003.setValue(self.creaseValue) #crease value
 			self.parentUi.s004.setValue(60) #normal angle
 			self.parentUi.s003.setEnabled(True)
-			self.setWidgetKwargs('tb000', self.parentUi, self.childUi, setText='{} {}'.format('Crease', self.creaseValue))
+			self.currentUi.tb000.setText('{} {}'.format('Crease', self.creaseValue))
 
 
+	@Slots.sync
 	def chk011(self):
 		'''
 		Crease: Auto
 		'''
 		if self.currentUi.chk011.isChecked():
-			self.toggleWidgets(self.parentUi, self.childUi, setEnabled='s005,s006')
+			self.toggleWidgets(setEnabled='s005,s006')
 		else:
-			self.toggleWidgets(self.parentUi, self.childUi, setDisabled='s005,s006')
+			self.toggleWidgets(setDisabled='s005,s006')
 
 
 	def tb000(self, state=None):
@@ -170,9 +174,9 @@ class Crease(Init):
 				self.parentUi.b000.setText(creaseSet)
 			else:
 				self.parentUi.b000.setText("must select set first")
-				self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='b000')
+				self.toggleWidgets(setUnChecked='b000')
 			if self.parentUi.b001.isChecked():
-				self.toggleWidgets(self.parentUi, self.childUi, setEnabled='b052')
+				self.toggleWidgets(setEnabled='b052')
 		else:
 			self.parentUi.b000.setText("Crease Set")
 
@@ -192,9 +196,9 @@ class Crease(Init):
 				self.parentUi.b001.setText(newObject)
 			else:
 				self.parentUi.b001.setText("must select obj first")
-				self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='b001')
+				self.toggleWidgets(setUnChecked='b001')
 			if self.parentUi.b000.isChecked():
-				self.toggleWidgets(self.parentUi, self.childUi, setEnabled='b052')
+				self.toggleWidgets(setEnabled='b052')
 		else:
 			self.parentUi.b001.setText("Object")
 
@@ -229,7 +233,7 @@ class Crease(Init):
 			# print("crease:", name)
 		pm.undoInfo (closeChunk=1)
 
-		self.toggleWidgets(self.parentUi, self.childUi, setDisabled='b052', setUnChecked='b000')#,self.parentUi.b001])
+		self.toggleWidgets(setDisabled='b052', setUnChecked='b000')#,self.parentUi.b001])
 		self.parentUi.b000.setText("Crease Set")
 		# self.parentUi.b001.setText("Object")
 

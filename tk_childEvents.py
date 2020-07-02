@@ -65,23 +65,13 @@ class EventFactoryFilter(QtCore.QObject):
 				if uiLevel<3:
 					self.resizeAndCenterWidget(widget)
 
-			elif derivedType=='QComboBox':
-				if callable(classMethod):
-					classMethod()
-					widget.setCurrentItem(0)
-
 			elif derivedType=='QWidget':
 				if self.sb.prefix(widget, 'w') and uiLevel==1: #prefix returns True if widgetName startswith the given prefix, and is followed by three integers.
 					widget.setVisible(False)
 
-			elif derivedType=='QTreeWidget':
-				if widgetType=='QTreeWidget_ExpandableList':
-					if callable(classMethod):
-						classMethod()
-
 			#add any of the widget's children not already stored in widgets (now that menus and such have been initialized).
-			if not widgetType=='QTreeWidget_ExpandableList':
-				[self.addWidgets(name, w) for w in widget.children() if w not in widgets]
+			exclude = ['QTreeWidget_ExpandableList']
+			[self.addWidgets(name, w) for w in widget.children() if w not in widgets and not w in exclude]
 
 
 	def addWidgets(self, name, widgets):
@@ -250,6 +240,7 @@ class EventFactoryFilter(QtCore.QObject):
 		self.derivedType = self.sb.getDerivedType(self.widget, self.name)
 		self.ui = self.sb.getUi(self.name)
 		self.uiLevel = self.sb.getUiLevel(self.name)
+		self.classMethod = self.sb.getMethod(self.name, self.widgetName)
 
 		eventName = EventFactoryFilter.createEventName(event) #get 'mousePressEvent' from <QEvent>
 		# print(self.name, eventName, self.widgetType, self.widgetName)
@@ -273,15 +264,27 @@ class EventFactoryFilter(QtCore.QObject):
 		if self.widgetName=='mainWindow':
 			self.widget.activateWindow()
 
-		if self.widgetName=='info':
+		elif self.widgetName=='info':
 			self.resizeAndCenterWidget(self.widget)
 
-		if self.widgetType=='QTreeWidget_ExpandableList':
-			if self.widget.refresh:
-				widgets = self.widget.getWidgets(refreshedWidgets=1) #get only any newly created widgets on each refresh.
-			else:
-				widgets = self.widget.getWidgets(removeNoneValues=1) #get all widgets on first show.
-			self.addWidgets(self.sb.getUiName(), widgets) #removeWidgets=self.widget._gcWidgets.keys()
+		if self.derivedType=='QComboBox':
+			if callable(self.classMethod):
+				try:
+					self.classMethod()
+					self.widget.setCurrentItem(0)
+				except (AttributeError, NameError) as error:
+					print(os.path.splitext(os.path.basename(__file__))[0], error)
+
+		elif self.derivedType=='QTreeWidget':
+			if self.widgetType=='QTreeWidget_ExpandableList':
+				if self.callable(classMethod):
+					self.classMethod()
+
+			if self.widget.refresh: #on each refresh:
+				widgets = self.widget.getWidgets(refreshedWidgets=1) #get only any newly created widgets.
+			else: #on first show:
+				widgets = self.widget.getWidgets(removeNoneValues=1) #get all widgets.
+			self.addWidgets(self.ui, widgets) #removeWidgets=self.widget._gcWidgets.keys()
 
 
 	def hideEvent(self, event):

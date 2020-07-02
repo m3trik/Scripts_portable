@@ -79,7 +79,7 @@ class Rigging(Init):
 		'''
 		Scale Joint
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk001-2')
+		self.toggleWidgets(setUnChecked='chk001-2')
 		# self.parentUi.s000.setValue(pm.jointDisplayScale(query=1)) #init global joint display size
 
 
@@ -87,7 +87,7 @@ class Rigging(Init):
 		'''
 		Scale IK
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk000, chk002')
+		self.toggleWidgets(setUnChecked='chk000, chk002')
 		# self.parentUi.s000.setValue(pm.ikHandleDisplayScale(query=1)) #init IK handle display size
 		
 
@@ -95,7 +95,7 @@ class Rigging(Init):
 		'''
 		Scale IK/FK
 		'''
-		self.toggleWidgets(self.parentUi, self.childUi, setUnChecked='chk000-1')
+		self.toggleWidgets(setUnChecked='chk000-1')
 		# self.parentUi.s000.setValue(pm.jointDisplayScale(query=1, ikfk=1)) #init IKFK display size
 
 
