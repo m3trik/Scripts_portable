@@ -18,7 +18,6 @@ class Rigging(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya Rigging Editors')
-
 			return
 
 
@@ -81,7 +80,7 @@ class Rigging(Init):
 		Scale Joint
 		'''
 		self.toggleWidgets(setUnChecked='chk001-2')
-		self.parentUi.s000.setValue(pm.jointDisplayScale(query=1)) #init global joint display size
+		self.parentUi.tb000.s000.setValue(pm.jointDisplayScale(query=1)) #init global joint display size
 
 
 	def chk001(self):
@@ -125,7 +124,10 @@ class Rigging(Init):
 			tb.add('QCheckBox', setText='IK\\FK', setObjectName='chk002', setChecked=True, setToolTip='Display IK\\FK.')
 			tb.add('QDoubleSpinBox', setPrefix='Tolerance: ', setObjectName='s000', minMax_='0.00-10 step.5', setValue=1.0, setToolTip='Global Display Scale for the selected type.')
 			
-			self.chk000() #init scale joint value
+			try:
+				self.chk000() #init scale joint value
+			except NameError:
+				pass
 			if state=='setMenu':
 				return
 

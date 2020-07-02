@@ -80,7 +80,7 @@ class Rigging(Init):
 		Scale Joint
 		'''
 		self.toggleWidgets(setUnChecked='chk001-2')
-		# self.parentUi.s000.setValue(pm.jointDisplayScale(query=1)) #init global joint display size
+		# self.parentUi.tb000.s000.setValue(pm.jointDisplayScale(query=1)) #init global joint display size
 
 
 	def chk001(self):
