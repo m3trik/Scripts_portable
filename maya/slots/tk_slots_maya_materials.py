@@ -57,14 +57,14 @@ class Materials(Init):
 		Editors
 		'''
 		cmb = self.parentUi.cmb001
-		
-		files = ['Hypershade']
-		contents = cmb.addItems_(files, 'Maya Material Editors')
 
-		if index is None:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index('Hypershade'):
+		if index=='setMenu':
+			files = ['Hypershade']
+			cmb.addItems_(files, 'Maya Material Editors')
+			return
+
+		if index>0:
+			if index==cmb.items.index('Hypershade'):
 				mel.eval('HypershadeWindow;')
 			cmb.setCurrentIndex(0)
 
@@ -78,16 +78,17 @@ class Materials(Init):
 		'''
 		cmb = self.parentUi.cmb002
 
-		if not cmb.containsContextMenuItems:
+		if index=='setMenu':
 			cmb.addToContext(QLabel_, setText='Open in Editor', setObjectName='lbl000', setToolTip='Open material in editor.')
-			cmb.addToContext(QLabel_, setText='Rename', setObjectName='lbl001', setToolTip='Rename material')
+			cmb.addToContext(QLabel_, setText='Rename', setObjectName='lbl001', setToolTip='Rename the current material.')
 			cmb.addToContext(QLabel_, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current material.')
 			cmb.addToContext(QLabel_, setText='Delete All Unused Materials', setObjectName='lbl003', setToolTip='Delete All unused materials.')
 			cmb.addToContext(QLabel_, setText='Refresh', setObjectName='cmb002', setToolTip='Refresh materials list')
-
+			return
 
 		if cmb.lineEdit():
 			self.renameMaterial()
+			self.lbl001(setEditable=False)
 			return
 
 		try:
@@ -311,9 +312,6 @@ class Materials(Init):
 				pm.rename(self.currentMaterial.name(), newMatName)
 			except RuntimeError as error:
 				cmb.setItemText(cmb.currentIndex(), str(error.strip('\n')))
-
-		#re-enable widgets
-		self.lbl001(setEditable=False)
 
 
 	@Slots.message

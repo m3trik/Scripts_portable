@@ -27,18 +27,18 @@ class Subdivision(Init):
 		Editors
 		'''
 		cmb = self.parentUi.cmb000
-		
-		list_ = ['Polygon Display Options', 'Reduce Polygons','Add Divisions','Smooth','SubDiv Proxy']
-		contents = cmb.addItems_(list_, 'Subdivision Editiors')
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
+		if index=='setMenu':
+			list_ = ['Polygon Display Options', 'Reduce Polygons','Add Divisions','Smooth','SubDiv Proxy']
+			cmb.addItems_(list_, 'Subdivision Editiors')
+			return
+
+		if index>0:
 			if index==contents.index('Polygon Display Options'):
 				mel.eval("CustomPolygonDisplayOptions") #Polygon Display Options #mel.eval("polysDisplaySetup 1;")
-			if index==contents.index('Reduce Polygons'):
+			elif index==contents.index('Reduce Polygons'):
 				mel.eval("ReducePolygonOptions;")
-			if index==contents.index('Add Divisions'):
+			elif index==contents.index('Add Divisions'):
 				mel.eval("SubdividePolygonOptions")
 			cmb.setCurrentIndex(0)
 
@@ -49,21 +49,21 @@ class Subdivision(Init):
 		'''
 		cmb = self.parentUi.cmb001
 		
-		list_ = ['Create Subdiv Proxy', 'Remove Subdiv Proxy Mirror', 'Crease Tool', 'Toggle Subdiv Proxy Display', 'Both Proxy and Subdiv Display']
-		contents = cmb.addItems_(list_, 'Smooth Proxy')
+		if index=='setMenu':
+			list_ = ['Create Subdiv Proxy', 'Remove Subdiv Proxy Mirror', 'Crease Tool', 'Toggle Subdiv Proxy Display', 'Both Proxy and Subdiv Display']
+			cmb.addItems_(list_, 'Smooth Proxy')
+			return
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
+		if index>0:
 			if index==contents.index('Create Subdiv Proxy'):
 				mel.eval('SmoothProxyOptions;') #'Add polygons to the selected proxy objects.' #performSmoothProxy 1;
-			if index==contents.index('Remove Subdiv Proxy Mirror'):
+			elif index==contents.index('Remove Subdiv Proxy Mirror'):
 				mel.eval('UnmirrorSmoothProxyOptions;') #'Create a single low resolution mesh for a mirrored proxy setup.' #performUnmirrorSmoothProxy 1;
-			if index==contents.index('Crease Tool'):
+			elif index==contents.index('Crease Tool'):
 				mel.eval('polyCreaseProperties;') #'Harden or soften the edges of a smooth mesh preview.' #polyCreaseValues polyCreaseContext;
-			if index==contents.index('Toggle Subdiv Proxy Display'):
+			elif index==contents.index('Toggle Subdiv Proxy Display'):
 				mel.eval('SmoothingDisplayToggle;')	#'Toggle the display of smooth shapes.' #smoothingDisplayToggle 1;
-			if index==contents.index('Both Proxy and Subdiv Display'):
+			elif index==contents.index('Both Proxy and Subdiv Display'):
 				mel.evel('SmoothingDisplayShowBoth;') #'Display both smooth shapes' #smoothingDisplayToggle 0;
 			cmb.setCurrentIndex(0)
 

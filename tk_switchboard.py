@@ -13,19 +13,19 @@ import sys, os.path
 
 
 # ------------------------------------------------
-#	Manage Ui elements
+#	Manage Ui element information.
 # ------------------------------------------------
 class Switchboard(QtCore.QObject):
 	'''
 	Get/set elements across modules using convenience methods.
 	
-	ui name/corresponding class name - should always be the same. (case insensitive)
-	ui files are looked for in a sub dir named 'ui'.
+	Ui name/and it's corresponding slot class name should always be the same. (case insensitive) ie. 'polygons' (ui name) will look to build connections to 'Polygons' (class name). 
+	Widget ovjectName/corresponding class method name need to be the same. ie. 'b000' (widget objectName) will try to connect to <b000> class method.
 
-	widget name/corresponding method name - need to be the same.
-	custom widget modules are looked for in a sub directory named 'widgets'. The module name and custom widget class name need to be identical.
+	Ui files are looked for in a sub dir named 'ui'. naming convention is: <ui name>.ui ie. polygons.ui
+	Custom widget modules are looked for in a sub directory named 'widgets'. naming convention: <name capital first char> widget class inside <name lowercase first char>.py module. ie. QLabel_ class inside qLabel_.py module.
 
-	structure:
+	nested dictionary structure:
 	_sbDict = {	
 		'<ui name>' : {
 					'ui' : <ui object>,
@@ -51,7 +51,7 @@ class Switchboard(QtCore.QObject):
 		'gcProtect' : [items protected from garbage collection]
 	}
 
-	The widgets is built as needed for each class when connectSlots (or any other dependant method) is called.
+	A widgets dict is built as needed for each class when connectSlots (or any other dependant) is called.
 	'''
 
 	def __init__(self, parent):
@@ -294,6 +294,7 @@ class Switchboard(QtCore.QObject):
 		'''
 		signals = { #the default signal to be associated with each widget type.
 			'QAction':'triggered',
+			'QLabel':'released',
 			'QPushButton':'released',
 			'QToolButton':'released',
 			'QListWidget':'itemClicked',
@@ -407,12 +408,12 @@ class Switchboard(QtCore.QObject):
 					print('Error: {0} {1} disconnectSlots: {2} {3} #'.format(name, widget.objectName(), signal, slot), '\n', error)
 
 
-	def uiList(self, name=False, ui=False):
+	def uiList(self, names=False, ui=False):
 		'''
 		Get a list of either all ui names, all ui object's, or both as key/value pairs in a dict.
 
 		args:
-			name (bool) = return string ui list
+			names (bool) = return string ui list
 			ui (bool) =	return dynamic ui list
 
 		returns:
@@ -420,7 +421,7 @@ class Switchboard(QtCore.QObject):
 			if ui: return list of dynamic ui objects
 			else: dict of ui names strings as keys, and corresponding ui objects as values. ie. {'ui name':<ui object>}
 			'''
-		if name:
+		if names:
 			return [k for k,v in self.sbDict.items() if type(v)==dict and 'ui' in v]
 		elif ui:
 			return [v['ui'] for k,v in self.sbDict.items() if type(v)==dict and 'ui' in v]
@@ -496,7 +497,7 @@ class Switchboard(QtCore.QObject):
 		if not type(index)==int:
 			index = self.getUiIndex(index) #get index using name
 
-		self.sbDict['name'].append(self.uiList(name=True)[index])
+		self.sbDict['name'].append(self.uiList(names=True)[index])
 
 		return self.sbDict['name'][-1]
 
@@ -632,9 +633,9 @@ class Switchboard(QtCore.QObject):
 		'''
 		
 		if name:
-			return self.uiList(name=True).index(name)
+			return self.uiList(names=True).index(name)
 		else:
-			return self.uiList(name=True).index(self.getUiName())
+			return self.uiList(names=True).index(self.getUiName())
 
 
 	def setUiSize(self, name=None, size=None): #store ui size.
@@ -1042,6 +1043,9 @@ class Switchboard(QtCore.QObject):
 
 		docString = next(w['docString'] for w in self.sbDict[name]['widgets'].values() if w['widgetName']==widgetName)
 
+		if docString is None:
+			return None
+
 		lines = docString.split('\n')
 		if first_line_only:
 			i=0
@@ -1321,7 +1325,7 @@ class Switchboard(QtCore.QObject):
 		Get or Query the widgets prefix.
 		A valid prefix is returned when the given widget's objectName startswith an alphanumeric char, followed by at least three integers. ex. i000 (alphanum,int,int,int)
 
-		ex. prefix('i023') returns 'i'
+		ex. prefix('b023') returns 'b'
 		if the second 'prefix' arg is given, then the method checks if the given objectName has the prefix, and the return value is bool.
 
 		args:
@@ -1334,7 +1338,7 @@ class Switchboard(QtCore.QObject):
 			else:
 				(str) alphanumeric 'string' 
 
-		ex call: sb.prefix(widget, ['b', 'v', 'i'])
+		ex call: sb.prefix(widget, ['b', 'chk', '_'])
 		'''
 		if prefix is not None: #check the actual prefix against the given prefix and return bool.
 			prefix = self.list(prefix) #if 'widgets' isn't a list, convert it to one.

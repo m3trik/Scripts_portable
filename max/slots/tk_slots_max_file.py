@@ -53,14 +53,13 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if not cmb.containsContextMenuItems:
+		if index=='setMenu':
 			cmb.addToContext('QPushButton', setObjectName='b001', setText='Last', setToolTip='Open the most recent file.')
+			return
 
 		list_ = [f for f in rt.getRecentfiles()]
 		items = cmb.addItems_(list_, "Recent Files")
 
-		if not index:
-			index = cmb.currentIndex()
 		if index>0:
 			# force=True; force if maxEval("maxFileName;") else not force #if sceneName prompt user to save; else force open.  also: checkForSave(); If the scene has been modified since the last file save (if any), calling this function displays the message box prompting the user that the scene has been modified and requests to save.
 			rt.loadMaxFile(str(items[index]))
@@ -73,14 +72,15 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb001
 
+		if index=='setMenu':
+			return
+
 		path = ''
 		list_ = []#[f for f in os.listdir(path)]
 
 		items = cmb.addItems_(list_, "Recent Projects")
 
-		# if not index:
-		# 	index = cmb.currentIndex()
-		# if index!=0:
+		# if index>0:
 		# 	maxEval('setProject "'+items[index]+'"')
 		# 	cmb.setCurrentIndex(0)
 
@@ -91,15 +91,16 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb002
 
+		if index=='setMenu':
+			return
+
 		path = MaxPlus.PathManager.GetAutobackDir()
 		files = [f for f in os.listdir(path) if f.endswith('.max') or f.endswith('.bak')] #get list of max autosave files
 
 		list_ = [f+'  '+datetime.fromtimestamp(os.path.getmtime(path+'\\'+f)).strftime('%H:%M  %m-%d-%Y') for f in files] #attach modified timestamp
 		items = cmb.addItems_(sorted(list_, reverse=1), "Recent Autosave")
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
+		if index>0:
 			rt.loadMaxFile(path+'\\'+str(files[index-1]))
 			cmb.setCurrentIndex(0)
 
@@ -110,26 +111,25 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb003
 
-		items = cmb.addItems_(['Import file', 'Import Options', 'Merge', 'Replace', 'Link Revit', 'Link FBX', 'Link AutoCAD'], 'Import')
+		if index=='setMenu':
+			cmb.addItems_(['Import file', 'Import Options', 'Merge', 'Replace', 'Link Revit', 'Link FBX', 'Link AutoCAD'], 'Import')
+			return
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0: #hide then perform operation
-			print(index)
+		if index>0: #hide then perform operation
 			self.tk.hide(force=1)
 			if index == 1: #Import
 				maxEval('max file import')
-			if index == 2: #Import options
+			elif index == 2: #Import options
 				maxEval('')
-			if index == 3: #Merge
+			elif index == 3: #Merge
 				maxEval('max file merge')
-			if index == 4: #Replace
+			elif index == 4: #Replace
 				maxEval('max file replace')
-			if index == 5: #Manage Links: Link Revit File
+			elif index == 5: #Manage Links: Link Revit File
 				maxEval('actionMan.executeAction 769996349 "108"')
-			if index == 6: #Manage Links: Link FBX File
+			elif index == 6: #Manage Links: Link FBX File
 				maxEval('actionMan.executeAction 769996349 "109"')
-			if index == 7: #Manage Links: Link AutoCAD File
+			elif index == 7: #Manage Links: Link AutoCAD File
 				maxEval('actionMan.executeAction 769996349 "110"')
 			cmb.setCurrentIndex(0)
 
@@ -140,22 +140,22 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb004
 
-		list_ = ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ", "Send to Maya: New Scene", "Send to Maya: Update Scene", "Send to Maya: Add to Scene"]
-		cmb.addItems_(list_, "Export")
+		if index=='setMenu':
+			list_ = ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ", "Send to Maya: New Scene", "Send to Maya: Update Scene", "Send to Maya: Add to Scene"]
+			cmb.addItems_(list_, "Export")
+			return
 
-		if not index:
-			index = cmb.currentIndex()
-		if index !=0: #hide then perform operation
+		if index>0: #hide then perform operation
 			self.tk.hide(force=1)
 			if index==1: #Export selection
 				maxEval('actionMan.executeAction 0 "40373"') #max file export
-			if index==2: #Export options
+			elif index==2: #Export options
 				maxEval('')
-			if index==3: #Unreal: File: Game Exporter
+			elif index==3: #Unreal: File: Game Exporter
 				maxEval('actionMan.executeAction 0 "40488"')
-			if index==4: #Unity: File: Game Exporter
+			elif index==4: #Unity: File: Game Exporter
 				maxEval('actionMan.executeAction 0 "40488"')
-			if index==5: #GoZ
+			elif index==5: #GoZ
 				print('GoZ')
 				maxEval(''' 
 					try (
@@ -163,11 +163,11 @@ class File(Init):
 						local result = s_gozServer.GoToZBrush()
 						) catch ();
 					''')
-			if index==6: #One Click Maya: Send as New Scene to Maya
+			elif index==6: #One Click Maya: Send as New Scene to Maya
 				maxEval('actionMan.executeAction 924213374 "0"')
-			if index==7: #One Click Maya: Update Current Scene in Maya
+			elif index==7: #One Click Maya: Update Current Scene in Maya
 				maxEval('actionMan.executeAction 924213374 "1"')
-			if index==8: #One Click Maya: Add to Current Scene in Maya
+			elif index==8: #One Click Maya: Add to Current Scene in Maya
 				maxEval('actionMan.executeAction 924213374 "2"')
 
 			cmb.setCurrentIndex(0)
@@ -179,13 +179,13 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb005
 
-		list_ = ['Schematic View']
-		items = cmb.addItems_(list_, '3dsMax File Editors')
+		if index=='setMenu':
+			list_ = ['Schematic View']
+			cmb.addItems_(list_, '3dsMax File Editors')
+			return
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==items.index('Schematic View'):
+		if index>0:
+			if index==cmb.items.index('Schematic View'):
 				maxEval('schematicView.Open "Schematic View 1"')
 			cmb.setCurrentIndex(0)
 
@@ -196,23 +196,23 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb006
 
-		if not cmb.containsContextMenuItems:
+		if index=='setMenu':
 			cmb.addToContext(QComboBox_, setObjectName='cmb001', setToolTip='Current project directory root.')
 			cmb.addToContext(QLabel_, setObjectName='lbl000', setText='Set', setToolTip='Set the project directory.')
 			cmb.addToContext(QLabel_, setObjectName='lbl001', setText='Minimize App', setToolTip='Minimize the main application.')
 			cmb.addToContext(QLabel_, setObjectName='lbl002', setText='Maximize App', setToolTip='Restore the main application.')
 			cmb.addToContext(QLabel_, setObjectName='lbl003', setText='Close App', setToolTip='Close the main application.')
+			return
 
 		path = MaxPlus.PathManager.GetProjectFolderDir() #current project path.
 		list_ = [f for f in os.listdir(path)]
 
 		project = MaxPlus.PathManager.GetProjectFolderDir().split('\\')[-1] #add current project path string to label. strip path and trailing '/'
 
-		items = cmb.addItems_(list_, project)
+		cmb.addItems_(list_, project)
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
+
+		if index>0:
 			dir_= path+list_[index-1]
 			if dir_.startswith('//'): #reformat for server address
 				dir_ = dir_.replace('/', '\\')

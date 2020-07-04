@@ -23,7 +23,6 @@ class Preferences(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb003', setToolTip='')
-
 			return
 
 
@@ -32,14 +31,14 @@ class Preferences(Init):
 		Editors
 		'''
 		cmb = self.parentUi.cmb003
-		
-		files = ['']
-		contents = cmb.addItems_(files, '')
 
-		# if not index:
-		# 	index = cmb.currentIndex()
-		# if index!=0:
-		# 	if index==contents.index(''):
+		if index=='setMenu':
+			list_ = ['']
+			contents = cmb.addItems_(list_, '')
+			return
+
+		# if index>0:
+		# 	if index==cmd.items.index(''):
 		# 		pass
 		# 	cmb.setCurrentIndex(0)
 
@@ -50,9 +49,11 @@ class Preferences(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		from PySide2 import QtWidgets, QtCore
-		list_ = QtWidgets.QStyleFactory.keys() #get styles from QStyleFactory
-		contents = cmb.addItems_(list_)
+		if index=='setMenu':
+			from PySide2 import QtWidgets, QtCore
+			list_ = QtWidgets.QStyleFactory.keys() #get styles from QStyleFactory
+			cmb.addItems_(list_)
+			return
 
 		if init: #temp.  move main function to shared Slots class
 			index = self.styleComboBox.findText(QtGui.qApp.style().objectName(), QtCore.Qt.MatchFixedString)
@@ -70,11 +71,13 @@ class Preferences(Init):
 		'''
 		cmb = self.parentUi.cmb001
 
-		list_ = ['millimeter','centimeter','meter','kilometer','inch','foot','yard','mile']
-		contents = cmb.addItems_(list_)
+		if index=='setMenu':
+			list_ = ['millimeter','centimeter','meter','kilometer','inch','foot','yard','mile']
+			contents = cmb.addItems_(list_)
+			return
 
 		# if init:
-		# 	index = contents.index(pm.currentUnit(query=1, fullName=1, linear=1)) #get/set current linear value
+		# 	index = cmd.items.index(pm.currentUnit(query=1, fullName=1, linear=1)) #get/set current linear value
 		# 	cmb.setCurrentIndex(index)
 		# else:
 		# 	pm.currentUnit(linear=contents[index]) #millimeter | centimeter | meter | kilometer | inch | foot | yard | mile
@@ -86,15 +89,16 @@ class Preferences(Init):
 		'''
 		cmb = self.parentUi.cmb002
 
-		#store a corresponding value for each item in the comboBox list_.
-		l = [('15 fps: ','game'),('24 fps: ','film'),('25 fps: ','pal'),('30 fps: ','ntsc'),('48 fps: ','show'),('50 fps: ','palf'),('60 fps: ','ntscf')]
-		list_ = [i[0]+i[1] for i in l] #ie. ['15 fps: game','24 fps: film', ..etc]
-		values = [i[1] for i in l] #ie. ['game','film', ..etc]
-
-		contents = cmb.addItems_(list_)
+		if index=='setMenu':
+			#store a corresponding value for each item in the comboBox list_.
+			l = [('15 fps: ','game'),('24 fps: ','film'),('25 fps: ','pal'),('30 fps: ','ntsc'),('48 fps: ','show'),('50 fps: ','palf'),('60 fps: ','ntscf')]
+			list_ = [i[0]+i[1] for i in l] #ie. ['15 fps: game','24 fps: film', ..etc]
+			values = [i[1] for i in l] #ie. ['game','film', ..etc]
+			cmb.addItems_(list_)
+			return
 
 		# if init:
-		# 	index = values.index(pm.currentUnit(query=1, fullName=1, time=1)) #get/set current time value
+		# 	index = cmb.items.index(pm.currentUnit(query=1, fullName=1, time=1)) #get/set current time value
 		# 	cmb.setCurrentIndex(index)
 		# else:
 		# 	pm.currentUnit(time=values[index]) #game | film | pal | ntsc | show | palf | ntscf

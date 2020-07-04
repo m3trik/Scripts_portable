@@ -28,20 +28,20 @@ class Scene(Init):
 		Editors
 		'''
 		cmb = self.parentUi.cmb000
-		
-		files = ['Node Editor', 'Outlinder', 'Content Browser', 'Optimize Scene Size']
-		contents = cmb.addItems_(files, 'Maya Scene Editors')
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
+		if index=='setMenu':
+			list_ = ['Node Editor', 'Outlinder', 'Content Browser', 'Optimize Scene Size']
+			cmb.addItems_(list_, 'Maya Scene Editors')
+			return
+
+		if index>0:
 			if index==contents.index('Node Editor'):
 				mel.eval('NodeEditorWindow;') #
-			if index==contents.index('Outlinder'):
+			elif index==contents.index('Outlinder'):
 				mel.eval('OutlinerWindow;') #
-			if index==contents.index('Content Browser'):
+			elif index==contents.index('Content Browser'):
 				mel.eval('ContentBrowserWindow;') #
-			if index==contents.index('Optimize Scene Size'):
+			elif index==contents.index('Optimize Scene Size'):
 				mel.eval('cleanUpScene 2;')
 			cmb.setCurrentIndex(0)
 

@@ -50,7 +50,6 @@ class Cameras(Init):
 		'''
 		Camera Clipping: Auto Clip
 		'''
-		print('chk000')
 		if self.clippingMenu.chk000.isChecked():
 			self.toggleWidgets(self.clippingMenu, setDisabled='s000-1')
 		else:

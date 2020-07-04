@@ -49,13 +49,13 @@ class Polygons(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		files = ['Bridge','Extrude']
-		items = cmb.addItems_(files, '3dsMax Polygon Operations')
+		if index=='setMenu':
+			list_ = ['Bridge','Extrude']
+			cmb.addItems_(list_, '3dsMax Polygon Operations')
+			return
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==items.index('Bridge'):
+		if index>0:
+			if index==cmb.items.index('Bridge'):
 				maxEval('''
 				if Ribbon - Modeling.ValidSOMode() and (subObjectLevel == 2 or subObjectLevel == 3) then
 				(
@@ -70,7 +70,7 @@ class Polygons(Init):
 					)
 				)
 				''')
-			if index==items.index('Extrude'):
+			if index==cmb.items.index('Extrude'):
 				maxEval('''
 				If subObjectLevel == undefined then Max Modify Mode
 				-- default to Face level:

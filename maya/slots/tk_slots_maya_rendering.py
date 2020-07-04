@@ -18,7 +18,6 @@ class Rendering(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='')
-
 			return
 
 
@@ -39,7 +38,7 @@ class Rendering(Init):
 		# 	cmb.setCurrentIndex(0)
 
 
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		Render: camera
 		'''

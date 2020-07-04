@@ -24,6 +24,8 @@ class QComboBox_(QtWidgets.QComboBox):
 	'''
 	
 	'''
+	returnPressed = QtCore.Signal()
+
 	def __init__(self, parent=None, popupStyle='modelView', **kwargs):
 		super(QComboBox_, self).__init__(parent)
 		'''
@@ -124,6 +126,7 @@ class QComboBox_(QtWidgets.QComboBox):
 			self.move(self.mapFromGlobal(value - self.rect().center())) #move and center
 
 
+	@property
 	def contextMenu(self):
 		'''
 		Get the context menu.
@@ -137,13 +140,13 @@ class QComboBox_(QtWidgets.QComboBox):
 		'''
 		Same as 'add', but instead adds items to the context menu.
 		'''
-		_menu=self.contextMenu()
+		_menu=self.contextMenu
 		return self.add(w, header, _menu, **kwargs)
 
 
 	def add(self, w, header=None, _menu=None, **kwargs):
 		'''
-		Add items to the comboboxes's menu. (custom or the standard modelView).
+		Add an item to the comboboxes's menu. (custom or the standard modelView).
 
 		args:
 			w (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
@@ -153,14 +156,14 @@ class QComboBox_(QtWidgets.QComboBox):
 			show (bool) = show the menu.
 			insertSeparator (QAction) = insert separator in front of the given action.
 		returns:
- 			the added widget.
+			the added widget.
 
 		ex.call:
 		tb.add('QCheckBox', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
 		'''
 		if self.popupStyle=='modelView' and _menu is None:
-			items = self.addItems_(w, header)
-			return items
+			item = self.addItems_(w, header)
+			return item
 
 		try:
 			w = getattr(QtWidgets, w)() #ex. QtWidgets.QAction(self) object from string.
@@ -176,7 +179,34 @@ class QComboBox_(QtWidgets.QComboBox):
 
 		setattr(self, w.objectName(), w)
 
+		#set connection to setLastActiveChild on widget signal.
+		if hasattr(w, 'released'):
+			w.released.connect(lambda x=w: self.setLastActiveChild(x))
+		if hasattr(w, 'valueChanged'):
+			w.valueChanged.connect(lambda x=w: self.setLastActiveChild(x))
+
 		return w
+
+
+	def setLastActiveChild(self, widget):
+		'''
+		'''
+		if widget:
+			self._lastActiveChild = widget
+
+		return self._lastActiveChild
+
+
+	def lastActiveChild(self, name=False):
+		'''
+		'''
+		if not hasattr(self, '_lastActiveChild'):
+			self._lastActiveChild = None
+
+		if name and self._lastActiveChild is not None:
+			return str(self._lastActiveChild.objectName())
+
+		return self._lastActiveChild
 
 
 	def addItems_(self, items, header=None):
@@ -194,6 +224,8 @@ class QComboBox_(QtWidgets.QComboBox):
 		'''
 		self.blockSignals(True) #to keep clear from triggering currentIndexChanged
 		index = self.currentIndex() #get current index before refreshing list
+		if index<0:
+			index=0
 		self.clear()
 
 		# print (type(items))
@@ -201,7 +233,7 @@ class QComboBox_(QtWidgets.QComboBox):
 			items = [items]
 
 		items_ = [str(i) for i in [header]+items if i]
-		self.addItems(items_) 
+		self.addItems(items_)
 
 		self.setCurrentIndex(index)
 		self.blockSignals(False)
@@ -209,6 +241,7 @@ class QComboBox_(QtWidgets.QComboBox):
 		return items_
 
 
+	@property
 	def items(self):
 		'''
 		Get a list of each items's text from the standard model/view.
@@ -220,7 +253,7 @@ class QComboBox_(QtWidgets.QComboBox):
 
 	def children_(self, of_type=[], contextMenu=False, _exclude=['QAction', 'QWidgetAction']):
 		'''
-		Get a list of child objects from a custom menu, excluding those types listed in '_exclude'.
+		Get a list of the menu's child objects, excluding those types listed in '_exclude'.
 
 		args:
 			contextMenu (bool) = Get the child widgets for the context menu.
@@ -230,7 +263,7 @@ class QComboBox_(QtWidgets.QComboBox):
 			(list)
 		'''
 		if contextMenu:
-			menu = self.contextMenu()
+			menu = self.contextMenu
 		else:
 			menu = self.menu
 
@@ -238,6 +271,7 @@ class QComboBox_(QtWidgets.QComboBox):
 			children = [i for i in menu.children() if i.__class__.__name__ in of_type and i.__class__.__name__ not in _exclude]
 		else:
 			children = [i for i in menu.children() if i.__class__.__name__ not in _exclude]
+
 		return children
 
 
@@ -310,22 +344,51 @@ class QComboBox_(QtWidgets.QComboBox):
 			event=<QEvent>
 		'''
 		if event.button()==QtCore.Qt.RightButton:
-			self.contextMenu().show()
+			self.contextMenu.show()
 
 		return QtWidgets.QComboBox.mousePressEvent(self, event)
 
 
-	def addContextMenuItemsToToolTip(self):
+	def keyPressEvent(self, event):
 		'''
+		args:
+			event = <QEvent>
+		'''
+		if event.key()==QtCore.Qt.Key_Return and not event.isAutoRepeat():
+			self.returnPressed.emit()
+			self.setEditable(False)
+
+		return QtWidgets.QComboBox.keyPressEvent(self, event)
+
+
+	def contextMenuToolTip(self):
+		'''
+		Creates an html formatted toolTip combining the toolTips of any context menu items.
+
+		returns:
+			(str) formatted toolTip.
 		'''
 		if hasattr(self, '_menu'):
-			contextMenuToolTip = '<br><b>*context menu:</b>'
-			for child in self.children_(contextMenu=True):
+			menuItems = self.children_(contextMenu=True)
+			if not menuItems:
+				return ''
+
+			contextMenuToolTip = '<br><br><u>Context menu items:</u>'
+			for menuItem in menuItems:
 				try:
-					contextMenuToolTip = '{0}<br>  {1} - {2}'.format(contextMenuToolTip, child.text(), child.toolTip())
+					contextMenuToolTip = '{0}<br>  <b>{1}</b> - {2}'.format(contextMenuToolTip, menuItem.text(), menuItem.toolTip())
 				except AttributeError:
 					pass
-			self.setToolTip(self.toolTip()+contextMenuToolTip)
+
+			return contextMenuToolTip
+
+
+	# def toolTip(self):
+	# 	'''
+
+	# 	'''		
+
+	# 	super(QComboBox_, self).toolTip()
 
 
 	def showEvent(self, event):
@@ -333,7 +396,10 @@ class QComboBox_(QtWidgets.QComboBox):
 		args:
 			event=<QEvent>
 		'''
-		self.addContextMenuItemsToToolTip()
+		if not hasattr(self, '_contextMenuToolTip'):
+			self._contextMenuToolTip = self.contextMenuToolTip()
+			if self._contextMenuToolTip:
+				self.setToolTip('{0}{1}'.format(self.toolTip(), self._contextMenuToolTip))
 
 		return QtWidgets.QComboBox.showEvent(self, event)
 
@@ -356,6 +422,13 @@ if __name__ == "__main__":
 
 
 # Deprecated -----------------------------------------------
+
+
+
+# shortcut = QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Return), self, activated=self.onActivated)
+# def onActivated(self):
+# 	print("enter pressed")
+
 
 # try:
 # 	if not __name__=='__main__':
@@ -388,7 +461,7 @@ if __name__ == "__main__":
 	# 		(QWidget) or (list)
 	# 	'''
 	# 	menuWidgets = self.menu.children_(index)
-	# 	contextMenuWidgets = self.contextMenu().children_(index)
+	# 	contextMenuWidgets = self.contextMenu.children_(index)
 
 	# 	if contextMenu:
 	# 		return contextMenuWidgets

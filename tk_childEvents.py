@@ -58,10 +58,11 @@ class EventFactoryFilter(QtCore.QObject):
 			widget.installEventFilter(self)
 
 			#type specific:
-			if derivedType in ['QPushButton', 'QToolButton']:
-				if widgetType in ['QToolButton_', 'QPushButton_Draggable']:
-					if callable(classMethod):
-						classMethod('setMenu')
+			if widgetType in ['QToolButton_', 'QPushButton_Draggable', 'QComboBox_']:
+				if callable(classMethod):
+					classMethod('setMenu')
+
+			if derivedType in ['QPushButton', 'QToolButton', 'QLabel']:
 				if uiLevel<3:
 					self.resizeAndCenterWidget(widget)
 
@@ -70,8 +71,9 @@ class EventFactoryFilter(QtCore.QObject):
 					widget.setVisible(False)
 
 			#add any of the widget's children not already stored in widgets (now that menus and such have been initialized).
-			exclude = ['QTreeWidget_ExpandableList']
-			[self.addWidgets(name, w) for w in widget.children() if w not in widgets and not w in exclude]
+			exclude = ['QTreeWidget_ExpandableList']#, 'QAction', 'QBoxLayout', 'QStandardItemModel', 'QFrame', 'QAbstractItemView', 'QItemSelectionModel', 'QItemDelegate', 'QScrollBar', 'QWidgetAction', 'QValidator', 'QObject', 'QStyledItemDelegate', 'QHeaderView', 'QPropertyAnimation']
+			[self.addWidgets(name, w) for w in widget.children() if w not in widgets and not w.__class__.__name__ in exclude]
+			# print(name, [w.objectName() for w in widget.children() if w not in widgets and not w.__class__.__name__ in exclude])
 
 
 	def addWidgets(self, name, widgets):
@@ -102,7 +104,7 @@ class EventFactoryFilter(QtCore.QObject):
 			derivedType = self.sb.getDerivedType(widget, name) #get the derived class type as string.
 			if hasattr(widget, 'styleSheet'):
 				s = getattr(StyleSheet, derivedType, '')
-				if uiLevel==2 and not self.sb.prefix(widget, 'i'): #if submenu and objectName don't start with 'i':
+				if uiLevel==2 and not self.sb.prefix(widget, 'i'): #if submenu and objectName doesn't start with 'i':
 					s = s+getattr(StyleSheet, 'dark') #override with the dark version on uiLevel 2 (submenus).
 				if widget.styleSheet(): #if the widget has an existing style sheet, append.
 					s = s+widget.styleSheet()
@@ -271,9 +273,8 @@ class EventFactoryFilter(QtCore.QObject):
 			if callable(self.classMethod):
 				try:
 					self.classMethod()
-					self.widget.setCurrentItem(0)
 				except (AttributeError, NameError) as error:
-					print(os.path.splitext(os.path.basename(__file__))[0], error)
+					print(self.name, self.widgetName, error)
 
 		elif self.derivedType=='QTreeWidget':
 			if self.widgetType=='QTreeWidget_ExpandableList':

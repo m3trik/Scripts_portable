@@ -18,7 +18,6 @@ class Uv(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='3dsMax UV Editors')
-
 			return
 
 
@@ -28,26 +27,26 @@ class Uv(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		list_ = ["UV Editor", "UV Set Editor", "UV Tool Kit", "UV Linking: Texture-Centric", "UV Linking: UV-Centric", "UV Linking: Paint Effects/UV", "UV Linking: Hair/UV"]
-		items = cmb.addItems_(list_, '3dsMax UV Editors')
+		if index=='setMenu':
+			list_ = ["UV Editor", "UV Set Editor", "UV Tool Kit", "UV Linking: Texture-Centric", "UV Linking: UV-Centric", "UV Linking: Paint Effects/UV", "UV Linking: Hair/UV"]
+			cmb.addItems_(list_, '3dsMax UV Editors')
+			return
 
-		if not index:
-			index = cmb.currentIndex()
-		if index !=0: #hide hotbox then perform operation
+		if index>0: #hide hotbox then perform operation
 			self.tk.hide()
-			if index == 1: #UV Editor
+			if index==1: #UV Editor
 				maxEval('TextureViewWindow;') 
-			if index == 2: #UV Set Editor
+			elif index==2: #UV Set Editor
 				maxEval('uvSetEditor;')
-			if index == 3: #UV Tool Kit
+			elif index==3: #UV Tool Kit
 				maxEval('toggleUVToolkit;')
-			if index == 4: #UV Linking: Texture-Centric
+			elif index==4: #UV Linking: Texture-Centric
 				maxEval('textureCentricUvLinkingEditor;')
-			if index == 5: #UV Linking: UV-Centric
+			elif index==5: #UV Linking: UV-Centric
 				maxEval('uvCentricUvLinkingEditor;')
-			if index == 6: #UV Linking: Paint Effects/UV
+			elif index==6: #UV Linking: Paint Effects/UV
 				maxEval('pfxUVLinkingEditor;')
-			if index == 7: #UV Linking: Hair/UV
+			elif index==7: #UV Linking: Hair/UV
 				mel.evel('hairUVLinkingEditor;')
 			self.parentUi.cmb000.setCurrentIndex(0)
 

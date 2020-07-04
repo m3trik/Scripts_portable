@@ -28,13 +28,13 @@ class Animation(Init):
 		'''
 		cmb = self.parentUi.cmb000
 		
-		files = ['']
-		contents = cmb.addItems_(files, '')
+		if index=='setMenu':
+			list_ = ['']
+			cmb.addItems_(list_, '')
+			return
 
-		# if not index:
-		# 	index = cmb.currentIndex()
-		# if index!=0:
-		# 	if index==contents.index(''):
+		# if index>0:
+		# 	if index==cmb.items.index(''):
 		# 		mel.eval('')
 		# 	cmb.setCurrentIndex(0)
 

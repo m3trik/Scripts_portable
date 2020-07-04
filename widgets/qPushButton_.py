@@ -91,6 +91,7 @@ class QPushButton_(QtWidgets.QPushButton):
 			self.move(self.mapFromGlobal(value - self.rect().center())) #move and center
 
 
+	@property
 	def contextMenu(self):
 		'''
 		Get the context menu.
@@ -123,22 +124,21 @@ class QPushButton_(QtWidgets.QPushButton):
 
 		w.setMinimumHeight(self.minimumSizeHint().height()+1) #set child widget height to that of the button
 
-		w = self.contextMenu().add(w, **kwargs)
+		w = self.contextMenu.add(w, **kwargs)
 		setattr(self, w.objectName(), w)
 		return w
 
 
 	def children_(self, index=None):
 		'''
-		Get the widget at the given index.
-		If no arg is given all widgets will be returned.
+		Get a list of the menu's child objects, excluding those types listed in '_exclude'.
 
 		args:
 			index (int) = widget location.
 		returns:
 			(QWidget) or (list)
 		'''
-		return self.contextMenu().children_(index)
+		return self.contextMenu.children_(index)
 
 
 	def mousePressEvent(self, event):
@@ -148,7 +148,7 @@ class QPushButton_(QtWidgets.QPushButton):
 		'''
 		if event.button()==QtCore.Qt.RightButton:
 			if self.contextMenu:
-				self.contextMenu().show()
+				self.contextMenu.show()
 
 		return QtWidgets.QPushButton.mousePressEvent(self, event)
 

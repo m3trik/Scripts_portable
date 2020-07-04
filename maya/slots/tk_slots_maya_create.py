@@ -45,19 +45,19 @@ class Create(Init):
 			return
 
 
-	def cmb000(self, index=None):
+	def cmb003(self, index=None):
 		'''
 		Editors
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.parentUi.cmb003
 		
-		files = ['']
-		contents = cmb.addItems_(files, '')
+		if index=='setMenu':
+			list_ = ['']
+			cmb.addItems_(list_, '')
+			return
 
-		# if not index:
-		# 	index = cmb.currentIndex()
-		# if index!=0:
-		# 	if index==contents.index(''):
+		# if index>0:
+		# 	if index==cmb.items.index(''):
 		# 		pass
 		# 	cmb.setCurrentIndex(0)
 
@@ -182,21 +182,21 @@ class Create(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if not cmb.containsMenuItems:
-			items = ['Polygon', 'NURBS', 'Light']
-			contents = cmb.addItems_(items)
+		if index=='setMenu':
+			list_ = ['Polygon', 'NURBS', 'Light']
+			cmb.addItems_(list_)
+			return
 
 		self.parentUi.cmb001.clear()
-
-		if cmb.currentIndex() == 0:
+		if cmb.currentIndex()==0:
 			polygons = ["Cube", "Sphere", "Cylinder", "Plane", "Circle", "Cone", "Pyramid", "Torus", "Tube", "GeoSphere", "Platonic Solids", "Text"]
 			self.parentUi.cmb001.addItems(polygons)
 
-		if cmb.currentIndex() == 1:
+		if cmb.currentIndex()==1:
 			nurbs = ["Cube", "Sphere", "Cylinder", "Cone", "Plane", "Torus", "Circle", "Square"]
 			self.parentUi.cmb001.addItems(nurbs)
 
-		if cmb.currentIndex() == 2:
+		if cmb.currentIndex()==2:
 			lights = ["Ambient", "Directional", "Point", "Spot", "Area", "Volume", "VRay Sphere", "VRay Dome", "VRay Rect", "VRay IES"]
 			self.parentUi.cmb001.addItems(lights)
 
@@ -212,6 +212,9 @@ class Create(Init):
 			show (bool) = Show the popup menu immediately after adding items.
 		'''
 		cmb = self.parentUi.cmb002
+
+		if index=='setMenu':
+			return
 
 		n = len(values)
 		if n and index is None:

@@ -195,16 +195,6 @@ class QMenu_(QtWidgets.QMenu):
 		return children
 
 
-	def leaveEvent(self, event):
-		'''
-		args:
-			event = <QEvent>
-		'''
-		self.hide()
-
-		return QtWidgets.QMenu.leaveEvent(self, event)
-
-
 	def mouseMoveEvent(self, event):
 		'''
 
@@ -213,6 +203,16 @@ class QMenu_(QtWidgets.QMenu):
 		# 	self.hide()
 
 		return QtWidgets.QMenu.mouseMoveEvent(self, event)
+
+
+	def leaveEvent(self, event):
+		'''
+		args:
+			event = <QEvent>
+		'''
+		self.hide()
+
+		return QtWidgets.QMenu.leaveEvent(self, event)
 
 
 	def hide(self, force=False):

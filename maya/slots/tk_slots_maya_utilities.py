@@ -18,7 +18,6 @@ class Utilities(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
-
 			return
 
 
@@ -27,14 +26,14 @@ class Utilities(Init):
 		Editors
 		'''
 		cmb = self.parentUi.cmb000
-		
-		files = ['']
-		contents = cmb.addItems_(files, '')
 
-		# if not index:
-		# 	index = cmb.currentIndex()
-		# if index!=0:
-		# 	if index==contents.index(''):
+		if index=='setMenu':
+			files = ['']
+			cmb.addItems_(files, '')
+			return
+
+		# if index>0:
+		# 	if index==cmb.items.index(''):
 		# 		pass
 		# 	cmb.setCurrentIndex(0)
 

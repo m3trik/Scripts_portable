@@ -27,16 +27,16 @@ class Lighting(Init):
 		Editors
 		'''
 		cmb = self.parentUi.cmb000
-		
-		files = ['']
-		items = cmb.addItems_(files, '')
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==items.index(''):
-				pass
-			cmb.setCurrentIndex(0)
+		if index=='setMenu':
+			files = ['']
+			cmb.addItems_(files, '')
+			return
+
+		# if index>0:
+		# 	if index==cmb.items.index(''):
+		# 		pass
+		# 	cmb.setCurrentIndex(0)
 
 
 	def b000(self):

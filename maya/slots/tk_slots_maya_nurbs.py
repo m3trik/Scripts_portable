@@ -27,46 +27,46 @@ class Nurbs(Init):
 		Maya Curve Operations
 		'''
 		cmb = self.parentUi.cmb000
-		
-		files = ['Project Curve','Duplicate Curve','Create Curve from Poly','Bend Curve', 'Curl Curve','Modify Curve Curvature','Smooth Curve','Straighten Curves','Extrude Curves','Revolve Curves','Loft Curves','Planar Curves','Insert Isoparms','Insert Knot','Rebuild Curve','Extend Curve', 'Extend Curve On Surface']
-		contents = cmb.addItems_(files, 'Maya Curve Operations')
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
+		if index=='setMenu':
+			list_ = ['Project Curve','Duplicate Curve','Create Curve from Poly','Bend Curve', 'Curl Curve','Modify Curve Curvature','Smooth Curve','Straighten Curves','Extrude Curves','Revolve Curves','Loft Curves','Planar Curves','Insert Isoparms','Insert Knot','Rebuild Curve','Extend Curve', 'Extend Curve On Surface']
+			cmb.addItems_(list_, 'Maya Curve Operations')
+			return
+
+		if index>0:
 			if index==contents.index('Project Curve'):
 				mel.eval("ProjectCurveOnSurfaceOptions;")
-			if index==contents.index('Duplicate Curve'):
+			elif index==contents.index('Duplicate Curve'):
 				mel.eval("DuplicateCurveOptions;")
-			if index==contents.index('Create Curve from Poly'):
+			elif index==contents.index('Create Curve from Poly'):
 				mel.eval("CreateCurveFromPolyOptions")
-			if index==contents.index('Bend Curve'):
+			elif index==contents.index('Bend Curve'):
 				mel.eval("BendCurvesOptions;")
-			if index==contents.index('Curl Curve'):
+			elif index==contents.index('Curl Curve'):
 				mel.eval("CurlCurvesOptions;")
-			if index==contents.index('Modify Curve Curvature'):
+			elif index==contents.index('Modify Curve Curvature'):
 				mel.eval("ScaleCurvatureOptions;")
-			if index==contents.index('Smooth Curve'):
+			elif index==contents.index('Smooth Curve'):
 				mel.eval("SmoothHairCurvesOptions;")
-			if index==contents.index('Straighten Curves'):
+			elif index==contents.index('Straighten Curves'):
 				mel.eval("StraightenCurvesOptions;")
-			if index==contents.index('Extrude Curves'):
+			elif index==contents.index('Extrude Curves'):
 				mel.eval("ExtrudeOptions;")
-			if index==contents.index('Revolve Curves'):
+			elif index==contents.index('Revolve Curves'):
 				mel.eval("RevolveOptions;")
-			if index==contents.index('Loft Curves'):
+			elif index==contents.index('Loft Curves'):
 				mel.eval("LoftOptions;")
-			if index==contents.index('Planar Curves'):
+			elif index==contents.index('Planar Curves'):
 				mel.eval("PlanarOptions;")
-			if index==contents.index('Insert Isoparms'):
+			elif index==contents.index('Insert Isoparms'):
 				mel.eval("InsertIsoparmsOptions;")
-			if index==contents.index('Insert Knot'):
+			elif index==contents.index('Insert Knot'):
 				mel.eval("InsertKnotOptions;")
-			if index==contents.index('Rebuild Curve'):
+			elif index==contents.index('Rebuild Curve'):
 				mel.eval("RebuildCurveOptions;")
-			if index==contents.index('Extend Curve'):
+			elif index==contents.index('Extend Curve'):
 				mel.eval("ExtendCurveOptions;")
-			if index==contents.index('Extend Curve On Surface'):
+			elif index==contents.index('Extend Curve On Surface'):
 				mel.eval("ExtendCurveOnSurfaceOptions;")
 			cmb.setCurrentIndex(0)
 
@@ -76,24 +76,24 @@ class Nurbs(Init):
 		Create: Curve
 		'''
 		cmb = self.parentUi.cmb001
-		
-		files = ['Ep Curve Tool','CV Curve Tool','Bezier Curve Tool','Pencil Curve Tool','2 Point Circular Arc','3 Point Circular Arc']
-		contents = cmb.addItems_(files, 'Create Curve')
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
+		if index=='setMenu':
+			list_ = ['Ep Curve Tool','CV Curve Tool','Bezier Curve Tool','Pencil Curve Tool','2 Point Circular Arc','3 Point Circular Arc']
+			cmb.addItems_(list_, 'Create Curve')
+			return
+
+		if index>0:
 			if index==contents.index('Ep Curve Tool'):
 				mel.eval('EPCurveToolOptions;') #mel.eval('EPCurveTool;')
-			if index==contents.index('CV Curve Tool'):
+			elif index==contents.index('CV Curve Tool'):
 				mel.eval('CVCurveToolOptions') #mel.eval('CVCurveTool')
-			if index==contents.index('Bezier Curve Tool'):
+			elif index==contents.index('Bezier Curve Tool'):
 				mel.eval('CreateBezierCurveToolOptions') #mel.eval('CreateBezierCurveTool;')
-			if index==contents.index('Pencil Curve Tool'):
+			elif index==contents.index('Pencil Curve Tool'):
 				mel.eval('PencilCurveToolOptions;') #mel.eval('PencilCurveTool;')
-			if index==contents.index('2 Point Circular Arc'):
+			elif index==contents.index('2 Point Circular Arc'):
 				mel.eval('TwoPointArcToolOptions;') #mel.eval("TwoPointArcTool;")
-			if index==contents.index('3 Point Circular Arc'):
+			elif index==contents.index('3 Point Circular Arc'):
 				mel.eval("ThreePointArcToolOptions;") #mel.eval("ThreePointArcTool;")
 			cmb.setCurrentIndex(0)
 

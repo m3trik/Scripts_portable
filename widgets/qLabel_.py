@@ -22,8 +22,11 @@ Promoting a widget in designer to use a custom class:
 
 class QLabel_(QtWidgets.QLabel):
 	'''
-
+	
 	'''
+	clicked = QtCore.Signal()
+	released = QtCore.Signal()
+
 	def __init__(self, parent=None, **kwargs):
 		super(QLabel_, self).__init__(parent)
 
@@ -87,21 +90,29 @@ class QLabel_(QtWidgets.QLabel):
 			event=<QEvent>
 		'''
 		if event.button()==QtCore.Qt.LeftButton:
-			try:
-				self.classMethod()
-			except Exception as error:
-				print (error)
+			self.clicked.emit()
 
 		return QtWidgets.QLabel.mousePressEvent(self, event)
 
 
-	def showEvent(self, event):
+	def mouseReleaseEvent(self, event):
 		'''
 		args:
 			event=<QEvent>
 		'''
+		if event.button()==QtCore.Qt.LeftButton:
+			self.released.emit()
 
-		return QtWidgets.QLabel.showEvent(self, event)
+		return QtWidgets.QLabel.mouseReleaseEvent(self, event)
+
+
+	# def showEvent(self, event):
+	# 	'''
+	# 	args:
+	# 		event=<QEvent>
+	# 	'''
+
+	# 	return QtWidgets.QLabel.showEvent(self, event)
 
 
 

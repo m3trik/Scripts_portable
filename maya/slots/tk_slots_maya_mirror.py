@@ -26,16 +26,16 @@ class Mirror(Init):
 		Editors
 		'''
 		cmb = self.parentUi.cmb000
-		
-		list_ = ['']
-		items = cmb.addItems_(list_, '')
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==items.index(''):
-				pass
-			cmb.setCurrentIndex(0)
+		if index=='setMenu':
+			list_ = ['']
+			cmb.addItems_(list_, '')
+			return
+
+		# if index>0:
+		# 	if index==cmd.items.index(''):
+		# 		pass
+		# 	cmb.setCurrentIndex(0)
 
 
 	def chk000_3(self):

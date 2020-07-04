@@ -46,14 +46,14 @@ class Create(Init):
 		Editors
 		'''
 		cmb = self.parentUi.cmb000
-		
-		files = ['']
-		contents = cmb.addItems_(files, '')
 
-		# if not index:
-		# 	index = cmb.currentIndex()
-		# if index!=0:
-		# 	if index==contents.index(''):
+		if index=='setMenu':
+			list_ = ['']
+			cmb.addItems_(list_, '')
+			return
+
+		# if index>0:
+		# 	if index==cmb.items.index(''):
 		# 		pass
 		# 	cmb.setCurrentIndex(0)
 
@@ -183,9 +183,10 @@ class Create(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if not cmb.containsMenuItems:
+		if index=='setMenu':
 			items = ['Mesh', 'Editable Poly', 'Editable Mesh', 'Editable Patch', 'NURBS', 'Light']
 			contents = cmb.addItems_(items)
+			return
 
 		self.parentUi.cmb001.clear()
 		index = cmb.currentIndex()
@@ -214,6 +215,9 @@ class Create(Init):
 			show (bool) = Show the popup menu immediately after adding items.
 		'''
 		cmb = self.parentUi.cmb002
+
+		if index=='setMenu':
+			return
 
 		attributes = {k:v for k,v in attributes.items() if isinstance(v,(int, float, bool))} #get only attributes of int, float, bool type.
 

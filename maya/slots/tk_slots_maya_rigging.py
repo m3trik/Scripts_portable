@@ -27,25 +27,25 @@ class Rigging(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		list_ = ['Quick Rig','HumanIK','Expression Editor','Shape Editor','Connection Editor','Channel Control Editor','Set Driven Key']
-		items = cmb.addItems_(list_, 'Maya Rigging Editors')
+		if index=='setMenu':
+			list_ = ['Quick Rig','HumanIK','Expression Editor','Shape Editor','Connection Editor','Channel Control Editor','Set Driven Key']
+			cmb.addItems_(list_, 'Maya Rigging Editors')
+			return
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==items.index('Quick Rig'):
+		if index>0:
+			if index==cmb.items.index('Quick Rig'):
 				mel.eval('QuickRigEditor;') #Quick Rig
-			if index==items.index('HumanIK'):
+			elif index==cmb.items.index('HumanIK'):
 				mel.eval('HIKCharacterControlsTool;') #HumanIK
-			if index==items.index('Expression Editor'):
+			elif index==cmb.items.index('Expression Editor'):
 				mel.eval('ExpressionEditor;') #Expression Editor
-			if index==items.index('Shape Editor'):
+			elif index==cmb.items.index('Shape Editor'):
 				mel.eval('ShapeEditor;') #Shape Editor
-			if index==items.index('Connection Editor'):
+			elif index==cmb.items.index('Connection Editor'):
 				mel.eval('ConnectionEditor;') #Connection Editor
-			if index==items.index('Channel Control Editor'):
+			elif index==cmb.items.index('Channel Control Editor'):
 				mel.eval('ChannelControlEditor;') #Channel Control Editor
-			if index==items.index('Set Driven Key'):
+			elif index==cmb.items.index('Set Driven Key'):
 				mel.eval('SetDrivenKeyOptions;') #Set Driven Key
 			cmb.setCurrentIndex(0)
 
@@ -56,21 +56,21 @@ class Rigging(Init):
 		'''
 		cmb = self.parentUi.cmb001
 
-		list_ = ['Joints','Locator','IK Handle', 'Lattice', 'Cluster']
-		items = cmb.addItems_(list_, "Create")
+		if index=='setMenu':
+			list_ = ['Joints','Locator','IK Handle', 'Lattice', 'Cluster']
+			cmb.addItems_(list_, "Create")
+			return
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==items.index('Joints'):
+		if index>0:
+			if index==cmb.items.index('Joints'):
 				pm.setToolTo('jointContext') #create joint tool
-			if index==items.index('Locator'):
+			elif index==cmb.items.index('Locator'):
 				pm.spaceLocator(p=[0,0,0]) #locator
-			if index==items.index('IK Handle'):
+			elif index==cmb.items.index('IK Handle'):
 				pm.setToolTo('ikHandleContext') #create ik handle
-			if index==items.index('Lattice'):
+			elif index==cmb.items.index('Lattice'):
 				pm.lattice(divisions=[2,5,2], objectCentered=1, ldv=[2,2,2]) ##create lattice
-			if index==items.index('Cluster'):
+			elif index==cmb.items.index('Cluster'):
 				mel.eval('CreateCluster;') #create cluster
 			cmb.setCurrentIndex(0)
 

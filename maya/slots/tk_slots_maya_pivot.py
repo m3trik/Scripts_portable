@@ -26,14 +26,14 @@ class Pivot(Init):
 		Editors
 		'''
 		cmb = self.parentUi.cmb000
-		
-		list_ = ['']
-		items = cmb.addItems_(list_, '')
 
-		# if not index:
-		# 	index = cmb.currentIndex()
-		# if index!=0:
-		# 	if index==items.index(''):
+		if index=='setMenu':
+			list_ = ['']
+			cmb.addItems_(list_, '')
+			return
+
+		# if index>0:
+		# 	if index==cmb.items.index(''):
 		# 		pass
 		# 	cmb.setCurrentIndex(0)
 
@@ -44,17 +44,17 @@ class Pivot(Init):
 		'''
 		cmb = self.parentUi.cmb001
 
-		list_ = ['Component', 'Object', 'World']
-		items = cmb.addItems_(list_, 'Center Pivot')
+		if index=='setMenu':
+			list_ = ['Component', 'Object', 'World']
+			cmb.addItems_(list_, 'Center Pivot')
+			return
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==items.index('Component'): #Set pivot points to the center of the component's bounding box.
+		if index>0:
+			if index==cmb.items.index('Component'): #Set pivot points to the center of the component's bounding box.
 				pm.xform(centerPivotsOnComponents=1)
-			if index==items.index('Object'): ##Set pivot points to the center of the object's bounding box
+			elif index==cmb.items.index('Object'): ##Set pivot points to the center of the object's bounding box
 				pm.xform(centerPivots=1)
-			if index==items.index('World'):
+			elif index==cmb.items.index('World'):
 				pm.xform(worldSpace=1, pivots=[0,0,0])
 			cmb.setCurrentIndex(0)
 

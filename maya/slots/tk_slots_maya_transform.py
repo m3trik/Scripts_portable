@@ -20,7 +20,6 @@ class Transform(Init):
 			if state == 'surface':
 				self.parentUi.cmb001.
 			'''
-
 		except NameError:
 			pass
 
@@ -33,7 +32,6 @@ class Transform(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
-
 			return
 
 
@@ -42,14 +40,14 @@ class Transform(Init):
 		Editors
 		'''
 		cmb = self.parentUi.cmb000
-		
-		files = ['']
-		contents = cmb.addItems_(files, '')
 
-		# if not index:
-		# 	index = cmb.currentIndex()
-		# if index!=0:
-		# 	if index==contents.index(''):
+		if index=='setMenu':
+			files = ['']
+			cmb.addItems_(files, '')
+			return
+
+		# if index>0:
+		# 	if index==cmd.list.index(''):
 		# 		pass
 		# 	cmb.setCurrentIndex(0)
 
@@ -63,30 +61,30 @@ class Transform(Init):
 		'''
 		cmb = self.parentUi.cmb001
 
-		list_ = ['Off', 'Edge', 'Surface', 'Make Live']
-		contents = cmb.addItems_(list_)
+		if index=='setMenu':
+			list_ = ['Edge', 'Surface', 'Make Live']
+			cmb.addItems_(list_, 'Off')
+			return
 
-		if not index:
-			index = cmb.currentIndex()
-
-		if index==contents.index('Off'):
+		if index>0:
+			if index==cmb.items.index('Edge'):
+				pm.xformConstraint(type='edge') #pm.manipMoveSetXformConstraint(edge=True);
+			elif index==cmb.items.index('Surface'):
+				pm.xformConstraint(type='surface') #pm.manipMoveSetXformConstraint(surface=True);
+			elif index==cmb.items.index('Make Live'):
+				selection = pm.ls(sl=1, objectsOnly=1)
+				if not selection:
+					cmb.setCurrentIndex(0)
+					return 'Error: Nothing Selected.'
+				pm.makeLive(selection[0]) #construction planes, nurbs surfaces and polygon meshes can be made live. makeLive supports one live object at a time.
+				self.viewPortMessage('{0}:<hl>makeLive: On</hl>'.format(selection[0].name()))
+				self._makeLiveState = True
+		else:
 			pm.xformConstraint(type='none') #pm.manipMoveSetXformConstraint(none=True);
 			if hasattr(self, '_makeLiveState') and self._makeLiveState:
 				pm.makeLive(none=True)
 				self._makeLiveStat = False
 				self.viewPortMessage('{0}:<hl>makeLive: Off</hl>'.format(obj))
-		if index==contents.index('Edge'):
-			pm.xformConstraint(type='edge') #pm.manipMoveSetXformConstraint(edge=True);
-		if index==contents.index('Surface'):
-			pm.xformConstraint(type='surface') #pm.manipMoveSetXformConstraint(surface=True);
-		if index==contents.index('Make Live'):
-			selection = pm.ls(sl=1, objectsOnly=1)
-			if not selection:
-				cmb.setCurrentIndex(0)
-				return 'Error: Nothing Selected.'
-			pm.makeLive(selection[0]) #construction planes, nurbs surfaces and polygon meshes can be made live. makeLive supports one live object at a time.
-			self.viewPortMessage('{0}:<hl>makeLive: On</hl>'.format(selection[0].name()))
-			self._makeLiveState = True
 
 
 	def chk005(self):

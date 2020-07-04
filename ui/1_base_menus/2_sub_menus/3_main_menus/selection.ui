@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>288</width>
-    <height>261</height>
+    <height>272</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -162,7 +162,7 @@
       <x>20</x>
       <y>20</y>
       <width>241</width>
-      <height>211</height>
+      <height>227</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
@@ -181,7 +181,7 @@
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>134</height>
+             <height>115</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -200,7 +200,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>75</y>
+              <y>55</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -231,7 +231,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>95</y>
+              <y>75</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -255,7 +255,7 @@
              </size>
             </property>
            </widget>
-           <widget class="QLineEdit" name="t001">
+           <widget class="QLineEdit" name="txt001">
             <property name="geometry">
              <rect>
               <x>0</x>
@@ -265,7 +265,7 @@
              </rect>
             </property>
             <property name="toolTip">
-             <string>Select all by name (wildcards=Startswith*, *Endswith, *contains*)</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select all by name.&lt;br&gt;&lt;br/&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Wildcards:&lt;/span&gt;&lt;br&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Startswith&lt;/span&gt;*&lt;br&gt;*&lt;span style=&quot; font-weight:600;&quot;&gt;Endswith&lt;/span&gt;&lt;br&gt;*&lt;span style=&quot; font-weight:600;&quot;&gt;contains&lt;/span&gt;*&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="maxLength">
              <number>100</number>
@@ -304,63 +304,17 @@
             <property name="editable">
              <bool>false</bool>
             </property>
-            <property name="sizeAdjustPolicy">
-             <enum>QComboBox::AdjustToContents</enum>
-            </property>
-            <item>
-             <property name="text">
-              <string>By Type</string>
-             </property>
-            </item>
-           </widget>
-           <widget class="QComboBox_" name="cmb004">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>55</y>
-              <width>111</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>111</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Select Style</string>
-            </property>
-            <property name="editable">
-             <bool>false</bool>
+            <property name="maxVisibleItems">
+             <number>30</number>
             </property>
             <property name="sizeAdjustPolicy">
              <enum>QComboBox::AdjustToContents</enum>
             </property>
             <item>
              <property name="text">
-              <string>Marquee</string>
+              <string>By Type:</string>
              </property>
             </item>
-           </widget>
-           <widget class="Line" name="line">
-            <property name="geometry">
-             <rect>
-              <x>-5</x>
-              <y>70</y>
-              <width>118</width>
-              <height>3</height>
-             </rect>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
            </widget>
            <widget class="QToolButton_" name="tb000">
             <property name="enabled">
@@ -369,7 +323,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>115</y>
+              <y>95</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -393,12 +347,10 @@
              </size>
             </property>
            </widget>
-           <zorder>t001</zorder>
+           <zorder>txt001</zorder>
            <zorder>tb001</zorder>
            <zorder>tb002</zorder>
            <zorder>cmb002</zorder>
-           <zorder>cmb004</zorder>
-           <zorder>line</zorder>
            <zorder>tb000</zorder>
           </widget>
          </item>
@@ -427,7 +379,7 @@
            <property name="minimumSize">
             <size>
              <width>111</width>
-             <height>56</height>
+             <height>33</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -443,7 +395,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>35</y>
+              <y>15</y>
               <width>111</width>
               <height>19</height>
              </rect>
@@ -461,88 +413,16 @@
              </size>
             </property>
             <property name="toolTip">
-             <string>Existing selection sets</string>
+             <string>Selection sets.</string>
             </property>
             <property name="editable">
              <bool>false</bool>
             </property>
+            <property name="maxVisibleItems">
+             <number>30</number>
+            </property>
             <property name="sizeAdjustPolicy">
              <enum>QComboBox::AdjustToContents</enum>
-            </property>
-            <item>
-             <property name="text">
-              <string>Sets:</string>
-             </property>
-            </item>
-           </widget>
-           <widget class="QLineEdit" name="t000">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>15</y>
-              <width>96</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>120</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>set name (suffix 'Set' is appended automatically)  (if left blank a generic name will be given.)</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="placeholderText">
-             <string>set#</string>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="b000">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>95</x>
-              <y>15</y>
-              <width>16</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>10</pointsize>
-             </font>
-            </property>
-            <property name="toolTip">
-             <string>Create the selection set</string>
-            </property>
-            <property name="text">
-             <string>»</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-            <property name="autoDefault">
-             <bool>false</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
             </property>
            </widget>
           </widget>
@@ -599,7 +479,7 @@
             </property>
             <item>
              <property name="text">
-              <string>Constraints</string>
+              <string>Off</string>
              </property>
             </item>
            </widget>
@@ -649,6 +529,9 @@
             <property name="toolTip">
              <string>Convert selection to type</string>
             </property>
+            <property name="maxVisibleItems">
+             <number>30</number>
+            </property>
             <property name="maxCount">
              <number>100</number>
             </property>
@@ -660,7 +543,7 @@
             </property>
             <item>
              <property name="text">
-              <string>Convert To</string>
+              <string>Convert To:</string>
              </property>
             </item>
            </widget>

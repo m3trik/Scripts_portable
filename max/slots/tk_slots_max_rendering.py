@@ -25,7 +25,6 @@ class Rendering(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='')
-
 			return
 
 
@@ -34,23 +33,26 @@ class Rendering(Init):
 		Editors
 		'''
 		cmb = self.parentUi.cmb001
-		
-		files = ['']
-		contents = cmb.addItems_(files, '')
 
-		# if not index:
-		# 	index = cmb.currentIndex()
-		# if index!=0:
-		# 	if index==contents.index(''):
+		if index=='setMenu':
+			list_ = ['']
+			cmb.addItems_(list_, '')
+			return
+
+		# if index>0:
+		# 	if index==cmb.items.index(''):
 		# 		pass
 		# 	cmb.setCurrentIndex(0)
 
 
-	def cmb000(self):
+	def cmb000(self, index=None):
 		'''
 		Render: camera
 		'''
 		cmb = self.parentUi.cmb000
+
+		if index=='setMenu':
+			return
 
 		self.cams = [cam for cam in rt.cameras if 'Target' not in str(cam)]
 		if self.cams:

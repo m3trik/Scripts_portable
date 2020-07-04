@@ -26,14 +26,14 @@ class Pivot(Init):
 		Editors
 		'''
 		cmb = self.parentUi.cmb000
-		
-		list_ = ['']
-		items = cmb.addItems_(list_, '')
 
-		# if not index:
-		# 	index = cmb.currentIndex()
-		# if index!=0:
-		# 	if index==items.index(''):
+		if index=='setMenu':
+			list_ = ['']
+			items = cmb.addItems_(list_, '')
+			return
+
+		# if index>0:
+		# 	if index==cmb.items.index(''):
 		# 		pass
 		# 	cmb.setCurrentIndex(0)
 
@@ -44,34 +44,34 @@ class Pivot(Init):
 		'''
 		cmb = self.parentUi.cmb001
 
-		list_ = ['Component', 'Object', 'World', 'Object Top', 'Object Bottom', 'Object Center Left', 
-			'Object Center Right', 'Object Bottom Left', 'Object Bottom Right', 'Object Top Left', 'Object Top Right']
-		items = cmb.addItems_(list_, 'Center Pivot')
+		if index=='setMenu':
+			list_ = ['Component', 'Object', 'World', 'Object Top', 'Object Bottom', 'Object Center Left', 
+				'Object Center Right', 'Object Bottom Left', 'Object Bottom Right', 'Object Top Left', 'Object Top Right']
+			cmb.addItems_(list_, 'Center Pivot')
+			return
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==items.index('Component'):
+		if index>0:
+			if index==cmb.items.index('Component'):
 				rt.CenterPivot(rt.selection) #Same as Hierarchy/Pivot/Affect Pivot Only - Center to Object.
-			if index==items.index('Object'):
+			if index==cmb.items.index('Object'):
 				self.centerPivot(rt.selection)
-			if index==items.index('World'):
+			if index==cmb.items.index('World'):
 				rt.selection.pivot = [0,0,0] #center pivot world 0,0,0
-			if index==items.index('Object Top'):
+			if index==cmb.items.index('Object Top'):
 				[setattr(obj, 'pivot', [obj.position.x, obj.position.y, obj.max.z]) for obj in rt.selection] #Move the pivot to the top of the object
-			if index==items.index('Object Bottom'):
+			if index==cmb.items.index('Object Bottom'):
 				[setattr(obj, 'pivot', [obj.position.x, obj.position.y, obj.min.z]) for obj in rt.selection] #Move the pivot to the bottom of the object
-			if index==items.index('Object Center Left'):
+			if index==cmb.items.index('Object Center Left'):
 				[setattr(obj, 'pivot', [obj.min.x, obj.position.y, obj.position.z]) for obj in rt.selection] #Move the pivot to the Center left of the object
-			if index==items.index('Object Center Right'):
+			if index==cmb.items.index('Object Center Right'):
 				[setattr(obj, 'pivot', [obj.max.x, obj.position.y, obj.position.z]) for obj in rt.selection] #Move the pivot to the Center right of the object
-			if index==items.index('Object Bottom Left'):
+			if index==cmb.items.index('Object Bottom Left'):
 				[setattr(obj, 'pivot', [obj.min.x, obj.position.y, obj.min.z]) for obj in rt.selection] #Move the pivot to the Bottom left of the object
-			if index==items.index('Object Bottom Right'):
+			if index==cmb.items.index('Object Bottom Right'):
 				[setattr(obj, 'pivot', [obj.max.x, obj.position.y, obj.min.z]) for obj in rt.selection] #Move the pivot to the Bottom right of the object
-			if index==items.index('Object Top Left'):
+			if index==cmb.items.index('Object Top Left'):
 				[setattr(obj, 'pivot', [obj.min.x, obj.position.y, obj.max.z]) for obj in rt.selection] #Move the pivot to the Top left of the object
-			if index==items.index('Object Top Right'):
+			if index==cmb.items.index('Object Top Right'):
 				[setattr(obj, 'pivot', [obj.max.x, obj.position.y, obj.max.z]) for obj in rt.selection] #Move the pivot to the Topright of the object
 			cmb.setCurrentIndex(0)
 

@@ -337,86 +337,6 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="b015">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>360</x>
-      <y>220</y>
-      <width>101</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>104</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="toolTip">
-     <string>Shrink selection</string>
-    </property>
-    <property name="text">
-     <string>Grow Selection</string>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>18</width>
-      <height>18</height>
-     </size>
-    </property>
-    <property name="autoDefault">
-     <bool>false</bool>
-    </property>
-    <property name="default">
-     <bool>false</bool>
-    </property>
-    <property name="flat">
-     <bool>false</bool>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="b014">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>365</x>
-      <y>250</y>
-      <width>96</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>104</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="toolTip">
-     <string>Grow selection</string>
-    </property>
-    <property name="text">
-     <string>Shrink Selection</string>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>18</width>
-      <height>18</height>
-     </size>
-    </property>
-    <property name="autoDefault">
-     <bool>false</bool>
-    </property>
-    <property name="default">
-     <bool>false</bool>
-    </property>
-    <property name="flat">
-     <bool>false</bool>
-    </property>
-   </widget>
    <widget class="QPushButton" name="chk004">
     <property name="enabled">
      <bool>true</bool>
@@ -458,6 +378,56 @@
     </property>
     <property name="flat">
      <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl003">
+    <property name="geometry">
+     <rect>
+      <x>365</x>
+      <y>220</y>
+      <width>101</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>19</height>
+     </size>
+    </property>
+    <property name="toolTip">
+     <string>Grow the current selection.</string>
+    </property>
+    <property name="text">
+     <string>Grow Selection</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl004">
+    <property name="geometry">
+     <rect>
+      <x>365</x>
+      <y>250</y>
+      <width>101</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>19</height>
+     </size>
+    </property>
+    <property name="toolTip">
+     <string>Shrink the current selection.</string>
+    </property>
+    <property name="text">
+     <string>Shrink Selection</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
   </widget>

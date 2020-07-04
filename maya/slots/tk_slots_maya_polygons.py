@@ -39,7 +39,6 @@ class Polygons(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
-
 			return
 
 
@@ -49,33 +48,33 @@ class Polygons(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		files = ['Extrude','Bevel','Bridge','Combine','Merge Vertex','Offset Edgeloop','Edit Edgeflow','Extract Curve','Poke','Wedge','Assign Invisible']
-		items = cmb.addItems_(files, 'Maya Polygon Operations')
+		if index=='setMenu':
+			list_ = ['Extrude','Bevel','Bridge','Combine','Merge Vertex','Offset Edgeloop','Edit Edgeflow','Extract Curve','Poke','Wedge','Assign Invisible']
+			cmb.addItems_(list_, 'Maya Polygon Operations')
+			return
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
+		if index>0:
 			if index==items.index('Extrude'):
 				mel.eval("PolyExtrudeOptions;")
-			if index==items.index('Bevel'):
+			elif index==items.index('Bevel'):
 				mel.eval('BevelPolygonOptions;')
-			if index==items.index('Bridge'):
+			elif index==items.index('Bridge'):
 				mel.eval("BridgeEdgeOptions;")
-			if index==items.index('Combine'):
+			elif index==items.index('Combine'):
 				mel.eval('CombinePolygonsOptions;')
-			if index==items.index('Merge Vertex'):
+			elif index==items.index('Merge Vertex'):
 				mel.eval('PolyMergeOptions;')
-			if index==items.index('Offset Edgeloop'):
+			elif index==items.index('Offset Edgeloop'):
 				mel.eval("DuplicateEdgesOptions;")
-			if index==items.index('Edit Edgeflow'):
+			elif index==items.index('Edit Edgeflow'):
 				mel.eval("PolyEditEdgeFlowOptions;")
-			if index==items.index('Extract Curve'):
+			elif index==items.index('Extract Curve'):
 				mel.eval('CreateCurveFromPolyOptions;')
-			if index==items.index('Poke'):
+			elif index==items.index('Poke'):
 				mel.eval("PokePolygonOptions;")
-			if index==items.index('Wedge'):
+			elif index==items.index('Wedge'):
 				mel.eval("WedgePolygonOptions;")
-			if index==items.index('Assign Invisible'):
+			elif index==items.index('Assign Invisible'):
 				mel.eval("PolyAssignSubdivHoleOptions;")
 			cmb.setCurrentIndex(0)
 

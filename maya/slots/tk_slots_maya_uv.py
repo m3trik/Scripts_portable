@@ -27,29 +27,29 @@ class Uv(Init):
 		Editors
 		'''
 		cmb = self.parentUi.cmb000
-		
-		list_ = ['UV Editor','UV Set Editor','UV Tool Kit','UV Linking: Texture-Centric','UV Linking: UV-Centric','UV Linking: Paint Effects/UV','UV Linking: Hair/UV','Flip UV']
-		items = cmb.addItems_(list_, 'Maya UV Editors')
 
-		if not index:
-			index = cmb.currentIndex()
-		if index !=0: #hide tk then perform operation
+		if index=='setMenu':
+			list_ = ['UV Editor','UV Set Editor','UV Tool Kit','UV Linking: Texture-Centric','UV Linking: UV-Centric','UV Linking: Paint Effects/UV','UV Linking: Hair/UV','Flip UV']
+			cmb.addItems_(list_, 'Maya UV Editors')
+			return
+
+		if index>0: #hide tk then perform operation
 			self.tk.hide()
-			if index == 1: #UV Editor
+			if index==1: #UV Editor
 				mel.eval('TextureViewWindow;') 
-			if index == 2: #UV Set Editor
+			elif index==2: #UV Set Editor
 				mel.eval('uvSetEditor;')
-			if index == 3: #UV Tool Kit
+			elif index==3: #UV Tool Kit
 				mel.eval('toggleUVToolkit;')
-			if index == 4: #UV Linking: Texture-Centric
+			elif index==4: #UV Linking: Texture-Centric
 				mel.eval('textureCentricUvLinkingEditor;')
-			if index == 5: #UV Linking: UV-Centric
+			elif index==5: #UV Linking: UV-Centric
 				mel.eval('uvCentricUvLinkingEditor;')
-			if index == 6: #UV Linking: Paint Effects/UV
+			elif index==6: #UV Linking: Paint Effects/UV
 				mel.eval('pfxUVLinkingEditor;')
-			if index == 7: #UV Linking: Hair/UV
+			elif index==7: #UV Linking: Hair/UV
 				mel.eval('hairUVLinkingEditor;')
-			if index==items.index('Flip UV'):
+			elif index==items.index('Flip UV'):
 				mel.eval("performPolyForceUV flip 1;")
 			cmb.setCurrentIndex(0)
 

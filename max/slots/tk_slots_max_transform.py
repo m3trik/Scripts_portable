@@ -33,7 +33,6 @@ class Transform(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
-
 			return
 
 
@@ -42,14 +41,14 @@ class Transform(Init):
 		Editors
 		'''
 		cmb = self.parentUi.cmb000
-		
-		files = ['']
-		contents = cmb.addItems_(files, '')
 
-		# if not index:
-		# 	index = cmb.currentIndex()
-		# if index!=0:
-		# 	if index==contents.index(''):
+		if index=='setMenu':
+			files = ['']
+			contents = cmb.addItems_(files, '')
+			return
+
+		# if inde>0:
+		# 	if index==cmb.items.index(''):
 		# 		pass
 		# 	cmb.setCurrentIndex(0)
 
@@ -64,13 +63,14 @@ class Transform(Init):
 		cmb = self.parentUi.cmb001
 		cmb.popupStyle = 'qmenu'
 
-		if not cmb.containsContextMenuItems:
+		if index=='setMenu':
 			cmb.addToContext('QRadioButton', setObjectName='chk017', setText='Standard', setChecked=True, setToolTip='')
 			cmb.addToContext('QRadioButton', setObjectName='chk018', setText='Body Shapes', setToolTip='')
 			cmb.addToContext('QRadioButton', setObjectName='chk019', setText='NURBS', setToolTip='')
 			cmb.addToContext('QRadioButton', setObjectName='chk020', setText='Point Cloud Shapes', setToolTip='')
 			cmb.addToContext(QLabel_, setObjectName='lbl000', setText='Disable All', setToolTip='Disable all constraints.')
 			self.connect_('chk017-20', 'toggled', self.cmb001, cmb) #connect to this method on toggle
+			return
 
 		cmb.menu.clear()
 		if cmb.chk017.isChecked(): #Standard

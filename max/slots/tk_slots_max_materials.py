@@ -51,13 +51,13 @@ class Materials(Init):
 		'''
 		cmb = self.parentUi.cmb001
 
-		list_ = ['Material Editor']
-		items = cmb.addItems_(list_, '3dsMax Material Editors')
+		if index=='setMenu':
+			list_ = ['Material Editor']
+			cmb.addItems_(list_, '3dsMax Material Editors')
+			return
 
-		if index is None:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==items.index('Material Editor'):
+		if index>0:
+			if index==cmd.items.index('Material Editor'):
 				maxEval('max mtledit')
 			cmb.setCurrentIndex(0)
 
@@ -71,15 +71,17 @@ class Materials(Init):
 		'''
 		cmb = self.parentUi.cmb002
 
-		if not cmb.containsContextMenuItems:
+		if index=='setMenu':
 			cmb.addToContext(QLabel_, setText='Open in Editor', setObjectName='lbl000', setToolTip='Open material in editor.')
-			cmb.addToContext(QLabel_, setText='Rename', setObjectName='lbl001', setToolTip='Rename material')
+			cmb.addToContext(QLabel_, setText='Rename', setObjectName='lbl001', setToolTip='Rename the current material.')
 			cmb.addToContext(QLabel_, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current material.')
 			cmb.addToContext(QLabel_, setText='Delete All Unused Materials', setObjectName='lbl003', setToolTip='Delete All unused materials.')
 			cmb.addToContext(QLabel_, setText='Refresh', setObjectName='cmb002', setToolTip='Refresh materials list')
+			return
 
 		if cmb.lineEdit():
 			self.renameMaterial()
+			self.lbl001(setEditable=False)
 			return
 
 		try:
@@ -250,9 +252,6 @@ class Materials(Init):
 				self.currentMaterial.name = newMatName
 			except RuntimeError as error:
 				cmb.setItemText(cmb.currentIndex(), str(error.strip('\n')))
-
-		#re-enable widgets
-		self.lbl001(setEditable=False)
 
 
 	def lbl001(self, setEditable=True):

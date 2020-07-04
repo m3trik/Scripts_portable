@@ -96,6 +96,9 @@
               <height>19</height>
              </size>
             </property>
+            <property name="maxVisibleItems">
+             <number>30</number>
+            </property>
             <property name="sizeAdjustPolicy">
              <enum>QComboBox::AdjustToContents</enum>
             </property>
@@ -128,6 +131,9 @@
               <width>999</width>
               <height>19</height>
              </size>
+            </property>
+            <property name="maxVisibleItems">
+             <number>30</number>
             </property>
             <property name="sizeAdjustPolicy">
              <enum>QComboBox::AdjustToContents</enum>
@@ -207,6 +213,9 @@
               <height>19</height>
              </size>
             </property>
+            <property name="maxVisibleItems">
+             <number>30</number>
+            </property>
             <property name="sizeAdjustPolicy">
              <enum>QComboBox::AdjustToContents</enum>
             </property>
@@ -239,6 +248,9 @@
               <width>999</width>
               <height>19</height>
              </size>
+            </property>
+            <property name="maxVisibleItems">
+             <number>30</number>
             </property>
             <property name="sizeAdjustPolicy">
              <enum>QComboBox::AdjustToContents</enum>
@@ -406,7 +418,7 @@
          </size>
         </property>
         <property name="maxVisibleItems">
-         <number>50</number>
+         <number>40</number>
         </property>
         <property name="sizeAdjustPolicy">
          <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
@@ -428,11 +440,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QToolButton_</class>
-   <extends>QToolButton</extends>
-   <header>widgets.qtoolbutton_.h</header>
-  </customwidget>
-  <customwidget>
    <class>QPushButton_Draggable</class>
    <extends>QPushButton</extends>
    <header>widgets.qpushbutton_draggable.h</header>
@@ -441,6 +448,11 @@
    <class>QProgressBar_</class>
    <extends>QProgressBar</extends>
    <header>widgets.qprogressbar_.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QToolButton_</class>
+   <extends>QToolButton</extends>
+   <header>widgets.qtoolbutton_.h</header>
   </customwidget>
   <customwidget>
    <class>QComboBox_</class>

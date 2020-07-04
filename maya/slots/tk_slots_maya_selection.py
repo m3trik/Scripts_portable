@@ -9,23 +9,23 @@ class Selection(Init):
 	def __init__(self, *args, **kwargs):
 		super(Selection, self).__init__(*args, **kwargs)
 
-		try: #set initial checked button states
-			state = pm.selectPref(query=True, useDepth=True)
-			self.childUi.chk004.setChecked(state) #chk004 ignore backfacing (camera based selection)
+		# try: #set initial checked button states
+		# 	state = pm.selectPref(query=True, useDepth=True)
+		# 	self.childUi.chk004.setChecked(state) #chk004 ignore backfacing (camera based selection)
 
-			#selection style: set initial checked state
-			ctx = pm.currentCtx() #flags (ctx, c=True) get the context's class.
-			if ctx == 'lassoContext':
-				self.cmb004(index=1)
-				self.childUi.chk006.setChecked(True)
-			elif ctx == 'paintContext':
-				self.cmb004(index=2)
-				self.childUi.chk007.setChecked(True)
-			else: #selectContext
-				self.cmb004(index=0)
-				self.childUi.chk005.setChecked(True)
-		except NameError:
-			pass
+		# 	#selection style: set initial checked state
+		# 	ctx = pm.currentCtx() #flags (ctx, c=True) get the context's class.
+		# 	if ctx == 'lassoContext':
+		# 		self.cmb004(index=2)
+		# 		self.childUi.chk006.setChecked(True)
+		# 	elif ctx == 'paintContext':
+		# 		self.cmb004(index=3)
+		# 		self.childUi.chk007.setChecked(True)
+		# 	else: #selectContext
+		# 		self.cmb004(index=1)
+		# 		self.childUi.chk005.setChecked(True)
+		# except NameError:
+		# 	pass
 
 
 	def pin(self, state=None):
@@ -36,27 +36,73 @@ class Selection(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='')
+			pin.add(QComboBox_, setObjectName='cmb004', setToolTip='Set the select tool type.')
 			pin.add('QCheckBox', setText='Ignore Backfacing', setObjectName='chk004', setToolTip='Ignore backfacing components during selection.')
-			pin.add(QLabel_, setText='Grow Selection', setObjectName='b014', setToolTip='Grow the current selection.')
-			pin.add(QLabel_, setText='Shrink Selection', setObjectName='b015', setToolTip='Shrink the current selection.')
+			pin.add(QLabel_, setText='Grow Selection', setObjectName='lbl003', setToolTip='Grow the current selection.')
+			pin.add(QLabel_, setText='Shrink Selection', setObjectName='lbl004', setToolTip='Shrink the current selection.')
 			return
 
 
-	def t000(self):
-		'''
-		Select The Selection Set Itself (Not Members Of)
-		'''
-		name = str(self.parentUi.t000.text())+"Set"
-		pm.select (name, noExpand=1) #noExpand=select set itself
-
-
-	def t001(self):
+	def txt001(self):
 		'''
 		Select By Name
 		'''
-		searchStr = str(self.parentUi.t001.text()) #asterisk denotes startswith*, *endswith, *contains* 
+		searchStr = str(self.parentUi.txt001.text()) #asterisk denotes startswith*, *endswith, *contains* 
 		if searchStr:
-			selection = pm.select (pm.ls (searchStr))
+			selection = pm.select(pm.ls (searchStr))
+
+
+	def lbl000(self):
+		'''
+		Selection Sets: Create New
+		'''
+		cmb = self.parentUi.cmb000
+		if not cmb.isEditable():
+			cmb.insertItem(0, '')
+			cmb.setEditable(True)
+			cmb.lineEdit().setPlaceholderText('New Set:')
+		else:
+			name = cmb.currentText()
+			self.creatNewSelectionSet(name)
+			self.cmb000() #refresh the sets comboBox
+			cmb.setCurrentIndex(0)
+
+
+	def lbl001(self):
+		'''
+		Selection Sets: Modify Current
+		'''
+		cmb = self.parentUi.cmb000
+		if not cmb.isEditable():
+			cmb.setEditable(True)
+			cmb.lineEdit().setPlaceholderText(cmb.currentText())
+		else:
+			name = cmb.currentText()
+			self.modifySet(name)
+			cmb.setItemText(cmb.currentIndex(), name)
+			# self.cmb000() #refresh the sets comboBox
+
+
+	def lbl002(self):
+		'''
+		Selection Sets: Delete Current
+		'''
+		cmb = self.parentUi.cmb000
+		name = cmb.currentText()
+		pm.delete(name)
+
+		index = cmb.currentIndex()
+		self.cmb000() #refresh the sets comboBox
+
+
+	def lbl003(self):
+		'''
+		Selection Sets: Select Current
+		'''
+		cmb = self.parentUi.cmb000
+		name = cmb.currentText()
+		if cmb.currentIndex()>0:
+			pm.select(name) # pm.select(name, noExpand=1) #Select The Selection Set Itself (Not Members Of) (noExpand=select set)
 
 
 	def s002(self):
@@ -133,6 +179,7 @@ class Selection(Init):
 		self.setSelectionStyle('selectContext')
 		self.toggleWidgets(setChecked='chk005', setUnChecked='chk006-7')
 		self.parentUi.cmb004.setCurrentIndex(0)
+		self.viewPortMessage('Select Style: <hl>Marquee</hl>')
 
 
 	def chk006(self):
@@ -142,6 +189,7 @@ class Selection(Init):
 		self.setSelectionStyle('lassoContext')
 		self.toggleWidgets(setChecked='chk006', setUnChecked='chk005,chk007')
 		self.parentUi.cmb004.setCurrentIndex(1)
+		self.viewPortMessage('Select Style: <hl>Lasso</hl>')
 
 
 	def chk007(self):
@@ -151,6 +199,7 @@ class Selection(Init):
 		self.setSelectionStyle('paintContext')
 		self.toggleWidgets(setChecked='chk007', setUnChecked='chk005-6')
 		self.parentUi.cmb004.setCurrentIndex(2)
+		self.viewPortMessage('Select Style: <hl>Paint</hl>')
 
 
 	def setSelectionStyle(self, ctx):
@@ -170,7 +219,6 @@ class Selection(Init):
 			ctx = pm.artSelectCtx(ctx)
 
 		pm.setToolTo(ctx)
-		self.viewPortMessage('Select Style: <hl>'+ctx+'</hl>')
 
 
 	def cmb000(self, index=None):
@@ -179,13 +227,17 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		contents = cmb.addItems_([str(set_) for set_ in pm.ls (et="objectSet", flatten=1)], "Sets")
+		if index=='setMenu':
+			cmb.addToContext(QLabel_, setText='Select', setObjectName='lbl003', setToolTip='Select the current set elements.')
+			cmb.addToContext(QLabel_, setText='New', setObjectName='lbl000', setToolTip='Create a new selection set.')
+			cmb.addToContext(QLabel_, setText='Modify', setObjectName='lbl001', setToolTip='Modify the current set by renaming and/or changing the selection.')
+			cmb.addToContext(QLabel_, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current set.')
+			cmb.returnPressed.connect(lambda m=cmb.lastActiveChild: getattr(self, m(name=1))())
+			return
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			pm.select (contents[index])
-			cmb.setCurrentIndex(0)
+		items = cmb.addItems_([str(s) for s in pm.ls(et='objectSet', flatten=1)])
+
+		self._currentSet = cmb.currentText()
 
 
 	def cmb001(self, index=None):
@@ -194,13 +246,13 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb001
 		
-		files = ['Polygon Selection Constraints']
-		contents = cmb.addItems_(files, '')
+		if index=='setMenu':
+			list_ = ['Polygon Selection Constraints']
+			cmb.addItems_(list_, 'Selection Editors:')
+			return
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index('Polygon Selection Constraints'):
+		if index>0:
+			if index==cmb.items.index('Polygon Selection Constraints'):
 				mel.eval('PolygonSelectionConstraints;')
 			cmb.setCurrentIndex(0)
 
@@ -211,64 +263,64 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb002	
 
-		list_ = ['IK Handles','Joints','Clusters','Lattices','Sculpt Objects','Wires','Transforms','Geometry','NURBS Curves','NURBS Surfaces','Polygon Geometry','Cameras','Lights','Image Planes','Assets','Fluids','Particles','Rigid Bodies','Rigid Constraints','Brushes','Strokes','Dynamic Constraints','Follicles','nCloths','nParticles','nRigids']
-		contents = cmb.addItems_(list_, 'By Type')
+		if index=='setMenu':
+			list_ = ['IK Handles','Joints','Clusters','Lattices','Sculpt Objects','Wires','Transforms','Geometry','NURBS Curves','NURBS Surfaces','Polygon Geometry','Cameras','Lights','Image Planes','Assets','Fluids','Particles','Rigid Bodies','Rigid Constraints','Brushes','Strokes','Dynamic Constraints','Follicles','nCloths','nParticles','nRigids']
+			cmb.addItems_(list_, 'By Type:')
+			return
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index('IK Handles'): #
+		if index>0:
+			if index==cmb.items.index('IK Handles'): #
 				type_ = pm.ls(type=['ikHandle', 'hikEffector'])
-			if index==contents.index('Joints'): #
+			if index==cmb.items.index('Joints'): #
 				type_ = pm.ls(type='joint')
-			if index==contents.index('Clusters'): #
+			if index==cmb.items.index('Clusters'): #
 				type_ = pm.listTransforms(type='clusterHandle')
-			if index==contents.index('Lattices'): #
+			if index==cmb.items.index('Lattices'): #
 				type_ = pm.listTransforms(type='lattice')
-			if index==contents.index('Sculpt Objects'): #
+			if index==cmb.items.index('Sculpt Objects'): #
 				type_ = pm.listTransforms(type=['implicitSphere', 'sculpt'])
-			if index==contents.index('Wires'): #
+			if index==cmb.items.index('Wires'): #
 				type_ = pm.ls(type='wire')
-			if index==contents.index('Transforms'): #
+			if index==cmb.items.index('Transforms'): #
 				type_ = pm.ls(type='transform')
-			if index==contents.index('Geometry'): #Select all Geometry
+			if index==cmb.items.index('Geometry'): #Select all Geometry
 				geometry = pm.ls(geometry=True)
 				type_ = pm.listRelatives(geometry, p=True, path=True) #pm.listTransforms(type='nRigid')
-			if index==contents.index('NURBS Curves'): #
+			if index==cmb.items.index('NURBS Curves'): #
 				type_ = pm.listTransforms(type='nurbsCurve')
-			if index==contents.index('NURBS Surfaces'): #
+			if index==cmb.items.index('NURBS Surfaces'): #
 				type_ = pm.ls(type='nurbsSurface')
-			if index==contents.index('Polygon Geometry'): #
+			if index==cmb.items.index('Polygon Geometry'): #
 				type_ = pm.listTransforms(type='mesh')
-			if index==contents.index('Cameras'): #
+			if index==cmb.items.index('Cameras'): #
 				type_ = pm.listTransforms(cameras=1)
-			if index==contents.index('Lights'): #
+			if index==cmb.items.index('Lights'): #
 				type_ = pm.listTransforms(lights=1)
-			if index==contents.index('Image Planes'): #
+			if index==cmb.items.index('Image Planes'): #
 				type_ = pm.ls(type='imagePlane')
-			if index==contents.index('Assets'): #
+			if index==cmb.items.index('Assets'): #
 				type_ = pm.ls(type=['container', 'dagContainer'])
-			if index==contents.index('Fluids'): #
+			if index==cmb.items.index('Fluids'): #
 				type_ = pm.listTransforms(type='fluidShape')
-			if index==contents.index('Particles'): #
+			if index==cmb.items.index('Particles'): #
 				type_ = pm.listTransforms(type='particle')
-			if index==contents.index('Rigid Bodies'): #
+			if index==cmb.items.index('Rigid Bodies'): #
 				type_ = pm.listTransforms(type='rigidBody')
-			if index==contents.index('Rigid Constraints'): #
+			if index==cmb.items.index('Rigid Constraints'): #
 				type_ = pm.ls(type='rigidConstraint')
-			if index==contents.index('Brushes'): #
+			if index==cmb.items.index('Brushes'): #
 				type_ = pm.ls(type='brush')
-			if index==contents.index('Strokes'): #
+			if index==cmb.items.index('Strokes'): #
 				type_ = pm.listTransforms(type='stroke')
-			if index==contents.index('Dynamic Constraints'): #
+			if index==cmb.items.index('Dynamic Constraints'): #
 				type_ = pm.listTransforms(type='dynamicConstraint')
-			if index==contents.index('Follicles'): #
+			if index==cmb.items.index('Follicles'): #
 				type_ = pm.listTransforms(type='follicle')
-			if index==contents.index('nCloths'): #
+			if index==cmb.items.index('nCloths'): #
 				type_ = pm.listTransforms(type='nCloth')
-			if index==contents.index('nParticles'): #
+			if index==cmb.items.index('nParticles'): #
 				type_ = pm.listTransforms(type='nParticle')
-			if index==contents.index('nRigids'): #
+			if index==cmb.items.index('nRigids'): #
 				type_ = pm.listTransforms(type='nRigid')
 
 			pm.select(type_)
@@ -281,52 +333,51 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb003
 
-		list_ = ['Verts', 'Vertex Faces', 'Vertex Perimeter', 'Edges', 'Edge Loop', 'Edge Ring', 'Contained Edges', 'Edge Perimeter', 'Border Edges', 'Faces', 'Face Path', 'Contained Faces', 'Face Perimeter', 'UV\'s', 'UV Shell', 'UV Shell Border', 'UV Perimeter', 'UV Edge Loop', 'Shell', 'Shell Border'] 
+		if index=='setMenu':
+			list_ = ['Verts', 'Vertex Faces', 'Vertex Perimeter', 'Edges', 'Edge Loop', 'Edge Ring', 'Contained Edges', 'Edge Perimeter', 'Border Edges', 'Faces', 'Face Path', 'Contained Faces', 'Face Perimeter', 'UV\'s', 'UV Shell', 'UV Shell Border', 'UV Perimeter', 'UV Edge Loop', 'Shell', 'Shell Border'] 
+			cmb.addItems_(list_, 'Convert To:')
+			return
 
-		contents = cmb.addItems_(list_, 'Convert To')
-
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index('Verts'): #Convert Selection To Vertices
+		if index>0:
+			if index==cmb.items.index('Verts'): #Convert Selection To Vertices
 				mel.eval('PolySelectConvert 3;')
-			if index==contents.index('Vertex Faces'): #
+			if index==cmb.items.index('Vertex Faces'): #
 				mel.eval('PolySelectConvert 5;')
-			if index==contents.index('Vertex Perimeter'): #
+			if index==cmb.items.index('Vertex Perimeter'): #
 				mel.eval('ConvertSelectionToVertexPerimeter;')
-			if index==contents.index('Edges'): #Convert Selection To Edges
+			if index==cmb.items.index('Edges'): #Convert Selection To Edges
 				mel.eval('PolySelectConvert 2;')
-			if index==contents.index('Edge Loop'): #
+			if index==cmb.items.index('Edge Loop'): #
 				mel.eval('polySelectSp -loop;')
-			if index==contents.index('Edge Ring'): #Convert Selection To Edge Ring
+			if index==cmb.items.index('Edge Ring'): #Convert Selection To Edge Ring
 				mel.eval('SelectEdgeRingSp;')
-			if index==contents.index('Contained Edges'): #
+			if index==cmb.items.index('Contained Edges'): #
 				mel.eval('PolySelectConvert 20;')
-			if index==contents.index('Edge Perimeter'): #
+			if index==cmb.items.index('Edge Perimeter'): #
 				mel.eval('ConvertSelectionToEdgePerimeter;')
-			if index==contents.index('Border Edges'): #
+			if index==cmb.items.index('Border Edges'): #
 				pm.select(self.getBorderEdgeFromFace())
-			if index==contents.index('Faces'): #Convert Selection To Faces
+			if index==cmb.items.index('Faces'): #Convert Selection To Faces
 				mel.eval('PolySelectConvert 1;')
-			if index==contents.index('Face Path'): #
+			if index==cmb.items.index('Face Path'): #
 				mel.eval('polySelectEdges edgeRing;')
-			if index==contents.index('Contained Faces'): #
+			if index==cmb.items.index('Contained Faces'): #
 				mel.eval('PolySelectConvert 10;')
-			if index==contents.index('Face Perimeter'): #
+			if index==cmb.items.index('Face Perimeter'): #
 				mel.eval('polySelectFacePerimeter;')
-			if index==contents.index('UV\'s'): #
+			if index==cmb.items.index('UV\'s'): #
 				mel.eval('PolySelectConvert 4;')
-			if index==contents.index('UV Shell'): #
+			if index==cmb.items.index('UV Shell'): #
 				mel.eval('polySelectBorderShell 0;')
-			if index==contents.index('UV Shell Border'): #
+			if index==cmb.items.index('UV Shell Border'): #
 				mel.eval('polySelectBorderShell 1;')
-			if index==contents.index('UV Perimeter'): #
+			if index==cmb.items.index('UV Perimeter'): #
 				mel.eval('ConvertSelectionToUVPerimeter;')
-			if index==contents.index('UV Edge Loop'): #
+			if index==cmb.items.index('UV Edge Loop'): #
 				mel.eval('polySelectEdges edgeUVLoopOrBorder;')
-			if index==contents.index('Shell'): #
+			if index==cmb.items.index('Shell'): #
 				mel.eval('polyConvertToShell;')
-			if index==contents.index('Shell Border'): #
+			if index==cmb.items.index('Shell Border'): #
 				mel.eval('polyConvertToShellBorder;')
 			cmb.setCurrentIndex(0)
 
@@ -337,19 +388,19 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb004
 
-		list_ = ['Marquee', 'Lasso', 'Paint'] 
+		if index=='setMenu':
+			list_ = ['Marquee', 'Lasso', 'Paint'] 
+			cmb.addItems_(list_, 'Select Tool Style:')
+			return
 
-		contents = cmb.addItems_(list_)
-
-		if not index:
-			index = cmb.currentIndex()
-
-		if index==contents.index('Marquee'): #
-			self.chk005()
-		if index==contents.index('Lasso'): #
-			self.chk006()
-		if index==contents.index('Paint'): #
-			self.chk007()
+		if index>0:
+			if index==cmb.items.index('Marquee'): #
+				self.chk005()
+			if index==cmb.items.index('Lasso'): #
+				self.chk006()
+			if index==cmb.items.index('Paint'): #
+				self.chk007()
+			cmb.setCurrentIndex(0)
 
 
 	def cmb005(self, index=None):
@@ -358,26 +409,26 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb005
 
-		list_ = ['Off', 'Angle', 'Border', 'Edge Loop', 'Edge Ring', 'Shell', 'UV Edge Loop']
-		contents = cmb.addItems_(list_)
+		if index=='setMenu':
+			list_ = ['Angle', 'Border', 'Edge Loop', 'Edge Ring', 'Shell', 'UV Edge Loop']
+			items = cmb.addItems_(list_, 'Off')
+			return
 
-		if not index:
-			index = cmb.currentIndex()
-
-		if index==contents.index('Off'):
+		if index>0:
+			if index==cmb.items.index('Angle'):
+				mel.eval('dR_selConstraintAngle;') #dR_DoCmd("selConstraintAngle");
+			elif index==cmb.items.index('Border'):
+				mel.eval('dR_selConstraintBorder;') #dR_DoCmd("selConstraintBorder");
+			elif index==cmb.items.index('Edge Loop'):
+				mel.eval('dR_selConstraintEdgeLoop;') #dR_DoCmd("selConstraintEdgeLoop");
+			elif index==cmb.items.index('Edge Ring'):
+				mel.eval('dR_selConstraintEdgeRing;') #dR_DoCmd("selConstraintEdgeRing");
+			elif index==cmb.items.index('Shell'):
+				mel.eval('dR_selConstraintElement;') #dR_DoCmd("selConstraintElement");
+			elif index==cmb.items.index('UV Edge Loop'):
+				mel.eval('dR_selConstraintUVEdgeLoop;') #dR_DoCmd("selConstraintUVEdgeLoop");
+		else:
 			mel.eval('dR_selConstraintOff;') #dR_DoCmd("selConstraintOff");
-		if index==contents.index('Angle'):
-			mel.eval('dR_selConstraintAngle;') #dR_DoCmd("selConstraintAngle");
-		if index==contents.index('Border'):
-			mel.eval('dR_selConstraintBorder;') #dR_DoCmd("selConstraintBorder");
-		if index==contents.index('Edge Loop'):
-			mel.eval('dR_selConstraintEdgeLoop;') #dR_DoCmd("selConstraintEdgeLoop");
-		if index==contents.index('Edge Ring'):
-			mel.eval('dR_selConstraintEdgeRing;') #dR_DoCmd("selConstraintEdgeRing");
-		if index==contents.index('Shell'):
-			mel.eval('dR_selConstraintElement;') #dR_DoCmd("selConstraintElement");
-		if index==contents.index('UV Edge Loop'):
-			mel.eval('dR_selConstraintUVEdgeLoop;') #dR_DoCmd("selConstraintUVEdgeLoop");
 
 
 	@Slots.message
@@ -461,27 +512,14 @@ class Selection(Init):
 			return 'Warning: No faces selected.'
 
 
-	def b000(self):
-		'''
-		Create Selection Set
-		'''
-		name = str(self.parentUi.t000.text())+"Set"
-		if pm.objExists (name):
-			pm.sets (name, clear=1)
-			pm.sets (name, add=1) #if set exists; clear set and add current selection 
-		else: #create set
-			pm.sets (name=name, text="gCharacterSet")
-			self.parentUi.t000.clear()
-
-
-	def b014(self):
+	def lbl003(self):
 		'''
 		Grow Selection
 		'''
 		mel.eval('GrowPolygonSelectionRegion;')
 
 
-	def b015(self):
+	def lbl004(self):
 		'''
 		Shrink Selection
 		'''
@@ -514,6 +552,37 @@ class Selection(Init):
 		Convert Selection To Edge Ring
 		'''
 		mel.eval('SelectEdgeRingSp;')
+
+
+	@Slots.message
+	def creatNewSelectionSet(self, name=None):
+		'''
+		Selection Sets: Create a new selection set.
+		'''
+		if pm.objExists (name):
+			return 'Error: Set with name <hl>{}</hl> already exists.'.format(name)
+
+		else: #create set
+			if not name: #name=='set#Set': #generate a generic name based on obj.name
+				num = self.cycle(list(range(99)), 'selectionSetNum')
+				name=sel[0].name+'Set'+str(num)
+
+			pm.sets(name=name, text="gCharacterSet")
+
+
+	@Slots.message
+	def modifySet(self, name):
+		'''
+		Selection Sets: Modify Current by renaming or changing the set members.
+		'''
+		name = pm.rename(self._currentSet, name)
+
+		if pm.objExists(name):
+			pm.sets(name, clear=1)
+			pm.sets(name, add=1) #if set exists; clear set and add current selection
+
+
+
 
 
 

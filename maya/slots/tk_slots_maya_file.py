@@ -19,7 +19,6 @@ class File(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb005', setToolTip='')
-
 			return
 
 
@@ -30,15 +29,14 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if not cmb.containsContextMenuItems:
+		if index=='setMenu':
 			cmb.addToContext('QPushButton', setObjectName='b001', setText='Last', setToolTip='Open the most recent file.')
+			return
 
 		files = [f for f in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in f]
 		items = cmb.addItems_(files, "Recent Files")
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
+		if index>0:
 			force=True; force if str(mel.eval("file -query -sceneName -shortName;")) else not force #if sceneName prompt user to save; else force open
 			pm.openFile(items[index], open=1, force=force)
 			cmb.setCurrentIndex(0)
@@ -50,12 +48,13 @@ class File(Init):
 
 		'''
 		cmb = self.parentUi.cmb001
-		
+
+		if index=='setMenu':
+			return
+
 		files = (list(reversed(mel.eval("optionVar -query RecentProjectsList;"))))
 		items = cmb.addItems_(files, "Recent Projects")
 
-		if not index:
-			index = cmb.currentIndex()
 		if index>0:
 			mel.eval('setProject "'+items[index]+'"')
 			cmb.setCurrentIndex(0)
@@ -69,12 +68,13 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb002
 
+		if index=='setMenu':
+			return
+
 		path = os.environ.get('MAYA_AUTOSAVE_FOLDER').split(';')[0] #get autosave dir path from env variable.
 		files = [f for f in os.listdir(path) if f.endswith('.mb') or f.endswith('.ma')] #[file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" in file_]
 		items = cmb.addItems_(files, "Recent Autosave")
 
-		if not index:
-			index = cmb.currentIndex()
 		if index!=0:
 			force=True
 			if str(mel.eval("file -query -sceneName -shortName;")):
@@ -91,19 +91,19 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb003
 
-		items = cmb.addItems_(['Import file', 'Import Options', 'FBX Import Presets', 'Obj Import Presets'], "Import")
+		if index=='setMenu':
+			cmb.addItems_(['Import file', 'Import Options', 'FBX Import Presets', 'Obj Import Presets'], "Import")
+			return
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0: #hide then perform operation
+		if index>0: #hide then perform operation
 			self.tk.hide(force=1)
-			if index == 1: #Import
+			if index==1: #Import
 				mel.eval('Import;')
-			if index == 2: #Import options
+			elif index==2: #Import options
 				mel.eval('ImportOptions;')
-			if index == 3: #FBX Import Presets
+			elif index==3: #FBX Import Presets
 				mel.eval('FBXUICallBack -1 editImportPresetInNewWindow fbx;') #Fbx Presets
-			if index == 4: #Obj Import Presets
+			elif index==4: #Obj Import Presets
 				mel.eval('FBXUICallBack -1 editImportPresetInNewWindow obj;') #Obj Presets
 			cmb.setCurrentIndex(0)
 
@@ -114,36 +114,36 @@ class File(Init):
 
 		'''
 		cmb = self.parentUi.cmb004
-		
-		list_ = ['Export Selection', 'Send to Unreal', 'Send to Unity', 'GoZ', 'Send to 3dsMax: As New Scene', 'Send to 3dsMax: Update Current', 
-				'Send to 3dsMax: Add to Current', 'Export to Offline File', 'Export Options', 'FBX Export Presets', 'Obj Export Presets']
-		items = cmb.addItems_(list_, 'Export')
 
-		if not index:
-			index = cmb.currentIndex()
-		if index !=0: #hide then perform operation
+		if index=='setMenu':
+			list_ = ['Export Selection', 'Send to Unreal', 'Send to Unity', 'GoZ', 'Send to 3dsMax: As New Scene', 'Send to 3dsMax: Update Current', 
+					'Send to 3dsMax: Add to Current', 'Export to Offline File', 'Export Options', 'FBX Export Presets', 'Obj Export Presets']
+			cmb.addItems_(list_, 'Export')
+			return
+
+		if index>0: #hide then perform operation
 			self.tk.hide(force=1)
 			if index==1: #Export selection
 				mel.eval('ExportSelection;')
-			if index==2: #Unreal
+			elif index==2: #Unreal
 				mel.eval('SendToUnrealSelection;')
-			if index==3: #Unity 
+			elif index==3: #Unity 
 				mel.eval('SendToUnitySelection;')
-			if index==4: #GoZ
+			elif index==4: #GoZ
 				mel.eval('print("GoZ"); source"C:/Users/Public/Pixologic/GoZApps/Maya/GoZBrushFromMaya.mel"; source "C:/Users/Public/Pixologic/GoZApps/Maya/GoZScript.mel";')
-			if index==5: #Send to 3dsMax: As New Scene
+			elif index==5: #Send to 3dsMax: As New Scene
 				mel.eval('SendAsNewScene3dsMax;') #OneClickMenuExecute ("3ds Max", "SendAsNewScene"); doMaxFlow { "sendNew","perspShape","1" };
-			if index==6: #Send to 3dsMax: Update Current
+			elif index==6: #Send to 3dsMax: Update Current
 				mel.eval('UpdateCurrentScene3dsMax;') #OneClickMenuExecute ("3ds Max", "UpdateCurrentScene"); doMaxFlow { "update","perspShape","1" };
-			if index==7: #Send to 3dsMax: Add to Current
+			elif index==7: #Send to 3dsMax: Add to Current
 				mel.eval('AddToCurrentScene3dsMax;') #OneClickMenuExecute ("3ds Max", "AddToScene"); doMaxFlow { "add","perspShape","1" };
-			if index==8: #Export to Offline File
+			elif index==8: #Export to Offline File
 				mel.eval('ExportOfflineFileOptions;') #ExportOfflineFile
-			if index==9: #Export options
+			elif index==9: #Export options
 				mel.eval('ExportSelectionOptions;')
-			if index==10: #FBX Export Presets
+			elif index==10: #FBX Export Presets
 				mel.eval('FBXUICallBack -1 editExportPresetInNewWindow fbx;') #Fbx Presets
-			if index==11: #Obj Export Presets
+			elif index==11: #Obj Export Presets
 				mel.eval('FBXUICallBack -1 editExportPresetInNewWindow obj;') #Obj Presets
 			cmb.setCurrentIndex(0)
 
@@ -154,18 +154,18 @@ class File(Init):
 		Editors
 		'''
 		cmb = self.parentUi.cmb005
-		
-		list_ = []
-		items = cmb.addItems_(list_, '')
 
-		# if not index:
-		# 	index = cmb.currentIndex()
-		# if index!=0:
-		# 	if index==items.index(''):
+		if index=='setMenu':
+			list_ = []
+			cmb.addItems_(list_, '')
+			return
+
+		# if index>0:
+		# 	if index==cmb.items.index(''):
 		# 		mel.eval('') #
-		# 	if index==items.index(''):
+		# 	if index==cmb.items.index(''):
 		# 		mel.eval('') #
-		# 	if index==items.index(''):
+		# 	if index==cmb.items.index(''):
 		# 		mel.eval('') #
 		# 	cmb.setCurrentIndex(0)
 
@@ -176,23 +176,22 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb006
 
-		if not cmb.containsContextMenuItems:
+		if index=='setMenu':
 			cmb.addToContext(QComboBox_, setObjectName='cmb001', setToolTip='Current project directory root.')
 			cmb.addToContext(QLabel_, setObjectName='lbl000', setText='Set', setToolTip='Set the project directory.')
 			cmb.addToContext(QLabel_, setObjectName='lbl001', setText='Minimize App', setToolTip='Minimize the main application.')
 			cmb.addToContext(QLabel_, setObjectName='lbl002', setText='Maximize App', setToolTip='Restore the main application.')
 			cmb.addToContext(QLabel_, setObjectName='lbl003', setText='Close App', setToolTip='Close the main application.')
+			return
 
 		path = pm.workspace(query=1, rd=1) #current project path.
 		list_ = [f for f in os.listdir(path)]
 
 		project = pm.workspace(query=1, rd=1).split('/')[-2] #add current project path string to label. strip path and trailing '/'
 
-		items = cmb.addItems_(list_, project)
+		cmb.addItems_(list_, project)
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
+		if index>0:
 			dir_= path+list_[index-1]
 			if dir_.startswith('//'): #reformat for server address
 				dir_ = dir_.replace('/', '\\')

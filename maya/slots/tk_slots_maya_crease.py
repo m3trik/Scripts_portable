@@ -33,7 +33,6 @@ class Crease(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya Crease Editors')
-
 			return
 
 
@@ -42,13 +41,13 @@ class Crease(Init):
 		Editors
 		'''
 		cmb = self.parentUi.cmb000
-		
-		list_ = ['Crease Set Editor']
-		items = cmb.addItems_(list_, 'Maya Crease Editors')
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
+		if index=='setMenu':
+			list_ = ['Crease Set Editor']
+			cmb.addItems_(list_, 'Maya Crease Editors')
+			return
+
+		if index>0:
 			if index==items.index('Crease Set Editor'):
 				from maya.app.general import creaseSetEditor
 				creaseSetEditor.showCreaseSetEditor()

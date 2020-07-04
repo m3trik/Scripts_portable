@@ -125,7 +125,7 @@
              </size>
             </property>
             <property name="maxVisibleItems">
-             <number>50</number>
+             <number>40</number>
             </property>
             <property name="sizeAdjustPolicy">
              <enum>QComboBox::AdjustToContentsOnFirstShow</enum>

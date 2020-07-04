@@ -26,8 +26,8 @@ class QToolButton_(QtWidgets.QToolButton):
 	def __init__(self, parent=None, showMenuOnMouseOver=False):
 		super(QToolButton_, self).__init__(parent)
 
-		menu = QMenu_(self)
-		self.setMenu(menu)
+		self.menu = QMenu_(self)
+		self.setMenu(self.menu)
 
 		self.showMenuOnMouseOver=showMenuOnMouseOver
  
@@ -56,6 +56,7 @@ class QToolButton_(QtWidgets.QToolButton):
 		return True
 
 
+	@property
 	def contextMenu(self):
 		'''
 		Get the context menu.
@@ -69,7 +70,7 @@ class QToolButton_(QtWidgets.QToolButton):
 		'''
 		Same as 'add', but instead adds items to the context menu.
 		'''
-		_menu=self.contextMenu()
+		_menu=self.contextMenu
 		return self.add(w, title, _menu, **kwargs)
 
 
@@ -98,7 +99,7 @@ class QToolButton_(QtWidgets.QToolButton):
 		w.setMinimumHeight(self.minimumSizeHint().height()+1) #set child widget height to that of the toolbutton
 
 		if _menu is None:
-			_menu = self.menu()
+			_menu = self.menu
 		w = _menu.add(w, **kwargs)
 		setattr(self, w.objectName(), w)
 
@@ -107,7 +108,7 @@ class QToolButton_(QtWidgets.QToolButton):
 
 	def children_(self, of_type=[], contextMenu=False, _exclude=['QAction', 'QWidgetAction']):
 		'''
-		Get a list of child objects from a custom menu, excluding those types listed in '_exclude'.
+		Get a list of the menu's child objects, excluding those types listed in '_exclude'.
 
 		args:
 			contextMenu (bool) = Get the child widgets for the context menu.
@@ -117,9 +118,9 @@ class QToolButton_(QtWidgets.QToolButton):
 			(list)
 		'''
 		if contextMenu:
-			menu = self.contextMenu()
+			menu = self.contextMenu
 		else:
-			menu = self.menu()
+			menu = self.menu
 
 		if of_type:
 			children = [i for i in menu.children() if i.__class__.__name__ in of_type and i.__class__.__name__ not in _exclude]
@@ -145,7 +146,7 @@ class QToolButton_(QtWidgets.QToolButton):
 			event=<QEvent>
 		'''
 		if event.button()==QtCore.Qt.RightButton:
-			self.contextMenu().show()
+			self.contextMenu.show()
 
 		return QtWidgets.QToolButton.mousePressEvent(self, event)
 

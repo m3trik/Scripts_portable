@@ -36,27 +36,84 @@ class Selection(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='')
+			pin.add(QComboBox_, setObjectName='cmb004', setToolTip='Set the select tool type.')
 			pin.add('QCheckBox', setText='Ignore Backfacing', setObjectName='chk004', setToolTip='Ignore backfacing components during selection.')
-			pin.add(QLabel_, setText='Grow Selection', setObjectName='b014', setToolTip='Grow the current selection.')
-			pin.add(QLabel_, setText='Shrink Selection', setObjectName='b015', setToolTip='Shrink the current selection.')
+			pin.add(QLabel_, setText='Grow Selection', setObjectName='lbl003', setToolTip='Grow the current selection.')
+			pin.add(QLabel_, setText='Shrink Selection', setObjectName='lbl004', setToolTip='Shrink the current selection.')
 			return
 
 
-	def t000(self):
+	@Slots.message
+	def txt000(self):
 		'''
-		Select The Selection Set Itself (Not Members Of)
+		Create Selection Set
 		'''
-		name = str(self.parentUi.t000.text())+"Set"
-		pm.select (name, noExpand=1) #noExpand=select set itself
+		name = str(self.parentUi.txt000.text())+"Set"
+
+		
 
 
-	def t001(self):
+	def txt001(self):
 		'''
 		Select By Name
 		'''
-		searchStr = str(self.parentUi.t001.text()) #asterisk denotes startswith*, *endswith, *contains* 
+		searchStr = str(self.parentUi.txt001.text()) #asterisk denotes startswith*, *endswith, *contains* 
 		if searchStr:
 			selection = rt.select(searchStr)
+
+
+	def lbl000(self):
+		'''
+		Selection Sets: Create New
+		'''
+		cmb = self.parentUi.cmb000
+		if not cmb.isEditable():
+			cmb.insertItem(0, '')
+			cmb.setEditable(True)
+			cmb.lineEdit().setPlaceholderText('New Set:')
+		else:
+			name = cmb.currentText()
+			self.creatNewSelectionSet(name)
+			self.cmb000() #refresh the sets comboBox
+			cmb.setCurrentIndex(0)
+
+
+	def lbl001(self):
+		'''
+		Selection Sets: Modify Current
+		'''
+		cmb = self.parentUi.cmb000
+		if not cmb.isEditable():
+			cmb.setEditable(True)
+			cmb.lineEdit().setPlaceholderText(cmb.currentText())
+		else:
+			name = cmb.currentText()
+			self.modifySet(name)
+			cmb.setItemText(cmb.currentIndex(), name)
+			# self.cmb000() #refresh the sets comboBox
+
+
+	def lbl002(self):
+		'''
+		Selection Sets: Delete Current
+		'''
+		cmb = self.parentUi.cmb000
+		name = cmb.currentText()
+		rt.delete(name)
+
+		index = cmb.currentIndex()
+		self.cmb000() #refresh the sets comboBox
+
+
+	def lbl003(self):
+		'''
+		Selection Sets: Select Current
+		'''
+		cmb = self.parentUi.cmb000
+		name = cmb.currentText()
+		if cmb.currentIndex()>0:
+			rt.select(name) # pm.select(name, noExpand=1) #Select The Selection Set Itself (Not Members Of) (noExpand=select set)
+
 
 
 	def s002(self):
@@ -163,14 +220,18 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		selectionSets = [s for s in rt.selectionSets]
-		contents = cmb.addItems_([s.name for s in selectionSets], "Sets")
+		if index=='setMenu':
+			cmb.addToContext(QLabel_, setText='Select', setObjectName='lbl003', setToolTip='Select the current set elements.')
+			cmb.addToContext(QLabel_, setText='New', setObjectName='lbl000', setToolTip='Create a new selection set.')
+			cmb.addToContext(QLabel_, setText='Modify', setObjectName='lbl001', setToolTip='Modify the current set by renaming and/or changing the selection.')
+			cmb.addToContext(QLabel_, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current set.')
+			cmb.returnPressed.connect(lambda m=cmb.lastActiveChild: getattr(self, m(name=1))())
+			return
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			rt.select(contents[index])
-			cmb.setCurrentIndex(0)
+		selectionSets = [s for s in rt.selectionSets]
+		items = cmb.addItems_([s.name for s in selectionSets])
+
+		self._currentSet = cmb.currentText()
 
 
 	def cmb001(self, index=None):
@@ -179,13 +240,13 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb001
 		
-		files = ['']
-		contents = cmb.addItems_(files, '')
+		if index=='setMenu':
+			list_ = ['']
+			cmb.addItems_(list_, '')
+			return
 
-		# if not index:
-		# 	index = cmb.currentIndex()
-		# if index!=0:
-		# 	if index==contents.index(''):
+		# if index>0:
+		# 	if index==cmb.items.index(''):
 		# 		pass
 		# 	cmb.setCurrentIndex(0)
 
@@ -196,27 +257,27 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb002
 	
-		list_ = ['Geometry', 'Shapes', 'Lights', 'Cameras', 'Helpers', 'Space Warps', 'Particle Systems', 'Bone Objects']
-		contents = cmb.addItems_(list_, 'Select by Type:')
+		if index=='setMenu':
+			list_ = ['Geometry', 'Shapes', 'Lights', 'Cameras', 'Helpers', 'Space Warps', 'Particle Systems', 'Bone Objects']
+			cmb.addItems_(list_, 'Select by Type:')
+			return
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index('Geometry'): #Select all Geometry
+		if index>0:
+			if index==cmb.items.index('Geometry'): #Select all Geometry
 				rt.select(rt.geometry)
-			if index==contents.index('Shapes'): #Select all Geometry
+			elif index==cmb.items.index('Shapes'): #Select all Geometry
 				rt.select(rt.shapes)
-			if index==contents.index('Lights'): #Select all Geometry
+			elif index==cmb.items.index('Lights'): #Select all Geometry
 				rt.select(rt.lights)
-			if index==contents.index('Cameras'): #Select all Geometry
+			elif index==cmb.items.index('Cameras'): #Select all Geometry
 				rt.select(rt.cameras)
-			if index==contents.index('Helpers'): #Select all Geometry
+			elif index==cmb.items.index('Helpers'): #Select all Geometry
 				rt.select(rt.helpers)
-			if index==contents.index('Space Warps'): #Select all Geometry
+			elif index==cmb.items.index('Space Warps'): #Select all Geometry
 				rt.select(rt.spacewarps)
-			if index==contents.index('Particle Systems'): #Select all Geometry
+			elif index==cmb.items.index('Particle Systems'): #Select all Geometry
 				rt.select(rt.particelsystems)
-			if index==contents.index('Bone Objects'): #Select all Geometry
+			elif index==cmb.items.index('Bone Objects'): #Select all Geometry
 				rt.select(rt.boneobjects)
 
 			cmb.setCurrentIndex(0)
@@ -228,18 +289,18 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb003
 
-		list_ = ['Vertex', 'Edge', 'Border', 'Face', 'Element']
-		contents = cmb.addItems_(list_, 'Convert To')
-		
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
+		if index=='setMenu':
+			list_ = ['Vertex', 'Edge', 'Border', 'Face', 'Element']
+			cmb.addItems_(list_, 'Convert To:')
+			return
+
+		if index>0:
 			for obj in rt.selection:
 				for i in list_:
-					if index==contents.index(i):
+					if index==cmb.items.index(i):
 						obj.convertSelection('CurrentLevel', i) #Convert current selection to index of string i
 						# rt.setSelectionLevel(obj, i) #Change component mode to i
-						rt.subObjectLevel = contents.index(i)
+						rt.subObjectLevel = items.index(i)
 			cmb.setCurrentIndex(0)
 
 
@@ -249,22 +310,23 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb004
 
-		list_ = ['Marquee', 'Circular', 'Fence', 'Lasso', 'Paint'] 
-		items = cmb.addItems_(list_)
+		if index=='setMenu':
+			list_ = ['Marquee', 'Circular', 'Fence', 'Lasso', 'Paint'] 
+			cmb.addItems_(list_, 'Select Tool Style:')
+			return
 
-		if not index:
-			index = cmb.currentIndex()
-
-		if index==items.index('Marquee'):
-			maxEval('actionMan.executeAction 0 "59232"') #Rectangular select region
-		if index==items.index('Circular'):
-			maxEval('actionMan.executeAction 0 "59233"') #Circular select region
-		if index==items.index('Fence'):
-			maxEval('actionMan.executeAction 0 "59234"') #Fence select region
-		if index==items.index('Lasso'):
-			maxEval('actionMan.executeAction 0 "59235"') #Lasso select region
-		if index==items.index('Paint'):
-			maxEval('actionMan.executeAction 0 "59236"') #Paint select region
+		if index>0:
+			if index==cmb.items.index('Marquee'):
+				maxEval('actionMan.executeAction 0 "59232"') #Rectangular select region
+			elif index==cmb.items.index('Circular'):
+				maxEval('actionMan.executeAction 0 "59233"') #Circular select region
+			elif index==cmb.items.index('Fence'):
+				maxEval('actionMan.executeAction 0 "59234"') #Fence select region
+			elif index==cmb.items.index('Lasso'):
+				maxEval('actionMan.executeAction 0 "59235"') #Lasso select region
+			elif index==cmb.items.index('Paint'):
+				maxEval('actionMan.executeAction 0 "59236"') #Paint select region
+			cmb.setCurrentIndex(0)
 
 
 	def cmb005(self, index=None):
@@ -273,26 +335,26 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb005
 
-		list_ = ['Off', 'Angle', 'Border', 'Edge Loop', 'Edge Ring', 'Shell', 'UV Edge Loop']
-		contents = cmb.addItems_(list_)
+		if index=='setMenu':
+			list_ = ['Off', 'Angle', 'Border', 'Edge Loop', 'Edge Ring', 'Shell', 'UV Edge Loop']
+			cmb.addItems_(list_, 'Off')
+			return
 
-		if not index:
-			index = cmb.currentIndex()
-
-		# if index==contents.index('Off'):
+		# if index>0:
+		# 	if index==cmb.items.index('Angle'):
+		# 		mel.eval('dR_selConstraintAngle;') #dR_DoCmd("selConstraintAngle");
+		# 	elif index==cmb.items.index('Border'):
+		# 		mel.eval('dR_selConstraintBorder;') #dR_DoCmd("selConstraintBorder");
+		# 	elif index==cmb.items.index('Edge Loop'):
+		# 		mel.eval('dR_selConstraintEdgeLoop;') #dR_DoCmd("selConstraintEdgeLoop");
+		# 	elif index==cmb.items.index('Edge Ring'):
+		# 		mel.eval('dR_selConstraintEdgeRing;') #dR_DoCmd("selConstraintEdgeRing");
+		# 	elif index==cmb.items.index('Shell'):
+		# 		mel.eval('dR_selConstraintElement;') #dR_DoCmd("selConstraintElement");
+		# 	elif index==cmb.items.index('UV Edge Loop'):
+		# 		mel.eval('dR_selConstraintUVEdgeLoop;') #dR_DoCmd("selConstraintUVEdgeLoop");
+		# else:
 		# 	mel.eval('dR_selConstraintOff;') #dR_DoCmd("selConstraintOff");
-		# if index==contents.index('Angle'):
-		# 	mel.eval('dR_selConstraintAngle;') #dR_DoCmd("selConstraintAngle");
-		# if index==contents.index('Border'):
-		# 	mel.eval('dR_selConstraintBorder;') #dR_DoCmd("selConstraintBorder");
-		# if index==contents.index('Edge Loop'):
-		# 	mel.eval('dR_selConstraintEdgeLoop;') #dR_DoCmd("selConstraintEdgeLoop");
-		# if index==contents.index('Edge Ring'):
-		# 	mel.eval('dR_selConstraintEdgeRing;') #dR_DoCmd("selConstraintEdgeRing");
-		# if index==contents.index('Shell'):
-		# 	mel.eval('dR_selConstraintElement;') #dR_DoCmd("selConstraintElement");
-		# if index==contents.index('UV Edge Loop'):
-		# 	mel.eval('dR_selConstraintUVEdgeLoop;') #dR_DoCmd("selConstraintUVEdgeLoop");
 
 
 	def tb000(self, state=None):
@@ -385,27 +447,7 @@ class Selection(Init):
 		# setFaceSelection sel #{}
 
 
-	@Slots.message
-	def b000(self):
-		'''
-		Create Selection Set
-		'''
-		name = str(self.parentUi.t000.text())+"Set"
-
-		sel = rt.selection
-
-		if sel:
-			if name=='set#Set': #generate a generic name based on obj.name
-				num = self.cycle(list(range(99)), 'selectionSetNum')
-				name=sel[0].name+'Set'+str(num)
-				rt.selectionSets[name]
-			else:
-				rt.selectionSets[name] #if set exists, overwrite set; else create set
-		else:
-			return 'Error: No valid objects selected.'
-
-
-	def b014(self):
+	def lbl003(self):
 		'''
 		Grow Selection
 		'''
@@ -417,12 +459,44 @@ class Selection(Init):
 			obj.EditablePoly.GrowSelection()
 
 
-	def b015(self):
+	def lbl004(self):
 		'''
 		Shrink Selection
 		'''
 		for obj in rt.selection:
 			obj.EditablePoly.ShrinkSelection()
+
+
+	@Slots.message
+	def creatNewSelectionSet(self, name=None):
+		'''
+		Selection Sets: Create a new selection set.
+		'''
+		if rt.isValidObj(name): # obj!=rt.undefined
+			return 'Error: Set with name <hl>{}</hl> already exists.'.format(name)
+
+		else: #create set
+			sel = rt.selection
+			if sel:
+				if not name: #name=='set#Set': #generate a generic name based on obj.name
+					num = self.cycle(list(range(99)), 'selectionSetNum')
+					name=sel[0].name+'Set'+str(num)
+
+				rt.selectionSets[name]
+			else:
+				return 'Error: No valid objects selected.'
+
+
+	@Slots.message
+	def modifySet(self, name):
+		'''
+		Selection Sets: Modify Current by renaming or changing the set members.
+		'''
+		node = rt.getNodeByName(self._currentSet)
+		node.name = name
+
+		if pm.objExists(name):
+			rt.selectionSets[name]
 
 
 

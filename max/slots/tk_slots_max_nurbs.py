@@ -18,7 +18,6 @@ class Nurbs(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
-
 			return
 
 
@@ -27,16 +26,16 @@ class Nurbs(Init):
 		Editors
 		'''
 		cmb = self.parentUi.cmb000
-		
-		list_ = ['']
-		items = cmb.addItems_(list_, '')
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==items.index(''):
-				pass
-			cmb.setCurrentIndex(0)
+		if index=='setMenu':
+			list_ = ['']
+			cmb.addItems_(list_, '')
+			return
+
+		# if index>0:
+		# 	if index==cmb.items.index(''):
+		# 		pass
+		# 	cmb.setCurrentIndex(0)
 
 
 	def cmb001(self, index=None):
@@ -45,15 +44,15 @@ class Nurbs(Init):
 		'''
 		cmb = self.parentUi.cmb001
 
-		list_ = ['']
-		items = cmb.addItems_(list_, 'Create Curve')
+		if index=='setMenu':
+			list_ = ['']
+			cmb.addItems_(list_, 'Create Curve')
+			return
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==items.index(''):
-				mel.eval('')
-			cmb.setCurrentIndex(0)
+		# if index>0:
+		# 	if index==cmb.items.index(''):
+		# 		mel.eval('')
+		# 	cmb.setCurrentIndex(0)
 
 
 	def b012(self):

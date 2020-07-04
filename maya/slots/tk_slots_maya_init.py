@@ -54,7 +54,7 @@ class Init(Slots):
 				if pm.selectType(query=1, allObjects=1): #get object/s
 
 					selectedObjects = pm.ls(selection=1, objectsOnly=1)
-					name_and_type = [str(i.name())+'|'+str(pm.objectType(i)) for i in selectedObjects] #ie. ['pCube1:transform', 'pSphere1:transform']
+					name_and_type = ['{0}[{1}]'.format(i.name(), pm.objectType(i)) for i in selectedObjects] #ie. ['pCube1:transform', 'pSphere1:transform']
 					infoDict.update({'Selection: ':name_and_type}) #currently selected objects by name and type.
 
 					objectFaces = pm.polyEvaluate(selectedObjects, face=True)

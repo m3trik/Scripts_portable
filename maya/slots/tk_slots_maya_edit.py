@@ -18,7 +18,6 @@ class Edit(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya Editors')
-
 			return
 
 
@@ -28,18 +27,18 @@ class Edit(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		files = ['Cleanup', 'Transfer: Attribute Values', 'Transfer: Shading Sets']
-		contents = cmb.addItems_(files, 'Maya Editors')
+		if index=='setMenu':
+			list_ = ['Cleanup', 'Transfer: Attribute Values', 'Transfer: Shading Sets']
+			cmb.addItems_(list_, 'Maya Editors')
+			return
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index('Cleanup'):
+		if index>0:
+			if index==cmb.items.index('Cleanup'):
 				mel.eval('CleanupPolygonOptions;')
-			if index==contents.index('Transfer: Attribute Values'):
+			if index==cmb.items.index('Transfer: Attribute Values'):
 				mel.eval('TransferAttributeValuesOptions;')
 				# mel.eval('performTransferAttributes 1;') #Transfer Attributes Options
-			if index==contents.index('Transfer: Shading Sets'):
+			if index==cmb.items.index('Transfer: Shading Sets'):
 				mel.eval('performTransferShadingSets 1;')
 			cmb.setCurrentIndex(0)
 
