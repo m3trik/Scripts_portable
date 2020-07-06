@@ -9,6 +9,9 @@ class DynLayout(Init):
 	def __init__(self, *args, **kwargs):
 		super(DynLayout, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('dynLayout')
+		self.childUi = self.sb.getUi('dynLayout_submenu')
+
 
 	def pin(self, state=None):
 		'''

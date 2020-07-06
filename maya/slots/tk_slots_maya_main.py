@@ -9,6 +9,9 @@ class Main(Init):
 	def __init__(self, *args, **kwargs):
 		super(Main, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('main')
+		self.childUi = self.sb.getUi('main_submenu')
+
 
 	def tree000(self, wItem=None, column=None):
 		'''

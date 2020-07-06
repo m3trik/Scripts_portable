@@ -9,6 +9,9 @@ class Utilities(Init):
 	def __init__(self, *args, **kwargs):
 		super(Utilities, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('utilities')
+		self.childUi = self.sb.getUi('utilities_submenu')
+
 
 	def pin(self, state=None):
 		'''

@@ -9,6 +9,9 @@ class Materials(Init):
 	def __init__(self, *args, **kwargs):
 		super(Materials, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('materials')
+		self.childUi = self.sb.getUi('materials_submenu')
+
 		self.materials=None
 		self.randomMat=None
 

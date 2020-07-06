@@ -9,6 +9,9 @@ class Nurbs(Init):
 	def __init__(self, *args, **kwargs):
 		super(Nurbs, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('nurbs')
+		self.childUi = self.sb.getUi('nurbs_submenu')
+
 
 	def pin(self, state=None):
 		'''

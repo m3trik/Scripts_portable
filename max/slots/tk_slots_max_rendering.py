@@ -9,6 +9,9 @@ class Rendering(Init):
 	def __init__(self, *args, **kwargs):
 		super(Rendering, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('rendering')
+		self.childUi = self.sb.getUi('rendering_submenu')
+
 		# #checkable comboBox not working
 		# comboBox = self.CheckableComboBox(self.parentUi.cmb000)
 		# for num in range(6):

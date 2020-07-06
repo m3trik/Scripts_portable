@@ -9,6 +9,9 @@ class Scripting(Init):
 	def __init__(self, *args, **kwargs):
 		super(Scripting, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('scripting')
+		self.childUi = self.sb.getUi('scripting_submenu')
+
 		# tk_cmdScrollFieldReporter = pm.cmdScrollFieldReporter (
 		# 														height=35,
 		# 														backgroundColor=[0,0,0],

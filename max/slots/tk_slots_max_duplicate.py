@@ -9,6 +9,9 @@ class Duplicate(Init):
 	def __init__(self, *args, **kwargs):
 		super(Duplicate, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('duplicate')
+		self.childUi = self.sb.getUi('duplicate_submenu')
+
 		self.parentUi.s000.valueChanged.connect(self.radialArray) #update radial array
 		self.parentUi.s001.valueChanged.connect(self.radialArray) 
 

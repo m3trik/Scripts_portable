@@ -9,6 +9,9 @@ class Preferences(Init):
 	def __init__(self, *args, **kwargs):
 		super(Preferences, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('preferences')
+		self.childUi = self.sb.getUi('preferences_submenu')
+
 		self.parentUi.b010.setText('Maya Preferences')
 
 		self.cmb001(init=1) #init cmb001
@@ -32,20 +35,20 @@ class Preferences(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if index=='setMenu':
-			from PySide2 import QtGui, QtCore
-			list_ = QtGui.QStyleFactory.keys() #get styles from QStyleFactory
-			cmb.addItems_(list_)
-			return
+		# if index=='setMenu':
+		# 	from PySide2 import QtGui, QtCore
+		# 	list_ = QtGui.QStyleFactory.keys() #get styles from QStyleFactory
+		# 	cmb.addItems_(list_)
+		# 	return
 
-		if init: #temp.  move main function to shared Slots class
-			index = self.styleComboBox.findText(QtGui.qApp.style().objectName(), QtCore.Qt.MatchFixedString)
-			cmb.setCurrentIndex(index)
-		else:
-			index = self.styleComboBox.findText(QtGui.qApp.style().objectName(), QtCore.Qt.MatchFixedString)
-			cmb.setCurrentIndex(index)
+		# if init: #temp.  move main function to shared Slots class
+		# 	index = self.styleComboBox.findText(QtGui.qApp.style().objectName(), QtCore.Qt.MatchFixedString)
+		# 	cmb.setCurrentIndex(index)
+		# else:
+		# 	index = self.styleComboBox.findText(QtGui.qApp.style().objectName(), QtCore.Qt.MatchFixedString)
+		# 	cmb.setCurrentIndex(index)
 
-			QtGui.qApp.setStyle(style)
+		# 	QtGui.qApp.setStyle(style)
 
 
 	def cmb001(self, index=None, init=False):

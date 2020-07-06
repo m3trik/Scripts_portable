@@ -9,6 +9,9 @@ class Convert(Init):
 	def __init__(self, *args, **kwargs):
 		super(Convert, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('convert')
+		self.childUi = self.sb.getUi('convert_submenu')
+
 
 	def pin(self, state=None):
 		'''

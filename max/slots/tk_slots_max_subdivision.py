@@ -9,6 +9,9 @@ class Subdivision(Init):
 	def __init__(self, *args, **kwargs):
 		super(Subdivision, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('subdivision')
+		self.childUi = self.sb.getUi('subdivision_submenu')
+
 		#Set 3ds Max specific naming
 		self.parentUi.gb000.setTitle('TurboSmooth')
 		self.parentUi.s000.setPrefix('Iterations:  ')

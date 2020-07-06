@@ -131,13 +131,13 @@
              <bool>false</bool>
             </property>
             <property name="maxVisibleItems">
-             <number>20</number>
+             <number>40</number>
             </property>
             <property name="maxCount">
              <number>200</number>
             </property>
             <property name="sizeAdjustPolicy">
-             <enum>QComboBox::AdjustToContents</enum>
+             <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
             </property>
             <property name="frame">
              <bool>true</bool>
@@ -231,13 +231,13 @@
              <bool>false</bool>
             </property>
             <property name="maxVisibleItems">
-             <number>20</number>
+             <number>40</number>
             </property>
             <property name="maxCount">
              <number>200</number>
             </property>
             <property name="sizeAdjustPolicy">
-             <enum>QComboBox::AdjustToContents</enum>
+             <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
             </property>
             <property name="frame">
              <bool>true</bool>
@@ -427,13 +427,13 @@
              <bool>false</bool>
             </property>
             <property name="maxVisibleItems">
-             <number>20</number>
+             <number>40</number>
             </property>
             <property name="maxCount">
              <number>200</number>
             </property>
             <property name="sizeAdjustPolicy">
-             <enum>QComboBox::AdjustToContents</enum>
+             <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
             </property>
             <property name="frame">
              <bool>true</bool>

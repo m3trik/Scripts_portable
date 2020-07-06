@@ -9,6 +9,9 @@ class Selection(Init):
 	def __init__(self, *args, **kwargs):
 		super(Selection, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('selection')
+		self.childUi = self.sb.getUi('selection_submenu')
+
 		# try: #set initial checked button states
 		# 	state = pm.selectPref(query=True, useDepth=True)
 		# 	self.childUi.chk004.setChecked(state) #chk004 ignore backfacing (camera based selection)
@@ -96,6 +99,20 @@ class Selection(Init):
 
 
 	def lbl003(self):
+		'''
+		Grow Selection
+		'''
+		mel.eval('GrowPolygonSelectionRegion;')
+
+
+	def lbl004(self):
+		'''
+		Shrink Selection
+		'''
+		mel.eval('ShrinkPolygonSelectionRegion;')
+
+
+	def lbl005(self):
 		'''
 		Selection Sets: Select Current
 		'''
@@ -223,16 +240,18 @@ class Selection(Init):
 
 	def cmb000(self, index=None):
 		'''
-		List Selection Sets
+		Selection Sets
 		'''
 		cmb = self.parentUi.cmb000
 
 		if index=='setMenu':
-			cmb.addToContext(QLabel_, setText='Select', setObjectName='lbl003', setToolTip='Select the current set elements.')
+			cmb.addToContext(QLabel_, setText='Select', setObjectName='lbl005', setToolTip='Select the current set elements.')
 			cmb.addToContext(QLabel_, setText='New', setObjectName='lbl000', setToolTip='Create a new selection set.')
 			cmb.addToContext(QLabel_, setText='Modify', setObjectName='lbl001', setToolTip='Modify the current set by renaming and/or changing the selection.')
 			cmb.addToContext(QLabel_, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current set.')
-			cmb.returnPressed.connect(lambda m=cmb.lastActiveChild: getattr(self, m(name=1))())
+			cmb.returnPressed.connect(lambda m=cmb.lastActiveChild: getattr(self, m(name=1))()) #connect to the last pressed child widget's corresponding method after return pressed. ie. self.lbl000 if cmb.lbl000 was clicked last.
+			cmb.currentIndexChanged.connect(self.lbl005) #select current set on index change.
+			cmb.beforePopupShown.connect(self.cmb000) #refresh comboBox contents before showing it's popup.
 			return
 
 		items = cmb.addItems_([str(s) for s in pm.ls(et='objectSet', flatten=1)])
@@ -510,20 +529,6 @@ class Selection(Init):
 			pm.undoInfo(closeChunk=1)
 		else:
 			return 'Warning: No faces selected.'
-
-
-	def lbl003(self):
-		'''
-		Grow Selection
-		'''
-		mel.eval('GrowPolygonSelectionRegion;')
-
-
-	def lbl004(self):
-		'''
-		Shrink Selection
-		'''
-		mel.eval('ShrinkPolygonSelectionRegion;')
 
 
 	def b016(self):

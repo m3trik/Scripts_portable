@@ -9,6 +9,9 @@ class Subdivision(Init):
 	def __init__(self, *args, **kwargs):
 		super(Subdivision, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('subdivision')
+		self.childUi = self.sb.getUi('subdivision_submenu')
+
 
 	def pin(self, state=None):
 		'''

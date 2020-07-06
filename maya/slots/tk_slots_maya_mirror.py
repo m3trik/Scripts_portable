@@ -9,6 +9,9 @@ class Mirror(Init):
 	def __init__(self, *args, **kwargs):
 		super(Mirror, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('mirror')
+		self.childUi = self.sb.getUi('mirror_submenu')
+
 
 	def pin(self, state=None):
 		'''

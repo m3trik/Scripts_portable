@@ -9,6 +9,9 @@ class Display(Init):
 	def __init__(self, *args, **kwargs):
 		super(Display, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('display')
+		self.childUi = self.sb.getUi('display_submenu')
+
 
 	def pin(self, state=None):
 		'''

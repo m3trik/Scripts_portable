@@ -9,6 +9,9 @@ class Create(Init):
 	def __init__(self, *args, **kwargs):
 		super(Create, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('create')
+		self.childUi = self.sb.getUi('create_submenu')
+
 		self.rotation = {'x':[90,0,0], 'y':[0,90,0], 'z':[0,0,90], '-x':[-90,0,0], '-y':[0,-90,0], '-z':[0,0,-90], 'last':[]}
 		self.point=[0,0,0]
 		self.history=[]
@@ -184,21 +187,21 @@ class Create(Init):
 
 		if index=='setMenu':
 			list_ = ['Polygon', 'NURBS', 'Light']
-			cmb.addItems_(list_)
+			cmb.addItems(list_)
 			return
 
-		self.parentUi.cmb001.clear()
-		if cmb.currentIndex()==0:
-			polygons = ["Cube", "Sphere", "Cylinder", "Plane", "Circle", "Cone", "Pyramid", "Torus", "Tube", "GeoSphere", "Platonic Solids", "Text"]
-			self.parentUi.cmb001.addItems(polygons)
+		polygons = ["Cube", "Sphere", "Cylinder", "Plane", "Circle", "Cone", "Pyramid", "Torus", "Tube", "GeoSphere", "Platonic Solids", "Text"]
+		nurbs = ["Cube", "Sphere", "Cylinder", "Cone", "Plane", "Torus", "Circle", "Square"]
+		lights = ["Ambient", "Directional", "Point", "Spot", "Area", "Volume", "VRay Sphere", "VRay Dome", "VRay Rect", "VRay IES"]
 
-		if cmb.currentIndex()==1:
-			nurbs = ["Cube", "Sphere", "Cylinder", "Cone", "Plane", "Torus", "Circle", "Square"]
-			self.parentUi.cmb001.addItems(nurbs)
+		if index==0: #shared menu. later converted to the specified type.
+			self.parentUi.cmb001.addItems_(polygons)
 
-		if cmb.currentIndex()==2:
-			lights = ["Ambient", "Directional", "Point", "Spot", "Area", "Volume", "VRay Sphere", "VRay Dome", "VRay Rect", "VRay IES"]
-			self.parentUi.cmb001.addItems(lights)
+		if index==1:
+			self.parentUi.cmb001.addItems_(nurbs)
+
+		if index==2:
+			self.parentUi.cmb001.addItems_(lights)
 
 
 	def cmb002(self, index=None, values={}, clear=False, show=False):
@@ -383,6 +386,7 @@ class Create(Init):
 		cmb000.setCurrentIndex(cmb000.findText(catagory1))
 		cmb001.setCurrentIndex(cmb001.findText(catagory2))
 		self.b000()
+		self.tk.hide()
 
 
 	def b001(self):

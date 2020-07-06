@@ -30,6 +30,9 @@ class Init(Slots):
 	def __init__(self, *args, **kwargs):
 		super(Init, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('init')
+		self.childUi = self.sb.getUi('init_submenu')
+
 
 	def info(self):
 		'''

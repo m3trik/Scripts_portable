@@ -31,22 +31,6 @@ class Slots(QtCore.QObject):
 		'''
 		return self.sb.getUi() #current
 
-	@property
-	def parentUi(self):
-		'''
-		Get the calling module's top level Ui.
-		'''
-		name = self.sb.getUiName(self.currentUi)
-		return self.sb.getUi(name, level=3) #main_menu
-
-	@property
-	def childUi(self):
-		'''
-		Get the calling module's submenu.
-		'''
-		name = self.sb.getUiName(self.currentUi)
-		return self.sb.getUi(name, level=2) #submenu
-
 
 	def getObjects(self, class_, objectNames, showError_=False):
 		'''

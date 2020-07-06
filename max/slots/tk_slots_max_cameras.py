@@ -9,6 +9,9 @@ class Cameras(Init):
 	def __init__(self, *args, **kwargs):
 		super(Cameras, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('cameras')
+		self.childUi = self.sb.getUi('cameras_submenu')
+
 
 	@property
 	def clippingMenu(self):

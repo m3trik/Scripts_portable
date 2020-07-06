@@ -9,6 +9,9 @@ class Scene(Init):
 	def __init__(self, *args, **kwargs):
 		super(Scene, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('scene')
+		self.childUi = self.sb.getUi('scene_submenu')
+
 		self.parentUi.t000.returnPressed.connect(self.t001) #preform rename on returnPressed
 
 

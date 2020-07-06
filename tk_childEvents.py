@@ -71,7 +71,8 @@ class EventFactoryFilter(QtCore.QObject):
 					widget.setVisible(False)
 
 			#add any of the widget's children not already stored in widgets (now that menus and such have been initialized).
-			exclude = ['QTreeWidget_ExpandableList']#, 'QAction', 'QBoxLayout', 'QStandardItemModel', 'QFrame', 'QAbstractItemView', 'QItemSelectionModel', 'QItemDelegate', 'QScrollBar', 'QWidgetAction', 'QValidator', 'QObject', 'QStyledItemDelegate', 'QHeaderView', 'QPropertyAnimation']
+			exclude = ['QTreeWidget_ExpandableList', 'QBoxLayout', 'QFrame', 'QAbstractItemView', 'QItemSelectionModel', 'QItemDelegate', 
+				'QScrollBar', 'QWidgetAction', 'QValidator', 'QObject', 'QStyledItemDelegate', 'QHeaderView', 'QPropertyAnimation'] #, 'QAction'
 			[self.addWidgets(name, w) for w in widget.children() if w not in widgets and not w.__class__.__name__ in exclude]
 			# print(name, [w.objectName() for w in widget.children() if w not in widgets and not w.__class__.__name__ in exclude])
 

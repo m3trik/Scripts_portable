@@ -269,7 +269,6 @@ class Tk(QtWidgets.QStackedWidget):
 			force (bool) = override preventHide.
 		'''
 		if force or not self.preventHide:
-			self.setUi('init')
 			super(Tk, self).hide()
 
 

@@ -9,6 +9,9 @@ class Selection(Init):
 	def __init__(self, *args, **kwargs):
 		super(Selection, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('selection')
+		self.childUi = self.sb.getUi('selection_submenu')
+
 		# try: #set initial checked button states
 		# 	state = pm.selectPref(query=True, useDepth=True)
 		# 	self.toggleWidgets(setChecked='chk004') #chk004 ignore backfacing (camera based selection)
@@ -43,16 +46,6 @@ class Selection(Init):
 			return
 
 
-	@Slots.message
-	def txt000(self):
-		'''
-		Create Selection Set
-		'''
-		name = str(self.parentUi.txt000.text())+"Set"
-
-		
-
-
 	def txt001(self):
 		'''
 		Select By Name
@@ -85,7 +78,9 @@ class Selection(Init):
 		cmb = self.parentUi.cmb000
 		if not cmb.isEditable():
 			cmb.setEditable(True)
-			cmb.lineEdit().setPlaceholderText(cmb.currentText())
+			name = cmb.currentText()
+			cmb.lineEdit().setPlaceholderText(name)
+			self._modifySet = self.getSet(name)
 		else:
 			name = cmb.currentText()
 			self.modifySet(name)
@@ -99,7 +94,12 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb000
 		name = cmb.currentText()
-		rt.delete(name)
+
+		set_ = self.getSet(name)
+		set_array = self.getSet(name, 'set_array')
+
+		if set_:
+			rt.deleteItem(set_array, set_)
 
 		index = cmb.currentIndex()
 		self.cmb000() #refresh the sets comboBox
@@ -107,13 +107,42 @@ class Selection(Init):
 
 	def lbl003(self):
 		'''
+		Grow Selection
+		'''
+		# expand functionalitly to grow according to selection type
+		#grow line #PolytoolsSelect.Pattern7 1
+		#grow loop #PolytoolsSelect.GrowLoop()
+		#grow ring #PolytoolsSelect.GrowRing()
+		for obj in rt.selection:
+			obj.EditablePoly.GrowSelection()
+
+
+	def lbl004(self):
+		'''
+		Shrink Selection
+		'''
+		for obj in rt.selection:
+			obj.EditablePoly.ShrinkSelection()
+
+
+	def lbl005(self):
+		'''
 		Selection Sets: Select Current
 		'''
 		cmb = self.parentUi.cmb000
 		name = cmb.currentText()
-		if cmb.currentIndex()>0:
-			rt.select(name) # pm.select(name, noExpand=1) #Select The Selection Set Itself (Not Members Of) (noExpand=select set)
 
+		set_ = self.getSet(name)
+		obj = self.getSet(name, 'object')
+		level = self.getSet(name, 'objectLevel')
+
+		if obj:
+			rt.select(obj)
+			rt.subObjectLevel = level #set the appropriate object level.
+		if set_:
+			rt.select(set_)
+
+		rt.redrawViews()
 
 
 	def s002(self):
@@ -216,22 +245,22 @@ class Selection(Init):
 
 	def cmb000(self, index=None):
 		'''
-		List Selection Sets
+		Selection Sets
 		'''
 		cmb = self.parentUi.cmb000
 
 		if index=='setMenu':
-			cmb.addToContext(QLabel_, setText='Select', setObjectName='lbl003', setToolTip='Select the current set elements.')
+			cmb.addToContext(QLabel_, setText='Select', setObjectName='lbl005', setToolTip='Select the current set elements.')
 			cmb.addToContext(QLabel_, setText='New', setObjectName='lbl000', setToolTip='Create a new selection set.')
 			cmb.addToContext(QLabel_, setText='Modify', setObjectName='lbl001', setToolTip='Modify the current set by renaming and/or changing the selection.')
 			cmb.addToContext(QLabel_, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current set.')
-			cmb.returnPressed.connect(lambda m=cmb.lastActiveChild: getattr(self, m(name=1))())
+			cmb.returnPressed.connect(lambda m=cmb.lastActiveChild: getattr(self, m(name=1))()) #connect to the last pressed child widget's corresponding method after return pressed. ie. self.lbl000 if cmb.lbl000 was clicked last.
+			cmb.currentIndexChanged.connect(self.lbl005) #select current set on index change.
+			cmb.beforePopupShown.connect(self.cmb000) #refresh comboBox contents before showing it's popup.
 			return
 
-		selectionSets = [s for s in rt.selectionSets]
-		items = cmb.addItems_([s.name for s in selectionSets])
-
-		self._currentSet = cmb.currentText()
+		sets_ = Selection.getSelectionSets(rt.geometry)
+		cmb.addItems_([s for s in sets_])
 
 
 	def cmb001(self, index=None):
@@ -241,14 +270,14 @@ class Selection(Init):
 		cmb = self.parentUi.cmb001
 		
 		if index=='setMenu':
-			list_ = ['']
-			cmb.addItems_(list_, '')
+			list_ = ['Selection Set Editor']
+			cmb.addItems_(list_, 'Selection Editors:')
 			return
 
-		# if index>0:
-		# 	if index==cmb.items.index(''):
-		# 		pass
-		# 	cmb.setCurrentIndex(0)
+		if index>0:
+			if index==cmb.items.index('Selection Set Editor'):
+				maxEval('macros.run "Edit" "namedSelSets"')
+			cmb.setCurrentIndex(0)
 
 
 	def cmb002(self, index=None):
@@ -447,62 +476,165 @@ class Selection(Init):
 		# setFaceSelection sel #{}
 
 
-	def lbl003(self):
-		'''
-		Grow Selection
-		'''
-		# expand functionalitly to grow according to selection type
-		#grow line #PolytoolsSelect.Pattern7 1
-		#grow loop #PolytoolsSelect.GrowLoop()
-		#grow ring #PolytoolsSelect.GrowRing()
-		for obj in rt.selection:
-			obj.EditablePoly.GrowSelection()
-
-
-	def lbl004(self):
-		'''
-		Shrink Selection
-		'''
-		for obj in rt.selection:
-			obj.EditablePoly.ShrinkSelection()
-
-
 	@Slots.message
 	def creatNewSelectionSet(self, name=None):
 		'''
 		Selection Sets: Create a new selection set.
+
+		args:
+			name (str) = The desired name of the new set.
 		'''
 		if rt.isValidObj(name): # obj!=rt.undefined
 			return 'Error: Set with name <hl>{}</hl> already exists.'.format(name)
 
 		else: #create set
-			sel = rt.selection
+			sel = self.currentSelection
 			if sel:
 				if not name: #name=='set#Set': #generate a generic name based on obj.name
 					num = self.cycle(list(range(99)), 'selectionSetNum')
-					name=sel[0].name+'Set'+str(num)
+					name='{0}_Set{1}'.format(rt.selection[0].name, num) #ie. pCube1_Set0
 
-				rt.selectionSets[name]
+				try:
+					rt.selectionSets[name] = sel #create a standard object set.
+				except IndexError:
+					rt.selection[0].faces[name] = sel #create a sub-object level set for the selected currently selected components.
 			else:
-				return 'Error: No valid objects selected.'
+				return 'Error: Nothing selected.'
 
 
 	@Slots.message
 	def modifySet(self, name):
 		'''
 		Selection Sets: Modify Current by renaming or changing the set members.
+
+		args:
+			name (str) = Name of an existing selection set.
 		'''
-		node = rt.getNodeByName(self._currentSet)
-		node.name = name
+		set_ = self.getSet(name)
+		self._modifySet.name = name
 
-		if pm.objExists(name):
-			rt.selectionSets[name]
-
-
-
+		sel = rt.selection
+		if sel: #if there is a current selection; replace the set contents with the new selection (else; just rename).
+			rt.selectionSets[name] = sel
 
 
-		
+	def getSet(self, name, index=None, objects=[]):
+		'''
+		Get a set or set info by name.
+
+		args:
+			name (str) = Set name.
+			index (str)(int) = Desired return value type. Valid values are: 0:'set', 1:'object', 2:'objectLevel'. default is to return the set for the given set name.
+			objects (list) = The group of objects to get the set from.
+
+		returns:
+			(obj) <set>, <object>, or (int) <object level> depending on the given index.
+		'''
+		if not objects:
+			objects = rt.geometry
+		sets = Selection.getSelectionSets(objects)
+		try:
+			if index in ('object', 1):
+				value = sets[name][1]
+			elif index in ('objectLevel', 2):
+				value = sets[name][2]
+			elif index in ('set_array', 3):
+				value = sets[name][3]
+			else: #<set>
+				value = sets[name][0]
+		except (IndexError, KeyError):
+			value = None
+
+		return value
+
+
+	@staticmethod
+	def getSelectionSets(objects=[], includeEmptySets=True):
+		'''
+		Get selection sets for a group of objects in the given list.
+		Returns Object and Sub-Object Level sets.
+
+		args:
+			objects (list) = The objects to get sets from. ie. rt.cameras (default is rt.geometry)
+
+		returns:
+			(dict) {'set name':[<set>, <object>, <object level as int>]}
+		'''
+		if includeEmptySets:
+			objects = [i for i in objects]+[None]
+
+		sets={}
+		for level in [0,1,2,4]: #range(5) omitting 'borders' because of attribute error: <obj.borders>
+			for obj in objects:
+				_sets = Selection.selectionSets(obj, level)
+				for setName, set_ in _sets.items():
+					set_array = Selection.getSetArray(obj, level)
+					sets[str(setName)] = [set_, obj, level, set_array]
+
+		return sets
+
+
+	@staticmethod
+	def getSetArray(obj=None, index=0):
+		'''
+		Get the array containing a set by array type.
+
+		args:
+			obj (obj) = Parent obj of the array.
+			index (int) = Array type. 
+
+		returns:
+			(array) maxscript array object.
+		'''
+		type_ = {0:'', 1:'vertices', 2:'edges', 3:'borders', 4:'faces'}
+
+		if index==0:
+			_set_array = rt.selectionSets
+		else:
+			_set_array = getattr(obj, type_[index], None) #ie. <obj.faces>
+
+		return _set_array
+
+
+	@staticmethod
+	def selectionSets(obj=None, level=None):
+		'''
+		Gets any existing selection sets for the given object.
+
+		args:
+			obj (obj) = The object to get sets for. If no object is given, any empty sets will be returned.
+			level (int) = The sub-object level. Valid values are: 0(obj), 1(vertices), 2(edges), 3(borders), 4(faces)
+
+		returns:
+			(dict) {'set name':<set>}
+		'''
+		if level is None: #if level isn't given:
+			level = rt.subObjectLevel #use the current object level.
+
+		set_array = Selection.getSetArray(obj, level)
+
+		try:
+			if obj is None: #empty sets
+				sets = {s.name:s for s in rt.selectionSets if len(s)==0}
+			elif level in (0, None):
+				sets = {s.name:s for n,s in enumerate(rt.selectionSets, 1) for i in range(1, rt.getNamedSelSetItemCount(n)+1) if rt.getNamedSelSetItem(n, i)==obj}
+			elif level==1: #verts
+				sets = {s:set_array[s] for s in obj.vertices.selSetNames}
+			elif level==2: #edges
+				sets = {s:set_array[s] for s in obj.edges.selSetNames}
+			elif level==3: #borders
+				sets = {s:set_array[s] for s in obj.borders.selSetNames}
+			elif level==4: #faces
+				sets = {s:set_array[s] for s in obj.faces.selSetNames}
+		except AttributeError: #skip if the obj type doesn't have an attribute of the given level: ie. object has no attribute 'selSetNames' (ex. non-editable mesh)
+			sets = {}
+
+		return sets
+
+
+
+
+
 
 
 

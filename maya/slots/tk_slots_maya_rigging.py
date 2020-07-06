@@ -9,6 +9,9 @@ class Rigging(Init):
 	def __init__(self, *args, **kwargs):
 		super(Rigging, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('rigging')
+		self.childUi = self.sb.getUi('rigging_submenu')
+
 
 	def pin(self, state=None):
 		'''

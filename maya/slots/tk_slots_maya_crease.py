@@ -9,6 +9,9 @@ class Crease(Init):
 	def __init__(self, *args, **kwargs):
 		super(Crease, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('crease')
+		self.childUi = self.sb.getUi('crease_submenu')
+
 		self.creaseValue = 10
 
 

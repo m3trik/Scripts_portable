@@ -10,6 +10,9 @@ class File(Init):
 	def __init__(self, *args, **kwargs):
 		super(File, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('file')
+		self.childUi = self.sb.getUi('file_submenu')
+
 		#get recent file list. #convert to python
 		maxEval('''
 		Fn getRecentFiles =

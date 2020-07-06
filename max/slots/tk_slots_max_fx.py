@@ -9,6 +9,9 @@ class Fx(Init):
 	def __init__(self, *args, **kwargs):
 		super(Fx, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('fx')
+		self.childUi = self.sb.getUi('fx_submenu')
+
 
 	def pin(self, state=None):
 		'''

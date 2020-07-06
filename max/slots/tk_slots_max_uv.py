@@ -9,6 +9,9 @@ class Uv(Init):
 	def __init__(self, *args, **kwargs):
 		super(Uv, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('uv')
+		self.childUi = self.sb.getUi('uv_submenu')
+
 
 	def pin(self, state=None):
 		'''

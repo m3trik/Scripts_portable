@@ -9,6 +9,9 @@ class Normals(Init):
 	def __init__(self, *args, **kwargs):
 		super(Normals, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('normals')
+		self.childUi = self.sb.getUi('normals_submenu')
+
 		self.parentUi.b003.setText('Hard Edge Display')
 
 

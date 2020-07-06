@@ -9,6 +9,9 @@ class Polygons(Init):
 	def __init__(self, *args, **kwargs):
 		super(Polygons, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('polygons')
+		self.childUi = self.sb.getUi('polygons_submenu')
+
 
 	def chk008(self):
 		'''

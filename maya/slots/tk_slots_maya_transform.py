@@ -9,6 +9,9 @@ class Transform(Init):
 	def __init__(self, *args, **kwargs):
 		super(Transform, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('transform')
+		self.childUi = self.sb.getUi('transform_submenu')
+
 		#set input masks for text fields
 		# self.parentUi.t000.setInputMask("00.00") #change to allow for neg values
 

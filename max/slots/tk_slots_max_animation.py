@@ -9,6 +9,9 @@ class Animation(Init):
 	def __init__(self, *args, **kwargs):
 		super(Animation, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('animation')
+		self.childUi = self.sb.getUi('animation_submenu')
+
 
 	def pin(self, state=None):
 		'''

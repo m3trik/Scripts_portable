@@ -9,6 +9,9 @@ class Lighting(Init):
 	def __init__(self, *args, **kwargs):
 		super(Lighting, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('lighting')
+		self.childUi = self.sb.getUi('lighting_submenu')
+
 
 	def pin(self, state=None):
 		'''

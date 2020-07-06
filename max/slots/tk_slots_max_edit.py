@@ -9,6 +9,9 @@ class Edit(Init):
 	def __init__(self, *args, **kwargs):
 		super(Edit, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('edit')
+		self.childUi = self.sb.getUi('edit_submenu')
+
 
 	def pin(self, state=None):
 		'''

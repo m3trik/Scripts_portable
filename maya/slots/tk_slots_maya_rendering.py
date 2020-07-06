@@ -9,6 +9,9 @@ class Rendering(Init):
 	def __init__(self, *args, **kwargs):
 		super(Rendering, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('rendering')
+		self.childUi = self.sb.getUi('rendering_submenu')
+
 
 	def pin(self, state=None):
 		'''

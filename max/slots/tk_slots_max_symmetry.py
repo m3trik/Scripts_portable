@@ -9,6 +9,9 @@ class Symmetry(Init):
 	def __init__(self, *args, **kwargs):
 		super(Symmetry, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('symmetry')
+		self.childUi = self.sb.getUi('symmetry_submenu')
+
 		#symmetry: set initial checked state
 		# state = pm.symmetricModelling(query=True, symmetry=True) #application symmetry state
 		# axis = pm.symmetricModelling(query=True, axis=True)

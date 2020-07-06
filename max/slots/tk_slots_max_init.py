@@ -30,6 +30,9 @@ class Init(Slots):
 	def __init__(self, *args, **kwargs):
 		super(Init, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('init')
+		self.childUi = self.sb.getUi('init_submenu')
+
 
 	def info(self):
 		'''
@@ -238,6 +241,33 @@ class Init(Slots):
 			return 'Error: Object must be an Editable_Poly.'
 		
 		return elementArray
+
+
+	@property
+	def currentSelection(self):
+		'''
+		Gets the currently selected objects or object components.
+
+		returns:
+			(array) current selection as a maxscript array.
+		'''
+		sel = rt.selection
+		if not sel:
+			return 'Error: Nothing Selected.'
+
+		level = rt.subObjectLevel
+		if level in (0, None): #objs
+			s = [i for i in sel]
+		elif level==1: #verts
+			s = Init.getSelectedVertices(sel[0])
+		elif level==2: #edges
+			s = Init.getSelectedEdges(sel[0])
+		elif level==3: #borders
+			s = rt.getBorderSelection(sel[0])
+		elif level==4: #faces
+			s = Init.getSelectedFaces(sel[0])
+
+		return rt.array(*s) #unpack list s and convert to an array.
 
 
 	@staticmethod

@@ -9,6 +9,9 @@ class Scene(Init):
 	def __init__(self, *args, **kwargs):
 		super(Scene, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('scene')
+		self.childUi = self.sb.getUi('scene_submenu')
+
 		self.parentUi.t000.returnPressed.connect(self.t001) #preform rename on returnPressed
 
 
@@ -20,7 +23,6 @@ class Scene(Init):
 
 		if state=='setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
-
 			return
 
 
@@ -118,7 +120,7 @@ class Scene(Init):
 			obj.name = newName #Rename the object with the new name
 
 
-	
+
 
 
 

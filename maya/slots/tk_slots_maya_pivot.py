@@ -9,6 +9,9 @@ class Pivot(Init):
 	def __init__(self, *args, **kwargs):
 		super(Pivot, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('pivot')
+		self.childUi = self.sb.getUi('pivot_submenu')
+
 
 	def pin(self, state=None):
 		'''

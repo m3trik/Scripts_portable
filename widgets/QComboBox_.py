@@ -25,6 +25,8 @@ class QComboBox_(QtWidgets.QComboBox):
 	
 	'''
 	returnPressed = QtCore.Signal()
+	beforePopupShown = QtCore.Signal()
+	beforePopupHidden = QtCore.Signal()
 
 	def __init__(self, parent=None, popupStyle='modelView', **kwargs):
 		super(QComboBox_, self).__init__(parent)
@@ -175,38 +177,17 @@ class QComboBox_(QtWidgets.QComboBox):
 
 		if _menu is None:
 			_menu = self.menu
-		w = _menu.add(w, **kwargs)
+		_menu.add(w, **kwargs)
 
 		setattr(self, w.objectName(), w)
 
-		#set connection to setLastActiveChild on widget signal.
+		#connect to 'setLastActiveChild' when signal activated.
 		if hasattr(w, 'released'):
-			w.released.connect(lambda x=w: self.setLastActiveChild(x))
-		if hasattr(w, 'valueChanged'):
-			w.valueChanged.connect(lambda x=w: self.setLastActiveChild(x))
+			w.released.connect(lambda widget=w: self.setLastActiveChild(widget))
+		elif hasattr(w, 'valueChanged'):
+			w.valueChanged.connect(lambda state, widget=w: self.setLastActiveChild(state, widget))
 
 		return w
-
-
-	def setLastActiveChild(self, widget):
-		'''
-		'''
-		if widget:
-			self._lastActiveChild = widget
-
-		return self._lastActiveChild
-
-
-	def lastActiveChild(self, name=False):
-		'''
-		'''
-		if not hasattr(self, '_lastActiveChild'):
-			self._lastActiveChild = None
-
-		if name and self._lastActiveChild is not None:
-			return str(self._lastActiveChild.objectName())
-
-		return self._lastActiveChild
 
 
 	def addItems_(self, items, header=None):
@@ -223,9 +204,7 @@ class QComboBox_(QtWidgets.QComboBox):
 		ex call: comboBox.addItems_(["Import file", "Import Options"], "Import")
 		'''
 		self.blockSignals(True) #to keep clear from triggering currentIndexChanged
-		index = self.currentIndex() #get current index before refreshing list
-		if index<0:
-			index=0
+		index = self.currentIndex() if self.currentIndex()>0 else 0 #get the current index before refreshing list. avoid negative values.
 		self.clear()
 
 		# print (type(items))
@@ -275,6 +254,43 @@ class QComboBox_(QtWidgets.QComboBox):
 		return children
 
 
+	def setLastActiveChild(self, *args, **kwargs):
+		'''
+		Set the given widget as the last active.
+
+		args:
+			*args[-1] = Widget to set as last active. The widget can later be returned by calling the 'lastActiveChild' method.
+			*args **kwargs = Any additional arguments passed in by the wiget's signal during a connect call.
+
+		returns:
+			(obj) widget.
+		'''
+		widget = args[-1]
+
+		self._lastActiveChild = widget
+		# print(args, kwargs, widget.objectName() if hasattr(widget, 'objectName') else None)
+		return self._lastActiveChild
+
+
+	def lastActiveChild(self, name=False):
+		'''
+		Get the given widget set as last active.
+
+		args:
+			name (bool) = Return the last active widgets name as a string.
+
+		returns:
+			(obj) widget or (str) widget name.
+		'''
+		if not hasattr(self, '_lastActiveChild'):
+			self._lastActiveChild = None
+
+		if name and self._lastActiveChild is not None:
+			return str(self._lastActiveChild.objectName())
+
+		return self._lastActiveChild
+
+
 	def setCurrentItem(self, i):
 		'''
 		Sets the current item from the given item text or index without triggering any signals.
@@ -296,6 +312,8 @@ class QComboBox_(QtWidgets.QComboBox):
 		'''
 		Show the popup menu.
 		'''
+		self.beforePopupShown.emit()
+
 		if not self.popupStyle=='modelView':
 			if not self.menu.visible:
 				self.menu.show()
@@ -312,6 +330,8 @@ class QComboBox_(QtWidgets.QComboBox):
 
 
 	def hidePopup(self):
+		self.beforePopupHidden.emit()
+
 		if not self.popupStyle=='modelView':
 			self.menu.hide()
 			self.menu.visible=False
