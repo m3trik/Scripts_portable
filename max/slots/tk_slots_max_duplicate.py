@@ -42,13 +42,13 @@ class Duplicate(Init):
 		'''
 		cmb = self.parentUi.cmb001
 		
-		files = ['']
-		contents = cmb.addItems_(files, '')
+		if index=='setMenu':
+			files = ['']
+			cmb.addItems_(files, '')
+			return
 
-		# if not index:
-		# 	index = cmb.currentIndex()
-		# if index!=0:
-		# 	if index==contents.index(''):
+		# if index>0:
+		# 	if index==cmb.items.index(''):
 		# 		pass
 		# 	cmb.setCurrentIndex(0)
 

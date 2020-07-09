@@ -16,6 +16,10 @@ class Cameras(Init):
 	@property
 	def clippingMenu(self):
 		'''
+		Menu: Camera clip plane settings.
+
+		returns:
+			(obj) menu as a property.
 		'''
 		if not hasattr(self, '_clippingMenu'):
 			self._clippingMenu = QMenu_(self.currentUi, position='cursorPos')
@@ -97,20 +101,20 @@ class Cameras(Init):
 		'''
 		tree = self.parentUi.tree000
 
-		if not any([wItem, column]): #populate the tree columns.
-			if not tree.refresh: #static list items -----------
-				tree.expandOnHover = True
-				tree.convert(tree.getTopLevelItems(), 'QLabel') #convert any existing contents.
+		if wItem=='setMenu':
+			tree.expandOnHover = True
+			tree.convert(tree.getTopLevelItems(), 'QLabel') #convert any existing contents.
 
-				l = []
-				[tree.add('QLabel', 'Editors', setText=s) for s in l]
+			l = []
+			[tree.add('QLabel', 'Editors', setText=s) for s in l]
+			return
 
-			#refreshed list items -----------------------------
+		if not any([wItem, column]): #refresh list items -----------------------------
 			try:
 				l = [str(cam.name) for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
-			except AttributeError: l=[]
+			except AttributeError:
+				l=[]
 			[tree.add('QLabel', 'Cameras', refresh=True, setText=s) for s in l]
-
 			return
 
 		widget = tree.getWidget(wItem, column)
@@ -282,6 +286,57 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 
 
 # deprecated ------------------------------------
+
+
+# def tree000(self, wItem=None, column=None):
+# 		'''
+		
+# 		'''
+# 		tree = self.parentUi.tree000
+
+# 		if not any([wItem, column]): #populate the tree columns.
+# 			if not tree.refresh: #static list items -----------
+# 				tree.expandOnHover = True
+# 				tree.convert(tree.getTopLevelItems(), 'QLabel') #convert any existing contents.
+
+# 				l = []
+# 				[tree.add('QLabel', 'Editors', setText=s) for s in l]
+
+# 			#refreshed list items -----------------------------
+# 			try:
+# 				l = [str(cam.name) for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
+# 			except AttributeError: l=[]
+# 			[tree.add('QLabel', 'Cameras', refresh=True, setText=s) for s in l]
+
+# 			return
+
+# 		widget = tree.getWidget(wItem, column)
+# 		text = tree.getWidgetText(wItem, column)
+# 		header = tree.getHeaderFromColumn(column)
+
+# 		if header=='Create':
+# 			if text=='Custom Camera':
+# 				rt.StartObjectCreation(rt.Physical_Camera)
+# 			if text=='Set Custom Camera':
+# 				maxEval('Try(viewport.setcamera $) Catch()')
+# 			if text=='Camera From View':
+# 				maxEval('macros.run "Lights and Cameras" "PhysicalCamera_CreateFromView"')
+
+# 		if header=='Cameras':
+# 			cam = rt.getNodeByName(text)
+# 			rt.select(cam) #select the camera
+# 			rt.viewport.setCamera(cam) #set viewport to camera
+# 			rt.redrawViews()
+
+# 		if header=='Options':
+# 			if text=='Group Cameras':
+# 				self.groupCameras()
+# 			if text=='Adjust Clipping':
+# 				self.clippingMenu.show()
+# 			if text=='Toggle Safe Frames':
+# 				maxEval('actionMan.executeAction 0 "219"') #Tools: Viewport Safeframes Toggle
+
+
 
 
 	# def cmb000(self, index=None):

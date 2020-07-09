@@ -61,17 +61,27 @@ paths = #(
 
 
 python.Execute "import sys"
-for path_ in paths do
-(
+for path_ in paths do (
 	python.Execute ("sys.path.append('"+path_+"')")
 )
 
 
 
+function PerformDelayedTasks sender evt = (
+	/*
+	Delayed Tasks:
 
--- delayed commands
-function PerformDelayedTasks sender evt=
-(
+	Any commands within this function body will be delayed by the set amount.
+
+	ex. usage:
+	delayTimer = dotnetobject "Windows.Forms.Timer"
+	delayTimer.Interval=5000
+
+	dotnet.AddEventHandler delayTimer "Tick" PerformDelayedTasks
+
+	delayTimer.enabled = true
+	*/
+
 	sender.enabled = false --important: don't repeat this timer event
 	dotnet.RemoveEventHandler sender "Elapsed" PerformDelayedTasks --for sanity and cleanup
 
@@ -101,7 +111,9 @@ function PerformDelayedTasks sender evt=
 	-- actionMan.saveKeyboardFile		--saveKeyboardFile()
 )
 
-delayTimer= dotnetobject "Windows.Forms.Timer"
+
+
+delayTimer = dotnetobject "Windows.Forms.Timer"
 delayTimer.Interval=5000
 
 dotnet.AddEventHandler delayTimer "Tick" PerformDelayedTasks

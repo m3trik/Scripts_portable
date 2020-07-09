@@ -36,7 +36,7 @@ class File(Init):
 			return
 
 		files = [f for f in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in f]
-		items = cmb.addItems_(files, "Recent Files")
+		items = cmb.addItems_(files, "Recent Files", clear=True)
 
 		if index>0:
 			force=True; force if str(mel.eval("file -query -sceneName -shortName;")) else not force #if sceneName prompt user to save; else force open
@@ -55,7 +55,7 @@ class File(Init):
 			return
 
 		files = (list(reversed(mel.eval("optionVar -query RecentProjectsList;"))))
-		items = cmb.addItems_(files, "Recent Projects")
+		items = cmb.addItems_(files, "Recent Projects", clear=True)
 
 		if index>0:
 			mel.eval('setProject "'+items[index]+'"')
@@ -75,9 +75,9 @@ class File(Init):
 
 		path = os.environ.get('MAYA_AUTOSAVE_FOLDER').split(';')[0] #get autosave dir path from env variable.
 		files = [f for f in os.listdir(path) if f.endswith('.mb') or f.endswith('.ma')] #[file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" in file_]
-		items = cmb.addItems_(files, "Recent Autosave")
+		items = cmb.addItems_(files, "Recent Autosave", clear=True)
 
-		if index!=0:
+		if index>0:
 			force=True
 			if str(mel.eval("file -query -sceneName -shortName;")):
 				force=False #if sceneName, prompt user to save; else force open
@@ -191,7 +191,7 @@ class File(Init):
 
 		project = pm.workspace(query=1, rd=1).split('/')[-2] #add current project path string to label. strip path and trailing '/'
 
-		cmb.addItems_(list_, project)
+		cmb.addItems_(list_, project, clear=True)
 
 		if index>0:
 			dir_= path+list_[index-1]

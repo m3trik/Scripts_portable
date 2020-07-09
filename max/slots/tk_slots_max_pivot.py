@@ -32,7 +32,7 @@ class Pivot(Init):
 
 		if index=='setMenu':
 			list_ = ['']
-			items = cmb.addItems_(list_, '')
+			cmb.addItems_(list_, '')
 			return
 
 		# if index>0:

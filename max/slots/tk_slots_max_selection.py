@@ -61,7 +61,7 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb000
 		if not cmb.isEditable():
-			cmb.insertItem(0, '')
+			cmb.addItems_('', ascending=True)
 			cmb.setEditable(True)
 			cmb.lineEdit().setPlaceholderText('New Set:')
 		else:
@@ -77,13 +77,13 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb000
 		if not cmb.isEditable():
-			cmb.setEditable(True)
 			name = cmb.currentText()
+			self._oldSetName = name
+			cmb.setEditable(True)
 			cmb.lineEdit().setPlaceholderText(name)
-			self._modifySet = self.getSet(name)
 		else:
 			name = cmb.currentText()
-			self.modifySet(name)
+			self.modifySet(self._oldSetName)
 			cmb.setItemText(cmb.currentIndex(), name)
 			# self.cmb000() #refresh the sets comboBox
 
@@ -101,7 +101,6 @@ class Selection(Init):
 		if set_:
 			rt.deleteItem(set_array, set_)
 
-		index = cmb.currentIndex()
 		self.cmb000() #refresh the sets comboBox
 
 
@@ -260,7 +259,7 @@ class Selection(Init):
 			return
 
 		sets_ = Selection.getSelectionSets(rt.geometry)
-		cmb.addItems_([s for s in sets_])
+		cmb.addItems_([s for s in sets_], clear=True)
 
 
 	def cmb001(self, index=None):
@@ -476,6 +475,17 @@ class Selection(Init):
 		# setFaceSelection sel #{}
 
 
+	def generateUniqueSetName(self):
+		'''
+		Generate a generic name based on the object's name.
+
+		<objectName>_Set<int>
+		'''
+		num = self.cycle(list(range(99)), 'selectionSetNum')
+		name = '{0}_Set{1}'.format(rt.selection[0].name, num) #ie. pCube1_Set0
+		return name
+
+
 	@Slots.message
 	def creatNewSelectionSet(self, name=None):
 		'''
@@ -490,14 +500,14 @@ class Selection(Init):
 		else: #create set
 			sel = self.currentSelection
 			if sel:
-				if not name: #name=='set#Set': #generate a generic name based on obj.name
-					num = self.cycle(list(range(99)), 'selectionSetNum')
-					name='{0}_Set{1}'.format(rt.selection[0].name, num) #ie. pCube1_Set0
+				if not name:
+					name = self.generateUniqueSetName()
 
-				try:
+				try: #object level set.
 					rt.selectionSets[name] = sel #create a standard object set.
-				except IndexError:
-					rt.selection[0].faces[name] = sel #create a sub-object level set for the selected currently selected components.
+				except IndexError: #sub-object level set.
+					set_array = Selection.getSetArray(rt.selection[0], rt.subObjectLevel) #ie. rt.selection[0].faces
+					set_array[name] = sel #create a sub-object level set for the selected currently selected components.
 			else:
 				return 'Error: Nothing selected.'
 
@@ -510,38 +520,56 @@ class Selection(Init):
 		args:
 			name (str) = Name of an existing selection set.
 		'''
-		set_ = self.getSet(name)
-		self._modifySet.name = name
+		sel = self.currentSelection
+		if sel:
+			newName = self.parentUi.cmb000.currentText()
+			if not newName:
+				newName = self.generateUniqueSetName()
 
-		sel = rt.selection
-		if sel: #if there is a current selection; replace the set contents with the new selection (else; just rename).
-			rt.selectionSets[name] = sel
+			set_ = self.getSet(name)
+
+			try: #object level set.
+				set_.name = newName #rename the old set with the comboBoxes current text.
+				rt.selectionSets[name] = sel #create a standard object set.
+			except IndexError: #sub-object level set.
+				set_array = self.getSet(name, 'set_array')
+				set_array[name] = sel #create a sub-object level set for the selected currently selected components.
+				# if not newName==name:
+				# 	rt.deleteItem(set_array, set_) #delete the old if a new set name is given.
+		else:
+			return 'Error: Nothing selected.'
 
 
-	def getSet(self, name, index=None, objects=[]):
+	def getSet(self, name, index=0, objects=[]):
 		'''
 		Get a set or set info by name.
 
 		args:
 			name (str) = Set name.
-			index (str)(int) = Desired return value type. Valid values are: 0:'set', 1:'object', 2:'objectLevel'. default is to return the set for the given set name.
+			index (str)(int) = Desired return value type. Valid values are: 0:'set'(default), 1:'object', 2:'objectLevel' 4:'set_array'.
 			objects (list) = The group of objects to get the set from.
 
 		returns:
-			(obj) <set>, <object>, or (int) <object level> depending on the given index.
+			depending on the given index:
+			(obj) <set> <object>
+			(int) <object level>
+			(array) <set_array>
+
+		ex. self.getSet(name, 'set_array') #using string 'set_array' as index value instead of int 4 for readability.
 		'''
 		if not objects:
 			objects = rt.geometry
 		sets = Selection.getSelectionSets(objects)
+
 		try:
-			if index in ('object', 1):
+			if index in ('set', 0):
+				value = sets[name][0]
+			elif index in ('object', 1):
 				value = sets[name][1]
 			elif index in ('objectLevel', 2):
 				value = sets[name][2]
 			elif index in ('set_array', 3):
 				value = sets[name][3]
-			else: #<set>
-				value = sets[name][0]
 		except (IndexError, KeyError):
 			value = None
 
@@ -558,7 +586,7 @@ class Selection(Init):
 			objects (list) = The objects to get sets from. ie. rt.cameras (default is rt.geometry)
 
 		returns:
-			(dict) {'set name':[<set>, <object>, <object level as int>]}
+			(dict) {'set name':[<set>, <object>, <object level as int>, <set array>]}
 		'''
 		if includeEmptySets:
 			objects = [i for i in objects]+[None]

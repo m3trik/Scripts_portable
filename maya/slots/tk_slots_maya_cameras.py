@@ -16,6 +16,10 @@ class Cameras(Init):
 	@property
 	def clippingMenu(self):
 		'''
+		Menu: Camera clip plane settings.
+
+		returns:
+			(obj) menu as a property.
 		'''
 		if not hasattr(self, '_clippingMenu'):
 			self._clippingMenu = QMenu_(self.parentUi, position='cursorPos')
@@ -89,16 +93,15 @@ class Cameras(Init):
 		'''
 		tree = self.parentUi.tree000
 
-		if not any([wItem, column]):
-			if not tree.refresh: #static list items -----------
-				tree.expandOnHover = True
-				tree.convert(tree.getTopLevelItems(), 'QLabel') #construct the tree using the existing contents.
+		if wItem=='setMenu':
+			tree.expandOnHover = True
+			tree.convert(tree.getTopLevelItems(), 'QLabel') #construct the tree using the existing contents.
 
-				l = []
-				[tree.add('QLabel', 'Editors', setText=s) for s in l]
-	
+			l = []
+			[tree.add('QLabel', 'Editors', setText=s) for s in l]
+			return
 
-			#refreshed list items -----------------------------
+		if not any([wItem, column]): #refresh list items -----------------------------
 			try:
 				cameras = pm.ls(type=('camera'), l=True) #Get all cameras
 				startup_cameras = [camera for camera in cameras if pm.camera(camera.parent(0), startupCamera=True, q=True)] #filter all startup / default cameras
@@ -106,7 +109,8 @@ class Cameras(Init):
 				non_startup_cameras_transform_pynodes = map(lambda x: x.parent(0), non_startup_cameras_pynodes) #get respective transform names
 				non_startup_cameras = map(str, non_startup_cameras_pynodes) #non-PyNode, regular string name list
 				non_startup_cameras_transforms = map(str, non_startup_cameras_transform_pynodes)
-			except AttributeError: non_startup_cameras=[]
+			except AttributeError:
+				non_startup_cameras=[]
 			[tree.add('QLabel', 'Cameras', refresh=True, setText=s) for s in non_startup_cameras]
 
 			l = ['Camera Sequencer', 'Camera Set Editor']
@@ -373,6 +377,69 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 
 
 #deprecated -------------------------------------
+
+
+# def tree000(self, wItem=None, column=None):
+# 		'''
+
+# 		'''
+# 		tree = self.parentUi.tree000
+
+# 		if not any([wItem, column]):
+# 			if not tree.refresh: #static list items -----------
+# 				tree.expandOnHover = True
+# 				tree.convert(tree.getTopLevelItems(), 'QLabel') #construct the tree using the existing contents.
+
+# 				l = []
+# 				[tree.add('QLabel', 'Editors', setText=s) for s in l]
+	
+
+# 			#refreshed list items -----------------------------
+# 			try:
+# 				cameras = pm.ls(type=('camera'), l=True) #Get all cameras
+# 				startup_cameras = [camera for camera in cameras if pm.camera(camera.parent(0), startupCamera=True, q=True)] #filter all startup / default cameras
+# 				non_startup_cameras_pynodes = list(set(cameras) - set(startup_cameras)) #get non-default cameras. these are all PyNodes
+# 				non_startup_cameras_transform_pynodes = map(lambda x: x.parent(0), non_startup_cameras_pynodes) #get respective transform names
+# 				non_startup_cameras = map(str, non_startup_cameras_pynodes) #non-PyNode, regular string name list
+# 				non_startup_cameras_transforms = map(str, non_startup_cameras_transform_pynodes)
+# 			except AttributeError: non_startup_cameras=[]
+# 			[tree.add('QLabel', 'Cameras', refresh=True, setText=s) for s in non_startup_cameras]
+
+# 			l = ['Camera Sequencer', 'Camera Set Editor']
+# 			[tree.add('QLabel', 'Editors', setText=s) for s in l]
+# 			return
+
+# 		widget = tree.getWidget(wItem, column)
+# 		text = tree.getWidgetText(wItem, column)
+# 		header = tree.getHeaderFromColumn(column)
+# 		print(header, text, column)
+
+# 		if header=='Create':
+# 			if text=='Custom Camera':
+# 				mel.eval('camera -centerOfInterest 5 -focalLength 35 -lensSqueezeRatio 1 -cameraScale 1 -horizontalFilmAperture 1.41732 -horizontalFilmOffset 0 -verticalFilmAperture 0.94488 -verticalFilmOffset 0 -filmFit Fill -overscan 1 -motionBlur 0 -shutterAngle 144 -nearClipPlane 0.1 -farClipPlane 10000 -orthographic 0 -orthographicWidth 30 -panZoomEnabled 0 -horizontalPan 0 -verticalPan 0 -zoom 1; objectMoveCommand; cameraMakeNode 1 "";')
+# 			if text=='Set Custom Camera':
+# 				mel.eval('string $homeName = `cameraView -camera persp`;') #cameraView -edit -camera persp -setCamera $homeName;
+# 			if text=='Camera From View':
+# 				print('No Maya Version')
+
+# 		if header=='Cameras':
+# 			pm.select(text)
+# 			pm.lookThru(text)
+
+# 		if header=='Editors':
+# 			if text=='Camera Sequencer':
+# 				mel.eval('SequenceEditor;')
+# 			if text=='Camera Set Editor':
+# 				mel.eval('cameraSetEditor;')
+
+# 		if header=='Options':
+# 			if text=='Group Cameras':
+# 				self.groupCameras()
+# 			if text=='Adjust Clipping':
+# 				self.clippingMenu.show()
+# 			if text=='Toggle Safe Frames': #Viewport Safeframes Toggle
+# 				self.toggleSafeFrames()
+
 
 
 	# def cmb000(self, index=None):

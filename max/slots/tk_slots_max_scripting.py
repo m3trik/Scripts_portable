@@ -41,7 +41,7 @@ class Scripting(Init):
 
 		if index=='setMenu':
 			files = ['']
-			contents = cmb.addItems_(files, '')
+			cmb.addItems_(files, '')
 			return
 
 		# if index>0:

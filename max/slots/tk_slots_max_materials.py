@@ -101,7 +101,7 @@ class Materials(Init):
 
 		mats = sorted([mat for mat in set(materials)])
 		matNames = [mat.name for mat in mats]
-		contents = cmb.addItems_(matNames)
+		contents = cmb.addItems_(matNames, clear=True)
 
 		#create and set icons with color swatch
 		for i in range(len(mats)): #create icons with color swatch

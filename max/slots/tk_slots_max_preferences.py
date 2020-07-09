@@ -14,9 +14,6 @@ class Preferences(Init):
 
 		self.parentUi.b010.setText('3dsMax Preferences')
 
-		self.cmb001(init=1) #init cmb001
-		self.cmb002(init=1) #init cmb002
-
 
 	def pin(self, state=None):
 		'''
@@ -37,7 +34,7 @@ class Preferences(Init):
 
 		if index=='setMenu':
 			list_ = ['']
-			contents = cmb.addItems_(list_, '')
+			cmb.addItems_(list_, '')
 			return
 
 		# if index>0:
@@ -46,29 +43,28 @@ class Preferences(Init):
 		# 	cmb.setCurrentIndex(0)
 
 
-	def cmb000(self, index=None, init=False):
+	def cmb000(self, index=None):
 		'''
 		Preferences:Ui - Set main ui style using QStyleFactory
 		'''
 		cmb = self.parentUi.cmb000
 
-		# if index=='setMenu':
-		# 	from PySide2 import QtWidgets, QtCore
-		# 	list_ = QtWidgets.QStyleFactory.keys() #get styles from QStyleFactory
-		# 	cmb.addItems_(list_)
-		# 	return
+		if index=='setMenu':
+			from PySide2 import QtWidgets, QtCore
+			list_ = QtWidgets.QStyleFactory.keys() #get styles from QStyleFactory
+			cmb.addItems_(list_)
+			try:
+				index = self.styleComboBox.findText(QtGui.qApp.style().objectName(), QtCore.Qt.MatchFixedString)
+				cmb.setCurrentIndex(index)
+			except:
+				pass
+			return
 
-		# if init: #temp.  move main function to shared Slots class
-		# 	index = self.styleComboBox.findText(QtGui.qApp.style().objectName(), QtCore.Qt.MatchFixedString)
-		# 	cmb.setCurrentIndex(index)
-		# else:
-		# 	index = self.styleComboBox.findText(QtGui.qApp.style().objectName(), QtCore.Qt.MatchFixedString)
-		# 	cmb.setCurrentIndex(index)
-
-		# 	QtGui.qApp.setStyle(style)
+		if index is not None:
+			QtGui.qApp.setStyle(cmb.items[index])
 
 
-	def cmb001(self, index=None, init=False):
+	def cmb001(self, index=None):
 		'''
 		Preferences:App - Set Working Units: Linear
 		'''
@@ -76,17 +72,19 @@ class Preferences(Init):
 
 		if index=='setMenu':
 			list_ = ['millimeter','centimeter','meter','kilometer','inch','foot','yard','mile']
-			contents = cmb.addItems_(list_)
+			cmb.addItems_(list_)
+			try:
+				index = cmb.items.index(pm.currentUnit(query=1, fullName=1, linear=1)) #get/set current linear value
+				cmb.setCurrentIndex(index)
+			except:
+				pass
 			return
 
-		# if init:
-		# 	index = cmd.items.index(pm.currentUnit(query=1, fullName=1, linear=1)) #get/set current linear value
-		# 	cmb.setCurrentIndex(index)
-		# else:
-		# 	pm.currentUnit(linear=contents[index]) #millimeter | centimeter | meter | kilometer | inch | foot | yard | mile
+		if index is not None:
+			pm.currentUnit(linear=cmb.items[index]) #millimeter | centimeter | meter | kilometer | inch | foot | yard | mile
 
 
-	def cmb002(self, index=None, init=False):
+	def cmb002(self, index=None):
 		'''
 		Preferences:App - Set Working Units: Time
 		'''
@@ -98,13 +96,15 @@ class Preferences(Init):
 			list_ = [i[0]+i[1] for i in l] #ie. ['15 fps: game','24 fps: film', ..etc]
 			values = [i[1] for i in l] #ie. ['game','film', ..etc]
 			cmb.addItems_(list_)
+			try:
+				index = cmb.items.index(pm.currentUnit(query=1, fullName=1, time=1)) #get/set current time value
+				cmb.setCurrentIndex(index)
+			except:
+				pass
 			return
 
-		# if init:
-		# 	index = cmb.items.index(pm.currentUnit(query=1, fullName=1, time=1)) #get/set current time value
-		# 	cmb.setCurrentIndex(index)
-		# else:
-		# 	pm.currentUnit(time=values[index]) #game | film | pal | ntsc | show | palf | ntscf
+		if index is not None:
+			pm.currentUnit(time=cmb.items[index]) #game | film | pal | ntsc | show | palf | ntscf
 
 
 	def b000(self):
@@ -141,6 +141,9 @@ class Preferences(Init):
 		Settings/Preferences
 		'''
 		mel.eval("PreferencesWindow;")
+
+
+
 
 
 

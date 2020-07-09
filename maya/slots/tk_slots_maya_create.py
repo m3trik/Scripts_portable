@@ -96,35 +96,39 @@ class Create(Init):
 		self.rotation['last'] = axis
 
 
-	def s000(self):
+	def s000(self, value=None):
 		'''
 		Set Translate X
 		'''
-		self.point[0] = float(self.parentUi.s000.value())
-		pm.xform (self.node, translation=self.point, worldSpace=1, absolute=1)
+		if self.node:
+			self.point[0] = float(self.parentUi.s000.value())
+			pm.xform (self.node, translation=self.point, worldSpace=1, absolute=1)
 
 
-	def s001(self):
+	def s001(self, value=None):
 		'''
 		Set Translate Y
 		'''
-		self.point[1] = float(self.parentUi.s001.value())
-		pm.xform (self.node, translation=self.point, worldSpace=1, absolute=1)
+		if self.node:
+			self.point[1] = float(self.parentUi.s001.value())
+			pm.xform (self.node, translation=self.point, worldSpace=1, absolute=1)
 
 
-	def s002(self):
+	def s002(self, value=None):
 		'''
 		Set Translate Z
 		'''
-		self.point[2] = float(self.parentUi.s002.value())
-		pm.xform (self.node, translation=self.point, worldSpace=1, absolute=1)
+		if self.node:
+			self.point[2] = float(self.parentUi.s002.value())
+			pm.xform (self.node, translation=self.point, worldSpace=1, absolute=1)
 
 
 	def txt003(self):
 		'''
 		Set Name
 		'''
-		pm.rename(self.node.name(), self.parentUi.txt003.text())
+		if self.node:
+			pm.rename(self.node.name(), self.parentUi.txt003.text())
 
 
 	def chk000(self):
@@ -187,7 +191,7 @@ class Create(Init):
 
 		if index=='setMenu':
 			list_ = ['Polygon', 'NURBS', 'Light']
-			cmb.addItems(list_)
+			cmb.addItems_(list_)
 			return
 
 		polygons = ["Cube", "Sphere", "Cylinder", "Plane", "Circle", "Cone", "Pyramid", "Torus", "Tube", "GeoSphere", "Platonic Solids", "Text"]
@@ -195,13 +199,13 @@ class Create(Init):
 		lights = ["Ambient", "Directional", "Point", "Spot", "Area", "Volume", "VRay Sphere", "VRay Dome", "VRay Rect", "VRay IES"]
 
 		if index==0: #shared menu. later converted to the specified type.
-			self.parentUi.cmb001.addItems_(polygons)
+			self.parentUi.cmb001.addItems_(polygons, clear=True)
 
 		if index==1:
-			self.parentUi.cmb001.addItems_(nurbs)
+			self.parentUi.cmb001.addItems_(nurbs, clear=True)
 
 		if index==2:
-			self.parentUi.cmb001.addItems_(lights)
+			self.parentUi.cmb001.addItems_(lights, clear=True)
 
 
 	def cmb002(self, index=None, values={}, clear=False, show=False):

@@ -60,7 +60,7 @@ class Rendering(Init):
 		self.cams = [cam for cam in rt.cameras if 'Target' not in str(cam)]
 		if self.cams:
 			list_ = [str(cam.name) for cam in self.cams] #camera names
-			cmb.addItems_(list_)
+			cmb.addItems_(list_, clear=True)
 
 
 	def b000(self):

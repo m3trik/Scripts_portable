@@ -185,18 +185,20 @@ class QComboBox_(QtWidgets.QComboBox):
 		if hasattr(w, 'released'):
 			w.released.connect(lambda widget=w: self.setLastActiveChild(widget))
 		elif hasattr(w, 'valueChanged'):
-			w.valueChanged.connect(lambda state, widget=w: self.setLastActiveChild(state, widget))
+			w.valueChanged.connect(lambda value, widget=w: self.setLastActiveChild(value, widget))
 
 		return w
 
 
-	def addItems_(self, items, header=None):
+	def addItems_(self, items, header=None, clear=True, ascending=False):
 		'''
 		Add items to the combobox's standard modelView without triggering any signals.
 
 		args:
 			items (str)(list) = A string or list of strings to fill the comboBox with.
 			header (str) = An optional value for the first index of the comboBox's list.
+			clear (bool) = Clear any previous items before adding new.
+			ascending (bool) = Insert in ascending order. New item(s) will be added to the top of the list.
 
 		returns:
 			(list) comboBox's current item list minus any header.
@@ -205,19 +207,42 @@ class QComboBox_(QtWidgets.QComboBox):
 		'''
 		self.blockSignals(True) #to keep clear from triggering currentIndexChanged
 		index = self.currentIndex() if self.currentIndex()>0 else 0 #get the current index before refreshing list. avoid negative values.
-		self.clear()
+	
+		if clear:
+			self.clear()
 
 		# print (type(items))
 		if not isinstance(items, (list, tuple, set)):
 			items = [items]
 
-		items_ = [str(i) for i in [header]+items if i]
-		self.addItems(items_)
+		for item in [header]+items:
+			if item is not None:
+				if ascending:
+					self.insertItem(0, str(item))
+				else:
+					self.addItem(str(item))
 
 		self.setCurrentIndex(index)
 		self.blockSignals(False)
 
-		return items_
+		return items
+
+
+	def setCurrentItem(self, i):
+		'''
+		Sets the current item from the given item text or index without triggering any signals.
+
+		args:
+			item (str)(int) = item text or item index
+		'''
+		self.blockSignals(True) #to keep clear from triggering currentIndexChanged
+
+		if isinstance(i, int): #set by item index:
+			self.setCurrentIndex(i)
+		else: #set by item text string:
+			self.setCurrentText(i)
+
+		self.blockSignals(False)
 
 
 	@property
@@ -257,6 +282,7 @@ class QComboBox_(QtWidgets.QComboBox):
 	def setLastActiveChild(self, *args, **kwargs):
 		'''
 		Set the given widget as the last active.
+		Maintains a list of the last 10 active child widgets.
 
 		args:
 			*args[-1] = Widget to set as last active. The widget can later be returned by calling the 'lastActiveChild' method.
@@ -267,45 +293,43 @@ class QComboBox_(QtWidgets.QComboBox):
 		'''
 		widget = args[-1]
 
-		self._lastActiveChild = widget
+		if not hasattr(self, '_lastActiveChild'):
+			self._lastActiveChild = []
+
+		del self._lastActiveChild[11:] #keep the list length at 10 elements.
+
+		self._lastActiveChild.append(widget)
 		# print(args, kwargs, widget.objectName() if hasattr(widget, 'objectName') else None)
-		return self._lastActiveChild
+		return self._lastActiveChild[-1]
 
 
-	def lastActiveChild(self, name=False):
+	def lastActiveChild(self, name=False, as_list=False):
 		'''
 		Get the given widget set as last active.
+		Contains a list of the last 10 active child widgets.
 
 		args:
 			name (bool) = Return the last active widgets name as a string.
 
 		returns:
 			(obj) widget or (str) widget name.
+
+		ex. slot connection:
+			cmb.returnPressed.connect(lambda m=cmb.lastActiveChild: getattr(self, m(name=1))()) #connect to the last pressed child widget's corresponding method after return pressed. ie. self.lbl000 if cmb.lbl000 was clicked last.
 		'''
 		if not hasattr(self, '_lastActiveChild'):
-			self._lastActiveChild = None
+			return None
 
-		if name and self._lastActiveChild is not None:
-			return str(self._lastActiveChild.objectName())
+		if name:
+			lastActive = str(self._lastActiveChild[-1].objectName())
+		elif name and as_list:
+			lastActive = [str(w.objectName()) for w in self._lastActiveChild]
+		elif as_list:
+			lastActive = [w for w in self._lastActiveChild]
+		else:
+			lastActive = self._lastActiveChild[-1]
 
-		return self._lastActiveChild
-
-
-	def setCurrentItem(self, i):
-		'''
-		Sets the current item from the given item text or index without triggering any signals.
-
-		args:
-			item (str)(int) = item text or item index
-		'''
-		self.blockSignals(True) #to keep clear from triggering currentIndexChanged
-
-		if isinstance(i, int): #set by item index:
-			self.setCurrentIndex(i)
-		else: #set by item text string:
-			self.setCurrentText(i)
-
-		self.blockSignals(False)
+		return lastActive
 
 
 	def showPopup(self):

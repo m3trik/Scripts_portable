@@ -41,16 +41,16 @@ class Duplicate(Init):
 		Editors
 		'''
 		cmb = self.parentUi.cmb000
-		
+
 		if index=='setMenu':
-			list_ = ['']
+			list_ = ['Duplicate Special']
 			cmb.addItems_(list_, '')
 			return
 
-		# if index>0:
-		# 	if index==cmb.items.index(''):
-		# 		pass
-		# 	cmb.setCurrentIndex(0)
+		if index>0:
+			if index==cmd.items.index('Duplicate Special'):
+				mel.eval('DuplicateSpecialOptions;')
+			cmb.setCurrentIndex(0)
 	
 
 	def radialArray(self):
@@ -304,23 +304,6 @@ class Duplicate(Init):
 			pm.select(duplicateObjList[:1]) #re-select the original object
 			del duplicateObjList[:] #clear the list
 			self.toggleWidgets(setDisabled='b002')
-
-
-	def cmb001(self, index=None):
-		'''
-		Editors
-		'''
-		cmb = self.parentUi.cmb001
-		
-		list_ = ['Duplicate Special']
-		contents = cmb.addItems_(list_, '')
-
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==contents.index('Duplicate Special'):
-				mel.eval('DuplicateSpecialOptions;')
-			cmb.setCurrentIndex(0)
 
 
 	def b001(self):

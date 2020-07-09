@@ -42,7 +42,7 @@ class Symmetry(Init):
 
 		if index=='setMenu':
 			list_ = ['']
-			contents = cmb.addItems_(list_, '')
+			cmb.addItems_(list_, '')
 			return
 
 		# if index>0:

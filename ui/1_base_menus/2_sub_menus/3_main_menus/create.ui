@@ -147,61 +147,6 @@
               <string>Cube</string>
              </property>
             </item>
-            <item>
-             <property name="text">
-              <string>Sphere</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Cylinder</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Plane</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Circle</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Cone</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Pyramid</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Torus</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Tube</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Geosphere</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Platonic Solids</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Text</string>
-             </property>
-            </item>
            </widget>
            <widget class="QComboBox_" name="cmb000">
             <property name="geometry">
@@ -245,16 +190,6 @@
             <item>
              <property name="text">
               <string>Polygon</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Nurbs</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Light</string>
              </property>
             </item>
            </widget>

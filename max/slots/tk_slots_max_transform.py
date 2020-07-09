@@ -47,7 +47,7 @@ class Transform(Init):
 
 		if index=='setMenu':
 			files = ['']
-			contents = cmb.addItems_(files, '')
+			cmb.addItems_(files, '')
 			return
 
 		# if inde>0:

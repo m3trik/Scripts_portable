@@ -36,11 +36,11 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			<opt1>:				['Options', 3, 3, None]
 		}
 	'''
-	enterEvent_	= QtCore.QEvent(QtCore.QEvent.Enter)
-	leaveEvent_	= QtCore.QEvent(QtCore.QEvent.Leave)
-	hoverEnter_ = QtCore.QEvent(QtCore.QEvent.HoverEnter)
-	hoverMove_ = QtCore.QEvent(QtCore.QEvent.HoverMove)
-	hoverLeave_ = QtCore.QEvent(QtCore.QEvent.HoverLeave)
+	enter = QtCore.QEvent(QtCore.QEvent.Enter)
+	leave = QtCore.QEvent(QtCore.QEvent.Leave)
+	hoverEnter = QtCore.QEvent(QtCore.QEvent.HoverEnter)
+	hoverMove = QtCore.QEvent(QtCore.QEvent.HoverMove)
+	hoverLeave = QtCore.QEvent(QtCore.QEvent.HoverLeave)
 
 
 	def __init__(self, parent=None, stepColumns=True, expandOnHover=False):
@@ -210,17 +210,17 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			try:
 				w = next(w for w in self.widgets.keys() if w.rect().contains(w.mapFromGlobal(QtGui.QCursor.pos())) and w.isVisible())
 			except StopIteration:
-				return QtWidgets.QApplication.sendEvent(self._mouseGrabber, self.hoverLeave_)
+				return QtWidgets.QApplication.sendEvent(self._mouseGrabber, self.hoverLeave)
 
 			if not w is self._mouseGrabber:
 				if self._mouseGrabber is not None:
-					QtWidgets.QApplication.sendEvent(self._mouseGrabber, self.hoverLeave_)
-					QtWidgets.QApplication.sendEvent(self._mouseGrabber, self.leaveEvent_)
+					QtWidgets.QApplication.sendEvent(self._mouseGrabber, self.hoverLeave)
+					QtWidgets.QApplication.sendEvent(self._mouseGrabber, self.leave)
 				if not w is self.mouseGrabber():
 					w.grabMouse()
 				self._mouseGrabber = w
-				QtWidgets.QApplication.sendEvent(w, self.hoverEnter_)
-				QtWidgets.QApplication.sendEvent(w, self.enterEvent_)
+				QtWidgets.QApplication.sendEvent(w, self.hoverEnter)
+				QtWidgets.QApplication.sendEvent(w, self.enter)
 
 		if event.type()==QtCore.QEvent.HoverLeave:
 			if self.expandOnHover:
@@ -701,6 +701,19 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		return list_
 
 
+	@property
+	def newWidgets(self):
+		'''
+		Get any newly created widgets from the treeWidget.
+		'''
+		if self.refresh: #after first build; on each refresh:
+			widgets = self.getWidgets(refreshedWidgets=1) #get only any newly created widgets.
+		else: #on first build:
+			widgets = self.getWidgets(removeNoneValues=1) #get all widgets.
+
+		return widgets
+
+
 	def getWidget(self, wItem, column):
 		'''
 		Get the widget from the widgetItem at the given column (if it exists).
@@ -937,7 +950,7 @@ if __name__ == '__main__':
 	# 	self._setEnabledState(0) #set widgets enabled/disabled
 	# 	self._resize(0)
 	# 	self._showColumns(0)
-	# 	QtWidgets.QApplication.sendEvent(self._mouseGrabber, self.hoverMove_)
+	# 	QtWidgets.QApplication.sendEvent(self._mouseGrabber, self.hoverMove)
 		
 	# 	return QtWidgets.QTreeWidget.EnterEvent(self, event)
 

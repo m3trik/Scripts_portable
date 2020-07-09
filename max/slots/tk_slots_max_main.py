@@ -18,18 +18,18 @@ class Main(Init):
 		'''
 		tree = self.parentUi.tree000
 
-		if not any([wItem, column]):
-			if not tree.refresh: #static list items -----------
-				tree.expandOnHover = True
-				tree.convert(tree.getTopLevelItems(), 'QLabel') #construct the tree using the existing contents.
+		if wItem=='setMenu':
+			tree.expandOnHover = True
+			tree.convert(tree.getTopLevelItems(), 'QLabel') #construct the tree using the existing contents.
+			return
 
-			#refreshed list items -----------------------------
+		if not any([wItem, column]): #refresh list items -----------------------------
 			recentCommandNames = self.sb.prevCommand(docString=1, as_list=1) #Get a list of any recent command names
 			[tree.add('QLabel', 'Recent Commands', refresh=True, setText=s) for s in recentCommandNames]
 
 			# l = []
 			# [tree.add('QLabel', '', setText=s) for s in l]
-			# return
+			return
 
 		# widget = tree.getWidget(wItem, column)
 		header = tree.getHeaderFromColumn(column)

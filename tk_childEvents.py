@@ -55,10 +55,13 @@ class EventFactoryFilter(QtCore.QObject):
 			classMethod = self.sb.getMethod(name, widgetName)
 
 			self.setStyleSheet_(name, widget)
-			widget.installEventFilter(self)
+			include = ['QWidget', 'QAction', 'QLabel', 'QPushButton', 'QToolButton', 'QListWidget', 'QTreeWidget', 'QComboBox', 'QSpinBox','QDoubleSpinBox','QCheckBox','QRadioButton','QLineEdit','QTextEdit','QProgressBar']
+			if derivedType in include: #install an event filter on only the given types.
+				widget.installEventFilter(self)
+				# print (widgetName if widgetName else widget)
 
 			#type specific:
-			if widgetType in ['QToolButton_', 'QPushButton_Draggable', 'QComboBox_']:
+			if widgetType in ['QToolButton_', 'QPushButton_Draggable', 'QComboBox_', 'QTreeWidget_ExpandableList']:
 				if callable(classMethod):
 					classMethod('setMenu')
 
@@ -71,10 +74,9 @@ class EventFactoryFilter(QtCore.QObject):
 					widget.setVisible(False)
 
 			#add any of the widget's children not already stored in widgets (now that menus and such have been initialized).
-			exclude = ['QTreeWidget_ExpandableList', 'QBoxLayout', 'QFrame', 'QAbstractItemView', 'QItemSelectionModel', 'QItemDelegate', 
-				'QScrollBar', 'QWidgetAction', 'QValidator', 'QObject', 'QStyledItemDelegate', 'QHeaderView', 'QPropertyAnimation'] #, 'QAction'
-			[self.addWidgets(name, w) for w in widget.children() if w not in widgets and not w.__class__.__name__ in exclude]
-			# print(name, [w.objectName() for w in widget.children() if w not in widgets and not w.__class__.__name__ in exclude])
+			exclude = ['QTreeWidget_ExpandableList'] #, 'QObject', 'QBoxLayout', 'QFrame', 'QAbstractItemView', 'QHeaderView', 'QItemSelectionModel', 'QItemDelegate', 'QScrollBar', 'QScrollArea', 'QValidator', 'QStyledItemDelegate', 'QPropertyAnimation'] #, 'QAction', 'QWidgetAction'
+			[self.addWidgets(name, w) for w in widget.children() if w not in widgets and not widgetType in exclude]
+			# print(name, [w.objectName() for w in widget.children() if w not in widgets and not widgetType in exclude])
 
 
 	def addWidgets(self, name, widgets):
@@ -87,6 +89,7 @@ class EventFactoryFilter(QtCore.QObject):
 			widgets (obj)(list) = widget or list of widgets.
 		'''
 		widgets = self.sb.list(widgets) #if 'widgets' isn't a list, convert it to one.
+
 		self.sb.addWidgets(name, widgets)
 		self.sb.connectSlots(name, widgets)
 		self.initWidgets(name, widgets) #initialize the widget to set things like the event filter and styleSheet.
@@ -277,16 +280,8 @@ class EventFactoryFilter(QtCore.QObject):
 				except (AttributeError, NameError) as error:
 					print(self.name, self.widgetName, error)
 
-		elif self.derivedType=='QTreeWidget':
-			if self.widgetType=='QTreeWidget_ExpandableList':
-				if self.callable(classMethod):
-					self.classMethod()
-
-			if self.widget.refresh: #on each refresh:
-				widgets = self.widget.getWidgets(refreshedWidgets=1) #get only any newly created widgets.
-			else: #on first show:
-				widgets = self.widget.getWidgets(removeNoneValues=1) #get all widgets.
-			self.addWidgets(self.ui, widgets) #removeWidgets=self.widget._gcWidgets.keys()
+		if self.widgetType=='QTreeWidget_ExpandableList':
+			self.addWidgets(self.name, self.widget.newWidgets) #removeWidgets=self.widget._gcWidgets.keys()
 
 
 	def hideEvent(self, event):

@@ -154,7 +154,7 @@ class QMenu_(QtWidgets.QMenu):
 		type_ = w.__class__.__name__
 
 		if type_=='QAction':
-			self.addAction(w)
+			a = self.addAction(w)
 		elif w is not self:
 			wAction = QtWidgets.QWidgetAction(self)
 			# w = wAction.createWidget(a)
@@ -179,7 +179,7 @@ class QMenu_(QtWidgets.QMenu):
 		return [self.addMenu(m) for m in menus]
 
 
-	def children_(self, index=None):
+	def children_(self, index=None, exclude=['QAction', 'QWidgetAction'], include=[]):
 		'''
 		Get the widget at the given index.
 		If no arg is given all widgets will be returned.
@@ -189,7 +189,7 @@ class QMenu_(QtWidgets.QMenu):
 		returns:
 			(QWidget) or (list)
 		'''
-		children = [i for i in self.children() if not i.__class__.__name__ in ['QAction', 'QWidgetAction']]
+		children = [i for i in self.children() if not i.__class__.__name__ in exclude and i.__class__.__name__ in include if include]
 		if index is not None:
 			return children[index]
 		return children

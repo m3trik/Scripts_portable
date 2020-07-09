@@ -61,7 +61,7 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb000
 		if not cmb.isEditable():
-			cmb.insertItem(0, '')
+			cmb.addItems_('', ascending=True)
 			cmb.setEditable(True)
 			cmb.lineEdit().setPlaceholderText('New Set:')
 		else:
@@ -77,11 +77,13 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb000
 		if not cmb.isEditable():
+			name = cmb.currentText()
+			self._oldSetName = name
 			cmb.setEditable(True)
-			cmb.lineEdit().setPlaceholderText(cmb.currentText())
+			cmb.lineEdit().setPlaceholderText(name)
 		else:
 			name = cmb.currentText()
-			self.modifySet(name)
+			self.modifySet(self._oldSetName)
 			cmb.setItemText(cmb.currentIndex(), name)
 			# self.cmb000() #refresh the sets comboBox
 
@@ -92,9 +94,9 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb000
 		name = cmb.currentText()
+
 		pm.delete(name)
 
-		index = cmb.currentIndex()
 		self.cmb000() #refresh the sets comboBox
 
 
@@ -118,6 +120,7 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb000
 		name = cmb.currentText()
+
 		if cmb.currentIndex()>0:
 			pm.select(name) # pm.select(name, noExpand=1) #Select The Selection Set Itself (Not Members Of) (noExpand=select set)
 
@@ -254,9 +257,8 @@ class Selection(Init):
 			cmb.beforePopupShown.connect(self.cmb000) #refresh comboBox contents before showing it's popup.
 			return
 
-		items = cmb.addItems_([str(s) for s in pm.ls(et='objectSet', flatten=1)])
-
-		self._currentSet = cmb.currentText()
+		list_ = [str(s) for s in pm.ls(et='objectSet', flatten=1)]
+		cmb.addItems_(list_, clear=True)
 
 
 	def cmb001(self, index=None):
@@ -559,6 +561,17 @@ class Selection(Init):
 		mel.eval('SelectEdgeRingSp;')
 
 
+	def generateUniqueSetName(self):
+		'''
+		Generate a generic name based on the object's name.
+
+		<objectName>_Set<int>
+		'''
+		num = self.cycle(list(range(99)), 'selectionSetNum')
+		name = '{0}_Set{1}'.format(rt.selection[0].name, num) #ie. pCube1_Set0
+		return name
+
+
 	@Slots.message
 	def creatNewSelectionSet(self, name=None):
 		'''
@@ -569,8 +582,7 @@ class Selection(Init):
 
 		else: #create set
 			if not name: #name=='set#Set': #generate a generic name based on obj.name
-				num = self.cycle(list(range(99)), 'selectionSetNum')
-				name=sel[0].name+'Set'+str(num)
+				name = self.generateUniqueSetName()
 
 			pm.sets(name=name, text="gCharacterSet")
 
@@ -580,7 +592,10 @@ class Selection(Init):
 		'''
 		Selection Sets: Modify Current by renaming or changing the set members.
 		'''
-		name = pm.rename(self._currentSet, name)
+		newName = self.parentUi.cmb000.currentText()
+		if not newName:
+			newName = self.generateUniqueSetName()
+		name = pm.rename(name, newName)
 
 		if pm.objExists(name):
 			pm.sets(name, clear=1)

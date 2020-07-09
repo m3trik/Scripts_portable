@@ -22,13 +22,15 @@ class Create(Init):
 		'''
 		Get the Transform Node
 		'''
-		selection = rt.selection
+		selection = [i for i in rt.selection]
 		if not selection:
 			return None
 
 		transform = selection[0]
 		if not self.parentUi.txt003.text()==transform.name: #make sure the same field reflects the current working node.
 			self.parentUi.txt003.setText(transform.name)
+			self.constructAttributesForNode(transform) #update the attribute values for the current node.
+
 		return transform
 
 
@@ -95,38 +97,42 @@ class Create(Init):
 		rt.redrawViews()
 
 
-	def s000(self):
+	def s000(self, value=None):
 		'''
 		Set Translate X
 		'''
-		self.point[0] = float(self.parentUi.s000.value())
-		self.node.pos = rt.point3(self.point[0], self.point[1], self.point[2])
-		rt.redrawViews()
+		if self.node:
+			self.point[0] = float(self.parentUi.s000.value())
+			self.node.pos = rt.point3(self.point[0], self.point[1], self.point[2])
+			rt.redrawViews()
 
 
-	def s001(self):
+	def s001(self, value=None):
 		'''
 		Set Translate Y
 		'''
-		self.point[1] = float(self.parentUi.s001.value())
-		self.node.pos = rt.point3(self.point[0], self.point[1], self.point[2])
-		rt.redrawViews()
+		if self.node:
+			self.point[1] = float(self.parentUi.s001.value())
+			self.node.pos = rt.point3(self.point[0], self.point[1], self.point[2])
+			rt.redrawViews()
 
 
-	def s002(self):
+	def s002(self, value=None):
 		'''
 		Set Translate Z
 		'''
-		self.point[2] = float(self.parentUi.s002.value())
-		self.node.pos = rt.point3(self.point[0], self.point[1], self.point[2])
-		rt.redrawViews()
+		if self.node:
+			self.point[2] = float(self.parentUi.s002.value())
+			self.node.pos = rt.point3(self.point[0], self.point[1], self.point[2])
+			rt.redrawViews()
 
 
 	def txt003(self):
 		'''
 		Set Name
 		'''
-		self.node.name = self.parentUi.txt003.text()
+		if self.node:
+			self.node.name = self.parentUi.txt003.text()
 
 
 	def chk000(self):
@@ -134,15 +140,17 @@ class Create(Init):
 		Rotate X Axis
 		'''
 		self.toggleWidgets(setChecked='chk000', setUnChecked='chk001,chk002')
-		self.rotateAbsolute(self.getAxis(), self.node)
-			
+		if self.node:
+			self.rotateAbsolute(self.getAxis(), self.node)
+
 
 	def chk001(self):
 		'''
 		Rotate Y Axis
 		'''
 		self.toggleWidgets(setChecked='chk001', setUnChecked='chk000,chk002')
-		self.rotateAbsolute(self.getAxis(), self.node)
+		if self.node:
+			self.rotateAbsolute(self.getAxis(), self.node)
 
 
 	def chk002(self):
@@ -150,20 +158,24 @@ class Create(Init):
 		Rotate Z Axis
 		'''
 		self.toggleWidgets(setChecked='chk002', setUnChecked='chk001,chk000')
-		self.rotateAbsolute(self.getAxis(), self.node)
+		if self.node:
+			self.rotateAbsolute(self.getAxis(), self.node)
 
 
 	def chk003(self):
 		'''
 		Rotate Negative Axis
 		'''
-		self.rotateAbsolute(self.getAxis(), self.node)
+		if self.node:
+			self.rotateAbsolute(self.getAxis(), self.node)
 
 
+	@Slots.message
 	def chk005(self):
 		'''
 		Set Point
 		'''
+		error=0
 		#add support for averaging multiple components and multiple component types.
 		obj = rt.selection[0]
 		if obj:
@@ -174,12 +186,15 @@ class Create(Init):
 			else:
 				self.point = obj.position
 		else:
-			print('Error: Nothing selected. Point set to origin [0,0,0].')
+			error = 1
 			self.point = [0,0,0]
 
 		self.parentUi.s000.setValue(self.point[0])
 		self.parentUi.s001.setValue(self.point[1])
 		self.parentUi.s002.setValue(self.point[2])
+
+		if error==1:
+			return 'Error: Nothing selected. Point set to origin [0,0,0].'
 
 
 	def cmb000(self, index=None):
@@ -190,7 +205,7 @@ class Create(Init):
 
 		if index=='setMenu':
 			list_ = ['Mesh', 'Editable Poly', 'Editable Mesh', 'Editable Patch', 'NURBS', 'Light']
-			cmb.addItems(list_)
+			cmb.addItems_(list_)
 			return
 
 		primitives = ["Cube", "Sphere", "Cylinder", "Plane", "Circle", "Cone", "Pyramid", "Torus", "Tube", "GeoSphere", "Text"] 
@@ -199,13 +214,13 @@ class Create(Init):
 		lights = ["Ambient", "Directional", "Point", "Spot", "Area", "Volume", "VRay Sphere", "VRay Dome", "VRay Rect", "VRay IES"]
 
 		if index in (0, 1, 2, 3): #shared menu. later converted to the specified type.
-			self.parentUi.cmb001.addItems_(primitives+extendedPrimitives)
+			self.parentUi.cmb001.addItems_(primitives+extendedPrimitives, clear=True)
 
 		if index==4:
-			self.parentUi.cmb001.addItems_(nurbs)
+			self.parentUi.cmb001.addItems_(nurbs, clear=True)
 
 		if index==5:
-			self.parentUi.cmb001.addItems_(lights)
+			self.parentUi.cmb001.addItems_(lights, clear=True)
 
 
 	def cmb002(self, index=None, attributes={}, clear=False, show=False):
@@ -245,6 +260,21 @@ class Create(Init):
 
 			if show:
 				cmb.showPopup()
+
+
+	def constructAttributesForNode(self, node):
+		'''
+		Populate the attributes comboBox with attributes of the given node.
+
+		args:
+			node (obj) = Scene object.
+		'''
+		exclude = ['getmxsprop', 'setmxsprop', 'typeInHeight', 'typeInLength', 'typeInPos', 'typeInWidth', 'typeInDepth', 
+			'typeInRadius', 'typeInRadius1', 'typeInRadius2', 'typeinCreationMethod', 'edgeChamferQuadIntersections', 
+			'edgeChamferType', 'hemisphere', 'realWorldMapSize', 'mapcoords']
+
+		attributes = self.getAttributesMax(node, exclude)
+		self.cmb002(attributes=attributes, clear=True, show=True)
 
 
 	def sXXX(self, index=None):
@@ -360,9 +390,7 @@ class Create(Init):
 		#rotate
 		self.rotateAbsolute(axis, node)
 
-		exclude = ['getmxsprop', 'setmxsprop', 'typeInHeight', 'typeInLength', 'typeInPos', 'typeInWidth', 'typeInDepth', 'typeInRadius', 'typeInRadius1', 'typeInRadius2', 'typeinCreationMethod', 'edgeChamferQuadIntersections', 'edgeChamferType', 'hemisphere', 'realWorldMapSize', 'mapcoords']	
-		attributes = self.getAttributesMax(node, exclude)
-		self.cmb002(attributes=attributes, clear=True, show=True)
+		self.constructAttributesForNode(node)
 
 		# if self.parentUi.cmb000.currentIndex() == 0: #if create type: polygon; convert to editable poly
 		# 	rt.convertTo(node, rt.PolyMeshObject) #convert after adding primitive attributes to spinboxes

@@ -149,9 +149,9 @@ class Switchboard(QtCore.QObject):
 		self.widgets(name).update(
 					{widget:{
 						'widgetName':objectName, 
-						'signalInstance':signalInstance,
 						'widgetType':widget.__class__.__name__,
 						'derivedType':derivedType,
+						'signalInstance':signalInstance,
 						'method': method,
 						'prefix':prefix,
 						'docString':docString}})
@@ -258,6 +258,44 @@ class Switchboard(QtCore.QObject):
 
 		if attr=='globalPos':
 			self.move(self.mapFromGlobal(value - self.rect().center())) #move and center
+
+
+	def setUniqueObjectName(self, widget, name=None):
+		'''
+		Set a unique object name for the given widget based on the pattern name000.
+
+		args:
+			widget (obj) = The child widget to set an object name for.
+			name (str) = Ui name.
+
+		returns:
+			(str) the widgets object name.
+		'''
+		if not name:
+			name = self.getUiName()
+
+		widgetType = widget.__class__.__name__
+		prefixTypes = {'QPushButton':'b', 'QPushButton':'v', 'QPushButton':'i', 'QToolButton':'tb', 'QComboBox':'cmb', 
+			'QCheckBox':'chk', 'QRadioButton':'chk', 'QPushButton(checkable)':'chk', 'QSpinBox':'s', 'QDoubleSpinBox':'s',
+			'QLabel':'lbl', 'QWidget':'w', 'QTreeWidget':'tree', 'QListWidget':'list', 'QLineEdit':'line', 'QTextEdit':'text'}
+
+		def nameGenerator(num):
+			widgetNum = ('00'+str(num))[-3:] #remove prefixed zeros to keep the num three digits. ie. 001, 011, 111
+
+			if widgetType in prefixTypes:
+				prefix = prefixTypes[widgetType] #ie. 'b' from 'QPushButton'
+			else:
+				prefix = widgetType.strip('Q')[:1].lower()+widgetType.strip('Q')[1:] #widgetAction from 'QWidgetAction'
+
+			return '{0}{1}'.format(prefix, widgetNum) #append num. ie. widgetAction000
+
+		num=0
+		widgetName = nameGenerator(num)
+		while self.getWidget(widgetName, name): #if a widget of the same name already exists; increment by one and try again.
+			num+=1; widgetName = nameGenerator(num)
+
+		widget.setObjectName(widgetName)
+		return widget.objectName()
 
 
 	def getClassFromUiName(self, name):

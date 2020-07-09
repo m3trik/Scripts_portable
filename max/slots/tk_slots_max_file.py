@@ -61,7 +61,7 @@ class File(Init):
 			return
 
 		list_ = [f for f in rt.getRecentfiles()]
-		items = cmb.addItems_(list_, "Recent Files")
+		items = cmb.addItems_(list_, "Recent Files", clear=True)
 
 		if index>0:
 			# force=True; force if maxEval("maxFileName;") else not force #if sceneName prompt user to save; else force open.  also: checkForSave(); If the scene has been modified since the last file save (if any), calling this function displays the message box prompting the user that the scene has been modified and requests to save.
@@ -81,7 +81,7 @@ class File(Init):
 		path = ''
 		list_ = []#[f for f in os.listdir(path)]
 
-		items = cmb.addItems_(list_, "Recent Projects")
+		items = cmb.addItems_(list_, "Recent Projects", clear=True)
 
 		# if index>0:
 		# 	maxEval('setProject "'+items[index]+'"')
@@ -101,7 +101,7 @@ class File(Init):
 		files = [f for f in os.listdir(path) if f.endswith('.max') or f.endswith('.bak')] #get list of max autosave files
 
 		list_ = [f+'  '+datetime.fromtimestamp(os.path.getmtime(path+'\\'+f)).strftime('%H:%M  %m-%d-%Y') for f in files] #attach modified timestamp
-		items = cmb.addItems_(sorted(list_, reverse=1), "Recent Autosave")
+		items = cmb.addItems_(sorted(list_, reverse=1), "Recent Autosave", clear=True)
 
 		if index>0:
 			rt.loadMaxFile(path+'\\'+str(files[index-1]))
@@ -212,7 +212,7 @@ class File(Init):
 
 		project = MaxPlus.PathManager.GetProjectFolderDir().split('\\')[-1] #add current project path string to label. strip path and trailing '/'
 
-		cmb.addItems_(list_, project)
+		cmb.addItems_(list_, project, clear=True)
 
 
 		if index>0:

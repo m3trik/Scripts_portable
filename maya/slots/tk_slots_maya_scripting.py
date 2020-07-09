@@ -22,7 +22,6 @@ class Scripting(Init):
 		# self.parentUi.plainTextEdit.appendPlainText(tk_cmdScrollFieldReporter)
 
 
-
 	def pin(self, state=None):
 		'''
 		Context menu
