@@ -16,7 +16,7 @@ class Edit(Init):
 		'''
 		pin = self.parentUi.pin
 
-		if state=='setMenu':
+		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
 			return
 
@@ -51,7 +51,7 @@ class Edit(Init):
 		Mesh Cleanup
 		'''
 		tb = self.currentUi.tb000
-		if state=='setMenu':
+		if state is 'setMenu':
 			tb.add('QCheckBox', setText='N-Gons', setObjectName='chk002', setToolTip='Find N-gons.')
 			tb.add('QCheckBox', setText='Isolated Vertex', setObjectName='chk003', setChecked=True, setToolTip='Find isolated vertices within specified angle threshold.')
 			tb.add('QSpinBox', setPrefix='Loose Vertex Angle: ', setObjectName='s006', minMax_='1-360 step1', setValue=15, setToolTip='Loose vertex search: Angle Threshold.')
@@ -72,7 +72,7 @@ class Edit(Init):
 		Delete History
 		'''
 		tb = self.currentUi.tb001
-		if state=='setMenu':
+		if state is 'setMenu':
 			tb.add('QCheckBox', setText='All', setObjectName='chk018', setChecked=True, setToolTip='Delete history on All objects.')
 			tb.add('QCheckBox', setText='Delete Unused Nodes', setObjectName='chk019', setChecked=True, setToolTip='Delete unused nodes.')
 			tb.add('QCheckBox', setText='Delete Deformers', setObjectName='chk020', setToolTip='Delete deformers.')
@@ -115,7 +115,7 @@ class Edit(Init):
 		Delete 
 		'''
 		tb = self.currentUi.tb002
-		if state=='setMenu':
+		if state is 'setMenu':
 			tb.add('QCheckBox', setText='Delete Loop', setObjectName='chk001', setToolTip='Delete the entire edge loop of any components selected.')
 			return
 
@@ -291,7 +291,7 @@ class Edit(Init):
 			tb.add('QRadioButton', setText='Z', setObjectName='chk009', setToolTip='Perform delete along Z axis.')
 
 			self.connect_('chk006-9', 'toggled', self.chk006_9, tb)
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		selection = pm.ls(sl=1, objectsOnly=1)

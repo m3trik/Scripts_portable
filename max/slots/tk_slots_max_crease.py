@@ -34,7 +34,7 @@ class Crease(Init):
 		'''
 		pin = self.parentUi.pin
 
-		if state=='setMenu':
+		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
 			return
 
@@ -45,7 +45,7 @@ class Crease(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['']
 			items = cmb.addItems_(list_, '')
 			return
@@ -120,7 +120,7 @@ class Crease(Init):
 			tb.add('QSpinBox', setPrefix='Auto Crease: high: ', setObjectName='s006', minMax_='0-180 step1', setValue=95, setToolTip='Auto crease: max angle constraint.')
 			
 			self.toggleWidgets(tb, setDisabled='s005,s006')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		creaseAmount = int(tb.s003.value())

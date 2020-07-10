@@ -40,7 +40,7 @@ class Polygons(Init):
 		'''
 		pin = self.parentUi.pin
 
-		if state=='setMenu':
+		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
 
 			return
@@ -52,7 +52,7 @@ class Polygons(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['Bridge','Extrude']
 			cmb.addItems_(list_, '3dsMax Polygon Operations')
 			return
@@ -99,7 +99,7 @@ class Polygons(Init):
 		tb = self.currentUi.tb000
 		if not tb.containsMenuItems:
 			tb.add('QDoubleSpinBox', setPrefix='Distance: ', setObjectName='s002', minMax_='0.000-10 step.001', setValue=0.001, setToolTip='Merge Distance.')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		tolerance = float(tb.s002.value())
@@ -128,7 +128,7 @@ class Polygons(Init):
 		tb = self.currentUi.tb001
 		if not tb.containsMenuItems:
 			tb.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s003', minMax_='0-10000 step1', setValue=0.001, setToolTip='Divisions.')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		divisions = tb.s003.value()
@@ -145,7 +145,7 @@ class Polygons(Init):
 		tb = self.currentUi.tb002
 		if not tb.containsMenuItems:
 			tb.add('QCheckBox', setText='Merge', setObjectName='chk000', setChecked=True, setToolTip='Combine selected meshes and merge any coincident verts/edges.')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		if tb.chk000.isChecked():
@@ -183,7 +183,7 @@ class Polygons(Init):
 		tb = self.currentUi.tb003
 		if not tb.containsMenuItems:
 			tb.add('QCheckBox', setText='Keep Faces Together', setObjectName='chk002', setChecked=True, setToolTip='Keep edges/faces together.')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		keepFacesTogether = tb.chk002.isChecked() #keep faces/edges together.
@@ -200,7 +200,7 @@ class Polygons(Init):
 		tb = self.currentUi.tb004
 		if not tb.containsMenuItems:
 			tb.add('QDoubleSpinBox', setPrefix='Width: ', setObjectName='s000', minMax_='0.00-100 step.01', setValue=0.01, setToolTip='Bevel Width.')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		width = float(tb.s000.value())
@@ -222,7 +222,7 @@ class Polygons(Init):
 		tb = self.currentUi.tb005
 		if not tb.containsMenuItems:
 			tb.add('QCheckBox', setText='Delete Original', setObjectName='chk007', setChecked=True, setToolTip='Delete original selected faces.')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		#rt.macros.run('Ribbon - Modeling', 'GeometryDetach')
@@ -253,7 +253,7 @@ class Polygons(Init):
 		tb = self.currentUi.tb006
 		if not tb.containsMenuItems:
 			tb.add('QDoubleSpinBox', setPrefix='Offset: ', setObjectName='s001', minMax_='0.00-100 step.01', setValue=2.00, setToolTip='Offset amount.')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		offset = float(tb.s001.value())
@@ -278,7 +278,7 @@ class Polygons(Init):
 			tb.add('QCheckBox', setText='U', setObjectName='chk008', setChecked=True, setToolTip='Divide facet: U coordinate.')
 			tb.add('QCheckBox', setText='V', setObjectName='chk009', setChecked=True, setToolTip='Divide facet: V coordinate.')
 			tb.add('QCheckBox', setText='Tris', setObjectName='chk010', setToolTip='Divide facet: Tris.')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		dv=u=v=0
@@ -311,7 +311,7 @@ class Polygons(Init):
 			tb.add('QRadioButton', setText='Union', setObjectName='chk011', setToolTip='Fuse two objects together.')
 			tb.add('QRadioButton', setText='Difference', setObjectName='chk012', setChecked=True, setToolTip='Indents one object with the shape of another at the point of their intersection.')
 			tb.add('QRadioButton', setText='Intersection', setObjectName='chk013', setToolTip='Keep only the interaction point of two objects.')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		# if tb.chk011.isChecked(): #union

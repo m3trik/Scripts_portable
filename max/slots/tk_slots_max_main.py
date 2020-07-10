@@ -18,7 +18,7 @@ class Main(Init):
 		'''
 		tree = self.parentUi.tree000
 
-		if wItem=='setMenu':
+		if wItem is 'setMenu':
 			tree.expandOnHover = True
 			tree.convert(tree.getTopLevelItems(), 'QLabel') #construct the tree using the existing contents.
 			return

@@ -21,7 +21,7 @@ class Preferences(Init):
 		'''
 		pin = self.parentUi.pin
 
-		if state=='setMenu':
+		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb003', setToolTip='')
 			return
 
@@ -32,7 +32,7 @@ class Preferences(Init):
 		'''
 		cmb = self.parentUi.cmb003
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['']
 			cmb.addItems_(list_, '')
 			return
@@ -49,7 +49,7 @@ class Preferences(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			from PySide2 import QtWidgets, QtCore
 			list_ = QtWidgets.QStyleFactory.keys() #get styles from QStyleFactory
 			cmb.addItems_(list_)
@@ -70,7 +70,7 @@ class Preferences(Init):
 		'''
 		cmb = self.parentUi.cmb001
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['millimeter','centimeter','meter','kilometer','inch','foot','yard','mile']
 			cmb.addItems_(list_)
 			try:
@@ -90,7 +90,7 @@ class Preferences(Init):
 		'''
 		cmb = self.parentUi.cmb002
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			#store a corresponding value for each item in the comboBox list_.
 			l = [('15 fps: ','game'),('24 fps: ','film'),('25 fps: ','pal'),('30 fps: ','ntsc'),('48 fps: ','show'),('50 fps: ','palf'),('60 fps: ','ntscf')]
 			list_ = [i[0]+i[1] for i in l] #ie. ['15 fps: game','24 fps: film', ..etc]

@@ -30,7 +30,7 @@ class Duplicate(Init):
 		'''
 		pin = self.parentUi.pin
 
-		if state=='setMenu':
+		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='')
 
 			return
@@ -42,7 +42,7 @@ class Duplicate(Init):
 		'''
 		cmb = self.parentUi.cmb001
 		
-		if index=='setMenu':
+		if index is 'setMenu':
 			files = ['']
 			cmb.addItems_(files, '')
 			return

@@ -19,7 +19,7 @@ class Normals(Init):
 		'''
 		pin = self.parentUi.pin
 
-		if state=='setMenu':
+		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
 			return
 
@@ -30,7 +30,7 @@ class Normals(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['']
 			cmb.addItems_(list_, '')
 			return
@@ -48,7 +48,7 @@ class Normals(Init):
 		tb = self.currentUi.tb000
 		if not tb.containsMenuItems:
 			tb.add('QSpinBox', setPrefix='Display Size: ', setObjectName='s001', minMax_='1-100 step1', setValue=1, setToolTip='Normal display size.')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		size = float(tb.s001.value())
@@ -79,7 +79,7 @@ class Normals(Init):
 		tb = self.currentUi.tb001
 		if not tb.containsMenuItems:
 			tb.add('QCheckBox', setText='Soften non-creased', setObjectName='chk000', setToolTip='Soften all non-creased edges.')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		mel.eval("PolySelectConvert 2")
@@ -112,7 +112,7 @@ class Normals(Init):
 		tb = self.currentUi.tb002
 		if not tb.containsMenuItems:
 			tb.add('QSpinBox', setPrefix='Angle: ', setObjectName='s000', minMax_='1-180 step1', setValue=30, setToolTip='Angle degree.')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		normalAngle = str(tb.s000.value())
@@ -128,7 +128,7 @@ class Normals(Init):
 		tb = self.currentUi.tb003
 		if not tb.containsMenuItems:
 			tb.add('QCheckBox', setText='All', setObjectName='chk001', setChecked=True, setToolTip='Lock/Unlock: all.')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		all_ = tb.chk001.isChecked()

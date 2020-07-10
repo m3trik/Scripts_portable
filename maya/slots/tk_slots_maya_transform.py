@@ -33,7 +33,7 @@ class Transform(Init):
 		'''
 		pin = self.parentUi.pin
 
-		if state=='setMenu':
+		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
 			return
 
@@ -44,7 +44,7 @@ class Transform(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			files = ['']
 			cmb.addItems_(files, '')
 			return
@@ -64,7 +64,7 @@ class Transform(Init):
 		'''
 		cmb = self.parentUi.cmb001
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['Edge', 'Surface', 'Make Live']
 			cmb.addItems_(list_, 'Off')
 			return
@@ -187,7 +187,7 @@ class Transform(Init):
 			tb.add('QCheckBox', setText='Move to Origin', setObjectName='chk014', setChecked=True, setToolTip='Move to origin (xyz 0,0,0).')
 			tb.add('QCheckBox', setText='Use Lowest Point', setObjectName='chk015', setToolTip='Use Lowest bounding box point (else mid point).')
 			tb.add('QCheckBox', setText='Center Pivot', setObjectName='chk016', setChecked=True, setToolTip='Center pivot on objects bounding box.')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		origin = tb.chk014.isChecked()
@@ -252,7 +252,7 @@ class Transform(Init):
 			tb.add('QCheckBox', setText='Average', setObjectName='chk006', setChecked=True, setToolTip='Align to last selected object or average.')
 			tb.add('QCheckBox', setText='Auto Align', setObjectName='chk010', setChecked=True, setToolTip='')
 			tb.add('QCheckBox', setText='Auto Align: Two Axes', setObjectName='chk011', setToolTip='')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		if tb.chk010.isChecked(): #Auto Align: if checked; set coordinates for auto align:

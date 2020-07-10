@@ -36,7 +36,7 @@ class Editors(Init):
 		'''
 		pin = self.parentUi.pin
 
-		if state=='setMenu':
+		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
 			return
 
@@ -47,7 +47,7 @@ class Editors(Init):
 		'''
 		cmb = self.parentUi.cmb000
 		
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['']
 			cmb.addItems_(list_, '')
 			return

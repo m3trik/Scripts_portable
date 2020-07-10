@@ -45,7 +45,7 @@ class File(Init):
 		'''
 		pin = self.parentUi.pin
 
-		if state=='setMenu':
+		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb005', setToolTip='3dsMax File Editors')
 			return
 
@@ -56,7 +56,7 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			cmb.addToContext('QPushButton', setObjectName='b001', setText='Last', setToolTip='Open the most recent file.')
 			return
 
@@ -75,7 +75,7 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb001
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			return
 
 		path = ''
@@ -94,7 +94,7 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb002
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			return
 
 		path = MaxPlus.PathManager.GetAutobackDir()
@@ -114,7 +114,7 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb003
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			cmb.addItems_(['Import file', 'Import Options', 'Merge', 'Replace', 'Link Revit', 'Link FBX', 'Link AutoCAD'], 'Import')
 			return
 
@@ -143,7 +143,7 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb004
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ", "Send to Maya: New Scene", "Send to Maya: Update Scene", "Send to Maya: Add to Scene"]
 			cmb.addItems_(list_, "Export")
 			return
@@ -182,7 +182,7 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb005
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['Schematic View']
 			cmb.addItems_(list_, '3dsMax File Editors')
 			return
@@ -199,7 +199,7 @@ class File(Init):
 		'''
 		cmb = self.parentUi.cmb006
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			cmb.addToContext(QComboBox_, setObjectName='cmb001', setToolTip='Current project directory root.')
 			cmb.addToContext(QLabel_, setObjectName='lbl000', setText='Set', setToolTip='Set the project directory.')
 			cmb.addToContext(QLabel_, setObjectName='lbl001', setText='Minimize App', setToolTip='Minimize the main application.')
@@ -233,7 +233,7 @@ class File(Init):
 			tb.add('QCheckBox', setText='Wireframe', setObjectName='chk000', setChecked=True, setToolTip='Set view to wireframe before save.')
 			tb.add('QCheckBox', setText='Increment', setObjectName='chk001', setChecked=True, setToolTip='Append and increment a unique integer value.')
 			tb.add('QCheckBox', setText='Quit', setObjectName='chk002', setToolTip='Quit after save.')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		preSaveScript = ""

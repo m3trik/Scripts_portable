@@ -19,7 +19,7 @@ class Mirror(Init):
 		'''
 		pin = self.parentUi.pin
 
-		if state=='setMenu':
+		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
 			return
 
@@ -30,7 +30,7 @@ class Mirror(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['']
 			cmb.addItems_(list_, '')
 			return
@@ -73,7 +73,7 @@ class Mirror(Init):
 			tb.add('QDoubleSpinBox', setPrefix='Merge Threshold: ', setObjectName='s000', minMax_='0.000-10 step.001', setValue=0.005, setToolTip='Merge vertex distance.')
 
 			self.connect_('chk000-3', 'toggled', self.chk000_3, tb)
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		axis = self.getAxisFromCheckBoxes('chk000-3', tb)

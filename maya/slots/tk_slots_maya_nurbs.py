@@ -19,7 +19,7 @@ class Nurbs(Init):
 		'''
 		pin = self.parentUi.pin
 
-		if state=='setMenu':
+		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya Curve Operations')
 
 			return
@@ -31,7 +31,7 @@ class Nurbs(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['Project Curve','Duplicate Curve','Create Curve from Poly','Bend Curve', 'Curl Curve','Modify Curve Curvature','Smooth Curve','Straighten Curves','Extrude Curves','Revolve Curves','Loft Curves','Planar Curves','Insert Isoparms','Insert Knot','Rebuild Curve','Extend Curve', 'Extend Curve On Surface']
 			cmb.addItems_(list_, 'Maya Curve Operations')
 			return
@@ -80,7 +80,7 @@ class Nurbs(Init):
 		'''
 		cmb = self.parentUi.cmb001
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['Ep Curve Tool','CV Curve Tool','Bezier Curve Tool','Pencil Curve Tool','2 Point Circular Arc','3 Point Circular Arc']
 			cmb.addItems_(list_, 'Create Curve')
 			return

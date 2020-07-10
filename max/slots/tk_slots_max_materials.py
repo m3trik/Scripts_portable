@@ -31,7 +31,7 @@ class Materials(Init):
 		'''
 		pin = self.parentUi.pin
 
-		if state=='setMenu':
+		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='3dsMax Material Editors')
 			return
 
@@ -54,7 +54,7 @@ class Materials(Init):
 		'''
 		cmb = self.parentUi.cmb001
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['Material Editor']
 			cmb.addItems_(list_, '3dsMax Material Editors')
 			return
@@ -74,7 +74,7 @@ class Materials(Init):
 		'''
 		cmb = self.parentUi.cmb002
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			cmb.addToContext(QLabel_, setText='Open in Editor', setObjectName='lbl000', setToolTip='Open material in editor.')
 			cmb.addToContext(QLabel_, setText='Rename', setObjectName='lbl001', setToolTip='Rename the current material.')
 			cmb.addToContext(QLabel_, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current material.')
@@ -132,7 +132,7 @@ class Materials(Init):
 		if not tb.containsMenuItems:
 			tb.add('QRadioButton', setText='Shell', setObjectName='chk005', setToolTip='Select entire shell.')
 			tb.add('QRadioButton', setText='Invert', setObjectName='chk006', setToolTip='Invert Selection.')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		shell = tb.chk005.isChecked() #Select by material: shell
@@ -154,7 +154,7 @@ class Materials(Init):
 			tb.add('QRadioButton', setText='ID Map Materials', setObjectName='chk001', setToolTip='List ID map materials.') #Material mode: ID Map Materials
 
 			self.connect_([tb.chk000, tb.chk001], 'toggled', [self.cmb002, self.tb001])
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		if tb.chk000.isChecked():
@@ -172,7 +172,7 @@ class Materials(Init):
 		if not tb.containsMenuItems:
 			tb.add('QRadioButton', setText='Current Material', setObjectName='chk007', setChecked=True, setToolTip='Re-Assign the current stored material.')
 			tb.add('QRadioButton', setText='New Random Material', setObjectName='chk008', setToolTip='Assign a new random ID material.')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		selection = rt.selection

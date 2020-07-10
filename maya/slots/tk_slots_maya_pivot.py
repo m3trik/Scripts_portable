@@ -19,7 +19,7 @@ class Pivot(Init):
 		'''
 		pin = self.parentUi.pin
 
-		if state=='setMenu':
+		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
 			return
 
@@ -30,7 +30,7 @@ class Pivot(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['']
 			cmb.addItems_(list_, '')
 			return
@@ -47,7 +47,7 @@ class Pivot(Init):
 		'''
 		cmb = self.parentUi.cmb001
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['Component', 'Object', 'World']
 			cmb.addItems_(list_, 'Center Pivot')
 			return
@@ -71,7 +71,7 @@ class Pivot(Init):
 		if not tb.containsMenuItems:
 			tb.add('QCheckBox', setText='Reset Pivot Position', setObjectName='chk000', setChecked=True, setToolTip='')
 			tb.add('QCheckBox', setText='Reset Pivot Orientation', setObjectName='chk001', setChecked=True, setToolTip='')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		resetPivotPosition = tb.chk000.isChecked() #Reset Pivot Position

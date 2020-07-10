@@ -37,7 +37,7 @@ class Selection(Init):
 		'''
 		pin = self.parentUi.pin
 
-		if state=='setMenu':
+		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='')
 			pin.add(QComboBox_, setObjectName='cmb004', setToolTip='Set the select tool type.')
 			pin.add('QCheckBox', setText='Ignore Backfacing', setObjectName='chk004', setToolTip='Ignore backfacing components during selection.')
@@ -247,7 +247,7 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			cmb.addToContext(QLabel_, setText='Select', setObjectName='lbl005', setToolTip='Select the current set elements.')
 			cmb.addToContext(QLabel_, setText='New', setObjectName='lbl000', setToolTip='Create a new selection set.')
 			cmb.addToContext(QLabel_, setText='Modify', setObjectName='lbl001', setToolTip='Modify the current set by renaming and/or changing the selection.')
@@ -267,7 +267,7 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb001
 		
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['Polygon Selection Constraints']
 			cmb.addItems_(list_, 'Selection Editors:')
 			return
@@ -284,7 +284,7 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb002	
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['IK Handles','Joints','Clusters','Lattices','Sculpt Objects','Wires','Transforms','Geometry','NURBS Curves','NURBS Surfaces','Polygon Geometry','Cameras','Lights','Image Planes','Assets','Fluids','Particles','Rigid Bodies','Rigid Constraints','Brushes','Strokes','Dynamic Constraints','Follicles','nCloths','nParticles','nRigids']
 			cmb.addItems_(list_, 'By Type:')
 			return
@@ -354,7 +354,7 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb003
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['Verts', 'Vertex Faces', 'Vertex Perimeter', 'Edges', 'Edge Loop', 'Edge Ring', 'Contained Edges', 'Edge Perimeter', 'Border Edges', 'Faces', 'Face Path', 'Contained Faces', 'Face Perimeter', 'UV\'s', 'UV Shell', 'UV Shell Border', 'UV Perimeter', 'UV Edge Loop', 'Shell', 'Shell Border'] 
 			cmb.addItems_(list_, 'Convert To:')
 			return
@@ -409,7 +409,7 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb004
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['Marquee', 'Lasso', 'Paint'] 
 			cmb.addItems_(list_, 'Select Tool Style:')
 			return
@@ -430,7 +430,7 @@ class Selection(Init):
 		'''
 		cmb = self.parentUi.cmb005
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['Angle', 'Border', 'Edge Loop', 'Edge Ring', 'Shell', 'UV Edge Loop']
 			items = cmb.addItems_(list_, 'Off')
 			return
@@ -463,7 +463,7 @@ class Selection(Init):
 			tb.add('QCheckBox', setText='Component Loop', setObjectName='chk001', setChecked=True, setToolTip='Select all contiguous components that form a loop with the current selection.')
 			tb.add('QCheckBox', setText='Shortest Path', setObjectName='chk002', setToolTip='Shortest component path between two selected vertices or UV\'s.')
 			tb.add('QSpinBox', setPrefix='Step: ', setObjectName='s003', minMax_='1-100 step1', setValue=1, setToolTip='Step Amount.')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		step = tb.s003.value()
@@ -491,7 +491,7 @@ class Selection(Init):
 		tb = self.currentUi.tb001
 		if not tb.containsMenuItems:
 			tb.add('QDoubleSpinBox', setPrefix='Tolerance: ', setObjectName='s000', minMax_='0.0-10 step.1', setValue=0.3, setToolTip='Select similar objects or components, depending on selection mode.')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		tolerance = str(tb.s000.value()) #string value because mel.eval is sending a command string
@@ -510,7 +510,7 @@ class Selection(Init):
 			tb.add('QDoubleSpinBox', setPrefix='x: ', setObjectName='s002', minMax_='0.00-1 step.01', setValue=0.01, setToolTip='Normal X range.')
 			tb.add('QDoubleSpinBox', setPrefix='y: ', setObjectName='s004', minMax_='0.00-1 step.01', setValue=0.01, setToolTip='Normal Y range.')
 			tb.add('QDoubleSpinBox', setPrefix='z: ', setObjectName='s005', minMax_='0.00-1 step.01', setValue=0.01, setToolTip='Normal Z range.')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		rangeX = float(tb.s002.value())

@@ -19,7 +19,7 @@ class Edit(Init):
 		'''
 		pin = self.parentUi.pin
 
-		if state=='setMenu':
+		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya Editors')
 			return
 
@@ -30,7 +30,7 @@ class Edit(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['Cleanup', 'Transfer: Attribute Values', 'Transfer: Shading Sets']
 			cmb.addItems_(list_, 'Maya Editors')
 			return
@@ -77,7 +77,7 @@ class Edit(Init):
 			tb.add('QDoubleSpinBox', setPrefix='Edge Length Tolerance: ', setObjectName='s007', minMax_='0.0-10 step.001', setValue=0.001, setToolTip='Tolerance for edge length.')
 			tb.add('QCheckBox', setText='Zero UV Face Area', setObjectName='chk015', setToolTip='Check for 0 uv face area.')
 			tb.add('QDoubleSpinBox', setPrefix='UV Face Area Tolerance:', setObjectName='s008', minMax_='0.0-10 step.001', setValue=0.001, setToolTip='Tolerance for uv face areas.')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		allMeshes = int(tb.chk005.isChecked()) #[0] All selectable meshes
@@ -120,7 +120,7 @@ class Edit(Init):
 			tb.add('QCheckBox', setText='All', setObjectName='chk018', setChecked=True, setToolTip='Delete history on All objects.')
 			tb.add('QCheckBox', setText='Delete Unused Nodes', setObjectName='chk019', setChecked=True, setToolTip='Delete unused nodes.')
 			tb.add('QCheckBox', setText='Delete Deformers', setObjectName='chk020', setToolTip='Delete deformers.')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		all_ = tb.chk018.isChecked()
@@ -161,7 +161,7 @@ class Edit(Init):
 		tb = self.currentUi.tb002
 		if not tb.containsMenuItems:
 			tb.add('QCheckBox', setText='Delete Loop', setObjectName='chk001', setToolTip='Delete the entire edge loop of any components selected.')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		selectionMask = pm.selectMode (query=True, component=True)
@@ -203,7 +203,7 @@ class Edit(Init):
 			tb.add('QRadioButton', setText='Z', setObjectName='chk009', setToolTip='Perform delete along Z axis.')
 
 			self.connect_('chk006-9', 'toggled', self.chk006_9, tb)
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		selection = pm.ls(sl=1, objectsOnly=1)

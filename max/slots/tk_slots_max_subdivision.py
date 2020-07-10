@@ -26,7 +26,7 @@ class Subdivision(Init):
 		'''
 		pin = self.parentUi.pin
 
-		if state=='setMenu':
+		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='Subdivision Modifiers')
 			return
 
@@ -37,7 +37,7 @@ class Subdivision(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['TurboSmooth','TurboSmooth Pro','OpenSubDiv','Subdivide','Subdivide (WSM)','MeshSmooth','Optimize','Pro Optimizer','Add Divisions']
 			cmb.addItems_(list_, '3dsMax Subdivision Modifiers')
 			return

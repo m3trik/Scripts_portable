@@ -19,7 +19,7 @@ class Pivot(Init):
 		'''
 		pin = self.parentUi.pin
 
-		if state=='setMenu':
+		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
 			return
 
@@ -30,7 +30,7 @@ class Pivot(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['']
 			cmb.addItems_(list_, '')
 			return
@@ -47,7 +47,7 @@ class Pivot(Init):
 		'''
 		cmb = self.parentUi.cmb001
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['Component', 'Object', 'World', 'Object Top', 'Object Bottom', 'Object Center Left', 
 				'Object Center Right', 'Object Bottom Left', 'Object Bottom Right', 'Object Top Left', 'Object Top Right']
 			cmb.addItems_(list_, 'Center Pivot')
@@ -89,7 +89,7 @@ class Pivot(Init):
 			tb.add('QCheckBox', setText='Reset Pivot Scale', setObjectName='chk000', setChecked=True, setToolTip='')
 			tb.add('QCheckBox', setText='Reset Pivot Transform', setObjectName='chk001', setChecked=True, setToolTip='')
 			tb.add('QCheckBox', setText='Reset XForm', setObjectName='chk002', setToolTip='')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		if tb.chk000: #Reset Pivot Scale

@@ -19,7 +19,7 @@ class Lighting(Init):
 		'''
 		pin = self.parentUi.pin
 
-		if state=='setMenu':
+		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
 
 			return
@@ -31,7 +31,7 @@ class Lighting(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			files = ['']
 			cmb.addItems_(files, '')
 			return

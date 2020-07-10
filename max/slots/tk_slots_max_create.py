@@ -40,7 +40,7 @@ class Create(Init):
 		'''
 		pin = self.parentUi.pin
 
-		if state=='setMenu':
+		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb003', setToolTip='')
 			return
 
@@ -51,7 +51,7 @@ class Create(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['']
 			cmb.addItems_(list_, '')
 			return
@@ -203,7 +203,7 @@ class Create(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['Mesh', 'Editable Poly', 'Editable Mesh', 'Editable Patch', 'NURBS', 'Light']
 			cmb.addItems_(list_)
 			return
@@ -235,7 +235,7 @@ class Create(Init):
 		'''
 		cmb = self.parentUi.cmb002
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			return
 
 		attributes = {k:v for k,v in attributes.items() if isinstance(v,(int, float, bool))} #get only attributes of int, float, bool type.

@@ -19,7 +19,7 @@ class Subdivision(Init):
 		'''
 		pin = self.parentUi.pin
 
-		if state=='setMenu':
+		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya Subdivision Editiors')
 			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='Smooth Proxy')
 			return
@@ -31,7 +31,7 @@ class Subdivision(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['Polygon Display Options', 'Reduce Polygons','Add Divisions','Smooth','SubDiv Proxy']
 			cmb.addItems_(list_, 'Subdivision Editiors')
 			return
@@ -52,7 +52,7 @@ class Subdivision(Init):
 		'''
 		cmb = self.parentUi.cmb001
 		
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['Create Subdiv Proxy', 'Remove Subdiv Proxy Mirror', 'Crease Tool', 'Toggle Subdiv Proxy Display', 'Both Proxy and Subdiv Display']
 			cmb.addItems_(list_, 'Smooth Proxy')
 			return

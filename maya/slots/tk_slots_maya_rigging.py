@@ -19,7 +19,7 @@ class Rigging(Init):
 		'''
 		pin = self.parentUi.pin
 
-		if state=='setMenu':
+		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya Rigging Editors')
 			return
 
@@ -30,7 +30,7 @@ class Rigging(Init):
 		'''
 		cmb = self.parentUi.cmb000
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['Quick Rig','HumanIK','Expression Editor','Shape Editor','Connection Editor','Channel Control Editor','Set Driven Key']
 			cmb.addItems_(list_, 'Maya Rigging Editors')
 			return
@@ -59,7 +59,7 @@ class Rigging(Init):
 		'''
 		cmb = self.parentUi.cmb001
 
-		if index=='setMenu':
+		if index is 'setMenu':
 			list_ = ['Joints','Locator','IK Handle', 'Lattice', 'Cluster']
 			cmb.addItems_(list_, "Create")
 			return
@@ -131,7 +131,7 @@ class Rigging(Init):
 				self.chk000() #init scale joint value
 			except NameError:
 				pass
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		joints = pm.ls(type="joint") #get all scene joints
@@ -157,7 +157,7 @@ class Rigging(Init):
 		tb = self.currentUi.tb001
 		if not tb.containsMenuItems:
 			tb.add('QCheckBox', setText='Align world', setObjectName='chk003', setToolTip='Align joints with the worlds transform.')
-			if state=='setMenu':
+			if state is 'setMenu':
 				return
 
 		orientJoint = 'xyz' #orient joints
