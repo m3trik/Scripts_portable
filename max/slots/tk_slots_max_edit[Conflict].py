@@ -9,6 +9,9 @@ class Edit(Init):
 	def __init__(self, *args, **kwargs):
 		super(Edit, self).__init__(*args, **kwargs)
 
+		self.parentUi = self.sb.getUi('edit')
+		self.childUi = self.sb.getUi('edit_submenu')
+
 
 	def pin(self, state=None):
 		'''
@@ -26,16 +29,16 @@ class Edit(Init):
 		Editors
 		'''
 		cmb = self.parentUi.cmb000
-		
-		list_ = ['']
-		items = cmb.addItems_(list_, '')
 
-		if not index:
-			index = cmb.currentIndex()
-		if index!=0:
-			if index==items.index(''):
-				pass
-			cmb.setCurrentIndex(0)
+		if index=='setMenu':
+			list_ = ['']
+			cmb.addItems_(list_, '')
+			return
+
+		# if index>0:
+		# 	if index==cmb.items.index(''):
+		# 		pass
+		# 	cmb.setCurrentIndex(0)
 	
 
 	def chk006_9(self):
@@ -82,32 +85,32 @@ class Edit(Init):
 		unusedNodes = tb.chk019.isChecked()
 		deformers = tb.chk020.isChecked()
 
-		objects = pm.ls(selection=1)
-		if all_:
-			objects = pm.ls(typ="mesh")
+		# objects = pm.ls(selection=1)
+		# if all_:
+		# 	objects = pm.ls(typ="mesh")
 
-		for obj in objects:
-			try:
-				if all_:
-					pm.delete (obj, constructionHistory=1)
-				else:
-					pm.bakePartialHistory (obj, prePostDeformers=1)
-			except:
-				pass
-		if unusedNodes:
-			maxEval('hyperShadePanelMenuCommand("hyperShadePanel1", "deleteUnusedNodes");')
+		# for obj in objects:
+		# 	try:
+		# 		if all_:
+		# 			pm.delete (obj, constructionHistory=1)
+		# 		else:
+		# 			pm.bakePartialHistory (obj, prePostDeformers=1)
+		# 	except:
+		# 		pass
+		# if unusedNodes:
+		# 	maxEval('hyperShadePanelMenuCommand("hyperShadePanel1", "deleteUnusedNodes");')
 
-		#display viewPort messages
-		if all_:
-			if deformers:
-				return 'Delete <hl>All</hl> History.'
-			else:
-				return 'Delete <hl>All Non-Deformer</hl> History.'
-		else:
-			if deformers:
-				return 'Delete history on '+str(objects)
-			else:
-				return 'Delete <hl>Non-Deformer</hl> history on '+str(objects)
+		# #display viewPort messages
+		# if all_:
+		# 	if deformers:
+		# 		return 'Delete <hl>All</hl> History.'
+		# 	else:
+		# 		return 'Delete <hl>All Non-Deformer</hl> History.'
+		# else:
+		# 	if deformers:
+		# 		return 'Delete history on '+str(objects)
+		# 	else:
+		# 		return 'Delete <hl>Non-Deformer</hl> history on '+str(objects)
 
 
 	def tb002(self, state=None):
@@ -177,9 +180,7 @@ class Edit(Init):
 		returns:
 			(list) list containing any found N-Gons		
 		'''
-		faces = Init.bitArrayToArray(rt.polyop.getFaceSelection(obj)) #get the selected vertices
-		if not faces: #else get all vertices for the selected object
-			faces = list(range(1, obj.faces.count))
+		faces = Init.getFaces(obj)
 
 		Init.setSubObjectLevel(4)
 				
@@ -198,17 +199,30 @@ class Edit(Init):
 			vector = vectors.next()
 		'''
 		for vertex in vertices:
-			edges = Init.bitArrayToArray(rt.polyop.getEdgesUsingVert(obj, vertex)) #get the edges that use the vertice
+			try:
+				edges = Init.bitArrayToArray(rt.polyop.getEdgesUsingVert(obj, vertex)) #get the edges that use the vertice
+			except:
+				edges = Init.bitArrayToArray(rt.getEdgesUsingVert(obj, vertex)) #get the edges that use the vertice
 
 			if len(edges)==2:
-				vertexPosition = rt.polyop.getVert(obj, vertex)
+				try:
+					vertexPosition = rt.polyop.getVert(obj, vertex)
+				except:
+					vertexPosition = rt.getVert(obj, vertex)
 
-				edgeVerts = Init.bitArrayToArray([rt.polyop.getVertsUsingEdge(obj, e) for e in edges])
+				try:
+					edgeVerts = Init.bitArrayToArray([rt.polyop.getVertsUsingEdge(obj, e) for e in edges])
+				except:
+					edgeVerts = Init.bitArrayToArray([rt.getVertsUsingEdge(obj, e) for e in edges])
 
 				edgeVerts = [v for v in edgeVerts if not v==vertex]
 
-				vector1 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[0]) - vertexPosition)
-				vector2 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[1]) - vertexPosition)
+				try:
+					vector1 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[0]) - vertexPosition)
+					vector2 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[1]) - vertexPosition)
+				except:
+					vector1 = rt.normalize(rt.getVert(obj, edgeVerts[0]) - vertexPosition)
+					vector2 = rt.normalize(rt.getVert(obj, edgeVerts[1]) - vertexPosition)
 
 				vector = rt.length(vector1 + vector2)
 				yield vector
@@ -268,7 +282,10 @@ class Edit(Init):
 				_isolatedVerts = Edit.findIsolatedVertices(obj)
 
 				Init.undo(True)
-				rt.polyop.setVertSelection(obj, _isolatedVerts)
+				try:
+					rt.polyop.setVertSelection(obj, _isolatedVerts)
+				except:
+					rt.setVertSelection(obj, _isolatedVerts)
 
 				print('Found '+str(len(_isolatedVerts))+' isolated vertices.')
 				
@@ -294,13 +311,13 @@ class Edit(Init):
 			if state=='setMenu':
 				return
 
-		selection = pm.ls(sl=1, objectsOnly=1)
-		axis = self.getAxisFromCheckBoxes('chk006-9', tb)
+		# selection = pm.ls(sl=1, objectsOnly=1)
+		# axis = self.getAxisFromCheckBoxes('chk006-9', tb)
 
-		pm.undoInfo(openChunk=1)
-		for obj in selection:
-			self.deleteAlongAxis(obj, axis) #Init.deleteAlongAxis - no max version.
-		pm.undoInfo(closeChunk=1)
+		# pm.undoInfo(openChunk=1)
+		# for obj in selection:
+		# 	self.deleteAlongAxis(obj, axis) #Init.deleteAlongAxis - no max version.
+		# pm.undoInfo(closeChunk=1)
 
 
 

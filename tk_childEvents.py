@@ -55,25 +55,43 @@ class EventFactoryFilter(QtCore.QObject):
 			classMethod = self.sb.getMethod(name, widgetName)
 
 			self.setStyleSheet_(name, widget)
-			include = ['QWidget', 'QAction', 'QLabel', 'QPushButton', 'QToolButton', 'QListWidget', 'QTreeWidget', 'QComboBox', 'QSpinBox','QDoubleSpinBox','QCheckBox','QRadioButton','QLineEdit','QTextEdit','QProgressBar']
-			if derivedType in include: #install an event filter on only the given types.
+
+			widgetTypes = [ #install an event filter on the given types.
+				'QWidget', 
+				'QAction', 
+				'QLabel', 
+				'QPushButton', 
+				'QToolButton', 
+				'QListWidget', 
+				'QTreeWidget', 
+				'QComboBox', 
+				'QSpinBox',
+				'QDoubleSpinBox',
+				'QCheckBox',
+				'QRadioButton',
+				'QLineEdit',
+				'QTextEdit',
+				'QProgressBar',
+				]
+
+			if derivedType in widgetTypes:
 				widget.installEventFilter(self)
 				# print (widgetName if widgetName else widget)
 
-			#type specific:
-			if widgetType in ['QToolButton_', 'QPushButton_Draggable', 'QComboBox_', 'QTreeWidget_ExpandableList']:
-				if callable(classMethod):
-					classMethod('setMenu')
+				#type specific:
+				if widgetType in ['QToolButton_', 'QPushButton_Draggable', 'QComboBox_', 'QTreeWidget_ExpandableList']:
+					if callable(classMethod):
+						classMethod('setMenu')
 
-			if derivedType in ['QPushButton', 'QToolButton', 'QLabel']:
-				if uiLevel<3:
-					self.resizeAndCenterWidget(widget)
+				if derivedType in ['QPushButton', 'QToolButton', 'QLabel']:
+					if uiLevel<3:
+						self.resizeAndCenterWidget(widget)
 
-			elif derivedType=='QWidget':
-				if self.sb.prefix(widget, 'w') and uiLevel==1: #prefix returns True if widgetName startswith the given prefix, and is followed by three integers.
-					widget.setVisible(False)
+				elif derivedType=='QWidget':
+					if self.sb.prefix(widget, 'w') and uiLevel==1: #prefix returns True if widgetName startswith the given prefix, and is followed by three integers.
+						widget.setVisible(False)
 
-			#add any of the widget's children not already stored in widgets (now that menus and such have been initialized).
+			#finally, add any of the widget's children.
 			exclude = ['QTreeWidget_ExpandableList'] #, 'QObject', 'QBoxLayout', 'QFrame', 'QAbstractItemView', 'QHeaderView', 'QItemSelectionModel', 'QItemDelegate', 'QScrollBar', 'QScrollArea', 'QValidator', 'QStyledItemDelegate', 'QPropertyAnimation'] #, 'QAction', 'QWidgetAction'
 			[self.addWidgets(name, w) for w in widget.children() if w not in widgets and not widgetType in exclude]
 			# print(name, [w.objectName() for w in widget.children() if w not in widgets and not widgetType in exclude])
