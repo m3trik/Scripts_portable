@@ -45,7 +45,7 @@ class Preferences(Init):
 
 	def cmb000(self, index=None):
 		'''
-		Preferences:Ui - Set main ui style using QStyleFactory
+		Ui Style: Set main ui style using QStyleFactory
 		'''
 		cmb = self.parentUi.cmb000
 
@@ -105,14 +105,6 @@ class Preferences(Init):
 
 		if index is not None:
 			pm.currentUnit(time=cmb.items[index]) #game | film | pal | ntsc | show | palf | ntscf
-
-
-	def b000(self):
-		'''
-		Init Tk_Main
-		'''
-		print('reload: tk_main module')
-		reload(tk_main)
 
 
 	def b001(self):

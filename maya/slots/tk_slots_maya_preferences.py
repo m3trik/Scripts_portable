@@ -28,7 +28,7 @@ class Preferences(Init):
 
 	def cmb000(self, index=None):
 		'''
-		Preferences:Ui - Set main ui style using QStyleFactory
+		Ui Style: Set main ui style using QStyleFactory
 		'''
 		cmb = self.parentUi.cmb000
 
@@ -105,16 +105,6 @@ class Preferences(Init):
 		# 	if index==cmb.items.index(''):
 		# 		pass
 		# 	cmb.setCurrentIndex(0)
-
-
-	@Slots.message
-	def b000(self):
-		'''
-		Init Tk_Main
-
-		'''
-		reload(tk_main)
-		return 'reload: tk_main'
 
 
 	def b001(self):

@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>312</width>
-    <height>321</height>
+    <width>279</width>
+    <height>246</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -307,7 +307,7 @@
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>76</height>
+             <height>34</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -317,7 +317,7 @@
             </size>
            </property>
            <property name="title">
-            <string>Toolkit</string>
+            <string>Ui Style</string>
            </property>
            <widget class="QComboBox_" name="cmb000">
             <property name="geometry">
@@ -357,61 +357,6 @@
               <string>Style</string>
              </property>
             </item>
-           </widget>
-           <widget class="QComboBox_" name="cmb003">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>35</y>
-              <width>113</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>113</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>113</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Select shorcut menu set type.</string>
-            </property>
-            <property name="maxVisibleItems">
-             <number>50</number>
-            </property>
-            <property name="sizeAdjustPolicy">
-             <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
-            </property>
-            <property name="frame">
-             <bool>false</bool>
-            </property>
-            <item>
-             <property name="text">
-              <string>Menu Set</string>
-             </property>
-            </item>
-           </widget>
-           <widget class="QPushButton" name="b000">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>55</y>
-              <width>111</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="toolTip">
-             <string>Re-Initialize instance</string>
-            </property>
-            <property name="text">
-             <string>Init</string>
-            </property>
            </widget>
           </widget>
          </item>
