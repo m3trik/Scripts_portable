@@ -85,12 +85,11 @@ class Pivot(Init):
 		Reset Pivot
 		'''
 		tb = self.currentUi.tb000
-		if not tb.containsMenuItems:
+		if state is 'setMenu':
 			tb.add('QCheckBox', setText='Reset Pivot Scale', setObjectName='chk000', setChecked=True, setToolTip='')
 			tb.add('QCheckBox', setText='Reset Pivot Transform', setObjectName='chk001', setChecked=True, setToolTip='')
 			tb.add('QCheckBox', setText='Reset XForm', setObjectName='chk002', setToolTip='')
-			if state is 'setMenu':
-				return
+			return
 
 		if tb.chk000: #Reset Pivot Scale
 			rt.ResetScale(rt.selection) #Same as Hierarchy/Pivot/Reset Scale.

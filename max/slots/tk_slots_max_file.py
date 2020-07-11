@@ -228,13 +228,12 @@ class File(Init):
 		Save
 		'''
 		tb = self.currentUi.tb000
-		if not tb.containsMenuItems:
+		if state is 'setMenu':
 			tb.add('QCheckBox', setText='ASCII', setObjectName='chk003', setChecked=True, setToolTip='Toggle ASCII or binary file type.')
 			tb.add('QCheckBox', setText='Wireframe', setObjectName='chk000', setChecked=True, setToolTip='Set view to wireframe before save.')
 			tb.add('QCheckBox', setText='Increment', setObjectName='chk001', setChecked=True, setToolTip='Append and increment a unique integer value.')
 			tb.add('QCheckBox', setText='Quit', setObjectName='chk002', setToolTip='Quit after save.')
-			if state is 'setMenu':
-				return
+			return
 
 		preSaveScript = ""
 		postSaveScript = ""

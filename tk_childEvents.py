@@ -126,6 +126,8 @@ class EventFactoryFilter(QtCore.QObject):
 			derivedType = self.sb.getDerivedType(widget, name) #get the derived class type as string.
 			if hasattr(widget, 'styleSheet'):
 				s = getattr(StyleSheet, derivedType, '')
+				if widget.size().width()<20:
+					s = s+'{} {{padding: 0px 0px 0px 0px;}}'.format(derivedType) #remove padding on small sized widgets.
 				if uiLevel==2 and not self.sb.prefix(widget, 'i'): #if submenu and objectName doesn't start with 'i':
 					s = s+getattr(StyleSheet, 'dark') #override with the dark version on uiLevel 2 (submenus).
 				if widget.styleSheet(): #if the widget has an existing style sheet, append.

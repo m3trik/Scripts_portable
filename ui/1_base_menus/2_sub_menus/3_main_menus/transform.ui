@@ -566,51 +566,23 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="b005">
-           <property name="enabled">
-            <bool>true</bool>
+          <widget class="QGroupBox" name="groupBox_5">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>59</height>
+            </size>
            </property>
            <property name="maximumSize">
             <size>
              <width>111</width>
-             <height>19</height>
-            </size>
-           </property>
-           <property name="toolTip">
-            <string>Move selected object(s) to last selected.</string>
-           </property>
-           <property name="text">
-            <string>Move To</string>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>18</width>
-             <height>18</height>
-            </size>
-           </property>
-           <property name="autoDefault">
-            <bool>false</bool>
-           </property>
-           <property name="default">
-            <bool>false</bool>
-           </property>
-           <property name="flat">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QGroupBox" name="groupBox_4">
-           <property name="maximumSize">
-            <size>
-             <width>111</width>
-             <height>21</height>
+             <height>999</height>
             </size>
            </property>
            <property name="title">
             <string/>
            </property>
-           <widget class="QPushButton" name="b002">
+           <widget class="QPushButton" name="b005">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -621,6 +593,86 @@
               <width>111</width>
               <height>19</height>
              </rect>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>19</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>111</width>
+              <height>19</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>Move selected object(s) to last selected.</string>
+            </property>
+            <property name="text">
+             <string>Move To</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>18</width>
+              <height>18</height>
+             </size>
+            </property>
+            <property name="autoDefault">
+             <bool>false</bool>
+            </property>
+            <property name="default">
+             <bool>false</bool>
+            </property>
+            <property name="flat">
+             <bool>false</bool>
+            </property>
+           </widget>
+           <widget class="QToolButton_" name="tb000">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>20</y>
+              <width>111</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>111</width>
+              <height>19</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>Move selected object to grid.</string>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="text">
+             <string>Drop to Grid</string>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="b002">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>40</y>
+              <width>111</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>19</height>
+             </size>
             </property>
             <property name="maximumSize">
              <size>
@@ -991,53 +1043,6 @@
               <width>18</width>
               <height>18</height>
              </size>
-            </property>
-           </widget>
-          </widget>
-         </item>
-         <item>
-          <widget class="QGroupBox" name="AlignToGrid">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>36</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>111</width>
-             <height>999</height>
-            </size>
-           </property>
-           <property name="title">
-            <string>Align To Grid</string>
-           </property>
-           <widget class="QToolButton_" name="tb000">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>15</y>
-              <width>111</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Move selected object to grid.</string>
-            </property>
-            <property name="layoutDirection">
-             <enum>Qt::LeftToRight</enum>
-            </property>
-            <property name="text">
-             <string>Drop to Grid</string>
             </property>
            </widget>
           </widget>

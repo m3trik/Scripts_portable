@@ -318,6 +318,14 @@ class StyleSheet():
 
 		}
 
+		QCheckBox::enabled {
+			color: {COLOR_TEXT1};
+		}
+
+		QCheckBox::disabled {
+			color: {COLOR_TEXT3};
+		}
+
 		QCheckBox::indicator {
 			width: 6px;
 			height: 6px;

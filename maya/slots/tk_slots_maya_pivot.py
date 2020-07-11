@@ -68,11 +68,10 @@ class Pivot(Init):
 		Reset Pivot
 		'''
 		tb = self.currentUi.tb000
-		if not tb.containsMenuItems:
+		if state is 'setMenu':
 			tb.add('QCheckBox', setText='Reset Pivot Position', setObjectName='chk000', setChecked=True, setToolTip='')
 			tb.add('QCheckBox', setText='Reset Pivot Orientation', setObjectName='chk001', setChecked=True, setToolTip='')
-			if state is 'setMenu':
-				return
+			return
 
 		resetPivotPosition = tb.chk000.isChecked() #Reset Pivot Position
 		resetPivotOrientation = tb.chk001.isChecked() #Reset Pivot Orientation

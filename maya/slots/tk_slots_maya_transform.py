@@ -80,14 +80,14 @@ class Transform(Init):
 					cmb.setCurrentIndex(0)
 					return 'Error: Nothing Selected.'
 				pm.makeLive(selection[0]) #construction planes, nurbs surfaces and polygon meshes can be made live. makeLive supports one live object at a time.
-				self.viewPortMessage('{0}:<hl>makeLive: On</hl>'.format(selection[0].name()))
+				self.viewPortMessage('Make Live: <hl>On</hl> {0}'.format(selection[0].name()))
 				self._makeLiveState = True
 		else:
 			pm.xformConstraint(type='none') #pm.manipMoveSetXformConstraint(none=True);
 			if hasattr(self, '_makeLiveState') and self._makeLiveState:
 				pm.makeLive(none=True)
 				self._makeLiveStat = False
-				self.viewPortMessage('{0}:<hl>makeLive: Off</hl>'.format(obj))
+				self.viewPortMessage('Make Live: <hl>Off</hl>')
 
 
 	def chk005(self):
@@ -122,13 +122,12 @@ class Transform(Init):
 
 	def chk010(self):
 		'''
-		Align: Auto Align
-
+		Align Vertices: Auto Align
 		'''
 		if self.parentUi.chk010.isChecked():
-			self.toggleWidgets(setDisabled='b029-31')
+			self.toggleWidgets(setDisabled='chk029-31')
 		else:
-			self.toggleWidgets(setEnabled='b029-31')
+			self.toggleWidgets(setEnabled='chk029-31')
 
 
 	def transformChecks(self):
@@ -183,12 +182,11 @@ class Transform(Init):
 		Drop To Grid
 		'''
 		tb = self.currentUi.tb000
-		if not tb.containsMenuItems:
+		if state is 'setMenu':
 			tb.add('QCheckBox', setText='Move to Origin', setObjectName='chk014', setChecked=True, setToolTip='Move to origin (xyz 0,0,0).')
 			tb.add('QCheckBox', setText='Use Lowest Point', setObjectName='chk015', setToolTip='Use Lowest bounding box point (else mid point).')
 			tb.add('QCheckBox', setText='Center Pivot', setObjectName='chk016', setChecked=True, setToolTip='Center pivot on objects bounding box.')
-			if state is 'setMenu':
-				return
+			return
 
 		origin = tb.chk014.isChecked()
 		bBoxLowestPoint = tb.chk015.isChecked()
@@ -244,16 +242,15 @@ class Transform(Init):
 		Auto Align finds the axis with the largest variance, and set the axis checkboxes accordingly before performing a regular align.
 		'''
 		tb = self.currentUi.tb001
-		if not tb.containsMenuItems:
-			tb.add('QCheckBox', setText='X Axis', setObjectName='chk029', setToolTip='Align X axis')
-			tb.add('QCheckBox', setText='Y Axis', setObjectName='chk030', setToolTip='Align Y axis')
-			tb.add('QCheckBox', setText='Z Axis', setObjectName='chk031', setToolTip='Align Z axis')
+		if state is 'setMenu':
+			tb.add('QCheckBox', setText='X Axis', setObjectName='chk029', setDisabled=True, setToolTip='Align X axis')
+			tb.add('QCheckBox', setText='Y Axis', setObjectName='chk030', setDisabled=True, setToolTip='Align Y axis')
+			tb.add('QCheckBox', setText='Z Axis', setObjectName='chk031', setDisabled=True, setToolTip='Align Z axis')
 			tb.add('QCheckBox', setText='Align Loop', setObjectName='chk007', setToolTip='Align entire edge loop from selected edge(s).')
 			tb.add('QCheckBox', setText='Average', setObjectName='chk006', setChecked=True, setToolTip='Align to last selected object or average.')
 			tb.add('QCheckBox', setText='Auto Align', setObjectName='chk010', setChecked=True, setToolTip='')
 			tb.add('QCheckBox', setText='Auto Align: Two Axes', setObjectName='chk011', setToolTip='')
-			if state is 'setMenu':
-				return
+			return
 
 		if tb.chk010.isChecked(): #Auto Align: if checked; set coordinates for auto align:
 			sel = pm.ls(selection=1)

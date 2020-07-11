@@ -108,7 +108,7 @@ class Crease(Init):
 		Crease
 		'''
 		tb = self.currentUi.tb000
-		if not tb.containsMenuItems:
+		if state is 'setMenu':
 			tb.add('QSpinBox', setPrefix='Crease Amount: ', setObjectName='s003', minMax_='0-10 step1', setValue=10, setToolTip='Crease amount 0-10. Overriden if "max" checked.')
 			tb.add('QCheckBox', setText='Toggle Max', setObjectName='chk003', setToolTip='Toggle crease amount from it\'s current value to the maximum amount.')
 			tb.add('QCheckBox', setText='Un-Crease', setObjectName='chk002', setToolTip='Un-crease selected components or If in object mode, uncrease all.')
@@ -120,8 +120,7 @@ class Crease(Init):
 			tb.add('QSpinBox', setPrefix='Auto Crease: high: ', setObjectName='s006', minMax_='0-180 step1', setValue=95, setToolTip='Auto crease: max angle constraint.')
 			
 			self.toggleWidgets(tb, setDisabled='s005,s006')
-			if state is 'setMenu':
-				return
+			return
 
 		creaseAmount = int(tb.s003.value())
 		normalAngle = int(tb.s004.value())

@@ -59,7 +59,7 @@ class Edit(Init):
 		Mesh Cleanup
 		'''
 		tb = self.currentUi.tb000
-		if not tb.containsMenuItems:
+		if state is 'setMenu':
 			tb.add('QCheckBox', setText='All Geometry', setObjectName='chk005', setToolTip='Clean All scene geometry.')
 			tb.add('QCheckBox', setText='Repair', setObjectName='chk004', setToolTip='Repair matching geometry. (else: select)')
 			tb.add('QCheckBox', setText='N-Gons', setObjectName='chk002', setChecked=True, setToolTip='Find N-gons.')
@@ -77,8 +77,7 @@ class Edit(Init):
 			tb.add('QDoubleSpinBox', setPrefix='Edge Length Tolerance: ', setObjectName='s007', minMax_='0.0-10 step.001', setValue=0.001, setToolTip='Tolerance for edge length.')
 			tb.add('QCheckBox', setText='Zero UV Face Area', setObjectName='chk015', setToolTip='Check for 0 uv face area.')
 			tb.add('QDoubleSpinBox', setPrefix='UV Face Area Tolerance:', setObjectName='s008', minMax_='0.0-10 step.001', setValue=0.001, setToolTip='Tolerance for uv face areas.')
-			if state is 'setMenu':
-				return
+			return
 
 		allMeshes = int(tb.chk005.isChecked()) #[0] All selectable meshes
 		selectOnly = int(not tb.chk004.isChecked())+1 #[1] Only perform a selection [0:clean, 1:select and clean, 2:select]
@@ -116,12 +115,11 @@ class Edit(Init):
 		Delete History
 		'''
 		tb = self.currentUi.tb001
-		if not tb.containsMenuItems:
+		if state is 'setMenu':
 			tb.add('QCheckBox', setText='All', setObjectName='chk018', setChecked=True, setToolTip='Delete history on All objects.')
 			tb.add('QCheckBox', setText='Delete Unused Nodes', setObjectName='chk019', setChecked=True, setToolTip='Delete unused nodes.')
 			tb.add('QCheckBox', setText='Delete Deformers', setObjectName='chk020', setToolTip='Delete deformers.')
-			if state is 'setMenu':
-				return
+			return
 
 		all_ = tb.chk018.isChecked()
 		unusedNodes = tb.chk019.isChecked()
@@ -159,10 +157,9 @@ class Edit(Init):
 		Delete 
 		'''
 		tb = self.currentUi.tb002
-		if not tb.containsMenuItems:
+		if state is 'setMenu':
 			tb.add('QCheckBox', setText='Delete Loop', setObjectName='chk001', setToolTip='Delete the entire edge loop of any components selected.')
-			if state is 'setMenu':
-				return
+			return
 
 		selectionMask = pm.selectMode (query=True, component=True)
 		maskVertex = pm.selectType (query=True, vertex=True)
@@ -196,15 +193,14 @@ class Edit(Init):
 		Delete Along Axis
 		'''
 		tb = self.currentUi.tb003
-		if not tb.containsMenuItems:
+		if state is 'setMenu':
 			tb.add('QCheckBox', setText='-', setObjectName='chk006', setChecked=True, setToolTip='Perform delete along negative axis.')
 			tb.add('QRadioButton', setText='X', setObjectName='chk007', setChecked=True, setToolTip='Perform delete along X axis.')
 			tb.add('QRadioButton', setText='Y', setObjectName='chk008', setToolTip='Perform delete along Y axis.')
 			tb.add('QRadioButton', setText='Z', setObjectName='chk009', setToolTip='Perform delete along Z axis.')
 
 			self.connect_('chk006-9', 'toggled', self.chk006_9, tb)
-			if state is 'setMenu':
-				return
+			return
 
 		selection = pm.ls(sl=1, objectsOnly=1)
 		axis = self.getAxisFromCheckBoxes('chk006-9', tb)

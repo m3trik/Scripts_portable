@@ -129,11 +129,10 @@ class Materials(Init):
 		Select By: Material Id
 		'''
 		tb = self.currentUi.tb000
-		if not tb.containsMenuItems:
+		if state is 'setMenu':
 			tb.add('QRadioButton', setText='Shell', setObjectName='chk005', setToolTip='Select entire shell.')
 			tb.add('QRadioButton', setText='Invert', setObjectName='chk006', setToolTip='Invert Selection.')
-			if state is 'setMenu':
-				return
+			return
 
 		shell = tb.chk005.isChecked() #Select by material: shell
 		invert = tb.chk006.isChecked() #Select by material: invert
@@ -149,13 +148,12 @@ class Materials(Init):
 		Stored Material Options
 		'''
 		tb = self.currentUi.tb001
-		if not tb.containsMenuItems:
+		if state is 'setMenu':
 			tb.add('QRadioButton', setText='All Scene Materials', setObjectName='chk000', setChecked=True, setToolTip='List all scene materials.') #Material mode: Stored Materials
 			tb.add('QRadioButton', setText='ID Map Materials', setObjectName='chk001', setToolTip='List ID map materials.') #Material mode: ID Map Materials
 
 			self.connect_([tb.chk000, tb.chk001], 'toggled', [self.cmb002, self.tb001])
-			if state is 'setMenu':
-				return
+			return
 
 		if tb.chk000.isChecked():
 			self.parentUi.group000.setTitle(tb.chk000.text())
@@ -169,11 +167,10 @@ class Materials(Init):
 		Assign Material
 		'''
 		tb = self.currentUi.tb002
-		if not tb.containsMenuItems:
+		if state is 'setMenu':
 			tb.add('QRadioButton', setText='Current Material', setObjectName='chk007', setChecked=True, setToolTip='Re-Assign the current stored material.')
 			tb.add('QRadioButton', setText='New Random Material', setObjectName='chk008', setToolTip='Assign a new random ID material.')
-			if state is 'setMenu':
-				return
+			return
 
 		selection = rt.selection
 
@@ -311,7 +308,7 @@ class Materials(Init):
 		self.parentUi.tb001.chk000.setChecked(True) #set the combobox to show all scene materials
 		cmb = self.parentUi.cmb002
 		self.cmb002() #refresh the combobox
-		cmb.setCurrentIndex(cmb.items().index(mat.name))
+		cmb.setCurrentIndex(cmb.items.index(mat.name))
 
 
 	@Slots.message
