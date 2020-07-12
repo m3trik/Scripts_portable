@@ -293,15 +293,14 @@ class EventFactoryFilter(QtCore.QObject):
 		elif self.widgetName=='info':
 			self.resizeAndCenterWidget(self.widget)
 
-		if self.derivedType=='QComboBox':
-			if callable(self.classMethod):
-				try:
-					self.classMethod()
-				except (AttributeError, NameError) as error:
-					print(self.name, self.widgetName, error)
+		if self.widgetType in ['QComboBox', 'QTreeWidget_ExpandableList']:
+			try:
+				self.classMethod()
+			except (AttributeError, NameError, TypeError) as error:
+				print(self.name, self.widgetName, error)
 
-		if self.widgetType=='QTreeWidget_ExpandableList':
-			self.addWidgets(self.name, self.widget.newWidgets) #removeWidgets=self.widget._gcWidgets.keys()
+			if self.widgetType=='QTreeWidget_ExpandableList':
+				self.addWidgets(self.name, self.widget.newWidgets) #removeWidgets=self.widget._gcWidgets.keys()
 
 
 	def hideEvent(self, event):

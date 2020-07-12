@@ -24,14 +24,14 @@ class Cameras(Init):
 		if not hasattr(self, '_clippingMenu'):
 			self._clippingMenu = QMenu_(self.parentUi, position='cursorPos')
 
-			self._clippingMenu.add('QPushButton', setText='Auto Clip', setObjectName='b000', setCheckable=True, setToolTip='When Auto Clip is ON, geometry closer to the camera than 3 units is not displayed. Turn OFF to manually define.')
+			self._clippingMenu.add('QPushButton', setText='Auto Clip', setObjectName='chk000', setCheckable=True, setToolTip='When Auto Clip is ON, geometry closer to the camera than 3 units is not displayed. Turn OFF to manually define.')
 			self._clippingMenu.add('QDoubleSpinBox', setPrefix='Far Clip:  ', setObjectName='s000', minMax_='.01-10 step.1', setToolTip='Adjust the current cameras near clipping plane.')
 			self._clippingMenu.add('QSpinBox', setPrefix='Near Clip: ', setObjectName='s001', minMax_='10-10000 step1', setToolTip='Adjust the current cameras far clipping plane.')
 
 		#set widget states for the current activeCamera
 		activeCamera = self.getCurrentCam()
 		if not activeCamera:
-			self.toggleWidgets(self._clippingMenu, setDisabled='s000-1,b000')
+			self.toggleWidgets(self._clippingMenu, setDisabled='s000-1,chk000')
 		elif pm.viewClipPlane(activeCamera, query=1, autoClipPlane=1): #if autoClipPlane is active:
 			self._clippingMenu.chk000.setChecked(True)
 			self.toggleWidgets(self._clippingMenu, setDisabled='s000-1')
@@ -45,7 +45,7 @@ class Cameras(Init):
 
 
 	@Slots.message
-	def b000(self):
+	def chk000(self):
 		'''
 		Camera Clipping: Auto Clip
 		'''
@@ -97,7 +97,7 @@ class Cameras(Init):
 			tree.expandOnHover = True
 			tree.convert(tree.getTopLevelItems(), 'QLabel') #construct the tree using the existing contents.
 
-			l = []
+			l = ['Camera Sequencer', 'Camera Set Editor']
 			[tree.add('QLabel', 'Editors', setText=s) for s in l]
 			return
 
@@ -112,15 +112,11 @@ class Cameras(Init):
 			except AttributeError:
 				non_startup_cameras=[]
 			[tree.add('QLabel', 'Cameras', refresh=True, setText=s) for s in non_startup_cameras]
-
-			l = ['Camera Sequencer', 'Camera Set Editor']
-			[tree.add('QLabel', 'Editors', setText=s) for s in l]
 			return
 
 		widget = tree.getWidget(wItem, column)
 		text = tree.getWidgetText(wItem, column)
 		header = tree.getHeaderFromColumn(column)
-		print(header, text, column)
 
 		if header=='Create':
 			if text=='Custom Camera':
@@ -128,7 +124,7 @@ class Cameras(Init):
 			if text=='Set Custom Camera':
 				mel.eval('string $homeName = `cameraView -camera persp`;') #cameraView -edit -camera persp -setCamera $homeName;
 			if text=='Camera From View':
-				print('No Maya Version')
+				Cameras.createCameraFromView()
 
 		if header=='Cameras':
 			pm.select(text)
@@ -343,7 +339,7 @@ class Cameras(Init):
 		'''
 		Toggle display of the film gate for the current camera.
 		'''
-		camera = self.getCurrentCam()
+		camera = Cameras.getCurrentCam()
 
 		state = pm.camera(camera, query=1, displayResolution=1)
 		if state:
@@ -365,6 +361,27 @@ class Cameras(Init):
 		view.getCamera(cam)
 		camPath = cam.fullPathName()
 		return camPath
+
+
+	@staticmethod
+	def createCameraFromView():
+		'''
+		Create a new camera base on the current view.
+		'''
+		curPanel = str(pm.getPanel(wf=1))
+		if pm.getPanel(typeOf=curPanel) == "modelPanel":
+			camera = str(pm.modelPanel(curPanel, q=1, cam=1))
+			newCameras = pm.duplicate(camera)
+			newCamera = newCameras[0]
+			pm.showHidden(newCamera)
+			pm.mel.lookThroughModelPanel(newCamera, curPanel)
+
+
+
+
+
+
+
 
 
 #module name

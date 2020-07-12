@@ -25,17 +25,17 @@ class Tk(QtWidgets.QStackedWidget):
 	args:
 		parent (obj) = the main application's top level window.
 	'''
-	def __init__(self, parent=None):
+	def __init__(self, parent=None, preventHide=False, key_show=QtCore.Qt.Key_F12):
 		super(Tk, self).__init__(parent)
+
+		self.key_show = key_show
+		self.preventHide = preventHide
 
 		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint)
 		self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 		self.setAttribute(QtCore.Qt.WA_SetStyle) #Indicates that the widget has a style of its own.
 
 		QtWidgets.QApplication.instance().focusChanged.connect(self.focusChanged)
-
-		self.key_show = QtCore.Qt.Key_F12
-		self.preventHide = False
 
 		self.sb = Switchboard(self)
 		self.sb.setMainAppWindow(self.parent())
@@ -271,6 +271,7 @@ class Tk(QtWidgets.QStackedWidget):
 			new (obj) = The current widget with focus.
 		'''
 		if not self.isActiveWindow():
+
 			self.hide()
 
 
