@@ -51,7 +51,7 @@ class Crease(Init):
 			return
 
 		if index>0:
-			if index==items.index('Crease Set Editor'):
+			if index==cmb.items.index('Crease Set Editor'):
 				from maya.app.general import creaseSetEditor
 				creaseSetEditor.showCreaseSetEditor()
 

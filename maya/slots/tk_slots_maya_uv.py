@@ -52,7 +52,7 @@ class Uv(Init):
 				mel.eval('pfxUVLinkingEditor;')
 			elif index==7: #UV Linking: Hair/UV
 				mel.eval('hairUVLinkingEditor;')
-			elif index==items.index('Flip UV'):
+			elif index==cmb.items.index('Flip UV'):
 				mel.eval("performPolyForceUV flip 1;")
 			cmb.setCurrentIndex(0)
 

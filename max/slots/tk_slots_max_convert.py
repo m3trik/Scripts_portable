@@ -53,45 +53,45 @@ class Convert(Init):
 			return
 
 		if index>0:
-			if index==items.index('NURBS to Polygons'): #index 1
+			if index==cmb.items.index('NURBS to Polygons'): #index 1
 				mel.eval('performnurbsToPoly 0;')
-			elif index==items.index('NURBS to Subdiv'): #index 2
+			elif index==cmb.items.index('NURBS to Subdiv'): #index 2
 				mel.eval('performSubdivCreate 0;')
-			elif index==items.index('Polygons to Subdiv'): #index 3
+			elif index==cmb.items.index('Polygons to Subdiv'): #index 3
 				mel.eval('performSubdivCreate 0;')
-			elif index==items.index('Smooth Mesh Preview to Polygons'): #index 4
+			elif index==cmb.items.index('Smooth Mesh Preview to Polygons'): #index 4
 				mel.eval('performSmoothMeshPreviewToPolygon;')
-			elif index==items.index('Polygon Edges to Curve'): #index 5
+			elif index==cmb.items.index('Polygon Edges to Curve'): #index 5
 				mel.eval('polyToCurve -form 2 -degree 3 -conformToSmoothMeshPreview 1;')
-			elif index==items.index('Type to Curves'): #index 6
+			elif index==cmb.items.index('Type to Curves'): #index 6
 				mel.eval('convertTypeCapsToCurves;')
-			elif index==items.index('Subdiv to Polygons'): #index 7
+			elif index==cmb.items.index('Subdiv to Polygons'): #index 7
 				mel.eval('performSubdivTessellate  false;')
-			elif index==items.index('Subdiv to NURBS'): #index 8
+			elif index==cmb.items.index('Subdiv to NURBS'): #index 8
 				mel.eval('performSubdToNurbs 0;')
-			elif index==items.index('NURBS Curve to Bezier'): #index 9
+			elif index==cmb.items.index('NURBS Curve to Bezier'): #index 9
 				mel.eval('nurbsCurveToBezier;')
-			elif index==items.index('Bezier Curve to NURBS'): #index 10
+			elif index==cmb.items.index('Bezier Curve to NURBS'): #index 10
 				mel.eval('bezierCurveToNurbs;')
-			elif index==items.index('Paint Effects to NURBS'): #index 11
+			elif index==cmb.items.index('Paint Effects to NURBS'): #index 11
 				mel.eval('performPaintEffectsToNurbs  false;')
-			elif index==items.index('Paint Effects to Curves'): #index 12
+			elif index==cmb.items.index('Paint Effects to Curves'): #index 12
 				mel.eval('performPaintEffectsToCurve  false;')
-			elif index==items.index('Texture to Geometry'): #index 13
+			elif index==cmb.items.index('Texture to Geometry'): #index 13
 				mel.eval('performTextureToGeom 0;')
-			elif index==items.index('Displacement to Polygons'): #index 14
+			elif index==cmb.items.index('Displacement to Polygons'): #index 14
 				mel.eval('displacementToPoly;')
-			elif index==items.index('Displacement to Polygons with History'): #index 15
+			elif index==cmb.items.index('Displacement to Polygons with History'): #index 15
 				mel.eval('setupAnimatedDisplacement;')
-			elif index==items.index('Fluid to Polygons'): #index 16
+			elif index==cmb.items.index('Fluid to Polygons'): #index 16
 				mel.eval('fluidToPoly;')
-			elif index==items.index('nParticle to Polygons'): #index 17
+			elif index==cmb.items.index('nParticle to Polygons'): #index 17
 				mel.eval('particleToPoly;')
-			elif index==items.index('Instance to Object'): #index 18
+			elif index==cmb.items.index('Instance to Object'): #index 18
 				mel.eval('convertInstanceToObject;')
-			elif index==items.index('Geometry to Bounding Box'): #index 19
+			elif index==cmb.items.index('Geometry to Bounding Box'): #index 19
 				mel.eval('performGeomToBBox 0;')
-			elif index==items.index('Convert XGen Primitives to Polygons'): #index 20
+			elif index==cmb.items.index('Convert XGen Primitives to Polygons'): #index 20
 				import xgenm.xmaya.xgmConvertPrimToPolygon as cpp
 				cpp.convertPrimToPolygon(False)
 

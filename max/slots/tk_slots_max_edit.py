@@ -33,7 +33,7 @@ class Edit(Init):
 		if not index:
 			index = cmb.currentIndex()
 		if index!=0:
-			if index==items.index(''):
+			if index==cmb.items.index(''):
 				pass
 			cmb.setCurrentIndex(0)
 	

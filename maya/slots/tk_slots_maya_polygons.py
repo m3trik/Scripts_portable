@@ -57,27 +57,27 @@ class Polygons(Init):
 			return
 
 		if index>0:
-			if index==items.index('Extrude'):
+			if index==cmb.items.index('Extrude'):
 				mel.eval("PolyExtrudeOptions;")
-			elif index==items.index('Bevel'):
+			elif index==cmb.items.index('Bevel'):
 				mel.eval('BevelPolygonOptions;')
-			elif index==items.index('Bridge'):
+			elif index==cmb.items.index('Bridge'):
 				mel.eval("BridgeEdgeOptions;")
-			elif index==items.index('Combine'):
+			elif index==cmb.items.index('Combine'):
 				mel.eval('CombinePolygonsOptions;')
-			elif index==items.index('Merge Vertex'):
+			elif index==cmb.items.index('Merge Vertex'):
 				mel.eval('PolyMergeOptions;')
-			elif index==items.index('Offset Edgeloop'):
+			elif index==cmb.items.index('Offset Edgeloop'):
 				mel.eval("DuplicateEdgesOptions;")
-			elif index==items.index('Edit Edgeflow'):
+			elif index==cmb.items.index('Edit Edgeflow'):
 				mel.eval("PolyEditEdgeFlowOptions;")
-			elif index==items.index('Extract Curve'):
+			elif index==cmb.items.index('Extract Curve'):
 				mel.eval('CreateCurveFromPolyOptions;')
-			elif index==items.index('Poke'):
+			elif index==cmb.items.index('Poke'):
 				mel.eval("PokePolygonOptions;")
-			elif index==items.index('Wedge'):
+			elif index==cmb.items.index('Wedge'):
 				mel.eval("WedgePolygonOptions;")
-			elif index==items.index('Assign Invisible'):
+			elif index==cmb.items.index('Assign Invisible'):
 				mel.eval("PolyAssignSubdivHoleOptions;")
 			cmb.setCurrentIndex(0)
 

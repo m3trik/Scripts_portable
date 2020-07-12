@@ -32,6 +32,8 @@ class Tk(QtWidgets.QStackedWidget):
 		self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 		self.setAttribute(QtCore.Qt.WA_SetStyle) #Indicates that the widget has a style of its own.
 
+		QtWidgets.QApplication.instance().focusChanged.connect(self.focusChanged)
+
 		self.key_show = QtCore.Qt.Key_F12
 		self.preventHide = False
 
@@ -41,6 +43,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 		self.childEvents = EventFactoryFilter(self)
 		self.overlay = OverlayFactoryFilter(self) #Paint events are handled by the overlay module.
+
 
 
 	def setUi(self, name='init'):
@@ -167,8 +170,9 @@ class Tk(QtWidgets.QStackedWidget):
 				self.childEvents._mouseGrabber = w1
 
 
+
 	# ------------------------------------------------
-	# 	Event overrides
+	# 	Main widget events
 	# ------------------------------------------------
 	def keyPressEvent(self, event):
 		'''
@@ -181,7 +185,6 @@ class Tk(QtWidgets.QStackedWidget):
 		return QtWidgets.QStackedWidget.keyPressEvent(self, event)
 
 
-
 	def keyReleaseEvent(self, event):
 		'''
 		args:
@@ -191,7 +194,6 @@ class Tk(QtWidgets.QStackedWidget):
 			self.hide()
 
 		return QtWidgets.QStackedWidget.keyReleaseEvent(self, event)
-
 
 
 	def mousePressEvent(self, event):
@@ -218,17 +220,18 @@ class Tk(QtWidgets.QStackedWidget):
 		return QtWidgets.QStackedWidget.mousePressEvent(self, event)
 
 
-
 	def mouseMoveEvent(self, event):
 		'''
 		args:
 			event = <QEvent>
 		'''
+		if not self.key_show:
+			self.hide()
+
 		if self.sb.uiLevel<3:
 			self.childEvents.mouseTracking(self.sb.name)
 
 		return QtWidgets.QStackedWidget.mouseMoveEvent(self, event)
-
 
 
 	def mouseReleaseEvent(self, event):
@@ -240,7 +243,6 @@ class Tk(QtWidgets.QStackedWidget):
 			self.setUi('init')
 
 		return QtWidgets.QStackedWidget.mouseReleaseEvent(self, event)
-
 
 
 	def mouseDoubleClickEvent(self, event):
@@ -260,6 +262,17 @@ class Tk(QtWidgets.QStackedWidget):
 		return QtWidgets.QStackedWidget.mouseDoubleClickEvent(self, event)
 
 
+	def focusChanged(self, old, new):
+		'''
+		Called on focus events.
+
+		args:
+			old (obj) = The previously focused widget.
+			new (obj) = The current widget with focus.
+		'''
+		if not self.isActiveWindow():
+			self.hide()
+
 
 	def hide(self, force=False):
 		'''
@@ -272,7 +285,6 @@ class Tk(QtWidgets.QStackedWidget):
 			super(Tk, self).hide()
 
 
-
 	def hideEvent(self, event):
 		'''
 		args:
@@ -282,7 +294,6 @@ class Tk(QtWidgets.QStackedWidget):
 			sys.exit() #assure that the sys processes are terminated.
 
 		return QtWidgets.QStackedWidget.hideEvent(self, event)
-
 
 
 	def showEvent(self, event):
@@ -305,7 +316,6 @@ class Tk(QtWidgets.QStackedWidget):
 		return QtWidgets.QStackedWidget.showEvent(self, event)
 
 
-
 	def repeatLastCommand(self):
 		'''
 		Repeat the last stored command.
@@ -320,7 +330,6 @@ class Tk(QtWidgets.QStackedWidget):
 			print('Warning: No recent commands in history.')
 
 
-
 	def repeatLastCameraView(self):
 		'''
 		Show the previous camera view.
@@ -333,7 +342,6 @@ class Tk(QtWidgets.QStackedWidget):
 			self.sb.prevCamera(allowCurrent=True, as_list=1).append(cam) #store the camera view
 		else:
 			print('Warning: No recent camera views in history.')
-
 
 
 	def repeatLastUi(self):
