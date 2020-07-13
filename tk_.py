@@ -225,9 +225,6 @@ class Tk(QtWidgets.QStackedWidget):
 		args:
 			event = <QEvent>
 		'''
-		if not self.key_show:
-			self.hide()
-
 		if self.sb.uiLevel<3:
 			self.childEvents.mouseTracking(self.sb.name)
 

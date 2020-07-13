@@ -28,10 +28,8 @@ class Edit(Init):
 		cmb = self.parentUi.cmb000
 		
 		list_ = ['']
-		items = cmb.addItems_(list_, '')
+		cmb.addItems_(list_, '')
 
-		if not index:
-			index = cmb.currentIndex()
 		if index!=0:
 			if index==cmb.items.index(''):
 				pass
