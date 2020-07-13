@@ -269,47 +269,6 @@
           </widget>
          </item>
          <item>
-          <widget class="QGroupBox" name="Save">
-           <property name="minimumSize">
-            <size>
-             <width>111</width>
-             <height>36</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>111</width>
-             <height>999</height>
-            </size>
-           </property>
-           <property name="title">
-            <string>Save</string>
-           </property>
-           <widget class="QToolButton_" name="tb000">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>15</y>
-              <width>111</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Save scene</string>
-            </property>
-            <property name="text">
-             <string>Save</string>
-            </property>
-           </widget>
-          </widget>
-         </item>
-         <item>
           <spacer name="verticalSpacer_2">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
@@ -448,11 +407,6 @@
    <class>QProgressBar_</class>
    <extends>QProgressBar</extends>
    <header>widgets.qprogressbar_.h</header>
-  </customwidget>
-  <customwidget>
-   <class>QToolButton_</class>
-   <extends>QToolButton</extends>
-   <header>widgets.qtoolbutton_.h</header>
   </customwidget>
   <customwidget>
    <class>QComboBox_</class>

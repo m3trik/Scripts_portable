@@ -33,7 +33,7 @@ class Scene(Init):
 		cmb = self.parentUi.cmb000
 
 		if index is 'setMenu':
-			list_ = ['Node Editor', 'Outlinder', 'Content Browser', 'Optimize Scene Size']
+			list_ = ['Node Editor', 'Outlinder', 'Content Browser', 'Optimize Scene Size', 'Prefix Hierarchy Names', 'Search and Replace Names']
 			cmb.addItems_(list_, 'Maya Scene Editors')
 			return
 
@@ -46,6 +46,10 @@ class Scene(Init):
 				mel.eval('ContentBrowserWindow;') #
 			elif index==contents.index('Optimize Scene Size'):
 				mel.eval('cleanUpScene 2;')
+			elif index==contents.index('Prefix Hierarchy Names'):
+				mel.eval('prefixHierarchy;') #Add a prefix to all hierarchy names.
+			elif index==contents.index('Search and Replace Names'):
+				mel.eval('SearchAndReplaceNames;') #performSearchReplaceNames 1; #Rename objects in the scene.
 			cmb.setCurrentIndex(0)
 
 

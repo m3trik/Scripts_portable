@@ -46,7 +46,11 @@ class File(Init):
 		pin = self.parentUi.pin
 
 		if state is 'setMenu':
-			pin.add(QComboBox_, setObjectName='cmb005', setToolTip='3dsMax File Editors')
+			pin.add(QComboBox_, setObjectName='cmb005', setToolTip='')
+			pin.add(QToolButton_, setObjectName='tb000', setText='Save', setToolTip='')
+			pin.add(QLabel_, setObjectName='lbl001', setText='Minimize App', setToolTip='Minimize the main application.')
+			pin.add(QLabel_, setObjectName='lbl002', setText='Maximize App', setToolTip='Restore the main application.')
+			pin.add(QLabel_, setObjectName='lbl003', setText='Close App', setToolTip='Close the main application.')
 			return
 
 
@@ -235,66 +239,104 @@ class File(Init):
 			tb.add('QCheckBox', setText='Quit', setObjectName='chk002', setToolTip='Quit after save.')
 			return
 
-		preSaveScript = ""
-		postSaveScript = ""
+		preSaveScript = ''
+		postSaveScript = ''
 
-		# type_ = "mayaBinary"
-		# if tb.chk003.isChecked(): #toggle ascii/ binary
-		# 	type_ = "mayaAscii" #type: mayaAscii, mayaBinary, mel, OBJ, directory, plug-in, audio, move, EPS, Adobe(R) Illustrator(R)
+		type_ = 'mayaBinary'
+		if tb.chk003.isChecked(): #toggle ascii/ binary
+			type_ = 'mayaAscii' #type: mayaAscii, mayaBinary, mel, OBJ, directory, plug-in, audio, move, EPS, Adobe(R) Illustrator(R)
 
-		# if tb.chk000.isChecked():
-		# 	mel.eval("DisplayWireframe;")
+		if tb.chk000.isChecked():
+			mel.eval('DisplayWireframe;')
 
-		# #get scene name and file path
-		# fullPath = str(mel.eval("file -query -sceneName;")) #ie. O:/Cloud/____Graphics/______project_files/elise.proj/elise.scenes/.maya/elise_mid.009.mb
-		# index = fullPath.rfind("/")+1
-		# curFullName = fullPath[index:] #ie. elise_mid.009.mb
-		# currentPath = fullPath[:index] #ie. O:/Cloud/____Graphics/______project_files/elise.proj/elise.scenes/.maya/
+		#get scene name and file path
+		fullPath = str(mel.eval('file -query -sceneName;')) #ie. O:/Cloud/____Graphics/______project_files/elise.proj/elise.scenes/.maya/elise_mid.009.mb
+		index = fullPath.rfind('/')+1
+		curFullName = fullPath[index:] #ie. elise_mid.009.mb
+		currentPath = fullPath[:index] #ie. O:/Cloud/____Graphics/______project_files/elise.proj/elise.scenes/.maya/
 		
-		# if tb.chk001.isChecked(): #increment filename
-		# 	import re, os, fnmatch, shutil
-		# 	incrementAmount = 5
+		if tb.chk001.isChecked(): #increment filename
+			newName = File.incrementFileName(curFullName)
+			File.deletePreviousFiles(curFullName)
+			pm.saveAs (currentPath+newName, force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
+			print('{0} {1}'.format('Result:', currentPath+newName))
+		else:	#save without renaming
+			pm.saveFile (force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
+			print('{0} {1}'.format('Result:', currentPath+currentName,))
 
-		# 	#remove filetype extention
-		# 	currentName = curFullName[:curFullName.rfind(".")] #name without extension ie. elise_mid.009 from elise_mid.009.mb
-		# 	#rename
-		# 	numExt = re.search(r'\d+$', currentName) #check if the last chars are numberic
-		# 	if numExt is not None:
-		# 		name = currentName[:currentName.rfind('.')] #strip off the number ie. elise_mid from elise_mid.009
-		# 		num = int(numExt.group())+1 #get file number and add 1 ie. 9 becomes 10
-		# 		prefix = '000'[:-len(str(num))]+str(num) #prefix '000' removing zeros according to num length ie. 009 becomes 010
-		# 		newName = name+'.'+prefix #ie. elise_mid.010
+		if tb.chk002.isChecked(): #quit maya
+			import time
+			for timer in range(5):
+				self.viewPortMessage('Shutting Down:<hl>'+str(timer)+'</hl>')
+				time.sleep(timer)
+			mel.eval("quit;")
+			# pm.Quit()
 
-		# 		#delete older files if they exist:
-		# 		oldNum = num-incrementAmount
-		# 		oldPrefix = '000'[:-len(str(oldNum))]+str(oldNum) #prefix the appropriate amount of zeros in front of the old number
-		# 		oldName = name+'.'+oldPrefix #ie. elise_mid.007
-		# 		try: #search recursively through the project folder and delete any old folders with the old filename
-		# 			dir_ =  os.path.abspath(os.path.join(currentPath, "../.."))
-		# 			for root, directories, files in os.walk(dir_):
-		# 				for filename in files:
-		# 					if all([filename==oldName+ext for ext in ('.ma','.ma.swatches','.mb','.mb.swatches')]):
-		# 						try:
-		# 							os.remove(filename)
-		# 						except:
-		# 							pass
-		# 		except OSError:
-		# 			print('{0}{1}{2}'.format("Warning: Delete failed (", currentPath+oldName, ")"))
-		# 			pass
-		# 	else:
-		# 		newName = currentName+".001"
-		# 	pm.saveAs (currentPath+newName, force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
-		# 	print('{0}{1}{2}'.format(" Result: ", currentPath+newName, " "))
-		# else:	#save without renaming
-		# 	pm.saveFile (force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
-		# 	print('{0}{1}{2}'.format(" Result: ", currentPath+currentName, " "))
 
-		# if tb.chk002.isChecked(): #quit
-		# 	import time
-		# 	for timer in range(5):
-		# 		print("Shutting Down:<hl>"+str(timer)+"</hl>")
-		# 		time.sleep(timer)
-		# 	mel.eval("quit;")
+	@staticmethod
+	def incrementFileName(fileName):
+		'''
+		Increment the given file name.
+
+		args:
+			fileName (str) = file name with extension. ie. elise_mid.ma
+
+		returns:
+			(str) incremented name. ie. elise_mid.000.ma
+		'''
+		import re
+
+		#remove filetype extention
+		currentName = fileName[:fileName.rfind('.')] #name without extension ie. elise_mid.009 from elise_mid.009.mb
+		#get file number
+		numExt = re.search(r'\d+$', currentName) #check if the last chars are numberic
+		if numExt is not None:
+			name = currentName[:currentName.rfind('.')] #strip off the number ie. elise_mid from elise_mid.009
+			num = int(numExt.group())+1 #get file number and add 1 ie. 9 becomes 10
+			prefix = '000'[:-len(str(num))]+str(num) #prefix '000' removing zeros according to num length ie. 009 becomes 010
+			newName = name+'.'+prefix #ie. elise_mid.010
+			
+		else:
+			newName = currentName+'.001'
+
+		return newName
+
+
+	@staticmethod
+	def deletePreviousFiles(fileName, numberOfPreviousFiles=5):
+		'''
+		Delete older files.
+
+		args:
+			fileName (str) = file name with extension. ie. elise_mid.ma
+			numberOfPreviousFiles (int) = Number of previous copies to keep.
+		'''
+		import re, os
+
+		#remove filetype extention
+		currentName = fileName[:fileName.rfind('.')] #name without extension ie. elise_mid.009 from elise_mid.009.mb
+		#get file number
+		numExt = re.search(r'\d+$', currentName) #check if the last chars are numberic
+		if numExt is not None:
+			name = currentName[:currentName.rfind('.')] #strip off the number ie. elise_mid from elise_mid.009
+			num = int(numExt.group())+1 #get file number and add 1 ie. 9 becomes 10
+
+			oldNum = num-numberOfPreviousFiles
+			oldPrefix = '000'[:-len(str(oldNum))]+str(oldNum) #prefix the appropriate amount of zeros in front of the old number
+			oldName = name+'.'+oldPrefix #ie. elise_mid.007
+			try: #search recursively through the project folder and delete any old folders with the old filename
+				dir_ =  os.path.abspath(os.path.join(currentPath, "../.."))
+				for root, directories, files in os.walk(dir_):
+					for filename in files:
+						if all([filename==oldName+ext for ext in ('.ma','.ma.swatches','.mb','.mb.swatches')]):
+							try:
+								import os
+								os.remove(filename)
+							except:
+								pass
+			except OSError:
+				print('{0} {1}'.format('Error: Could not delete', currentPath+oldName))
+				pass
 
 
 	def lbl000(self):

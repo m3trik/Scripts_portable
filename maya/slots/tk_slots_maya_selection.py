@@ -125,7 +125,7 @@ class Selection(Init):
 			pm.select(name) # pm.select(name, noExpand=1) #Select The Selection Set Itself (Not Members Of) (noExpand=select set)
 
 
-	def s002(self):
+	def s002(self, value=None):
 		'''
 		Select Island: tolerance x
 		'''
@@ -136,7 +136,7 @@ class Selection(Init):
 			tb.s005.setValue(text)
 
 
-	def s004(self):
+	def s004(self, value=None):
 		'''
 		Select Island: tolerance y
 		'''
@@ -147,7 +147,7 @@ class Selection(Init):
 			tb.s005.setValue(text)
 
 
-	def s005(self):
+	def s005(self, value=None):
 		'''
 		Select Island: tolerance z
 		'''

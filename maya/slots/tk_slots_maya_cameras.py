@@ -61,7 +61,7 @@ class Cameras(Init):
 		pm.viewClipPlane(activeCamera, autoClipPlane=True)
 
 
-	def s000(self):
+	def s000(self, value=None):
 		'''
 		Camera Clipping: Near Clip
 		'''
@@ -74,7 +74,7 @@ class Cameras(Init):
 		pm.viewClipPlane(activeCamera, nearClipPlane=widget.value())
 
 
-	def s001(self):
+	def s001(self, value=None):
 		'''
 		Camera Clipping: Far Clip
 		'''
@@ -99,6 +99,10 @@ class Cameras(Init):
 
 			l = ['Camera Sequencer', 'Camera Set Editor']
 			[tree.add('QLabel', 'Editors', setText=s) for s in l]
+			return
+
+			l = ['Exclusive to Camera', 'Hidden from Camera', 'Remove from Exclusive', 'Remove from Hidden', 'Remove All for Camera', 'Remove All']
+			[tree.add('QLabel', 'Per Camera Visibility', setText=s) for s in l]
 			return
 
 		if not any([wItem, column]): #refresh list items -----------------------------
@@ -135,6 +139,20 @@ class Cameras(Init):
 				mel.eval('SequenceEditor;')
 			if text=='Camera Set Editor':
 				mel.eval('cameraSetEditor;')
+
+		if header=='Per Camera Visibility':
+			if text=='Exclusive to Camera':
+				mel.eval('SetExclusiveToCamera;') #doPerCameraVisibility 0; Make selected objects exclusive to the selected (or current) camera.
+			if text=='Hidden from Camera':
+				mel.eval('SetHiddenFromCamera;') #doPerCameraVisibility 1; Make selected objects hidden from the selected (or current) camera.
+			if text=='Remove from Exclusive':
+				mel.eval('CameraRemoveFromExclusive;') #doPerCameraVisibility 2; Remove selected objects from the selected (or current) camera's exclusive list.
+			if text=='Remove from Hidden':
+				mel.eval('CameraRemoveFromHidden;') #doPerCameraVisibility 3; Remove the selected objects from the selected (or current) camera's hidden list.
+			if text=='Remove All for Camera': #Remove all hidden or exclusive objects for the selected (or current) camera.
+				mel.eval('CameraRemoveAll;') #doPerCameraVisibility 4; 
+			if text=='Remove All':
+				mel.eval('CameraRemoveAllForAll;') #doPerCameraVisibility 5; Remove all hidden or exclusive objects for all cameras.
 
 		if header=='Options':
 			if text=='Group Cameras':

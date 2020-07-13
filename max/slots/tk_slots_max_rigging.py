@@ -104,7 +104,7 @@ class Rigging(Init):
 		# self.parentUi.s000.setValue(pm.jointDisplayScale(query=1, ikfk=1)) #init IKFK display size
 
 
-	def s000(self):
+	def s000(self, value=None):
 		'''
 		Scale Joint/IK/FK
 		'''

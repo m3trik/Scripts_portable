@@ -16,7 +16,7 @@ class Crease(Init):
 
 
 	@Slots.sync
-	def s003(self):
+	def s003(self, value=None):
 		'''
 		Crease Amount
 		Tracks the standard crease amount while toggles such as un-crease, and crease max temporarily change the spinbox value. 

@@ -69,7 +69,7 @@ class Cameras(Init):
 		activeCamera.clipManually(False)
 
 
-	def s000(self):
+	def s000(self, value=None):
 		'''
 		Camera Clipping: Near Clip
 		'''
@@ -82,7 +82,7 @@ class Cameras(Init):
 		activeCamera.nearClip = value
 
 
-	def s001(self):
+	def s001(self, value=None):
 		'''
 		Camera Clipping: Far Clip
 		'''

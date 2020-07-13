@@ -4,6 +4,7 @@ from PySide2 import QtGui
 from widgets.qMenu_ import QMenu_
 from widgets.qLabel_ import QLabel_
 from widgets.qComboBox_ import QComboBox_
+from widgets.qToolButton_ import QToolButton_
 from widgets.qWidget_MultiWidget import QWidget_MultiWidget as MultiWidget
 
 import os

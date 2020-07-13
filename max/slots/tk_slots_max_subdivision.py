@@ -109,7 +109,7 @@ class Subdivision(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def s000(self):
+	def s000(self, value=None):
 		'''
 		Division Level
 		'''
@@ -123,7 +123,7 @@ class Subdivision(Init):
 			except: pass
 
 
-	def s001(self):
+	def s001(self, value=None):
 		'''
 		Tesselation Level
 		'''

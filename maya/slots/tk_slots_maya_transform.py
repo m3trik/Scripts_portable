@@ -90,6 +90,38 @@ class Transform(Init):
 				self.viewPortMessage('Make Live: <hl>Off</hl>')
 
 
+	def cmb002(self, index=None):
+		'''
+		Align To
+		'''
+		cmb = self.parentUi.cmb002
+
+		if index is 'setMenu':
+			list_ = ['Point to Point', '2 Points to 2 Points', '3 Points to 3 Points', 'Align Objects', 'Position Along Curve', 'Align Tool', 'Snap Together Tool', 'Orient to Vertex/Edge Tool']
+			cmb.addItems_(list_, 'Align To')
+			return
+
+		if index>0:
+			if index==cmb.items.index('Point to Point'):
+				mel.eval('SnapPointToPointOptions;') #performSnapPtToPt 1; Select any type of point object or component.
+			elif index==cmb.items.index('2 Points to 2 Points'):
+				mel.eval('Snap2PointsTo2PointsOptions;') #performSnap2PtTo2Pt 1; Select any type of point object or component.
+			elif index==cmb.items.index('3 Points to 3 Points'):
+				mel.eval('Snap3PointsTo3PointsOptions;') #performSnap3PtTo3Pt 1; Select any type of point object or component.
+			elif index==cmb.items.index('Align Objects'):
+				mel.eval('performAlignObjects 1;') #Align the selected objects.
+			elif index==cmb.items.index('Position Along Curve'):
+				mel.eval('PositionAlongCurve;') #Position selected objects along a selected curve.
+				# import maya.app.general.positionAlongCurve
+				# maya.app.general.positionAlongCurve.positionAlongCurve()
+			elif index==cmb.items.index('Align Tool'):
+				mel.eval('SetAlignTool;') #setToolTo alignToolCtx; Align the selection to the last selected object.
+			elif index==cmb.items.index('Snap Together Tool'):
+				mel.eval('SetSnapTogetherToolOptions;') #setToolTo snapTogetherToolCtx; toolPropertyWindow;) Snap two objects together.
+			elif index==cmb.items.index('Orient to Vertex/Edge Tool'):
+				mel.eval('orientToTool;') #Orient To Vertex/Edge
+
+
 	def chk005(self):
 		'''
 		Transform: Scale
@@ -417,54 +449,6 @@ class Transform(Init):
 
 		'''
 		mel.eval("BakeCustomPivot;")
-
-
-	def b018(self):
-		'''
-		Snap Align Objects: Align Objects
-
-		'''
-		mel.eval("performAlignObjects 1;")
-
-
-	def b022(self):
-		'''
-		Align Tool
-
-		'''
-		mel.eval("setToolTo alignToolCtx;")
-
-
-	def b023(self):
-		'''
-		Orient To Vertex/Edge
-
-		'''
-		mel.eval("orientToTool;")
-
-
-	def b024(self):
-		'''
-		Snap To Component
-
-		'''
-		mel.eval("bt_snapAlignObjectToComponent;")
-
-
-	def b025(self):
-		'''
-		Snap Together
-
-		'''
-		mel.eval("setToolTo snapTogetherToolCtx;")
-
-
-	def b026(self):
-		'''
-		Maya Bonus Tools: Snap Align Objects To Component Options
-
-		'''
-		mel.eval("bt_snapAlignObjectToComponentOptions;")
 
 
 	def b032(self):
