@@ -9,14 +9,12 @@ class Main(Init):
 	def __init__(self, *args, **kwargs):
 		super(Main, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('main')
-
 
 	def tree000(self, wItem=None, column=None):
 		'''
 
 		'''
-		tree = self.parentUi.tree000
+		tree = self.main.tree000
 
 		if wItem is 'setMenu':
 			tree.expandOnHover = True
@@ -24,8 +22,8 @@ class Main(Init):
 			return
 
 		if not any([wItem, column]): #refresh list items -----------------------------
-			recentCommandNames = self.sb.prevCommand(docString=1, as_list=1) #Get a list of any recent command names
-			[tree.add('QLabel', 'Recent Commands', refresh=True, setText=s) for s in recentCommandNames]
+			recentCommandInfo = self.sb.prevCommand(docString=1, toolTip=1, as_list=1) #Get a list of any recent command names and their toolTips
+			[tree.add('QLabel', 'Recent Commands', refresh=True, setText=s[0], setToolTip=s[1]) for s in recentCommandInfo]
 
 			# l = []
 			# [tree.add('QLabel', '', setText=s) for s in l]

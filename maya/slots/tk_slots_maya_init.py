@@ -31,9 +31,6 @@ class Init(Slots):
 	def __init__(self, *args, **kwargs):
 		super(Init, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('init')
-		self.childUi = self.sb.getUi('init_submenu')
-
 
 	def info(self):
 		'''
@@ -100,6 +97,17 @@ class Init(Slots):
 
 
 
+	@staticmethod
+	def loadPlugin(plugin):
+		'''
+		Loads A Plugin.
+		
+		args:
+			plugin (str) = The desired plugin to load.
+
+		ex. loadPlugin('nearestPointOnMesh')
+		'''
+		not cmds.pluginInfo(plugin, query=True, loaded=True) and cmds.loadPlugin(plugin)
 
 
 	# ------------------------------------------------
@@ -213,7 +221,6 @@ class Init(Slots):
 			return list(face for face in pm.filterExpand(obj+'.f[*]', sm=34) if pm.exactWorldBoundingBox(face)[i] > -0.00001)
 
 
-
 	@staticmethod
 	def getBorderEdgeFromFace(faces=None):
 		'''
@@ -243,7 +250,6 @@ class Init(Slots):
 						break
 
 		return borderEdges
-
 
 
 	@staticmethod
@@ -279,6 +285,63 @@ class Init(Slots):
 
 		return paths
 
+
+	@staticmethod
+	def getVectorLength(x, y):
+		'''
+		Get the Magnitude of a Vector.
+
+		args:
+			x (tuple) = Point X.
+			y (tuple) = Point Y.
+
+		returns:
+			(float) Magnitude Of The Vector.
+		'''
+		import math
+		dX = x[0] - y[0]
+		dY = x[1] - y[1]
+		dZ = x[2] - y[2]
+
+		length = math.sqrt( dX * dX + dY * dY + dZ * dZ )
+
+		return length
+
+
+	@staticmethod
+	def getClosestVerts(set1, set2, tolerance=10000):
+		'''
+		Get the two closest vertices between the two sets of vertices.
+
+		args:
+			set1 (obj)(set) = vertex/Vertices.
+			set2 (set) = Vertices.
+			tolerance (int) = Maximum search distance.
+
+		returns:
+			(set) closest vertex pair (<vertex from set1>, <vertex from set2>).
+		'''
+		if not isinstance(set1, (list, tuple, set)):
+			set1 = (set1)
+
+		verticesAndPositions1 = {v:pm.pointPosition(v, world=1) for v in set1}
+		verticesAndPositions2 = {v:pm.pointPosition(v, world=1) for v in set2}
+
+		closestDistance = 2**32-1
+
+		closestVerts=None
+		closestPosition=[]
+		for v1, v1Pos in verticesAndPositions1.items():
+			for v2, v2Pos in verticesAndPositions2.items(): 
+				distance = Init.getVectorLength(v1Pos, v2Pos)
+
+				if distance < closestDistance:
+					closestDistance = distance
+					closestPosition = v2Pos
+					if closestDistance < tolerance:
+						closestVerts = (v1, v2)
+
+		return closestVerts
 
 
 	@staticmethod
@@ -354,7 +417,6 @@ class Init(Slots):
 		pm.undoInfo (closeChunk=True)
 
 
-
 	@staticmethod
 	def getComponentPoint(component, alignToNormal=False):
 		'''
@@ -401,7 +463,6 @@ class Init(Slots):
 		z = vertexPoint [2::3]
 
 		return list(round(sum(x) / float(len(x)),4), round(sum(y) / float(len(y)),4), round(sum(z) / float(len(z)),4))
-
 
 
 	@staticmethod

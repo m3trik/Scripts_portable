@@ -9,9 +9,6 @@ class Polygons(Init):
 	def __init__(self, *args, **kwargs):
 		super(Polygons, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('polygons')
-		self.childUi = self.sb.getUi('polygons_submenu')
-
 
 	def chk008(self):
 		'''
@@ -38,7 +35,7 @@ class Polygons(Init):
 		'''
 		Context menu
 		'''
-		pin = self.parentUi.pin
+		pin = self.polygons.pin
 
 		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
@@ -49,7 +46,7 @@ class Polygons(Init):
 		'''
 		Maya Polygon Operations
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.polygons.cmb000
 
 		if index is 'setMenu':
 			list_ = ['Extrude','Bevel','Bridge','Combine','Merge Vertex','Offset Edgeloop','Edit Edgeflow','Extract Curve','Poke','Wedge','Assign Invisible']
@@ -87,7 +84,7 @@ class Polygons(Init):
 		'''
 		Merge Vertices
 		'''
-		tb = self.currentUi.tb000
+		tb = self.ui.tb000
 		if state is 'setMenu':
 			tb.add('QDoubleSpinBox', setPrefix='Distance: ', setObjectName='s002', minMax_='0.000-10 step.001', setValue=0.001, setToolTip='Merge Distance.')
 			return
@@ -104,7 +101,7 @@ class Polygons(Init):
 
 			else: #if object mode. merge all vertices on the selected object.
 				for n, obj in enumerate(selection):
-					if not self.parentUi.progressBar.step(n, len(selection)): #register progress while checking for cancellation:
+					if not self.polygons.progressBar.step(n, len(selection)): #register progress while checking for cancellation:
 						break
 
 					# get number of vertices
@@ -125,9 +122,9 @@ class Polygons(Init):
 		'''
 		Bridge
 		'''
-		tb = self.currentUi.tb001
+		tb = self.ui.tb001
 		if state is 'setMenu':
-			tb.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s003', minMax_='0-10000 step1', setValue=1, setToolTip='Subdivision Amount.')
+			tb.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s003', minMax_='0-10000 step1', setValue=0, setToolTip='Subdivision Amount.')
 			return
 
 		divisions = tb.s003.value()
@@ -143,7 +140,7 @@ class Polygons(Init):
 		'''
 		Combine
 		'''
-		tb = self.currentUi.tb002
+		tb = self.ui.tb002
 		if state is 'setMenu':
 			tb.add('QCheckBox', setText='Merge', setObjectName='chk000', setChecked=True, setToolTip='Combine selected meshes and merge any coincident verts/edges.')
 			return
@@ -159,7 +156,7 @@ class Polygons(Init):
 		'''
 		Extrude
 		'''
-		tb = self.currentUi.tb003
+		tb = self.ui.tb003
 		if state is 'setMenu':
 			tb.add('QCheckBox', setText='Keep Faces Together', setObjectName='chk002', setChecked=True, setToolTip='Keep edges/faces together.')
 			tb.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s004', minMax_='1-10000 step1', setValue=1, setToolTip='Subdivision Amount.')
@@ -180,7 +177,7 @@ class Polygons(Init):
 		'''
 		Bevel (Chamfer)
 		'''
-		tb = self.currentUi.tb004
+		tb = self.ui.tb004
 		if state is 'setMenu':
 			tb.add('QDoubleSpinBox', setPrefix='Width: ', setObjectName='s000', minMax_='0.00-100 step.01', setValue=0.01, setToolTip='Bevel Width.')
 			return
@@ -199,7 +196,7 @@ class Polygons(Init):
 		'''
 		Detach
 		'''
-		tb = self.currentUi.tb005
+		tb = self.ui.tb005
 		if state is 'setMenu':
 			tb.add('QCheckBox', setText='Delete Original', setObjectName='chk007', setChecked=True, setToolTip='Delete original selected faces.')
 			return
@@ -259,7 +256,7 @@ class Polygons(Init):
 		'''
 		Inset Face Region
 		'''
-		tb = self.currentUi.tb006
+		tb = self.ui.tb006
 		if state is 'setMenu':
 			tb.add('QDoubleSpinBox', setPrefix='Offset: ', setObjectName='s001', minMax_='0.00-100 step.01', setValue=2.00, setToolTip='Offset amount.')
 			return
@@ -273,7 +270,7 @@ class Polygons(Init):
 		'''
 		Divide Facet
 		'''
-		tb = self.currentUi.tb007
+		tb = self.ui.tb007
 		if state is 'setMenu':
 			tb.add('QCheckBox', setText='U', setObjectName='chk008', setChecked=True, setToolTip='Divide facet: U coordinate.')
 			tb.add('QCheckBox', setText='V', setObjectName='chk009', setChecked=True, setToolTip='Divide facet: V coordinate.')
@@ -308,7 +305,7 @@ class Polygons(Init):
 		'''
 		Boolean Operation
 		'''
-		tb = self.currentUi.tb008
+		tb = self.ui.tb008
 		if state is 'setMenu':
 			tb.add('QRadioButton', setText='Union', setObjectName='chk011', setToolTip='Fuse two objects together.')
 			tb.add('QRadioButton', setText='Difference', setObjectName='chk012', setChecked=True, setToolTip='Indents one object with the shape of another at the point of their intersection.')
@@ -377,13 +374,6 @@ class Polygons(Init):
 		Multi-Cut Tool
 		'''
 		mel.eval('dR_multiCutTool;')
-
-
-	def b015(self):
-		'''
-		Delete Edgeloop
-		'''
-		mel.eval("bt_polyDeleteEdgeLoopTool;")
 
 
 	def b021(self):

@@ -9,15 +9,12 @@ class File(Init):
 	def __init__(self, *args, **kwargs):
 		super(File, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('file')
-		self.childUi = self.sb.getUi('file_submenu')
-
 
 	def pin(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.parentUi.pin
+		pin = self.file.pin
 
 		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb005', setToolTip='')
@@ -32,14 +29,14 @@ class File(Init):
 		'''
 		Recent Files
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.file.cmb000
 
 		if index is 'setMenu':
 			cmb.addToContext('QPushButton', setObjectName='b001', setText='Last', setToolTip='Open the most recent file.')
 			return
 
-		files = [f for f in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in f]
-		items = cmb.addItems_(files, "Recent Files", clear=True)
+		recentFiles = [f for f in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in f]
+		items = cmb.addItems_(recentFiles, "Recent Files", clear=True)
 
 		if index>0:
 			force=True; force if str(mel.eval("file -query -sceneName -shortName;")) else not force #if sceneName prompt user to save; else force open
@@ -51,7 +48,7 @@ class File(Init):
 		'''
 		Recent Projects
 		'''
-		cmb = self.parentUi.cmb001
+		cmb = self.file.cmb001
 
 		if index is 'setMenu':
 			return
@@ -69,13 +66,22 @@ class File(Init):
 		'''
 		Recent Autosave
 		'''
-		cmb = self.parentUi.cmb002
+		cmb = self.file.cmb002
 
 		if index is 'setMenu':
 			return
 
 		path = os.environ.get('MAYA_AUTOSAVE_FOLDER').split(';')[0] #get autosave dir path from env variable.
-		files = [f for f in os.listdir(path) if f.endswith('.mb') or f.endswith('.ma')] #[file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" in file_]
+		envPathAutosave = [f for f in os.listdir(path) if f.endswith('.mb') or f.endswith('.ma')] #[file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" in file_]
+
+		projectDirPath = pm.workspace(query=1, rd=1) #current project path.
+		try:
+			projectDirAutosave = [f for f in os.listdir(projectDirPath+'/autosave')]
+		except Exception as error:
+			print (error)
+			projectDirAutosave = []
+
+		files = envPathAutosave + projectDirAutosave
 		items = cmb.addItems_(files, "Recent Autosave", clear=True)
 
 		if index>0:
@@ -91,7 +97,7 @@ class File(Init):
 		'''
 		Import
 		'''
-		cmb = self.parentUi.cmb003
+		cmb = self.file.cmb003
 
 		if index is 'setMenu':
 			cmb.addItems_(['Import file', 'Import Options', 'FBX Import Presets', 'Obj Import Presets'], "Import")
@@ -114,7 +120,7 @@ class File(Init):
 		'''
 		Export
 		'''
-		cmb = self.parentUi.cmb004
+		cmb = self.file.cmb004
 
 		if index is 'setMenu':
 			list_ = ['Export Selection', 'Send to Unreal', 'Send to Unity', 'GoZ', 'Send to 3dsMax: As New Scene', 'Send to 3dsMax: Update Current', 
@@ -154,7 +160,7 @@ class File(Init):
 		'''
 		Editors
 		'''
-		cmb = self.parentUi.cmb005
+		cmb = self.file.cmb005
 
 		if index is 'setMenu':
 			list_ = []
@@ -175,7 +181,7 @@ class File(Init):
 		'''
 		Project Folder
 		'''
-		cmb = self.parentUi.cmb006
+		cmb = self.file.cmb006
 
 		if index is 'setMenu':
 			cmb.addToContext(QComboBox_, setObjectName='cmb001', setToolTip='Current project directory root.')
@@ -344,19 +350,6 @@ class File(Init):
 		# pm.quit (force=force, exitcode=exitcode)
 
 
-	def setComboBox(self, comboBox, text):
-		'''
-		Set the given comboBox's index using a text string.
-		args:
-			comboBox (str) = comboBox name (will also be used as the methods name).
-			text (str) = text of the index to switch to.
-		'''
-		cmb = getattr(self.parentUi, comboBox)
-		method = getattr(self, comboBox)
-		cmb.currentIndexChanged.connect(method)
-		cmb.setCurrentIndex(cmb.findText(text))
-
-
 	def b001(self):
 		'''
 		Recent Files: Open Last
@@ -390,10 +383,10 @@ class File(Init):
 		'''
 		Remove String From Object Names.
 		'''
-		from_ = str(self.parentUi.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
-		to = str(self.parentUi.t001.text())
-		replace = self.parentUi.chk004.isChecked()
-		selected = self.parentUi.chk005.isChecked()
+		from_ = str(self.file.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
+		to = str(self.file.t001.text())
+		replace = self.file.chk004.isChecked()
+		selected = self.file.chk005.isChecked()
 
 		objects = pm.ls (from_) #Stores a list of all objects starting with 'from_'
 		if selected:

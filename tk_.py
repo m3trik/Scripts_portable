@@ -5,6 +5,7 @@ import sys, os.path
 
 from tk_switchboard import Switchboard
 from tk_overlay import OverlayFactoryFilter
+from tk_styleSheet import StyleSheet
 from tk_childEvents import EventFactoryFilter
 from widgets.qPushButton_ import QPushButton_
 
@@ -43,6 +44,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 		self.childEvents = EventFactoryFilter(self)
 		self.overlay = OverlayFactoryFilter(self) #Paint events are handled by the overlay module.
+		self.style = StyleSheet(self)
 
 
 

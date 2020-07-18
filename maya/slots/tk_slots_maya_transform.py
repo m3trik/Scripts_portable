@@ -9,19 +9,17 @@ class Transform(Init):
 	def __init__(self, *args, **kwargs):
 		super(Transform, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('transform')
-		self.childUi = self.sb.getUi('transform_submenu')
 
 		#set input masks for text fields
-		# self.parentUi.t000.setInputMask("00.00") #change to allow for neg values
+		# self.transform.t000.setInputMask("00.00") #change to allow for neg values
 
 		try: #component constraints. query and set initial value
 			state = pm.xformConstraint(query=True, type=True)
 			'''
 			if state == 'edge':
-				self.parentUi.cmb001.
+				self.transform.cmb001.
 			if state == 'surface':
-				self.parentUi.cmb001.
+				self.transform.cmb001.
 			'''
 		except NameError:
 			pass
@@ -31,7 +29,7 @@ class Transform(Init):
 		'''
 		Context menu
 		'''
-		pin = self.parentUi.pin
+		pin = self.transform.pin
 
 		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
@@ -42,7 +40,7 @@ class Transform(Init):
 		'''
 		Editors
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.transform.cmb000
 
 		if index is 'setMenu':
 			files = ['']
@@ -62,7 +60,7 @@ class Transform(Init):
 		constrain along normals #checkbox option for edge amd surface constaints
 		setXformConstraintAlongNormal false;
 		'''
-		cmb = self.parentUi.cmb001
+		cmb = self.transform.cmb001
 
 		if index is 'setMenu':
 			list_ = ['Edge', 'Surface', 'Make Live']
@@ -94,7 +92,7 @@ class Transform(Init):
 		'''
 		Align To
 		'''
-		cmb = self.parentUi.cmb002
+		cmb = self.transform.cmb002
 
 		if index is 'setMenu':
 			list_ = ['Point to Point', '2 Points to 2 Points', '3 Points to 3 Points', 'Align Objects', 'Position Along Curve', 'Align Tool', 'Snap Together Tool', 'Orient to Vertex/Edge Tool']
@@ -122,14 +120,97 @@ class Transform(Init):
 				mel.eval('orientToTool;') #Orient To Vertex/Edge
 
 
+	def cmb003(self, index=None):
+		'''
+		Transform Tool Snapping
+		'''
+		cmb = self.transform.cmb003
+
+		if index is 'setMenu':
+			cmb.popupStyle = 'qmenu'
+			try:
+				moveValue = pm.manipMoveContext('Move', q=True, snapValue=True)
+				scaleValue = pm.manipScaleContext('Scale', q=True, snapValue=True)
+				rotateValue = pm.manipRotateContext('Rotate', q=True, snapValue=True)
+
+				list_ = [('chk021', 'Move Snap Off'), ('s021', 'increment:', moveValue, '1-1000 step1'), 
+						('chk022', 'Scale Snap Off'), ('s022', 'increment:', scaleValue, '1-1000 step1'), 
+						('chk023', 'Rotate Snap Off'), ('s023', 'degrees:', rotateValue, '1-360 step1')]
+				widgets = [cmb.add('QCheckBox', setObjectName=i[0], setText=i[1], setTristate=1) if len(i) is 2 
+						else cmb.add('QDoubleSpinBox', setObjectName=i[0], setPrefix=i[1], setValue=i[2], minMax_=i[3], setDisabled=1) for i in list_]
+			except NameError as error:
+				print(error)
+			return
+
+
+	def chk021(self, state=None):
+		'''
+		Transform Tool Snap Settings: Move
+		'''
+		text = {0:'Move Snap Off', 1:'Move Snap Relative', 2:'Move Snap Absolute'}
+		self.transform.chk021.setText(text[state])
+		self.transform.s021.setEnabled(state)
+		pm.manipMoveContext('Move', edit=1, snapRelative=False if state>1 else True)
+
+		cmb = self.transform.cmb003
+		cmb.setCurrentText('Off') if not all((state, cmb.chk022.isChecked(), cmb.chk023.isChecked())) else cmb.setCurrentText('On')
+
+
+	def chk022(self, state=None):
+		'''
+		Transform Tool Snap Settings: Scale
+		'''
+		text = {0:'Scale Snap Off', 1:'Scale Snap Relative', 2:'Scale Snap Absolute'}
+		self.transform.chk022.setText(text[state])
+		self.transform.s022.setEnabled(state)
+		pm.manipScaleContext('Scale', edit=1, snapRelative=False if state>1 else True)
+
+		cmb = self.transform.cmb003
+		cmb.setCurrentText('Off') if not all((state, cmb.chk021.isChecked(), cmb.chk023.isChecked())) else cmb.setCurrentText('On')
+
+
+	def chk023(self, state=None):
+		'''
+		Transform Tool Snap Settings: Rotate
+		'''
+		text = {0:'Rotate Snap Off', 1:'Rotate Snap Relative', 2:'Rotate Snap Absolute'}
+		self.transform.chk023.setText(text[state])
+		self.transform.s023.setEnabled(state)
+		pm.manipRotateContext('Rotate', edit=1, snapRelative=False if state>1 else True)
+
+		cmb = self.transform.cmb003
+		cmb.setCurrentText('Off') if not all((state, cmb.chk021.isChecked(), cmb.chk022.isChecked())) else cmb.setCurrentText('On')
+
+
+	def s021(self, value=None):
+		'''
+		Transform Tool Snap Settings: Spinboxes
+		'''
+		pm.manipMoveContext('Move', edit=1, snapValue=value)
+
+
+	def s022(self, value=None):
+		'''
+		Transform Tool Snap Settings: Spinboxes
+		'''
+		pm.manipScaleContext('Scale', edit=1, snapValue=value)
+
+
+	def s023(self, value=None):
+		'''
+		Transform Tool Snap Settings: Spinboxes
+		'''
+		pm.manipRotateContext('Rotate', edit=1, snapValue=value)
+
+
 	def chk005(self):
 		'''
 		Transform: Scale
 
 		'''
 		self.toggleWidgets(setUnChecked='chk008-9', setChecked='chk000-2')
-		self.parentUi.s000.setValue(2)
-		self.parentUi.s000.setSingleStep(1)
+		self.transform.s000.setValue(2)
+		self.transform.s000.setSingleStep(1)
 
 
 	def chk008(self):
@@ -138,8 +219,8 @@ class Transform(Init):
 
 		'''
 		self.toggleWidgets(setUnChecked='chk005,chk009,chk000-2')
-		self.parentUi.s000.setValue(0.1)
-		self.parentUi.s000.setSingleStep(0.1)
+		self.transform.s000.setValue(0.1)
+		self.transform.s000.setSingleStep(0.1)
 
 
 	def chk009(self):
@@ -148,48 +229,48 @@ class Transform(Init):
 
 		'''
 		self.toggleWidgets(setUnChecked='chk005,chk008,chk000-2')
-		self.parentUi.s000.setValue(45)
-		self.parentUi.s000.setSingleStep(5)
+		self.transform.s000.setValue(45)
+		self.transform.s000.setSingleStep(5)
 
 
 	def chk010(self):
 		'''
 		Align Vertices: Auto Align
 		'''
-		if self.parentUi.chk010.isChecked():
+		if self.transform.chk010.isChecked():
 			self.toggleWidgets(setDisabled='chk029-31')
 		else:
 			self.toggleWidgets(setEnabled='chk029-31')
 
 
 	def transformChecks(self):
-		floatXYZ = float(self.parentUi.s000.text())
+		floatXYZ = float(self.transform.s000.text())
 		floatX=floatY=floatZ = 0
 
-		if self.parentUi.chk005.isChecked():
+		if self.transform.chk005.isChecked():
 			currentScale = pm.xform (query=1, scale=1)
 			floatX = round(currentScale[0], 2)
 			floatY = round(currentScale[1], 2)
 			floatZ = round(currentScale[2], 2)
 
-		if self.parentUi.chk000.isChecked():
+		if self.transform.chk000.isChecked():
 			floatX = floatXYZ
-		if self.parentUi.chk001.isChecked():
+		if self.transform.chk001.isChecked():
 			floatY = floatXYZ
-		if self.parentUi.chk002.isChecked():
+		if self.transform.chk002.isChecked():
 			floatZ = floatXYZ
 
 		xyz = [floatX, floatY, floatZ]
 		return xyz
 
 
-	def transform(self): #transform
-		relative = bool(self.parentUi.chk003.isChecked())#Move absolute/relative toggle
-		worldspace = bool(self.parentUi.chk004.isChecked())#Move object/worldspace toggle
+	def performTransformations(self): #transform
+		relative = bool(self.transform.chk003.isChecked())#Move absolute/relative toggle
+		worldspace = bool(self.transform.chk004.isChecked())#Move object/worldspace toggle
 		xyz = self.transformChecks()
 		
 		#Scale selected.
-		if self.parentUi.chk005.isChecked():
+		if self.transform.chk005.isChecked():
 			if xyz[0] != -1: #negative values are only valid in relative mode and cannot scale relatively by one so prevent the math below which would scale incorrectly in this case.
 				#convert the decimal place system xform uses for negative scale values to an standard negative value
 				if xyz[0] < 0:
@@ -201,11 +282,11 @@ class Transform(Init):
 				pm.xform (relative=relative, worldSpace=worldspace, objectSpace=(not worldspace), scale=(xyz[0], xyz[1], xyz[2]))
 	
 		#Move selected relative/absolute, object/worldspace by specified amount.
-		if self.parentUi.chk008.isChecked():
+		if self.transform.chk008.isChecked():
 			pm.xform (relative=relative, worldSpace=worldspace, objectSpace=(not worldspace), translation=(xyz[0], xyz[1], xyz[2]))
 
 		#Rotate selected
-		if self.parentUi.chk009.isChecked():
+		if self.transform.chk009.isChecked():
 			pm.xform (relative=relative, worldSpace=worldspace, objectSpace=(not worldspace), rotation=(xyz[0], xyz[1], xyz[2]))
 
 
@@ -213,7 +294,7 @@ class Transform(Init):
 		'''
 		Drop To Grid
 		'''
-		tb = self.currentUi.tb000
+		tb = self.ui.tb000
 		if state is 'setMenu':
 			tb.add('QCheckBox', setText='Move to Origin', setObjectName='chk014', setChecked=True, setToolTip='Move to origin (xyz 0,0,0).')
 			tb.add('QCheckBox', setText='Use Lowest Point', setObjectName='chk015', setToolTip='Use Lowest bounding box point (else mid point).')
@@ -273,7 +354,7 @@ class Transform(Init):
 
 		Auto Align finds the axis with the largest variance, and set the axis checkboxes accordingly before performing a regular align.
 		'''
-		tb = self.currentUi.tb001
+		tb = self.ui.tb001
 		if state is 'setMenu':
 			tb.add('QCheckBox', setText='X Axis', setObjectName='chk029', setDisabled=True, setToolTip='Align X axis')
 			tb.add('QCheckBox', setText='Y Axis', setObjectName='chk030', setDisabled=True, setToolTip='Align Y axis')
@@ -366,12 +447,12 @@ class Transform(Init):
 		Transform -
 
 		'''
-		#change the textfield to neg value and call transform
-		textfield = float(self.parentUi.s000.value())
+		#change the textfield to neg value and call performTransformations
+		textfield = float(self.transform.s000.value())
 		if textfield >=0:
 			newText = -textfield
-			self.parentUi.s000.setValue(newText)
-		self.transform()
+			self.transform.s000.setValue(newText)
+		self.performTransformations()
 
 
 	def b001(self):
@@ -379,12 +460,12 @@ class Transform(Init):
 		Transform +
 
 		'''
-		#change the textfield to pos value and call transform
-		textfield = float(self.parentUi.s000.value())
+		#change the textfield to pos value and call performTransformations
+		textfield = float(self.transform.s000.value())
 		if textfield <0:
 			newText = abs(textfield)
-			self.parentUi.s000.setValue(newText)
-		self.transform()
+			self.transform.s000.setValue(newText)
+		self.performTransformations()
 
 
 	def b002(self):

@@ -177,6 +177,59 @@
           <number>12</number>
          </property>
          <item>
+          <widget class="QGroupBox" name="groupBox_7">
+           <property name="minimumSize">
+            <size>
+             <width>111</width>
+             <height>33</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>111</width>
+             <height>51</height>
+            </size>
+           </property>
+           <property name="title">
+            <string>Selection</string>
+           </property>
+           <widget class="QComboBox_" name="cmb006">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>15</y>
+              <width>111</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>111</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>111</width>
+              <height>19</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A list of currently selected objects.&lt;/p&gt;&lt;p&gt;Unchecking an object, deselects it.&lt;/p&gt;&lt;p&gt;*selection sizes are limited to 50 objects.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="editable">
+             <bool>false</bool>
+            </property>
+            <property name="maxVisibleItems">
+             <number>50</number>
+            </property>
+            <property name="sizeAdjustPolicy">
+             <enum>QComboBox::AdjustToContents</enum>
+            </property>
+           </widget>
+          </widget>
+         </item>
+         <item>
           <widget class="QGroupBox" name="groupBox_5">
            <property name="minimumSize">
             <size>

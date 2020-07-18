@@ -7,8 +7,6 @@ except:
 
 import os.path
 
-from tk_styleSheet import StyleSheet
-
 
 
 class EventFactoryFilter(QtCore.QObject):
@@ -54,7 +52,7 @@ class EventFactoryFilter(QtCore.QObject):
 			uiLevel = self.sb.getUiLevel(name)
 			classMethod = self.sb.getMethod(name, widgetName)
 
-			self.setStyleSheet_(name, widget)
+			self.tk.style.setStyleSheet(name, widget)
 
 			widgetTypes = [ #install an event filter on the given types.
 				'QWidget', 
@@ -111,28 +109,6 @@ class EventFactoryFilter(QtCore.QObject):
 		self.sb.addWidgets(name, widgets)
 		self.sb.connectSlots(name, widgets)
 		self.initWidgets(name, widgets) #initialize the widget to set things like the event filter and styleSheet.
-
-
-	def setStyleSheet_(self, name, widgets):
-		'''
-		Set the style sheet for the given widgets.
-
-		args:
-			name (str) = name of the parent ui.
-			widgets (obj)(list) = widget or list of widgets.
-		'''
-		uiLevel = self.sb.getUiLevel(name)
-		for widget in self.sb.list(widgets):
-			derivedType = self.sb.getDerivedType(widget, name) #get the derived class type as string.
-			if hasattr(widget, 'styleSheet'):
-				s = getattr(StyleSheet, derivedType, '')
-				if widget.size().width()<20:
-					s = s+'{} {{padding: 0px 0px 0px 0px;}}'.format(derivedType) #remove padding on small sized widgets.
-				if uiLevel==2 and not self.sb.prefix(widget, 'i'): #if submenu and objectName doesn't start with 'i':
-					s = s+getattr(StyleSheet, 'dark') #override with the dark version on uiLevel 2 (submenus).
-				if widget.styleSheet(): #if the widget has an existing style sheet, append.
-					s = s+widget.styleSheet()
-				widget.setStyleSheet(s)
 
 
 	def resizeAndCenterWidget(self, widget, paddingX=30, paddingY=6):
@@ -293,7 +269,7 @@ class EventFactoryFilter(QtCore.QObject):
 		elif self.widgetName=='info':
 			self.resizeAndCenterWidget(self.widget)
 
-		if self.widgetType in ['QComboBox', 'QTreeWidget_ExpandableList']:
+		if self.widgetType in ['QComboBox_', 'QTreeWidget_ExpandableList']:
 			try:
 				self.classMethod()
 			except (AttributeError, NameError, TypeError) as error:
@@ -327,16 +303,16 @@ class EventFactoryFilter(QtCore.QObject):
 
 		elif self.derivedType=='QPushButton':
 			if self.sb.prefix(self.widget, 'i'): #set the stacked widget.
-				submenu = self.widget.whatsThis()+'_submenu'
+				submenu = self.sb.getUiName(self.widget.whatsThis(), level=2)
 				if not self.name==submenu: #do not reopen the submenu if it is already open.
 					self.name = self.tk.setSubUi(self.widget, submenu)
 
 			elif self.widgetName=='return_':
 				self.tk.setPrevUi()
 
-			elif self.sb.prefix(self.widget, 'chk'):
-				if self.sb.getUiLevel(self.name)==2: #if submenu:
-					self.widget.click()
+		if self.sb.prefix(self.widget, 'chk'):
+			if self.sb.getUiLevel(self.name)==2: #if submenu:
+				self.widget.click()
 
 
 	def leaveEvent(self, event):
@@ -396,7 +372,8 @@ class EventFactoryFilter(QtCore.QObject):
 					#add the buttons command info to the prevCommand list.
 					method = self.sb.getMethod(self.name, self.widgetName)
 					docString = self.sb.getDocString(self.name, self.widgetName)
-					self.sb.prevCommand(as_list=1).append([method, docString]) #store the command method object and it's docString (ie. 'Multi-cut tool')
+					toolTip = self.widget.toolTip()
+					self.sb.prevCommand(as_list=1).append([method, docString, toolTip]) #store the method object and other relevant information about the command.
 
 
 
@@ -412,28 +389,6 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # Notes
 # -----------------------------------------------
 
-# p1 = self.widget.mapToGlobal(self.widget.rect().center())
-
-# 					submenu = self.widget.whatsThis()+'_submenu'
-# 					n = self.widgetName
-# 					if not self.name==submenu: #do not reopen submenu on enter event if it is already open.
-# 						self.name = self.tk.setUi(submenu) #switch the stacked layout to the given submenu.
-# 						self.widget = getattr(self.tk.currentWidget(), n) #get the widget with the same name in the new ui.
-
-
-# 						p3 = self.tk.mapToGlobal(self.tk.pos())
-# 						p2 = self.widget.mapToGlobal(self.widget.rect().center())
-# 						self.tk.move(self.tk.mapFromGlobal(p3 +(p1 - p2)))
 
 
 
-# print(name, self.sb.previousName(omitLevel=0, as_list=1)[-3])
-					# if name==self.sb.previousName(omitLevel=0, as_list=1, allowDuplicates=1)[-3]: #if index is changed to the previous ui, remove the last widget.
-						# del self.prevWidget[-1:]
-
-
-#show button for any previous commands.
-		# if self.sb.prefix(self.widget, 'v') and self.name=='main': #'v024-29'
-		# 	self.widget.setText(self.sb.prevCommand(docString=1, as_list=1)[-num]) #prevCommand docString
-		#  	#self.resizeAndCenterWidget(self.widget)
-		# 	self.widget.show()

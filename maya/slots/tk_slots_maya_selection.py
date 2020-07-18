@@ -9,24 +9,22 @@ class Selection(Init):
 	def __init__(self, *args, **kwargs):
 		super(Selection, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('selection')
-		self.childUi = self.sb.getUi('selection_submenu')
 
 		# try: #set initial checked button states
 		# 	state = pm.selectPref(query=True, useDepth=True)
-		# 	self.childUi.chk004.setChecked(state) #chk004 ignore backfacing (camera based selection)
+		# 	self.selection_submenu.chk004.setChecked(state) #chk004 ignore backfacing (camera based selection)
 
 		# 	#selection style: set initial checked state
 		# 	ctx = pm.currentCtx() #flags (ctx, c=True) get the context's class.
 		# 	if ctx == 'lassoContext':
 		# 		self.cmb004(index=2)
-		# 		self.childUi.chk006.setChecked(True)
+		# 		self.selection_submenu.chk006.setChecked(True)
 		# 	elif ctx == 'paintContext':
 		# 		self.cmb004(index=3)
-		# 		self.childUi.chk007.setChecked(True)
+		# 		self.selection_submenu.chk007.setChecked(True)
 		# 	else: #selectContext
 		# 		self.cmb004(index=1)
-		# 		self.childUi.chk005.setChecked(True)
+		# 		self.selection_submenu.chk005.setChecked(True)
 		# except NameError:
 		# 	pass
 
@@ -35,7 +33,7 @@ class Selection(Init):
 		'''
 		Context menu
 		'''
-		pin = self.parentUi.pin
+		pin = self.selection.pin
 
 		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='')
@@ -50,7 +48,7 @@ class Selection(Init):
 		'''
 		Select By Name
 		'''
-		searchStr = str(self.parentUi.txt001.text()) #asterisk denotes startswith*, *endswith, *contains* 
+		searchStr = str(self.selection.txt001.text()) #asterisk denotes startswith*, *endswith, *contains* 
 		if searchStr:
 			selection = pm.select(pm.ls (searchStr))
 
@@ -59,7 +57,7 @@ class Selection(Init):
 		'''
 		Selection Sets: Create New
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.selection.cmb000
 		if not cmb.isEditable():
 			cmb.addItems_('', ascending=True)
 			cmb.setEditable(True)
@@ -75,7 +73,7 @@ class Selection(Init):
 		'''
 		Selection Sets: Modify Current
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.selection.cmb000
 		if not cmb.isEditable():
 			name = cmb.currentText()
 			self._oldSetName = name
@@ -92,7 +90,7 @@ class Selection(Init):
 		'''
 		Selection Sets: Delete Current
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.selection.cmb000
 		name = cmb.currentText()
 
 		pm.delete(name)
@@ -118,7 +116,7 @@ class Selection(Init):
 		'''
 		Selection Sets: Select Current
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.selection.cmb000
 		name = cmb.currentText()
 
 		if cmb.currentIndex()>0:
@@ -184,7 +182,7 @@ class Selection(Init):
 		'''
 		Ignore Backfacing (Camera Based Selection)
 		'''
-		if self.childUi.chk004.isChecked():
+		if self.selection_submenu.chk004.isChecked():
 			pm.selectPref(useDepth=True)
 			return 'Camera-based selection <hl>On</hl>.'
 		else:
@@ -198,7 +196,7 @@ class Selection(Init):
 		'''
 		self.setSelectionStyle('selectContext')
 		self.toggleWidgets(setChecked='chk005', setUnChecked='chk006-7')
-		self.parentUi.cmb004.setCurrentIndex(0)
+		self.selection.cmb004.setCurrentIndex(0)
 		self.viewPortMessage('Select Style: <hl>Marquee</hl>')
 
 
@@ -208,7 +206,7 @@ class Selection(Init):
 		'''
 		self.setSelectionStyle('lassoContext')
 		self.toggleWidgets(setChecked='chk006', setUnChecked='chk005,chk007')
-		self.parentUi.cmb004.setCurrentIndex(1)
+		self.selection.cmb004.setCurrentIndex(1)
 		self.viewPortMessage('Select Style: <hl>Lasso</hl>')
 
 
@@ -218,7 +216,7 @@ class Selection(Init):
 		'''
 		self.setSelectionStyle('paintContext')
 		self.toggleWidgets(setChecked='chk007', setUnChecked='chk005-6')
-		self.parentUi.cmb004.setCurrentIndex(2)
+		self.selection.cmb004.setCurrentIndex(2)
 		self.viewPortMessage('Select Style: <hl>Paint</hl>')
 
 
@@ -245,7 +243,7 @@ class Selection(Init):
 		'''
 		Selection Sets
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.selection.cmb000
 
 		if index is 'setMenu':
 			cmb.addToContext(QLabel_, setText='Select', setObjectName='lbl005', setToolTip='Select the current set elements.')
@@ -265,7 +263,7 @@ class Selection(Init):
 		'''
 		Editors
 		'''
-		cmb = self.parentUi.cmb001
+		cmb = self.selection.cmb001
 		
 		if index is 'setMenu':
 			list_ = ['Polygon Selection Constraints']
@@ -282,7 +280,7 @@ class Selection(Init):
 		'''
 		Select by Type
 		'''
-		cmb = self.parentUi.cmb002	
+		cmb = self.selection.cmb002	
 
 		if index is 'setMenu':
 			list_ = ['IK Handles','Joints','Clusters','Lattices','Sculpt Objects','Wires','Transforms','Geometry','NURBS Curves','NURBS Surfaces','Polygon Geometry','Cameras','Lights','Image Planes','Assets','Fluids','Particles','Rigid Bodies','Rigid Constraints','Brushes','Strokes','Dynamic Constraints','Follicles','nCloths','nParticles','nRigids']
@@ -352,7 +350,7 @@ class Selection(Init):
 		'''
 		Convert To
 		'''
-		cmb = self.parentUi.cmb003
+		cmb = self.selection.cmb003
 
 		if index is 'setMenu':
 			list_ = ['Verts', 'Vertex Faces', 'Vertex Perimeter', 'Edges', 'Edge Loop', 'Edge Ring', 'Contained Edges', 'Edge Perimeter', 'Border Edges', 'Faces', 'Face Path', 'Contained Faces', 'Face Perimeter', 'UV\'s', 'UV Shell', 'UV Shell Border', 'UV Perimeter', 'UV Edge Loop', 'Shell', 'Shell Border'] 
@@ -407,7 +405,7 @@ class Selection(Init):
 		'''
 		Select Style: Set Context
 		'''
-		cmb = self.parentUi.cmb004
+		cmb = self.selection.cmb004
 
 		if index is 'setMenu':
 			list_ = ['Marquee', 'Lasso', 'Paint'] 
@@ -428,7 +426,7 @@ class Selection(Init):
 		'''
 		Selection Contraints
 		'''
-		cmb = self.parentUi.cmb005
+		cmb = self.selection.cmb005
 
 		if index is 'setMenu':
 			list_ = ['Angle', 'Border', 'Edge Loop', 'Edge Ring', 'Shell', 'UV Edge Loop']
@@ -452,6 +450,39 @@ class Selection(Init):
 			mel.eval('dR_selConstraintOff;') #dR_DoCmd("selConstraintOff");
 
 
+	def cmb006(self, index=None):
+		'''
+		Selected Objects
+		'''
+		cmb = self.selection.cmb006
+
+		if index is 'setMenu':
+			cmb.popupStyle = 'qmenu'
+			cmb.beforePopupShown.connect(self.cmb006) #refresh comboBox contents before showing it's popup.
+			return
+
+		cmb.clear()
+		list_ = [str(i) for i in pm.ls(sl=1, flatten=1)]
+		widgets = [cmb.add('QCheckBox', setText=t, setChecked=1) for t in list_[:50]] #selection list is capped with a slice at 50 elements.
+
+		for w in widgets:
+			try:
+				w.disconnect() #disconnect all previous connections.
+			except TypeError:
+				pass #if no connections are present; pass
+			w.toggled.connect(lambda state, widget=w: self.chkxxx(state=state, widget=widget))
+
+
+	def chkxxx(self, **kwargs):
+		'''
+		Transform Constraints: Constraint CheckBoxes
+		'''
+		try:
+			pm.select(kwargs['widget'].text(), deselect=(not kwargs['state']))
+		except KeyError:
+			pass
+
+
 	@Slots.message
 	def tb000(self, state=None):
 		'''
@@ -459,28 +490,37 @@ class Selection(Init):
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
-			tb.add('QCheckBox', setText='Component Loop', setObjectName='chk001', setChecked=True, setToolTip='Select all contiguous components that form a loop with the current selection.')
-			tb.add('QCheckBox', setText='Shortest Path', setObjectName='chk002', setToolTip='Shortest component path between two selected vertices or UV\'s.')
+			tb.add('QRadioButton', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
+			tb.add('QRadioButton', setText='Component Loop', setObjectName='chk001', setChecked=True, setToolTip='Select all contiguous components that form a loop with the current selection.')
+			tb.add('QRadioButton', setText='Shortest Path', setObjectName='chk002', setToolTip='Shortest component path between two selected vertices or UV\'s.')
 			tb.add('QSpinBox', setPrefix='Step: ', setObjectName='s003', minMax_='1-100 step1', setValue=1, setToolTip='Step Amount.')
 			return
 
 		step = tb.s003.value()
 
-		if tb.chk000.isChecked(): #Select Ring
-			self.shortestEdgePath()
-			return 'Warning: Add correct arguments for this tool.'
+		selectionMask = pm.selectMode (query=True, component=True)
+		maskVertex = pm.selectType (query=True, vertex=True)
+		maskEdge = pm.selectType (query=True, edge=True)
+		maskFacet = pm.selectType (query=True, facet=True)
 
-		if tb.chk001.isChecked(): #Select contigious
-			# mel.eval('SelectContiguousEdges;')
-			mel.eval('SelectContiguousEdgesOptions;') #Select contigious edge loop options
-		
-		if tb.chk002.isChecked(): #Shortest Edge Path
-			self.shortestEdgePath()
-			# maxEval('SelectShortestEdgePathTool;')
+		objects = pm.ls(sl=1)
+		for obj in objects:
+			if pm.objectType(obj, isType='mesh'): 
+				if tb.chk000.isChecked(): #Select Ring
+					if all([selectionMask==1, maskEdge==1]):
+						pm.polySelect(edgeRing=True)
 
-		else: #Select Loop
-			mel.eval("selectEveryNEdge;")
+				elif tb.chk002.isChecked(): #Shortest Edge Path
+					if all([selectionMask==1, maskEdge==1]):
+						import re
+						vertices = [pm.ls(pm.polyListComponentConversion(e, fromEdge=1, toVertex=1), flatten=1) for e in pm.ls(sl=1)]
+						closestVerts = self.getClosestVerts(vertices[0], vertices[1])
+						vertexNumbers = [int(re.findall(r'(?<=\[)[0-9]+(?=:?])', str(s))[0]) for s in closestVerts] #get the vertex numbers as integer values. ie. [818, 1380]
+						pm.polySelect(shortestEdgePath=(vertexNumbers[0], vertexNumbers[1]))
+
+				elif tb.chk001.isChecked(): #Select Loop
+					if all([selectionMask==1, maskEdge==1]):
+						pm.polySelect(edgeLoop=True)
 
 
 	def tb001(self, state=None):
@@ -589,7 +629,7 @@ class Selection(Init):
 		'''
 		Selection Sets: Modify Current by renaming or changing the set members.
 		'''
-		newName = self.parentUi.cmb000.currentText()
+		newName = self.selection.cmb000.currentText()
 		if not newName:
 			newName = self.generateUniqueSetName()
 		name = pm.rename(name, newName)

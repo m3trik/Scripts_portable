@@ -14,7 +14,7 @@ class Tk_maya(Tk):
 	'''
 	Tk class overridden for use with Autodesk Maya.
 	args:
-		parent = Instance application top level window object.
+		parent = Application top level window instance.
 	'''
 	def __init__(self, parent=None):
 

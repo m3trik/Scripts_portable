@@ -31,9 +31,6 @@ class Init(Slots):
 	def __init__(self, *args, **kwargs):
 		super(Init, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('init')
-		self.childUi = self.sb.getUi('init_submenu')
-
 
 	def info(self):
 		'''
@@ -936,7 +933,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 		comboBox (str) = comboBox name (will also be used as the methods name).
 	# 		index = int or 'string' - text of the index to switch to.
 	# 	'''
-	# 	cmb = getattr(self.parentUi, comboBox)
+	# 	cmb = getattr(self.init, comboBox)
 	# 	method = getattr(self, comboBox)
 	# 	cmb.currentIndexChanged.connect(method)
 	# 	if not type(index)==int:

@@ -354,6 +354,9 @@ class QComboBox_(QtWidgets.QComboBox):
 
 
 	def hidePopup(self):
+		'''
+		
+		'''
 		self.beforePopupHidden.emit()
 
 		if not self.popupStyle=='modelView':
@@ -361,6 +364,16 @@ class QComboBox_(QtWidgets.QComboBox):
 			self.menu.visible=False
 		else:
 			super(QComboBox_, self).hidePopup()
+
+
+	def clear(self):
+		'''
+		
+		'''
+		if not self.popupStyle=='modelView':
+			self.menu.clear()
+		else:
+			super(QComboBox_, self).clear()
 
 
 	def enterEvent(self, event):

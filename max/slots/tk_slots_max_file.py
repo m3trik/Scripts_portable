@@ -10,8 +10,6 @@ class File(Init):
 	def __init__(self, *args, **kwargs):
 		super(File, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('file')
-		self.childUi = self.sb.getUi('file_submenu')
 
 		#get recent file list. #convert to python
 		maxEval('''
@@ -43,7 +41,7 @@ class File(Init):
 		'''
 		Context menu
 		'''
-		pin = self.parentUi.pin
+		pin = self.file.pin
 
 		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb005', setToolTip='')
@@ -58,7 +56,7 @@ class File(Init):
 		'''
 		Recent Files
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.file.cmb000
 
 		if index is 'setMenu':
 			cmb.addToContext('QPushButton', setObjectName='b001', setText='Last', setToolTip='Open the most recent file.')
@@ -77,7 +75,7 @@ class File(Init):
 		'''
 		Recent Projects
 		'''
-		cmb = self.parentUi.cmb001
+		cmb = self.file.cmb001
 
 		if index is 'setMenu':
 			return
@@ -96,7 +94,7 @@ class File(Init):
 		'''
 		Recent Autosave
 		'''
-		cmb = self.parentUi.cmb002
+		cmb = self.file.cmb002
 
 		if index is 'setMenu':
 			return
@@ -116,7 +114,7 @@ class File(Init):
 		'''
 		Import
 		'''
-		cmb = self.parentUi.cmb003
+		cmb = self.file.cmb003
 
 		if index is 'setMenu':
 			cmb.addItems_(['Import file', 'Import Options', 'Merge', 'Replace', 'Link Revit', 'Link FBX', 'Link AutoCAD'], 'Import')
@@ -145,7 +143,7 @@ class File(Init):
 		'''
 		Export
 		'''
-		cmb = self.parentUi.cmb004
+		cmb = self.file.cmb004
 
 		if index is 'setMenu':
 			list_ = ["Export Selection", "Export Options", "Unreal", "Unity", "GoZ", "Send to Maya: New Scene", "Send to Maya: Update Scene", "Send to Maya: Add to Scene"]
@@ -184,7 +182,7 @@ class File(Init):
 		'''
 		Editors
 		'''
-		cmb = self.parentUi.cmb005
+		cmb = self.file.cmb005
 
 		if index is 'setMenu':
 			list_ = ['Schematic View']
@@ -201,14 +199,11 @@ class File(Init):
 		'''
 		Project Folder
 		'''
-		cmb = self.parentUi.cmb006
+		cmb = self.file.cmb006
 
 		if index is 'setMenu':
 			cmb.addToContext(QComboBox_, setObjectName='cmb001', setToolTip='Current project directory root.')
 			cmb.addToContext(QLabel_, setObjectName='lbl000', setText='Set', setToolTip='Set the project directory.')
-			cmb.addToContext(QLabel_, setObjectName='lbl001', setText='Minimize App', setToolTip='Minimize the main application.')
-			cmb.addToContext(QLabel_, setObjectName='lbl002', setText='Maximize App', setToolTip='Restore the main application.')
-			cmb.addToContext(QLabel_, setObjectName='lbl003', setText='Close App', setToolTip='Close the main application.')
 			return
 
 		path = MaxPlus.PathManager.GetProjectFolderDir() #current project path.
@@ -409,10 +404,10 @@ class File(Init):
 		'''
 		Remove String From Object Names.
 		'''
-		from_ = str(self.parentUi.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
-		to = str(self.parentUi.t001.text())
-		replace = self.parentUi.chk004.isChecked()
-		selected = self.parentUi.chk005.isChecked()
+		from_ = str(self.file.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
+		to = str(self.file.t001.text())
+		replace = self.file.chk004.isChecked()
+		selected = self.file.chk005.isChecked()
 
 		# objects = pm.ls (from_) #Stores a list of all objects starting with 'from_'
 		# if selected:

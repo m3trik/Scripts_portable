@@ -19,17 +19,32 @@ class Slots(QtCore.QObject):
 	def __init__(self, parent=None, *args, **kwargs):
 		super(Slots, self).__init__(parent)
 		'''
+		kwargs: (passed in via the switchboard module's 'getClassFromUiName' method.)
+			_ui (method) = returns the current ui for the current class; else the parent ui.
+			_currentUi (method) = returns the current ui.
+			name (ui) = ui of <name>
+			<name>_submenu (ui) = ui of <name_submenu>
+			sb (class) = switchboard instance.
+			tk (class) = stacked widget instance.
 		'''
-		for k,v in kwargs.items():
+		for k, v in kwargs.items():
 			setattr(self, k, v)
 
+
+	@property
+	def ui(self):
+		'''
+		Get the current Ui if it is either the parent or
+		child ui for the current class, else return the parent ui.
+		'''
+		return self._ui()
 
 	@property
 	def currentUi(self):
 		'''
 		Get the current Ui.
 		'''
-		return self.sb.getUi() #current
+		return self._currentUi()
 
 
 	def getObjects(self, class_, objectNames, showError_=False):
@@ -190,14 +205,16 @@ class Slots(QtCore.QObject):
 		ex.	self.toggleWidgets(<ui1>, <ui2>, setDisabled='b000', setUnChecked='chk009-12', setVisible='b015,b017')
 		'''
 		if not args:
-			args = [self.parentUi, self.childUi]
+			childUi = self.sb.getUi(level=2)
+			parentUi = self.sb.getUi(level=3)
+			args = [parentUi, childUi]
 
 		for ui in args:
 			for property_ in kwargs: #property_ ie. setUnChecked
 				widgets = self.getObjects(ui, kwargs[property_]) #getObjects returns a widget list from a string of objectNames.
 
 				state = True
-				if 'Un' in property_: #set state to False if '_False' is appended to the keyword.
+				if 'Un' in property_: #strips 'Un' and sets the state from True to False. ie. 'setUnChecked' becomes 'setChecked' (False)
 					property_ = property_.replace('Un', '')
 					state = False
 
@@ -270,6 +287,19 @@ class Slots(QtCore.QObject):
 
 			# spinboxes[index].setEnabled(True)
 			spinboxes[index].blockSignals(False)
+
+
+	# def setComboBox(self, comboBox, text):
+	# 	'''
+	# 	Set the given comboBox's index using a text string.
+	# 	args:
+	# 		comboBox (str) = comboBox name (will also be used as the methods name).
+	# 		text (str) = text of the index to switch to.
+	# 	'''
+	# 	cmb = getattr(ui, comboBox)
+	# 	method = getattr(self, comboBox)
+	# 	cmb.currentIndexChanged.connect(method)
+	# 	cmb.setCurrentIndex(cmb.findText(text))
 
 
 	def setAxisForCheckBoxes(self, checkboxes, axis, ui=None):
@@ -377,19 +407,21 @@ class Slots(QtCore.QObject):
 
 
 	@staticmethod
-	def collapseList(list_, limit=None):
+	def collapseList(list_, limit=None, compress=True, returnAsString=True):
 		'''
 		Convert a list of integers to a collapsed sequential string format.
 		ie. [19,22,23,24,25,26] to ['19', '22..26']
 
 		args:
-			list_ (list) = of integers
+			list_ (list) = A list of integers
+			compress (bool) = Trim redundant chars from the second half of a compressed set. ie. ['19', '22-32', '1225-6'] from ['19', '22..32', '1225..1226']
+			returnAsString (bool) = Return a single string value instead of a list.
 
 		returns:
-			(list)
+			(list) or (str) if 'returnAsString'.
 		'''
 		list_ = [str(x) for x in list_] #make sure the list is made up of strings.
-		
+
 		ranges=[]
 		for x in list_:
 			if not ranges:
@@ -400,14 +432,20 @@ class Slots(QtCore.QObject):
 				ranges.append([x])
 			prev_x = int(x)
 
-		collapsedList = ["..".join([r[0], r[-1]] if len(r) > 1 else r) for r in ranges]
+		if compress: #style: ['19', '22-32', '1225-6']
+			collapsedList = ['-'.join([r[0], r[-1][len(str(r[-1]))-len(str((int(r[-1])-int(r[0])))):]] if len(r) > 1 else r) for r in ranges] #find the difference and use that value to further trim redundant chars from the string
+		else: #style: ['19', '22..32', '1225..1226']
+			collapsedList = ['..'.join([r[0], r[-1]] if len(r) > 1 else r) for r in ranges]
 
 		if limit and len(collapsedList)>limit:
 			l = collapsedList[:limit]
 			l.append('...')
-			return l
-		else:
-			return collapsedList
+			collapsedList = l
+		
+		if returnAsString:
+			collapsedList = ', '.join(collapsedList)
+
+		return collapsedList
 
 
 	# @classmethod

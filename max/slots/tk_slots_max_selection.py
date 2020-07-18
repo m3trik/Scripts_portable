@@ -9,8 +9,6 @@ class Selection(Init):
 	def __init__(self, *args, **kwargs):
 		super(Selection, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('selection')
-		self.childUi = self.sb.getUi('selection_submenu')
 
 		# try: #set initial checked button states
 		# 	state = pm.selectPref(query=True, useDepth=True)
@@ -20,13 +18,13 @@ class Selection(Init):
 		# 	ctx = pm.currentCtx() #flags (ctx, c=True) get the context's class.
 		# 	if ctx == 'lassoContext':
 		# 		self.cmb004(index=1)
-		# 		self.childUi.chk006.setChecked(True)
+		# 		self.selection_submenu.chk006.setChecked(True)
 		# 	elif ctx == 'paintContext':
 		# 		self.cmb004(index=2)
-		# 		self.childUi.chk007.setChecked(True)
+		# 		self.selection_submenu.chk007.setChecked(True)
 		# 	else: #selectContext
 		# 		self.cmb004(index=0)
-		# 		self.childUi.chk005.setChecked(True)
+		# 		self.selection_submenu.chk005.setChecked(True)
 		# except NameError:
 		# 	pass
 
@@ -35,7 +33,7 @@ class Selection(Init):
 		'''
 		Context menu
 		'''
-		pin = self.parentUi.pin
+		pin = self.selection.pin
 
 		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='')
@@ -50,7 +48,7 @@ class Selection(Init):
 		'''
 		Select By Name
 		'''
-		searchStr = str(self.parentUi.txt001.text()) #asterisk denotes startswith*, *endswith, *contains* 
+		searchStr = str(self.selection.txt001.text()) #asterisk denotes startswith*, *endswith, *contains* 
 		if searchStr:
 			selection = rt.select(searchStr)
 
@@ -59,7 +57,7 @@ class Selection(Init):
 		'''
 		Selection Sets: Create New
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.selection.cmb000
 		if not cmb.isEditable():
 			cmb.addItems_('', ascending=True)
 			cmb.setEditable(True)
@@ -75,7 +73,7 @@ class Selection(Init):
 		'''
 		Selection Sets: Modify Current
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.selection.cmb000
 		if not cmb.isEditable():
 			name = cmb.currentText()
 			self._oldSetName = name
@@ -92,7 +90,7 @@ class Selection(Init):
 		'''
 		Selection Sets: Delete Current
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.selection.cmb000
 		name = cmb.currentText()
 
 		set_ = self.getSet(name)
@@ -128,7 +126,7 @@ class Selection(Init):
 		'''
 		Selection Sets: Select Current
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.selection.cmb000
 		name = cmb.currentText()
 
 		set_ = self.getSet(name)
@@ -204,7 +202,7 @@ class Selection(Init):
 		Ignore Backfacing (Camera Based Selection)
 		'''
 		for obj in rt.selection:
-			if self.childUi.chk004.isChecked():
+			if self.selection_submenu.chk004.isChecked():
 				sel.ignoreBackfacing = True
 				return 'Camera-based selection <hl>On</hl>.'
 			else:
@@ -218,7 +216,7 @@ class Selection(Init):
 		Select Style: Marquee
 		'''
 		self.toggleWidgets(setChecked='chk005', setUnChecked='chk006-7')
-		self.parentUi.cmb004.setCurrentIndex(0)
+		self.selection.cmb004.setCurrentIndex(0)
 		return 'Select Style: <hl>Marquee</hl>'
 
 
@@ -228,7 +226,7 @@ class Selection(Init):
 		Select Style: Lasso
 		'''
 		self.toggleWidgets(setChecked='chk006', setUnChecked='chk005,chk007')
-		self.parentUi.cmb004.setCurrentIndex(3)
+		self.selection.cmb004.setCurrentIndex(3)
 		return 'Select Style: <hl>Lasso</hl>'
 
 
@@ -238,7 +236,7 @@ class Selection(Init):
 		Select Style: Paint
 		'''
 		self.toggleWidgets(setChecked='chk007', setUnChecked='chk005-6')
-		self.parentUi.cmb004.setCurrentIndex(4)
+		self.selection.cmb004.setCurrentIndex(4)
 		return 'Select Style: <hl>Paint</hl>'
 
 
@@ -246,7 +244,7 @@ class Selection(Init):
 		'''
 		Selection Sets
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.selection.cmb000
 
 		if index is 'setMenu':
 			cmb.addToContext(QLabel_, setText='Select', setObjectName='lbl005', setToolTip='Select the current set elements.')
@@ -266,7 +264,7 @@ class Selection(Init):
 		'''
 		Editors
 		'''
-		cmb = self.parentUi.cmb001
+		cmb = self.selection.cmb001
 		
 		if index is 'setMenu':
 			list_ = ['Selection Set Editor']
@@ -283,7 +281,7 @@ class Selection(Init):
 		'''
 		Select All Of Type
 		'''
-		cmb = self.parentUi.cmb002
+		cmb = self.selection.cmb002
 	
 		if index is 'setMenu':
 			list_ = ['Geometry', 'Shapes', 'Lights', 'Cameras', 'Helpers', 'Space Warps', 'Particle Systems', 'Bone Objects']
@@ -315,7 +313,7 @@ class Selection(Init):
 		'''
 		Convert To
 		'''
-		cmb = self.parentUi.cmb003
+		cmb = self.selection.cmb003
 
 		if index is 'setMenu':
 			list_ = ['Vertex', 'Edge', 'Border', 'Face', 'Element']
@@ -336,7 +334,7 @@ class Selection(Init):
 		'''
 		Select Style: Set Context
 		'''
-		cmb = self.parentUi.cmb004
+		cmb = self.selection.cmb004
 
 		if index is 'setMenu':
 			list_ = ['Marquee', 'Circular', 'Fence', 'Lasso', 'Paint'] 
@@ -361,7 +359,7 @@ class Selection(Init):
 		'''
 		Selection Contraints
 		'''
-		cmb = self.parentUi.cmb005
+		cmb = self.selection.cmb005
 
 		if index is 'setMenu':
 			list_ = ['Off', 'Angle', 'Border', 'Edge Loop', 'Edge Ring', 'Shell', 'UV Edge Loop']
@@ -383,6 +381,42 @@ class Selection(Init):
 		# 		mel.eval('dR_selConstraintUVEdgeLoop;') #dR_DoCmd("selConstraintUVEdgeLoop");
 		# else:
 		# 	mel.eval('dR_selConstraintOff;') #dR_DoCmd("selConstraintOff");
+
+
+	def cmb006(self, index=None):
+		'''
+		Selected Objects
+		'''
+		cmb = self.selection.cmb006
+
+		if index is 'setMenu':
+			cmb.popupStyle = 'qmenu'
+			cmb.beforePopupShown.connect(self.cmb006) #refresh comboBox contents before showing it's popup.
+			return
+
+		cmb.clear()
+		list_ = [str(i) for i in rt.selection]
+		widgets = [cmb.add('QCheckBox', setText=t, setChecked=1) for t in list_[:50]] #selection list is capped with a slice at 50 elements.
+
+		for w in widgets:
+			try:
+				w.disconnect() #disconnect all previous connections.
+			except TypeError:
+				pass #if no connections are present; pass
+			w.toggled.connect(lambda state, widget=w: self.chkxxx(state=state, widget=widget))
+
+
+	def chkxxx(self, **kwargs):
+		'''
+		Transform Constraints: Constraint CheckBoxes
+		'''
+		try:
+			if kwargs['state']==True:
+				rt.deselect(kwargs['widget'].text())
+			else:
+				rt.select(kwargs['widget'].text())
+		except KeyError:
+			pass
 
 
 	def tb000(self, state=None):
@@ -519,7 +553,7 @@ class Selection(Init):
 		'''
 		sel = self.currentSelection
 		if sel:
-			newName = self.parentUi.cmb000.currentText()
+			newName = self.selection.cmb000.currentText()
 			if not newName:
 				newName = self.generateUniqueSetName()
 

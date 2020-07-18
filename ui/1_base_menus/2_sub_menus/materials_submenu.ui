@@ -151,7 +151,7 @@
      <rect>
       <x>280</x>
       <y>230</y>
-      <width>46</width>
+      <width>86</width>
       <height>19</height>
      </rect>
     </property>
@@ -165,7 +165,7 @@
      <string>Assign stored material shader ID</string>
     </property>
     <property name="text">
-     <string>Assign</string>
+     <string>Assign Current</string>
     </property>
    </widget>
    <widget class="QPushButton" name="b002">
@@ -293,6 +293,32 @@
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="chk008">
+    <property name="geometry">
+     <rect>
+      <x>175</x>
+      <y>190</y>
+      <width>136</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Random Material</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="chk007">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>190</y>
+      <width>136</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Current Material</string>
     </property>
    </widget>
   </widget>

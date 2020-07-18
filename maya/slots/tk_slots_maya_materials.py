@@ -9,10 +9,7 @@ class Materials(Init):
 	def __init__(self, *args, **kwargs):
 		super(Materials, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('materials')
-		self.childUi = self.sb.getUi('materials_submenu')
-
-		self.materials=None
+		self.currentMaterials=None
 		self.randomMat=None
 
 
@@ -21,15 +18,15 @@ class Materials(Init):
 		'''
 		Get the current material using the current index of the materials combobox.
 		'''
-		text = self.parentUi.cmb002.currentText()
-		return self.materials[text]
+		text = self.materials.cmb002.currentText()
+		return self.currentMaterials[text]
 
 
 	def pin(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.parentUi.pin
+		pin = self.materials.pin
 
 		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='Maya Material Editors')
@@ -39,27 +36,33 @@ class Materials(Init):
 
 	def chk007(self):
 		'''
+		Assign Material: Current
 		'''
-		self.parentUi.tb002.setText('Assign Current')
+		self.ui.tb002.setText('Assign Current')
+		self.toggleWidgets(setUnChecked='chk008-9')
 
 
 	def chk008(self):
 		'''
+		Assign Material: Random
 		'''
-		self.parentUi.tb002.setText('Assign Random')
+		self.ui.tb002.setText('Assign Random')
+		self.toggleWidgets(setUnChecked='chk007, chk009')
 
 
 	def chk009(self):
 		'''
+		Assign Material: New
 		'''
-		self.parentUi.tb002.setText('Assign New')
+		self.ui.tb002.setText('Assign New')
+		self.toggleWidgets(setUnChecked='chk007-8')
 
 
 	def cmb001(self, index=None):
 		'''
 		Editors
 		'''
-		cmb = self.parentUi.cmb001
+		cmb = self.materials.cmb001
 
 		if index is 'setMenu':
 			files = ['Hypershade']
@@ -79,7 +82,7 @@ class Materials(Init):
 		args:
 			index (int) = parameter on activated, currentIndexChanged, and highlighted signals.
 		'''
-		cmb = self.parentUi.cmb002
+		cmb = self.materials.cmb002
 
 		if index is 'setMenu':
 			cmb.addToContext(QLabel_, setText='Open in Editor', setObjectName='lbl000', setToolTip='Open material in editor.')
@@ -95,9 +98,9 @@ class Materials(Init):
 			return
 
 		try:
-			sceneMaterials = self.parentUi.tb001.chk000.isChecked()
-			idMapMaterials = self.parentUi.tb001.chk001.isChecked()
-			favoriteMaterials = self.parentUi.tb001.chk002.isChecked()
+			sceneMaterials = self.materials.tb001.chk000.isChecked()
+			idMapMaterials = self.materials.tb001.chk001.isChecked()
+			favoriteMaterials = self.materials.tb001.chk002.isChecked()
 		except: #if the toolbox hasn't been constructed yet: default to sceneMaterials
 			sceneMaterials = True
 
@@ -126,10 +129,7 @@ class Materials(Init):
 			except AttributeError:
 				pass
 
-		if index is None:
-			index = cmb.currentIndex()
-
-		self.materials = {name:mats[i] for i, name in enumerate(matNames)} #add mat objects to materials dictionary. 'mat name'=key, <mat object>=value
+		self.currentMaterials = {name:mats[i] for i, name in enumerate(matNames)} #add mat objects to materials dictionary. 'mat name'=key, <mat object>=value
 
 
 	@Slots.message
@@ -139,17 +139,21 @@ class Materials(Init):
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
+			tb.add('QCheckBox', setText='All Objects', setObjectName='chk003', setToolTip='Search all scene objects, or only those currently selected.')
 			tb.add('QCheckBox', setText='Shell', setObjectName='chk005', setToolTip='Select entire shell.')
 			tb.add('QCheckBox', setText='Invert', setObjectName='chk006', setToolTip='Invert Selection.')
 			return
 
-		shell = tb.chk005.isChecked() #Select by material: shell
-		invert = tb.chk006.isChecked() #Select by material: invert
-
 		if not self.currentMaterial:
 			return 'Error: No Material Selection.'
 
-		self.selectByMaterialID(self.currentMaterial, pm.ls(selection=1))
+		shell = tb.chk005.isChecked() #Select by material: shell
+		invert = tb.chk006.isChecked() #Select by material: invert
+		allObjects = tb.chk003.isChecked() #Search all scene objects
+
+		objects = pm.ls(sl=1, objectsOnly=1) if not allObjects else None
+
+		self.selectByMaterialID(self.currentMaterial, objects, shell=shell, invert=invert)
 
 
 	def tb001(self, state=None):
@@ -166,11 +170,11 @@ class Materials(Init):
 			return
 
 		if tb.chk000.isChecked():
-			self.parentUi.group000.setTitle(tb.chk000.text())
+			self.materials.group000.setTitle(tb.chk000.text())
 		elif tb.chk001.isChecked():
-			self.parentUi.group000.setTitle(tb.chk001.text())
+			self.materials.group000.setTitle(tb.chk001.text())
 		elif tb.chk002.isChecked():
-			self.parentUi.group000.setTitle(tb.chk002.text())
+			self.materials.group000.setTitle(tb.chk002.text())
 
 
 	@Slots.message
@@ -202,11 +206,11 @@ class Materials(Init):
 
 			self.randomMat = mat
 
-			if self.parentUi.tb001.chk001.isChecked():
+			if self.materials.tb001.chk001.isChecked():
 				self.cmb002() #refresh the combobox
 			else:
-				self.parentUi.tb001.chk001.setChecked(True) #set combobox to ID map mode. toggling the checkbox refreshes the combobox.
-			self.parentUi.cmb002.setCurrentItem(mat.name()) #set the combobox index to the new mat #self.cmb002.setCurrentIndex(self.cmb002.findText(name))
+				self.materials.tb001.chk001.setChecked(True) #set combobox to ID map mode. toggling the checkbox refreshes the combobox.
+			self.materials.cmb002.setCurrentItem(mat.name()) #set the combobox index to the new mat #self.cmb002.setCurrentIndex(self.cmb002.findText(name))
 
 		elif tb.chk009.isChecked(): #Assign New Material
 			mel.eval('buildObjectMenuItemsNow "MainPane|viewPanes|modelPanel4|modelPanel4|modelPanel4|modelPanel4ObjectPop";')
@@ -218,9 +222,9 @@ class Materials(Init):
 		'''
 		Open material in editor
 		'''
-		if self.parentUi.tb001.chk001.isChecked(): #ID map mode
+		if self.materials.tb001.chk001.isChecked(): #ID map mode
 			try:
-				mat = self.materials[self.parentUi.cmb002.currentText()] #get object from string key
+				mat = self.currentMaterials[self.materials.cmb002.currentText()] #get object from string key
 			except:
 				return '# Error: No stored material or no valid object selected.'
 		else: #Stored material mode
@@ -241,12 +245,12 @@ class Materials(Init):
 		Rename Material: Set cmb002 as editable and disable widgets.
 		'''
 		if setEditable:
-			self.parentUi.cmb002.setEditable(True)
-			# self.parentUi.cmb002.lineEdit().returnPressed.connect(self.renameMaterial)
-			self.toggleWidgets(self.parentUi, setDisabled='b002,lbl000,tb000,tb002')
+			self.materials.cmb002.setEditable(True)
+			# self.materials.cmb002.lineEdit().returnPressed.connect(self.renameMaterial)
+			self.toggleWidgets(self.materials, setDisabled='b002,lbl000,tb000,tb002')
 		else:
-			self.parentUi.cmb002.setEditable(False)
-			self.toggleWidgets(self.parentUi, setEnabled='b002,lbl000,tb000,tb002')
+			self.materials.cmb002.setEditable(False)
+			self.toggleWidgets(self.materials, setEnabled='b002,lbl000,tb000,tb002')
 
 
 	def lbl002(self):
@@ -256,8 +260,8 @@ class Materials(Init):
 		mat = self.currentMaterial
 		mat = pm.delete(mat)
 
-		index = self.parentUi.cmb002.currentIndex()
-		self.parentUi.cmb002.setItemText(index, 'None') #self.parentUi.cmb002.removeItem(index)
+		index = self.materials.cmb002.currentIndex()
+		self.materials.cmb002.setItemText(index, 'None') #self.materials.cmb002.removeItem(index)
 
 
 	def lbl003(self):
@@ -288,8 +292,8 @@ class Materials(Init):
 
 		mat = self.getMaterial()
 
-		self.parentUi.tb001.chk000.setChecked(True) #set the combobox to show all scene materials
-		cmb = self.parentUi.cmb002
+		self.materials.tb001.chk000.setChecked(True) #set the combobox to show all scene materials
+		cmb = self.materials.cmb002
 		self.cmb002() #refresh the combobox
 		cmb.setCurrentIndex(cmb.items.index(mat.name()))
 
@@ -298,11 +302,11 @@ class Materials(Init):
 		'''
 		Rename Material
 		'''
-		cmb = self.parentUi.cmb002 #scene materials
+		cmb = self.materials.cmb002 #scene materials
 		newMatName = cmb.currentText()
 
 		if self.currentMaterial and self.currentMaterial.name!=newMatName:
-			if self.parentUi.tb001.chk001.isChecked(): #Rename ID map Material
+			if self.materials.tb001.chk001.isChecked(): #Rename ID map Material
 				prefix = 'ID_'
 				if not newMatName.startswith(prefix):
 					newMatName = prefix+newMatName
@@ -497,7 +501,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	Existing Materials
 
 	# 	'''
-	# 	cmb = self.parentUi.cmb000
+	# 	cmb = self.materials.cmb000
 
 	# 	mats = [m for m in pm.ls(materials=1)]
 	# 	matNames = [m.name() for m in mats]

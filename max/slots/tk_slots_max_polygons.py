@@ -382,13 +382,6 @@ class Polygons(Init):
 		# obj = rt.Filters.GetModOrObj()
 		# if obj:
 		# 	obj.ToggleCommandMode('CutVertex') #cut vertex tool
-		
-
-	def b015(self):
-		'''
-		Delete Edgeloop
-		'''
-		maxEval('$.EditablePoly.Remove ()')
 
 
 	def b021(self):

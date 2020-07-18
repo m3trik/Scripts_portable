@@ -298,6 +298,31 @@ class Switchboard(QtCore.QObject):
 		return widget.objectName()
 
 
+	def getClassKwargs(self, name):
+		'''
+		Get keyword arguments for the given ui name.
+
+		args:
+			name (str) = ui name. ie. 'polygons'
+
+		returns:
+			(dict) packed keyword arguments.
+		'''
+		childUi = self.getUi(name, level=2)
+		parentUi = self.getUi(name, level=3)
+
+		kwargs = {
+			'_ui':lambda childUi=childUi, parentUi=parentUi: self.getUi() if self.getUi() in (parentUi, childUi) else parentUi,
+			'_currentUi':lambda: self.getUi(),
+			name:parentUi,	
+			self.getUiName(name, level=2):childUi,
+			'sb':self,
+			'tk':self.parent,
+		}
+
+		return kwargs
+
+
 	def getClassFromUiName(self, name):
 		'''
 		Get the slot class corresponding to the given ui name.  ie. <Polygons> from 'polygons'
@@ -310,12 +335,14 @@ class Switchboard(QtCore.QObject):
 			(obj) class obj
 		'''
 		n = name.split('_')[0] #get ie. 'polygons' from 'polygons_submenu' in cases where a submenu shares the same slot class of it's parent menu.
-		ui = self.getUi(name)
+
 		# path = 'slots.{0}'.format(n[0].upper()+n[1:]) #ie. slots.Init
 		mainAppWindowName = self.getMainAppWindow(objectName=True)
 		className = n[0].upper()+n[1:] #capitalize the first char of name to get the class name.
 		path = 'tk_slots_{0}_{1}.{2}'.format(mainAppWindowName, n, className) #ie. 'tk_slots_maya_init.Init'
-		class_ = self.getClassInstance(path, ui=ui, sb=self, tk=self.parent) #get the class instance while passing in any keyword arguments into **kwargs.
+		kwargs = self.getClassKwargs(n)
+		class_ = self.getClassInstance(path,
+									**kwargs) #get the class instance while passing in any keyword arguments into **kwargs.
 
 		return class_
 
@@ -340,7 +367,7 @@ class Switchboard(QtCore.QObject):
 			'QComboBox':'currentIndexChanged',
 			'QSpinBox':'valueChanged',
 			'QDoubleSpinBox':'valueChanged',
-			'QCheckBox':'released',
+			'QCheckBox':'stateChanged',
 			'QRadioButton':'released',
 			'QLineEdit':'returnPressed',
 			'QTextEdit':'textChanged',
@@ -487,7 +514,7 @@ class Switchboard(QtCore.QObject):
 
 		if level==2: #submenu
 			if 'submenu' not in name:
-				name = name+'_submenu'
+				name = self.getUiName(name, level=2)
 
 		if level==3: #main menu
 			name = name.split('_')[0] #'polygons' from 'polygons_component_submenu'
@@ -546,7 +573,8 @@ class Switchboard(QtCore.QObject):
 		If no argument is given, the name for the current ui will be returned.
 
 		args:
-			ui (obj) = Use ui object to get its corresponding name. (the default behavior is to return the current ui name)
+			ui (obj)(str) = Use ui object to get its corresponding name. (the default behavior is to return the current ui name)
+						also supports passing in a string value of a known name to use with the camelCase, pascalCase, and level parameters.
 			camelCase (bool) = Return name with first letter lowercase. (default: False)
 			pascalCase (bool) = Return name with first letter capitalized. (default: False)
 			level (int) = Get the ui of the given level. (2:submenu, 3:main_menu)
@@ -562,12 +590,14 @@ class Switchboard(QtCore.QObject):
 				name = self.sbDict['name'][-1]
 			except IndexError: #if index out of range (no value exists): return None
 				return None
+		elif isinstance(ui, (str, unicode)):
+			name = ui
 		else: #get the ui name string key from the ui value in uiList.
 			name = next(k for k, v in self.uiList().items() if v==ui)
 
 		if level==2: #submenu
 			if 'submenu' not in name:
-				name = name+'_submenu'
+				name = '{}_submenu'.format(name)
 
 		if level==3: #main menu
 			name = name.split('_')[0] #polygons from polygons_component_submenu
@@ -1147,17 +1177,21 @@ class Switchboard(QtCore.QObject):
 				return ''
 
 
-	def prevCommand(self, docString=False, method=False, as_list=False):
+	def prevCommand(self, docString=False, method=False, toolTip=False, as_list=False):
 		'''
+		Get previous commands and relevant information.
+
 		args:
 			docString (bool) = return the docString of last command. Default is off.
 			method (bool) = return the method of last command. Default is off.
+			toolTip (bool) = return the commands toolTip.
 
 		returns:
-			if docString: 'string' description (derived from the last used command method's docString) (as_list: [string list] all docStrings, in order of use)
-			if method: method of last used command. (as_list: [<method object> list} all methods, in order of use)
-			if as_list: list of lists with <method object> as first element and <docString> as second. ie. [[b001, 'multi-cut tool']]
-			else : <method object> of the last used command
+			(str) if docString: 'string' description (derived from the last used command method's docString) (as_list: [string list] all docStrings, in order of use)
+			(obj) if method: method of last used command. when combined with as_list; [<method object> list} all methods, in order of use)
+			(str) if toolTip: the commands toolTip.
+			(list) if as_list: list of lists with <method object> as first element and <docString> as second. ie. [[b001, 'multi-cut tool']]
+			(obj) else: <method object> of the last used command
 		'''
 		if not 'prevCommand' in self.sbDict:
 			self.sbDict['prevCommand'] = [] #initialize list
@@ -1168,22 +1202,36 @@ class Switchboard(QtCore.QObject):
 		[list_.remove(l) for l in list_[:] if list_.count(l)>1] #remove any previous duplicates if they exist; keeping the last added element.
 
 		if as_list:
-			if docString and not method:
-				try:
-					return [i[1] for i in list_]
-				except:
-					return None
-			elif method and not docString:
-				try:
-					return [i[0] for i in list_]
-				except:
-					return ['# No commands in history. #']
+			if all((method, not docString, not toolTip)): #100
+				return [i[0] for i in list_]
+
+			elif all((not method, docString, not toolTip)): #010
+				return [i[1] for i in list_]
+
+			elif all((not method, not docString, toolTip)): #001
+				return [i[2] for i in list_]
+
+			elif all((method, docString, not toolTip)): #110
+				return [i[:2] for i in list_]
+
+			elif all((not method, docString, toolTip)): #011
+				return [i[1:] for i in list_]
+
+			elif all((method, not docString, toolTip)): #101
+				return [[i[0],i[2]] for i in list_]
+
 			else:
-				return list_
+				return list_ #111
 
 		elif docString:
 			try:
 				return list_[-1][1]
+			except:
+				return ''
+
+		elif toolTip:
+			try:
+				return list_[-1][2]
 			except:
 				return ''
 
@@ -1636,21 +1684,6 @@ sbDict = {
 # 	else:
 # 		return False
 
-	# def getSubmenu(self, ui=None):
-	# 	'''
-	# 	Get the submenu object of the given ui using it's name string, or the parent ui object.
-
-	# 	args:
-	# 		ui (str) = ui name.
-	# 			<ui object> - dynamic ui.
-	# 	'''
-	# 	if not isinstance(ui, (str, unicode)):
-	# 		name = self.getUiName(ui) #get name using ui object, or get current ui name if ui=None.
-
-	# 	if 'submenu' not in name:
-	# 		name = name+'_submenu'
-
-	# 	return self.getUi(name)
 
 
 

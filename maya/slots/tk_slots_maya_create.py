@@ -9,9 +9,6 @@ class Create(Init):
 	def __init__(self, *args, **kwargs):
 		super(Create, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('create')
-		self.childUi = self.sb.getUi('create_submenu')
-
 		self.rotation = {'x':[90,0,0], 'y':[0,90,0], 'z':[0,0,90], '-x':[-90,0,0], '-y':[0,-90,0], '-z':[0,0,-90], 'last':[]}
 		self.point=[0,0,0]
 		self.history=[]
@@ -31,8 +28,8 @@ class Create(Init):
 				return None
 
 		transform = transforms[0]
-		if not self.parentUi.txt003.text()==transform.name(): #make sure the same field reflects the current working node.
-			self.parentUi.txt003.setText(transform.name())
+		if not self.create.txt003.text()==transform.name(): #make sure the same field reflects the current working node.
+			self.create.txt003.setText(transform.name())
 
 		return transform
 
@@ -41,7 +38,7 @@ class Create(Init):
 		'''
 		Context menu
 		'''
-		pin = self.parentUi.pin
+		pin = self.create.pin
 
 		if state is 'setMenu':
 			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
@@ -52,7 +49,7 @@ class Create(Init):
 		'''
 		Editors
 		'''
-		cmb = self.parentUi.cmb003
+		cmb = self.create.cmb003
 		
 		if index is 'setMenu':
 			list_ = ['']
@@ -69,13 +66,13 @@ class Create(Init):
 		'''
 
 		'''
-		if self.parentUi.chk000.isChecked():
+		if self.create.chk000.isChecked():
 			axis = 'x'
-		elif self.parentUi.chk001.isChecked():
+		elif self.create.chk001.isChecked():
 			axis = 'y'
-		elif self.parentUi.chk002.isChecked():
+		elif self.create.chk002.isChecked():
 			axis = 'z'
-		if self.parentUi.chk003.isChecked(): #negative
+		if self.create.chk003.isChecked(): #negative
 			axis = '-'+axis
 		return axis
 
@@ -101,7 +98,7 @@ class Create(Init):
 		Set Translate X
 		'''
 		if self.node:
-			self.point[0] = float(self.parentUi.s000.value())
+			self.point[0] = float(self.create.s000.value())
 			pm.xform (self.node, translation=self.point, worldSpace=1, absolute=1)
 
 
@@ -110,7 +107,7 @@ class Create(Init):
 		Set Translate Y
 		'''
 		if self.node:
-			self.point[1] = float(self.parentUi.s001.value())
+			self.point[1] = float(self.create.s001.value())
 			pm.xform (self.node, translation=self.point, worldSpace=1, absolute=1)
 
 
@@ -119,7 +116,7 @@ class Create(Init):
 		Set Translate Z
 		'''
 		if self.node:
-			self.point[2] = float(self.parentUi.s002.value())
+			self.point[2] = float(self.create.s002.value())
 			pm.xform (self.node, translation=self.point, worldSpace=1, absolute=1)
 
 
@@ -128,7 +125,7 @@ class Create(Init):
 		Set Name
 		'''
 		if self.node:
-			pm.rename(self.node.name(), self.parentUi.txt003.text())
+			pm.rename(self.node.name(), self.create.txt003.text())
 
 
 	def chk000(self):
@@ -178,16 +175,16 @@ class Create(Init):
 			self.point = [0,0,0]
 			print('Warning: Nothing selected. Point set to origin [0,0,0].')
 
-		self.parentUi.s000.setValue(self.point[0])
-		self.parentUi.s001.setValue(self.point[1])
-		self.parentUi.s002.setValue(self.point[2])
+		self.create.s000.setValue(self.point[0])
+		self.create.s001.setValue(self.point[1])
+		self.create.s002.setValue(self.point[2])
 
 
 	def cmb000(self, index=None):
 		'''
 
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.create.cmb000
 
 		if index is 'setMenu':
 			list_ = ['Polygon', 'NURBS', 'Light']
@@ -199,13 +196,13 @@ class Create(Init):
 		lights = ["Ambient", "Directional", "Point", "Spot", "Area", "Volume", "VRay Sphere", "VRay Dome", "VRay Rect", "VRay IES"]
 
 		if index==0: #shared menu. later converted to the specified type.
-			self.parentUi.cmb001.addItems_(polygons, clear=True)
+			self.create.cmb001.addItems_(polygons, clear=True)
 
 		if index==1:
-			self.parentUi.cmb001.addItems_(nurbs, clear=True)
+			self.create.cmb001.addItems_(nurbs, clear=True)
 
 		if index==2:
-			self.parentUi.cmb001.addItems_(lights, clear=True)
+			self.create.cmb001.addItems_(lights, clear=True)
 
 
 	def cmb002(self, index=None, values={}, clear=False, show=False):
@@ -218,15 +215,14 @@ class Create(Init):
 			clear (bool) = Clear any previous items.
 			show (bool) = Show the popup menu immediately after adding items.
 		'''
-		cmb = self.parentUi.cmb002
+		cmb = self.create.cmb002
 
 		if index is 'setMenu':
+			cmb.popupStyle = 'qmenu'
 			return
 
 		n = len(values)
 		if n and index is None:
-			cmb.popupStyle = 'qmenu'
-
 			names = 's000-'+str(n-1)
 
 			if clear:
@@ -252,7 +248,7 @@ class Create(Init):
 		args:
 			index(int) = optional index of the spinbox that called this function. ie. 5 from s005
 		'''
-		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.parentUi.cmb002.children_()} #get current spinbox values. ie. {width:10} from spinbox prefix and value.
+		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.create.cmb002.children_()} #get current spinbox values. ie. {width:10} from spinbox prefix and value.
 		self.setAttributesMEL(self.node.history()[-1], spinboxValues) #set attributes for the history node
 
 
@@ -261,8 +257,8 @@ class Create(Init):
 		Create Object
 		'''
 		axis = self.rotation[self.getAxis()] #get axis as [int list]
-		type_ = self.parentUi.cmb000.currentText()
-		index = self.parentUi.cmb001.currentIndex()
+		type_ = self.create.cmb000.currentText()
+		index = self.create.cmb001.currentIndex()
 
 		#polygons
 		if type_=='Polygon':
@@ -359,9 +355,9 @@ class Create(Init):
 
 		#set name
 		if isinstance(node[0], (str,unicode)): #is type of:
-			self.parentUi.txt003.setText(node[0])
+			self.create.txt003.setText(node[0])
 		else:
-			self.parentUi.txt003.setText(node[0].name())
+			self.create.txt003.setText(node[0].name())
 
 		self.history.extend(node) #save current node to history
 		self.rotation['last']=[] #reset rotation history
@@ -377,15 +373,15 @@ class Create(Init):
 		pm.select(node) #select the transform node so that you can see any edits
 
 
-	def create(self, catagory1, catagory2):
+	def createPrimitive(self, catagory1, catagory2):
 		'''
-		ie. create('Polygons', 'Cube')
+		ie. createPrimitive('Polygons', 'Cube')
 		args:
 			type1 (str) = 
 			type2 (str) = 
 		'''
-		cmb000 = self.parentUi.cmb000
-		cmb001 = self.parentUi.cmb001
+		cmb000 = self.create.cmb000
+		cmb001 = self.create.cmb001
 
 		cmb000.setCurrentIndex(cmb000.findText(catagory1))
 		cmb001.setCurrentIndex(cmb001.findText(catagory2))
@@ -397,28 +393,28 @@ class Create(Init):
 		'''
 		Create poly cube
 		'''
-		self.create('Polygon', 'Cube')
+		self.createPrimitive('Polygon', 'Cube')
 
 
 	def b002(self):
 		'''
 		Create poly sphere
 		'''
-		self.create('Polygon', 'Sphere')
+		self.createPrimitive('Polygon', 'Sphere')
 
 
 	def b003(self):
 		'''
 		Create poly cylinder
 		'''
-		self.create('Polygon', 'Cylinder')
+		self.createPrimitive('Polygon', 'Cylinder')
 
 
 	def b004(self):
 		'''
 		Create poly plane
 		'''
-		self.create('Polygon', 'Plane')
+		self.createPrimitive('Polygon', 'Plane')
 
 
 

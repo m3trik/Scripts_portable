@@ -116,7 +116,7 @@ class Edit(Init):
 		'''
 		tb = self.currentUi.tb001
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='All', setObjectName='chk018', setChecked=True, setToolTip='Delete history on All objects.')
+			tb.add('QCheckBox', setText='For All Objects', setObjectName='chk018', setChecked=True, setToolTip='Delete history on All objects or just those selected.')
 			tb.add('QCheckBox', setText='Delete Unused Nodes', setObjectName='chk019', setChecked=True, setToolTip='Delete unused nodes.')
 			tb.add('QCheckBox', setText='Delete Deformers', setObjectName='chk020', setToolTip='Delete deformers.')
 			return
@@ -158,7 +158,9 @@ class Edit(Init):
 		'''
 		tb = self.currentUi.tb002
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='Delete Loop', setObjectName='chk001', setToolTip='Delete the entire edge loop of any components selected.')
+			tb.add('QCheckBox', setText='Delete Edge Loop', setObjectName='chk001', setToolTip='Delete the edge loops of any edges selected.')
+			tb.add('QCheckBox', setText='Delete Edge Ring', setObjectName='chk000', setToolTip='Delete the edge rings of any edges selected.')
+			tb.add('QCheckBox', setText='Delete Edge Border', setObjectName='chk021', setToolTip='Delete the edge rings of any edges selected.')
 			return
 
 		selectionMask = pm.selectMode (query=True, component=True)
@@ -167,13 +169,18 @@ class Edit(Init):
 		maskFacet = pm.selectType (query=True, facet=True)
 
 		objects = pm.ls(sl=1)
-
 		for obj in objects:
 			if pm.objectType(obj, isType='joint'):
 				pm.removeJoint(obj) #remove joints
 
 			elif pm.objectType(obj, isType='mesh'): 
 				if all([selectionMask==1, maskEdge==1]):
+					if tb.chk000.isChecked(): #delete ring.
+						pm.polySelect(edgeRing=True) #select the edge ring.
+					if tb.chk001.isChecked(): #delete loop.
+						pm.polySelect(edgeLoop=True) #select the edge loop.
+					if tb.chk021.isChecked(): #delete border.
+						pm.polySelect(edgeBorder=True) #select connected border edges.
 					pm.polyDelEdge(cleanVertices=True) #delete edges
 
 				elif all([selectionMask==1, maskVertex==1]):
@@ -184,8 +191,6 @@ class Edit(Init):
 
 				else: #all([selectionMask==1, maskFacet==1]):
 					pm.delete(obj) #delete faces\mesh objects
-		
-		self.viewPortMessage('Delete <hl>'+str(objects)+'</hl>.')
 
 
 	def tb003(self, state=None):
