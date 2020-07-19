@@ -78,7 +78,7 @@ class Rigging(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def chk000(self):
+	def chk000(self, state=None):
 		'''
 		Scale Joint
 		'''
@@ -86,7 +86,7 @@ class Rigging(Init):
 		self.parentUi.tb000.s000.setValue(pm.jointDisplayScale(query=1)) #init global joint display size
 
 
-	def chk001(self):
+	def chk001(self, state=None):
 		'''
 		Scale IK
 		'''
@@ -94,7 +94,7 @@ class Rigging(Init):
 		self.parentUi.s000.setValue(pm.ikHandleDisplayScale(query=1)) #init IK handle display size
 		
 
-	def chk002(self):
+	def chk002(self, state=None):
 		'''
 		Scale IK/FK
 		'''

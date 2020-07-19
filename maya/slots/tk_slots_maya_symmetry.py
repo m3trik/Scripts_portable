@@ -69,7 +69,7 @@ class Symmetry(Init):
 
 
 	@Slots.sync
-	def chk000(self):
+	def chk000(self, state=None):
 		'''
 		Symmetry X
 		'''
@@ -79,7 +79,7 @@ class Symmetry(Init):
 
 
 	@Slots.sync
-	def chk001(self):
+	def chk001(self, state=None):
 		'''
 		Symmetry Y
 		'''
@@ -89,7 +89,7 @@ class Symmetry(Init):
 
 
 	@Slots.sync
-	def chk002(self):
+	def chk002(self, state=None):
 		'''
 		Symmetry Z
 		'''
@@ -98,7 +98,7 @@ class Symmetry(Init):
 		self.setSymmetry(state, 'z')
 
 
-	def chk004(self):
+	def chk004(self, state=None):
 		'''
 		Symmetry: Object
 		'''
@@ -106,7 +106,7 @@ class Symmetry(Init):
 	
 
 	@Slots.message
-	def chk005(self):
+	def chk005(self, state=None):
 		'''
 		Symmetry: Topo
 		'''

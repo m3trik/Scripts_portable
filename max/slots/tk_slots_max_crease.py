@@ -54,7 +54,7 @@ class Crease(Init):
 
 
 	@Slots.sync
-	def chk002(self):
+	def chk002(self, state=None):
 		'''
 		Un-Crease
 		'''
@@ -72,7 +72,7 @@ class Crease(Init):
 
 
 	@Slots.sync
-	def chk003(self):
+	def chk003(self, state=None):
 		'''
 		Crease: Max
 		'''
@@ -90,7 +90,7 @@ class Crease(Init):
 
 
 	@Slots.sync
-	def chk011(self):
+	def chk011(self, state=None):
 		'''
 		Crease: Auto
 		'''

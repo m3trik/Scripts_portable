@@ -13,6 +13,7 @@ if not app:
 class Tk_maya(Tk):
 	'''
 	Tk class overridden for use with Autodesk Maya.
+
 	args:
 		parent = Application top level window instance.
 	'''
@@ -21,8 +22,8 @@ class Tk_maya(Tk):
 		if not parent:
 			try:
 				parent = next(w for w in app.topLevelWidgets() if w.objectName()=='MayaWindow')
-			except:
-				print('Error: "MayaWindow" object not found in app.topLevelWidgets()')
+			except Exception as error:
+				print(self.__class__.__name__, error)
 
 		super(Tk_maya, self).__init__(parent)
 

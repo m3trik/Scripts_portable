@@ -10,21 +10,21 @@ class Polygons(Init):
 		super(Polygons, self).__init__(*args, **kwargs)
 
 
-	def chk008(self):
+	def chk008(self, state=None):
 		'''
 		Split U
 		'''
 		self.toggleWidgets(setUnChecked='chk010')
 
 
-	def chk009(self):
+	def chk009(self, state=None):
 		'''
 		Split V
 		'''
 		self.toggleWidgets(setUnChecked='chk010')
 
 
-	def chk010(self):
+	def chk010(self, state=None):
 		'''
 		Tris
 		'''

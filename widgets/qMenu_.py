@@ -159,6 +159,9 @@ class QMenu_(QtWidgets.QMenu):
 			if callable(w):
 				w = w() #ex. QtWidgets.QAction(self) object.
 
+		w.setMinimumHeight(19) #self.parent().minimumSizeHint().height()+1) #set child widget height to that of the toolbutton
+		self._setAttributes(kwargs, w) #set any additional given keyword args for the widget.
+
 		type_ = w.__class__.__name__
 
 		if type_=='QAction':
@@ -169,9 +172,8 @@ class QMenu_(QtWidgets.QMenu):
 			wAction.setDefaultWidget(w)
 			self.addAction(wAction)
 
-		self._setAttributes(kwargs, w) #set any additional given keyword args for the widget.
 		setattr(self, w.objectName(), w) #add the widget's objectName as a QMenu attribute.
-
+		
 		return w
 
 

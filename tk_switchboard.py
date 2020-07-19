@@ -368,7 +368,7 @@ class Switchboard(QtCore.QObject):
 			'QSpinBox':'valueChanged',
 			'QDoubleSpinBox':'valueChanged',
 			'QCheckBox':'stateChanged',
-			'QRadioButton':'released',
+			'QRadioButton':'toggled',
 			'QLineEdit':'returnPressed',
 			'QTextEdit':'textChanged',
 			'QProgressBar':'valueChanged',
@@ -499,7 +499,8 @@ class Switchboard(QtCore.QObject):
 		Get the dynamic ui using its string name, or if no argument is given, return the current ui.
 
 		args:
-			name (str) = Name of class. ie. 'polygons' (by default getUi returns the current ui)
+			name (str)(obj) = Name of class. ie. 'polygons' (by default getUi returns the current ui)
+				also supports passing in a ui object to access parameters setAsCurrent and level.
 			setAsCurrent (bool) = Set the ui name as the currently active ui. (default: False)
 			level (int) = Get the ui of the given level. (2:submenu, 3:main_menu)
 
@@ -509,7 +510,9 @@ class Switchboard(QtCore.QObject):
 		'''
 		if name is None:
 			name = self.getUiName(camelCase=True)
-			if name is None:
+		elif not isinstance(name, (str, unicode)): #name as ui object
+			name = self.getUiName(name, camelCase=True)
+		if name is None:
 				return None
 
 		if level==2: #submenu
@@ -925,8 +928,9 @@ class Switchboard(QtCore.QObject):
 		Case insensitive. Get the widget object/s from the given ui and objectName.
 
 		args:
-			name (str) = name of ui. ie. 'polygons'. If no name is given, the current ui will be used.
 			objectName (str) = optional name of widget. ie. 'b000'
+			name (str)(obj) = name of ui. ie. 'polygons'. If no name is given, the current ui will be used.
+						 	A ui object can be passed into this parameter, which will be used to get it's corresponding name. 
 
 		returns:
 			if objectName:  widget object with the given name from the current ui.
@@ -935,6 +939,8 @@ class Switchboard(QtCore.QObject):
 		'''
 		if not name:
 			name = self.getUiName()
+		if not isinstance(str, unicode):
+			name = self.getUiName(name)
 
 		if not 'widgets' in self.sbDict[name]:
 			self.widgets(name) #construct the signals and slots for the ui
@@ -1382,7 +1388,7 @@ class Switchboard(QtCore.QObject):
 	#Property
 	def getUiLevel(self, name=False):
 		'''
-		Get the hierarcical level of a ui from its string name.
+		Get the hierarcical level of a ui.
 		If no argument is given, the level of current ui will be returned.
 
 		level 0: init (root) (parent class)
@@ -1391,7 +1397,7 @@ class Switchboard(QtCore.QObject):
 		level 3: main_menus
 
 		args:
-			name (str) = ui name to get level of. ie. 'polygons'
+			name (str)(obj) = The ui name or ui object to get level of. ie. 'polygons' or <polygons>
 
 		returns:
 			ui level as an integer.
@@ -1399,6 +1405,8 @@ class Switchboard(QtCore.QObject):
 		if not name:
 			name = self.getUiName()
 			name = name[0].lower()+name[1:] #lowercase the first letter of name.
+		elif not isinstance(name, (str, unicode)):
+			name = self.getUiName(name)
 
 		try:
 			return self.sbDict[name]['uiLevel']

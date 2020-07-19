@@ -45,7 +45,7 @@ class Cameras(Init):
 
 
 	@Slots.message
-	def chk000(self):
+	def chk000(self, state=None):
 		'''
 		Camera Clipping: Auto Clip
 		'''

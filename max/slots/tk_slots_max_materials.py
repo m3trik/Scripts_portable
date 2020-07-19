@@ -12,6 +12,8 @@ class Materials(Init):
 		self.currentMaterials=None
 		self.randomMat=None
 
+		self.materials_submenu.b003.setVisible(False)
+
 
 	@property
 	def currentMaterial(self):
@@ -33,20 +35,31 @@ class Materials(Init):
 			return
 
 
-	def chk007(self):
+	@Slots.sync
+	def chk007(self, state=None):
 		'''
 		Assign Material: Current
 		'''
-		self.ui.tb002.setText('Assign Current')
-		self.toggleWidgets(setUnChecked='chk008')
+		self.materials.tb002.setText('Assign Current')
+		# self.toggleWidgets(setUnChecked='chk008-9')
 
 
-	def chk008(self):
+	@Slots.sync
+	def chk008(self, state=None):
 		'''
 		Assign Material: Random
 		'''
-		self.ui.tb002.setText('Assign Random')
-		self.toggleWidgets(setUnChecked='chk007')
+		self.materials.tb002.setText('Assign Random')
+		# self.toggleWidgets(setUnChecked='chk007, chk009')
+
+
+	@Slots.sync
+	def chk009(self, state=None):
+		'''
+		Assign Material: New
+		'''
+		self.materials.tb002.setText('Assign New')
+		# self.toggleWidgets(setUnChecked='chk007-8')
 
 
 	def cmb001(self, index=None):
@@ -54,7 +67,6 @@ class Materials(Init):
 		Editors
 		'''
 		cmb = self.materials.cmb001
-
 		if index is 'setMenu':
 			list_ = ['Material Editor']
 			cmb.addItems_(list_, '3dsMax Material Editors')
@@ -74,13 +86,13 @@ class Materials(Init):
 			index (int) = parameter on activated, currentIndexChanged, and highlighted signals.
 		'''
 		cmb = self.materials.cmb002
-
 		if index is 'setMenu':
 			cmb.addToContext(QLabel_, setText='Open in Editor', setObjectName='lbl000', setToolTip='Open material in editor.')
 			cmb.addToContext(QLabel_, setText='Rename', setObjectName='lbl001', setToolTip='Rename the current material.')
 			cmb.addToContext(QLabel_, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current material.')
 			cmb.addToContext(QLabel_, setText='Delete All Unused Materials', setObjectName='lbl003', setToolTip='Delete All unused materials.')
-			cmb.addToContext(QLabel_, setText='Refresh', setObjectName='cmb002', setToolTip='Refresh materials list')
+			# cmb.addToContext(QLabel_, setText='Refresh', setObjectName='cmb002', setToolTip='Refresh materials list')
+			cmb.beforePopupShown.connect(self.cmb002) #refresh comboBox contents before showing it's popup.
 			return
 
 		if cmb.lineEdit():
@@ -123,6 +135,10 @@ class Materials(Init):
 
 		self.currentMaterials = {name:mats[i] for i, name in enumerate(matNames)} #add mat objects to materials dictionary. 'mat name'=key, <mat object>=value
 
+		self.materials_submenu.b003.setText('Assign '+cmb.currentText())
+		self.materials_submenu.b003.setMinimumWidth(self.materials_submenu.b003.minimumSizeHint().width()+25)
+		self.materials_submenu.b003.setVisible(True if cmb.currentText() else False)
+
 
 	@Slots.message
 	def tb000(self, state=None):
@@ -152,7 +168,7 @@ class Materials(Init):
 		'''
 		Stored Material Options
 		'''
-		tb = self.ui.tb001
+		tb = self.materials.tb001
 		if state is 'setMenu':
 			tb.add('QRadioButton', setText='All Scene Materials', setObjectName='chk000', setChecked=True, setToolTip='List all scene materials.') #Material mode: Stored Materials
 			tb.add('QRadioButton', setText='ID Map Materials', setObjectName='chk001', setToolTip='List ID map materials.') #Material mode: ID Map Materials
@@ -171,9 +187,10 @@ class Materials(Init):
 		'''
 		Assign Material
 		'''
-		tb = self.ui.tb002
+		tb = self.materials.tb002
 		if state is 'setMenu':
 			tb.add('QRadioButton', setText='Current Material', setObjectName='chk007', setChecked=True, setToolTip='Re-Assign the current stored material.')
+			tb.add('QRadioButton', setText='New Material', setObjectName='chk009', setToolTip='Assign a new material.')
 			tb.add('QRadioButton', setText='New Random Material', setObjectName='chk008', setToolTip='Assign a new random ID material.')
 			return
 
@@ -200,6 +217,9 @@ class Materials(Init):
 
 		elif tb.chk007.isChecked(): #Assign current mat
 			self.assignMaterial(selection, self.currentMaterial)
+
+		elif tb.chk009.isChecked(): #Assign New Material
+			pass
 
 		rt.redrawViews()
 
@@ -298,6 +318,20 @@ class Materials(Init):
 			rt.freeSceneBitmaps()
 
 
+	def b000(self):
+		'''
+		Material List: Delete
+		'''
+		self.lbl002()
+
+
+	def b001(self):
+		'''
+		Material List: Edit
+		'''
+		self.lbl000()
+
+
 	@Slots.message
 	def b002(self):
 		'''
@@ -314,6 +348,30 @@ class Materials(Init):
 		cmb = self.materials.cmb002
 		self.cmb002() #refresh the combobox
 		cmb.setCurrentIndex(cmb.items.index(mat.name))
+
+
+	def b003(self):
+		'''
+		Assign: Assign Current
+		'''
+		self.materials.tb002.chk007.setChecked(True)
+		self.tb002()
+
+
+	def b004(self):
+		'''
+		Assign: Assign Random
+		'''
+		self.materials.tb002.chk008.setChecked(True)
+		self.tb002()
+
+
+	def b005(self):
+		'''
+		Assign: Assign New
+		'''
+		self.materials.tb002.chk009.setChecked(True)
+		self.tb002()
 
 
 	@Slots.message

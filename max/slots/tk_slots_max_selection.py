@@ -175,21 +175,21 @@ class Selection(Init):
 			tb.s004.setValue(text)
 
 
-	def chk000(self):
+	def chk000(self, state=None):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
 		self.toggleWidgets(setUnChecked='chk001-2')
 
 
-	def chk001(self):
+	def chk001(self, state=None):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
 		self.toggleWidgets(setUnChecked='chk000,chk002')
 
 
-	def chk002(self):
+	def chk002(self, state=None):
 		'''
 		Select Nth: uncheck other checkboxes
 		'''
@@ -197,7 +197,7 @@ class Selection(Init):
 
 
 	@Slots.message
-	def chk004(self):
+	def chk004(self, state=None):
 		'''
 		Ignore Backfacing (Camera Based Selection)
 		'''
@@ -211,7 +211,7 @@ class Selection(Init):
 
 
 	@Slots.message
-	def chk005(self):
+	def chk005(self, state=None):
 		'''
 		Select Style: Marquee
 		'''
@@ -221,7 +221,7 @@ class Selection(Init):
 
 
 	@Slots.message
-	def chk006(self):
+	def chk006(self, state=None):
 		'''
 		Select Style: Lasso
 		'''
@@ -231,7 +231,7 @@ class Selection(Init):
 
 
 	@Slots.message
-	def chk007(self):
+	def chk007(self, state=None):
 		'''
 		Select Style: Paint
 		'''

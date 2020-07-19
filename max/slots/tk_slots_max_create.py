@@ -132,7 +132,7 @@ class Create(Init):
 			self.node.name = self.create.txt003.text()
 
 
-	def chk000(self):
+	def chk000(self, state=None):
 		'''
 		Rotate X Axis
 		'''
@@ -141,7 +141,7 @@ class Create(Init):
 			self.rotateAbsolute(self.getAxis(), self.node)
 
 
-	def chk001(self):
+	def chk001(self, state=None):
 		'''
 		Rotate Y Axis
 		'''
@@ -150,7 +150,7 @@ class Create(Init):
 			self.rotateAbsolute(self.getAxis(), self.node)
 
 
-	def chk002(self):
+	def chk002(self, state=None):
 		'''
 		Rotate Z Axis
 		'''
@@ -159,7 +159,7 @@ class Create(Init):
 			self.rotateAbsolute(self.getAxis(), self.node)
 
 
-	def chk003(self):
+	def chk003(self, state=None):
 		'''
 		Rotate Negative Axis
 		'''
@@ -168,7 +168,7 @@ class Create(Init):
 
 
 	@Slots.message
-	def chk005(self):
+	def chk005(self, state=None):
 		'''
 		Set Point
 		'''

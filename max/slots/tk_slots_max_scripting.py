@@ -50,7 +50,7 @@ class Scripting(Init):
 		# 	cmb.setCurrentIndex(0)
 
 
-	def chk000(self):
+	def chk000(self, state=None):
 		'''
 		Toggle Mel/Python
 		'''

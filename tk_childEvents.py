@@ -273,7 +273,7 @@ class EventFactoryFilter(QtCore.QObject):
 			try:
 				self.classMethod()
 			except (AttributeError, NameError, TypeError) as error:
-				print(self.name, self.widgetName, error)
+				print(self.__class__.__name__, self.name, self.widgetName, error)
 
 			if self.widgetType=='QTreeWidget_ExpandableList':
 				self.addWidgets(self.name, self.widget.newWidgets) #removeWidgets=self.widget._gcWidgets.keys()

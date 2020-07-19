@@ -154,9 +154,11 @@ class QComboBox_(QtWidgets.QComboBox):
 			w (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
 			header (str) = optional - header string at top when using standard model/view.
 			_menu (obj) = menu to add to. typically internal use only.
+
 		kwargs:
 			show (bool) = show the menu.
 			insertSeparator (QAction) = insert separator in front of the given action.
+
 		returns:
 			the added widget.
 
@@ -172,8 +174,6 @@ class QComboBox_(QtWidgets.QComboBox):
 		except:
 			if callable(w):
 				w = w() #ex. QtWidgets.QAction(self) object.
-
-		w.setMinimumHeight(self.minimumSizeHint().height()+1) #set child widget height to that of the toolbutton
 
 		if _menu is None:
 			_menu = self.menu

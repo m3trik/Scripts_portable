@@ -262,7 +262,7 @@ class Transform(Init):
 				print (fn, '|', state)
 
 
-	def chk005(self):
+	def chk005(self, state=None):
 		'''
 		Transform: Scale
 
@@ -272,7 +272,7 @@ class Transform(Init):
 		self.transform.s000.setSingleStep(1)
 
 
-	def chk008(self):
+	def chk008(self, state=None):
 		'''
 		Transform: Move
 
@@ -282,7 +282,7 @@ class Transform(Init):
 		self.transform.s000.setSingleStep(0.1)
 
 
-	def chk009(self):
+	def chk009(self, state=None):
 		'''
 		Transform: Rotate
 
@@ -292,7 +292,7 @@ class Transform(Init):
 		self.transform.s000.setSingleStep(5)
 
 
-	def chk010(self):
+	def chk010(self, state=None):
 		'''
 		Align Vertices: Auto Align
 		'''

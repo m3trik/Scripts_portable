@@ -67,7 +67,7 @@ class Duplicate(Init):
 		self.chk016() #calling chk015 directly from valueChanged would pass the returned spinbox value to the create arg
 
 
-	def chk007(self):
+	def chk007(self, state=None):
 		'''
 		Duplicate: Translate To Components
 		'''
@@ -79,7 +79,7 @@ class Duplicate(Init):
 
 
 	@Slots.message
-	def chk010(self):
+	def chk010(self, state=None):
 		'''
 		Radial Array: Set Pivot
 		'''
@@ -103,14 +103,14 @@ class Duplicate(Init):
 			self.parentUi.chk010.setText("Set Pivot")
 
 
-	def chk011(self):
+	def chk011(self, state=None):
 		'''
 		Radial Array: Instance/Duplicate Toggle
 		'''
 		self.chk015() #calling chk015 directly from valueChanged would pass the returned spinbox value to the create arg
 
 
-	def chk012(self):
+	def chk012(self, state=None):
 		'''
 		Radial Array: X Axis
 		'''
@@ -118,7 +118,7 @@ class Duplicate(Init):
 		self.chk015()
 
 
-	def chk013(self):
+	def chk013(self, state=None):
 		'''
 		Radial Array: Y Axis
 		'''
@@ -126,7 +126,7 @@ class Duplicate(Init):
 		self.chk015()
 
 
-	def chk014(self):
+	def chk014(self, state=None):
 		'''
 		Radial Array: Z Axis
 		'''

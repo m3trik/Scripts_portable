@@ -159,37 +159,50 @@ class Slots(QtCore.QObject):
 			self.syncWidgets(fn.__name__) #Get the state of the widget in the current ui and set any widgets (having the methods name) in child or parent ui's accordingly.
 		return wrapper
 
-	def syncWidgets(self, widgets, ui=None):
+	def syncWidgets(self, widgets, from_ui=None, fn=2):
 		'''
 		Keep widgets (having the same objectName) in sync across parent and child uis
 		If the second widget does not have an attribute it will silently skip it.
 		Attributes starting with '__' are ignored.
 
 		args:
-			widgets (str)(list) = QWidget list (string objectNames) to get the attributes from. string shorthand style: ie. 'b000-12,b022'
-			ui (obj) = ui to sync to. default is the current ui.
+			widgets (str)(list) = Widget objectNames as string or list of widget objects. string shorthand style: ie. 'b000-12,b022'
+			from_ui (obj) = ui to sync to. default is the current ui.
+			fn (int) = The widgets to sync. 1) the given widgets, 2) the given widgets and their parents, 3) all widgets.
 
 		self.syncWidgets('chk002-6')
 		'''
-		if not ui:
+		if not from_ui:
 			from_ui = self.sb.getUi()
 
-		if self.sb.getUiLevel(ui)==3: #self.sb.getUiLevel(from_widget)==3
-			to_ui = self.sb.getUi(self.sb.getUiName(from_ui), level=2) #get either it's parent or submenu, depending on the given ui.
-		else:
-			to_ui = self.sb.getUi(self.sb.getUiName(from_ui), level=3)
+		to_ui = self.sb.getUi(from_ui, level=2) if self.sb.getUiLevel(from_ui)==3 else self.sb.getUi(from_ui, level=3)#get either it's parent or submenu, depending on the given ui.
 
-		if isinstance(widgets, (str, unicode)):
-			from_widgets = self.getObjects(from_ui, widgets) #getObjects returns a widget list from a string of objectNames.
+		if fn in (0, 1): #
+			if isinstance(widgets, (str, unicode)):
+				from_widgets = self.getObjects(from_ui, widgets) #returns a list of widget objects from a string of objectNames.  ie. [<b000>, <b001>, ..] from 'b000-12,b022'
+				to_widgets = self.getObjects(to_ui, widgets)
+			else: #if list of widget objects:
+				from_widgets = widgets
+				to_widgets = [self.sb.getWidget(w.objectName(), name=to_ui) for w in widgets]
 
-		if isinstance(widgets, (str, unicode)):
-			to_widgets = self.getObjects(to_ui, widgets) #getObjects returns a widget list from a string of objectNames.
+		if fn==1: #get parents of the given widgets
+			from_widgets += [w.parent() for w in from_widgets]
+			to_widgets += [w.parent() for w in to_widgets]
 
-		_widgets = dict(zip(from_widgets, to_widgets)) #{<from_widget>:<to_widget>}
+		else: #get all widgets
+			if not fn in (0, 1):
+				from_widgets = self.sb.getWidget(name=from_ui)
+				to_widgets = self.sb.getWidget(name=to_ui)
+
+		from_widgets = {w.objectName():w for w in from_widgets}
+		# print ('from_widgets:', [i for i in from_widgets.values() if 'QRadioButton' in str(i)])
+		to_widgets = {w.objectName():w for w in to_widgets}
+		# print ('to_widgets:  ', [i for i in to_widgets.values() if 'QRadioButton' in str(i)])
+
+		_widgets = {from_widgets[i]:to_widgets[i] for i in from_widgets if i in to_widgets} #{<from_widget>:<to_widget>}
 		for from_widget, to_widget in _widgets.items():
-			attributeTypes = {'isChecked':'setChecked', 'isDisabled':'setDisabled', 'isEnabled':'setEnabled', 'value':'setValue', 'text':'setText', 'icon':'setIcon'}
-			attributes = {settr:getattr(from_widget, gettr)() for gettr,settr in attributeTypes.items() if hasattr(from_widget, gettr)} #get the first widget's attributes:values.
-			# [setattr(to_widget, attr, value) for attr, value in attributes.items() if hasattr(to_widget, attr)] #
+			attributeTypes = {'isChecked':'setChecked', 'isDisabled':'setDisabled', 'isEnabled':'setEnabled', 'value':'setValue', 'text':'setText', 'icon':'setIcon'}	
+			attributes = {settr:getattr(from_widget, gettr)() for gettr, settr in attributeTypes.items() if hasattr(from_widget, gettr)} #get the from_widget's {attribute:value} ie. {'setChecked':True}
 			[getattr(to_widget, attr)(value) for attr, value in attributes.items() if hasattr(to_widget, attr)] #set the second widget's attributes from the first.
 
 

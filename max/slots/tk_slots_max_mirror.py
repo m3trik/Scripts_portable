@@ -50,7 +50,7 @@ class Mirror(Init):
 
 
 	@Slots.sync
-	def chk005(self):
+	def chk005(self, state=None):
 		'''
 		Mirror: Cut
 		'''
@@ -142,7 +142,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 
 #deprecated:
 
-	# def chk000(self):
+	# def chk000(self, state=None):
 	# 	'''
 	# 	Delete: Negative Axis. Set Text Mirror Axis
 	# 	'''
@@ -158,7 +158,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 
 
 	# #set check states
-	# def chk001(self):
+	# def chk000(self, state=None):
 	# 	'''
 	# 	Delete: X Axis
 	# 	'''
@@ -170,7 +170,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	self.parentUi.b008.setText('Delete '+axis)
 
 
-	# def chk002(self):
+	# def chk002(self, state=None):
 	# 	'''
 	# 	Delete: Y Axis
 	# 	'''
@@ -182,7 +182,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	self.parentUi.b008.setText('Delete '+axis)
 
 
-	# def chk003(self):
+	# def chk003(self, state=None):
 	# 	'''
 	# 	Delete: Z Axis
 	# 	'''

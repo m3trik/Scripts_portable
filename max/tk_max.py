@@ -11,6 +11,7 @@ except ImportError as error:
 class Tk_max(Tk):
 	'''
 	Tk class overridden for use with Autodesk 3ds max.
+
 	args:
 		parent = main application top level window object.
 	'''
@@ -20,8 +21,8 @@ class Tk_max(Tk):
 			try:
 				parent = MaxPlus.GetQMaxMainWindow()
 				parent.setObjectName('MaxWindow')
-			except:
-				print('Error: "MaxWindow" object not found by MaxPlus.GetQMaxMainWindow()')
+			except Exception as error:
+				print(self.__class__.__name__, error)
 
 		super(Tk_max, self).__init__(parent)
 

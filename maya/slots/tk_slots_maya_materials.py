@@ -12,6 +12,8 @@ class Materials(Init):
 		self.currentMaterials=None
 		self.randomMat=None
 
+		self.materials_submenu.b003.setVisible(False)
+
 
 	@property
 	def currentMaterial(self):
@@ -34,28 +36,31 @@ class Materials(Init):
 			return
 
 
-	def chk007(self):
+	@Slots.sync
+	def chk007(self, state=None):
 		'''
 		Assign Material: Current
 		'''
-		self.ui.tb002.setText('Assign Current')
-		self.toggleWidgets(setUnChecked='chk008-9')
+		self.materials.tb002.setText('Assign Current')
+		# self.toggleWidgets(setUnChecked='chk008-9')
 
 
-	def chk008(self):
+	@Slots.sync
+	def chk008(self, state=None):
 		'''
 		Assign Material: Random
 		'''
-		self.ui.tb002.setText('Assign Random')
-		self.toggleWidgets(setUnChecked='chk007, chk009')
+		self.materials.tb002.setText('Assign Random')
+		# self.toggleWidgets(setUnChecked='chk007, chk009')
 
 
-	def chk009(self):
+	@Slots.sync
+	def chk009(self, state=None):
 		'''
 		Assign Material: New
 		'''
-		self.ui.tb002.setText('Assign New')
-		self.toggleWidgets(setUnChecked='chk007-8')
+		self.materials.tb002.setText('Assign New')
+		# self.toggleWidgets(setUnChecked='chk007-8')
 
 
 	def cmb001(self, index=None):
@@ -89,7 +94,8 @@ class Materials(Init):
 			cmb.addToContext(QLabel_, setText='Rename', setObjectName='lbl001', setToolTip='Rename the current material.')
 			cmb.addToContext(QLabel_, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current material.')
 			cmb.addToContext(QLabel_, setText='Delete All Unused Materials', setObjectName='lbl003', setToolTip='Delete All unused materials.')
-			cmb.addToContext(QLabel_, setText='Refresh', setObjectName='cmb002', setToolTip='Refresh materials list')
+			# cmb.addToContext(QLabel_, setText='Refresh', setObjectName='cmb002', setToolTip='Refresh materials list')
+			cmb.beforePopupShown.connect(self.cmb002) #refresh comboBox contents before showing it's popup.
 			return
 
 		if cmb.lineEdit():
@@ -131,13 +137,17 @@ class Materials(Init):
 
 		self.currentMaterials = {name:mats[i] for i, name in enumerate(matNames)} #add mat objects to materials dictionary. 'mat name'=key, <mat object>=value
 
+		self.materials_submenu.b003.setText('Assign '+cmb.currentText())
+		self.materials_submenu.b003.setMinimumWidth(self.materials_submenu.b003.minimumSizeHint().width()+25)
+		self.materials_submenu.b003.setVisible(True if cmb.currentText() else False)
+
 
 	@Slots.message
 	def tb000(self, state=None):
 		'''
 		Select By Material Id
 		'''
-		tb = self.currentUi.tb000
+		tb = self.ui.tb000
 		if state is 'setMenu':
 			tb.add('QCheckBox', setText='All Objects', setObjectName='chk003', setToolTip='Search all scene objects, or only those currently selected.')
 			tb.add('QCheckBox', setText='Shell', setObjectName='chk005', setToolTip='Select entire shell.')
@@ -160,7 +170,7 @@ class Materials(Init):
 		'''
 		Stored Material Options
 		'''
-		tb = self.currentUi.tb001
+		tb = self.materials.tb001
 		if state is 'setMenu':
 			tb.add('QRadioButton', setText='All Scene Materials', setObjectName='chk000', setChecked=True, setToolTip='List all scene materials.') #Material mode: Scene Materials
 			tb.add('QRadioButton', setText='ID Map Materials', setObjectName='chk001', setToolTip='List ID map materials.') #Material mode: ID Map Materials
@@ -182,7 +192,7 @@ class Materials(Init):
 		'''
 		Assign Material
 		'''
-		tb = self.currentUi.tb002
+		tb = self.materials.tb002
 		if state is 'setMenu':
 			tb.add('QRadioButton', setText='Current Material', setObjectName='chk007', setChecked=True, setToolTip='Re-Assign the current stored material.')
 			tb.add('QRadioButton', setText='New Material', setObjectName='chk009', setToolTip='Assign a new material.')
@@ -280,11 +290,24 @@ class Materials(Init):
 			mel.eval('showSG '+self.currentMaterial.name())
 
 
+	def b000(self):
+		'''
+		Material List: Delete
+		'''
+		self.lbl002()
+
+
+	def b001(self):
+		'''
+		Material List: Edit
+		'''
+		self.lbl000()
+
+
 	@Slots.message
 	def b002(self):
 		'''
 		Store Material
-
 		'''
 		selection = pm.ls(selection=1)
 		if not selection:
@@ -296,6 +319,30 @@ class Materials(Init):
 		cmb = self.materials.cmb002
 		self.cmb002() #refresh the combobox
 		cmb.setCurrentIndex(cmb.items.index(mat.name()))
+
+
+	def b003(self):
+		'''
+		Assign: Assign Current
+		'''
+		self.materials.tb002.chk007.setChecked(True)
+		self.tb002()
+
+
+	def b004(self):
+		'''
+		Assign: Assign Random
+		'''
+		self.materials.tb002.chk008.setChecked(True)
+		self.tb002()
+
+
+	def b005(self):
+		'''
+		Assign: Assign New
+		'''
+		self.materials.tb002.chk009.setChecked(True)
+		self.tb002()
 
 
 	def renameMaterial(self):
@@ -367,6 +414,7 @@ class Materials(Init):
 		args:
 			startingWith (list) = Filters material names starting with any of the strings in the given list. ie. ['ID_']
 			exclude (list) = Node types to exclude.
+
 		returns:
 			(list) materials.
 		'''
@@ -413,6 +461,7 @@ class Materials(Init):
 		args:
 			name (str) = material name.
 			prefix (str) = name prefix.
+
 		returns:
 			(obj) material
 		'''
