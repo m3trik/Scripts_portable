@@ -2,16 +2,16 @@ from __future__ import print_function
 import pymel.core as pm
 import maya.mel as mel
 
+from tk_slots_maya_init import Init
 
 
 
-
-
-class Macros(object):
+class Macros(Init):
 	'''
 	Custom scripts with assigned hotkeys.
 	'''
-	def __init__(self):
+	def __init__(self, *args, **kwargs):
+		super(Macros, self).__init__(*args, **kwargs)
 		'''
 		'''
 
@@ -41,6 +41,7 @@ class Macros(object):
 	def setMacro(self, name=None, k=None, cat=None, ann=None):
 		'''
 		Sets a default runtime command with a keyboard shotcut.
+
 		args:
 			name (str) = The command name you provide must be unique. The name itself must begin with an alphabetic character or underscore followed by alphanumeric characters or underscores.
 			cat (str) = catagory - Category for the command.
@@ -97,9 +98,11 @@ class Macros(object):
 		Return the text of the source code for an object.
 		The source code is returned as a single string.
 		Removes lines containing '@' or 'def ' ie. @staticmethod.
+
 		args:
 			cmd = module, class, method, function, traceback, frame, or code object.
 			removeTabs (int) = remove x instances of '\t' from each line.
+
 		returns:
 			A Multi-line string.
 		'''
@@ -117,6 +120,7 @@ class Macros(object):
 	def setWireframeOnShadedOption(editor, state):
 		'''
 		Set Wireframe On Shaded.
+
 		args:
 			editor (str) = The panel name.
 			state (bool) = The desired on or off state.
@@ -134,7 +138,7 @@ class Macros(object):
 	def hk_back_face_culling():
 		'''
 		hk_back_face_culling
-		Toggle Back-Face Culling
+		Toggle Back-Face Culling.
 		'''
 		sel = pm.ls(selection=True)
 		if sel:
@@ -158,52 +162,57 @@ class Macros(object):
 	def hk_smooth_preview():
 		'''
 		hk_smooth_preview
-		Toggle smooth mesh preview
+		Toggle smooth mesh preview.
 		'''
 		selection=pm.ls(selection=1)
 		scene=pm.ls(geometry=1)
+
 		#if no object selected smooth all geometry
-		if len(selection) == 0:
-			for object in scene:
-				if pm.getAttr(str(object) + ".displaySmoothMesh") != 2:
-					pm.setAttr((str(object) + ".displaySmoothMesh"), 2)
-					#smooth preview on
-					pm.displayPref(wireframeOnShadedActive="none")
-					#selection wireframe off
-					pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview is now <hl>ON</hl>.\n<hl>2</hl>")
-					
-				
+		if len(selection)==0:
+			state = Init.cycle([0,1,2], 'hk_smooth_preview')
+
+			for obj in scene:
+				obj = obj.split('.')[0] #get u'pSphereShape1' from u'pSphereShape1.vtx[105]' if in component mode.
+
+				if state is 0: #if pm.getAttr(str(obj) + ".displaySmoothMesh") != 2:
+					pm.setAttr((str(obj) + ".displaySmoothMesh"), 2) #smooth preview on
+					pm.displayPref(wireframeOnShadedActive="none") #selection wireframe off
+					pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview is now <hl>ON</hl>.<br><hl>2</hl>")
+
+				elif state is 1:
+					pm.setAttr((str(obj) + ".displaySmoothMesh"), 2) #smooth preview on
+					pm.displayPref(wireframeOnShadedActive="full") #selection wireframe off
+					# pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview is now <hl>ON</hl>.<br><hl>2</hl>")
+
 				else:
-					pm.setAttr((str(object) + ".displaySmoothMesh"), 0)
-					#smooth preview off
-					pm.displayPref(wireframeOnShadedActive="full")
-					#selection wireframe on
-					pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview is now <hl>OFF</hl>.\n<hl>2</hl>")
-					
-				if pm.getAttr(str(object) + ".smoothLevel") != 1:
-					pm.setAttr((str(object) + ".smoothLevel"), 1)
-					
-				
-			
+					pm.setAttr((str(obj) + ".displaySmoothMesh"), 0) #smooth preview off
+					pm.displayPref(wireframeOnShadedActive="full") #selection wireframe on
+					pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview is now <hl>OFF</hl>.<br><hl>2</hl>")
+
+				if pm.getAttr(str(obj) + ".smoothLevel") != 1:
+					pm.setAttr((str(obj) + ".smoothLevel"), 1)
+
 		#smooth selection only
-		for object in selection:
-			if pm.getAttr(str(object) + ".displaySmoothMesh") != 2:
-				pm.setAttr((str(object) + ".displaySmoothMesh"), 2)
-				#smooth preview on
-				pm.displayPref(wireframeOnShadedActive="none")
-				#selection wireframe off
-				pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview is now <hl>ON</hl>.\n<hl>2</hl>")
-				
-			
+		for obj in selection:
+			obj = obj.split('.')[0] #get u'pSphereShape1' from u'pSphereShape1.vtx[105]' if in component mode.
+
+			if pm.getAttr(str(obj) + ".displaySmoothMesh") != 2:
+				pm.setAttr((str(obj) + ".displaySmoothMesh"), 2) #smooth preview on
+				pm.displayPref(wireframeOnShadedActive="none") #selection wireframe off
+				pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview is now <hl>ON</hl>.<br><hl>2</hl>")
+
+			elif pm.getAttr(str(obj) + ".displaySmoothMesh") == 2 and pm.displayPref(query=1, wireframeOnShadedActive=1)=='none':
+				pm.setAttr((str(obj) + ".displaySmoothMesh"), 2) #smooth preview on
+				pm.displayPref(wireframeOnShadedActive="full") #selection wireframe off
+				# pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview is now <hl>ON</hl>.<br><hl>2</hl>")
+
 			else:
-				pm.setAttr((str(object) + ".displaySmoothMesh"), 0)
-				#smooth preview off
-				pm.displayPref(wireframeOnShadedActive="full")
-				#selection wireframe on
-				pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview is now <hl>OFF</hl>.\n<hl>2</hl>")
-				
-			if pm.getAttr(str(object) + ".smoothLevel") != 1:
-				pm.setAttr((str(object) + ".smoothLevel"), 1)
+				pm.setAttr((str(obj) + ".displaySmoothMesh"), 0) #smooth preview off
+				pm.displayPref(wireframeOnShadedActive="full") #selection wireframe on
+				pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview is now <hl>OFF</hl>.<br><hl>2</hl>")
+
+			if pm.getAttr(str(obj) + ".smoothLevel") != 1:
+				pm.setAttr((str(obj) + ".smoothLevel"), 1)
 
 
 
@@ -211,8 +220,7 @@ class Macros(object):
 	def hk_isolate_selected():
 		'''
 		hk_isolate_selected
-		Isolate current selection
-		Isolate selected
+		Isolate the current selection.
 		'''
 		currentPanel = pm.getPanel(withFocus=1)
 		state = pm.isolateSelect(currentPanel, query=1, state=1)
@@ -229,7 +237,7 @@ class Macros(object):
 	def hk_grid_and_image_planes():
 		'''
 		hk_grid_and_image_planes
-		Toggle grid and image plane visibility
+		Toggle grid and image plane visibility.
 		'''
 		image_plane = pm.ls(exactType='imagePlane')
 
@@ -250,7 +258,7 @@ class Macros(object):
 	def hk_frame_selected():
 		'''
 		hk_frame_selected
-		Frame selected by a set amount
+		Frame selected by a set amount.
 		'''
 		pm.melGlobals.initVar('int', 'tk_toggleFrame')
 		selection = pm.ls(selection=1)
@@ -326,7 +334,7 @@ class Macros(object):
 	def hk_wireframe_on_shaded():
 		'''
 		hk_wireframe_on_shaded
-		Toggle wireframe on shaded
+		Toggle wireframe on shaded.
 		'''
 		currentPanel = pm.getPanel(withFocus=True)
 		mode = pm.displayPref(query=True, wireframeOnShadedActive=True)
@@ -352,8 +360,7 @@ class Macros(object):
 	def hk_xray():
 		'''
 		hk_xray
-		Toggle xray mode
-		Toggle xRay all
+		Toggle xRay all except selected.
 		'''
 		#xray all except selected
 		scene = pm.ls(visible=1, dag=1, noIntermediate=1, flatten=1, type='surfaceShape')
@@ -369,7 +376,7 @@ class Macros(object):
 	def hk_wireframe():
 		'''
 		hk_wireframe
-		Toggle wireframe/shaded/shaded w/texture display
+		Toggle wireframe/shaded/shaded w/texture display.
 		'''
 		currentPanel = pm.getPanel(withFocus=1)
 		state = pm.modelEditor(currentPanel, query=1, displayAppearance=1)
@@ -394,7 +401,7 @@ class Macros(object):
 	def hk_shading():
 		'''
 		hk_shading
-		Toggle viewport shading
+		Toggle viewport shading.
 		'''
 		currentPanel = pm.getPanel (withFocus=1)
 		displayAppearance = pm.modelEditor (currentPanel, query=1, displayAppearance=1)
@@ -424,7 +431,7 @@ class Macros(object):
 	def hk_selection_mode():
 		'''
 		hk_selection_mode
-		Toggle between object selection & last component selection
+		Toggle between object selection & last component selection.
 		'''
 		objectMode = pm.selectMode(query=True, object=True)
 		if objectMode:
@@ -437,19 +444,19 @@ class Macros(object):
 	def hk_paste_and_rename():
 		'''
 		hk_paste_and_rename
-		Paste and rename removing keyword 'paste'
+		Paste and rename removing keyword 'paste'.
 		'''
 		pm.mel.cutCopyPaste("paste")
 		#paste and then re-name object removing keyword 'pasted'
 		pasted=pm.ls("pasted__*")
-		object = ""
-		for object in pasted:
+		obj = ""
+		for obj in pasted:
 			elements = []
 			# The values returned by ls may be full or partial dag
 			# paths - when renaming we only want the actual
 			# object name so strip off the leading dag path.
 			#
-			elements=object.split("|")
+			elements=obj.split("|")
 			stripped=elements[- 1]
 			# Remove the 'pasted__' suffix from the name
 			#
@@ -458,7 +465,7 @@ class Macros(object):
 			# be renamed as well. Use catchQuiet here to ignore errors
 			# when trying to rename the child shape a second time.
 			# 
-			pm.catch(lambda: pm.evalEcho("rename " + str(object) + " " + stripped))
+			pm.catch(lambda: pm.evalEcho("rename " + str(obj) + " " + stripped))
 
 
 
@@ -466,7 +473,7 @@ class Macros(object):
 	def hk_multi_component():
 		'''
 		hk_multi_component
-		Multi-Component Selection
+		Multi-Component Selection.
 		'''
 		pm.SelectMultiComponentMask()
 		pm.inViewMessage(statusMessage="<hl>Multi-Component Selection Mode</hl>\\n Mask is now <hl>ON</hl>.\\n<hl>F4</hl>", fade=True, position="topCenter")
@@ -477,7 +484,7 @@ class Macros(object):
 	def hk_toggle_component_mask():
 		'''
 		hk_toggle_component_mask
-		Toggle Component Selection Mask
+		Toggle Component Selection Mask.
 		'''
 		mode=pm.selectMode(query=1, component=1)
 		if mode == 0:
@@ -507,7 +514,7 @@ class Macros(object):
 	def hk_tk_show():
 		'''
 		hk_tk_show
-		Display tk marking menu
+		Display tk marking menu.
 		'''
 		if 'tk' not in locals() and 'tk' not in globals():
 			from tk_maya import Instance
@@ -521,7 +528,7 @@ class Macros(object):
 	def hk_hotbox_full():
 		'''
 		hk_hotbox_full
-		Display the full version of the hotbox
+		Display the full version of the hotbox.
 		'''
 		pm.hotBox(polygonsOnlyMenus=1, displayHotbox=1)
 		pm.hotBox()
@@ -532,7 +539,7 @@ class Macros(object):
 	def hk_toggle_panels():
 		'''
 		hk_toggle_panels
-		Toggle UI toolbars
+		Toggle UI toolbars.
 		'''
 		if pm.menu('MayaWindow|HotBoxControlsMenu', q=1, ni=1) == 0:
 			pm.setParent('MayaWindow|HotBoxControlsMenu', m=1)

@@ -35,31 +35,25 @@ class Materials(Init):
 			return
 
 
-	@Slots.sync
 	def chk007(self, state=None):
 		'''
 		Assign Material: Current
 		'''
 		self.materials.tb002.setText('Assign Current')
-		# self.toggleWidgets(setUnChecked='chk008-9')
 
 
-	@Slots.sync
 	def chk008(self, state=None):
 		'''
 		Assign Material: Random
 		'''
 		self.materials.tb002.setText('Assign Random')
-		# self.toggleWidgets(setUnChecked='chk007, chk009')
 
 
-	@Slots.sync
 	def chk009(self, state=None):
 		'''
 		Assign Material: New
 		'''
 		self.materials.tb002.setText('Assign New')
-		# self.toggleWidgets(setUnChecked='chk007-8')
 
 
 	def cmb001(self, index=None):
@@ -355,6 +349,7 @@ class Materials(Init):
 		Assign: Assign Current
 		'''
 		self.materials.tb002.chk007.setChecked(True)
+		self.materials.tb002.setText('Assign Current')
 		self.tb002()
 
 
@@ -363,6 +358,7 @@ class Materials(Init):
 		Assign: Assign Random
 		'''
 		self.materials.tb002.chk008.setChecked(True)
+		self.materials.tb002.setText('Assign Random')
 		self.tb002()
 
 
@@ -371,6 +367,7 @@ class Materials(Init):
 		Assign: Assign New
 		'''
 		self.materials.tb002.chk009.setChecked(True)
+		self.materials.tb002.setText('Assign New')
 		self.tb002()
 
 
