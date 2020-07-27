@@ -44,11 +44,11 @@ class File(Init):
 		pin = self.file.pin
 
 		if state is 'setMenu':
-			pin.add(QComboBox_, setObjectName='cmb005', setToolTip='')
-			pin.add(QToolButton_, setObjectName='tb000', setText='Save', setToolTip='')
-			pin.add(QLabel_, setObjectName='lbl001', setText='Minimize App', setToolTip='Minimize the main application.')
-			pin.add(QLabel_, setObjectName='lbl002', setText='Maximize App', setToolTip='Restore the main application.')
-			pin.add(QLabel_, setObjectName='lbl003', setText='Close App', setToolTip='Close the main application.')
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb005', setToolTip='')
+			pin.contextMenu.add(QToolButton_, setObjectName='tb000', setText='Save', setToolTip='')
+			pin.contextMenu.add(QLabel_, setObjectName='lbl001', setText='Minimize App', setToolTip='Minimize the main application.')
+			pin.contextMenu.add(QLabel_, setObjectName='lbl002', setText='Maximize App', setToolTip='Restore the main application.')
+			pin.contextMenu.add(QLabel_, setObjectName='lbl003', setText='Close App', setToolTip='Close the main application.')
 			return
 
 
@@ -59,7 +59,7 @@ class File(Init):
 		cmb = self.file.cmb000
 
 		if index is 'setMenu':
-			cmb.addToContext('QPushButton', setObjectName='b001', setText='Last', setToolTip='Open the most recent file.')
+			cmb.contextMenu.add('QPushButton', setObjectName='b001', setText='Last', setToolTip='Open the most recent file.')
 			return
 
 		list_ = [f for f in rt.getRecentfiles()]
@@ -202,8 +202,8 @@ class File(Init):
 		cmb = self.file.cmb006
 
 		if index is 'setMenu':
-			cmb.addToContext(QComboBox_, setObjectName='cmb001', setToolTip='Current project directory root.')
-			cmb.addToContext(QLabel_, setObjectName='lbl000', setText='Set', setToolTip='Set the project directory.')
+			cmb.contextMenu.add(QComboBox_, setObjectName='cmb001', setToolTip='Current project directory root.')
+			cmb.contextMenu.add(QLabel_, setObjectName='lbl000', setText='Set', setToolTip='Set the project directory.')
 			return
 
 		path = MaxPlus.PathManager.GetProjectFolderDir() #current project path.
@@ -228,20 +228,20 @@ class File(Init):
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='ASCII', setObjectName='chk003', setChecked=True, setToolTip='Toggle ASCII or binary file type.')
-			tb.add('QCheckBox', setText='Wireframe', setObjectName='chk000', setChecked=True, setToolTip='Set view to wireframe before save.')
-			tb.add('QCheckBox', setText='Increment', setObjectName='chk001', setChecked=True, setToolTip='Append and increment a unique integer value.')
-			tb.add('QCheckBox', setText='Quit', setObjectName='chk002', setToolTip='Quit after save.')
+			tb.menu_.add('QCheckBox', setText='ASCII', setObjectName='chk003', setChecked=True, setToolTip='Toggle ASCII or binary file type.')
+			tb.menu_.add('QCheckBox', setText='Wireframe', setObjectName='chk000', setChecked=True, setToolTip='Set view to wireframe before save.')
+			tb.menu_.add('QCheckBox', setText='Increment', setObjectName='chk001', setChecked=True, setToolTip='Append and increment a unique integer value.')
+			tb.menu_.add('QCheckBox', setText='Quit', setObjectName='chk002', setToolTip='Quit after save.')
 			return
 
 		preSaveScript = ''
 		postSaveScript = ''
 
 		type_ = 'mayaBinary'
-		if tb.chk003.isChecked(): #toggle ascii/ binary
+		if tb.menu_.chk003.isChecked(): #toggle ascii/ binary
 			type_ = 'mayaAscii' #type: mayaAscii, mayaBinary, mel, OBJ, directory, plug-in, audio, move, EPS, Adobe(R) Illustrator(R)
 
-		if tb.chk000.isChecked():
+		if tb.menu_.chk000.isChecked():
 			mel.eval('DisplayWireframe;')
 
 		#get scene name and file path
@@ -250,7 +250,7 @@ class File(Init):
 		curFullName = fullPath[index:] #ie. elise_mid.009.mb
 		currentPath = fullPath[:index] #ie. O:/Cloud/____Graphics/______project_files/elise.proj/elise.scenes/.maya/
 		
-		if tb.chk001.isChecked(): #increment filename
+		if tb.menu_.chk001.isChecked(): #increment filename
 			newName = File.incrementFileName(curFullName)
 			File.deletePreviousFiles(curFullName)
 			pm.saveAs (currentPath+newName, force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
@@ -259,7 +259,7 @@ class File(Init):
 			pm.saveFile (force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
 			print('{0} {1}'.format('Result:', currentPath+currentName,))
 
-		if tb.chk002.isChecked(): #quit maya
+		if tb.menu_.chk002.isChecked(): #quit maya
 			import time
 			for timer in range(5):
 				self.viewPortMessage('Shutting Down:<hl>'+str(timer)+'</hl>')

@@ -2,9 +2,11 @@
 # coding=utf-8
 from PySide2 import QtWidgets, QtCore, QtGui
 
+from shared import Menu, Attributes
 
 
-class QWidget_MultiWidget(QtWidgets.QWidget):
+
+class QWidget_MultiWidget(QtWidgets.QWidget, Menu, Attributes):
 	'''
 	'''
 	enterEvent_	= QtCore.QEvent(QtCore.QEvent.Enter)
@@ -36,55 +38,6 @@ class QWidget_MultiWidget(QtWidgets.QWidget):
 
 			# w.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
 			w.installEventFilter(self)
-
-
-	def setAttributes(self, attributes=None, w=None, order=[], **kwargs):
-		'''
-		Works with attributes passed in as a dict or kwargs.
-		If attributes are passed in as a dict, kwargs are ignored.
-
-		args:
-			attributes (dict) = keyword attributes and their corresponding values.
-			w (obj) = the child widget to set attributes for. (default=None)
-			#order (list) = list of string keywords. ie. ['move', 'show']. attributes in this list will be set last, by list order. an example would be setting move positions after setting resize arguments, or showing the widget only after other attributes have been set.
-		kwargs:
-			set any keyword arguments.
-		'''
-		if not attributes:
-			attributes = kwargs
-
-		for k in order:
-			v = attributes.pop(k, None)
-			if v:
-				from collections import OrderedDict
-				attributes = OrderedDict(attributes)
-				attributes[k] = v
-
-		for attr, value in attributes.items():
-			try:
-				getattr(w, attr)(value)
-
-			except Exception as error:
-				if type(error)==AttributeError:
-					self.setCustomAttribute(w, attr, value)
-				else:
-					raise error
-
-
-	def setCustomAttribute(self, w, attr, value):
-		'''
-		Custom attributes can be set using a trailing underscore convention to differentiate them from standard attributes. ie. insertSeparator_=True
-
-		args:
-			w (obj) = the child widget to set attributes for.
-			attr (str) = custom keyword attribute.
-			value (str) = the value corresponding to the given attr.
-		'''
-		if attr=='':
-			if value=='':
-				pass
-		else:
-			print('Error: {} has no attribute {}'.format(action, attr))
 
 
 	def eventFilter(self, widget, event):
@@ -177,10 +130,7 @@ class QWidget_MultiWidget(QtWidgets.QWidget):
 		font.setPointSize(font.pointSize()*1.5)
 		widget.setFont(font)
 		widget.setContentsMargins(0,0,0,0) # widget.setStyleSheet('margin: 0px 0px 5px 0px;')
-		widget.setStyleSheet('''
-			QLabel {
-			padding: 0px 0px 5px 0px;
-			}''')
+		widget.setStyleSheet('QLabel {padding: 0px 0px 5px 0px;}')
 
 
 	def showEvent(self, event):
@@ -213,13 +163,87 @@ if __name__ == "__main__":
 
 
 
+# --------------------------------
+# Notes
+# --------------------------------
+
 # adding a Multi-Widget row to a custom tree widget:
 # m = MultiWidget(['QPushButton', 'QPushButton'])
 # m.children_(0).setText('ButtonText')
 # m.setAsOptionBox(m.children_(1)) #set button 2 to be an option box style
 # tree.add(m, 'Cameras') #add the widgets to the tree under the parent header 'Cameras'
 
+
+'''
+Promoting a widget in designer to use a custom class:
+>	In Qt Designer, select all the widgets you want to replace, 
+		then right-click them and select 'Promote to...'. 
+
+>	In the dialog:
+		Base Class:		Class from which you inherit. ie. QWidget
+		Promoted Class:	Name of the class. ie. "MyWidget"
+		Header File:	Path of the file (changing the extension .py to .h)  ie. myfolder.mymodule.mywidget.h
+
+>	Then click "Add", "Promote", 
+		and you will see the class change from "QWidget" to "MyWidget" in the Object Inspector pane.
+'''
+
+
 # deprecated ------------------------------------------------
+
+
+
+
+	# def setAttributes(self, attributes=None, w=None, order=[], **kwargs):
+	# 	'''
+	# 	Works with attributes passed in as a dict or kwargs.
+	# 	If attributes are passed in as a dict, kwargs are ignored.
+
+	# 	args:
+	# 		attributes (dict) = keyword attributes and their corresponding values.
+	# 		w (obj) = the child widget to set attributes for. (default=None)
+	# 		#order (list) = list of string keywords. ie. ['move', 'show']. attributes in this list will be set last, by list order. an example would be setting move positions after setting resize arguments, or showing the widget only after other attributes have been set.
+	# 	kwargs:
+	# 		set any keyword arguments.
+	# 	'''
+	# 	if not attributes:
+	# 		attributes = kwargs
+
+	# 	for k in order:
+	# 		v = attributes.pop(k, None)
+	# 		if v:
+	# 			from collections import OrderedDict
+	# 			attributes = OrderedDict(attributes)
+	# 			attributes[k] = v
+
+	# 	for attr, value in attributes.items():
+	# 		try:
+	# 			getattr(w, attr)(value)
+
+	# 		except Exception as error:
+	# 			if type(error)==AttributeError:
+	# 				self.setCustomAttribute(w, attr, value)
+	# 			else:
+	# 				raise error
+
+
+	# def setCustomAttribute(self, w, attr, value):
+	# 	'''
+	# 	Custom attributes can be set using a trailing underscore convention to differentiate them from standard attributes. ie. insertSeparator_=True
+
+	# 	args:
+	# 		w (obj) = the child widget to set attributes for.
+	# 		attr (str) = custom keyword attribute.
+	# 		value (str) = the value corresponding to the given attr.
+	# 	'''
+	# 	if attr=='':
+	# 		if value=='':
+	# 			pass
+	# 	else:
+	# 		print('Error: {} has no attribute {}'.format(action, attr))
+
+
+
 
 
 # if not __name__=='__main__' and not hasattr(self, 'parentUiName'):

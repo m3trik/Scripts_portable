@@ -20,7 +20,7 @@ class Pivot(Init):
 		pin = self.parentUi.pin
 
 		if state is 'setMenu':
-			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
 			return
 
 
@@ -69,12 +69,12 @@ class Pivot(Init):
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='Reset Pivot Position', setObjectName='chk000', setChecked=True, setToolTip='')
-			tb.add('QCheckBox', setText='Reset Pivot Orientation', setObjectName='chk001', setChecked=True, setToolTip='')
+			tb.menu_.add('QCheckBox', setText='Reset Pivot Position', setObjectName='chk000', setChecked=True, setToolTip='')
+			tb.menu_.add('QCheckBox', setText='Reset Pivot Orientation', setObjectName='chk001', setChecked=True, setToolTip='')
 			return
 
-		resetPivotPosition = tb.chk000.isChecked() #Reset Pivot Position
-		resetPivotOrientation = tb.chk001.isChecked() #Reset Pivot Orientation
+		resetPivotPosition = tb.menu_.chk000.isChecked() #Reset Pivot Position
+		resetPivotOrientation = tb.menu_.chk001.isChecked() #Reset Pivot Orientation
 
 		mel.eval('manipPivotReset({0},{1})'.format(int(resetPivotPosition), int(resetPivotOrientation)))
 		return 'Reset Pivot Position <hl>{0}</hl>.<br>Reset Pivot Orientation <hl>{1}</hl>.'.format(resetPivotPosition, resetPivotOrientation)

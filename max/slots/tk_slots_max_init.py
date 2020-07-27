@@ -35,6 +35,7 @@ class Init(Slots):
 	def info(self):
 		'''
 		Get current scene attributes. Only those with relevant values will be displayed.
+
 		returns:
 			(dict) current object attributes.
 		'''
@@ -104,21 +105,30 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getAttributesMax(node, exclude=None):
+	def getAttributesMax(node, include=[], exclude=[]):
 		'''
-		Get history node attributes:values using the transform node. 
+		Get node attributes and their corresponding values as a dict.
 
 		args:
 			node (obj) = Transform node.
-			exclude (list) = Attributes to exclude from the returned dictionay. ie. ['Position','Rotation','Scale','renderable','isHidden','isFrozen','selected']
+			include (list) = Attributes to include. All other will be ommited. Exclude takes dominance over include. Meaning, if the same attribute is in both lists, it will be excluded.
+			exclude (list) = Attributes to exclude from the returned dictionay. ie. [u'Position',u'Rotation',u'Scale',u'renderable',u'isHidden',u'isFrozen',u'selected']
 
 		returns:
 			(dict) {'string attribute': current value}
-		'''
+
 		# print (rt.showProperties(obj))
 		# print (rt.getPropNames(obj))
+		'''
+		if not all((include, exclude)):
+			exclude = ['getmxsprop', 'setmxsprop', 'typeInHeight', 'typeInLength', 'typeInPos', 'typeInWidth', 'typeInDepth', 
+				'typeInRadius', 'typeInRadius1', 'typeInRadius2', 'typeinCreationMethod', 'edgeChamferQuadIntersections', 
+				'edgeChamferType', 'hemisphere', 'realWorldMapSize', 'mapcoords']
 
-		return {attr:node.getmxsprop(attr) for attr in [str(n) for n in rt.getPropNames(node)] if attr not in exclude}
+		attributes = {attr:node.getmxsprop(attr) for attr in [str(n) for n in rt.getPropNames(node)] 
+				if not attr in exclude and (attr in include if include else attr not in include)}
+
+		return attributes
 
 
 	@staticmethod
@@ -130,7 +140,8 @@ class Init(Slots):
 			node (obj) = Transform node.
 			attributes (dict) = Attributes and their correponding value to set. ie. {'string attribute': value}
 		'''
-		[setattr(node, attribute, value) for attribute, value in attributes.items() if attribute and value]
+		[setattr(node, attribute, value) for attribute, value in attributes.items() 
+		if attribute and value]
 
 		rt.redrawViews()
 
@@ -886,7 +897,37 @@ class Init(Slots):
 	# ------------------------------------------------
 
 
-	
+	@classmethod
+	def attr(cls, fn):
+		'''
+		Decorator for objAttrWindow.
+		'''
+		def wrapper(self, *args, **kwargs):
+			self.setAttributeWindow(fn(self, *args, **kwargs))
+		return wrapper
+
+	def setAttributeWindow(self, obj, include=[], exclude=[]):
+		'''
+		Launch a popup window containing the given objects attributes.
+
+		args:
+			obj (obj) = The object to get the attributes of.
+			include (list) = Attributes to include. All other will be ommited. Exclude takes dominance over include. Meaning, if the same attribute is in both lists, it will be excluded.
+			exclude (list) = Attributes to exclude from the returned dictionay. ie. [u'Position',u'Rotation',u'Scale',u'renderable',u'isHidden',u'isFrozen',u'selected']
+		'''
+		if obj is None:
+			return
+
+		if isinstance(obj, (list, set, tuple)):
+			obj = obj[0]
+
+		if not all((include, exclude)):
+			exclude = []
+
+		attributes = self.getAttributesMax(obj, include=include, exclude=exclude)
+		self.objAttrWindow(obj, attributes, self.setAttributesMax)
+
+
 	@Slots.message
 	def maxUiSetChecked(self, id, table, item, state=True, query=False):
 		'''

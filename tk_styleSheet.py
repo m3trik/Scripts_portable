@@ -5,12 +5,26 @@ from PySide2 import QtCore
 
 
 
-
 # ------------------------------------------------
 #' MainWindow StyleSheet'
 # ------------------------------------------------
 class StyleSheet(QtCore.QObject):
 	'''
+	# css commenting:
+		/* multi-line */
+
+	# setting a property:
+		qApp.setStyleSheet("QLineEdit#name[prop=true] {background-color:transparent;}") #does't effect the lineEdit with objectName 'name' if that buttons property 'styleSheet' is false (c++ lowercase). 
+		self.setProperty('prop', True) #set the widget property.
+
+	# gradients:
+		background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #E0E0E0, stop: 1 #FFFFFF);
+
+	# Set multiple widgets:
+		QComboBox:!editable, QComboBox::drop-down:editable { ... }
+
+	# Set the style for a specific widget:
+		QWidget#mainWindow ('#' syntax, followed by the widget's objectName)
 	'''
 	colorValues = {
 		'standard': {
@@ -43,6 +57,11 @@ class StyleSheet(QtCore.QObject):
 
 			QWidget#mainWindow {
 				background: transparent;
+			} ''',
+
+		'QStackedWidget': '''
+			QStackedWidget {
+
 			} ''',
 
 		'QPushButton': '''
@@ -181,7 +200,8 @@ class StyleSheet(QtCore.QObject):
 			}
 
 			QToolButton::menu-button:pressed {
-
+				background-color: transparent;
+				border: 1px solid transparent;
 			}
 
 			QToolButton::menu-arrow {
@@ -463,6 +483,11 @@ class StyleSheet(QtCore.QObject):
 				background-attachment: fixed; /* fixed, scroll */
 			} ''',
 
+		'QPlainTextEdit': '''
+			QPlainTextEdit {
+				
+			} ''',
+
 		'QListView': '''
 			QListView {
 				background-color: {BACKGROUND};
@@ -742,7 +767,7 @@ class StyleSheet(QtCore.QObject):
 			}
 
 			QMenu::item {
-				padding: 5px 5px 0px 0px; /* top, right, bottom, left */
+				padding: 5px 5px 5px 5px; /* top, right, bottom, left */
 				border: 1px solid transparent; /* reserve space for selection border */
 			}
 
@@ -824,6 +849,11 @@ class StyleSheet(QtCore.QObject):
 				padding: 2px;
 				background-image: none;
 			} ''',
+
+		'QTabWidget': '''
+			QTabWidget {
+				
+			} ''',
 		}
 
 
@@ -836,8 +866,14 @@ class StyleSheet(QtCore.QObject):
 
 	def getStyleSheet(self, widgetType, style='standard'):
 		'''
-		Set the StyleSheet for a given widget type.
-		Set the style for a specific widget by using the '#' syntax and the widget's objectName. ie. QWidget#mainWindow
+		Get the styleSheet for the given widgetType.
+
+		args:
+			widgetType (str) = The class name of the widget. ie. 'QLabel'
+			style (str) = The color value set to use. valid values are: 'standard', 'dark'
+
+		returns:
+			(str) css styleSheet
 		'''
 		try:
 			css = self.styleSheets[widgetType]
@@ -854,6 +890,7 @@ class StyleSheet(QtCore.QObject):
 	def setStyleSheet(self, name, widgets, ratio=6):
 		'''
 		Set the styleSheet for the given widgets.
+		Set the style for a specific widget by using the '#' syntax and the widget's objectName. ie. QWidget#mainWindow
 
 		args:
 			name (str) = name of the parent ui.
@@ -923,19 +960,6 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 '''
 #qt styleSheet reference
 http://doc.qt.io/qt-5/stylesheet-reference.html#qtabbar-widget
-
-# commenting:
-	/* multi-line */
-
-# setting property:
-	qApp.setStyleSheet("QLineEdit#name[prop=true] {background-color:transparent;}") #does't effect the lineEdit with objectName 'name' if that buttons property 'styleSheet' is false (c++ lowercase). 
-	self.setProperty('prop', True) #set the widget property.
-
-# gradient:
-	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #E0E0E0, stop: 1 #FFFFFF);
-
-# multiple widgets:
-	QComboBox:!editable, QComboBox::drop-down:editable { ... }
 
 
 

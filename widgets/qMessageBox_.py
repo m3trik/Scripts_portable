@@ -1,6 +1,6 @@
 from PySide2 import QtCore, QtGui, QtWidgets
 
-import sys
+from shared import Attributes
 
 
 
@@ -20,7 +20,7 @@ Promoting a widget in designer to use a custom class:
 
 
 
-class QMessageBox_(QtWidgets.QMessageBox):
+class QMessageBox_(QtWidgets.QMessageBox, Attributes):
 	'''
 	Displays a message box with HTML formatting for a set time before closing.
 
@@ -45,6 +45,7 @@ class QMessageBox_(QtWidgets.QMessageBox):
 
 		self.location = location
 
+		self.setAttributes(kwargs)
 
 
 	def _tick(self):
@@ -200,6 +201,7 @@ class QMessageBox_(QtWidgets.QMessageBox):
 
 
 if __name__ == "__main__":
+	import sys
 	qApp = QtWidgets.QApplication(sys.argv)
 		
 	w = QMessageBox_()

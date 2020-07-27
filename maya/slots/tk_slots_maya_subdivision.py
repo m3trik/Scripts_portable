@@ -20,8 +20,8 @@ class Subdivision(Init):
 		pin = self.parentUi.pin
 
 		if state is 'setMenu':
-			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya Subdivision Editiors')
-			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='Smooth Proxy')
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya Subdivision Editiors')
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb001', setToolTip='Smooth Proxy')
 			return
 
 

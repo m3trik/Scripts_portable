@@ -1,38 +1,18 @@
 from PySide2 import QtCore, QtGui, QtWidgets
 
-import sys
-
-from widgets.qMenu_ import QMenu_
-
-'''
-Promoting a widget in designer to use a custom class:
->	In Qt Designer, select all the widgets you want to replace, 
-		then right-click them and select 'Promote to...'. 
-
->	In the dialog:
-		Base Class:		Class from which you inherit. ie. QWidget
-		Promoted Class:	Name of the class. ie. "MyWidget"
-		Header File:	Path of the file (changing the extension .py to .h)  ie. myfolder.mymodule.mywidget.h
-
->	Then click "Add", "Promote", 
-		and you will see the class change from "QWidget" to "MyWidget" in the Object Inspector pane.
-'''
+from shared import Menu, Attributes
 
 
 
-class QPushButton_Draggable(QtWidgets.QPushButton):
+class QPushButton_Draggable(QtWidgets.QPushButton, Menu, Attributes):
 	'''
 	Draggable/Checkable pushbutton.
 	'''
 
 	__mousePressPos = QtCore.QPoint()
 
-	def __init__(self, parent=None, contextMenu=True):
+	def __init__(self, parent=None, **kwargs):
 		super(QPushButton_Draggable, self).__init__(parent)
-
-		self.contextMenu = contextMenu
-		if self.contextMenu:
-			self.menu = QMenu_(self, position='cursorPos')
 
 		self.setCheckable(True)
 
@@ -52,56 +32,7 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 
 		self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
 
-
-	@property
-	def containsContextMenuItems(self):
-		'''
-		Query whether a menu has been constructed.
-		'''
-		if not self.children_():
-			return False
-		return True
-
-
-	def add(self, w, **kwargs):
-		'''
-		Add items to the toolbutton's menu.
-
-		args:
-			widget (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
-		kwargs:
-			show (bool) = show the menu.
-			insertSeparator (QAction) = insert separator in front of the given action.
-		returns:
- 			the added widget.
-
-		ex.call:
-		tb.add('QCheckBox', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
-		'''
-		try:
-			w = getattr(QtWidgets, w)() #ex. QtWidgets.QAction(self) object from string.
-		except:
-			if callable(w):
-				w = w() #ex. QtWidgets.QAction(self) object.
-
-		w.setMinimumHeight(self.minimumSizeHint().height()+1) #set child widget height to that of the toolbutton
-
-		w = self.menu.add(w, **kwargs)
-		setattr(self, w.objectName(), w)
-		return w
-
-
-	def children_(self, index=None):
-		'''
-		Get the widget at the given index.
-		If no arg is given all widgets will be returned.
-
-		args:
-			index (int) = widget location.
-		returns:
-			(QWidget) or (list)
-		'''
-		return self.menu.children_(index)
+		self.setAttributes(kwargs)
 
 
 	def mousePressEvent(self, event):
@@ -117,7 +48,7 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 			self.window().preventHide = True
 
 		if event.button()==QtCore.Qt.RightButton:
-			self.menu.show()
+			self.contextMenu.show()
 
 		return QtWidgets.QPushButton.mousePressEvent(self, event)
 
@@ -161,15 +92,6 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 		return QtWidgets.QPushButton.mouseReleaseEvent(self, event)
 
 
-	def showEvent(self, event):
-		'''
-		args:
-			event=<QEvent>
-		'''
-
-		return QtWidgets.QPushButton.showEvent(self, event)
-
-
 
 
 
@@ -178,6 +100,7 @@ class QPushButton_Draggable(QtWidgets.QPushButton):
 
 
 if __name__ == "__main__":
+	import sys
 	app = QtWidgets.QApplication(sys.argv)
 		
 	QPushButton_Draggable().show()
@@ -185,10 +108,90 @@ if __name__ == "__main__":
 
 
 
+# --------------------------------
+# Notes
+# --------------------------------
 
+'''
+Promoting a widget in designer to use a custom class:
+>	In Qt Designer, select all the widgets you want to replace, 
+		then right-click them and select 'Promote to...'. 
+
+>	In the dialog:
+		Base Class:		Class from which you inherit. ie. QWidget
+		Promoted Class:	Name of the class. ie. "MyWidget"
+		Header File:	Path of the file (changing the extension .py to .h)  ie. myfolder.mymodule.mywidget.h
+
+>	Then click "Add", "Promote", 
+		and you will see the class change from "QWidget" to "MyWidget" in the Object Inspector pane.
+'''
 
 
 # Deprecated ---------------------------------------------------------------
+
+
+	# def showEvent(self, event):
+	# 	'''
+	# 	args:
+	# 		event=<QEvent>
+	# 	'''
+
+	# 	return QtWidgets.QPushButton.showEvent(self, event)
+
+
+	# def add(self, w, **kwargs):
+	# 	'''
+	# 	Add items to the toolbutton's menu.
+
+	# 	args:
+	# 		widget (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
+	# 	kwargs:
+	# 		show (bool) = show the menu.
+	# 		insertSeparator (QAction) = insert separator in front of the given action.
+	# 	returns:
+ # 			the added widget.
+
+	# 	ex.call:
+	# 	tb.menu_.add('QCheckBox', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
+	# 	'''
+	# 	try:
+	# 		w = getattr(QtWidgets, w)() #ex. QtWidgets.QAction(self) object from string.
+	# 	except:
+	# 		if callable(w):
+	# 			w = w() #ex. QtWidgets.QAction(self) object.
+
+	# 	w.setMinimumHeight(self.minimumSizeHint().height()+1) #set child widget height to that of the toolbutton
+
+	# 	w = self.contextMenu.add(w, **kwargs)
+	# 	setattr(self, w.objectName(), w)
+	# 	return w
+
+
+	# def children_(self, index=None):
+	# 	'''
+	# 	Get the widget at the given index.
+	# 	If no arg is given all widgets will be returned.
+
+	# 	args:
+	# 		index (int) = widget location.
+	# 	returns:
+	# 		(QWidget) or (list)
+	# 	'''
+	# 	return self.contextMenu.children_(index)
+
+
+	# @property
+	# def containsContextMenuItems(self):
+	# 	'''
+	# 	Query whether a menu has been constructed.
+	# 	'''
+	# 	if not self.children_():
+	# 		return False
+	# 	return True
+
+
+
+
 
 		# if not __name__=='__main__' and not hasattr(self, 'parentUiName'):
 		# 	p = self.parent()

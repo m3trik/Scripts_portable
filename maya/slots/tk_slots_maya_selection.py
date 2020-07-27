@@ -36,11 +36,11 @@ class Selection(Init):
 		pin = self.selection.pin
 
 		if state is 'setMenu':
-			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='')
-			pin.add(QComboBox_, setObjectName='cmb004', setToolTip='Set the select tool type.')
-			pin.add('QCheckBox', setText='Ignore Backfacing', setObjectName='chk004', setToolTip='Ignore backfacing components during selection.')
-			pin.add(QLabel_, setText='Grow Selection', setObjectName='lbl003', setToolTip='Grow the current selection.')
-			pin.add(QLabel_, setText='Shrink Selection', setObjectName='lbl004', setToolTip='Shrink the current selection.')
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb001', setToolTip='')
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb004', setToolTip='Set the select tool type.')
+			pin.contextMenu.add('QCheckBox', setText='Ignore Backfacing', setObjectName='chk004', setToolTip='Ignore backfacing components during selection.')
+			pin.contextMenu.add(QLabel_, setText='Grow Selection', setObjectName='lbl003', setToolTip='Grow the current selection.')
+			pin.contextMenu.add(QLabel_, setText='Shrink Selection', setObjectName='lbl004', setToolTip='Shrink the current selection.')
 			return
 
 
@@ -128,10 +128,10 @@ class Selection(Init):
 		Select Island: tolerance x
 		'''
 		tb = self.currentUi.tb002
-		if tb.chk003.isChecked():
-			text = tb.s002.value()
-			tb.s004.setValue(text)
-			tb.s005.setValue(text)
+		if tb.menu_.chk003.isChecked():
+			text = tb.menu_.s002.value()
+			tb.menu_.s004.setValue(text)
+			tb.menu_.s005.setValue(text)
 
 
 	def s004(self, value=None):
@@ -139,10 +139,10 @@ class Selection(Init):
 		Select Island: tolerance y
 		'''
 		tb = self.currentUi.tb002
-		if tb.chk003.isChecked():
-			text = tb.s004.value()
-			tb.s002.setValue(text)
-			tb.s005.setValue(text)
+		if tb.menu_.chk003.isChecked():
+			text = tb.menu_.s004.value()
+			tb.menu_.s002.setValue(text)
+			tb.menu_.s005.setValue(text)
 
 
 	def s005(self, value=None):
@@ -150,10 +150,10 @@ class Selection(Init):
 		Select Island: tolerance z
 		'''
 		tb = self.currentUi.tb002
-		if tb.chk003.isChecked():
-			text = tb.s005.value()
-			tb.s002.setValue(text)
-			tb.s004.setValue(text)
+		if tb.menu_.chk003.isChecked():
+			text = tb.menu_.s005.value()
+			tb.menu_.s002.setValue(text)
+			tb.menu_.s004.setValue(text)
 
 
 	def chk000(self, state=None):
@@ -246,11 +246,11 @@ class Selection(Init):
 		cmb = self.selection.cmb000
 
 		if index is 'setMenu':
-			cmb.addToContext(QLabel_, setText='Select', setObjectName='lbl005', setToolTip='Select the current set elements.')
-			cmb.addToContext(QLabel_, setText='New', setObjectName='lbl000', setToolTip='Create a new selection set.')
-			cmb.addToContext(QLabel_, setText='Modify', setObjectName='lbl001', setToolTip='Modify the current set by renaming and/or changing the selection.')
-			cmb.addToContext(QLabel_, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current set.')
-			cmb.returnPressed.connect(lambda m=cmb.lastActiveChild: getattr(self, m(name=1))()) #connect to the last pressed child widget's corresponding method after return pressed. ie. self.lbl000 if cmb.lbl000 was clicked last.
+			cmb.contextMenu.add(QLabel_, setText='Select', setObjectName='lbl005', setToolTip='Select the current set elements.')
+			cmb.contextMenu.add(QLabel_, setText='New', setObjectName='lbl000', setToolTip='Create a new selection set.')
+			cmb.contextMenu.add(QLabel_, setText='Modify', setObjectName='lbl001', setToolTip='Modify the current set by renaming and/or changing the selection.')
+			cmb.contextMenu.add(QLabel_, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current set.')
+			cmb.returnPressed.connect(lambda m=cmb.contextMenu.lastActiveChild: getattr(self, m(name=1))()) #connect to the last pressed child widget's corresponding method after return pressed. ie. self.lbl000 if cmb.lbl000 was clicked last.
 			cmb.currentIndexChanged.connect(self.lbl005) #select current set on index change.
 			cmb.beforePopupShown.connect(self.cmb000) #refresh comboBox contents before showing it's popup.
 			return
@@ -463,7 +463,7 @@ class Selection(Init):
 
 		cmb.clear()
 		list_ = [str(i) for i in pm.ls(sl=1, flatten=1)]
-		widgets = [cmb.add('QCheckBox', setText=t, setChecked=1) for t in list_[:50]] #selection list is capped with a slice at 50 elements.
+		widgets = [cmb.menu_.add('QCheckBox', setText=t, setChecked=1) for t in list_[:50]] #selection list is capped with a slice at 50 elements.
 
 		for w in widgets:
 			try:
@@ -490,13 +490,13 @@ class Selection(Init):
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
-			tb.add('QRadioButton', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
-			tb.add('QRadioButton', setText='Component Loop', setObjectName='chk001', setChecked=True, setToolTip='Select all contiguous components that form a loop with the current selection.')
-			tb.add('QRadioButton', setText='Shortest Path', setObjectName='chk002', setToolTip='Shortest component path between two selected vertices or UV\'s.')
-			tb.add('QSpinBox', setPrefix='Step: ', setObjectName='s003', minMax_='1-100 step1', setValue=1, setToolTip='Step Amount.')
+			tb.menu_.add('QRadioButton', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
+			tb.menu_.add('QRadioButton', setText='Component Loop', setObjectName='chk001', setChecked=True, setToolTip='Select all contiguous components that form a loop with the current selection.')
+			tb.menu_.add('QRadioButton', setText='Shortest Path', setObjectName='chk002', setToolTip='Shortest component path between two selected vertices or UV\'s.')
+			tb.menu_.add('QSpinBox', setPrefix='Step: ', setObjectName='s003', minMax_='1-100 step1', setValue=1, setToolTip='Step Amount.')
 			return
 
-		step = tb.s003.value()
+		step = tb.menu_.s003.value()
 
 		selectionMask = pm.selectMode (query=True, component=True)
 		maskVertex = pm.selectType (query=True, vertex=True)
@@ -506,11 +506,11 @@ class Selection(Init):
 		objects = pm.ls(sl=1)
 		for obj in objects:
 			if pm.objectType(obj, isType='mesh'): 
-				if tb.chk000.isChecked(): #Select Ring
+				if tb.menu_.chk000.isChecked(): #Select Ring
 					if all([selectionMask==1, maskEdge==1]):
 						pm.polySelect(edgeRing=True)
 
-				elif tb.chk002.isChecked(): #Shortest Edge Path
+				elif tb.menu_.chk002.isChecked(): #Shortest Edge Path
 					if all([selectionMask==1, maskEdge==1]):
 						import re
 						vertices = [pm.ls(pm.polyListComponentConversion(e, fromEdge=1, toVertex=1), flatten=1) for e in pm.ls(sl=1)]
@@ -518,7 +518,7 @@ class Selection(Init):
 						vertexNumbers = [int(re.findall(r'(?<=\[)[0-9]+(?=:?])', str(s))[0]) for s in closestVerts] #get the vertex numbers as integer values. ie. [818, 1380]
 						pm.polySelect(shortestEdgePath=(vertexNumbers[0], vertexNumbers[1]))
 
-				elif tb.chk001.isChecked(): #Select Loop
+				elif tb.menu_.chk001.isChecked(): #Select Loop
 					if all([selectionMask==1, maskEdge==1]):
 						pm.polySelect(edgeLoop=True)
 
@@ -529,10 +529,10 @@ class Selection(Init):
 		'''
 		tb = self.currentUi.tb001
 		if state is 'setMenu':
-			tb.add('QDoubleSpinBox', setPrefix='Tolerance: ', setObjectName='s000', minMax_='0.0-10 step.1', setValue=0.3, setToolTip='Select similar objects or components, depending on selection mode.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Tolerance: ', setObjectName='s000', minMax_='0.0-10 step.1', setValue=0.3, setToolTip='Select similar objects or components, depending on selection mode.')
 			return
 
-		tolerance = str(tb.s000.value()) #string value because mel.eval is sending a command string
+		tolerance = str(tb.menu_.s000.value()) #string value because mel.eval is sending a command string
 
 		mel.eval("doSelectSimilar 1 {\""+ tolerance +"\"}")
 
@@ -544,15 +544,15 @@ class Selection(Init):
 		'''
 		tb = self.currentUi.tb002
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='Lock Values', setObjectName='chk003', setChecked=True, setToolTip='Keep values in sync.')
-			tb.add('QDoubleSpinBox', setPrefix='x: ', setObjectName='s002', minMax_='0.00-1 step.01', setValue=0.01, setToolTip='Normal X range.')
-			tb.add('QDoubleSpinBox', setPrefix='y: ', setObjectName='s004', minMax_='0.00-1 step.01', setValue=0.01, setToolTip='Normal Y range.')
-			tb.add('QDoubleSpinBox', setPrefix='z: ', setObjectName='s005', minMax_='0.00-1 step.01', setValue=0.01, setToolTip='Normal Z range.')
+			tb.menu_.add('QCheckBox', setText='Lock Values', setObjectName='chk003', setChecked=True, setToolTip='Keep values in sync.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='x: ', setObjectName='s002', minMax_='0.00-1 step.01', setValue=0.01, setToolTip='Normal X range.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='y: ', setObjectName='s004', minMax_='0.00-1 step.01', setValue=0.01, setToolTip='Normal Y range.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='z: ', setObjectName='s005', minMax_='0.00-1 step.01', setValue=0.01, setToolTip='Normal Z range.')
 			return
 
-		rangeX = float(tb.s002.value())
-		rangeY = float(tb.s004.value())
-		rangeZ = float(tb.s005.value())
+		rangeX = float(tb.menu_.s002.value())
+		rangeY = float(tb.menu_.s004.value())
+		rangeZ = float(tb.menu_.s005.value())
 		selectedFaces = pm.filterExpand(sm=34)
 
 		if selectedFaces:

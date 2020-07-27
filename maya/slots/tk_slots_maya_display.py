@@ -5,23 +5,20 @@ import traceback
 import os.path
 
 
+
 class Display(Init):
 	def __init__(self, *args, **kwargs):
 		super(Display, self).__init__(*args, **kwargs)
-
-		self.parentUi = self.sb.getUi('display')
-		self.childUi = self.sb.getUi('display_submenu')
 
 
 	def pin(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.parentUi.pin
+		pin = self.display.pin
 
 		if state is 'setMenu':
-			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
-
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
 			return
 
 
@@ -29,17 +26,17 @@ class Display(Init):
 		'''
 		Editors
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.display.cmb000
 		
 		if index is 'setMenu':
 			list_ = ['']
 			cmb.addItems_(list_, '')
 			return
 
-		# if index>0:
-		# 	if index==cmb.items.index(''):
-		# 		pass
-		# 	cmb.setCurrentIndex(0)
+		if index>0:
+			if index==cmb.items.index(''):
+				pass
+			cmb.setCurrentIndex(0)
 
 
 	def b000(self):
@@ -138,9 +135,12 @@ class Display(Init):
 
 	def b009(self):
 		'''
-		
+		Toggle Material Override
 		'''
-		pass
+		currentPanel = pm.getPanel(withFocus=True)
+		state = pm.modelEditor(currentPanel, query=1, useDefaultMaterial=1)
+		pm.modelEditor(currentPanel, edit=1, useDefaultMaterial=not state)
+		self.viewPortMessage('Default Material Override: <hl>{}</hl>.'.format(state))
 
 
 	def b010(self):

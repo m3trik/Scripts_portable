@@ -7,8 +7,8 @@ from pydoc import locate
 
 import sys, os.path
 
-
-
+try: import shiboken2
+except: from PySide2 import shiboken2
 
 
 
@@ -209,13 +209,13 @@ class Switchboard(QtCore.QObject):
 		return self.sbDict[name]['widgets']
 
 
-	def setAttributes(self, attributes=None, order=['globalPos', 'setVisible'], **kwargs):
+	def setAttributes(self, attributes=None, order=['setVisible'], **kwargs):
 		'''
 		Works with attributes passed in as a dict or kwargs.
 		If attributes are passed in as a dict, kwargs are ignored.
 		args:
 			attributes (dict) = keyword attributes and their corresponding values.
-			#order (list) = list of string keywords. ie. ['move', 'show']. attributes in this list will be set last, in order of the list. an example would be setting move positions after setting resize arguments.
+			#order (list) = list of string keywords. ie. ['move', 'setVisible']. attributes in this list will be set last, in order of the list. an example would be setting move positions after setting resize arguments.
 		kwargs:
 			set any keyword arguments.
 		'''
@@ -233,31 +233,8 @@ class Switchboard(QtCore.QObject):
 			try:
 				getattr(self, attr)(value)
 
-			except Exception as error:
-				if type(error)==AttributeError:
-					self.setCustomAttribute(attr, value)
-				else:
-					raise error
-
-
-	def setCustomAttribute(self, attr, value):
-		'''
-		Handle custom keyword arguments.
-		args:
-			attr (str) = custom keyword attribute.
-			value (str) = the value corresponding to the given attr.
-		kwargs:
-			copy (obj) = widget to copy certain attributes from.
-			globalPos (QPoint) = move to given global location and center.
-		'''
-		if attr=='copy':
-			self.setObjectName(value.objectName())
-			self.resize(value.size())
-			self.setText(value.text())
-			self.setWhatsThis(value.whatsThis())
-
-		if attr=='globalPos':
-			self.move(self.mapFromGlobal(value - self.rect().center())) #move and center
+			except AttributeError:
+				pass
 
 
 	def setUniqueObjectName(self, widget, name=None):
@@ -933,9 +910,9 @@ class Switchboard(QtCore.QObject):
 						 	A ui object can be passed into this parameter, which will be used to get it's corresponding name. 
 
 		returns:
-			if objectName:  widget object with the given name from the current ui.
-			if name and objectName: widget object with the given name from the given ui name.
-			if name: all widgets for the given ui.
+			(obj) if objectName:  widget object with the given name from the current ui.
+				  if name and objectName: widget object with the given name from the given ui name.
+			(list) if name: all widgets for the given ui.
 		'''
 		if not name:
 			name = self.getUiName()
@@ -946,9 +923,9 @@ class Switchboard(QtCore.QObject):
 			self.widgets(name) #construct the signals and slots for the ui
 
 		if objectName:
-			return next((w for w in self.sbDict[name]['widgets'].values() if w['widgetName']==objectName), None)
+			return next((w if shiboken2.isValid(w) else self.removeWidgets(w, name) for w in self.sbDict[name]['widgets'].values() if w['widgetName']==objectName), None)
 		else:
-			return [w for w in self.sbDict[name]['widgets'].keys()]
+			return [w if shiboken2.isValid(w) else self.removeWidgets(w, name) for w in self.sbDict[name]['widgets'].keys()]
 
 	#Property
 	def getWidgetName(self, widget=None, name=None):

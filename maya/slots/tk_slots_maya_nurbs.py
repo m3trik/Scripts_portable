@@ -20,7 +20,7 @@ class Nurbs(Init):
 		pin = self.parentUi.pin
 
 		if state is 'setMenu':
-			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya Curve Operations')
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya Curve Operations')
 
 			return
 

@@ -9,9 +9,6 @@ class Editors(Init):
 	def __init__(self, *args, **kwargs):
 		super(Editors, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('editors')
-		self.childUi = self.sb.getUi('editors_submenu')
-
 		#construct stacked widget from maya layouts
 		# self.widgetList = ['MainAttributeEditorLayout','MainChannelBoxLayout','ToggledOutlinerLayout','MainToolSettingsLayout','LayerEditorDisplayLayerLayout']
 		self.stackedWidget = self.sb.getUi('dynLayout').stackedWidget
@@ -34,10 +31,10 @@ class Editors(Init):
 		'''
 		Context menu
 		'''
-		pin = self.parentUi.pin
+		pin = self.editors.pin
 
 		if state is 'setMenu':
-			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
 			return
 
 
@@ -45,70 +42,89 @@ class Editors(Init):
 		'''
 		Editors
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.editors.cmb000
 		
 		if index is 'setMenu':
 			list_ = ['']
 			cmb.addItems_(list_, '')
 			return
 
-		# if index>0:
-		# 	if index==cmb.items.index(''):
-		# 		pass
-		# 	cmb.setCurrentIndex(0)
+		if index>0:
+			if index==cmb.items.index(''):
+				pass
+			cmb.setCurrentIndex(0)
 
 
-	def setWidgetIndex(self, name):
-		'''
-		Set the active widget in the dynLayout ui.
-		args:
-			name (str) = name of widget
-		returns:
-			the current widget object from the stacked widget.
-		'''
-		print(8*' -')
-		self.stackedWidget.addWidget(self.sb.getWidget(name=name))
-		self.stackedWidget.setCurrentWidget(name)
-		currentWidget = self.stackedWidget.currentWidget()
-		currentWidget.adjustSize()
-		# self.tk.resize(currentWidget.minimumSizeHint())
-		# self.tk.resize(currentWidget.sizeHint())
-		return currentWidget
+	# def setWidgetIndex(self, name):
+	# 	'''
+	# 	Set the active widget in the dynLayout ui.
+	# 	args:
+	# 		name (str) = name of widget
+	# 	returns:
+	# 		the current widget object from the stacked widget.
+	# 	'''
+	# 	print(8*' -')
+	# 	self.stackedWidget.addWidget(self.sb.getWidget(name=name))
+	# 	self.stackedWidget.setCurrentWidget(name)
+	# 	currentWidget = self.stackedWidget.currentWidget()
+	# 	currentWidget.adjustSize()
+	# 	# self.tk.resize(currentWidget.minimumSizeHint())
+	# 	# self.tk.resize(currentWidget.sizeHint())
+	# 	return currentWidget
 
 
 	def i000(self):
 		'''
 		Attributes
 		'''
-		self.setWidgetIndex('MainAttributeEditorLayout')
+		# self.setWidgetIndex('MainAttributeEditorLayout')
+		if pm.workspaceControl('AttributeEditor', exists=1):
+			if pm.workspaceControl('AttributeEditor', query=1, visible=1):
+				pm.workspaceControl('AttributeEditor', edit=1, close=1)
+			else:
+				pm.workspaceControl('AttributeEditor', edit=1, restore=1)
 
 
 	def i001(self):
 		'''
 		Outliner
 		'''
-		self.setWidgetIndex('ToggledOutlinerLayout')
+		# self.setWidgetIndex('ToggledOutlinerLayout')
+		if pm.workspaceControl('Outliner', exists=1):
+			if pm.workspaceControl('Outliner', query=1, visible=1):
+				pm.workspaceControl('Outliner', edit=1, close=1)
+			else:
+				pm.workspaceControl('Outliner', edit=1, restore=1)
 
 
 	def i002(self):
 		'''
 		Tool
 		'''
-		self.setWidgetIndex('MainToolSettingsLayout')
+		# self.setWidgetIndex('MainToolSettingsLayout')
+		if pm.workspaceControl('ToolSettings', exists=1):
+			if pm.workspaceControl('ToolSettings', query=1, visible=1):
+				pm.workspaceControl('ToolSettings', edit=1, close=1)
+			else:
+				pm.workspaceControl('ToolSettings', edit=1, restore=1)
 
 
 	def i003(self):
 		'''
 		Layers
 		'''
-		self.setWidgetIndex('LayerEditorDisplayLayerLayout')
+		# self.setWidgetIndex('LayerEditorDisplayLayerLayout')
+		pm.mel.channelsLayersPrefChange(True) #Preferences: ui elements: Show Layer Editor within Channel Box: Off
+		pm.mel.setLayersVisible(True)
 
 
 	def i004(self):
 		'''
 		Channels
 		'''
-		self.setWidgetIndex('MainChannelBoxLayout')
+		# self.setWidgetIndex('MainChannelBoxLayout')
+		pm.mel.channelsLayersPrefChange(True) #Preferences: ui elements: Show Layer Editor within Channel Box: Off
+		pm.mel.setChannelsVisible(True)
 
 
 

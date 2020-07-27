@@ -91,7 +91,7 @@
            <property name="minimumSize">
             <size>
              <width>137</width>
-             <height>175</height>
+             <height>155</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -389,56 +389,11 @@
              <bool>false</bool>
             </property>
            </widget>
-           <widget class="QComboBox_" name="cmb002">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>135</y>
-              <width>136</width>
-              <height>22</height>
-             </rect>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>136</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>136</width>
-              <height>999</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Select an object to create.</string>
-            </property>
-            <property name="editable">
-             <bool>false</bool>
-            </property>
-            <property name="maxVisibleItems">
-             <number>40</number>
-            </property>
-            <property name="maxCount">
-             <number>200</number>
-            </property>
-            <property name="sizeAdjustPolicy">
-             <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
-            </property>
-            <property name="frame">
-             <bool>true</bool>
-            </property>
-            <item>
-             <property name="text">
-              <string>Attributes</string>
-             </property>
-            </item>
-           </widget>
            <widget class="QPushButton" name="b000">
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>155</y>
+              <y>135</y>
               <width>136</width>
               <height>19</height>
              </rect>
@@ -611,7 +566,6 @@
            <zorder>txt003</zorder>
            <zorder>chk005</zorder>
            <zorder>chk003</zorder>
-           <zorder>cmb002</zorder>
            <zorder>s000</zorder>
            <zorder>s001</zorder>
            <zorder>s002</zorder>

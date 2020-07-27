@@ -180,37 +180,6 @@
      <string>Mesh</string>
     </property>
    </widget>
-   <widget class="QToolButton_" name="tb004">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>335</x>
-      <y>250</y>
-      <width>56</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>111</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="toolTip">
-     <string>Bevel modifier</string>
-    </property>
-    <property name="text">
-     <string>Bevel</string>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>18</width>
-      <height>18</height>
-     </size>
-    </property>
-   </widget>
   </widget>
  </widget>
  <customwidgets>

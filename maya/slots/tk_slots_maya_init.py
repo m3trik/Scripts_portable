@@ -35,8 +35,9 @@ class Init(Slots):
 	def info(self):
 		'''
 		Get current scene attributes. Only those with relevant values will be displayed.
+
 		returns:
-				{dict} - current object attributes.
+			{dict} - current object attributes.
 		'''
 		infoDict={}
 		try:
@@ -55,7 +56,7 @@ class Init(Slots):
 				if pm.selectType(query=1, allObjects=1): #get object/s
 
 					selectedObjects = pm.ls(selection=1, objectsOnly=1)
-					name_and_type = ['{0} [{1}]'.format(i.name(), pm.objectType(i)) for i in selectedObjects] #ie. ['pCube1:transform', 'pSphere1:transform']
+					name_and_type = ['{0} : {1}'.format(i.name(), pm.objectType(i)) for i in selectedObjects] #ie. ['pCube1:transform', 'pSphere1:transform']
 					infoDict.update({'Selection: ':name_and_type}) #currently selected objects by name and type.
 
 					objectFaces = pm.polyEvaluate(selectedObjects, face=True)
@@ -68,19 +69,22 @@ class Init(Slots):
 
 			elif pm.selectMode(query=1, component=1): #component mode:
 				if pm.selectType(query=1, vertex=1): #get vertex selection info
-					selectedVerts = [v.split('[')[-1].rstrip(']') for v in pm.filterExpand(selectionMask=31)] #pm.polyEvaluate(vertexComponent=1);
+					vertices = pm.filterExpand(selectionMask=31)
+					selectedVerts = [v.split('[')[-1].rstrip(']') for v in vertices] if vertices else [] #pm.polyEvaluate(vertexComponent=1);
 					collapsedList = self.collapseList(selectedVerts, limit=6)
 					numVerts = pm.polyEvaluate (selection[0], vertex=1)
 					infoDict.update({'Vertices: '+str(len(selectedVerts))+'/'+str(numVerts):collapsedList}) #selected verts
 
 				elif pm.selectType(query=1, edge=1): #get edge selection info
-					selectedEdges = [e.split('[')[-1].rstrip(']') for e in pm.filterExpand(selectionMask=32)] #pm.polyEvaluate(edgeComponent=1);
+					edges = pm.filterExpand(selectionMask=32)
+					selectedEdges = [e.split('[')[-1].rstrip(']') for e in edges] if edges else [] #pm.polyEvaluate(edgeComponent=1);
 					collapsedList = self.collapseList(selectedEdges, limit=6)
 					numEdges = pm.polyEvaluate (selection[0], edge=1)
 					infoDict.update({'Edges: '+str(len(selectedEdges))+'/'+str(numEdges):collapsedList}) #selected edges
 
 				elif pm.selectType(query=1, facet=1): #get face selection info
-					selectedFaces = [f.split('[')[-1].rstrip(']') for f in pm.filterExpand(selectionMask=34)] #pm.polyEvaluate(faceComponent=1);
+					faces = pm.filterExpand(selectionMask=34)
+					selectedFaces = [f.split('[')[-1].rstrip(']') for f in faces] if faces else [] #pm.polyEvaluate(faceComponent=1);
 					collapsedList = self.collapseList(selectedFaces, limit=6)
 					numFaces = pm.polyEvaluate (selection[0], face=1)
 					infoDict.update({'Faces: '+str(len(selectedFaces))+'/'+str(numFaces):collapsedList}) #selected faces
@@ -125,7 +129,7 @@ class Init(Slots):
 				try:
 					mel.eval('bt_polyNSidedToQuad;')
 				except:
-					print('Maya Bonus Tools: Convert N-Sided Faces To Quads not installed. (bt_polyNSidedToQuad;)')
+					print('Maya Bonus Tools: Convert N-Sided Faces To Quads not found. (bt_polyNSidedToQuad;)')
 
 			else: #Find And Select N-Gons
 				pm.select(obj)
@@ -698,19 +702,31 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getAttributesMEL(node, exclude=[]):
+	def getAttributesMEL(node, include=[], exclude=[]):
 		'''
 		Get node attributes and their corresponding values as a dict.
 
 		args:
 			node (obj) = Transform node.
+			include (list) = Attributes to include. All other will be ommited. Exclude takes dominance over include. Meaning, if the same attribute is in both lists, it will be excluded.
 			exclude (list) = Attributes to exclude from the returned dictionay. ie. [u'Position',u'Rotation',u'Scale',u'renderable',u'isHidden',u'isFrozen',u'selected']
 
 		returns:
 			(dict) {'string attribute': current value}
 		'''
+		if not all((include, exclude)):
+			exclude = [u'message', u'caching', u'frozen', u'isHistoricallyInteresting', u'nodeState', u'binMembership', u'output', u'edgeIdMap', u'miterAlong', u'message',
+					u'axis', u'axisX', u'axisY', u'axisZ', u'paramWarn', u'uvSetName', u'createUVs', u'texture', u'maya70', u'inputPolymesh', u'maya2017Update1', 
+					u'manipMatrix', u'inMeshCache', u'faceIdMap', u'subdivideNgons', u'useOldPolyArchitecture', u'inputComponents', 
+					u'binMembership', u'maya2015', u'cacheInput', u'inputMatrix', u'forceParallel', u'autoFit', u'maya2016SP3', u'caching', u'output', u'vertexIdMap', 
+					u'useInputComp', 
+					]
+
 		# print('node:', node); print('attr:', pm.listAttr(node))
-		return {attr:pm.getAttr(node+'.'+attr) for attr in pm.listAttr(node) if attr not in exclude} #ie. pm.getAttr('polyCube1.subdivisionsDepth')
+		attributes = {attr:pm.getAttr(node+'.'+attr) for attr in pm.listAttr(node) 
+				if not attr in exclude and (attr in include if include else attr not in include)} #ie. pm.getAttr('polyCube1.subdivisionsDepth')
+
+		return attributes
 
 
 	@staticmethod
@@ -725,7 +741,8 @@ class Init(Slots):
 		ex call:
 		self.setAttributesMEL(obj, {'smoothLevel':1})
 		'''
-		[pm.setAttr(node+'.'+attr, value) for attr, value in attributes.items() if attr and value] #ie. pm.setAttr('polyCube1.subdivisionsDepth', 5)
+		[pm.setAttr(node+'.'+attr, value) for attr, value in attributes.items() 
+		if attr and value] #ie. pm.setAttr('polyCube1.subdivisionsDepth', 5)
 
 
 	@staticmethod
@@ -767,11 +784,38 @@ class Init(Slots):
 	# ------------------------------------------------
 
 
+	@classmethod
+	def attr(cls, fn):
+		'''
+		Decorator for objAttrWindow.
+		'''
+		def wrapper(self, *args, **kwargs):
+			self.setAttributeWindow(fn(self, *args, **kwargs))
+		return wrapper
+
+	def setAttributeWindow(self, obj, include=[], exclude=[]):
+		'''
+		Launch a popup window containing the given objects attributes.
+
+		args:
+			obj (obj) = The object to get the attributes of.
+			include (list) = Attributes to include. All other will be ommited. Exclude takes dominance over include. Meaning, if the same attribute is in both lists, it will be excluded.
+			exclude (list) = Attributes to exclude from the returned dictionay. ie. [u'Position',u'Rotation',u'Scale',u'renderable',u'isHidden',u'isFrozen',u'selected']
+		'''
+		if obj is None:
+			return
+
+		if isinstance(obj, (list, set, tuple)):
+			obj = obj[0]
+
+		attributes = self.getAttributesMEL(obj, include=include, exclude=exclude)
+		self.objAttrWindow(obj, attributes, self.setAttributesMEL)
+
 
 	@staticmethod
 	def getMayaMainWindow():
 		'''
-		Get the main Maya window as a QtGui.QMainWindow instance
+		Get the main Maya window as a QtWidgets.QMainWindow instance
 
 		returns:
 			QtGui.QMainWindow instance of the top level Maya windows

@@ -9,20 +9,17 @@ class Preferences(Init):
 	def __init__(self, *args, **kwargs):
 		super(Preferences, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('preferences')
-		self.childUi = self.sb.getUi('preferences_submenu')
-
-		self.parentUi.b010.setText('3dsMax Preferences')
+		self.preferences.b010.setText('3dsMax Preferences')
 
 
 	def pin(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.parentUi.pin
+		pin = self.preferences.pin
 
 		if state is 'setMenu':
-			pin.add(QComboBox_, setObjectName='cmb003', setToolTip='')
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb003', setToolTip='')
 			return
 
 
@@ -30,24 +27,24 @@ class Preferences(Init):
 		'''
 		Editors
 		'''
-		cmb = self.parentUi.cmb003
+		cmb = self.preferences.cmb003
 
 		if index is 'setMenu':
 			list_ = ['']
 			cmb.addItems_(list_, '')
 			return
 
-		# if index>0:
-		# 	if index==cmd.items.index(''):
-		# 		pass
-		# 	cmb.setCurrentIndex(0)
+		if index>0:
+			if index==cmd.items.index(''):
+				pass
+			cmb.setCurrentIndex(0)
 
 
 	def cmb000(self, index=None):
 		'''
 		Ui Style: Set main ui style using QStyleFactory
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.preferences.cmb000
 
 		if index is 'setMenu':
 			from PySide2 import QtWidgets, QtCore
@@ -68,7 +65,7 @@ class Preferences(Init):
 		'''
 		Preferences:App - Set Working Units: Linear
 		'''
-		cmb = self.parentUi.cmb001
+		cmb = self.preferences.cmb001
 
 		if index is 'setMenu':
 			list_ = ['millimeter','centimeter','meter','kilometer','inch','foot','yard','mile']
@@ -88,7 +85,7 @@ class Preferences(Init):
 		'''
 		Preferences:App - Set Working Units: Time
 		'''
-		cmb = self.parentUi.cmb002
+		cmb = self.preferences.cmb002
 
 		if index is 'setMenu':
 			#store a corresponding value for each item in the comboBox list_.
@@ -153,7 +150,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	Custom Menu Set
 	# 	'''
-	# 	cmb = self.parentUi.cmb000
+	# 	cmb = self.preferences.cmb000
 		
 	# 	list_ = ['Modeling', 'Normals', 'Materials', 'UV'] #combobox list menu corresponding to the button text sets.
 	# 	contents = cmb.addItems_(list_, 'Menu Sets')

@@ -27,7 +27,7 @@ class Subdivision(Init):
 		pin = self.parentUi.pin
 
 		if state is 'setMenu':
-			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='Subdivision Modifiers')
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='Subdivision Modifiers')
 			return
 
 

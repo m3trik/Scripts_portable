@@ -31,8 +31,8 @@ class Materials(Init):
 		pin = self.materials.pin
 
 		if state is 'setMenu':
-			pin.add(QComboBox_, setObjectName='cmb001', setToolTip='Maya Material Editors')
-			pin.add(QLabel_, setText='Material Attributes', setObjectName='lbl004', setToolTip='Show the material attributes in the attribute editor.')
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb001', setToolTip='Maya Material Editors')
+			pin.contextMenu.add(QLabel_, setText='Material Attributes', setObjectName='lbl004', setToolTip='Show the material attributes in the attribute editor.')
 			return
 
 
@@ -84,11 +84,11 @@ class Materials(Init):
 		cmb = self.materials.cmb002
 
 		if index is 'setMenu':
-			cmb.addToContext(QLabel_, setText='Open in Editor', setObjectName='lbl000', setToolTip='Open material in editor.')
-			cmb.addToContext(QLabel_, setText='Rename', setObjectName='lbl001', setToolTip='Rename the current material.')
-			cmb.addToContext(QLabel_, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current material.')
-			cmb.addToContext(QLabel_, setText='Delete All Unused Materials', setObjectName='lbl003', setToolTip='Delete All unused materials.')
-			# cmb.addToContext(QLabel_, setText='Refresh', setObjectName='cmb002', setToolTip='Refresh materials list')
+			cmb.contextMenu.add(QLabel_, setText='Open in Editor', setObjectName='lbl000', setToolTip='Open material in editor.')
+			cmb.contextMenu.add(QLabel_, setText='Rename', setObjectName='lbl001', setToolTip='Rename the current material.')
+			cmb.contextMenu.add(QLabel_, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current material.')
+			cmb.contextMenu.add(QLabel_, setText='Delete All Unused Materials', setObjectName='lbl003', setToolTip='Delete All unused materials.')
+			# cmb.contextMenu.add(QLabel_, setText='Refresh', setObjectName='cmb002', setToolTip='Refresh materials list')
 			cmb.beforePopupShown.connect(self.cmb002) #refresh comboBox contents before showing it's popup.
 			return
 
@@ -98,9 +98,9 @@ class Materials(Init):
 			return
 
 		try:
-			sceneMaterials = self.materials.tb001.chk000.isChecked()
-			idMapMaterials = self.materials.tb001.chk001.isChecked()
-			favoriteMaterials = self.materials.tb001.chk002.isChecked()
+			sceneMaterials = self.materials.tb001.menu_.chk000.isChecked()
+			idMapMaterials = self.materials.tb001.menu_.chk001.isChecked()
+			favoriteMaterials = self.materials.tb001.menu_.chk002.isChecked()
 		except: #if the toolbox hasn't been constructed yet: default to sceneMaterials
 			sceneMaterials = True
 
@@ -143,17 +143,17 @@ class Materials(Init):
 		'''
 		tb = self.ui.tb000
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='All Objects', setObjectName='chk003', setToolTip='Search all scene objects, or only those currently selected.')
-			tb.add('QCheckBox', setText='Shell', setObjectName='chk005', setToolTip='Select entire shell.')
-			tb.add('QCheckBox', setText='Invert', setObjectName='chk006', setToolTip='Invert Selection.')
+			tb.menu_.add('QCheckBox', setText='All Objects', setObjectName='chk003', setToolTip='Search all scene objects, or only those currently selected.')
+			tb.menu_.add('QCheckBox', setText='Shell', setObjectName='chk005', setToolTip='Select entire shell.')
+			tb.menu_.add('QCheckBox', setText='Invert', setObjectName='chk006', setToolTip='Invert Selection.')
 			return
 
 		if not self.currentMaterial:
 			return 'Error: No Material Selection.'
 
-		shell = tb.chk005.isChecked() #Select by material: shell
-		invert = tb.chk006.isChecked() #Select by material: invert
-		allObjects = tb.chk003.isChecked() #Search all scene objects
+		shell = tb.menu_.chk005.isChecked() #Select by material: shell
+		invert = tb.menu_.chk006.isChecked() #Select by material: invert
+		allObjects = tb.menu_.chk003.isChecked() #Search all scene objects
 
 		objects = pm.ls(sl=1, objectsOnly=1) if not allObjects else None
 
@@ -166,19 +166,19 @@ class Materials(Init):
 		'''
 		tb = self.materials.tb001
 		if state is 'setMenu':
-			tb.add('QRadioButton', setText='All Scene Materials', setObjectName='chk000', setChecked=True, setToolTip='List all scene materials.') #Material mode: Scene Materials
-			tb.add('QRadioButton', setText='ID Map Materials', setObjectName='chk001', setToolTip='List ID map materials.') #Material mode: ID Map Materials
-			tb.add('QRadioButton', setText='Favorite Materials', setObjectName='chk002', setToolTip='List Favorite materials.') #Material mode: Favorite Materials
+			tb.menu_.add('QRadioButton', setText='All Scene Materials', setObjectName='chk000', setChecked=True, setToolTip='List all scene materials.') #Material mode: Scene Materials
+			tb.menu_.add('QRadioButton', setText='ID Map Materials', setObjectName='chk001', setToolTip='List ID map materials.') #Material mode: ID Map Materials
+			tb.menu_.add('QRadioButton', setText='Favorite Materials', setObjectName='chk002', setToolTip='List Favorite materials.') #Material mode: Favorite Materials
 
-			self.connect_([tb.chk000, tb.chk001], 'toggled', [self.cmb002, self.tb001])
+			self.connect_([tb.menu_.chk000, tb.menu_.chk001], 'toggled', [self.cmb002, self.tb001])
 			return
 
-		if tb.chk000.isChecked():
-			self.materials.group000.setTitle(tb.chk000.text())
-		elif tb.chk001.isChecked():
-			self.materials.group000.setTitle(tb.chk001.text())
-		elif tb.chk002.isChecked():
-			self.materials.group000.setTitle(tb.chk002.text())
+		if tb.menu_.chk000.isChecked():
+			self.materials.group000.setTitle(tb.menu_.chk000.text())
+		elif tb.menu_.chk001.isChecked():
+			self.materials.group000.setTitle(tb.menu_.chk001.text())
+		elif tb.menu_.chk002.isChecked():
+			self.materials.group000.setTitle(tb.menu_.chk002.text())
 
 
 	@Slots.message
@@ -188,19 +188,19 @@ class Materials(Init):
 		'''
 		tb = self.materials.tb002
 		if state is 'setMenu':
-			tb.add('QRadioButton', setText='Current Material', setObjectName='chk007', setChecked=True, setToolTip='Re-Assign the current stored material.')
-			tb.add('QRadioButton', setText='New Material', setObjectName='chk009', setToolTip='Assign a new material.')
-			tb.add('QRadioButton', setText='New Random Material', setObjectName='chk008', setToolTip='Assign a new random ID material.')
+			tb.menu_.add('QRadioButton', setText='Current Material', setObjectName='chk007', setChecked=True, setToolTip='Re-Assign the current stored material.')
+			tb.menu_.add('QRadioButton', setText='New Material', setObjectName='chk009', setToolTip='Assign a new material.')
+			tb.menu_.add('QRadioButton', setText='New Random Material', setObjectName='chk008', setToolTip='Assign a new random ID material.')
 			return
 
 		selection = pm.ls(selection=1, flatten=1)
 		if not selection:
 			return 'Error: No renderable object is selected for assignment.'
 
-		if tb.chk007.isChecked(): #Assign current mat
+		if tb.menu_.chk007.isChecked(): #Assign current mat
 			self.assignMaterial(selection, self.currentMaterial)
 
-		elif tb.chk008.isChecked(): #Assign New random mat ID
+		elif tb.menu_.chk008.isChecked(): #Assign New random mat ID
 			mat = self.createRandomMaterial(prefix='ID_')
 			self.assignMaterial(selection, mat)
 
@@ -210,13 +210,13 @@ class Materials(Init):
 
 			self.randomMat = mat
 
-			if self.materials.tb001.chk001.isChecked():
+			if self.materials.tb001.menu_.chk001.isChecked():
 				self.cmb002() #refresh the combobox
 			else:
-				self.materials.tb001.chk001.setChecked(True) #set combobox to ID map mode. toggling the checkbox refreshes the combobox.
+				self.materials.tb001.menu_.chk001.setChecked(True) #set combobox to ID map mode. toggling the checkbox refreshes the combobox.
 			self.materials.cmb002.setCurrentItem(mat.name()) #set the combobox index to the new mat #self.cmb002.setCurrentIndex(self.cmb002.findText(name))
 
-		elif tb.chk009.isChecked(): #Assign New Material
+		elif tb.menu_.chk009.isChecked(): #Assign New Material
 			mel.eval('buildObjectMenuItemsNow "MainPane|viewPanes|modelPanel4|modelPanel4|modelPanel4|modelPanel4ObjectPop";')
 			mel.eval('createAssignNewMaterialTreeLister "";')
 
@@ -226,7 +226,7 @@ class Materials(Init):
 		'''
 		Open material in editor
 		'''
-		if self.materials.tb001.chk001.isChecked(): #ID map mode
+		if self.materials.tb001.menu_.chk001.isChecked(): #ID map mode
 			try:
 				mat = self.currentMaterials[self.materials.cmb002.currentText()] #get object from string key
 			except:
@@ -309,7 +309,7 @@ class Materials(Init):
 
 		mat = self.getMaterial()
 
-		self.materials.tb001.chk000.setChecked(True) #set the combobox to show all scene materials
+		self.materials.tb001.menu_.chk000.setChecked(True) #set the combobox to show all scene materials
 		cmb = self.materials.cmb002
 		self.cmb002() #refresh the combobox
 		cmb.setCurrentIndex(cmb.items.index(mat.name()))
@@ -319,7 +319,7 @@ class Materials(Init):
 		'''
 		Assign: Assign Current
 		'''
-		self.materials.tb002.chk007.setChecked(True)
+		self.materials.tb002.menu_.chk007.setChecked(True)
 		self.materials.tb002.setText('Assign Current')
 		self.tb002()
 
@@ -328,7 +328,7 @@ class Materials(Init):
 		'''
 		Assign: Assign Random
 		'''
-		self.materials.tb002.chk008.setChecked(True)
+		self.materials.tb002.menu_.chk008.setChecked(True)
 		self.materials.tb002.setText('Assign Random')
 		self.tb002()
 
@@ -337,7 +337,7 @@ class Materials(Init):
 		'''
 		Assign: Assign New
 		'''
-		self.materials.tb002.chk009.setChecked(True)
+		self.materials.tb002.menu_.chk009.setChecked(True)
 		self.materials.tb002.setText('Assign New')
 		self.tb002()
 
@@ -350,7 +350,7 @@ class Materials(Init):
 		newMatName = cmb.currentText()
 
 		if self.currentMaterial and self.currentMaterial.name!=newMatName:
-			if self.materials.tb001.chk001.isChecked(): #Rename ID map Material
+			if self.materials.tb001.menu_.chk001.isChecked(): #Rename ID map Material
 				prefix = 'ID_'
 				if not newMatName.startswith(prefix):
 					newMatName = prefix+newMatName

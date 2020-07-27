@@ -1,4 +1,4 @@
-ccfrom __future__ import print_function
+from __future__ import print_function
 from tk_slots_max_init import *
 
 import os.path
@@ -11,7 +11,6 @@ class Create(Init):
 
 		self.rotation = {'x':[90,0,0], 'y':[0,90,0], 'z':[0,0,90], '-x':[-90,0,0], '-y':[0,-90,0], '-z':[0,0,-90], 'last':[]}
 		self.point=[0,0,0]
-		self.history=[]
 
 
 	@property
@@ -38,7 +37,7 @@ class Create(Init):
 		pin = self.create.pin
 
 		if state is 'setMenu':
-			pin.add(QComboBox_, setObjectName='cmb003', setToolTip='')
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb003', setToolTip='')
 			return
 
 
@@ -53,10 +52,10 @@ class Create(Init):
 			cmb.addItems_(list_, '')
 			return
 
-		# if index>0:
-		# 	if index==cmb.items.index(''):
-		# 		pass
-		# 	cmb.setCurrentIndex(0)
+		if index>0:
+			if index==cmb.items.index(''):
+				pass
+			cmb.setCurrentIndex(0)
 
 
 	def getAxis(self):
@@ -205,86 +204,43 @@ class Create(Init):
 			cmb.addItems_(list_)
 			return
 
+		if index==0: #shared menu. later converted to the specified type.
+			self.cmb001(0)
+
+		if index==4:
+			self.cmb001(4)
+
+		if index==5:
+			self.cmb001(5)
+
+
+	def cmb001(self, index=None):
+		'''
+
+		'''
+		cmb = self.create.cmb001
+
+		if index is 'setMenu':
+			list_ = ["Cube", "Sphere", "Cylinder", "Plane", "Circle", "Cone", "Pyramid", "Torus", "Tube", "GeoSphere", "Text"] 
+			cmb.addItems_(list_, clear=True)
+			return
+
 		primitives = ["Cube", "Sphere", "Cylinder", "Plane", "Circle", "Cone", "Pyramid", "Torus", "Tube", "GeoSphere", "Text"] 
 		extendedPrimitives = ['Hedra', 'Torus Knot', 'Chamfer Box', 'Chamfer Cylinder', 'Oil Tank', 'Capsule', 'Spindle', 'L-Extrusion', 'Gengon', 'C-Extrusion', 'RingWave', 'Hose', 'Prism'] #Extended Primitives:
 		nurbs = ["Cube", "Sphere", "Cylinder", "Cone", "Plane", "Torus", "Circle", "Square"]
 		lights = ["Ambient", "Directional", "Point", "Spot", "Area", "Volume", "VRay Sphere", "VRay Dome", "VRay Rect", "VRay IES"]
 
 		if index in (0, 1, 2, 3): #shared menu. later converted to the specified type.
-			self.create.cmb001.addItems_(primitives+extendedPrimitives, clear=True)
+			cmb.addItems_(primitives+extendedPrimitives, clear=True)
 
 		if index==4:
-			self.create.cmb001.addItems_(nurbs, clear=True)
+			cmb.addItems_(nurbs, clear=True)
 
 		if index==5:
-			self.create.cmb001.addItems_(lights, clear=True)
+			cmb.addItems_(lights, clear=True)
 
 
-	def cmb002(self, index=None, attributes={}, clear=False, show=False):
-		'''
-		Get/Set Primitive Attributes.
-
-		args:
-			index (int) = parameter on activated, currentIndexChanged, and highlighted signals.
-			attributes (dict) = Attibute and it's corresponding value. ie. {width:10}
-			clear (bool) = Clear any previous items.
-			show (bool) = Show the popup menu immediately after adding items.
-		'''
-		cmb = self.create.cmb002
-
-		if index is 'setMenu':
-			cmb.popupStyle = 'qmenu'
-			return
-
-		attributes = {k:v for k,v in attributes.items() if isinstance(v,(int, float, bool))} #get only attributes of int, float, bool type.
-
-		n = len(attributes)
-		if n and index is None:
-			names = 's000-'+str(n-1)
-
-			if clear:
-				cmb.menu.clear()
-
-			#add spinboxes
-			[cmb.add('QDoubleSpinBox', setObjectName=name, minMax_='0.00-100 step1') for name in self.unpackNames(names)]
-
-			#set values
-			self.setSpinboxes(cmb, names, attributes)
-
-			#set signal/slot connections
-			self.connect_(names, 'valueChanged', self.sXXX, cmb)
-
-			if show:
-				cmb.showPopup()
-
-
-	def constructAttributesForNode(self, node):
-		'''
-		Populate the attributes comboBox with attributes of the given node.
-
-		args:
-			node (obj) = Scene object.
-		'''
-		exclude = ['getmxsprop', 'setmxsprop', 'typeInHeight', 'typeInLength', 'typeInPos', 'typeInWidth', 'typeInDepth', 
-			'typeInRadius', 'typeInRadius1', 'typeInRadius2', 'typeinCreationMethod', 'edgeChamferQuadIntersections', 
-			'edgeChamferType', 'hemisphere', 'realWorldMapSize', 'mapcoords']
-
-		attributes = self.getAttributesMax(node, exclude)
-		self.cmb002(attributes=attributes, clear=True, show=True)
-
-
-	def sXXX(self, index=None):
-		'''
-		Set node attributes from multiple spinbox values.
-
-		args:
-			index(int) = optional index of the spinbox that called this function. ie. 5 from s005
-		'''
-		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.create.cmb002.children_()} #current spinbox values. ie. from s000 get the value of six and add it to the list
-		self.setAttributesMax(self.node, spinboxValues) #set attributes for the history node
-
-
-	@Slots.message
+	@Init.attr
 	def b000(self):
 		'''
 		Create Object
@@ -296,7 +252,8 @@ class Create(Init):
 		if not type_:
 			type_ = 'Mesh' #set default type
 
-		if type_ in ['Mesh', 'Editable Poly', 'Polygon', 'Editable Mesh', 'Editable Patch', 'NURBS']: #Primitives
+		#Primitives
+		if type_ in ['Mesh', 'Editable Poly', 'Polygon', 'Editable Mesh', 'Editable Patch', 'NURBS']:
 			if index==0: #cube:
 				node = rt.Box(width=15, length=15, height=15, lengthsegs=1, widthsegs=1, heightsegs=1)
 			elif index==1: #sphere:
@@ -320,7 +277,8 @@ class Create(Init):
 			elif index==9: #Soccer ball
 				node = rt.GeoSphere(radius=5, segs=2, baseType=2, smooth=True)
 
-		if type_ in ['Hedra', 'Torus Knot', 'Chamfer Box', 'Chamfer Cylinder', 'Oil Tank', 'Capsule', 'Spindle', 'L-Extrusion', 'Gengon', 'C-Extrusion', 'RingWave', 'Hose', 'Prism']: #Extended Primitives:
+		#Extended Primitives:
+		if type_ in ['Hedra', 'Torus Knot', 'Chamfer Box', 'Chamfer Cylinder', 'Oil Tank', 'Capsule', 'Spindle', 'L-Extrusion', 'Gengon', 'C-Extrusion', 'RingWave', 'Hose', 'Prism']:
 			if index==10: #Hedra
 				rt.Hedra(family=0, scalep=100, scaleq=100, scaler=100, mapcoords=True, radius=13.2914, pos=[2.80033,-6.07454,0], isSelected=True)
 			elif index==11: #Torus Knot
@@ -363,7 +321,7 @@ class Create(Init):
 			rt.convertTo(node, rt.Editable_Patch)
 		
 		# lights
-		elif type_=='Light': #Lights
+		elif type_=='Light':
 			
 			#
 			if index==0:
@@ -378,7 +336,6 @@ class Create(Init):
 		else:
 			self.create.txt003.setText(node.name)
 
-		self.history.extend(node) #save current node to history
 		self.rotation['last']=[] #reset rotation history
 
 		#translate the newly created node
@@ -386,13 +343,13 @@ class Create(Init):
 		#rotate
 		self.rotateAbsolute(axis, node)
 
-		self.constructAttributesForNode(node)
-
 		# if self.create.cmb000.currentIndex() == 0: #if create type: polygon; convert to editable poly
 		# 	rt.convertTo(node, rt.PolyMeshObject) #convert after adding primitive attributes to spinboxes
 
 		rt.select(node) #select the transform node so that you can see any edits
 		rt.redrawViews()
+
+		return node
 
 
 	def createPrimitive(self, catagory1, catagory2):
@@ -453,3 +410,69 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 
 
+# deprecated ------------------------------------
+
+
+
+	# def cmb002(self, index=None, attributes={}, clear=False, show=False):
+	# 	'''
+	# 	Get/Set Primitive Attributes.
+
+	# 	args:
+	# 		index (int) = parameter on activated, currentIndexChanged, and highlighted signals.
+	# 		attributes (dict) = Attibute and it's corresponding value. ie. {width:10}
+	# 		clear (bool) = Clear any previous items.
+	# 		show (bool) = Show the popup menu immediately after adding items.
+	# 	'''
+	# 	cmb = self.create.cmb002
+
+	# 	if index is 'setMenu':
+	# 		cmb.popupStyle = 'qmenu'
+	# 		return
+
+	# 	attributes = {k:v for k,v in attributes.items() if isinstance(v,(int, float, bool))} #get only attributes of int, float, bool type.
+
+	# 	n = len(attributes)
+	# 	if n and index is None:
+	# 		names = 's000-'+str(n-1)
+
+	# 		if clear:
+	# 			cmb.menu_.clear()
+
+	# 		#add spinboxes
+	# 		[cmb.add('QDoubleSpinBox', setObjectName=name, minMax_='0.00-100 step1') for name in self.unpackNames(names)]
+
+	# 		#set values
+	# 		self.setSpinboxes(cmb, names, attributes)
+
+	# 		#set signal/slot connections
+	# 		self.connect_(names, 'valueChanged', self.sXXX, cmb)
+
+	# 		if show:
+	# 			cmb.showPopup()
+
+
+	# def constructAttributesForNode(self, node):
+	# 	'''
+	# 	Populate the attributes comboBox with attributes of the given node.
+
+	# 	args:
+	# 		node (obj) = Scene object.
+	# 	'''
+	# 	exclude = ['getmxsprop', 'setmxsprop', 'typeInHeight', 'typeInLength', 'typeInPos', 'typeInWidth', 'typeInDepth', 
+	# 		'typeInRadius', 'typeInRadius1', 'typeInRadius2', 'typeinCreationMethod', 'edgeChamferQuadIntersections', 
+	# 		'edgeChamferType', 'hemisphere', 'realWorldMapSize', 'mapcoords']
+
+	# 	attributes = self.getAttributesMax(node, exclude=exclude)
+	# 	self.cmb002(attributes=attributes, clear=True, show=True)
+
+
+	# def sXXX(self, index=None):
+	# 	'''
+	# 	Set node attributes from multiple spinbox values.
+
+	# 	args:
+	# 		index(int) = optional index of the spinbox that called this function. ie. 5 from s005
+	# 	'''
+	# 	spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.create.cmb002.children_()} #current spinbox values. ie. from s000 get the value of six and add it to the list
+	# 	self.setAttributesMax(self.node, spinboxValues) #set attributes for the history node

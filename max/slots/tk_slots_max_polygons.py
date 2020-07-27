@@ -41,7 +41,7 @@ class Polygons(Init):
 		pin = self.parentUi.pin
 
 		if state is 'setMenu':
-			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
 
 			return
 
@@ -98,10 +98,10 @@ class Polygons(Init):
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
-			tb.add('QDoubleSpinBox', setPrefix='Distance: ', setObjectName='s002', minMax_='0.000-10 step.001', setValue=0.001, setToolTip='Merge Distance.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Distance: ', setObjectName='s002', minMax_='0.0000-10 step.001', setValue=0.001, setToolTip='Merge Distance.')
 			return
 
-		tolerance = float(tb.s002.value())
+		tolerance = float(tb.menu_.s002.value())
 		selection = rt.selection
 
 		if selection:
@@ -117,7 +117,7 @@ class Polygons(Init):
 				else: #if object mode. merge all vertices on the selected object.
 					rt.polyop.weldVertsByThreshold(obj, obj.verts)
 		else:
-			return 'Error: No object selected. Must select an object or component.'
+			return 'Error: No object selected.'
 
 
 	def tb001(self, state=None):
@@ -126,10 +126,10 @@ class Polygons(Init):
 		'''
 		tb = self.currentUi.tb001
 		if state is 'setMenu':
-			tb.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s003', minMax_='0-10000 step1', setValue=0.001, setToolTip='Divisions.')
+			tb.menu_.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s003', minMax_='0-10000 step1', setValue=0.001, setToolTip='Divisions.')
 			return
 
-		divisions = tb.s003.value()
+		divisions = tb.menu_.s003.value()
 
 		for obj in rt.selection:
 			obj.EditablePoly.Bridge() #perform bridge
@@ -142,10 +142,10 @@ class Polygons(Init):
 		'''
 		tb = self.currentUi.tb002
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='Merge', setObjectName='chk000', setChecked=True, setToolTip='Combine selected meshes and merge any coincident verts/edges.')
+			tb.menu_.add('QCheckBox', setText='Merge', setObjectName='chk000', setChecked=True, setToolTip='Combine selected meshes and merge any coincident verts/edges.')
 			return
 
-		if tb.chk000.isChecked():
+		if tb.menu_.chk000.isChecked():
 			pass
 
 		sel = rt.selection
@@ -179,10 +179,10 @@ class Polygons(Init):
 		'''
 		tb = self.currentUi.tb003
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='Keep Faces Together', setObjectName='chk002', setChecked=True, setToolTip='Keep edges/faces together.')
+			tb.menu_.add('QCheckBox', setText='Keep Faces Together', setObjectName='chk002', setChecked=True, setToolTip='Keep edges/faces together.')
 			return
 
-		keepFacesTogether = tb.chk002.isChecked() #keep faces/edges together.
+		keepFacesTogether = tb.menu_.chk002.isChecked() #keep faces/edges together.
 
 		rt.macros.run('Ribbon - Modeling', 'EPoly_Extrude')
 		# for obj in rt.selection:
@@ -195,10 +195,10 @@ class Polygons(Init):
 		'''
 		tb = self.currentUi.tb004
 		if state is 'setMenu':
-			tb.add('QDoubleSpinBox', setPrefix='Width: ', setObjectName='s000', minMax_='0.00-100 step.01', setValue=0.01, setToolTip='Bevel Width.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Width: ', setObjectName='s000', minMax_='0.00-100 step.01', setValue=0.01, setToolTip='Bevel Width.')
 			return
 
-		width = float(tb.s000.value())
+		width = float(tb.menu_.s000.value())
 
 		rt.macros.run('Ribbon - Modeling', 'EPoly_Chamfer')
 		# width = float(self.parentUi.s000.value())
@@ -216,7 +216,7 @@ class Polygons(Init):
 		'''
 		tb = self.currentUi.tb005
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='Delete Original', setObjectName='chk007', setChecked=True, setToolTip='Delete original selected faces.')
+			tb.menu_.add('QCheckBox', setText='Delete Original', setObjectName='chk007', setChecked=True, setToolTip='Delete original selected faces.')
 			return
 
 		#rt.macros.run('Ribbon - Modeling', 'GeometryDetach')
@@ -246,10 +246,10 @@ class Polygons(Init):
 		'''
 		tb = self.currentUi.tb006
 		if state is 'setMenu':
-			tb.add('QDoubleSpinBox', setPrefix='Offset: ', setObjectName='s001', minMax_='0.00-100 step.01', setValue=2.00, setToolTip='Offset amount.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Offset: ', setObjectName='s001', minMax_='0.00-100 step.01', setValue=2.00, setToolTip='Offset amount.')
 			return
 
-		offset = float(tb.s001.value())
+		offset = float(tb.menu_.s001.value())
 		maxEval('''
 		Try 
 		(
@@ -268,23 +268,23 @@ class Polygons(Init):
 		'''
 		tb = self.currentUi.tb007
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='U', setObjectName='chk008', setChecked=True, setToolTip='Divide facet: U coordinate.')
-			tb.add('QCheckBox', setText='V', setObjectName='chk009', setChecked=True, setToolTip='Divide facet: V coordinate.')
-			tb.add('QCheckBox', setText='Tris', setObjectName='chk010', setToolTip='Divide facet: Tris.')
+			tb.menu_.add('QCheckBox', setText='U', setObjectName='chk008', setChecked=True, setToolTip='Divide facet: U coordinate.')
+			tb.menu_.add('QCheckBox', setText='V', setObjectName='chk009', setChecked=True, setToolTip='Divide facet: V coordinate.')
+			tb.menu_.add('QCheckBox', setText='Tris', setObjectName='chk010', setToolTip='Divide facet: Tris.')
 			return
 
 		dv=u=v=0
-		if tb.chk008.isChecked(): #Split U
+		if tb.menu_.chk008.isChecked(): #Split U
 			u=2
-		if tb.chk009.isChecked(): #Split V
+		if tb.menu_.chk009.isChecked(): #Split V
 			v=2
 
 		mode = 0 #The subdivision mode. 0=quads, 1=triangles
 		subdMethod = 1 #subdivision type: 0=exponential(traditional subdivision) 1=linear(number of faces per edge grows linearly)
-		if tb.chk010.isChecked(): #tris
+		if tb.menu_.chk010.isChecked(): #tris
 			mode=dv=1
 			subdMethod=0
-		if all([tb.chk008.isChecked(), tb.chk009.isChecked()]): #subdivide once into quads
+		if all([tb.menu_.chk008.isChecked(), tb.menu_.chk009.isChecked()]): #subdivide once into quads
 			dv=1
 			subdMethod=0
 			u=v=0
@@ -300,18 +300,18 @@ class Polygons(Init):
 		'''
 		tb = self.currentUi.tb008
 		if state is 'setMenu':
-			tb.add('QRadioButton', setText='Union', setObjectName='chk011', setToolTip='Fuse two objects together.')
-			tb.add('QRadioButton', setText='Difference', setObjectName='chk012', setChecked=True, setToolTip='Indents one object with the shape of another at the point of their intersection.')
-			tb.add('QRadioButton', setText='Intersection', setObjectName='chk013', setToolTip='Keep only the interaction point of two objects.')
+			tb.menu_.add('QRadioButton', setText='Union', setObjectName='chk011', setToolTip='Fuse two objects together.')
+			tb.menu_.add('QRadioButton', setText='Difference', setObjectName='chk012', setChecked=True, setToolTip='Indents one object with the shape of another at the point of their intersection.')
+			tb.menu_.add('QRadioButton', setText='Intersection', setObjectName='chk013', setToolTip='Keep only the interaction point of two objects.')
 			return
 
-		# if tb.chk011.isChecked(): #union
+		# if tb.menu_.chk011.isChecked(): #union
 		# 	mel.eval("polyPerformBooleanAction 1 o 0;") #PolygonBooleanIntersection;
 
-		# if tb.chk012.isChecked(): #difference
+		# if tb.menu_.chk012.isChecked(): #difference
 		# 	mel.eval("polyPerformBooleanAction 2 o 0;") #PolygonBooleanDifference;
 
-		# if tb.chk013.isChecked(): #intersection
+		# if tb.menu_.chk013.isChecked(): #intersection
 		# 	mel.eval("polyPerformBooleanAction 3 o 0;") #PolygonBooleanIntersection;
 
 

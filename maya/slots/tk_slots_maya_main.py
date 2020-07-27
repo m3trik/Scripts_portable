@@ -23,10 +23,24 @@ class Main(Init):
 
 		if not any([wItem, column]): #refresh list items -----------------------------
 			recentCommandInfo = self.sb.prevCommand(docString=1, toolTip=1, as_list=1) #Get a list of any recent command names and their toolTips
-			[tree.add('QLabel', 'Recent Commands', refresh=True, setText=s[0], setToolTip=s[1]) for s in recentCommandInfo]
+			[tree.add('QLabel', 'Recent Commands', refresh=1, setText=s[0], setToolTip=s[1]) 
+				for s in recentCommandInfo]
 
-			# l = []
-			# [tree.add('QLabel', '', setText=s) for s in l]
+			selection = pm.ls(sl=1, objectsOnly=1, flatten=1)
+			if selection:
+				history = selection[0].history()[1:]
+				for node in history:
+					parent = tree.add('QLabel', 'Node History', parentHeader=node.name(), refresh=1, setText=node.name())
+
+					attributes = Init.getAttributesMEL(node) #get dict containing attributes:values of the history node.
+					spinboxes = [tree.add('QDoubleSpinBox', parent, refresh=1, set_by_value_=[k, v])
+						for k, v in attributes.items() 
+							if isinstance(v, (float, int, bool))]
+
+					#set signal/slot connections:
+					[w.valueChanged.connect(
+						lambda value, widget=w, obj=node: self.setAttributesMEL(node, {widget.prefix().rstrip(': '):value})) 
+						for w in spinboxes] #set signal/slot connections
 			return
 
 		# widget = tree.getWidget(wItem, column)

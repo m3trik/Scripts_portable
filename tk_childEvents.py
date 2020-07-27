@@ -1,9 +1,5 @@
 from __future__ import print_function
 from PySide2 import QtCore, QtGui, QtWidgets
-try:
-	import shiboken2
-except:
-	from PySide2 import shiboken2
 
 import os.path
 
@@ -76,14 +72,13 @@ class EventFactoryFilter(QtCore.QObject):
 				widget.installEventFilter(self)
 				# print (widgetName if widgetName else widget)
 
-				#type specific:
 				if widgetType in ['QToolButton_', 'QPushButton_Draggable', 'QComboBox_', 'QTreeWidget_ExpandableList']:
 					if callable(classMethod):
 						classMethod('setMenu')
 
 				if derivedType in ['QPushButton', 'QToolButton', 'QLabel']:
 					if uiLevel<3:
-						self.resizeAndCenterWidget(widget)
+						EventFactoryFilter.resizeAndCenterWidget(widget)
 
 				elif derivedType=='QWidget':
 					if self.sb.prefix(widget, 'w') and uiLevel==1: #prefix returns True if widgetName startswith the given prefix, and is followed by three integers.
@@ -106,31 +101,15 @@ class EventFactoryFilter(QtCore.QObject):
 		'''
 		widgets = self.sb.list(widgets) #if 'widgets' isn't a list, convert it to one.
 
-		self.sb.addWidgets(name, widgets)
+		self.sb.addWidgets(name, widgets) #add the widgets to the switchboard dict.
 		self.sb.connectSlots(name, widgets)
 		self.initWidgets(name, widgets) #initialize the widget to set things like the event filter and styleSheet.
 
 
-	def resizeAndCenterWidget(self, widget, paddingX=30, paddingY=6):
-		'''
-		Adjust the given widget's size to fit contents and re-center.
-
-		args:
-			widget = <widget object> - widget to resize.
-			paddingX (int) = additional width to be applied.
-			paddingY (int) = additional height to be applied.
-		'''
-		p1 = widget.rect().center()
-		widget.resize(widget.sizeHint().width()+paddingX, widget.sizeHint().height()+paddingY)
-		p2 = widget.rect().center()
-		diff = p1-p2
-		widget.move(widget.pos()+diff)
-
-
 	def mouseTracking(self, name):
 		'''
-		Get widget/s currently under cursor. Grab mouse, and send events accordingly.
-		Send Enter event and grab mouse. (used to trigger widgets entered while in the mouse button down state)
+		Get the widget(s) currently under the mouse cursor, and manage mouse grab and event handling for those widgets.
+		Used to trigger widget evemts while in the mouse button down state.
 
 		args:
 			name (str) = ui name.
@@ -139,16 +118,10 @@ class EventFactoryFilter(QtCore.QObject):
 		ui = self.sb.getUi(name)
 		widgetsUnderMouse=[] #list of widgets currently under the mouse cursor and their parents. in hierarchical order. ie. [[<widgets.qPushButton_.QPushButton_ object at 0x00000000045F6948>, <PySide2.QtWidgets.QMainWindow object at 0x00000000045AA8C8>, <__main__.Tk_max object at 0x000000000361F508>, <PySide2.QtWidgets.QWidget object at 0x00000000036317C8>]]
 		for widget in self.sb.getWidget(name=name): #all widgets from the current ui.
-			if not shiboken2.isValid(widget):
-				self.sb.removeWidgets(widget) #remove any widgets from the main dict if the c++ object no longer exists.
-
-			elif not hasattr(widget, 'rect'): #ignore any widgets not having the 'rect' attribute.
-				pass
-
-			else:
+			if hasattr(widget, 'rect'): #ignore any widgets not having the 'rect' attribute.
 				try:
 					widgetName = self.sb.getWidgetName(widget, name)
-				except:
+				except KeyError:
 					self.addWidgets(name, widget) #initialize the widget to set things like the event filter and styleSheet.
 					widgetName = self.sb.getWidgetName(widget, name)
 
@@ -169,16 +142,33 @@ class EventFactoryFilter(QtCore.QObject):
 						if ui.mainWindow.isVisible():
 							ui.mainWindow.grabMouse()
 							self._mouseGrabber = ui.mainWindow
-				
+
 
 		widgetsUnderMouse.sort(key=len) #sort 'widgetsUnderMouse' by ascending length so that lowest level child widgets get grabMouse last.
 		if widgetsUnderMouse:
 			for widgetList in widgetsUnderMouse:
 				widget = widgetList[0]
 				widget.grabMouse() #set widget to receive mouse events.
+				self._mouseGrabber = widget
 				# print (widget.objectName())
 				# print('grab:', widget.mouseGrabber().objectName(), '(tk_childEvents)')
-				self._mouseGrabber = widget
+
+
+	@staticmethod
+	def resizeAndCenterWidget(widget, paddingX=30, paddingY=6):
+		'''
+		Adjust the given widget's size to fit contents and re-center.
+
+		args:
+			widget = <widget object> - widget to resize.
+			paddingX (int) = additional width to be applied.
+			paddingY (int) = additional height to be applied.
+		'''
+		p1 = widget.rect().center()
+		widget.resize(widget.sizeHint().width()+paddingX, widget.sizeHint().height()+paddingY)
+		p2 = widget.rect().center()
+		diff = p1-p2
+		widget.move(widget.pos()+diff)
 
 
 	@staticmethod
@@ -210,7 +200,7 @@ class EventFactoryFilter(QtCore.QObject):
 			widget = <QWidget>
 			event = <QEvent>
 		'''
-		if not shiboken2.isValid(widget) or event.type()==QtCore.QEvent.Destroy:
+		if event.type()==QtCore.QEvent.Destroy:
 			return False
 
 		eventTypes = [ #types of events to be handled:
@@ -267,7 +257,7 @@ class EventFactoryFilter(QtCore.QObject):
 			self.widget.activateWindow()
 
 		elif self.widgetName=='info':
-			self.resizeAndCenterWidget(self.widget)
+			EventFactoryFilter.resizeAndCenterWidget(self.widget)
 
 		if self.widgetType in ['QComboBox_', 'QTreeWidget_ExpandableList']:
 			try:

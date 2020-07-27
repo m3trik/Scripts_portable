@@ -25,8 +25,21 @@ class Main(Init):
 			recentCommandInfo = self.sb.prevCommand(docString=1, toolTip=1, as_list=1) #Get a list of any recent command names and their toolTips
 			[tree.add('QLabel', 'Recent Commands', refresh=True, setText=s[0], setToolTip=s[1]) for s in recentCommandInfo]
 
-			# l = []
-			# [tree.add('QLabel', '', setText=s) for s in l]
+			selection = rt.selection
+			if selection:
+				history = selection
+				for node in history:
+					parent = tree.add('QLabel', 'Node History', parentHeader=node.name, refresh=1, setText=node.name)
+
+					attributes = Init.getAttributesMax(node) #get dict containing attributes:values of the history node.
+					spinboxes = [tree.add('QDoubleSpinBox', parent, refresh=1, set_by_value_=[k, v])
+						for k, v in attributes.items() 
+							if isinstance(v, (float, int, bool))]
+
+					#set signal/slot connections:
+					[w.valueChanged.connect(
+						lambda value, widget=w, obj=node: self.setAttributesMzx(node, {widget.prefix().rstrip(': '):value})) 
+						for w in spinboxes] #set signal/slot connections
 			return
 
 		# widget = tree.getWidget(wItem, column)

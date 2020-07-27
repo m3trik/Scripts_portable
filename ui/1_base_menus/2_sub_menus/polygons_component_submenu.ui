@@ -65,7 +65,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>430</x>
+      <x>440</x>
       <y>290</y>
       <width>56</width>
       <height>19</height>
@@ -105,8 +105,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>325</x>
-      <y>250</y>
+      <x>300</x>
+      <y>220</y>
       <width>56</width>
       <height>19</height>
      </rect>
@@ -173,7 +173,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>395</x>
+      <x>350</x>
       <y>250</y>
       <width>56</width>
       <height>19</height>
@@ -204,8 +204,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>355</x>
-      <y>320</y>
+      <x>350</x>
+      <y>330</y>
       <width>56</width>
       <height>19</height>
      </rect>
@@ -272,7 +272,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>355</x>
+      <x>365</x>
       <y>290</y>
       <width>56</width>
       <height>19</height>
@@ -343,9 +343,9 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>325</x>
+      <x>285</x>
       <y>360</y>
-      <width>111</width>
+      <width>81</width>
       <height>19</height>
      </rect>
     </property>
@@ -462,6 +462,37 @@
     </property>
     <property name="text">
      <string>Component</string>
+    </property>
+   </widget>
+   <widget class="QToolButton_" name="tb004">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>425</x>
+      <y>250</y>
+      <width>56</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>111</width>
+      <height>19</height>
+     </size>
+    </property>
+    <property name="toolTip">
+     <string>Bevel modifier</string>
+    </property>
+    <property name="text">
+     <string>Bevel</string>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>18</width>
+      <height>18</height>
+     </size>
     </property>
    </widget>
   </widget>

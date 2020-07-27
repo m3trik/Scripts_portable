@@ -20,7 +20,7 @@ class Uv(Init):
 		pin = self.parentUi.pin
 
 		if state is 'setMenu':
-			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='3dsMax UV Editors')
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='3dsMax UV Editors')
 			return
 
 

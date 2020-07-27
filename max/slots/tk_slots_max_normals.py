@@ -22,7 +22,7 @@ class Normals(Init):
 		pin = self.parentUi.pin
 
 		if state is 'setMenu':
-			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
 			return
 
 
@@ -50,10 +50,10 @@ class Normals(Init):
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
-			tb.add('QSpinBox', setPrefix='Display Size: ', setObjectName='s001', minMax_='1-100 step1', setValue=1, setToolTip='Normal display size.')
+			tb.menu_.add('QSpinBox', setPrefix='Display Size: ', setObjectName='s001', minMax_='1-100 step1', setValue=1, setToolTip='Normal display size.')
 			return
 
-		size = float(tb.s001.value())
+		size = float(tb.menu_.s001.value())
 		# state = pm.polyOptions (query=True, displayNormal=True)
 		state = self.cycle([1,2,3,0], 'displayNormals')
 		if state ==0: #off
@@ -83,7 +83,7 @@ class Normals(Init):
 		'''
 		tb = self.currentUi.tb001
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='Soften non-creased', setObjectName='chk000', setToolTip='Soften all non-creased edges.')
+			tb.menu_.add('QCheckBox', setText='Soften non-creased', setObjectName='chk000', setToolTip='Soften all non-creased edges.')
 			return
 
 		mel.eval("PolySelectConvert 2")
@@ -93,7 +93,7 @@ class Normals(Init):
 		pm.undoInfo(openChunk=1)
 		self.mainProgressBar(len(edges))
 
-		soften = tb.chk000.isChecked()
+		soften = tb.menu_.chk000.isChecked()
 
 		for edge in edges:
 			pm.progressBar("tk_progressBar", edit=1, step=1)
@@ -115,10 +115,10 @@ class Normals(Init):
 		'''
 		tb = self.currentUi.tb002
 		if state is 'setMenu':
-			tb.add('QSpinBox', setPrefix='Angle: ', setObjectName='s000', minMax_='1-180 step1', setValue=30, setToolTip='Angle degree.')
+			tb.menu_.add('QSpinBox', setPrefix='Angle: ', setObjectName='s000', minMax_='1-180 step1', setValue=30, setToolTip='Angle degree.')
 			return
 
-		normalAngle = str(tb.s000.value())
+		normalAngle = str(tb.menu_.s000.value())
 		subObjectLevel = rt.subObjectLevel
 
 
@@ -149,12 +149,12 @@ class Normals(Init):
 		'''
 		tb = self.currentUi.tb003
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='All', setObjectName='chk001', setChecked=True, setToolTip='Lock/Unlock: all.')
+			tb.menu_.add('QCheckBox', setText='All', setObjectName='chk001', setChecked=True, setToolTip='Lock/Unlock: all.')
 			return
 
 		print('Error: No 3ds Version.')
 		tb.setDisabled(True)
-		# all_ = tb.chk001.isChecked()
+		# all_ = tb.menu_.chk001.isChecked()
 		# state = self.parentUi.chk002.isChecked()#pm.polyNormalPerVertex(vertex, query=1, freezeNormal=1)
 		# selection = pm.ls (selection=1, objectsOnly=1)
 		# maskObject = pm.selectMode (query=1, object=1)

@@ -95,12 +95,12 @@ class Instance():
 if __name__ == "__main__":
 	import sys
 
-	#create a parent object to run the code outside of maya.
+	#create a generic parent object to run the code outside of maya.
 	from PySide2.QtWidgets import QWidget
 	dummyParent = QWidget()
 	dummyParent.setObjectName('MayaWindow')
-	Instance(dummyParent).show_() #Tk_maya(dummyParent).show()
 
+	Instance(dummyParent).show_() #Tk_maya(dummyParent).show()
 	sys.exit(app.exec_())
 
 

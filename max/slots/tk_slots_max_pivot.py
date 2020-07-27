@@ -20,7 +20,7 @@ class Pivot(Init):
 		pin = self.parentUi.pin
 
 		if state is 'setMenu':
-			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
 			return
 
 
@@ -86,18 +86,18 @@ class Pivot(Init):
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='Reset Pivot Scale', setObjectName='chk000', setChecked=True, setToolTip='')
-			tb.add('QCheckBox', setText='Reset Pivot Transform', setObjectName='chk001', setChecked=True, setToolTip='')
-			tb.add('QCheckBox', setText='Reset XForm', setObjectName='chk002', setToolTip='')
+			tb.menu_.add('QCheckBox', setText='Reset Pivot Scale', setObjectName='chk000', setChecked=True, setToolTip='')
+			tb.menu_.add('QCheckBox', setText='Reset Pivot Transform', setObjectName='chk001', setChecked=True, setToolTip='')
+			tb.menu_.add('QCheckBox', setText='Reset XForm', setObjectName='chk002', setToolTip='')
 			return
 
-		if tb.chk000: #Reset Pivot Scale
+		if tb.menu_.chk000: #Reset Pivot Scale
 			rt.ResetScale(rt.selection) #Same as Hierarchy/Pivot/Reset Scale.
 		
-		if tb.chk001: #Reset Pivot Transform
+		if tb.menu_.chk001: #Reset Pivot Transform
 			rt.ResetTransform(rt.selection) #Same as Hierarchy/Pivot/Reset Transform.
 
-		if tb.chk002: #reset XForm
+		if tb.menu_.chk002: #reset XForm
 			rt.ResetXForm(rt.selection) #Same as the Reset XForm utility in the Utilities tab - applies XForm modifier to node, stores the current transformations in the gizmo and resets the object transformations.
 			return 'Result: ResetXForm '+str([obj.name for obj in rt.selection])
 

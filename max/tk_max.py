@@ -112,8 +112,8 @@ if __name__ == "__main__":
 	from PySide2.QtWidgets import QWidget
 	dummyParent = QWidget()
 	dummyParent.setObjectName('MaxWindow')
-	Instance(dummyParent).show_() #Tk_max(p).show()
 
+	Instance(dummyParent).show_() #Tk_max(p).show()
 	sys.exit(app.exec_())
 
 

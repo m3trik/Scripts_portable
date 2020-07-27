@@ -38,7 +38,7 @@ class Polygons(Init):
 		pin = self.polygons.pin
 
 		if state is 'setMenu':
-			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
 			return
 
 
@@ -86,10 +86,10 @@ class Polygons(Init):
 		'''
 		tb = self.ui.tb000
 		if state is 'setMenu':
-			tb.add('QDoubleSpinBox', setPrefix='Distance: ', setObjectName='s002', minMax_='0.000-10 step.001', setValue=0.001, setToolTip='Merge Distance.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Distance: ', setObjectName='s002', minMax_='0.0000-10 step.001', setValue=0.001, setToolTip='Merge Distance.')
 			return
 
-		tolerance = float(tb.s002.value())
+		tolerance = float(tb.menu_.s002.value())
 		selection = pm.ls(selection=1, objectsOnly=1)
 
 		if selection:
@@ -118,22 +118,24 @@ class Polygons(Init):
 			return 'Warning: No object selected. Must select an object or component.'
 
 
+	@Init.attr
 	def tb001(self, state=None):
 		'''
 		Bridge
 		'''
 		tb = self.ui.tb001
 		if state is 'setMenu':
-			tb.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s003', minMax_='0-10000 step1', setValue=0, setToolTip='Subdivision Amount.')
+			tb.menu_.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s003', minMax_='0-10000 step1', setValue=0, setToolTip='Subdivision Amount.')
 			return
 
-		divisions = tb.s003.value()
+		divisions = tb.menu_.s003.value()
 
 		selection = pm.ls(sl=1)
 		edges = pm.filterExpand(selection, selectionMask=32, expand=1) #get edges from selection
 
-		pm.polyBridgeEdge(edges, divisions=divisions) #bridge edges
+		node = pm.polyBridgeEdge(edges, divisions=divisions) #bridge edges
 		pm.polyCloseBorder(edges) #fill edges if they lie on a border
+		return node
 
 
 	def tb002(self, state=None):
@@ -142,51 +144,63 @@ class Polygons(Init):
 		'''
 		tb = self.ui.tb002
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='Merge', setObjectName='chk000', setChecked=True, setToolTip='Combine selected meshes and merge any coincident verts/edges.')
+			tb.menu_.add('QCheckBox', setText='Merge', setObjectName='chk000', setChecked=True, setToolTip='Combine selected meshes and merge any coincident verts/edges.')
 			return
 
 		# pm.polyUnite( 'plg1', 'plg2', 'plg3', name='result' ) #for future reference. if more functionality is needed use polyUnite
-		if tb.chk000.isChecked():
+		if tb.menu_.chk000.isChecked():
 			pm.polyUnite(ch=1, mergeUVSets=1, centerPivot=1)
 		else:
 			mel.eval('CombinePolygons;')
 
 
+	@Init.attr
 	def tb003(self, state=None):
 		'''
 		Extrude
 		'''
 		tb = self.ui.tb003
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='Keep Faces Together', setObjectName='chk002', setChecked=True, setToolTip='Keep edges/faces together.')
-			tb.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s004', minMax_='1-10000 step1', setValue=1, setToolTip='Subdivision Amount.')
+			tb.menu_.add('QCheckBox', setText='Keep Faces Together', setObjectName='chk002', setChecked=True, setToolTip='Keep edges/faces together.')
+			tb.menu_.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s004', minMax_='1-10000 step1', setValue=1, setToolTip='Subdivision Amount.')
 			return
 
-		keepFacesTogether = tb.chk002.isChecked() #keep faces/edges together.
-		divisions = tb.s004.value()
+		keepFacesTogether = tb.menu_.chk002.isChecked() #keep faces/edges together.
+		divisions = tb.menu_.s004.value()
 
 		selection = pm.ls(sl=1)
 		if pm.selectType(query=1, facet=1): #face selection
-			pm.polyExtrudeFacet(selection, ch=1, keepFacesTogether=keepFacesTogether, divisions=divisions)
+			pm.polyExtrudeFacet(edit=1, keepFacesTogether=keepFacesTogether, divisions=divisions)
+			mel.eval('PolyExtrude;')
+			# return pm.polyExtrudeFacet(selection, ch=1, keepFacesTogether=keepFacesTogether, divisions=divisions)
 
 		elif pm.selectType(query=1, edge=1): #edge selection
-			pm.polyExtrudeEdge(selection, ch=1, keepFacesTogether=keepFacesTogether, divisions=divisions)
+			pm.polyExtrudeEdge(edit=1, keepFacesTogether=keepFacesTogether, divisions=divisions)
+			mel.eval('PolyExtrude;')
+			# return pm.polyExtrudeEdge(selection, ch=1, keepFacesTogether=keepFacesTogether, divisions=divisions)
+
+		elif pm.selectType(query=1, vertex=1): #vertex selection
+			pm.polyExtrudeVertex(edit=1, width=0.5, length=1, divisions=divisions)
+			mel.eval('PolyExtrude;')
+			# return polyExtrudeVertex(selection, ch=1, width=0.5, length=1, divisions=divisions)
 
 
+	@Init.attr
 	def tb004(self, state=None):
 		'''
 		Bevel (Chamfer)
 		'''
 		tb = self.ui.tb004
 		if state is 'setMenu':
-			tb.add('QDoubleSpinBox', setPrefix='Width: ', setObjectName='s000', minMax_='0.00-100 step.01', setValue=0.01, setToolTip='Bevel Width.')
+			print (self.sb.getUiName(self.ui))
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Width: ', setObjectName='s000', minMax_='0.00-100 step.01', setValue=0.01, setToolTip='Bevel Width.')
 			return
 
-		width = float(tb.s000.value())
+		width = float(tb.menu_.s000.value())
 		chamfer = True
 		segments = 1
 
-		pm.polyBevel3 (fraction=width, offsetAsFraction=1, autoFit=1, depth=1, mitering=0, 
+		return pm.polyBevel3(fraction=width, offsetAsFraction=1, autoFit=1, depth=1, mitering=0, 
 			miterAlong=0, chamfer=chamfer, segments=segments, worldSpace=1, smoothingAngle=30, subdivideNgons=1,
 			mergeVertices=1, mergeVertexTolerance=0.0001, miteringAngle=180, angleTolerance=180, ch=0)
 
@@ -198,7 +212,7 @@ class Polygons(Init):
 		'''
 		tb = self.ui.tb005
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='Delete Original', setObjectName='chk007', setChecked=True, setToolTip='Delete original selected faces.')
+			# tb.menu_.add('QCheckBox', setText='Delete Original', setObjectName='chk007', setChecked=True, setToolTip='Delete original selected faces.')
 			return
 
 		vertexMask = pm.selectType (query=True, vertex=True)
@@ -219,50 +233,52 @@ class Polygons(Init):
 				if len(selFace) < 1:
 					return 'Warning: Nothing selected.'
 
-				if len(selObj) > 1:
-					return 'Warning: Only components from a single object can be extracted.'
+				# if len(selObj) > 1:
+				# 	return 'Warning: Only components from a single object can be extracted.'
 
 				else:
-					pm.undoInfo (openChunk=1)
-					sel = str(selFace[0]).split(".") #creates ex. ['polyShape', 'f[553]']
-					print(sel)
-					extractedObject = "extracted_"+sel[0]
-					pm.duplicate (sel[0], name=extractedObject)
-					if tb.chk007.isChecked(): #delete original
-						pm.delete (selFace)
+					mel.eval("DetachComponent;")
+					# pm.undoInfo (openChunk=1)
+					# sel = str(selFace[0]).split(".") #creates ex. ['polyShape', 'f[553]']
+					# print(sel)
+					# extractedObject = "extracted_"+sel[0]
+					# pm.duplicate (sel[0], name=extractedObject)
+					# if tb.menu_.chk007.isChecked(): #delete original
+					# 	pm.delete (selFace)
 
-					allFace = [] #populate a list of all faces in the duplicated object
-					numFaces = pm.polyEvaluate(extractedObject, face=1)
-					num=0
-					for _ in range(numFaces):
-						allFace.append(extractedObject+".f["+str(num)+"]")
-						num+=1
+					# allFace = [] #populate a list of all faces in the duplicated object
+					# numFaces = pm.polyEvaluate(extractedObject, face=1)
+					# num=0
+					# for _ in range(numFaces):
+					# 	allFace.append(extractedObject+".f["+str(num)+"]")
+					# 	num+=1
 
-					extFace = [] #faces to keep
-					for face in selFace:
-						fNum = str(face.split(".")[0]) #ex. f[4]
-						extFace.append(extractedObject+"."+fNum)
+					# extFace = [] #faces to keep
+					# for face in selFace:
+					# 	fNum = str(face.split(".")[0]) #ex. f[4]
+					# 	extFace.append(extractedObject+"."+fNum)
 
-					delFace = [x for x in allFace if x not in extFace] #all faces not in extFace
-					pm.delete (delFace)
+					# delFace = [x for x in allFace if x not in extFace] #all faces not in extFace
+					# pm.delete (delFace)
 
-					pm.select (extractedObject)
-					pm.xform (cpc=1) #center pivot
-					pm.undoInfo (closeChunk=1)
-					return extractedObject
+					# pm.select (extractedObject)
+					# pm.xform (cpc=1) #center pivot
+					# pm.undoInfo (closeChunk=1)
+					# return extractedObject
 
 
+	@Init.attr
 	def tb006(self, state=None):
 		'''
 		Inset Face Region
 		'''
 		tb = self.ui.tb006
 		if state is 'setMenu':
-			tb.add('QDoubleSpinBox', setPrefix='Offset: ', setObjectName='s001', minMax_='0.00-100 step.01', setValue=2.00, setToolTip='Offset amount.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Offset: ', setObjectName='s001', minMax_='0.00-100 step.01', setValue=2.00, setToolTip='Offset amount.')
 			return
 
-		offset = float(tb.s001.value())
-		pm.polyExtrudeFacet (keepFacesTogether=1, pvx=0, pvy=40.55638003, pvz=33.53797107, divisions=1, twist=0, taper=1, offset=offset, thickness=0, smoothingAngle=30)
+		offset = float(tb.menu_.s001.value())
+		return pm.polyExtrudeFacet (keepFacesTogether=1, pvx=0, pvy=40.55638003, pvz=33.53797107, divisions=1, twist=0, taper=1, offset=offset, thickness=0, smoothingAngle=30)
 
 
 	@Slots.message
@@ -272,23 +288,23 @@ class Polygons(Init):
 		'''
 		tb = self.ui.tb007
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='U', setObjectName='chk008', setChecked=True, setToolTip='Divide facet: U coordinate.')
-			tb.add('QCheckBox', setText='V', setObjectName='chk009', setChecked=True, setToolTip='Divide facet: V coordinate.')
-			tb.add('QCheckBox', setText='Tris', setObjectName='chk010', setToolTip='Divide facet: Tris.')
+			tb.menu_.add('QCheckBox', setText='U', setObjectName='chk008', setChecked=True, setToolTip='Divide facet: U coordinate.')
+			tb.menu_.add('QCheckBox', setText='V', setObjectName='chk009', setChecked=True, setToolTip='Divide facet: V coordinate.')
+			tb.menu_.add('QCheckBox', setText='Tris', setObjectName='chk010', setToolTip='Divide facet: Tris.')
 			return
 
 		dv=u=v=0
-		if tb.chk008.isChecked(): #Split U
+		if tb.menu_.chk008.isChecked(): #Split U
 			u=2
-		if tb.chk009.isChecked(): #Split V
+		if tb.menu_.chk009.isChecked(): #Split V
 			v=2
 
 		mode = 0 #The subdivision mode. 0=quads, 1=triangles
 		subdMethod = 1 #subdivision type: 0=exponential(traditional subdivision) 1=linear(number of faces per edge grows linearly)
-		if tb.chk010.isChecked(): #tris
+		if tb.menu_.chk010.isChecked(): #tris
 			mode=dv=1
 			subdMethod=0
-		if all([tb.chk008.isChecked(), tb.chk009.isChecked()]): #subdivide once into quads
+		if all([tb.menu_.chk008.isChecked(), tb.menu_.chk009.isChecked()]): #subdivide once into quads
 			dv=1
 			subdMethod=0
 			u=v=0
@@ -307,26 +323,27 @@ class Polygons(Init):
 		'''
 		tb = self.ui.tb008
 		if state is 'setMenu':
-			tb.add('QRadioButton', setText='Union', setObjectName='chk011', setToolTip='Fuse two objects together.')
-			tb.add('QRadioButton', setText='Difference', setObjectName='chk012', setChecked=True, setToolTip='Indents one object with the shape of another at the point of their intersection.')
-			tb.add('QRadioButton', setText='Intersection', setObjectName='chk013', setToolTip='Keep only the interaction point of two objects.')
+			tb.menu_.add('QRadioButton', setText='Union', setObjectName='chk011', setToolTip='Fuse two objects together.')
+			tb.menu_.add('QRadioButton', setText='Difference', setObjectName='chk012', setChecked=True, setToolTip='Indents one object with the shape of another at the point of their intersection.')
+			tb.menu_.add('QRadioButton', setText='Intersection', setObjectName='chk013', setToolTip='Keep only the interaction point of two objects.')
 			return
 
-		if tb.chk011.isChecked(): #union
+		if tb.menu_.chk011.isChecked(): #union
 			mel.eval("polyPerformBooleanAction 1 o 0;") #PolygonBooleanIntersection;
 
-		if tb.chk012.isChecked(): #difference
+		if tb.menu_.chk012.isChecked(): #difference
 			mel.eval("polyPerformBooleanAction 2 o 0;") #PolygonBooleanDifference;
 
-		if tb.chk013.isChecked(): #intersection
+		if tb.menu_.chk013.isChecked(): #intersection
 			mel.eval("polyPerformBooleanAction 3 o 0;") #PolygonBooleanIntersection;
 
 
+	@Init.attr
 	def b000(self):
 		'''
 		Circularize
 		'''
-		pm.polyCircularize(constructionHistory=1, alignment=0, radialOffset=0, normalOffset=0, normalOrientation=0, smoothingAngle=30, evenlyDistribute=1, divisions=0, supportingEdges=0, twist=0, relaxInterior=1)
+		return pm.polyCircularize(constructionHistory=1, alignment=0, radialOffset=0, normalOffset=0, normalOrientation=0, smoothingAngle=30, evenlyDistribute=1, divisions=0, supportingEdges=0, twist=0, relaxInterior=1)
 
 
 	def b001(self):
@@ -343,6 +360,7 @@ class Polygons(Init):
 		mel.eval('SeparatePolygon;')
 
 
+	@Init.attr
 	def b004(self):
 		'''
 		Slice
@@ -350,7 +368,7 @@ class Polygons(Init):
 		cuttingDirection = 'Y' #valid values: 'x','y','z' A value of 'x' will cut the object along the YZ plane cutting through the center of the bounding box. 'y':ZX. 'z':XY.
 
 		sel = pm.ls(sl=1)
-		pm.polyCut(sel, cuttingDirection=cuttingDirection, ch=1)
+		return pm.polyCut(sel, cuttingDirection=cuttingDirection, ch=1)
 
 
 	def b009(self):
@@ -361,12 +379,13 @@ class Polygons(Init):
 		mel.eval('PolygonCollapse;')
 
 
+	@Init.attr
 	def b010(self):
 		'''
 		Extract Curve
 		'''
 		# mel.eval('CreateCurveFromPoly;')
-		pm.polyToCurve (form=2, degree=3, conformToSmoothMeshPreview=True) #degree: 1=linear,2= ,3=cubic,5= ,7=
+		return pm.polyToCurve (form=2, degree=3, conformToSmoothMeshPreview=True) #degree: 1=linear,2= ,3=cubic,5= ,7=
 
 
 	def b012(self):

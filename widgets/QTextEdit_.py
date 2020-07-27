@@ -1,6 +1,6 @@
 from PySide2 import QtCore, QtGui, QtWidgets
 
-import sys
+from shared import Menu, Attributes
 
 
 
@@ -20,11 +20,11 @@ Promoting a widget in designer to use a custom class:
 
 
 
-class QTextEdit_(QtWidgets.QTextEdit):
+class QTextEdit_(QtWidgets.QTextEdit, Attributes):
 	'''
 	
 	'''
-	def __init__(self, parent=None):
+	def __init__(self, parent=None, **kwargs):
 		super(QTextEdit_, self).__init__(parent)
 
 		self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
@@ -40,6 +40,7 @@ class QTextEdit_(QtWidgets.QTextEdit):
 		self.viewport().setAutoFillBackground(False)
 		self.setTextBackgroundColor(QtGui.QColor(50, 50, 50))
 
+		self.setAttributes(kwargs)
 
 
 	def insertText(self, dict_):
@@ -83,6 +84,7 @@ class QTextEdit_(QtWidgets.QTextEdit):
 
 
 if __name__ == "__main__":
+	import sys
 	qApp = QtWidgets.QApplication(sys.argv)
 		
 	w = QTextEdit_()

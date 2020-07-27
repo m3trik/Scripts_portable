@@ -20,7 +20,7 @@ class Edit(Init):
 		pin = self.parentUi.pin
 
 		if state is 'setMenu':
-			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya Editors')
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya Editors')
 			return
 
 
@@ -58,47 +58,47 @@ class Edit(Init):
 		'''
 		Mesh Cleanup
 		'''
-		tb = self.currentUi.tb000
+		tb = self.ui.tb000
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='All Geometry', setObjectName='chk005', setToolTip='Clean All scene geometry.')
-			tb.add('QCheckBox', setText='Repair', setObjectName='chk004', setToolTip='Repair matching geometry. (else: select)')
-			tb.add('QCheckBox', setText='N-Gons', setObjectName='chk002', setChecked=True, setToolTip='Find N-gons.')
-			tb.add('QCheckBox', setText='Non-Manifold Geometry', setObjectName='chk017', setChecked=True, setToolTip='Check for nonmanifold polys.')
-			tb.add('QCheckBox', setText='Quads', setObjectName='chk010', setToolTip='Check for quad sided polys.')
-			tb.add('QCheckBox', setText='Concave', setObjectName='chk011', setToolTip='Check for concave polys.')
-			tb.add('QCheckBox', setText='Non-Planar', setObjectName='chk003', setToolTip='Check for non-planar polys.')
-			tb.add('QCheckBox', setText='Holed', setObjectName='chk012', setToolTip='Check for holed polys.')
-			tb.add('QCheckBox', setText='Lamina', setObjectName='chk018', setToolTip='Check for lamina polys.')
-			tb.add('QCheckBox', setText='Shared UV\'s', setObjectName='chk016', setToolTip='Unshare uvs that are shared across vertices.')
-			# tb.add('QCheckBox', setText='Invalid Components', setObjectName='chk019', setToolTip='Check for invalid components.')
-			tb.add('QCheckBox', setText='Zero Face Area', setObjectName='chk013', setToolTip='Check for 0 area faces.')
-			tb.add('QDoubleSpinBox', setPrefix='Face Area Tolerance:   ', setObjectName='s006', minMax_='0.0-10 step.001', setValue=0.001, setToolTip='Tolerance for face areas.')
-			tb.add('QCheckBox', setText='Zero Length Edges', setObjectName='chk014', setToolTip='Check for 0 length edges.')
-			tb.add('QDoubleSpinBox', setPrefix='Edge Length Tolerance: ', setObjectName='s007', minMax_='0.0-10 step.001', setValue=0.001, setToolTip='Tolerance for edge length.')
-			tb.add('QCheckBox', setText='Zero UV Face Area', setObjectName='chk015', setToolTip='Check for 0 uv face area.')
-			tb.add('QDoubleSpinBox', setPrefix='UV Face Area Tolerance:', setObjectName='s008', minMax_='0.0-10 step.001', setValue=0.001, setToolTip='Tolerance for uv face areas.')
+			tb.menu_.add('QCheckBox', setText='All Geometry', setObjectName='chk005', setToolTip='Clean All scene geometry.')
+			tb.menu_.add('QCheckBox', setText='Repair', setObjectName='chk004', setToolTip='Repair matching geometry. (else: select)')
+			tb.menu_.add('QCheckBox', setText='N-Gons', setObjectName='chk002', setChecked=True, setToolTip='Find N-gons.')
+			tb.menu_.add('QCheckBox', setText='Non-Manifold Geometry', setObjectName='chk017', setChecked=True, setToolTip='Check for nonmanifold polys.')
+			tb.menu_.add('QCheckBox', setText='Quads', setObjectName='chk010', setToolTip='Check for quad sided polys.')
+			tb.menu_.add('QCheckBox', setText='Concave', setObjectName='chk011', setToolTip='Check for concave polys.')
+			tb.menu_.add('QCheckBox', setText='Non-Planar', setObjectName='chk003', setToolTip='Check for non-planar polys.')
+			tb.menu_.add('QCheckBox', setText='Holed', setObjectName='chk012', setToolTip='Check for holed polys.')
+			tb.menu_.add('QCheckBox', setText='Lamina', setObjectName='chk018', setToolTip='Check for lamina polys.')
+			tb.menu_.add('QCheckBox', setText='Shared UV\'s', setObjectName='chk016', setToolTip='Unshare uvs that are shared across vertices.')
+			# tb.menu_.add('QCheckBox', setText='Invalid Components', setObjectName='chk019', setToolTip='Check for invalid components.')
+			tb.menu_.add('QCheckBox', setText='Zero Face Area', setObjectName='chk013', setToolTip='Check for 0 area faces.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Face Area Tolerance:   ', setObjectName='s006', minMax_='0.0-10 step.001', setValue=0.001, setToolTip='Tolerance for face areas.')
+			tb.menu_.add('QCheckBox', setText='Zero Length Edges', setObjectName='chk014', setToolTip='Check for 0 length edges.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Edge Length Tolerance: ', setObjectName='s007', minMax_='0.0-10 step.001', setValue=0.001, setToolTip='Tolerance for edge length.')
+			tb.menu_.add('QCheckBox', setText='Zero UV Face Area', setObjectName='chk015', setToolTip='Check for 0 uv face area.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='UV Face Area Tolerance:', setObjectName='s008', minMax_='0.0-10 step.001', setValue=0.001, setToolTip='Tolerance for uv face areas.')
 			return
 
-		allMeshes = int(tb.chk005.isChecked()) #[0] All selectable meshes
-		selectOnly = int(not tb.chk004.isChecked())+1 #[1] Only perform a selection [0:clean, 1:select and clean, 2:select]
+		allMeshes = int(tb.menu_.chk005.isChecked()) #[0] All selectable meshes
+		selectOnly = int(not tb.menu_.chk004.isChecked())+1 #[1] Only perform a selection [0:clean, 1:select and clean, 2:select]
 		historyOn = 1 #[2] keep construction history
-		quads = int(tb.chk010.isChecked()) #[3] check for quads polys
-		nsided = int(tb.chk002.isChecked()) #[4] check for n-sided polys
-		concave = int(tb.chk011.isChecked()) #[5] check for concave polys
-		holed = int(tb.chk012.isChecked()) #[6] check for holed polys
-		nonplanar = int(tb.chk003.isChecked()) #[7] check for non-planar polys
-		zeroGeom = int(tb.chk013.isChecked()) #[8] check for 0 area faces
-		zeroGeomTol = tb.s006.value() #[9] tolerance for face areas
-		zeroEdge = int(tb.chk014.isChecked()) #[10] check for 0 length edges
-		zeroEdgeTol = tb.s007.value() #[11] tolerance for edge length
-		zeroMap = int(tb.chk015.isChecked()) #[12] check for 0 uv face area
-		zeroMapTol = tb.s008.value() #[13] tolerance for uv face areas
-		sharedUVs = int(tb.chk016.isChecked()) #[14] Unshare uvs that are shared across vertices
-		nonmanifold = int(tb.chk017.isChecked()) #[15] check for nonmanifold polys
-		lamina = -int(tb.chk018.isChecked()) #[16] check for lamina polys [default -1]
-		invalidComponents = 0 #int(tb.chk019.isChecked()) #[17] a guess what this arg does. not checked. default is 0.
+		quads = int(tb.menu_.chk010.isChecked()) #[3] check for quads polys
+		nsided = int(tb.menu_.chk002.isChecked()) #[4] check for n-sided polys
+		concave = int(tb.menu_.chk011.isChecked()) #[5] check for concave polys
+		holed = int(tb.menu_.chk012.isChecked()) #[6] check for holed polys
+		nonplanar = int(tb.menu_.chk003.isChecked()) #[7] check for non-planar polys
+		zeroGeom = int(tb.menu_.chk013.isChecked()) #[8] check for 0 area faces
+		zeroGeomTol = tb.menu_.s006.value() #[9] tolerance for face areas
+		zeroEdge = int(tb.menu_.chk014.isChecked()) #[10] check for 0 length edges
+		zeroEdgeTol = tb.menu_.s007.value() #[11] tolerance for edge length
+		zeroMap = int(tb.menu_.chk015.isChecked()) #[12] check for 0 uv face area
+		zeroMapTol = tb.menu_.s008.value() #[13] tolerance for uv face areas
+		sharedUVs = int(tb.menu_.chk016.isChecked()) #[14] Unshare uvs that are shared across vertices
+		nonmanifold = int(tb.menu_.chk017.isChecked()) #[15] check for nonmanifold polys
+		lamina = -int(tb.menu_.chk018.isChecked()) #[16] check for lamina polys [default -1]
+		invalidComponents = 0 #int(tb.menu_.chk019.isChecked()) #[17] a guess what this arg does. not checked. default is 0.
 
-		# if tb.chk005.isChecked(): #All Geometry. Select components for cleanup from all visible geometry in the scene
+		# if tb.menu_.chk005.isChecked(): #All Geometry. Select components for cleanup from all visible geometry in the scene
 		# 	scene = pm.ls(visible=1, geometry=1)
 		# 	[pm.select (geometry, add=1) for geometry in scene]
 
@@ -114,16 +114,16 @@ class Edit(Init):
 		'''
 		Delete History
 		'''
-		tb = self.currentUi.tb001
+		tb = self.ui.tb001
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='For All Objects', setObjectName='chk018', setChecked=True, setToolTip='Delete history on All objects or just those selected.')
-			tb.add('QCheckBox', setText='Delete Unused Nodes', setObjectName='chk019', setChecked=True, setToolTip='Delete unused nodes.')
-			tb.add('QCheckBox', setText='Delete Deformers', setObjectName='chk020', setToolTip='Delete deformers.')
+			tb.menu_.add('QCheckBox', setText='For All Objects', setObjectName='chk018', setChecked=True, setToolTip='Delete history on All objects or just those selected.')
+			tb.menu_.add('QCheckBox', setText='Delete Unused Nodes', setObjectName='chk019', setChecked=True, setToolTip='Delete unused nodes.')
+			tb.menu_.add('QCheckBox', setText='Delete Deformers', setObjectName='chk020', setToolTip='Delete deformers.')
 			return
 
-		all_ = tb.chk018.isChecked()
-		unusedNodes = tb.chk019.isChecked()
-		deformers = tb.chk020.isChecked()
+		all_ = tb.menu_.chk018.isChecked()
+		unusedNodes = tb.menu_.chk019.isChecked()
+		deformers = tb.menu_.chk020.isChecked()
 		objects = pm.ls(selection=1)
 		if all_:
 			objects = pm.ls(typ="mesh")
@@ -156,11 +156,11 @@ class Edit(Init):
 		'''
 		Delete 
 		'''
-		tb = self.currentUi.tb002
+		tb = self.ui.tb002
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='Delete Edge Loop', setObjectName='chk001', setToolTip='Delete the edge loops of any edges selected.')
-			tb.add('QCheckBox', setText='Delete Edge Ring', setObjectName='chk000', setToolTip='Delete the edge rings of any edges selected.')
-			tb.add('QCheckBox', setText='Delete Edge Border', setObjectName='chk021', setToolTip='Delete the edge rings of any edges selected.')
+			tb.menu_.add('QCheckBox', setText='Delete Edge Loop', setObjectName='chk001', setToolTip='Delete the edge loops of any edges selected.')
+			tb.menu_.add('QCheckBox', setText='Delete Edge Ring', setObjectName='chk000', setToolTip='Delete the edge rings of any edges selected.')
+			tb.menu_.add('QCheckBox', setText='Delete Edge Border', setObjectName='chk021', setToolTip='Delete the edge rings of any edges selected.')
 			return
 
 		selectionMask = pm.selectMode (query=True, component=True)
@@ -175,11 +175,11 @@ class Edit(Init):
 
 			elif pm.objectType(obj, isType='mesh'): 
 				if all([selectionMask==1, maskEdge==1]):
-					if tb.chk000.isChecked(): #delete ring.
+					if tb.menu_.chk000.isChecked(): #delete ring.
 						pm.polySelect(edgeRing=True) #select the edge ring.
-					if tb.chk001.isChecked(): #delete loop.
+					if tb.menu_.chk001.isChecked(): #delete loop.
 						pm.polySelect(edgeLoop=True) #select the edge loop.
-					if tb.chk021.isChecked(): #delete border.
+					if tb.menu_.chk021.isChecked(): #delete border.
 						pm.polySelect(edgeBorder=True) #select connected border edges.
 					pm.polyDelEdge(cleanVertices=True) #delete edges
 
@@ -197,14 +197,14 @@ class Edit(Init):
 		'''
 		Delete Along Axis
 		'''
-		tb = self.currentUi.tb003
+		tb = self.ui.tb003
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='-', setObjectName='chk006', setChecked=True, setToolTip='Perform delete along negative axis.')
-			tb.add('QRadioButton', setText='X', setObjectName='chk007', setChecked=True, setToolTip='Perform delete along X axis.')
-			tb.add('QRadioButton', setText='Y', setObjectName='chk008', setToolTip='Perform delete along Y axis.')
-			tb.add('QRadioButton', setText='Z', setObjectName='chk009', setToolTip='Perform delete along Z axis.')
+			tb.menu_.add('QCheckBox', setText='-', setObjectName='chk006', setChecked=True, setToolTip='Perform delete along negative axis.')
+			tb.menu_.add('QRadioButton', setText='X', setObjectName='chk007', setChecked=True, setToolTip='Perform delete along X axis.')
+			tb.menu_.add('QRadioButton', setText='Y', setObjectName='chk008', setToolTip='Perform delete along Y axis.')
+			tb.menu_.add('QRadioButton', setText='Z', setObjectName='chk009', setToolTip='Perform delete along Z axis.')
 
-			self.connect_('chk006-9', 'toggled', self.chk006_9, tb)
+			self.connect_('chk006-9', 'toggled', self.chk006_9, tb.menu_)
 			return
 
 		selection = pm.ls(sl=1, objectsOnly=1)

@@ -9,9 +9,6 @@ class Cameras(Init):
 	def __init__(self, *args, **kwargs):
 		super(Cameras, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('cameras')
-		self.childUi = self.sb.getUi('cameras_submenu')
-
 
 	@property
 	def clippingMenu(self):
@@ -22,7 +19,7 @@ class Cameras(Init):
 			(obj) menu as a property.
 		'''
 		if not hasattr(self, '_clippingMenu'):
-			self._clippingMenu = QMenu_(self.parentUi, position='cursorPos')
+			self._clippingMenu = QMenu_(self.cameras, position='cursorPos')
 
 			self._clippingMenu.add('QPushButton', setText='Auto Clip', setObjectName='chk000', setCheckable=True, setToolTip='When Auto Clip is ON, geometry closer to the camera than 3 units is not displayed. Turn OFF to manually define.')
 			self._clippingMenu.add('QDoubleSpinBox', setPrefix='Far Clip:  ', setObjectName='s000', minMax_='.01-10 step.1', setToolTip='Adjust the current cameras near clipping plane.')
@@ -32,9 +29,11 @@ class Cameras(Init):
 		activeCamera = self.getCurrentCam()
 		if not activeCamera:
 			self.toggleWidgets(self._clippingMenu, setDisabled='s000-1,chk000')
+
 		elif pm.viewClipPlane(activeCamera, query=1, autoClipPlane=1): #if autoClipPlane is active:
 			self._clippingMenu.chk000.setChecked(True)
 			self.toggleWidgets(self._clippingMenu, setDisabled='s000-1')
+
 		nearClip = pm.viewClipPlane(activeCamera, query=1, nearClipPlane=1) if activeCamera else 1.0
 		farClip = pm.viewClipPlane(activeCamera, query=1, farClipPlane=1) if activeCamera else 1000.0
 
@@ -91,7 +90,7 @@ class Cameras(Init):
 		'''
 
 		'''
-		tree = self.parentUi.tree000
+		tree = self.cameras.tree000
 
 		if wItem is 'setMenu':
 			tree.expandOnHover = True
@@ -418,7 +417,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # 		'''
 
 # 		'''
-# 		tree = self.parentUi.tree000
+# 		tree = self.cameras.tree000
 
 # 		if not any([wItem, column]):
 # 			if not tree.refresh: #static list items -----------
@@ -482,7 +481,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	Camera Editors
 
 	# 	'''
-	# 	cmb = self.parentUi.cmb000
+	# 	cmb = self.cameras.cmb000
 		
 	# 	list_ = ['Camera Sequencer', 'Camera Set Editor']
 	# 	contents = cmb.addItems_(list_, '')
@@ -514,7 +513,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	non_startup_cameras = map(str, non_startup_cameras_pynodes)
 	# 	non_startup_cameras_transforms = map(str, non_startup_cameras_transform_pynodes)
 
-	# 	cmb = self.parentUi.cmb001
+	# 	cmb = self.cameras.cmb001
 		
 	# 	contents = cmb.addItems_(non_startup_cameras, "Cameras")
 
@@ -530,7 +529,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	Create
 
 	# 	'''
-	# 	cmb = self.parentUi.cmb002
+	# 	cmb = self.cameras.cmb002
 		
 	# 	list_ = ['Custom Camera', 'Set Custom Camera', 'Camera From View']
 	# 	contents = cmb.addItems_(list_, "Create")
@@ -552,7 +551,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	Options
 
 	# 	'''
-	# 	cmb = self.parentUi.cmb003
+	# 	cmb = self.cameras.cmb003
 		
 	# 	list_ = ['Group Cameras']
 	# 	contents = cmb.addItems_(list_, "Options")

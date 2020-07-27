@@ -71,19 +71,19 @@
     <widget class="QWidget" name="w000" native="true">
      <property name="geometry">
       <rect>
-       <x>155</x>
+       <x>0</x>
        <y>390</y>
-       <width>286</width>
-       <height>211</height>
+       <width>601</width>
+       <height>601</height>
       </rect>
      </property>
      <widget class="QTreeWidget_ExpandableList" name="tree000">
       <property name="geometry">
        <rect>
-        <x>85</x>
-        <y>10</y>
+        <x>240</x>
+        <y>0</y>
         <width>116</width>
-        <height>191</height>
+        <height>201</height>
        </rect>
       </property>
       <property name="layoutDirection">
@@ -133,6 +133,11 @@
       <item>
        <property name="text">
         <string>Recent Commands</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Node History</string>
        </property>
       </item>
      </widget>

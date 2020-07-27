@@ -9,18 +9,15 @@ class Mirror(Init):
 	def __init__(self, *args, **kwargs):
 		super(Mirror, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('mirror')
-		self.childUi = self.sb.getUi('mirror_submenu')
-
 
 	def pin(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.parentUi.pin
+		pin = self.mirror.pin
 
 		if state is 'setMenu':
-			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
 			return
 
 
@@ -28,7 +25,7 @@ class Mirror(Init):
 		'''
 		Editors
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.mirror.cmb000
 
 		if index is 'setMenu':
 			list_ = ['']
@@ -46,7 +43,7 @@ class Mirror(Init):
 		Set the tb000's text according to the checkstates.
 		'''
 		axis = self.getAxisFromCheckBoxes('chk000-3')
-		self.parentUi.tb000.setText('Mirror '+axis)
+		self.mirror.tb000.setText('Mirror '+axis)
 
 
 	@Slots.sync
@@ -64,49 +61,49 @@ class Mirror(Init):
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='-', setObjectName='chk000', setChecked=True, setToolTip='Perform mirror along negative axis.')
-			tb.add('QRadioButton', setText='X', setObjectName='chk001', setChecked=True, setToolTip='Perform mirror along X axis.')
-			tb.add('QRadioButton', setText='Y', setObjectName='chk002', setToolTip='Perform mirror along Y axis.')
-			tb.add('QRadioButton', setText='Z', setObjectName='chk003', setToolTip='Perform mirror along Z axis.')
-			tb.add('QCheckBox', setText='Instance', setObjectName='chk004', setToolTip='Instance object.')
-			tb.add('QCheckBox', setText='Cut', setObjectName='chk005', setChecked=True, setToolTip='Perform a delete along specified axis before mirror.')
-			tb.add('QDoubleSpinBox', setPrefix='Merge Threshold: ', setObjectName='s000', minMax_='0.000-10 step.001', setValue=0.005, setToolTip='Merge vertex distance.')
+			tb.menu_.add('QCheckBox', setText='-', setObjectName='chk000', setChecked=True, setToolTip='Perform mirror along negative axis.')
+			tb.menu_.add('QRadioButton', setText='X', setObjectName='chk001', setChecked=True, setToolTip='Perform mirror along X axis.')
+			tb.menu_.add('QRadioButton', setText='Y', setObjectName='chk002', setToolTip='Perform mirror along Y axis.')
+			tb.menu_.add('QRadioButton', setText='Z', setObjectName='chk003', setToolTip='Perform mirror along Z axis.')
+			tb.menu_.add('QCheckBox', setText='Instance', setObjectName='chk004', setToolTip='Instance object.')
+			tb.menu_.add('QCheckBox', setText='Cut', setObjectName='chk005', setChecked=True, setToolTip='Perform a delete along specified axis before mirror.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Merge Threshold: ', setObjectName='s000', minMax_='0.000-10 step.001', setValue=0.005, setToolTip='Merge vertex distance.')
 
-			self.connect_('chk000-3', 'toggled', self.chk000_3, tb)
+			self.connect_('chk000-3', 'toggled', self.chk000_3, tb.menu_)
 			return
 
 		axis = self.getAxisFromCheckBoxes('chk000-3', tb)
-		cutMesh = tb.chk005.isChecked() #cut mesh on axis before mirror.
-		instance = tb.chk004.isChecked()
-		mergeThreshold = tb.s000.value()
+		cutMesh = tb.menu_.chk005.isChecked() #cut mesh on axis before mirror.
+		instance = tb.menu_.chk004.isChecked()
+		mergeThreshold = tb.menu_.s000.value()
 
 		if axis=='X': #'x'
-			axisDirection = 0 #positive axis
-			a = 0
-			x=-1; y=1; z=1
+			axisDirection = 1 #mirror toward negative axis
+			a = 0 #axis
+			x=-1; y=1; z=1 #scale values
 
 		elif axis=='-X': #'-x'
-			axisDirection = 1 #negative axis
+			axisDirection = 0 #mirror toward positive axis
 			a = 1 #0=-x, 1=x, 2=-y, 3=y, 4=-z, 5=z 
 			x=-1; y=1; z=1 #if instance: used to negatively scale
 
 		elif axis=='Y': #'y'
-			axisDirection = 0
+			axisDirection = 1
 			a = 2
 			x=1; y=-1; z=1
 
 		elif axis=='-Y': #'-y'
-			axisDirection = 1
+			axisDirection = 0
 			a = 3
 			x=1; y=-1; z=1
 
 		elif axis=='Z': #'z'
-			axisDirection = 0
+			axisDirection = 1
 			a = 4
 			x=1; y=1; z=-1
 
 		elif axis=='-Z': #'-z'
-			axisDirection = 1
+			axisDirection = 0
 			a = 5
 			x=1; y=1; z=-1
 
@@ -118,9 +115,11 @@ class Mirror(Init):
 		for obj in [n for n in pm.listRelatives(selection, allDescendents=1) if pm.objectType(n, isType='mesh')]: #get any mesh type child nodes of obj.
 			if cutMesh:
 				self.deleteAlongAxis(obj, axis) #delete mesh faces that fall inside the specified axis.
+
 			if instance: #create instance and scale negatively
 				inst = pm.instance(obj) # bt_convertToMirrorInstanceMesh(0); #x=0, y=1, z=2, -x=3, -y=4, -z=5
 				pm.xform(inst, scale=[x,y,z]) #pm.scale(z,x,y, pivot=(0,0,0), relative=1) #swap the xyz values to transform the instanced node
+
 			else: #mirror
 				pm.polyMirrorFace(obj, mirrorAxis=axisDirection, direction=a, mergeMode=1, mergeThresholdType=1, mergeThreshold=mergeThreshold, worldSpace=0, smoothingAngle=30, flipUVs=0, ch=0) #mirrorPosition x, y, z - This flag specifies the position of the custom mirror axis plane
 		pm.undoInfo(closeChunk=1)
@@ -143,19 +142,50 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 
 #deprecated:
 
+
+# if axis=='X': #'x'
+# 			axisDirection = 0 #positive axis
+# 			a = 0 #axis
+# 			x=-1; y=1; z=1 #scale values
+
+# 		elif axis=='-X': #'-x'
+# 			axisDirection = 1 #negative axis
+# 			a = 1 #0=-x, 1=x, 2=-y, 3=y, 4=-z, 5=z 
+# 			x=-1; y=1; z=1 #if instance: used to negatively scale
+
+# 		elif axis=='Y': #'y'
+# 			axisDirection = 0
+# 			a = 2
+# 			x=1; y=-1; z=1
+
+# 		elif axis=='-Y': #'-y'
+# 			axisDirection = 1
+# 			a = 3
+# 			x=1; y=-1; z=1
+
+# 		elif axis=='Z': #'z'
+# 			axisDirection = 0
+# 			a = 4
+# 			x=1; y=1; z=-1
+
+# 		elif axis=='-Z': #'-z'
+# 			axisDirection = 1
+# 			a = 5
+# 			x=1; y=1; z=-1
+
 	# def chk000(self, state=None):
 	# 	'''
 	# 	Delete: Negative Axis. Set Text Mirror Axis
 	# 	'''
 	# 	axis = "X"
-	# 	if self.parentUi.chk002.isChecked():
+	# 	if self.mirror.chk002.isChecked():
 	# 		axis = "Y"
-	# 	if self.parentUi.chk003.isChecked():
+	# 	if self.mirror.chk003.isChecked():
 	# 		axis = "Z"
-	# 	if self.parentUi.chk000.isChecked():
+	# 	if self.mirror.chk000.isChecked():
 	# 		axis = '-'+axis
-	# 	self.parentUi.tb000.setText('Mirror '+axis)
-	# 	self.parentUi.tb003.setText('Delete '+axis)
+	# 	self.mirror.tb000.setText('Mirror '+axis)
+	# 	self.mirror.tb003.setText('Delete '+axis)
 
 
 	# #set check states
@@ -165,10 +195,10 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	self.toggleWidgets(setUnChecked='chk002,chk003')
 	# 	axis = "X"
-	# 	if self.parentUi.chk000.isChecked():
+	# 	if self.mirror.chk000.isChecked():
 	# 		axis = '-'+axis
-	# 	self.parentUi.tb000.setText('Mirror '+axis)
-	# 	self.parentUi.tb003.setText('Delete '+axis)
+	# 	self.mirror.tb000.setText('Mirror '+axis)
+	# 	self.mirror.tb003.setText('Delete '+axis)
 
 
 	# def chk002(self, state=None):
@@ -177,10 +207,10 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	self.toggleWidgets(setUnChecked='chk001,chk003')
 	# 	axis = "Y"
-	# 	if self.parentUi.chk000.isChecked():
+	# 	if self.mirror.chk000.isChecked():
 	# 		axis = '-'+axis
-	# 	self.parentUi.tb000.setText('Mirror '+axis)
-	# 	self.parentUi.tb003.setText('Delete '+axis)
+	# 	self.mirror.tb000.setText('Mirror '+axis)
+	# 	self.mirror.tb003.setText('Delete '+axis)
 
 
 	# def chk003(self, state=None):
@@ -189,10 +219,10 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	self.toggleWidgets(setUnChecked='chk001,chk002')
 	# 	axis = "Z"
-	# 	if self.parentUi.chk000.isChecked():
+	# 	if self.mirror.chk000.isChecked():
 	# 		axis = '-'+axis
-	# 	self.parentUi.tb000.setText('Mirror '+axis)
-	# 	self.parentUi.tb003.setText('Delete '+axis)
+	# 	self.mirror.tb000.setText('Mirror '+axis)
+	# 	self.mirror.tb003.setText('Delete '+axis)
 
 
 	# def chk005(self, state=None):
@@ -200,7 +230,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 		# Mirror: Cut
 		# '''
 		#keep menu and submenu in sync:
-		# if self.childUi.chk005.isChecked():
+		# if self.mirror_submenu.chk005.isChecked():
 		# 	self.toggleWidgets(setChecked='chk005')
 		# else:
 		# 	self.toggleWidgets(setUnChecked='chk005')

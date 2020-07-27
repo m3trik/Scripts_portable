@@ -1,9 +1,7 @@
 from __future__ import print_function
 from PySide2 import QtCore
+
 import os.path, sys
-
-
-
 
 
 
@@ -22,8 +20,8 @@ class Slots(QtCore.QObject):
 		kwargs: (passed in via the switchboard module's 'getClassFromUiName' method.)
 			_ui (method) = returns the current ui for the current class; else the parent ui.
 			_currentUi (method) = returns the current ui.
-			name (ui) = ui of <name>
-			<name>_submenu (ui) = ui of <name_submenu>
+			name (ui) = ui of <name> ie. self.polygons for the ui of filename polygons
+			<name>_submenu (ui) = ui of <name_submenu> ie. self.polygons_submenu
 			sb (class) = switchboard instance.
 			tk (class) = stacked widget instance.
 		'''
@@ -47,9 +45,10 @@ class Slots(QtCore.QObject):
 		return self._currentUi()
 
 
-	def getObjects(self, class_, objectNames, showError_=False):
+	@staticmethod
+	def getObjects(class_, objectNames, showError_=False):
 		'''
-		Get a list of corresponding objects from a single string.
+		Get a list of corresponding objects from a shorthand string.
 		ie. 's000,b002,cmb011-15' would return object list: [<s000>, <b002>, <cmb011>, <cmb012>, <cmb013>, <cmb014>, <cmb015>]
 
 		args:
@@ -66,57 +65,46 @@ class Slots(QtCore.QObject):
 		for name in Slots.unpackNames(objectNames):
 			try:
 				objects.append(getattr(class_, name)) #equivilent to:(self.ui.m000)
-			except Exception as error: 
+			except AttributeError as error: 
 				if showError_:
-					print(error)
-				else: pass
+					print("tk_slots: 'getObjects:' objects.append(getattr({0}, {1})) {2}".format(class_, name, error))
+				else:
+					pass
+
 		return objects
 
 
 	@staticmethod
-	def getAttributes(obj, exclude=None):
+	def getAttributes(obj, include=[], exclude=[]):
 		'''
-		Get existing object attributes.
+		Get attributes for a given object.
+
 		args:
-			obj = object
-			exclude = 'string list' - attributes to exclude from returned dictionay
+			obj (obj) = The object to get the attributes of.
+			include (list) = Attributes to include. All other will be ommited. Exclude takes dominance over include. Meaning, if the same attribute is in both lists, it will be excluded.
+			exclude (list) = Attributes to exclude from the returned dictionay. ie. [u'Position',u'Rotation',u'Scale',u'renderable',u'isHidden',u'isFrozen',u'selected']
 
 		returns:
-			dictionary {'string attribute': value}
+			(dict) {'string attribute': current value}
 		'''
-		return {attr:getattr(obj, attr) for attr in dir(obj) if attr not in exclude}
+		return {attr:getattr(obj, attr) 
+					for attr in obj.__dict__ 
+						if not attr in exclude 
+						and (attr in include if include else attr not in include)}
 
 
 	@staticmethod
 	def setAttributes(obj, attributes):
 		'''
-		Set object attributes.
+		Set attributes for a given object.
+
 		args:
-			obj = object
+			obj (obj) = The object to set attributes for.
 			attributes = dictionary {'string attribute': value} - attributes and their correponding value to set
 		'''
-		[setattr(obj, attr, value) for attr, value in attributes.iteritems() if attr and value]
-
-
-	# def callMethod(self, name, method, *args, **kwargs):
-	# 	'''
-	# 	Call a method from a class outside of the current ui.
-	# 	Momentarily switches to the ui of the given method for the call, before returning to the previous ui.
-
-	# 	args:
-	# 		name (str) = ui name.
-	# 		method (str) = method name.
-	# 	'''
-	# 	ui = self.sb.getUi()
-	# 	temp = self.tk.setUi(name)
-	# 	method = self.sb.getMethod(name, method)
-
-	# 	try:
-	# 		method(*args, **kwargs)
-	# 	except Exception as error:
-	# 		print(error)
-
-	# 	self.tk.setUi(ui)
+		[setattr(obj, attr, value) 
+			for attr, value in attributes.iteritems() 
+				if attr and value]
 
 
 	def connect_(self, widgets, signals, slots, class_=None):
@@ -124,18 +112,18 @@ class Slots(QtCore.QObject):
 		Connect multiple signals to multiple slots at once.
 
 		args:
-			widgets (str)(obj)(list) = ie. 'chk000-2' or [tb.chk000, tb.chk001]
+			widgets (str)(obj)(list) = ie. 'chk000-2' or [tb.menu_.chk000, tb.menu_.chk001]
 			signals (str)(list) = ie. 'toggled' or [toggled]
 			slots (obj)(list) = ie. self.cmb002 or [self.cmb002]
 			class_ (obj)(list) = if the widgets arg is given as a string, then the class_ it belongs to can be explicitly given. else, the current ui will be used.
 
-		ex call: self.connect_('chk000-2', 'toggled', self.cmb002, tb) *or self.connect_([tb.chk000, tb.chk001], 'toggled', self.cmb002)
+		ex call: self.connect_('chk000-2', 'toggled', self.cmb002, tb.menu_) *or self.connect_([tb.menu_.chk000, tb.menu_.chk001], 'toggled', self.cmb002)
 		'''
 		if isinstance(widgets, (str,unicode)):
 			try:
-				widgets = self.getObjects(class_, widgets, showError_=True) #getObjects returns a widget list from a string of objectNames.
+				widgets = Slots.getObjects(class_, widgets, showError_=True) #getObjects returns a widget list from a string of objectNames.
 			except:
-				widgets = self.getObjects(self.sb.getUi(), widgets, showError_=True)
+				widgets = Slots.getObjects(self.sb.getUi(), widgets, showError_=True)
 
 		#if the variables are not of a list type; convert them.
 		widgets = self.sb.list(widgets)
@@ -149,6 +137,42 @@ class Slots(QtCore.QObject):
 					signal.connect(slot)
 
 
+	# @classmethod
+	def hideTk(fn):
+		'''
+		Decorator that hides the stacked widget main window.
+		'''
+		def wrapper(self, *args, **kwargs):
+			fn(self, *args, **kwargs) #execute the method normally.
+			self.tk.hide() #Get the state of the widget in the current ui and set any widgets (having the methods name) in child or parent ui's accordingly.
+		return wrapper
+
+	# @hideTk
+	def objAttrWindow(self, obj, attributes, fn=None):
+		'''
+		Launch a popup window containing the given objects attributes.
+
+		args:
+			obj (obj) = The object to get the attributes of.
+			attributes (dict) = {'attribute':<value>}
+			fn (method) = Set an alternative method to call on widget signal. 
+				fn two arguments. The object to get the attributes for, and a dict containing attribute:value pairs. ex. fn(obj, {'attribute':<value>}
+		'''
+		from widgets.qMenu_ import QMenu_
+		menu = QMenu_(position='cursorPos', setVisible=True)
+
+		spinboxes = [menu.add('QDoubleSpinBox', set_by_value_=[k, v]) for 
+			k, v in attributes.items() 
+			if isinstance(v, (float, int, bool))]
+
+		if not fn:
+			fn = self.getAttributes
+
+		[w.valueChanged.connect(
+			lambda value, widget=w, obj=obj: fn(obj, {widget.prefix().rstrip(': '):value})) 
+			for w in spinboxes] #set signal/slot connections
+
+
 	@classmethod
 	def sync(cls, fn):
 		'''
@@ -159,7 +183,7 @@ class Slots(QtCore.QObject):
 			self.syncWidgets(fn.__name__) #Get the state of the widget in the current ui and set any widgets (having the methods name) in child or parent ui's accordingly.
 		return wrapper
 
-	def syncWidgets(self, widgets, from_ui=None, fn=2):
+	def syncWidgets(self, widgets, from_ui=None, op=2):
 		'''
 		Keep widgets (having the same objectName) in sync across parent and child uis
 		If the second widget does not have an attribute it will silently skip it.
@@ -168,7 +192,7 @@ class Slots(QtCore.QObject):
 		args:
 			widgets (str)(list) = Widget objectNames as string or list of widget objects. string shorthand style: ie. 'b000-12,b022'
 			from_ui (obj) = ui to sync to. default is the current ui.
-			fn (int) = The widgets to sync. 1) the given widgets, 2) the given widgets and their parents, 3) all widgets.
+			op (int) = which widgets to sync. 1) the given widgets, 2) the given widgets and their parents, 3) all widgets.
 
 		self.syncWidgets('chk002-6')
 		'''
@@ -177,20 +201,20 @@ class Slots(QtCore.QObject):
 
 		to_ui = self.sb.getUi(from_ui, level=2) if self.sb.getUiLevel(from_ui)==3 else self.sb.getUi(from_ui, level=3)#get either it's parent or submenu, depending on the given ui.
 
-		if fn in (0, 1): #
+		if op in (0, 1): #
 			if isinstance(widgets, (str, unicode)):
-				from_widgets = self.getObjects(from_ui, widgets) #returns a list of widget objects from a string of objectNames.  ie. [<b000>, <b001>, ..] from 'b000-12,b022'
-				to_widgets = self.getObjects(to_ui, widgets)
+				from_widgets = Slots.getObjects(from_ui, widgets) #returns a list of widget objects from a string of objectNames.  ie. [<b000>, <b001>, ..] from 'b000-12,b022'
+				to_widgets = Slots.getObjects(to_ui, widgets)
 			else: #if list of widget objects:
 				from_widgets = widgets
 				to_widgets = [self.sb.getWidget(w.objectName(), name=to_ui) for w in widgets]
 
-		if fn==1: #get parents of the given widgets
+		if op==1: #get parents of the given widgets
 			from_widgets += [w.parent() for w in from_widgets]
 			to_widgets += [w.parent() for w in to_widgets]
 
 		else: #get all widgets
-			if not fn in (0, 1):
+			if not op in (0, 1):
 				from_widgets = self.sb.getWidget(name=from_ui)
 				to_widgets = self.sb.getWidget(name=to_ui)
 
@@ -201,9 +225,23 @@ class Slots(QtCore.QObject):
 
 		_widgets = {from_widgets[i]:to_widgets[i] for i in from_widgets if i in to_widgets} #{<from_widget>:<to_widget>}
 		for from_widget, to_widget in _widgets.items():
-			attributeTypes = {'isChecked':'setChecked', 'isDisabled':'setDisabled', 'isEnabled':'setEnabled', 'value':'setValue', 'text':'setText', 'icon':'setIcon'}	
-			attributes = {settr:getattr(from_widget, gettr)() for gettr, settr in attributeTypes.items() if hasattr(from_widget, gettr)} #get the from_widget's {attribute:value} ie. {'setChecked':True}
-			[getattr(to_widget, attr)(value) for attr, value in attributes.items() if hasattr(to_widget, attr)] #set the second widget's attributes from the first.
+
+			attributeTypes = {
+				'isChecked':'setChecked', 
+				'isDisabled':'setDisabled', 
+				'isEnabled':'setEnabled', 
+				'value':'setValue', 
+				'text':'setText', 
+				'icon':'setIcon',
+				}
+
+			attributes = {settr:getattr(from_widget, gettr)() 
+							for gettr, settr in attributeTypes.items() 
+								if hasattr(from_widget, gettr)} #get the from_widget's {attribute:value} ie. {'setChecked':True}
+			
+			[getattr(to_widget, attr)(value) 
+				for attr, value in attributes.items() 
+					if hasattr(to_widget, attr)] #set the second widget's attributes from the first.
 
 
 	def toggleWidgets(self, *args, **kwargs):
@@ -224,7 +262,7 @@ class Slots(QtCore.QObject):
 
 		for ui in args:
 			for property_ in kwargs: #property_ ie. setUnChecked
-				widgets = self.getObjects(ui, kwargs[property_]) #getObjects returns a widget list from a string of objectNames.
+				widgets = Slots.getObjects(ui, kwargs[property_]) #getObjects returns a widget list from a string of objectNames.
 
 				state = True
 				if 'Un' in property_: #strips 'Un' and sets the state from True to False. ie. 'setUnChecked' becomes 'setChecked' (False)
@@ -250,69 +288,9 @@ class Slots(QtCore.QObject):
 			args = args+[self.parentUi, self.childUi]
 
 		for ui in args[1:]:
-			widgets = self.getObjects(ui, args[0]) #getObjects returns a widget list from a string of objectNames.
+			widgets = Slots.getObjects(ui, args[0]) #getObjects returns a widget list from a string of objectNames.
 			for property_, value in kwargs.items():
 				[getattr(w, property_)(value) for w in widgets] #set the property state for each widget in the list.
-
-
-	def setSpinboxes(self, ui, spinboxes, attributes={}):
-		'''
-		Set multiple spinbox values.
-
-		args:
-			ui = <dynamic ui>
-			spinboxes (str)(list) = Packed spinbox names or object list. ie. 's001-4, s007' or [<s001>, <s002>, <s003>, <s004>, <s007>]
-			attributes = {'string key':value}
-
-		ex. self.setSpinboxes (self.ui, spinboxNames='s000-15', attributes={'width':1, 'length ratio':1, 'patches U':1, 'patches V':1})
-		ex. self.setSpinboxes (self.ui, spinboxNames='s000', attributes={'size':5} #explicit;  set single s000 with a label 'size' and value of 5
-		'''
-		if isinstance(spinboxes, (str, unicode)):
-			spinboxes = self.getObjects(ui, spinboxes) #get spinbox objects
-
-		#clear previous values
-		for spinbox in spinboxes:
-			spinbox.blockSignals(True)
-			# spinbox.setEnabled(False)
-
-		#set values
-		for index, (key, value) in enumerate(attributes.items()):
-			if isinstance(value, float):
-				if value<0: spinboxes[index].setMinimum(-100)
-				decimals = str(value)[::-1].find('.') #get decimal places
-				spinboxes[index].setDecimals(decimals)
-				spinboxes[index].setPrefix(key+': ')
-				spinboxes[index].setValue(value)
-				spinboxes[index].setSuffix('')
-
-			elif isinstance(value, int):
-				if value<0: spinboxes[index].setMinimum(-100)
-				spinboxes[index].setDecimals(0)
-				spinboxes[index].setPrefix(key+': ')
-				spinboxes[index].setValue(value)
-				spinboxes[index].setSuffix('')
-
-			elif isinstance(value, bool):
-				value = int(value)
-				spinboxes[index].setMinimum(0)
-				spinboxes[index].setMaximum(1)
-				spinboxes[index].setSuffix('<bool>')
-
-			# spinboxes[index].setEnabled(True)
-			spinboxes[index].blockSignals(False)
-
-
-	# def setComboBox(self, comboBox, text):
-	# 	'''
-	# 	Set the given comboBox's index using a text string.
-	# 	args:
-	# 		comboBox (str) = comboBox name (will also be used as the methods name).
-	# 		text (str) = text of the index to switch to.
-	# 	'''
-	# 	cmb = getattr(ui, comboBox)
-	# 	method = getattr(self, comboBox)
-	# 	cmb.currentIndexChanged.connect(method)
-	# 	cmb.setCurrentIndex(cmb.findText(text))
 
 
 	def setAxisForCheckBoxes(self, checkboxes, axis, ui=None):
@@ -328,7 +306,7 @@ class Slots(QtCore.QObject):
 		if isinstance(checkboxes, (str, unicode)):
 			if ui is None:
 				ui = self.currentUi
-			checkboxes = self.getObjects(ui, checkboxes)
+			checkboxes = Slots.getObjects(ui, checkboxes)
 
 		prefix = '-' if '-' in axis else '' #separate the prefix and axis
 		coord = axis.strip('-')
@@ -350,7 +328,7 @@ class Slots(QtCore.QObject):
 		if isinstance(checkboxes, (str, unicode)):
 			if ui is None:
 				ui = self.currentUi
-			checkboxes = self.getObjects(ui, checkboxes, showError_=1)
+			checkboxes = Slots.getObjects(ui, checkboxes, showError_=1)
 
 		prefix=axis=''
 		for chk in checkboxes:
@@ -446,9 +424,14 @@ class Slots(QtCore.QObject):
 			prev_x = int(x)
 
 		if compress: #style: ['19', '22-32', '1225-6']
-			collapsedList = ['-'.join([r[0], r[-1][len(str(r[-1]))-len(str((int(r[-1])-int(r[0])))):]] if len(r) > 1 else r) for r in ranges] #find the difference and use that value to further trim redundant chars from the string
+			collapsedList = ['-'.join([r[0], r[-1][len(str(r[-1]))-len(str((int(r[-1])-int(r[0])))):]] #find the difference and use that value to further trim redundant chars from the string
+								if len(r) > 1 else r) 
+									for r in ranges]
+
 		else: #style: ['19', '22..32', '1225..1226']
-			collapsedList = ['..'.join([r[0], r[-1]] if len(r) > 1 else r) for r in ranges]
+			collapsedList = ['..'.join([r[0], r[-1]] 
+								if len(r) > 1 else r) 
+									for r in ranges]
 
 		if limit and len(collapsedList)>limit:
 			l = collapsedList[:limit]
@@ -536,6 +519,86 @@ print (os.path.splitext(os.path.basename(__file__))[0])
 
 #depricated:
 
+
+	# def callMethod(self, name, method, *args, **kwargs):
+	# 	'''
+	# 	Call a method from a class outside of the current ui.
+	# 	Momentarily switches to the ui of the given method for the call, before returning to the previous ui.
+
+	# 	args:
+	# 		name (str) = ui name.
+	# 		method (str) = method name.
+	# 	'''
+	# 	ui = self.sb.getUi()
+	# 	temp = self.tk.setUi(name)
+	# 	method = self.sb.getMethod(name, method)
+
+	# 	try:
+	# 		method(*args, **kwargs)
+	# 	except Exception as error:
+	# 		print(error)
+
+	# 	self.tk.setUi(ui)
+
+
+	# def setSpinboxes(self, ui, spinboxes, attributes={}):
+	# 	'''
+	# 	Set multiple spinbox values and adjust for the data type.
+
+	# 	args:
+	# 		ui = <dynamic ui>
+	# 		spinboxes (str)(list) = Packed spinbox names or object list. ie. 's001-4, s007' or [<s001>, <s002>, <s003>, <s004>, <s007>]
+	# 		attributes = {'string key':value}
+
+	# 	ex. self.setSpinboxes (self.ui, spinboxNames='s000-15', attributes={'width':1, 'length ratio':1, 'patches U':1, 'patches V':1})
+	# 	ex. self.setSpinboxes (self.ui, spinboxNames='s000', attributes={'size':5} #explicit;  set single s000 with a label 'size' and value of 5
+	# 	'''
+	# 	if isinstance(spinboxes, (str, unicode)):
+	# 		spinboxes = Slots.getObjects(ui, spinboxes) #get spinbox objects
+
+	# 	#set values
+	# 	for index, (key, value) in enumerate(attributes.items()):
+	# 		spinboxes[index].blockSignals(True)
+	# 		if isinstance(value, float):
+	# 			if value<0:
+	# 				spinboxes[index].setMinimum(-100)
+	# 			decimals = str(value)[::-1].find('.') #get decimal places
+	# 			spinboxes[index].setDecimals(decimals)
+	# 			spinboxes[index].setPrefix(key+': ')
+	# 			spinboxes[index].setValue(value)
+	# 			spinboxes[index].setSuffix('')
+
+	# 		elif isinstance(value, int):
+	# 			if value<0:
+	# 				spinboxes[index].setMinimum(-100)
+	# 			spinboxes[index].setDecimals(0)
+	# 			spinboxes[index].setPrefix(key+': ')
+	# 			spinboxes[index].setValue(value)
+	# 			spinboxes[index].setSuffix('')
+
+	# 		elif isinstance(value, bool):
+	# 			value = int(value)
+	# 			spinboxes[index].setMinimum(0)
+	# 			spinboxes[index].setMaximum(1)
+	# 			spinboxes[index].setSuffix('<bool>')
+
+	# 		# spinboxes[index].setEnabled(True)
+	# 		spinboxes[index].blockSignals(False)
+
+
+	# def setComboBox(self, comboBox, text):
+	# 	'''
+	# 	Set the given comboBox's index using a text string.
+	# 	args:
+	# 		comboBox (str) = comboBox name (will also be used as the methods name).
+	# 		text (str) = text of the index to switch to.
+	# 	'''
+	# 	cmb = getattr(ui, comboBox)
+	# 	method = getattr(self, comboBox)
+	# 	cmb.currentIndexChanged.connect(method)
+	# 	cmb.setCurrentIndex(cmb.findText(text))
+
+
 	# @staticmethod
 	# def msg(string, prefix='', inView=False):
 	# 	'''
@@ -579,27 +642,27 @@ print (os.path.splitext(os.path.basename(__file__))[0])
 	# 	ex.	setButtons(self.ui, disable='b000', unchecked='chk009-12', invisible='b015')
 	# 	'''
 	# 	if checked:
-	# 		checked = self.getObjects(ui, checked)
+	# 		checked = Slots.getObjects(ui, checked)
 	# 		[button.setChecked(True) for button in checked]
 			
 	# 	if unchecked:
-	# 		unchecked = self.getObjects(ui, unchecked)
+	# 		unchecked = Slots.getObjects(ui, unchecked)
 	# 		[button.setChecked(False) for button in unchecked]
 			
 	# 	if enable:
-	# 		enable = self.getObjects(ui, enable)
+	# 		enable = Slots.getObjects(ui, enable)
 	# 		[button.setEnabled(True) for button in enable]
 			
 	# 	if disable:
-	# 		disable = self.getObjects(ui, disable)
+	# 		disable = Slots.getObjects(ui, disable)
 	# 		[button.setDisabled(True) for button in disable]
 			
 	# 	if visible:
-	# 		visible = self.getObjects(ui, visible)
+	# 		visible = Slots.getObjects(ui, visible)
 	# 		[button.setVisible(True) for button in visible]
 			
 	# 	if invisible:
-	# 		invisible = self.getObjects(ui, invisible)
+	# 		invisible = Slots.getObjects(ui, invisible)
 	# 		[button.setVisible(False) for button in invisible]
 
 
@@ -616,7 +679,7 @@ print (os.path.splitext(os.path.basename(__file__))[0])
 # 	ex. self.setSpinboxes (self.ui, values=[("width",1),("length ratio",1),("patches U",1),("patches V",1)]) #range. dict 'value's will be added to corresponding spinbox starting at s000 through s003.
 # 	ex. self.setSpinboxes (self.ui, spinboxNames='s000', values=[('size',5)]) #explicit;  set single s000 with a label 'size' and value of 5. multiple spinboxes can be set this way. specify a range of spinboxes using 's010-18'.
 # 	'''
-# 	spinboxes = self.getObjects(ui, spinboxNames) #get spinbox objects
+# 	spinboxes = Slots.getObjects(ui, spinboxNames) #get spinbox objects
 
 # 	#clear previous values
 # 	for spinbox in spinboxes:

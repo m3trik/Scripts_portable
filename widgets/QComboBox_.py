@@ -1,26 +1,10 @@
 from PySide2 import QtCore, QtGui, QtWidgets
 
-import sys
-
-from widgets.qMenu_ import QMenu_
-
-'''
-Promoting a widget in designer to use a custom class:
->	In Qt Designer, select all the widgets you want to replace, 
-		then right-click them and select 'Promote to...'. 
-
->	In the dialog:
-		Base Class:		Class from which you inherit. ie. QWidget
-		Promoted Class:	Name of the class. ie. "MyWidget"
-		Header File:	Path of the file (changing the extension .py to .h)  ie. myfolder.mymodule.mywidget.h
-
->	Then click "Add", "Promote", 
-		and you will see the class change from "QWidget" to "MyWidget" in the Object Inspector pane.
-'''
+from shared import Menu, Attributes
 
 
 
-class QComboBox_(QtWidgets.QComboBox):
+class QComboBox_(QtWidgets.QComboBox, Menu, Attributes):
 	'''
 	
 	'''
@@ -36,158 +20,20 @@ class QComboBox_(QtWidgets.QComboBox):
 		'''
 		self.popupStyle = popupStyle
 
-		self.menu = QMenu_(self, position='bottomLeft')
-		self.menu.visible=False #built-in method isVisible() not working.
+		self.menu_.visible=False #built-in method isVisible() not working.
 		self.view().installEventFilter(self)
 
 		self.setAttributes(kwargs)
 
 
 	@property
-	def containsMenuItems(self):
+	def items(self):
 		'''
-		Query whether a menu has been constructed.
-		'''
-		if not self.children_():
-			return False
-		return True
-
-
-	@property
-	def containsContextMenuItems(self):
-		'''
-		Query whether a menu has been constructed.
-		'''
-		if not self.children_(contextMenu=True):
-			return False
-		return True
-
-
-	def eventFilter(self, widget, event):
-		'''
-		Event filter for the standard view.
-
-		QtCore.QEvent.Show, Hide, FocusIn, FocusOut, FocusAboutToChange
-		'''
-		# if not (str(event.type()).split('.')[-1]) in ['QPaintEvent', 'UpdateLater', 'PolishRequest', 'Paint']: print(str(event.type())) #debugging
-		if event.type()==QtCore.QEvent.Hide:
-			if self.parent().__class__.__name__=='QMenu_':
-				self.parent().hide()
-
-		return super(QComboBox_, self).eventFilter(widget, event)
-
-
-	def setAttributes(self, attributes=None, order=['globalPos', 'setVisible'], **kwargs):
-		'''
-		Works with attributes passed in as a dict or kwargs.
-		If attributes are passed in as a dict, kwargs are ignored.
-		args:
-			attributes (dict) = keyword attributes and their corresponding values.
-			#order (list) = list of string keywords. ie. ['move', 'show']. attributes in this list will be set last, in order of the list. an example would be setting move positions after setting resize arguments.
-		kwargs:
-			set any keyword arguments.
-		'''
-		if not attributes:
-			attributes = kwargs
-
-		for k in order:
-			v = attributes.pop(k, None)
-			if v:
-				from collections import OrderedDict
-				attributes = OrderedDict(attributes)
-				attributes[k] = v
-
-		for attr, value in attributes.items():
-			try:
-				getattr(self, attr)(value)
-
-			except Exception as error:
-				if type(error)==AttributeError:
-					self.setCustomAttribute(attr, value)
-				else:
-					raise error
-
-
-	def setCustomAttribute(self, attr, value):
-		'''
-		Handle custom keyword arguments.
-		args:
-			attr (str) = custom keyword attribute.
-			value (str) = the value corresponding to the given attr.
-		kwargs:
-			copy (obj) = widget to copy certain attributes from.
-			globalPos (QPoint) = move to given global location and center.
-		'''
-		if attr=='copy':
-			self.setObjectName(value.objectName())
-			self.resize(value.size())
-			self.setText(value.text())
-			self.setWhatsThis(value.whatsThis())
-
-		if attr=='globalPos':
-			self.move(self.mapFromGlobal(value - self.rect().center())) #move and center
-
-
-	@property
-	def contextMenu(self):
-		'''
-		Get the context menu.
-		'''
-		if not hasattr(self, '_menu'):
-			self._menu = QMenu_(self, position='cursorPos')
-		return self._menu
-
-
-	def addToContext(self, w, header=None, **kwargs):
-		'''
-		Same as 'add', but instead adds items to the context menu.
-		'''
-		_menu=self.contextMenu
-		return self.add(w, header, _menu, **kwargs)
-
-
-	def add(self, w, header=None, _menu=None, **kwargs):
-		'''
-		Add an item to the comboboxes's menu. (custom or the standard modelView).
-
-		args:
-			w (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
-			header (str) = optional - header string at top when using standard model/view.
-			_menu (obj) = menu to add to. typically internal use only.
-
-		kwargs:
-			show (bool) = show the menu.
-			insertSeparator (QAction) = insert separator in front of the given action.
-
+		Get a list of each items's text from the standard model/view.
 		returns:
-			the added widget.
-
-		ex.call:
-		tb.add('QCheckBox', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
+			(list)
 		'''
-		if self.popupStyle=='modelView' and _menu is None:
-			item = self.addItems_(w, header)
-			return item
-
-		try:
-			w = getattr(QtWidgets, w)() #ex. QtWidgets.QAction(self) object from string.
-		except:
-			if callable(w):
-				w = w() #ex. QtWidgets.QAction(self) object.
-
-		if _menu is None:
-			_menu = self.menu
-		_menu.add(w, **kwargs)
-
-		setattr(self, w.objectName(), w)
-
-		#connect to 'setLastActiveChild' when signal activated.
-		if hasattr(w, 'released'):
-			w.released.connect(lambda widget=w: self.setLastActiveChild(widget))
-		elif hasattr(w, 'valueChanged'):
-			w.valueChanged.connect(lambda value, widget=w: self.setLastActiveChild(value, widget))
-
-		return w
+		return [self.itemText(i) for i in range(self.count())]
 
 
 	def addItems_(self, items, header=None, clear=True, ascending=False):
@@ -245,93 +91,6 @@ class QComboBox_(QtWidgets.QComboBox):
 		self.blockSignals(False)
 
 
-	@property
-	def items(self):
-		'''
-		Get a list of each items's text from the standard model/view.
-		returns:
-			(list)
-		'''
-		return [self.itemText(i) for i in range(self.count())]
-
-
-	def children_(self, of_type=[], contextMenu=False, _exclude=['QAction', 'QWidgetAction']):
-		'''
-		Get a list of the menu's child objects, excluding those types listed in '_exclude'.
-
-		args:
-			contextMenu (bool) = Get the child widgets for the context menu.
-			of_type (list) = Widget types as strings. Types of widgets to return. Any types listed in _exclude will still be excluded.
-			_exclude (list) = Widget types as strings. Can be modified to set types to exclude from the returned results.
-		returns:
-			(list)
-		'''
-		if contextMenu:
-			menu = self.contextMenu
-		else:
-			menu = self.menu
-
-		if of_type:
-			children = [i for i in menu.children() if i.__class__.__name__ in of_type and i.__class__.__name__ not in _exclude]
-		else:
-			children = [i for i in menu.children() if i.__class__.__name__ not in _exclude]
-
-		return children
-
-
-	def setLastActiveChild(self, *args, **kwargs):
-		'''
-		Set the given widget as the last active.
-		Maintains a list of the last 10 active child widgets.
-
-		args:
-			*args[-1] = Widget to set as last active. The widget can later be returned by calling the 'lastActiveChild' method.
-			*args **kwargs = Any additional arguments passed in by the wiget's signal during a connect call.
-
-		returns:
-			(obj) widget.
-		'''
-		widget = args[-1]
-
-		if not hasattr(self, '_lastActiveChild'):
-			self._lastActiveChild = []
-
-		del self._lastActiveChild[11:] #keep the list length at 10 elements.
-
-		self._lastActiveChild.append(widget)
-		# print(args, kwargs, widget.objectName() if hasattr(widget, 'objectName') else None)
-		return self._lastActiveChild[-1]
-
-
-	def lastActiveChild(self, name=False, as_list=False):
-		'''
-		Get the given widget set as last active.
-		Contains a list of the last 10 active child widgets.
-
-		args:
-			name (bool) = Return the last active widgets name as a string.
-
-		returns:
-			(obj) widget or (str) widget name.
-
-		ex. slot connection:
-			cmb.returnPressed.connect(lambda m=cmb.lastActiveChild: getattr(self, m(name=1))()) #connect to the last pressed child widget's corresponding method after return pressed. ie. self.lbl000 if cmb.lbl000 was clicked last.
-		'''
-		if not hasattr(self, '_lastActiveChild'):
-			return None
-
-		if name:
-			lastActive = str(self._lastActiveChild[-1].objectName())
-		elif name and as_list:
-			lastActive = [str(w.objectName()) for w in self._lastActiveChild]
-		elif as_list:
-			lastActive = [w for w in self._lastActiveChild]
-		else:
-			lastActive = self._lastActiveChild[-1]
-
-		return lastActive
-
-
 	def showPopup(self):
 		'''
 		Show the popup menu.
@@ -339,12 +98,12 @@ class QComboBox_(QtWidgets.QComboBox):
 		self.beforePopupShown.emit()
 
 		if not self.popupStyle=='modelView':
-			if not self.menu.visible:
-				self.menu.show()
-				self.menu.visible=True
+			if not self.menu_.visible:
+				self.menu_.show()
+				self.menu_.visible=True
 			else:
-				self.menu.hide()
-				self.menu.visible=False
+				self.menu_.hide()
+				self.menu_.visible=False
 			return	
 
 		width = self.minimumSizeHint().width()
@@ -360,8 +119,8 @@ class QComboBox_(QtWidgets.QComboBox):
 		self.beforePopupHidden.emit()
 
 		if not self.popupStyle=='modelView':
-			self.menu.hide()
-			self.menu.visible=False
+			self.menu_.hide()
+			self.menu_.visible=False
 		else:
 			super(QComboBox_, self).hidePopup()
 
@@ -371,7 +130,7 @@ class QComboBox_(QtWidgets.QComboBox):
 		
 		'''
 		if not self.popupStyle=='modelView':
-			self.menu.clear()
+			self.menu_.clear()
 		else:
 			super(QComboBox_, self).clear()
 
@@ -418,48 +177,30 @@ class QComboBox_(QtWidgets.QComboBox):
 		return QtWidgets.QComboBox.keyPressEvent(self, event)
 
 
-	def contextMenuToolTip(self):
-		'''
-		Creates an html formatted toolTip combining the toolTips of any context menu items.
-
-		returns:
-			(str) formatted toolTip.
-		'''
-		if hasattr(self, '_menu'):
-			menuItems = self.children_(contextMenu=True)
-			if not menuItems:
-				return ''
-
-			contextMenuToolTip = '<br><br><u>Context menu items:</u>'
-			for menuItem in menuItems:
-				try:
-					contextMenuToolTip = '{0}<br>  <b>{1}</b> - {2}'.format(contextMenuToolTip, menuItem.text(), menuItem.toolTip())
-				except AttributeError:
-					pass
-
-			return contextMenuToolTip
-
-
-	# def toolTip(self):
-	# 	'''
-
-	# 	'''		
-
-	# 	super(QComboBox_, self).toolTip()
-
-
 	def showEvent(self, event):
 		'''
 		args:
 			event=<QEvent>
 		'''
-		if not hasattr(self, '_contextMenuToolTip'):
-			self._contextMenuToolTip = self.contextMenuToolTip()
-			if self._contextMenuToolTip:
-				self.setToolTip('{0}{1}'.format(self.toolTip(), self._contextMenuToolTip))
+		contextMenuToolTip = self.menu_.contextMenuToolTip()
+		if contextMenuToolTip:
+			self.setToolTip('{0}{1}'.format(self.toolTip(), contextMenuToolTip))
 
 		return QtWidgets.QComboBox.showEvent(self, event)
 
+
+	def eventFilter(self, widget, event):
+		'''
+		Event filter for the standard view.
+
+		QtCore.QEvent.Show, Hide, FocusIn, FocusOut, FocusAboutToChange
+		'''
+		# if not (str(event.type()).split('.')[-1]) in ['QPaintEvent', 'UpdateLater', 'PolishRequest', 'Paint']: print(str(event.type())) #debugging
+		if event.type()==QtCore.QEvent.Hide:
+			if self.parent().__class__.__name__=='QMenu_':
+				self.parent().hide()
+
+		return super(QComboBox_, self).eventFilter(widget, event)
 
 
 
@@ -470,6 +211,7 @@ class QComboBox_(QtWidgets.QComboBox):
 
 
 if __name__ == "__main__":
+	import sys
 	app = QtWidgets.QApplication(sys.argv)
 
 	w=QComboBox_(popupStyle='qmenu')
@@ -478,7 +220,193 @@ if __name__ == "__main__":
 
 
 
+# --------------------------------
+# Notes
+# --------------------------------
+
+'''
+Promoting a widget in designer to use a custom class:
+>	In Qt Designer, select all the widgets you want to replace, 
+		then right-click them and select 'Promote to...'. 
+
+>	In the dialog:
+		Base Class:		Class from which you inherit. ie. QWidget
+		Promoted Class:	Name of the class. ie. "MyWidget"
+		Header File:	Path of the file (changing the extension .py to .h)  ie. myfolder.mymodule.mywidget.h
+
+>	Then click "Add", "Promote", 
+		and you will see the class change from "QWidget" to "MyWidget" in the Object Inspector pane.
+'''
+
 # Deprecated -----------------------------------------------
+
+
+	# def addToContext(self, w, header=None, **kwargs):
+	# 	'''
+	# 	Same as 'add', but instead adds items to the context menu.
+	# 	'''
+	# 	_menu=self.contextMenu
+	# 	return self.add(w, header, _menu, **kwargs)
+
+
+	# def add(self, w, header=None, _menu=None, **kwargs):
+	# 	'''
+	# 	Add an item to the comboboxes's menu. (custom or the standard modelView).
+
+	# 	args:
+	# 		w (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
+	# 		header (str) = optional - header string at top when using standard model/view.
+	# 		_menu (obj) = menu to add to. typically internal use only.
+
+	# 	kwargs:
+	# 		show (bool) = show the menu.
+	# 		insertSeparator (QAction) = insert separator in front of the given action.
+
+	# 	returns:
+	# 		the added widget.
+
+	# 	ex.call:
+	# 	tb.menu_.add('QCheckBox', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
+	# 	'''
+	# 	if self.popupStyle=='modelView' and _menu is None:
+	# 		item = self.addItems_(w, header)
+	# 		return item
+
+	# 	try:
+	# 		w = getattr(QtWidgets, w)() #ex. QtWidgets.QAction(self) object from string.
+	# 	except:
+	# 		if callable(w):
+	# 			w = w() #ex. QtWidgets.QAction(self) object.
+
+	# 	if _menu is None:
+	# 		_menu = self.menu_
+	# 	_menu.add(w, **kwargs)
+
+	# 	setattr(self, w.objectName(), w)
+
+	# 	#connect to 'setLastActiveChild' when signal activated.
+	# 	if hasattr(w, 'released'):
+	# 		w.released.connect(lambda widget=w: self.setLastActiveChild(widget))
+	# 	elif hasattr(w, 'valueChanged'):
+	# 		w.valueChanged.connect(lambda value, widget=w: self.setLastActiveChild(value, widget))
+
+	# 	return w
+
+
+
+
+
+
+# def children_(self, of_type=[], contextMenu=False, _exclude=['QAction', 'QWidgetAction']):
+	# 	'''
+	# 	Get a list of the menu's child objects, excluding those types listed in '_exclude'.
+
+	# 	args:
+	# 		contextMenu (bool) = Get the child widgets for the context menu.
+	# 		of_type (list) = Widget types as strings. Types of widgets to return. Any types listed in _exclude will still be excluded.
+	# 		_exclude (list) = Widget types as strings. Can be modified to set types to exclude from the returned results.
+	# 	returns:
+	# 		(list)
+	# 	'''
+	# 	if contextMenu:
+	# 		menu = self.contextMenu
+	# 	else:
+	# 		menu = self.menu
+
+	# 	if of_type:
+	# 		children = [i for i in menu.children() if i.__class__.__name__ in of_type and i.__class__.__name__ not in _exclude]
+	# 	else:
+	# 		children = [i for i in menu.children() if i.__class__.__name__ not in _exclude]
+
+	# 	return children
+
+
+
+
+	# def setAttributes(self, attributes=None, order=[Shared, 'setVisible'], **kwargs):
+	# 	'''
+	# 	Works with attributes passed in as a dict or kwargs.
+	# 	If attributes are passed in as a dict, kwargs are ignored.
+	# 	args:
+	# 		attributes (dict) = keyword attributes and their corresponding values.
+	# 		#order (list) = list of string keywords. ie. ['move', 'show']. attributes in this list will be set last, in order of the list. an example would be setting move positions after setting resize arguments.
+	# 	kwargs:
+	# 		set any keyword arguments.
+	# 	'''
+	# 	if not attributes:
+	# 		attributes = kwargs
+
+	# 	for k in order:
+	# 		v = attributes.pop(k, None)
+	# 		if v:
+	# 			from collections import OrderedDict
+	# 			attributes = OrderedDict(attributes)
+	# 			attributes[k] = v
+
+	# 	for attr, value in attributes.items():
+	# 		try:
+	# 			getattr(self, attr)(value)
+
+	# 		except Exception as error:
+	# 			if type(error)==AttributeError:
+	# 				self.setCustomAttribute(attr, value)
+	# 			else:
+	# 				raise error
+
+
+	# def setCustomAttribute(self, attr, value):
+	# 	'''
+	# 	Handle custom keyword arguments.
+	# 	args:
+	# 		attr (str) = custom keyword attribute.
+	# 		value (str) = the value corresponding to the given attr.
+	# 	kwargs:
+	# 		copy (obj) = widget to copy certain attributes from.
+	# 		globalPos (QPoint) = move to given global location and center.
+	# 	'''
+	# 	if attr=='copy':
+	# 		self.setObjectName(value.objectName())
+	# 		self.resize(value.size())
+	# 		self.setText(value.text())
+	# 		self.setWhatsThis(value.whatsThis())
+
+	# 	if attr==Shared:
+	# 		self.move(self.mapFromGlobal(value - self.rect().center())) #move and center
+
+
+	# @property
+	# def contextMenu(self):
+	# 	'''
+	# 	Get the context menu.
+	# 	'''
+	# 	if not hasattr(self, '_menu'):
+	# 		self._menu = QMenu_(self, position='cursorPos')
+	# 	return self._menu
+
+
+
+	# @property
+	# def containsMenuItems(self):
+	# 	'''
+	# 	Query whether a menu has been constructed.
+	# 	'''
+	# 	if not self.children_():
+	# 		return False
+	# 	return True
+
+
+	# @property
+	# def containsContextMenuItems(self):
+	# 	'''
+	# 	Query whether a menu has been constructed.
+	# 	'''
+	# 	if not self.children_(contextMenu=True):
+	# 		return False
+	# 	return True
+
+
+
+
 
 
 

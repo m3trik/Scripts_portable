@@ -11,7 +11,6 @@ class Create(Init):
 
 		self.rotation = {'x':[90,0,0], 'y':[0,90,0], 'z':[0,0,90], '-x':[-90,0,0], '-y':[0,-90,0], '-z':[0,0,-90], 'last':[]}
 		self.point=[0,0,0]
-		self.history=[]
 
 
 	@property
@@ -41,7 +40,7 @@ class Create(Init):
 		pin = self.create.pin
 
 		if state is 'setMenu':
-			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
 			return
 
 
@@ -56,10 +55,10 @@ class Create(Init):
 			cmb.addItems_(list_, '')
 			return
 
-		# if index>0:
-		# 	if index==cmb.items.index(''):
-		# 		pass
-		# 	cmb.setCurrentIndex(0)
+		if index>0:
+			if index==cmb.items.index(''):
+				pass
+			cmb.setCurrentIndex(0)
 
 
 	def getAxis(self):
@@ -191,67 +190,42 @@ class Create(Init):
 			cmb.addItems_(list_)
 			return
 
+		if index==0: #shared menu. later converted to the specified type.
+			self.cmb001(0)
+
+		if index==1:
+			self.cmb001(1)
+
+		if index==2:
+			self.cmb001(2)
+
+
+	def cmb001(self, index=None):
+		'''
+
+		'''
+		cmb = self.create.cmb001
+
+		if index is 'setMenu':
+			list_ = ["Cube", "Sphere", "Cylinder", "Plane", "Circle", "Cone", "Pyramid", "Torus", "Tube", "GeoSphere", "Platonic Solids", "Text"]
+			cmb.addItems_(list_)
+			return
+
 		polygons = ["Cube", "Sphere", "Cylinder", "Plane", "Circle", "Cone", "Pyramid", "Torus", "Tube", "GeoSphere", "Platonic Solids", "Text"]
 		nurbs = ["Cube", "Sphere", "Cylinder", "Cone", "Plane", "Torus", "Circle", "Square"]
 		lights = ["Ambient", "Directional", "Point", "Spot", "Area", "Volume", "VRay Sphere", "VRay Dome", "VRay Rect", "VRay IES"]
 
 		if index==0: #shared menu. later converted to the specified type.
-			self.create.cmb001.addItems_(polygons, clear=True)
+			cmb.addItems_(polygons, clear=True)
 
 		if index==1:
-			self.create.cmb001.addItems_(nurbs, clear=True)
+			cmb.addItems_(nurbs, clear=True)
 
 		if index==2:
-			self.create.cmb001.addItems_(lights, clear=True)
+			cmb.addItems_(lights, clear=True)
 
 
-	def cmb002(self, index=None, values={}, clear=False, show=False):
-		'''
-		Get/Set Primitive Attributes.
-
-		args:
-			index (int) = parameter on activated, currentIndexChanged, and highlighted signals.
-			values (dict) = Attibute and it's corresponding value. ie. {u'width': 10}
-			clear (bool) = Clear any previous items.
-			show (bool) = Show the popup menu immediately after adding items.
-		'''
-		cmb = self.create.cmb002
-
-		if index is 'setMenu':
-			cmb.popupStyle = 'qmenu'
-			return
-
-		n = len(values)
-		if n and index is None:
-			names = 's000-'+str(n-1)
-
-			if clear:
-				cmb.menu.clear()
-
-			#add spinboxes
-			[cmb.add('QDoubleSpinBox', setObjectName=name, minMax_='0.00-100 step1') for name in self.unpackNames(names)]
-
-			#set values
-			self.setSpinboxes(cmb, names, values)
-
-			#set signal/slot connections
-			self.connect_(names, 'valueChanged', self.sXXX, cmb)
-
-			if show:
-				cmb.showPopup()
-
-
-	def sXXX(self, index=None):
-		'''
-		Set node attributes from multiple spinbox values.
-
-		args:
-			index(int) = optional index of the spinbox that called this function. ie. 5 from s005
-		'''
-		spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.create.cmb002.children_()} #get current spinbox values. ie. {width:10} from spinbox prefix and value.
-		self.setAttributesMEL(self.node.history()[-1], spinboxValues) #set attributes for the history node
-
-
+	@Init.attr
 	def b000(self):
 		'''
 		Create Object
@@ -262,94 +236,52 @@ class Create(Init):
 
 		#polygons
 		if type_=='Polygon':
-
-			#cube:
-			if index==0:
+			if index==0: #cube:
 				node = pm.polyCube (axis=axis, width=5, height=5, depth=5, subdivisionsX=1, subdivisionsY=1, subdivisionsZ=1)
-
-			#sphere:
-			if index==1:
+			elif index==1: #sphere:
 				node = pm.polySphere (axis=axis, radius=5, subdivisionsX=12, subdivisionsY=12)
-
-			#cylinder:
-			if index==2:
+			elif index==2: #cylinder:
 				node = pm.polyCylinder (axis=axis, radius=5, height=10, subdivisionsX=1, subdivisionsY=1, subdivisionsZ=1)
-
-			#plane:
-			if index==3:
+			elif index==3: #plane:
 				node = pm.polyPlane (axis=axis, width=5, height=5, subdivisionsX=1, subdivisionsY=1)
-
-			#circle:
-			if index==4:
+			elif index==4: #circle:
 				axis = next(key for key, value in self.rotation.items() if value==axis and key!='last') #get key from value, as createCircle takes the key (ie. 'x') as an argument.
 				node = self.createCircle(axis=axis, numPoints=5, radius=5, mode=0)
-
-			#Cone:
-			if index==5:
+			elif index==5: #Cone:
 				node = pm.polyCone (axis=axis, radius=5, height=5, subdivisionsX=1, subdivisionsY=1, subdivisionsZ=1)
-
-			#Pyramid
-			if index==6:
+			elif index==6: #Pyramid
 				node = pm.polyPyramid (axis=axis, sideLength=5, numberOfSides=5, subdivisionsHeight=1, subdivisionsCaps=1)
-
-			#Torus:
-			if index==7:
+			elif index==7: #Torus:
 				node = pm.polyTorus (axis=axis, radius=10, sectionRadius=5, twist=0, subdivisionsX=5, subdivisionsY=5)
-
-			#Pipe
-			if index==8:
+			elif index==8: #Pipe
 				node = pm.polyPipe (axis=axis, radius=5, height=5, thickness=2, subdivisionsHeight=1, subdivisionsCaps=1)
-
-			#Soccer ball
-			if index==9:
+			elif index==9: #Soccer ball
 				node = pm.polyPrimitive(axis=axis, radius=5, sideLength=5, polyType=0)
-
-			#Platonic solids
-			if index==10:
+			elif index==10: #Platonic solids
 				node = mel.eval("performPolyPrimitive PlatonicSolid 0;")
-
 
 		#nurbs
 		if type_=='NURBS':
-
-			#Cube
-			if index==0:
+			if index==0: #Cube
 				node = pm.nurbsCube (ch=1, d=3, hr=1, p=(0, 0, 0), lr=1, w=1, v=1, ax=(0, 1, 0), u=1)
-
-			#Sphere
-			if index==1:
+			elif index==1: #Sphere
 				node = pm.sphere (esw=360, ch=1, d=3, ut=0, ssw=0, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=4, ax=(0, 1, 0))
-
-			#Cylinder
-			if index==2:
+			elif index==2: #Cylinder
 				node = pm.cylinder (esw=360, ch=1, d=3, hr=2, ut=0, ssw=0, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=1, ax=(0, 1, 0))
-
-			#Cone
-			if index==3:
+			elif index==3: #Cone
 				node = pm.cone (esw=360, ch=1, d=3, hr=2, ut=0, ssw=0, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=1, ax=(0, 1, 0))
-
-			#Plane
-			if index==4:
+			elif index==4: #Plane
 				node = pm.nurbsPlane (ch=1, d=3, v=1, p=(0, 0, 0), u=1, w=1, ax=(0, 1, 0), lr=1)
-
-			#Torus
-			if index==5:
+			elif index==5: #Torus
 				node = pm.torus (esw=360, ch=1, d=3, msw=360, ut=0, ssw=0, hr=0.5, p=(0, 0, 0), s=8, r=1, tol=0.01, nsp=4, ax=(0, 1, 0))
-
-			#Circle
-			if index==6:
+			elif index==6: #Circle
 				node = pm.circle (c=(0, 0, 0), ch=1, d=3, ut=0, sw=360, s=8, r=1, tol=0.01, nr=(0, 1, 0))
-
-			#Square
-			if index==7:
+			elif index==7: #Square
 				node = pm.nurbsSquare (c=(0, 0, 0), ch=1, d=3, sps=1, sl1=1, sl2=1, nr=(0, 1, 0))
-
 
 		#lights
 		if type_=='Light':
-			
-			#
-			if index==0:
+			if index==0: #
 				pass
 
 
@@ -359,18 +291,14 @@ class Create(Init):
 		else:
 			self.create.txt003.setText(node[0].name())
 
-		self.history.extend(node) #save current node to history
 		self.rotation['last']=[] #reset rotation history
 
 		#translate the newly created node
-		pm.xform (node, translation=self.point, worldSpace=1, absolute=1)
-
-		exclude = [u'message', u'caching', u'frozen', u'isHistoricallyInteresting', u'nodeState', u'binMembership', u'output', 
-					u'axis', u'axisX', u'axisY', u'axisZ', u'paramWarn', u'uvSetName', u'createUVs', u'texture', u'maya70']
-		attributes = self.getAttributesMEL(self.node.history()[-1], exclude) #get dict containing attributes:values of the history node.
-		self.cmb002(values=attributes, clear=True, show=True)
+		pm.xform(node, translation=self.point, worldSpace=1, absolute=1)
 
 		pm.select(node) #select the transform node so that you can see any edits
+
+		return self.getHistoryNode(node)
 
 
 	def createPrimitive(self, catagory1, catagory2):

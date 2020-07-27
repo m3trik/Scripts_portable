@@ -14,10 +14,10 @@ class Edit(Init):
 		'''
 		Context menu
 		'''
-		pin = self.parentUi.pin
+		pin = self.edit.pin
 
 		if state is 'setMenu':
-			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
 			return
 
 
@@ -25,12 +25,14 @@ class Edit(Init):
 		'''
 		Editors
 		'''
-		cmb = self.parentUi.cmb000
-		
-		list_ = ['']
-		cmb.addItems_(list_, '')
+		cmb = self.edit.cmb000
 
-		if index!=0:
+		if index is 'setMenu':
+			list_ = ['']
+			cmb.addItems_(list_, '')
+			return
+
+		if index>0:
 			if index==cmb.items.index(''):
 				pass
 			cmb.setCurrentIndex(0)
@@ -41,25 +43,25 @@ class Edit(Init):
 		Set the toolbutton's text according to the checkstates.
 		'''
 		axis = self.getAxisFromCheckBoxes('chk006-9')
-		self.parentUi.tb003.setText('Delete '+axis)
+		self.edit.tb003.setText('Delete '+axis)
 
 
 	def tb000(self, state=None):
 		'''
 		Mesh Cleanup
 		'''
-		tb = self.currentUi.tb000
+		tb = self.ui.tb000
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='N-Gons', setObjectName='chk002', setToolTip='Find N-gons.')
-			tb.add('QCheckBox', setText='Isolated Vertex', setObjectName='chk003', setChecked=True, setToolTip='Find isolated vertices within specified angle threshold.')
-			tb.add('QSpinBox', setPrefix='Loose Vertex Angle: ', setObjectName='s006', minMax_='1-360 step1', setValue=15, setToolTip='Loose vertex search: Angle Threshold.')
-			tb.add('QCheckBox', setText='Repair', setObjectName='chk004', setToolTip='Repair matching geometry. (else: select)')
+			tb.menu_.add('QCheckBox', setText='N-Gons', setObjectName='chk002', setToolTip='Find N-gons.')
+			tb.menu_.add('QCheckBox', setText='Isolated Vertex', setObjectName='chk003', setChecked=True, setToolTip='Find isolated vertices within specified angle threshold.')
+			tb.menu_.add('QSpinBox', setPrefix='Loose Vertex Angle: ', setObjectName='s006', minMax_='1-360 step1', setValue=15, setToolTip='Loose vertex search: Angle Threshold.')
+			tb.menu_.add('QCheckBox', setText='Repair', setObjectName='chk004', setToolTip='Repair matching geometry. (else: select)')
 			return
 
-		isolatedVerts = tb.chk003.isChecked() #isolated vertices
-		edgeAngle = tb.s006.value()
-		nGons = tb.chk002.isChecked() #n-sided polygons
-		repair = tb.chk004.isChecked() #attempt auto repair errors
+		isolatedVerts = tb.menu_.chk003.isChecked() #isolated vertices
+		edgeAngle = tb.menu_.s006.value()
+		nGons = tb.menu_.chk002.isChecked() #n-sided polygons
+		repair = tb.menu_.chk004.isChecked() #attempt auto repair errors
 
 		self.meshCleanup(isolatedVerts=isolatedVerts, edgeAngle=edgeAngle, nGons=nGons, repair=repair)
 
@@ -69,16 +71,16 @@ class Edit(Init):
 		'''
 		Delete History
 		'''
-		tb = self.currentUi.tb001
+		tb = self.ui.tb001
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='For All Objects', setObjectName='chk018', setChecked=True, setToolTip='Delete history on All objects or just those selected.')
-			tb.add('QCheckBox', setText='Delete Unused Nodes', setObjectName='chk019', setChecked=True, setToolTip='Delete unused nodes.')
-			tb.add('QCheckBox', setText='Delete Deformers', setObjectName='chk020', setToolTip='Delete deformers.')
+			tb.menu_.add('QCheckBox', setText='For All Objects', setObjectName='chk018', setChecked=True, setToolTip='Delete history on All objects or just those selected.')
+			tb.menu_.add('QCheckBox', setText='Delete Unused Nodes', setObjectName='chk019', setChecked=True, setToolTip='Delete unused nodes.')
+			tb.menu_.add('QCheckBox', setText='Delete Deformers', setObjectName='chk020', setToolTip='Delete deformers.')
 			return
 
-		all_ = tb.chk018.isChecked()
-		unusedNodes = tb.chk019.isChecked()
-		deformers = tb.chk020.isChecked()
+		all_ = tb.menu_.chk018.isChecked()
+		unusedNodes = tb.menu_.chk019.isChecked()
+		deformers = tb.menu_.chk020.isChecked()
 
 		objects = pm.ls(selection=1)
 		if all_:
@@ -112,9 +114,9 @@ class Edit(Init):
 		'''
 		Delete 
 		'''
-		tb = self.currentUi.tb002
+		tb = self.ui.tb002
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='Delete Loop', setObjectName='chk001', setToolTip='Delete the entire edge loop of any components selected.')
+			tb.menu_.add('QCheckBox', setText='Delete Loop', setObjectName='chk001', setToolTip='Delete the entire edge loop of any components selected.')
 			return
 
 		level = rt.subObjectLevel
@@ -175,9 +177,7 @@ class Edit(Init):
 		returns:
 			(list) list containing any found N-Gons		
 		'''
-		faces = Init.bitArrayToArray(rt.polyop.getFaceSelection(obj)) #get the selected vertices
-		if not faces: #else get all vertices for the selected object
-			faces = list(range(1, obj.faces.count))
+		faces = Init.getFaces(obj)
 
 		Init.setSubObjectLevel(4)
 				
@@ -196,17 +196,30 @@ class Edit(Init):
 			vector = vectors.next()
 		'''
 		for vertex in vertices:
-			edges = Init.bitArrayToArray(rt.polyop.getEdgesUsingVert(obj, vertex)) #get the edges that use the vertice
+			try:
+				edges = Init.bitArrayToArray(rt.polyop.getEdgesUsingVert(obj, vertex)) #get the edges that use the vertice
+			except:
+				edges = Init.bitArrayToArray(rt.getEdgesUsingVert(obj, vertex)) #get the edges that use the vertice
 
 			if len(edges)==2:
-				vertexPosition = rt.polyop.getVert(obj, vertex)
+				try:
+					vertexPosition = rt.polyop.getVert(obj, vertex)
+				except:
+					vertexPosition = rt.getVert(obj, vertex)
 
-				edgeVerts = Init.bitArrayToArray([rt.polyop.getVertsUsingEdge(obj, e) for e in edges])
+				try:
+					edgeVerts = Init.bitArrayToArray([rt.polyop.getVertsUsingEdge(obj, e) for e in edges])
+				except:
+					edgeVerts = Init.bitArrayToArray([rt.getVertsUsingEdge(obj, e) for e in edges])
 
 				edgeVerts = [v for v in edgeVerts if not v==vertex]
 
-				vector1 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[0]) - vertexPosition)
-				vector2 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[1]) - vertexPosition)
+				try:
+					vector1 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[0]) - vertexPosition)
+					vector2 = rt.normalize(rt.polyop.getVert(obj, edgeVerts[1]) - vertexPosition)
+				except:
+					vector1 = rt.normalize(rt.getVert(obj, edgeVerts[0]) - vertexPosition)
+					vector2 = rt.normalize(rt.getVert(obj, edgeVerts[1]) - vertexPosition)
 
 				vector = rt.length(vector1 + vector2)
 				yield vector
@@ -266,7 +279,10 @@ class Edit(Init):
 				_isolatedVerts = Edit.findIsolatedVertices(obj)
 
 				Init.undo(True)
-				rt.polyop.setVertSelection(obj, _isolatedVerts)
+				try:
+					rt.polyop.setVertSelection(obj, _isolatedVerts)
+				except:
+					rt.setVertSelection(obj, _isolatedVerts)
 
 				print('Found '+str(len(_isolatedVerts))+' isolated vertices.')
 				
@@ -281,23 +297,23 @@ class Edit(Init):
 		'''
 		Delete Along Axis
 		'''
-		tb = self.currentUi.tb003
+		tb = self.ui.tb003
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='-', setObjectName='chk006', setChecked=True, setToolTip='Perform delete along negative axis.')
-			tb.add('QRadioButton', setText='X', setObjectName='chk007', setChecked=True, setToolTip='Perform delete along X axis.')
-			tb.add('QRadioButton', setText='Y', setObjectName='chk008', setToolTip='Perform delete along Y axis.')
-			tb.add('QRadioButton', setText='Z', setObjectName='chk009', setToolTip='Perform delete along Z axis.')
+			tb.menu_.add('QCheckBox', setText='-', setObjectName='chk006', setChecked=True, setToolTip='Perform delete along negative axis.')
+			tb.menu_.add('QRadioButton', setText='X', setObjectName='chk007', setChecked=True, setToolTip='Perform delete along X axis.')
+			tb.menu_.add('QRadioButton', setText='Y', setObjectName='chk008', setToolTip='Perform delete along Y axis.')
+			tb.menu_.add('QRadioButton', setText='Z', setObjectName='chk009', setToolTip='Perform delete along Z axis.')
 
-			self.connect_('chk006-9', 'toggled', self.chk006_9, tb)
+			self.connect_('chk006-9', 'toggled', self.chk006_9, tb.menu_)
 			return
 
-		selection = pm.ls(sl=1, objectsOnly=1)
-		axis = self.getAxisFromCheckBoxes('chk006-9', tb)
+		# selection = pm.ls(sl=1, objectsOnly=1)
+		# axis = self.getAxisFromCheckBoxes('chk006-9', tb)
 
-		pm.undoInfo(openChunk=1)
-		for obj in selection:
-			self.deleteAlongAxis(obj, axis) #Init.deleteAlongAxis - no max version.
-		pm.undoInfo(closeChunk=1)
+		# pm.undoInfo(openChunk=1)
+		# for obj in selection:
+		# 	self.deleteAlongAxis(obj, axis) #Init.deleteAlongAxis - no max version.
+		# pm.undoInfo(closeChunk=1)
 
 
 

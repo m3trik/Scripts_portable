@@ -1,6 +1,6 @@
 from PySide2 import QtCore, QtGui, QtWidgets
 
-import sys
+from shared import Attributes
 
 
 
@@ -20,19 +20,21 @@ Promoting a widget in designer to use a custom class:
 
 
 
-class QProgressBar_(QtWidgets.QProgressBar):
+class QProgressBar_(QtWidgets.QProgressBar, Attributes):
 	'''
 	ex. for n, i in enumerate(list_):
 			if not self.ui.progressBar.step(n, len(list_)): #register progress while checking for cancellation:
 				break
 	'''
-	def __init__(self, parent=None):
+	def __init__(self, parent=None, **kwargs):
 		super(QProgressBar_, self).__init__(parent)
 
 		self.setVisible(False)
 
 		self.isCanceled = False
 		# self.connect(QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Escape), self), self.cancel())
+
+		self.setAttributes(kwargs)
 
 
 	def cancel(self):
@@ -96,6 +98,7 @@ class QProgressBar_(QtWidgets.QProgressBar):
 
 
 if __name__ == "__main__":
+	import sys
 	qApp = QtWidgets.QApplication(sys.argv)
 		
 	w = QProgressBar_()

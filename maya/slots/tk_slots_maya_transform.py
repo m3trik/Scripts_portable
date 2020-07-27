@@ -32,7 +32,7 @@ class Transform(Init):
 		pin = self.transform.pin
 
 		if state is 'setMenu':
-			pin.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
 			return
 
 
@@ -136,8 +136,8 @@ class Transform(Init):
 				list_ = [('chk021', 'Move Snap Off'), ('s021', 'increment:', moveValue, '1-1000 step1'), 
 						('chk022', 'Scale Snap Off'), ('s022', 'increment:', scaleValue, '1-1000 step1'), 
 						('chk023', 'Rotate Snap Off'), ('s023', 'degrees:', rotateValue, '1-360 step1')]
-				widgets = [cmb.add('QCheckBox', setObjectName=i[0], setText=i[1], setTristate=1) if len(i) is 2 
-						else cmb.add('QDoubleSpinBox', setObjectName=i[0], setPrefix=i[1], setValue=i[2], minMax_=i[3], setDisabled=1) for i in list_]
+				widgets = [cmb.menu_.add('QCheckBox', setObjectName=i[0], setText=i[1], setTristate=1) if len(i) is 2 
+						else cmb.menu_.add('QDoubleSpinBox', setObjectName=i[0], setPrefix=i[1], setValue=i[2], minMax_=i[3], setDisabled=1) for i in list_]
 			except NameError as error:
 				print(error)
 			return
@@ -153,7 +153,7 @@ class Transform(Init):
 		pm.manipMoveContext('Move', edit=1, snapRelative=False if state>1 else True)
 
 		cmb = self.transform.cmb003
-		cmb.setCurrentText('Off') if not all((state, cmb.chk022.isChecked(), cmb.chk023.isChecked())) else cmb.setCurrentText('On')
+		cmb.setCurrentText('Off') if not all((state, cmb.menu_.chk022.isChecked(), cmb.menu_.chk023.isChecked())) else cmb.setCurrentText('On')
 
 
 	def chk022(self, state=None):
@@ -166,7 +166,7 @@ class Transform(Init):
 		pm.manipScaleContext('Scale', edit=1, snapRelative=False if state>1 else True)
 
 		cmb = self.transform.cmb003
-		cmb.setCurrentText('Off') if not all((state, cmb.chk021.isChecked(), cmb.chk023.isChecked())) else cmb.setCurrentText('On')
+		cmb.setCurrentText('Off') if not all((state, cmb.menu_.chk021.isChecked(), cmb.menu_.chk023.isChecked())) else cmb.setCurrentText('On')
 
 
 	def chk023(self, state=None):
@@ -179,7 +179,7 @@ class Transform(Init):
 		pm.manipRotateContext('Rotate', edit=1, snapRelative=False if state>1 else True)
 
 		cmb = self.transform.cmb003
-		cmb.setCurrentText('Off') if not all((state, cmb.chk021.isChecked(), cmb.chk022.isChecked())) else cmb.setCurrentText('On')
+		cmb.setCurrentText('Off') if not all((state, cmb.menu_.chk021.isChecked(), cmb.menu_.chk022.isChecked())) else cmb.setCurrentText('On')
 
 
 	def s021(self, value=None):
@@ -296,14 +296,14 @@ class Transform(Init):
 		'''
 		tb = self.ui.tb000
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='Move to Origin', setObjectName='chk014', setChecked=True, setToolTip='Move to origin (xyz 0,0,0).')
-			tb.add('QCheckBox', setText='Use Lowest Point', setObjectName='chk015', setToolTip='Use Lowest bounding box point (else mid point).')
-			tb.add('QCheckBox', setText='Center Pivot', setObjectName='chk016', setChecked=True, setToolTip='Center pivot on objects bounding box.')
+			tb.menu_.add('QCheckBox', setText='Move to Origin', setObjectName='chk014', setChecked=True, setToolTip='Move to origin (xyz 0,0,0).')
+			tb.menu_.add('QCheckBox', setText='Use Lowest Point', setObjectName='chk015', setToolTip='Use Lowest bounding box point (else mid point).')
+			tb.menu_.add('QCheckBox', setText='Center Pivot', setObjectName='chk016', setChecked=True, setToolTip='Center pivot on objects bounding box.')
 			return
 
-		origin = tb.chk014.isChecked()
-		bBoxLowestPoint = tb.chk015.isChecked()
-		centerPivot = tb.chk016.isChecked()
+		origin = tb.menu_.chk014.isChecked()
+		bBoxLowestPoint = tb.menu_.chk015.isChecked()
+		centerPivot = tb.menu_.chk016.isChecked()
 
 		selection = pm.ls(selection=1, objectsOnly=1)
 
@@ -356,16 +356,16 @@ class Transform(Init):
 		'''
 		tb = self.ui.tb001
 		if state is 'setMenu':
-			tb.add('QCheckBox', setText='X Axis', setObjectName='chk029', setDisabled=True, setToolTip='Align X axis')
-			tb.add('QCheckBox', setText='Y Axis', setObjectName='chk030', setDisabled=True, setToolTip='Align Y axis')
-			tb.add('QCheckBox', setText='Z Axis', setObjectName='chk031', setDisabled=True, setToolTip='Align Z axis')
-			tb.add('QCheckBox', setText='Align Loop', setObjectName='chk007', setToolTip='Align entire edge loop from selected edge(s).')
-			tb.add('QCheckBox', setText='Average', setObjectName='chk006', setChecked=True, setToolTip='Align to last selected object or average.')
-			tb.add('QCheckBox', setText='Auto Align', setObjectName='chk010', setChecked=True, setToolTip='')
-			tb.add('QCheckBox', setText='Auto Align: Two Axes', setObjectName='chk011', setToolTip='')
+			tb.menu_.add('QCheckBox', setText='X Axis', setObjectName='chk029', setDisabled=True, setToolTip='Align X axis')
+			tb.menu_.add('QCheckBox', setText='Y Axis', setObjectName='chk030', setDisabled=True, setToolTip='Align Y axis')
+			tb.menu_.add('QCheckBox', setText='Z Axis', setObjectName='chk031', setDisabled=True, setToolTip='Align Z axis')
+			tb.menu_.add('QCheckBox', setText='Align Loop', setObjectName='chk007', setToolTip='Align entire edge loop from selected edge(s).')
+			tb.menu_.add('QCheckBox', setText='Average', setObjectName='chk006', setChecked=True, setToolTip='Align to last selected object or average.')
+			tb.menu_.add('QCheckBox', setText='Auto Align', setObjectName='chk010', setChecked=True, setToolTip='')
+			tb.menu_.add('QCheckBox', setText='Auto Align: Two Axes', setObjectName='chk011', setToolTip='')
 			return
 
-		if tb.chk010.isChecked(): #Auto Align: if checked; set coordinates for auto align:
+		if tb.menu_.chk010.isChecked(): #Auto Align: if checked; set coordinates for auto align:
 			sel = pm.ls(selection=1)
 
 			if not len(sel)==0:
@@ -396,29 +396,29 @@ class Transform(Init):
 				axis = max(x,y,z)
 				tangent = max(tx,ty,tz)
 
-				if tb.chk011.isChecked(): #Auto Align: Two Axes
+				if tb.menu_.chk011.isChecked(): #Auto Align: Two Axes
 					if axis==x: #"yz"
-						self.toggleWidgets(tb, setChecked='chk030-31', setUnChecked='chk029')
+						self.toggleWidgets(tb.menu_, setChecked='chk030-31', setUnChecked='chk029')
 					if axis==y: #"xz"
-						self.toggleWidgets(tb, setChecked='chk029,chk031', setUnChecked='chk030')
+						self.toggleWidgets(tb.menu_, setChecked='chk029,chk031', setUnChecked='chk030')
 					if axis==z: #"xy"
-						self.toggleWidgets(tb, setChecked='chk029-30', setUnChecked='chk031')
+						self.toggleWidgets(tb.menu_, setChecked='chk029-30', setUnChecked='chk031')
 				else:
 					if any ([axis==x and tangent==ty, axis==y and tangent==tx]): #"z"
-						self.toggleWidgets(tb, setChecked='chk031', setUnChecked='chk029-30')
+						self.toggleWidgets(tb.menu_, setChecked='chk031', setUnChecked='chk029-30')
 					if any ([axis==x and tangent==tz, axis==z and tangent==tx]): #"y"
-						self.toggleWidgets(tb, setChecked='chk030', setUnChecked='chk029,chk031')
+						self.toggleWidgets(tb.menu_, setChecked='chk030', setUnChecked='chk029,chk031')
 					if any ([axis==y and tangent==tz, axis==z and tangent==ty]): #"x"
-						self.toggleWidgets(tb, setChecked='chk029', setUnChecked='chk030-31')
+						self.toggleWidgets(tb.menu_, setChecked='chk029', setUnChecked='chk030-31')
 			else:
 				return 'Warning: An edge must be selected.'
 
 		#align
-		x = tb.chk029.isChecked()
-		y = tb.chk030.isChecked()
-		z = tb.chk031.isChecked()
-		avg = tb.chk006.isChecked()
-		loop = tb.chk007.isChecked()
+		x = tb.menu_.chk029.isChecked()
+		y = tb.menu_.chk030.isChecked()
+		z = tb.menu_.chk031.isChecked()
+		avg = tb.menu_.chk006.isChecked()
+		loop = tb.menu_.chk007.isChecked()
 
 		if all ([x, not y, not z]): #align x
 			self.alignVertices(mode=3,average=avg,edgeloop=loop)

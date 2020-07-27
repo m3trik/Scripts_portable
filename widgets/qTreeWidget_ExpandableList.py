@@ -1,18 +1,16 @@
 from __future__ import print_function
 from PySide2 import QtCore, QtGui, QtWidgets
-try:
-	import shiboken2
-except:
-	from PySide2 import shiboken2
+
+try: import shiboken2
+except: from PySide2 import shiboken2
 
 import sys
 
+from shared import Attributes
 
 
 
-
-
-class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
+class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 	'''
 	Additional column lists are shown as they are triggered by their parent widgets.
 
@@ -43,7 +41,7 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 	hoverLeave = QtCore.QEvent(QtCore.QEvent.HoverLeave)
 
 
-	def __init__(self, parent=None, stepColumns=True, expandOnHover=False):
+	def __init__(self, parent=None, stepColumns=True, expandOnHover=False, **kwargs):
 		super (QTreeWidget_ExpandableList, self).__init__(parent)
 
 		self.refresh=False
@@ -76,64 +74,7 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			    background-color: none;
 			}''')
 
-
-	def setAttributes(self, item=None, attributes=None, order=['globalPos'], **kwargs):
-		'''
-		Works with attributes passed in as a dict or kwargs.
-		If attributes are passed in as a dict, kwargs are ignored.
-
-		args:
-			attributes (dict) = keyword attributes and their corresponding values.
-			order (list) = list of string keywords. ie. ['move', 'show']. attributes in this list will be set last, in order of the list. an example would be setting move positions after setting resize arguments.
-		kwargs:
-			set any additional keyword arguments.
-		'''
-		if not attributes:
-			attributes = kwargs
-
-		for k in order: #re-order the attributes (with contents of 'order' list last).
-			v = attributes.pop(k, None)
-			if v:
-				from collections import OrderedDict
-				attributes = OrderedDict(attributes)
-				attributes[k] = v
-
-		for attr, value in attributes.items():
-			try:
-				if item:
-					getattr(item, attr)(value)
-				else:
-					getattr(self, attr)(value)
-
-			except Exception as error:
-				if type(error)==AttributeError:
-					if item:
-						self.setCustomAttribute(attr, value, item)
-					else:
-						self.setCustomAttribute(attr, value)
-				else:
-					raise error
-
-
-	def setCustomAttribute(self, attr, value, item=None):
-		'''
-		Handle custom keyword arguments.
-
-		args:
-			attr (str) = custom keyword attribute.
-			value (str) = the value corresponding to the given attr.
-		kwargs:
-			refresh (bool) = set the header's column to be refreshed on showEvent.
-			globalPos (QPoint) = move to given global location and center.
-		'''
-		if attr=='globalPos':
-			self.move(self.mapFromGlobal(value - self.rect().center())) #move and center
-
-		else:
-			if item:
-				print('Error: {} has no attribute {}'.format(item, attr))
-			else:
-				print('Error: {} has no attribute {}'.format(self, attr))
+		self.setAttributes(kwargs)
 
 
 	def add(self, widget, header='root', parentHeader=None, refresh=False, **kwargs):
@@ -190,7 +131,7 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 		widget.setObjectName(self._createObjectName(wItem, column)) #set an dynamically generated objectName.
 		widget.installEventFilter(self)
 
-		self.setAttributes(widget, kwargs) #set any additional given keyword args for the widget.
+		self.setAttributes(kwargs, widget) #set any additional given keyword args for the widget.
 
 		return widget
 
@@ -669,6 +610,7 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 			removeNoneValues (bool) = Remove any 'None' values from the returned list.
 			refreshedWidgets (bool) = Return only widgets from a column that is flagged to refresh. ie. it's column header starts with '*'. None values are removed when this argument is set.
 			inverse (bool)(iter) = get the widgets not associated with the given argument. ie. not in 'columns' or not in 'wItem'. An iterative can be passed in instead of a bool value. inverse has no effect when returning all widgets.
+	
 		returns:
 			widgets (list)
 		'''
@@ -851,7 +793,7 @@ class QTreeWidget_ExpandableList(QtWidgets.QTreeWidget):
 if __name__ == '__main__':
 	app = QtWidgets.QApplication(sys.argv)
 
-	tree=QTreeWidget_ExpandableList(stepColumns=1)
+	tree=QTreeWidget_ExpandableList(stepColumns=1, setVisible=True)
 
 	create = tree.add('QPushButton', parentHeader='Create', setText='Create')
 	tree.add('QLabel', create, setText='Custom Camera')
@@ -866,7 +808,7 @@ if __name__ == '__main__':
 	tree.add('QLabel', options, setText='Opt1')
 	tree.add('QLabel', options, setText='Opt2')
 
-	tree.show()
+	# tree.show()
 	sys.exit(app.exec_())
 
 
@@ -907,6 +849,80 @@ if __name__ == '__main__':
 
 
 # depricated: ---------------------------------------------------------------------------
+
+
+
+# def setAttributes(self, attributes=None, action=None, order=['show'], **kwargs):
+	# 	'''
+	# 	Internal use. Works with attributes passed in as a dict or kwargs.
+	# 	If attributes are passed in as a dict, kwargs are ignored.
+
+	# 	args:
+	# 		attributes (dict) = keyword attributes and their corresponding values.
+	# 		action (obj) = the child action or widgetAction to set attributes for. (default=None)
+	# 		#order (list) = list of string keywords. ie. ['move', 'show']. attributes in this list will be set last, by list order. an example would be setting move positions after setting resize arguments, or showing the widget only after other attributes have been set.
+	# 	kwargs:
+	# 		set any keyword arguments.
+	# 	'''
+	# 	if not attributes:
+	# 		attributes = kwargs
+
+	# 	for k in order:
+	# 		v = attributes.pop(k, None)
+	# 		if v:
+	# 			from collections import OrderedDict
+	# 			attributes = OrderedDict(attributes)
+	# 			attributes[k] = v
+
+	# 	for attr, value in attributes.items():
+	# 		try:
+	# 			getattr(action, attr)(value)
+
+	# 		except AttributeError:
+	# 			self.setCustomAttribute(action, attr, value)
+
+
+	# def setCustomAttribute(self, action, attr, value):
+	# 	'''
+	# 	Internal use. Custom attributes can be set using a trailing underscore convention to differentiate them from standard attributes.
+
+	# 	args:
+	# 		action (obj) = action (obj) = the child action or widgetAction to set attributes for.
+	# 		attr (str) = custom keyword attribute.
+	# 		value (str) = the value corresponding to the given attr.
+
+	# 	attributes:
+	# 		insertSeparator_ (bool) = insert a line separater before the new widget.
+	# 		setLayoutDirection_ (str) = set the layout direction using a string value. ie. 'LeftToRight'
+	# 		setAlignment_ (str) = set the alignment using a string value. ie. 'AlignVCenter'
+	# 		setButtonSymbols_ (str) = set button symbols using a string value. ex. ie. 'PlusMinus'
+	# 		minMax_ (str) = set the min, max, and step value using a string value. ex. '.01-10 step.1'
+	# 	'''
+	# 	if attr=='insertSeparator_':
+	# 		self.insertSeparator(action)
+
+	# 	elif attr=='setLayoutDirection_':
+	# 		self.setAttributes({'setLayoutDirection':getattr(QtCore.Qt, value)}, action)
+
+	# 	elif attr=='setAlignment_':
+	# 		self.setAttributes({'setAlignment':getattr(QtCore.Qt, value)}, action)
+
+	# 	elif attr=='setButtonSymbols_':
+	# 		self.setAttributes({'setButtonSymbols':getattr(QtWidgets.QAbstractSpinBox, value)}, action)
+
+	# 	#presets
+	# 	elif attr=='minMax_':
+	# 		minimum = float(value.split('-')[0])
+	# 		maximum = float(value.split('-')[1].split(' ')[0])
+	# 		step = float(value.split(' ')[1].strip('step'))
+
+	# 		self.setAttributes({'setMinimum':minimum, 'setMaximum':maximum, 'setSingleStep':step, 'setButtonSymbols_':'NoButtons'}, action)
+
+	# 	else:
+	# 		print('Error: {} has no attribute {}'.format(action, attr))
+
+
+	
 
 
 # try:
