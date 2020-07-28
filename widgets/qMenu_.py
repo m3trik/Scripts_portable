@@ -16,7 +16,7 @@ class QMenu_(QtWidgets.QMenu, Attributes):
 
 		self.position=position
 
-		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint)
+		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint|QtCore.Qt.WindowStaysOnTopHint)
 		self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
 		self.setStyleSheet('''
@@ -74,6 +74,8 @@ class QMenu_(QtWidgets.QMenu, Attributes):
 			if callable(w):
 				w = w(self) #ie. QtWidgets.QAction(self) object.
 
+		self.setAttributes(kwargs, w) #set any additional given keyword args for the widget.
+
 		type_ = w.__class__.__name__
 
 		if type_=='QAction': #
@@ -93,8 +95,6 @@ class QMenu_(QtWidgets.QMenu, Attributes):
 				w.released.connect(lambda widget=w: self.setLastActiveChild(widget))
 			elif hasattr(w, 'valueChanged'):
 				w.valueChanged.connect(lambda value, widget=w: self.setLastActiveChild(value, widget))
-
-		self.setAttributes(kwargs, w) #set any additional given keyword args for the widget.
 
 		return w
 

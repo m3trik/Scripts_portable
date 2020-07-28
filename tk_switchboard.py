@@ -283,18 +283,23 @@ class Switchboard(QtCore.QObject):
 			name (str) = ui name. ie. 'polygons'
 
 		returns:
-			(dict) packed keyword arguments.
+			(dict) packed keyword arguments. ie. {'_currentUi': <function <lambda> at 0x000001D97BCFCAC8>, '_ui': <function <lambda> at 0x000001D97BCFCA58>, 'tk': <PySide2.QtWidgets.QWidget object at 0x000001D94E1E9D88>, 'polygons_submenu': <PySide2.QtWidgets.QMainWindow object at 0x000001D978D8A708>, 'sb': <tk_switchboard.Switchboard object at 0x000001D97BD7D1C8>, 'polygons': <PySide2.QtWidgets.QMainWindow object at 0x000001D97BCEB0C8>}
 		'''
 		childUi = self.getUi(name, level=2)
 		parentUi = self.getUi(name, level=3)
 
 		kwargs = {
-			'_ui':lambda childUi=childUi, parentUi=parentUi: self.getUi() if self.getUi() in (parentUi, childUi) else parentUi,
-			'_currentUi':lambda: self.getUi(),
-			name:parentUi,	
-			self.getUiName(name, level=2):childUi,
-			'sb':self,
-			'tk':self.parent,
+			name: parentUi, #ie. 'polygons': <PySide2.QtWidgets.QMainWindow object at 0x000001D97BCEB0C8>
+			self.getUiName(name, level=2): childUi, #ie. 'polygons_submenu': <PySide2.QtWidgets.QMainWindow object at 0x000001D978D8A708>
+
+			'_ui': lambda parentUi=parentUi: self.getUi() 
+				if self.getUi() in [v for k, v in self.uiList().items() if self.getUiName(parentUi) in k] #if the current ui is not one of the parent ui's children or the parent ui itself, default to the parent ui.
+					else parentUi,
+
+			'_currentUi': lambda: self.getUi(),
+
+			'sb': self,
+			'tk': self.parent,
 		}
 
 		return kwargs
@@ -494,10 +499,10 @@ class Switchboard(QtCore.QObject):
 
 		if level==2: #submenu
 			if 'submenu' not in name:
-				name = self.getUiName(name, level=2)
+				name = self.getUiName(name, level=2) #ie. polygons_submenu
 
 		if level==3: #main menu
-			name = name.split('_')[0] #'polygons' from 'polygons_component_submenu'
+			name = name.split('_')[0] #ie. 'polygons' from 'polygons_component_submenu'
 
 		if setAsCurrent:
 			self.name = name #set the property for the current ui name.

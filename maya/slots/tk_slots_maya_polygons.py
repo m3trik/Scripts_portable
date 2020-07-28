@@ -192,7 +192,6 @@ class Polygons(Init):
 		'''
 		tb = self.ui.tb004
 		if state is 'setMenu':
-			print (self.sb.getUiName(self.ui))
 			tb.menu_.add('QDoubleSpinBox', setPrefix='Width: ', setObjectName='s000', minMax_='0.00-100 step.01', setValue=0.01, setToolTip='Bevel Width.')
 			return
 

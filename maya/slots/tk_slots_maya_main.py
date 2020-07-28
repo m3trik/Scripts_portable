@@ -30,7 +30,7 @@ class Main(Init):
 			if selection:
 				history = selection[0].history()[1:]
 				for node in history:
-					parent = tree.add('QLabel', 'Node History', parentHeader=node.name(), refresh=1, setText=node.name())
+					parent = tree.add('QLabel', 'History', parentHeader=node.name(), refresh=1, setText=node.name())
 
 					attributes = Init.getAttributesMEL(node) #get dict containing attributes:values of the history node.
 					spinboxes = [tree.add('QDoubleSpinBox', parent, refresh=1, set_by_value_=[k, v])
@@ -39,8 +39,8 @@ class Main(Init):
 
 					#set signal/slot connections:
 					[w.valueChanged.connect(
-						lambda value, widget=w, obj=node: self.setAttributesMEL(node, {widget.prefix().rstrip(': '):value})) 
-						for w in spinboxes] #set signal/slot connections
+						lambda value, widget=w, node=node: self.setAttributesMEL(node, {widget.prefix().rstrip(': '):value})) 
+							for w in spinboxes] #set signal/slot connections
 			return
 
 		# widget = tree.getWidget(wItem, column)

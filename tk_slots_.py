@@ -33,9 +33,11 @@ class Slots(QtCore.QObject):
 	def ui(self):
 		'''
 		Get the current Ui if it is either the parent or
-		child ui for the current class, else return the parent ui.
+		a child ui for the current class, else return the parent ui.
 		'''
+		# print (self.sb.getUiName(self._ui()))
 		return self._ui()
+
 
 	@property
 	def currentUi(self):

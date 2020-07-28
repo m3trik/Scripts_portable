@@ -35,11 +35,11 @@ class File(Init):
 			cmb.contextMenu.add('QPushButton', setObjectName='b001', setText='Last', setToolTip='Open the most recent file.')
 			return
 
-		recentFiles = [f for f in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in f]
+		recentFiles = [f.replace('/', '\\') for f in (list(reversed(pm.mel.optionVar(query=1, RecentFilesList=1)))) if "Autosave" not in f]
 		items = cmb.addItems_(recentFiles, "Recent Files", clear=True)
 
 		if index>0:
-			force=True; force if str(mel.eval("file -query -sceneName -shortName;")) else not force #if sceneName prompt user to save; else force open
+			force=True; force if str(pm.mel.file(query=1, sceneName=1, shortName=1)) else not force #if sceneName prompt user to save; else force open
 			pm.openFile(items[index], open=1, force=force)
 			cmb.setCurrentIndex(0)
 
@@ -53,11 +53,11 @@ class File(Init):
 		if index is 'setMenu':
 			return
 
-		files = (list(reversed(mel.eval("optionVar -query RecentProjectsList;"))))
+		files = (list(reversed(pm.mel.optionVar(query=1, RecentProjectsList=1))))
 		items = cmb.addItems_(files, "Recent Projects", clear=True)
 
 		if index>0:
-			mel.eval('setProject "'+items[index]+'"')
+			pm.mel.setProject(items[index]) #mel.eval('setProject "'+items[index]+'"')
 			cmb.setCurrentIndex(0)
 
 
@@ -79,14 +79,14 @@ class File(Init):
 			projectDirAutosave = [f for f in os.listdir(projectDirPath+'/autosave')]
 		except Exception as error:
 			print (error)
-			projectDirAutosave = []
+			projectDirAutosave=[]
 
 		files = envPathAutosave + projectDirAutosave
 		items = cmb.addItems_(files, "Recent Autosave", clear=True)
 
 		if index>0:
 			force=True
-			if str(mel.eval("file -query -sceneName -shortName;")):
+			if str(pm.mel.file(query=1, sceneName=1, shortName=1)):
 				force=False #if sceneName, prompt user to save; else force open
 			pm.openFile(path+items[index], open=1, force=force)
 			cmb.setCurrentIndex(0)
@@ -186,6 +186,7 @@ class File(Init):
 		if index is 'setMenu':
 			cmb.contextMenu.add(QComboBox_, setObjectName='cmb001', setToolTip='Current project directory root.')
 			cmb.contextMenu.add(QLabel_, setObjectName='lbl000', setText='Set', setToolTip='Set the project directory.')
+			cmb.contextMenu.add(QLabel_, setObjectName='lbl004', setText='Root', setToolTip='Open the project directory.')
 			return
 
 		path = pm.workspace(query=1, rd=1) #current project path.
@@ -348,6 +349,17 @@ class File(Init):
 		sceneName = str(mel.eval("file -query -sceneName -shortName;")) #if sceneName prompt user to save; else force close
 		mel.eval("quit;") if sceneName else mel.eval("quit -f;")
 		# pm.quit (force=force, exitcode=exitcode)
+
+
+	def lbl004(self):
+		'''
+		Open current project root
+		'''
+		dir_ = pm.workspace(query=1, rd=1) #current project path.
+
+		if dir_.startswith('//'): #reformat for server address
+			dir_ = dir_.replace('/', '\\')
+		os.startfile(dir_)
 
 
 	def b001(self):

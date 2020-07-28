@@ -137,7 +137,7 @@
       </item>
       <item>
        <property name="text">
-        <string>Node History</string>
+        <string>History</string>
        </property>
       </item>
      </widget>

@@ -62,7 +62,7 @@ class File(Init):
 			cmb.contextMenu.add('QPushButton', setObjectName='b001', setText='Last', setToolTip='Open the most recent file.')
 			return
 
-		list_ = [f for f in rt.getRecentfiles()]
+		list_ = [f.replace('/', '\\') for f in rt.getRecentfiles()]
 		items = cmb.addItems_(list_, "Recent Files", clear=True)
 
 		if index>0:
@@ -204,6 +204,7 @@ class File(Init):
 		if index is 'setMenu':
 			cmb.contextMenu.add(QComboBox_, setObjectName='cmb001', setToolTip='Current project directory root.')
 			cmb.contextMenu.add(QLabel_, setObjectName='lbl000', setText='Set', setToolTip='Set the project directory.')
+			cmb.contextMenu.add(QLabel_, setObjectName='lbl004', setText='Root', setToolTip='Open the project directory.')
 			return
 
 		path = MaxPlus.PathManager.GetProjectFolderDir() #current project path.
@@ -373,6 +374,17 @@ class File(Init):
 		# sceneName = str(mel.eval("file -query -sceneName -shortName;")) #if sceneName prompt user to save; else force close
 		# mel.eval("quit;") if sceneName else mel.eval("quit -f;")
 		# pm.quit (force=force, exitcode=exitcode)
+
+
+	def lbl004(self):
+		'''
+		Open current project root
+		'''
+		dir_ = rt.getRecentfiles() #current project path.
+
+		if dir_.startswith('//'): #reformat for server address
+			dir_ = dir_.replace('/', '\\')
+		os.startfile(dir_)
 
 
 	def b001(self):

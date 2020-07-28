@@ -9,15 +9,12 @@ class Edit(Init):
 	def __init__(self, *args, **kwargs):
 		super(Edit, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('edit')
-		self.childUi = self.sb.getUi('edit_submenu')
-
 
 	def pin(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.parentUi.pin
+		pin = self.edit.pin
 
 		if state is 'setMenu':
 			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya Editors')
@@ -28,7 +25,7 @@ class Edit(Init):
 		'''
 		Editors
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.edit.cmb000
 
 		if index is 'setMenu':
 			list_ = ['Cleanup', 'Transfer: Attribute Values', 'Transfer: Shading Sets']
@@ -50,8 +47,9 @@ class Edit(Init):
 		'''
 		Set the toolbutton's text according to the checkstates.
 		'''
-		axis = self.getAxisFromCheckBoxes('chk006-9')
-		self.parentUi.tb003.setText('Delete '+axis)
+		tb = self.ui.tb003
+		axis = self.getAxisFromCheckBoxes('chk006-9', tb.menu_)
+		tb.setText('Delete '+axis)
 
 
 	def tb000(self, state=None):
@@ -208,7 +206,7 @@ class Edit(Init):
 			return
 
 		selection = pm.ls(sl=1, objectsOnly=1)
-		axis = self.getAxisFromCheckBoxes('chk006-9', tb)
+		axis = self.getAxisFromCheckBoxes('chk006-9', tb.menu_)
 
 		pm.undoInfo(openChunk=1)
 		for obj in selection:

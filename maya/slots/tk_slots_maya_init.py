@@ -572,7 +572,7 @@ class Init(Slots):
 
 		dict_={}
 		for n in normals:
-			l = list(s.replace(regex,'') for s in n.split(' ') if s) #[u'FACE_NORMAL', u'150:', u'0.935741', u'0.110496', u'0.334931\n']
+			l = list(s.replace(regex,'') for s in n.split(' ') if s) #['FACE_NORMAL', '150:', '0.935741', '0.110496', '0.334931\n']
 
 			key = int(l[1].strip(':')) #int face number as key ie. 150
 			value = list(float(i) for i in l[-3:])  #vector list as value. ie. [[0.935741, 0.110496, 0.334931]]
@@ -674,7 +674,7 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getHistoryNode(node):
+	def getHistoryNode(node, index=0):
 		'''
 		Get the history node of the given transform. 
 
@@ -686,9 +686,10 @@ class Init(Slots):
 
 		alt method: node.history()[-1]
 		'''
-		shapes = pm.listRelatives(node, children=1, shapes=1) #get shape node from transform: returns list ie. [nt.Mesh(u'pConeShape1')]
-		connections = pm.listConnections(shapes, source=1, destination=0) #get incoming connections: returns list ie. [nt.PolyCone(u'polyCone1')]
-		return connections[0]
+		shapes = pm.listRelatives(node, children=1, shapes=1) #get shape node from transform: returns list ie. [nt.Mesh('pConeShape1')]
+		connections = pm.listConnections(shapes, source=1, destination=0) #get incoming connections: returns list ie. [nt.PolyCone('polyCone1')]
+
+		return connections[index]
 
 
 	@staticmethod
@@ -698,6 +699,7 @@ class Init(Slots):
 		'''
 		objects = pm.ls(node, l=1)
 		tokens=[]
+
 		return objects[0].split("|")
 
 
@@ -709,22 +711,27 @@ class Init(Slots):
 		args:
 			node (obj) = Transform node.
 			include (list) = Attributes to include. All other will be ommited. Exclude takes dominance over include. Meaning, if the same attribute is in both lists, it will be excluded.
-			exclude (list) = Attributes to exclude from the returned dictionay. ie. [u'Position',u'Rotation',u'Scale',u'renderable',u'isHidden',u'isFrozen',u'selected']
+			exclude (list) = Attributes to exclude from the returned dictionay. ie. ['Position','Rotation','Scale','renderable','isHidden','isFrozen','selected']
 
 		returns:
 			(dict) {'string attribute': current value}
 		'''
 		if not all((include, exclude)):
-			exclude = [u'message', u'caching', u'frozen', u'isHistoricallyInteresting', u'nodeState', u'binMembership', u'output', u'edgeIdMap', u'miterAlong', u'message',
-					u'axis', u'axisX', u'axisY', u'axisZ', u'paramWarn', u'uvSetName', u'createUVs', u'texture', u'maya70', u'inputPolymesh', u'maya2017Update1', 
-					u'manipMatrix', u'inMeshCache', u'faceIdMap', u'subdivideNgons', u'useOldPolyArchitecture', u'inputComponents', 
-					u'binMembership', u'maya2015', u'cacheInput', u'inputMatrix', u'forceParallel', u'autoFit', u'maya2016SP3', u'caching', u'output', u'vertexIdMap', 
-					u'useInputComp', 
+			exclude = ['message', 'caching', 'frozen', 'isHistoricallyInteresting', 'nodeState', 'binMembership', 'output', 'edgeIdMap', 'miterAlong', 'message',
+					'axis', 'axisX', 'axisY', 'axisZ', 'paramWarn', 'uvSetName', 'createUVs', 'texture', 'maya70', 'inputPolymesh', 'maya2017Update1', 
+					'manipMatrix', 'inMeshCache', 'faceIdMap', 'subdivideNgons', 'useOldPolyArchitecture', 'inputComponents', 
+					'binMembership', 'maya2015', 'cacheInput', 'inputMatrix', 'forceParallel', 'autoFit', 'maya2016SP3', 'caching', 'output', 'vertexIdMap', 
+					'useInputComp', 'worldSpace', 'taperCurve_Position', 'taperCurve_FloatValue', 'taperCurve_Interp',
 					]
 
 		# print('node:', node); print('attr:', pm.listAttr(node))
-		attributes = {attr:pm.getAttr(node+'.'+attr) for attr in pm.listAttr(node) 
-				if not attr in exclude and (attr in include if include else attr not in include)} #ie. pm.getAttr('polyCube1.subdivisionsDepth')
+		attributes={} 
+		for attr in pm.listAttr(node):
+			if not attr in exclude and (attr in include if include else attr not in include): #ie. pm.getAttr('polyCube1.subdivisionsDepth')
+				try:
+					attributes[attr] = pm.getAttr(node+'.'+attr)
+				except Exception as error:
+					print (error)
 
 		return attributes
 
@@ -741,8 +748,9 @@ class Init(Slots):
 		ex call:
 		self.setAttributesMEL(obj, {'smoothLevel':1})
 		'''
-		[pm.setAttr(node+'.'+attr, value) for attr, value in attributes.items() 
-		if attr and value] #ie. pm.setAttr('polyCube1.subdivisionsDepth', 5)
+		[pm.setAttr(node+'.'+attr, value) 
+			for attr, value in attributes.items() 
+				if attr and value] #ie. pm.setAttr('polyCube1.subdivisionsDepth', 5)
 
 
 	@staticmethod
@@ -762,7 +770,7 @@ class Init(Slots):
 		self.connectAttributes('rotateFrame', 'place2d', fileNode')
 		self.connectAttributes('mirror', 'place2d', fileNode')
 		self.connectAttributes('stagger', 'place2d', fileNode')
-		self.connectAttributes('wrapU', 'place2d', fileNode')
+		self.connectAttributes('wrap', 'place2d', fileNode')
 		self.connectAttributes('wrapV', 'place2d', fileNode')
 		self.connectAttributes('repeatUV', 'place2d', fileNode')
 		self.connectAttributes('offset', 'place2d', fileNode')
@@ -800,7 +808,7 @@ class Init(Slots):
 		args:
 			obj (obj) = The object to get the attributes of.
 			include (list) = Attributes to include. All other will be ommited. Exclude takes dominance over include. Meaning, if the same attribute is in both lists, it will be excluded.
-			exclude (list) = Attributes to exclude from the returned dictionay. ie. [u'Position',u'Rotation',u'Scale',u'renderable',u'isHidden',u'isFrozen',u'selected']
+			exclude (list) = Attributes to exclude from the returned dictionay. ie. ['Position','Rotation','Scale','renderable','isHidden','isFrozen','selected']
 		'''
 		if obj is None:
 			return
