@@ -446,7 +446,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 		self.setSpinboxes(cmb, names, attributes)
 
 	# 		#set signal/slot connections
-	# 		self.connect_(names, 'valueChanged', self.sXXX, cmb)
+	# 		self.connect_(names, 'valueChanged', self.sXXX, cmb.menu_)
 
 	# 		if show:
 	# 			cmb.showPopup()

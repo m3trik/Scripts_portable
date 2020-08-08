@@ -135,16 +135,20 @@ class Transform(Init):
 
 		if index is 'setMenu':
 			cmb.popupStyle = 'qmenu'
+			cmb.contextMenu.add(QLabel_, setText='Disable All', setObjectName='lbl001', setToolTip='Disable all transform snapping.')
+
 			try:
 				moveValue = pm.manipMoveContext('Move', q=True, snapValue=True)
 				scaleValue = pm.manipScaleContext('Scale', q=True, snapValue=True)
 				rotateValue = pm.manipRotateContext('Rotate', q=True, snapValue=True)
 
-				list_ = [('chk021', 'Move Snap Off'), ('s021', 'increment:', moveValue, '1-1000 step1'), 
-						('chk022', 'Scale Snap Off'), ('s022', 'increment:', scaleValue, '1-1000 step1'), 
-						('chk023', 'Rotate Snap Off'), ('s023', 'degrees:', rotateValue, '1-360 step1')]
-				widgets = [cmb.menu_.add('QCheckBox', setObjectName=i[0], setText=i[1], setTristate=1) if len(i) is 2 
+				list_ = [('chk021', 'Move <b>Off</b>'), ('s021', 'increment:', moveValue, '1-1000 step1'), 
+						('chk022', 'Scale <b>Off</b>'), ('s022', 'increment:', scaleValue, '1-1000 step1'), 
+						('chk023', 'Rotate <b>Off</b>'), ('s023', 'degrees:', rotateValue, '1-360 step1')]
+
+				widgets = [cmb.menu_.add(QCheckBox_, setObjectName=i[0], setText=i[1], setTristate=1) if len(i) is 2 
 						else cmb.menu_.add('QDoubleSpinBox', setObjectName=i[0], setPrefix=i[1], setValue=i[2], minMax_=i[3], setDisabled=1) for i in list_]
+
 			except NameError as error:
 				print(error)
 			return
@@ -154,39 +158,42 @@ class Transform(Init):
 		'''
 		Transform Tool Snap Settings: Move
 		'''
-		text = {0:'Move Snap Off', 1:'Move Snap Relative', 2:'Move Snap Absolute'}
+		text = {0:'Move <b>Off</b>', 1:'Move <b>Relative</b>', 2:'Move <b>Absolute</b>'}
 		self.transform.chk021.setText(text[state])
 		self.transform.s021.setEnabled(state)
-		pm.manipMoveContext('Move', edit=1, snapRelative=False if state>1 else True)
+		pm.manipMoveContext('Move', edit=1, snap=False if state is 0 else True, snapRelative=True if state is 1 else False) #state: 0=off, 1=relative, 2=absolute
+		pm.texMoveContext('texMoveContext', edit=1, snap=False if state is 0 else True) #uv move context
 
 		cmb = self.transform.cmb003
-		cmb.setCurrentText('Off') if not all((state, cmb.menu_.chk022.isChecked(), cmb023.isChecked())) else cmb.setCurrentText('On')
+		cmb.setCurrentText('Off') if not any((state, cmb.menu_.chk022.isChecked(), cmb.menu_.chk023.isChecked())) else cmb.setCurrentText('On')
 
 
 	def chk022(self, state=None):
 		'''
 		Transform Tool Snap Settings: Scale
 		'''
-		text = {0:'Scale Snap Off', 1:'Scale Snap Relative', 2:'Scale Snap Absolute'}
+		text = {0:'Scale <b>Off</b>', 1:'Scale <b>Relative</b>', 2:'Scale <b>Absolute</b>'}
 		self.transform.chk022.setText(text[state])
 		self.transform.s022.setEnabled(state)
-		pm.manipScaleContext('Scale', edit=1, snapRelative=False if state>1 else True)
+		pm.manipScaleContext('Scale', edit=1, snap=False if state is 0 else True, snapRelative=True if state is 1 else False) #state: 0=off, 1=relative, 2=absolute
+		pm.texScaleContext('texScaleContext', edit=1, snap=False if state is 0 else True) #uv scale context
 
 		cmb = self.transform.cmb003
-		cmb.setCurrentText('Off') if not all((state, cmb.menu_.chk021.isChecked(), cmb023.isChecked())) else cmb.setCurrentText('On')
+		cmb.setCurrentText('Off') if not any((state, cmb.menu_.chk021.isChecked(), cmb.menu_.chk023.isChecked())) else cmb.setCurrentText('On')
 
 
 	def chk023(self, state=None):
 		'''
 		Transform Tool Snap Settings: Rotate
 		'''
-		text = {0:'Rotate Snap Off', 1:'Rotate Snap Relative', 2:'Rotate Snap Absolute'}
+		text = {0:'Rotate <b>Off</b>', 1:'Rotate <b>Relative</b>', 2:'Rotate <b>Absolute</b>'}
 		self.transform.chk023.setText(text[state])
 		self.transform.s023.setEnabled(state)
-		pm.manipRotateContext('Rotate', edit=1, snapRelative=False if state>1 else True)
+		pm.manipRotateContext('Rotate', edit=1, snap=False if state is 0 else True, snapRelative=True if state is 1 else False) #state: 0=off, 1=relative, 2=absolute
+		pm.texRotateContext('texRotateContext', edit=1, snap=False if state is 0 else True) #uv rotate context
 
 		cmb = self.transform.cmb003
-		cmb.setCurrentText('Off') if not all((state, cmb.menu_.chk021.isChecked(), cmb022.isChecked())) else cmb.setCurrentText('On')
+		cmb.setCurrentText('Off') if not any((state, cmb.menu_.chk021.isChecked(), cmb.menu_.chk022.isChecked())) else cmb.setCurrentText('On')
 
 
 	def s021(self, value=None):
@@ -194,6 +201,7 @@ class Transform(Init):
 		Transform Tool Snap Settings: Spinboxes
 		'''
 		pm.manipMoveContext('Move', edit=1, snapValue=value)
+		pm.texMoveContext('texMoveContext', edit=1, snapValue=value) #uv move context
 
 
 	def s022(self, value=None):
@@ -201,6 +209,7 @@ class Transform(Init):
 		Transform Tool Snap Settings: Spinboxes
 		'''
 		pm.manipScaleContext('Scale', edit=1, snapValue=value)
+		pm.texScaleContext('texScaleContext', edit=1, snapValue=value) #uv scale context
 
 
 	def s023(self, value=None):
@@ -208,14 +217,7 @@ class Transform(Init):
 		Transform Tool Snap Settings: Spinboxes
 		'''
 		pm.manipRotateContext('Rotate', edit=1, snapValue=value)
-
-
-	def lbl000(self):
-		'''
-		Transform Constraints: Disable All
-		'''
-		widgets = self.transform.cmb001.contextMenu.children_(of_type=['QCheckBox'])
-		[w.setChecked(False) for w in widgets if w.isChecked()]
+		pm.texRotateContext('texRotateContext', edit=1, snapValue=value) #uv rotate context
 
 
 	def chkxxx(self, **kwargs):
@@ -502,6 +504,23 @@ class Transform(Init):
 
 		if all ([x, y, z]): #align xyz
 			self.alignVertices(mode=6,average=avg,edgeloop=loop)
+
+
+	def lbl000(self):
+		'''
+		Transform Constraints: Disable All
+		'''
+		widgets = self.transform.cmb001.contextMenu.children_(of_type=['QCheckBox'])
+		[w.setChecked(False) for w in widgets if w.isChecked()]
+
+
+	def lbl001(self):
+		'''
+		Transform Tool Snapping: Disable All
+		'''
+		cmb = self.transform.cmb003
+		self.toggleWidgets(setDisabled='chk021-23')
+		cmb.setCurrentText('Off') if not any((state, cmb.menu_.chk021.isChecked(), cmb.menu_.chk023.isChecked())) else cmb.setCurrentText('On')
 
 
 	def b000(self):

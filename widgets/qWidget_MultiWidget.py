@@ -2,12 +2,14 @@
 # coding=utf-8
 from PySide2 import QtWidgets, QtCore, QtGui
 
-from shared import Menu, Attributes
+from shared import Attributes
 
 
 
-class QWidget_MultiWidget(QtWidgets.QWidget, Menu, Attributes):
+class QWidget_MultiWidget(QtWidgets.QWidget, Attributes):
 	'''
+	args:
+		layoutType (str) = valid values are: 'QBoxLayout', 'QHBoxLayout', 'QVBoxLayout' default is: 'QHBoxLayout'
 	'''
 	enterEvent_	= QtCore.QEvent(QtCore.QEvent.Enter)
 	leaveEvent_	= QtCore.QEvent(QtCore.QEvent.Leave)
@@ -15,29 +17,72 @@ class QWidget_MultiWidget(QtWidgets.QWidget, Menu, Attributes):
 	hoverMove_ = QtCore.QEvent(QtCore.QEvent.HoverMove)
 	hoverLeave_ = QtCore.QEvent(QtCore.QEvent.HoverLeave)
 
-	def __init__(self, widgets, parent=None, **kwargs):
+	def __init__(self, parent=None, layoutType='QHBoxLayout', **kwargs):
 		super(QWidget_MultiWidget, self).__init__(parent)
+
+		self.layoutType = layoutType
 
 		self._mouseGrabber=None
 
-		self.row = QtWidgets.QHBoxLayout(self)
-		self.row.setSpacing(0)
-		# self.row.addStretch(0)
-		self.row.setContentsMargins(0,0,0,0) #self.row.setMargin(0)
+		# self.setMouseTracking(True)
 
-		for w in widgets:
-			try:
-				w = getattr(QtWidgets, w)(self) #ex. QtWidgets.QLabel(self) object from string. parented to self.
-			except:
-				if callable(w):
-					w = widget(self) #ex. QtWidgets.QLabel(self) object. parented to self.
+		self.setAttributes(kwargs) #set any additional given keyword args for the widget.
 
-			self.row.addWidget(w)
-			self.setAttributes(kwargs, w) #set any additional given keyword args for the widget.
-			setattr(self, w.objectName(), w)
 
-			# w.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
-			w.installEventFilter(self)
+	@property
+	def row(self):
+		'''
+		Get the row from the layout.
+		'''
+		if not hasattr(self, '_row'):
+			self._row = getattr(QtWidgets, self.layoutType)(self)
+			self._row.setSpacing(0)
+			# self.row.addStretch(0)
+			self._row.setContentsMargins(0,0,0,0) #self.row.setMargin(0)
+
+		return self._row
+
+
+	def add(self, w, **kwargs):
+		'''
+		Add items to the Layout.
+
+		args:
+			widget (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
+
+		kwargs:
+			insertSeparator_ (bool) = insert a separator before the widget.
+			setLayoutDirection_ (str) = ie. 'LeftToRight'
+			setAlignment_ (str) = ie. 'AlignVCenter'
+			setButtonSymbols_ (str) = ie. 'PlusMinus'
+			minMax_ (str) = Set the min, max, and step values with a string. ie. '1-100 step.1'
+
+		returns:
+ 			the added widget.
+
+		ex.call:
+		w.add('QCheckBox', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
+		'''
+		#get the widget
+		try:
+			w = getattr(QtWidgets, w)(self) #ie. QtWidgets.QAction(self) object from string.
+		except:
+			if callable(w):
+				w = w(self) #ie. QtWidgets.QAction(self) object.
+
+		self.setAttributes(kwargs, w) #set any additional given keyword args for the widget.
+
+		# type_ = w.__class__.__name__
+
+		self.row.addWidget(w)
+
+		w.installEventFilter(self)
+
+		w.setMinimumSize(w.sizeHint().width(), 20) #self.parent().minimumSizeHint().height()+1) #set child widget height to that of the toolbutton]
+
+		setattr(self, w.objectName(), w) #add the widget's objectName as a QMenu attribute.
+
+		return w
 
 
 	def eventFilter(self, widget, event):
@@ -103,36 +148,6 @@ class QWidget_MultiWidget(QtWidgets.QWidget, Menu, Attributes):
 		return QtWidgets.QWidget.leaveEvent(self, event)
 
 
-	def children_(self, index=None):
-		'''
-		Get the widget at the given index.
-		If no arg is given all widgets will be returned.
-
-		args:
-			index (int) = widget location.
-		returns:
-			(QWidget) or (list)
-		'''
-		children = [i for i in self.children() if not i.__class__.__name__=='QHBoxLayout']
-		if index is not None:
-			return children[index]
-		return children
-
-
-	def setAsOptionBox(self, widget):
-		'''
-		Set a pushbutton type widget to an option box style.
-		'''
-		widget.setFixedWidth(widget.sizeHint().height()*1.5)
-		widget.setFixedHeight(widget.sizeHint().height()*1.6)
-		widget.setText('□')
-		font = widget.font()
-		font.setPointSize(font.pointSize()*1.5)
-		widget.setFont(font)
-		widget.setContentsMargins(0,0,0,0) # widget.setStyleSheet('margin: 0px 0px 5px 0px;')
-		widget.setStyleSheet('QLabel {padding: 0px 0px 5px 0px;}')
-
-
 	def showEvent(self, event):
 		'''
 		args:
@@ -141,6 +156,74 @@ class QWidget_MultiWidget(QtWidgets.QWidget, Menu, Attributes):
 		self.resize(self.sizeHint().width(), self.sizeHint().height())
 
 		return QtWidgets.QWidget.showEvent(self, event)
+
+
+	def children_(self, index=None, include=[], exclude=['QBoxLayout', 'QHBoxLayout', 'QVBoxLayout']):
+		'''
+		Get a list of the menu's child objects, excluding those types listed in 'exclude'.
+
+		args:
+			index (int) = return the child widget at the given index.
+			exclude (list) = Widget types to exclude from the returned results.
+			include (list) = Widget types to include in the returned results. All others will be omitted. Exclude takes dominance over include. Meaning, if a widget is both in the exclude and include lists, it will be excluded.
+
+		returns:
+			(obj)(list) child widgets or child widget at given index.
+		'''
+		children = [i for i in self.children() 
+				if i.__class__.__name__ not in exclude 
+				and (i.__class__.__name__ in include if include else i.__class__.__name__ not in include)]
+
+		if index is not None:
+			try:
+				children = children[index]
+			except IndexError:
+				children = None
+		return children
+
+
+	def setAsOptionBox(self, w):
+		'''
+		Set a pushbutton type widget to an option box style.
+
+		args:
+			w (obj) = QWidget
+
+		returns:
+			(bool) True if the widget was set; else False.
+		'''
+		if not hasattr(w, 'setText'):
+			return False
+
+		w.setFixedWidth(w.sizeHint().height()*1.5)
+		w.setFixedHeight(w.sizeHint().height()*1.6)
+		w.setText('□')
+		font = w.font()
+		font.setPointSize(font.pointSize()*1.5)
+		w.setFont(font)
+		w.setContentsMargins(0,0,0,0) # widget.setStyleSheet('margin: 0px 0px 5px 0px;')
+		w.setStyleSheet('QLabel {padding: 0px 0px 5px 0px;}')
+
+		return True
+
+
+	def set_by_value(self, values):
+		'''
+
+		'''
+		for v in values:
+			if isinstance(v, (str, unicode)):
+				self.add(QtWidgets.QLabel(v))
+
+			elif isinstance(v, bool):
+				self.add(QtWidgets.QCheckBox(), setChecked=v)
+
+			elif isinstance(v, int):
+				print (type(v))
+				self.add(QtWidgets.QSpinBox(), setSpinBoxByValue=v)
+
+			elif isinstance(v, float):
+				self.add(QtWidgets.QDoubleSpinBox(v), setSpinBoxByValue=v)
 
 
 
@@ -154,11 +237,14 @@ if __name__ == "__main__":
 	import sys
 	qApp = QtWidgets.QApplication(sys.argv)
 
-	m = QWidget_MultiWidget([QtWidgets.QPushButton('Cameras'), 'QPushButton'])
-	m.setAsOptionBox(m.children_(1))
-	print(m.children_(0).text())
+	w = QWidget_MultiWidget(set_by_value=['Height', 0])
+	# w.add(QtWidgets.QLabel('Height'))
+	# w.add('QDoubleSpinBox')
 
-	m.show()
+	# w.setAsOptionBox(w.children_(index=1))
+	# print(w.children_(index=0).text())
+
+	w.show()
 	sys.exit(qApp.exec_())
 
 

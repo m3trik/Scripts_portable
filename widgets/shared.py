@@ -1,10 +1,13 @@
+# !/usr/bin/python
+# coding=utf-8
+from builtins import super
 from PySide2 import QtCore, QtGui, QtWidgets
 
 
 
 class Menu(object):
 	'''
-	Parent class for custom widgets.
+	Get Menu instances.
 	'''
 	def __init__(self):
 		'''
@@ -35,15 +38,139 @@ class Menu(object):
 
 
 
+class RichText(object):
+	'''
+	Rich text support for widgets.
+	Text with rich text formatting will be set as rich text, otherwise it will be handled as usual.
+
+	args:
+		parent (obj) = parent widget.
+		alignment (str) = text alignment. valid values are: 'AlignLeft', 'AlignCenter', 'AlignRight'
+	'''
+	def __init__(self, parent=None, alignment='AlignLeft', **kwargs):
+		'''
+		'''
+		self.alignment = getattr(QtCore.Qt, alignment)
+
+		self.setText = self.setRichText
+		self.text = self.richText
+		self.sizeHint = self.richTextSizeHint
+
+
+	@property
+	def hasRichText(self):
+		'''
+		Query whether the widget contains rich text.
+
+		returns:
+			(bool)
+		'''
+		if not hasattr(self, '_hasRichText'):
+			self._hasRichText=False
+
+		return self._hasRichText
+
+
+	@property
+	def richTextLabel(self):
+		'''
+		Return a QLabel and inside a QHBoxLayout.
+		'''
+		if not hasattr(self, '_richTextLabel'):
+
+			self.__layout = QtWidgets.QHBoxLayout(self)
+			self.__layout.setContentsMargins(0, 0, 0, 0)
+			# self.__layout.setSpacing(0)
+
+			self._richTextLabel = QtWidgets.QLabel(self)
+			self._richTextLabel.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+			self._richTextLabel.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
+			# self._richTextLabel.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+			self._richTextLabel.setAlignment(self.alignment)
+
+			self.__layout.addWidget(self._richTextLabel)
+
+			self.setRichTextStyle()
+
+		return self._richTextLabel
+
+
+	def setRichTextStyle(self, textColor='white'):
+		self._richTextLabel.setStyleSheet('''
+			QLabel {{
+				color: {0};
+				margin: 3px 0px 0px 0px; /* top, right, bottom, left */
+				padding: 0px 5px 0px 5px; /* top, right, bottom, left */
+			}}
+		'''.format(textColor))
+
+
+	def setRichText(self, text):
+		'''
+		If the text string contains rich text formatting:
+			Set the rich text label text.
+			Add whitespace to the actual widget text until it matches the sizeHint of what it would containing the richTextLabel's text.
+
+		args:
+			text (str) = The desired widget's display text.
+		'''
+		if text and all(i in text for i in ('<','>')): #check the text string for rich text formatting.
+			self.richTextLabel.setTextFormat(QtCore.Qt.RichText)
+			self.richTextLabel.setText(text)
+			self.updateGeometry()
+
+			self.__class__.__base__.setText(self, text) #temporarily set the text to get the sizeHint value.
+			self.__richTextSizeHint = self.__class__.__base__.sizeHint(self)
+
+			self.__class__.__base__.setText(self, None) #clear the text, and add whitespaces until the sizeHint is the correct size.
+			whiteSpace=' '
+			while self.__richTextSizeHint.width()>self.__class__.__base__.sizeHint(self).width():
+				self.__class__.__base__.setText(self, whiteSpace)
+				whiteSpace += ' '
+
+			self._hasRichText=True
+
+		else:
+			self.__class__.__base__.setText(self, text) #set standard widget text
+
+
+	def richText(self):
+		'''
+		returns:
+			(str) the widget's or the richTextLabel's text.
+		'''
+		if self.hasRichText:
+			text = self.richTextLabel.text()
+			return text
+
+		else:
+			return self.__class__.__base__.text(self) #return standard widget text
+
+
+	def richTextSizeHint(self):
+		'''
+		The richTextSizeHint is the sizeHint of the actual widget if it were containing the text.
+
+		returns:
+			(str) the widget's or the richTextLabel's sizeHint.
+		'''
+		if self.hasRichText:
+			return self.__richTextSizeHint
+
+		else:
+			return self.__class__.__base__.sizeHint(self) #return standard widget sizeHint
+
+
+
 class Attributes(object):
 	'''
-	Parent class for custom widgets.
+	Methods for managing object Attributes.
 	'''
 	def __init__(self):
 		'''
 		'''
 
-	def setAttributes(self, attributes=None, obj=None, order=['moveGlobal_', 'setVisible'], **kwargs):
+	def setAttributes(self, attributes=None, obj=None, order=['setPosition_', 'setVisible'], **kwargs):
 		'''
 		Works with attributes passed in as a dict or kwargs.
 		If attributes are passed in as a dict, kwargs are ignored.
@@ -51,7 +178,7 @@ class Attributes(object):
 		args:
 			attributes (dict) = keyword attributes and their corresponding values.
 			obj (obj) = the child obj or widgetAction to set attributes for. (default=None)
-			#order (list) = list of string keywords. ie. ['moveGlobal_', 'setVisible']. attributes in this list will be set last, by list order. an example would be setting move positions after setting resize arguments, or showing the widget only after other attributes have been set.
+			#order (list) = list of string keywords. ie. ['setPosition_', 'setVisible']. attributes in this list will be set last, by list order. an example would be setting move positions after setting resize arguments, or showing the widget only after other attributes have been set.
 
 		kwargs:
 			set any keyword arguments.
@@ -89,7 +216,8 @@ class Attributes(object):
 
 		attributes:
 			copy_ (obj) = widget to copy attributes from.
-			moveGlobal_ (QPoint) = move to given global location and center.
+			setSize_ (list) = size as an x and y value. ie. (40, 80)
+			setPosition_ (QPoint)(str) = move to given global position and center. valid string values include: 'cursor', 
 			addMenu_ (QMenu) = Used for adding additional menus to a parent menu. ex. parentMenu = QMenu_(); childMenu = QMenu_('Create', addMenu_=parentMenu)
 			insertSeparator_ (bool) = insert a line separater before the new widget.
 			setLayoutDirection_ (str) = set the layout direction using a string value. ie. 'LeftToRight'
@@ -103,7 +231,13 @@ class Attributes(object):
 			obj.setText(value.text())
 			obj.setWhatsThis(value.whatsThis())
 
-		elif attr=='moveGlobal_':
+		elif attr=='setSize_':
+			x, y = value
+			obj.resize(QtCore.QSize(x, y))
+
+		elif attr=='setPosition_':
+			if value is 'cursor':
+				value = QtGui.QCursor.pos()
 			obj.move(obj.mapFromGlobal(value - obj.rect().center())) #move and center
 
 		elif attr=='addMenu_':
@@ -126,8 +260,8 @@ class Attributes(object):
 		elif attr=='minMax_':
 			self.setMinMax(obj, value)
 
-		elif attr=='set_by_value_':
-			self.setByValue(obj, value[0], value[1])
+		elif attr=='setSpinBoxByValue_':
+			self.setSpinBoxByValue(obj, value[0], value[1])
 
 		else:
 			print('Error: {} has no attribute {}'.format(obj, attr))
@@ -153,7 +287,7 @@ class Attributes(object):
 		}, spinbox)
 
 
-	def setByValue(self, spinbox, attribute, value):
+	def setSpinBoxByValue(self, spinbox, attribute, value):
 		'''
 		
 		args:
@@ -168,17 +302,17 @@ class Attributes(object):
 		step = spinbox.singleStep()
 		decimals = spinbox.decimals()
 
-		if isinstance(value, float):
+		if isinstance(value, bool):
+			value = int(value)
+			minimum = 0
+			maximum = 1
+
+		elif isinstance(value, float):
 			decimals = str(value)[::-1].find('.') #get decimal places
 			step = Attributes.moveDecimalPoint(1, -decimals)
 
 		elif isinstance(value, int):
 			decimals = 0
-
-		elif isinstance(value, bool):
-			value = int(value)
-			minimum = 0
-			maximum = 1
 
 		self.setAttributes({
 			'setValue':value,

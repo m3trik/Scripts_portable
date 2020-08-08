@@ -75,7 +75,7 @@ class Mirror(Init):
 			self.connect_('chk000-3', 'toggled', self.chk000_3, tb.menu_)
 			return
 
-		axis = self.getAxisFromCheckBoxes('chk000-3', tb)
+		axis = self.getAxisFromCheckBoxes('chk000-3', tb.menu_)
 		cutMesh = tb.menu_.chk005.isChecked() #cut
 		instance = tb.menu_.chk004.isChecked()
 		mergeThreshold = tb.menu_.s000.value()

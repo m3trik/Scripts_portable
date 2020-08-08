@@ -1,10 +1,10 @@
 from PySide2 import QtCore, QtGui, QtWidgets
 
-from shared import Menu, Attributes
+from shared import Menu, Attributes, RichText
 
 
 
-class QPushButton_Draggable(QtWidgets.QPushButton, Menu, Attributes):
+class QPushButton_Draggable(QtWidgets.QPushButton, Menu, Attributes, RichText):
 	'''
 	Draggable/Checkable pushbutton.
 	'''
@@ -35,6 +35,36 @@ class QPushButton_Draggable(QtWidgets.QPushButton, Menu, Attributes):
 		self.setAttributes(kwargs)
 
 
+	def setText(self, text):
+		'''
+		Override setText to support rich text formatting.
+
+		args:
+			text (str) = The desired widget text.
+		'''
+		self.setRichText(text)
+
+
+	def text(self):
+		'''
+		Override text to support rich text formatting.
+
+		returns:
+			(str)
+		'''
+		return self.richText()
+
+
+	def sizeHint(self):
+		'''
+		Override sizeHint to support rich text formatting.
+
+		returns:
+			(QSize)
+		'''
+		return self.richTextSizeHint()
+
+
 	def mousePressEvent(self, event):
 		'''
 		args:
@@ -63,7 +93,7 @@ class QPushButton_Draggable(QtWidgets.QPushButton, Menu, Attributes):
 		#move window:
 		curPos = self.window().mapToGlobal(self.window().pos())
 		globalPos = event.globalPos()
-		diff = globalPos -self.__mouseMovePos
+		diff = globalPos - self.__mouseMovePos
 
 		self.window().move(self.window().mapFromGlobal(curPos + diff))
 		self.__mouseMovePos = globalPos

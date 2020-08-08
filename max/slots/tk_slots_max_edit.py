@@ -308,7 +308,7 @@ class Edit(Init):
 			return
 
 		# selection = pm.ls(sl=1, objectsOnly=1)
-		# axis = self.getAxisFromCheckBoxes('chk006-9', tb)
+		# axis = self.getAxisFromCheckBoxes('chk006-9', tb.menu_)
 
 		# pm.undoInfo(openChunk=1)
 		# for obj in selection:

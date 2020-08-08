@@ -91,6 +91,21 @@ class QComboBox_(QtWidgets.QComboBox, Menu, Attributes):
 		self.blockSignals(False)
 
 
+	def setCurrentText(self, text):
+		'''
+		Sets the text for the current index.
+
+		args:
+			item (str)(int) = item text or item index
+		'''
+		self.blockSignals(True) #to keep clear from triggering currentIndexChanged
+
+		index = self.currentIndex()
+		self.setItemText(index, text)
+
+		self.blockSignals(False)
+
+
 	def showPopup(self):
 		'''
 		Show the popup menu.

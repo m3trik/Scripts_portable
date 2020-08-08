@@ -4,6 +4,7 @@ from PySide2 import QtGui
 from widgets.qMenu_ import QMenu_
 from widgets.qLabel_ import QLabel_
 from widgets.qComboBox_ import QComboBox_
+from widgets.qCheckBox_ import QCheckBox_
 from widgets.qToolButton_ import QToolButton_
 from widgets.qWidget_MultiWidget import QWidget_MultiWidget as MultiWidget
 
@@ -111,7 +112,7 @@ class Init(Slots):
 
 		args:
 			node (obj) = Transform node.
-			include (list) = Attributes to include. All other will be ommited. Exclude takes dominance over include. Meaning, if the same attribute is in both lists, it will be excluded.
+			include (list) = Attributes to include. All other will be omitted. Exclude takes dominance over include. Meaning, if the same attribute is in both lists, it will be excluded.
 			exclude (list) = Attributes to exclude from the returned dictionay. ie. [u'Position',u'Rotation',u'Scale',u'renderable',u'isHidden',u'isFrozen',u'selected']
 
 		returns:
@@ -912,7 +913,7 @@ class Init(Slots):
 
 		args:
 			obj (obj) = The object to get the attributes of.
-			include (list) = Attributes to include. All other will be ommited. Exclude takes dominance over include. Meaning, if the same attribute is in both lists, it will be excluded.
+			include (list) = Attributes to include. All other will be omitted. Exclude takes dominance over include. Meaning, if the same attribute is in both lists, it will be excluded.
 			exclude (list) = Attributes to exclude from the returned dictionay. ie. [u'Position',u'Rotation',u'Scale',u'renderable',u'isHidden',u'isFrozen',u'selected']
 		'''
 		if obj is None:

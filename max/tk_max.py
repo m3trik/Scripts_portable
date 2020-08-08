@@ -21,6 +21,7 @@ class Tk_max(Tk):
 			try:
 				parent = MaxPlus.GetQMaxMainWindow()
 				parent.setObjectName('MaxWindow')
+
 			except Exception as error:
 				print(self.__class__.__name__, error)
 
@@ -34,6 +35,7 @@ class Tk_max(Tk):
 		'''
 		try:
 			MaxPlus.CUI.DisableAccelerators()
+
 		except Exception as error:
 			print(error)
 
@@ -47,6 +49,7 @@ class Tk_max(Tk):
 		'''
 		try:
 			MaxPlus.CUI.EnableAccelerators()
+
 		except Exception as error:
 			print(error)
 

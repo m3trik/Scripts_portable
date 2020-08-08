@@ -2,6 +2,8 @@ from __future__ import print_function
 from tk_ import Tk
 from PySide2.QtWidgets import QApplication
 
+from widgets.qWidget_ProgressIndicator import QWidget_ProgressIndicator
+
 import sys
 global app
 app = QApplication.instance() #get the qApp instance if it exists.
@@ -22,10 +24,16 @@ class Tk_maya(Tk):
 		if not parent:
 			try:
 				parent = next(w for w in app.topLevelWidgets() if w.objectName()=='MayaWindow')
+
 			except Exception as error:
 				print(self.__class__.__name__, error)
 
+		# progressIndicator = QWidget_ProgressIndicator()
+		# progressIndicator.start()
+
 		super(Tk_maya, self).__init__(parent)
+
+		# progressIndicator.stop()
 
 
 	def showEvent(self, event):

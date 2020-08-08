@@ -44,7 +44,7 @@ class Crease(Init):
 
 		if index is 'setMenu':
 			list_ = ['Crease Set Editor']
-			cmb.addItems_(list_, 'Maya Crease Editors')
+			cmb.addItems_(list_, 'Crease Editors:')
 			return
 
 		if index>0:
@@ -107,6 +107,7 @@ class Crease(Init):
 		Crease
 		'''
 		tb = self.ui.tb000
+
 		if state is 'setMenu':
 			tb.menu_.add('QSpinBox', setPrefix='Crease Amount: ', setObjectName='s003', minMax_='0-10 step1', setValue=10, setToolTip='Crease amount 0-10. Overriden if "max" checked.')
 			tb.menu_.add('QCheckBox', setText='Toggle Max', setObjectName='chk003', setToolTip='Toggle crease amount from it\'s current value to the maximum amount.')

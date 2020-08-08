@@ -81,7 +81,7 @@ class QMenu_(QtWidgets.QMenu, Attributes):
 		if type_=='QAction': #
 			a = self.addAction(w)
 
-		elif w is not self: #
+		else: #
 			wAction = QtWidgets.QWidgetAction(self)
 			wAction.setDefaultWidget(w)
 			self.addAction(wAction)
@@ -99,38 +99,43 @@ class QMenu_(QtWidgets.QMenu, Attributes):
 		return w
 
 
-	def children_(self, include=[], exclude=['QAction', 'QWidgetAction']):
+	def children_(self, index=None, include=[], exclude=['QAction', 'QWidgetAction', 'QHBoxLayout', 'QVBoxLayout']):
 		'''
 		Get a list of the menu's child objects, excluding those types listed in 'exclude'.
 
 		args:
-			contextMenu (bool) = Get the child widgets for the context menu.
+			index (int) = return the child widget at the given index.
 			exclude (list) = Widget types to exclude from the returned results.
-			include (list) = Widget types to include in the returned results. All others will be ommited. Exclude takes dominance over include. Meaning, if a widget is both in the exclude and include lists, it will be excluded.
+			include (list) = Widget types to include in the returned results. All others will be omitted. Exclude takes dominance over include. Meaning, if a widget is both in the exclude and include lists, it will be excluded.
 
 		returns:
-			(list) child widgets.
+			(obj)(list) child widgets or child widget at given index.
 		'''
 		children = [i for i in self.children() 
 				if i.__class__.__name__ not in exclude 
 				and (i.__class__.__name__ in include if include else i.__class__.__name__ not in include)]
 
+		if index is not None:
+			try:
+				children = children[index]
+			except IndexError:
+				children = None
 		return children
 
 
-	def setLastActiveChild(self, *args, **kwargs):
+	def setLastActiveChild(self, widget, *args, **kwargs):
 		'''
 		Set the given widget as the last active.
 		Maintains a list of the last 10 active child widgets.
 
 		args:
-			*args[-1] = Widget to set as last active. The widget can later be returned by calling the 'lastActiveChild' method.
+			widget = Widget to set as last active. The widget can later be returned by calling the 'lastActiveChild' method.
 			*args **kwargs = Any additional arguments passed in by the wiget's signal during a connect call.
 
 		returns:
 			(obj) widget.
 		'''
-		widget = args[-1]
+		# widget = args[-1]
 
 		if not hasattr(self, '_lastActiveChild'):
 			self._lastActiveChild = []
@@ -179,19 +184,17 @@ class QMenu_(QtWidgets.QMenu, Attributes):
 			(str) formatted toolTip.
 		'''
 		if not hasattr(self, '_contextMenuToolTip'):
-			contextMenuToolTip=''
+			self._contextMenuToolTip=''
 			menuItems = self.children_()
 			if menuItems:
-				contextMenuToolTip = '<br><br><u>Context menu items:</u>'
+				self._contextMenuToolTip = '<br><br><u>Context menu items:</u>'
 				for menuItem in menuItems:
 					try:
-						contextMenuToolTip = '{0}<br>  <b>{1}</b> - {2}'.format(contextMenuToolTip, menuItem.text(), menuItem.toolTip())
+						self._contextMenuToolTip = '{0}<br>  <b>{1}</b> - {2}'.format(self._contextMenuToolTip, menuItem.text(), menuItem.toolTip())
 					except AttributeError:
 						pass
 
-			self._contextMenuToolTip = contextMenuToolTip
-
-		return self.contextMenuToolTip
+		return self._contextMenuToolTip
 
 
 	def leaveEvent(self, event):
@@ -275,7 +278,6 @@ if __name__ == "__main__":
 	m2.add('QPushButton', setText='Button')
 
 	# m.exec_(parent=None)
-
 	sys.exit(app.exec_())
 
 
@@ -437,7 +439,7 @@ Promoting a widget in designer to use a custom class:
 	# 	elif attr=='minMax_':
 	# 		self.setMinMax(action, value)
 
-	# 	elif attr=='set_by_value_':
+	# 	elif attr=='setSpinBoxByValue_':
 	# 		self.setByValue(action, value[0], value[1])
 
 	# 	else:

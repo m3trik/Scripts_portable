@@ -13,6 +13,8 @@ class QLabel_(QtWidgets.QLabel, Menu, Attributes):
 	def __init__(self, parent=None, **kwargs):
 		super(QLabel_, self).__init__(parent)
 
+		self.setTextFormat(QtCore.Qt.RichText)
+
 		self.setAttributes(kwargs)
 
 

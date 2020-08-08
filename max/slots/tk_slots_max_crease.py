@@ -32,7 +32,7 @@ class Crease(Init):
 		pin = self.crease.pin
 
 		if state is 'setMenu':
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='3ds Max Crease Modifiers')
 			return
 
 
@@ -43,14 +43,23 @@ class Crease(Init):
 		cmb = self.crease.cmb000
 
 		if index is 'setMenu':
-			list_ = ['']
-			items = cmb.addItems_(list_, '')
+			list_ = ['Crease Modifier']
+			cmb.addItems_(list_, 'Crease Modifiers:')
 			return
 
-		# if index>0:
-		# 	if index==cmb.items.index(''):
-		# 		pass
-		# 	cmb.setCurrentIndex(0)
+		if index>0:
+			if index==cmb.items.index('Crease Modifier'):
+				#check if modifier exists
+				for obj in rt.selection:
+					mod = obj.modifiers[rt.Crease]
+					if mod==None: #if not create
+						mod = rt.crease()
+						rt.addModifier (obj, mod)
+						#set modifier attributes
+						# mod.enabled = state
+
+			rt.redrawViews()
+			cmb.setCurrentIndex(0)
 
 
 	@Slots.sync
@@ -105,6 +114,7 @@ class Crease(Init):
 		Crease
 		'''
 		tb = self.ui.tb000
+
 		if state is 'setMenu':
 			tb.menu_.add('QSpinBox', setPrefix='Crease Amount: ', setObjectName='s003', minMax_='0-10 step1', setValue=10, setToolTip='Crease amount 0-10. Overriden if "max" checked.')
 			tb.menu_.add('QCheckBox', setText='Toggle Max', setObjectName='chk003', setToolTip='Toggle crease amount from it\'s current value to the maximum amount.')
@@ -161,28 +171,6 @@ class Crease(Init):
 		'''
 		Crease Set Transfer: Transform Node
 		'''
-		if self.crease.b000.isChecked():
-			creaseSet = str(pm.ls(selection=1)) #ex. [nt.CreaseSet(u'creaseSet1')]
-
-			index1 = creaseSet.find("u")
-			index2 = creaseSet.find(")")
-			creaseSet = creaseSet[index1+1:index2].strip("'") #ex. creaseSet1
-
-			if creaseSet != "[":
-				self.crease.b000.setText(creaseSet)
-			else:
-				self.crease.b000.setText("must select set first")
-				self.toggleWidgets(setUnChecked='b000')
-			if self.crease.b001.isChecked():
-				self.toggleWidgets(setEnabled='b052')
-		else:
-			self.crease.b000.setText("Crease Set")
-
-
-	def b001(self):
-		'''
-		Crease Set Transfer: Crease Set
-		'''
 		if self.crease.b001.isChecked():
 			newObject = str(pm.ls(selection=1)) #ex. [nt.Transform(u'pSphere1')]
 
@@ -199,6 +187,28 @@ class Crease(Init):
 				self.toggleWidgets(setEnabled='b052')
 		else:
 			self.crease.b001.setText("Object")
+
+
+	def b001(self):
+		'''
+		Crease Set Transfer: Crease Set
+		'''
+		if self.crease.b000.isChecked():
+			creaseSet = str(pm.ls(selection=1)) #ex. [nt.CreaseSet(u'creaseSet1')]
+
+			index1 = creaseSet.find("u")
+			index2 = creaseSet.find(")")
+			creaseSet = creaseSet[index1+1:index2].strip("'") #ex. creaseSet1
+
+			if creaseSet != "[":
+				self.crease.b000.setText(creaseSet)
+			else:
+				self.crease.b000.setText("must select set first")
+				self.toggleWidgets(setUnChecked='b000')
+			if self.crease.b001.isChecked():
+				self.toggleWidgets(setEnabled='b052')
+		else:
+			self.crease.b000.setText("Crease Set")
 
 
 	def b002(self):
@@ -234,6 +244,7 @@ class Crease(Init):
 		self.toggleWidgets(setDisabled='b052', setUnChecked='b000')#,self.crease.b001])
 		self.crease.b000.setText("Crease Set")
 		# self.crease.b001.setText("Object")
+
 
 
 

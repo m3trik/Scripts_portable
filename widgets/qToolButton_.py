@@ -1,14 +1,15 @@
 from PySide2 import QtCore, QtGui, QtWidgets
 
-from shared import Menu, Attributes
+from shared import Menu, Attributes, RichText
 
 
 
-class QToolButton_(QtWidgets.QToolButton, Menu, Attributes):
+class QToolButton_(QtWidgets.QToolButton, Menu, Attributes, RichText):
 	'''
 	'''
 	def __init__(self, parent=None, showMenuOnMouseOver=False, **kwargs):
 		super(QToolButton_, self).__init__(parent)
+		RichText.__init__(self, alignment='AlignCenter')
 
 		self.showMenuOnMouseOver=showMenuOnMouseOver
 

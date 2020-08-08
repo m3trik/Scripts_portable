@@ -35,12 +35,12 @@ class File(Init):
 			cmb.contextMenu.add('QPushButton', setObjectName='b001', setText='Last', setToolTip='Open the most recent file.')
 			return
 
-		recentFiles = [f.replace('/', '\\') for f in (list(reversed(pm.mel.optionVar(query=1, RecentFilesList=1)))) if "Autosave" not in f]
-		items = cmb.addItems_(recentFiles, "Recent Files", clear=True)
+		recentFiles = [File.serverPath(f) for f in (list(reversed(pm.optionVar(query='RecentFilesList')))) if "Autosave" not in f]
+		cmb.addItems_(recentFiles, "Recent Files", clear=True)
 
 		if index>0:
 			force=True; force if str(pm.mel.file(query=1, sceneName=1, shortName=1)) else not force #if sceneName prompt user to save; else force open
-			pm.openFile(items[index], open=1, force=force)
+			pm.openFile(cmb.items[index], open=1, force=force)
 			cmb.setCurrentIndex(0)
 
 
@@ -53,7 +53,7 @@ class File(Init):
 		if index is 'setMenu':
 			return
 
-		files = (list(reversed(pm.mel.optionVar(query=1, RecentProjectsList=1))))
+		files = (list(reversed(pm.optionVar(query='RecentProjectsList'))))
 		items = cmb.addItems_(files, "Recent Projects", clear=True)
 
 		if index>0:
@@ -72,7 +72,7 @@ class File(Init):
 			return
 
 		path = os.environ.get('MAYA_AUTOSAVE_FOLDER').split(';')[0] #get autosave dir path from env variable.
-		envPathAutosave = [f for f in os.listdir(path) if f.endswith('.mb') or f.endswith('.ma')] #[file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" in file_]
+		envPathAutosave = [f for f in os.listdir(path) if f.endswith('.mb') or f.endswith('.ma')] #[file_ for file_ in (list(reversed(pm.optionVar(query='RecentFilesList'))))) if "Autosave" in file_]
 
 		projectDirPath = pm.workspace(query=1, rd=1) #current project path.
 		try:
@@ -197,10 +197,7 @@ class File(Init):
 		cmb.addItems_(list_, project, clear=True)
 
 		if index>0:
-			dir_= path+list_[index-1]
-			if dir_.startswith('//'): #reformat for server address
-				dir_ = dir_.replace('/', '\\')
-			os.startfile(dir_)
+			os.startfile(File.serverPath(path+list_[index-1]))
 			cmb.setCurrentIndex(0)
 
 
@@ -356,17 +353,14 @@ class File(Init):
 		Open current project root
 		'''
 		dir_ = pm.workspace(query=1, rd=1) #current project path.
-
-		if dir_.startswith('//'): #reformat for server address
-			dir_ = dir_.replace('/', '\\')
-		os.startfile(dir_)
+		os.startfile(File.serverPath(dir_))
 
 
 	def b001(self):
 		'''
 		Recent Files: Open Last
 		'''
-		# files = [file_ for file_ in (list(reversed(mel.eval("optionVar -query RecentFilesList;")))) if "Autosave" not in file_]
+		# files = [file_ for file_ in (list(reversed(pm.optionVar(query='RecentFilesList')))) if "Autosave" not in file_]
 
 		# force=True
 		# if str(mel.eval("file -query -sceneName -shortName;")):
@@ -414,6 +408,18 @@ class File(Init):
 			if replace:
 				newName = obj.replace(from_, to)
 			pm.rename(obj, newName) #Rename the object with the new name
+
+
+	@staticmethod
+	def serverPath(dir_):
+		'''
+		Assure a given directory path string is formatted correctly for a server address.
+		If the string starts with //, replace with \\
+		'''
+		if dir_.startswith('//'): #reformat for server address
+			dir_ = dir_.replace('//', '\\\\')
+
+		return dir_
 
 
 

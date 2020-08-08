@@ -83,7 +83,7 @@ class Slots(QtCore.QObject):
 
 		args:
 			obj (obj) = The object to get the attributes of.
-			include (list) = Attributes to include. All other will be ommited. Exclude takes dominance over include. Meaning, if the same attribute is in both lists, it will be excluded.
+			include (list) = Attributes to include. All other will be omitted. Exclude takes dominance over include. Meaning, if the same attribute is in both lists, it will be excluded.
 			exclude (list) = Attributes to exclude from the returned dictionay. ie. [u'Position',u'Rotation',u'Scale',u'renderable',u'isHidden',u'isFrozen',u'selected']
 
 		returns:
@@ -163,7 +163,7 @@ class Slots(QtCore.QObject):
 		from widgets.qMenu_ import QMenu_
 		menu = QMenu_(position='cursorPos', setVisible=True)
 
-		spinboxes = [menu.add('QDoubleSpinBox', set_by_value_=[k, v]) for 
+		spinboxes = [menu.add('QDoubleSpinBox', setSpinBoxByValue_=[k, v]) for 
 			k, v in attributes.items() 
 			if isinstance(v, (float, int, bool))]
 
@@ -172,7 +172,7 @@ class Slots(QtCore.QObject):
 
 		[w.valueChanged.connect(
 			lambda value, widget=w, obj=obj: fn(obj, {widget.prefix().rstrip(': '):value})) 
-			for w in spinboxes] #set signal/slot connections
+				for w in spinboxes] #set signal/slot connections
 
 
 	@classmethod
@@ -185,7 +185,13 @@ class Slots(QtCore.QObject):
 			self.syncWidgets(fn.__name__) #Get the state of the widget in the current ui and set any widgets (having the methods name) in child or parent ui's accordingly.
 		return wrapper
 
-	def syncWidgets(self, widgets, from_ui=None, op=2):
+	def syncWidgets(self, widgets, from_ui=None, op=2, attributeTypes = {
+															'isChecked':'setChecked', 
+															'isDisabled':'setDisabled', 
+															'isEnabled':'setEnabled', 
+															'value':'setValue', 
+															'text':'setText', 
+															'icon':'setIcon',}):
 		'''
 		Keep widgets (having the same objectName) in sync across parent and child uis
 		If the second widget does not have an attribute it will silently skip it.
@@ -193,8 +199,9 @@ class Slots(QtCore.QObject):
 
 		args:
 			widgets (str)(list) = Widget objectNames as string or list of widget objects. string shorthand style: ie. 'b000-12,b022'
-			from_ui (obj) = ui to sync to. default is the current ui.
-			op (int) = which widgets to sync. 1) the given widgets, 2) the given widgets and their parents, 3) all widgets.
+			from_ui (obj) = The ui to sync to. default is the current ui.
+			op (int) = Which widgets to sync. 1) the given widgets, 2) the given widgets and their parents, 3) all widgets.
+			attributeTypes (dict) = Which attributes to sync. the dict contains gettr:settr pairs. ie. {'isChecked':'setChecked'}
 
 		self.syncWidgets('chk002-6')
 		'''
@@ -220,22 +227,11 @@ class Slots(QtCore.QObject):
 				from_widgets = self.sb.getWidget(name=from_ui)
 				to_widgets = self.sb.getWidget(name=to_ui)
 
-		from_widgets = {w.objectName():w for w in from_widgets}
-		# print ('from_widgets:', [i for i in from_widgets.values() if 'QRadioButton' in str(i)])
-		to_widgets = {w.objectName():w for w in to_widgets}
-		# print ('to_widgets:  ', [i for i in to_widgets.values() if 'QRadioButton' in str(i)])
+		from_widgets = {w.objectName():w for w in from_widgets}; #print ('from_widgets:', [i for i in from_widgets.values() if 'QRadioButton' in str(i)])
+		to_widgets = {w.objectName():w for w in to_widgets}; #print ('to_widgets:  ', [i for i in to_widgets.values() if 'QRadioButton' in str(i)])
 
 		_widgets = {from_widgets[i]:to_widgets[i] for i in from_widgets if i in to_widgets} #{<from_widget>:<to_widget>}
 		for from_widget, to_widget in _widgets.items():
-
-			attributeTypes = {
-				'isChecked':'setChecked', 
-				'isDisabled':'setDisabled', 
-				'isEnabled':'setEnabled', 
-				'value':'setValue', 
-				'text':'setText', 
-				'icon':'setIcon',
-				}
 
 			attributes = {settr:getattr(from_widget, gettr)() 
 							for gettr, settr in attributeTypes.items() 

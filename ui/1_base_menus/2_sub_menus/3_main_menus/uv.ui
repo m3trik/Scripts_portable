@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>265</width>
-    <height>307</height>
+    <height>369</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -231,93 +231,6 @@
             </property>
             <property name="text">
              <string>Distortion</string>
-            </property>
-            <property name="autoDefault">
-             <bool>true</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </widget>
-         </item>
-         <item>
-          <widget class="QGroupBox" name="groupBox_7">
-           <property name="minimumSize">
-            <size>
-             <width>111</width>
-             <height>34</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>111</width>
-             <height>31</height>
-            </size>
-           </property>
-           <property name="title">
-            <string>Selection</string>
-           </property>
-           <widget class="QPushButton" name="b003">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>50</x>
-              <y>15</y>
-              <width>61</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>UV shell selection mask</string>
-            </property>
-            <property name="text">
-             <string>UV Shell</string>
-            </property>
-            <property name="autoDefault">
-             <bool>true</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="b004">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>15</y>
-              <width>51</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>UV selection mask</string>
-            </property>
-            <property name="text">
-             <string>UV</string>
             </property>
             <property name="autoDefault">
              <bool>true</bool>

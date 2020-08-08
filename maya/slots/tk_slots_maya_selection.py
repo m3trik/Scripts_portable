@@ -39,6 +39,7 @@ class Selection(Init):
 			pin.contextMenu.add(QComboBox_, setObjectName='cmb001', setToolTip='')
 			pin.contextMenu.add(QComboBox_, setObjectName='cmb004', setToolTip='Set the select tool type.')
 			pin.contextMenu.add('QCheckBox', setText='Ignore Backfacing', setObjectName='chk004', setToolTip='Ignore backfacing components during selection.')
+			pin.contextMenu.add('QCheckBox', setText='Soft Selection', setObjectName='chk008', setToolTip='Toggle soft selection mode.')
 			pin.contextMenu.add(QLabel_, setText='Grow Selection', setObjectName='lbl003', setToolTip='Grow the current selection.')
 			pin.contextMenu.add(QLabel_, setText='Shrink Selection', setObjectName='lbl004', setToolTip='Shrink the current selection.')
 			return
@@ -218,6 +219,19 @@ class Selection(Init):
 		self.toggleWidgets(setChecked='chk007', setUnChecked='chk005-6')
 		self.selection.cmb004.setCurrentIndex(2)
 		self.viewPortMessage('Select Style: <hl>Paint</hl>')
+
+
+	@Slots.message
+	def chk008(self, state=None):
+		'''
+		Toggle Soft Selection
+		'''
+		if self.selection_submenu.chk008.isChecked():
+			pm.softSelect(edit=1, softSelectEnabled=True)
+			return 'Soft Select <hl>On</hl>.'
+		else:
+			pm.softSelect(edit=1, softSelectEnabled=False)
+			return 'Soft Select <hl>Off</hl>.'
 
 
 	def setSelectionStyle(self, ctx):

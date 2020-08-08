@@ -36,8 +36,6 @@ class Tk(QtWidgets.QStackedWidget):
 		self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 		self.setAttribute(QtCore.Qt.WA_SetStyle) #Indicates that the widget has a style of its own.
 
-		QtWidgets.QApplication.instance().focusChanged.connect(self.focusChanged)
-
 		self.sb = Switchboard(self)
 		self.sb.setMainAppWindow(self.parent())
 		self.sb.setClassInstance(self, 'tk')
@@ -46,6 +44,7 @@ class Tk(QtWidgets.QStackedWidget):
 		self.overlay = OverlayFactoryFilter(self) #Paint events are handled by the overlay module.
 		self.style = StyleSheet(self)
 
+		QtWidgets.QApplication.instance().focusChanged.connect(self.focusChanged)
 
 
 	def setUi(self, name='init'):
@@ -159,13 +158,13 @@ class Tk(QtWidgets.QStackedWidget):
 		args:
 			name (str) = name of ui to duplicate the widgets to.
 		'''
-		w0 = QPushButton_(parent=self.sb.getUi(name), setObjectName='return_', resize=QtCore.QSize(45, 45), moveGlobal_=self.drawPath[0]) #create an invisible return button at the start point.
+		w0 = QPushButton_(parent=self.sb.getUi(name), setObjectName='return_', setSize_=(45, 45), setPosition_=self.drawPath[0]) #create an invisible return button at the start point.
 		self.childEvents.addWidgets(name, w0) #initialize the widget to set things like the event filter and styleSheet.
 
 		if self.sb.getUiLevel(self.sb.previousName(omitLevel=3))==2: #if submenu: recreate widget/s from the previous ui that are in the current path.
 			for i in range(2, len(self.widgetPath)+1): #for index in widgetPath starting at 2:
 				prevWidget = self.widgetPath[-i][0] #assign the index a neg value to count from the back of the list (starting at -2).
-				w1 = QPushButton_(parent=self.sb.getUi(name), copy_=prevWidget, moveGlobal_=self.widgetPath[-i][1], setVisible=True)
+				w1 = QPushButton_(parent=self.sb.getUi(name), copy_=prevWidget, setPosition_=self.widgetPath[-i][1], setVisible=True)
 				self.childEvents.addWidgets(name, w1) #initialize the widget to set things like the event filter and styleSheet.
 				self.childEvents._mouseOver.append(w1)
 				w1.grabMouse() #set widget to receive mouse events.

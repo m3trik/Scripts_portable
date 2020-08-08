@@ -143,6 +143,7 @@ class Materials(Init):
 		'''
 		tb = self.ui.tb000
 		if state is 'setMenu':
+			tb.menu_.add('QCheckBox', setText='Current Material', setObjectName='chk010', setToolTip='Use the current material, <br>else use the current viewport selection to get a material.')
 			tb.menu_.add('QCheckBox', setText='All Objects', setObjectName='chk003', setToolTip='Search all scene objects, or only those currently selected.')
 			tb.menu_.add('QCheckBox', setText='Shell', setObjectName='chk005', setToolTip='Select entire shell.')
 			tb.menu_.add('QCheckBox', setText='Invert', setObjectName='chk006', setToolTip='Invert Selection.')
@@ -154,10 +155,13 @@ class Materials(Init):
 		shell = tb.menu_.chk005.isChecked() #Select by material: shell
 		invert = tb.menu_.chk006.isChecked() #Select by material: invert
 		allObjects = tb.menu_.chk003.isChecked() #Search all scene objects
+		currentMaterial = tb.menu_.chk010.isChecked() #Use the current material instead of the material of the current viewport selection.
 
 		objects = pm.ls(sl=1, objectsOnly=1) if not allObjects else None
+		material = self.currentMaterial if currentMaterial else None
 
-		self.selectByMaterialID(self.currentMaterial, objects, shell=shell, invert=invert)
+
+		self.selectByMaterialID(material, objects, shell=shell, invert=invert)
 
 
 	def tb001(self, state=None):
@@ -234,8 +238,7 @@ class Materials(Init):
 		else: #Stored material mode
 			if not self.currentMaterial: #get material from selected scene object
 				if pm.ls(sl=1, objectsOnly=1):
-					pm.hyperShade('', shaderNetworksSelectMaterialNodes=1) #selects the material node. doesnt return anything. optional first argument=obj with material.
-					self.currentMaterial = pm.ls(selection=1, materials=1)[0]
+					self.currentMaterial = self.getMaterial()
 				else:
 					return '# Error: No stored material or no valid object selected.'
 			mat = self.currentMaterial
@@ -363,7 +366,7 @@ class Materials(Init):
 
 
 	@Slots.message
-	def selectByMaterialID(self, material, objects=None, shell=False, invert=False):
+	def selectByMaterialID(self, material=None, objects=None, shell=False, invert=False):
 		'''
 		Select By Material Id
 	
@@ -377,15 +380,17 @@ class Materials(Init):
 		'''
 		if pm.nodeType(material)=='VRayMultiSubTex': #if not a multimaterial
 			return 'Error: If material is a multimaterial, select a submaterial.'
-		else:
-			mat = material
 
-		# if not objects: #if not selection; use all scene geometry
-		# 	shapes = pm.ls(type="mesh")
-		# 	objects = pm.listRelatives(shapes, parent=True) #transforms
+		if not material:
+			if not pm.ls(sl=1):
+				return 'Error: Nothing selected. Select an object face, or choose the option: current material.'
+			material = self.getMaterial()
 
-		pm.select(mat)
+		pm.select(material)
 		pm.hyperShade(objects='') #select all with material. "" defaults to currently selected materials.
+
+		if objects:
+			[pm.select(i, deselect=1) for i in pm.ls(sl=1) if i.split('.')[0] not in objects]
 
 		faces = pm.filterExpand(selectionMask=34, expand=1)
 		transforms = pm.listRelatives(faces, p=True) #[node.replace('Shape','') for node in pm.ls(sl=1, objectsOnly=1, visible=1)] #get transform node name from shape node
@@ -437,14 +442,17 @@ class Materials(Init):
 
 
 	@staticmethod
-	def getMaterial():
+	def getMaterial(obj=''):
 		'''
 		Get the material from the selected face.
+
+		args:
+			(str)(obj) = The obj with the material.
 
 		returns:
 			(list) material
 		'''
-		pm.hyperShade("", shaderNetworksSelectMaterialNodes=1) #selects the material node 
+		pm.hyperShade(obj, shaderNetworksSelectMaterialNodes=1) #selects the material node 
 		mats = pm.ls(selection=1, materials=1) #now add the selected node to a variable
 
 		return mats[0]

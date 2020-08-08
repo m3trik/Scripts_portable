@@ -29,10 +29,10 @@ class Main(Init):
 			if selection:
 				history = selection
 				for node in history:
-					parent = tree.add('QLabel', 'Node History', parentHeader=node.name, refresh=1, setText=node.name)
+					parent = tree.add('QLabel', 'Node History', childHeader=node.name, refresh=1, setText=node.name)
 
 					attributes = Init.getAttributesMax(node) #get dict containing attributes:values of the history node.
-					spinboxes = [tree.add('QDoubleSpinBox', parent, refresh=1, set_by_value_=[k, v])
+					spinboxes = [tree.add('QDoubleSpinBox', parent, refresh=1, setSpinBoxByValue_=[k, v])
 						for k, v in attributes.items() 
 							if isinstance(v, (float, int, bool))]
 

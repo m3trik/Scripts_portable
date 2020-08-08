@@ -33,6 +33,7 @@ class StyleSheet(QtCore.QObject):
 			'HOVER'				: 'rgba(82,133,166,175)',
 			'TEXT'				: 'white',
 			'TEXT_CHECKED'		: 'black',
+			'TEXT_DISABLED'		: 'grey',
 			'TEXT_HOVER'		: 'white',
 			'TEXT_BACKGROUND'	: 'rgb(50,50,50)',
 		},
@@ -43,7 +44,7 @@ class StyleSheet(QtCore.QObject):
 			'HOVER'				: 'rgba(82,133,166,175)',
 			'TEXT'				: 'grey',
 			'TEXT_CHECKED'		: 'black',
-			'TEXT_DISABLED'		: 'grey',
+			'TEXT_DISABLED'		: 'darkGray',
 			'TEXT_HOVER'		: 'white',
 			'TEXT_BACKGROUND'	: 'rgb(50,50,50)',
 		}
@@ -57,12 +58,14 @@ class StyleSheet(QtCore.QObject):
 
 			QWidget#mainWindow {
 				background: transparent;
-			} ''',
+			} 
+			''',
 
 		'QStackedWidget': '''
 			QStackedWidget {
 
-			} ''',
+			} 
+			''',
 
 		'QPushButton': '''
 			QPushButton {
@@ -108,7 +111,8 @@ class StyleSheet(QtCore.QObject):
 
 			QPushButton:default {
 				border-color: navy; /* make the default button prominent */
-			} ''',
+			} 
+			''',
 
 		'QToolButton': '''
 			QToolButton {
@@ -210,7 +214,8 @@ class StyleSheet(QtCore.QObject):
 
 			QToolButton::menu-arrow:open {
 
-			} ''',
+			} 
+			''',
 
 		'QAbstractButton': '''
 			QAbstractButton:hover {
@@ -219,7 +224,8 @@ class StyleSheet(QtCore.QObject):
 
 			QAbstractButton:pressed {
 				background: {PRESSED};
-			} ''',
+			} 
+			''',
 
 		'QComboBox': '''
 			QComboBox {
@@ -269,7 +275,8 @@ class StyleSheet(QtCore.QObject):
 				border-left-style: solid; /* just a single line */
 				border-top-right-radius: 1px; /* same radius as the QComboBox */
 				border-bottom-right-radius: 1px;
-			} ''',
+			} 
+			''',
 
 		'QSpinBox': '''
 			QSpinBox {
@@ -286,7 +293,8 @@ class StyleSheet(QtCore.QObject):
 				background-color: {HOVER};
 				color: {TEXT_HOVER};
 				border: 1px solid black;
-			} ''',
+			} 
+			''',
 
 		'QDoubleSpinBox': '''
 			QDoubleSpinBox {
@@ -303,7 +311,8 @@ class StyleSheet(QtCore.QObject):
 				background-color: {HOVER};
 				color: {TEXT_HOVER};
 				border: 1px solid black;
-			} ''',
+			} 
+			''',
 
 		'QAbstractSpinBox': '''
 			QScrollBar:left-arrow, QScrollBar::right-arrow, QScrollBar::up-arrow, QScrollBar::down-arrow {
@@ -322,7 +331,8 @@ class StyleSheet(QtCore.QObject):
 				border: 1px solid {PRESSED};
 				background: {BACKGROUND};
 				subcontrol-origin: border;
-			} ''',
+			} 
+			''',
 
 		'QCheckBox': '''
 			QCheckBox {
@@ -332,14 +342,17 @@ class StyleSheet(QtCore.QObject):
 				padding: 0px 5px 0px 5px; /* top, right, bottom, left */
 				background-color: {BACKGROUND};
 				color: {TEXT};
+				spacing: 5px;
 			}
 
 			QCheckBox::hover {
-
+				background-color: {HOVER};
+				color: {TEXT_HOVER};
 			}
 
 			QCheckBox::hover:checked {
-
+				background-color: {HOVER};
+				color: {TEXT_HOVER};
 			}
 
 			QCheckBox::enabled {
@@ -350,29 +363,68 @@ class StyleSheet(QtCore.QObject):
 				color: {TEXT_DISABLED};
 			}
 
+			QCheckBox::checked {
+				background-color: {HOVER};
+				color: {TEXT_CHECKED};
+			}
+
+			QCheckBox::checked:hover {
+				background-color: {HOVER};
+				color: {TEXT_CHECKED};
+			}
+
+			QCheckBox::indeterminate {
+				background-color: {HOVER};
+				color: {TEXT_CHECKED};
+			}
+
+			QCheckBox::indeterminate:hover {
+				background-color: {HOVER};
+				color: {TEXT_CHECKED};
+			}
+
 			QCheckBox::indicator {
-				width: 6px;
-				height: 6px;
+				width: 0px;
+				height: 0px;
+				border: 0px solid transparent;
 			}
 
 			QCheckBox::indicator::unchecked {
-				border: 1px solid transparent;
-				background: none;
+				image: none;
 			}
 
 			QCheckBox::indicator:unchecked:hover {
-				border: 1px solid {HOVER};
+				image: none;
+			}
+
+			QCheckBox::indicator:unchecked:pressed {
+				image: none;
 			}
 
 			QCheckBox::indicator::checked {
-				border: 1px solid transparent;
-				background: {HOVER};
+				image: none;
 			}
 
 			QCheckBox::indicator:checked:hover {
-				border: 1px solid transparent;
-				background: {HOVER};
-			} ''',
+				image: none;
+			} 
+
+			QCheckBox::indicator:checked:pressed {
+				image: none;
+			}
+
+			QCheckBox::indicator:indeterminate:checked {
+				image: none;
+			}
+
+			QCheckBox::indicator:indeterminate:hover {
+				image: none;
+			}
+
+			QCheckBox::indicator:indeterminate:pressed {
+				image: none;
+			}
+			''',
 
 		'QRadioButton': '''
 			QRadioButton {
@@ -385,36 +437,55 @@ class StyleSheet(QtCore.QObject):
 			}
 
 			QRadioButton::hover {
-
+				background-color: {HOVER};
+				color: {TEXT_HOVER};
 			}
 
 			QRadioButton::hover:checked {
+				background-color: {HOVER};
+				color: {TEXT_HOVER};
+			}
 
+			QRadioButton::enabled {
+				color: {TEXT};
+			}
+
+			QRadioButton::disabled {
+				color: {TEXT_DISABLED};
+			}
+
+			QRadioButton::checked {
+				background-color: {HOVER};
+				color: {TEXT_CHECKED};
+			}
+
+			QRadioButton::checked:hover {
+				background-color: {HOVER};
+				color: {TEXT_CHECKED};
 			}
 
 			QRadioButton::indicator {
-				width: 6px;
-				height: 6px;
+				width: 0px;
+				height: 0px;
+				border: 0px solid transparent;
 			}
 
 			QRadioButton::indicator::unchecked {
-				border: 1px solid transparent;
-				background: none;
+				image: none;
 			}
 
 			QRadioButton::indicator:unchecked:hover {
-				border: 1px solid {HOVER};
+				image: none;
 			}
 
 			QRadioButton::indicator::checked {
-				border: 1px solid transparent;
-				background: {HOVER};
+				image: none;
 			}
 
 			QRadioButton::indicator:checked:hover {
-				border: 1px solid transparent;
-				background: {HOVER};
-			} ''',
+				image: none;
+			} 
+			''',
 
 		'QAbstractItemView': '''
 			QAbstractItemView {
@@ -422,7 +493,8 @@ class StyleSheet(QtCore.QObject):
 				selection-background-color: {HOVER};
 				selection-color: {BACKGROUND};
 				alternate-background-color: {BACKGROUND};
-			} ''',
+			} 
+			''',
 
 		'QHeaderView': '''
 			QHeaderView {
@@ -437,12 +509,14 @@ class StyleSheet(QtCore.QObject):
 
 			QHeaderView::section:selected, QHeaderView::section::checked {
 				background: {BACKGROUND};
-			} ''',
+			} 
+			''',
 
 		'QTableView': '''
 			QTableView {
 				gridline-color: {PRESSED};
-			} ''',
+			} 
+			''',
 
 		'QLineEdit': '''
 			QLineEdit {
@@ -465,7 +539,8 @@ class StyleSheet(QtCore.QObject):
 
 			QLineEdit:read-only {
 				background: {BACKGROUND};
-			} ''',
+			} 
+			''',
 
 		'QTextEdit': '''
 			QTextEdit#info {
@@ -481,12 +556,14 @@ class StyleSheet(QtCore.QObject):
 				selection-background-color: {HOVER};
 				selection-color: {TEXT};
 				background-attachment: fixed; /* fixed, scroll */
-			} ''',
+			} 
+			''',
 
 		'QPlainTextEdit': '''
 			QPlainTextEdit {
 				
-			} ''',
+			} 
+			''',
 
 		'QListView': '''
 			QListView {
@@ -517,7 +594,8 @@ class StyleSheet(QtCore.QObject):
 			QListView::item:hover {
 				background: {HOVER};
 				color: {TEXT_HOVER};
-			} ''',
+			} 
+			''',
 
 		'QListWidget': '''
 			QListWidget {
@@ -548,7 +626,8 @@ class StyleSheet(QtCore.QObject):
 			QListWidget::item:hover {
 				background: {HOVER};
 				color: {TEXT_HOVER};
-			} ''',
+			} 
+			''',
 
 		'QTreeWidget': '''
 			QTreeWidget {
@@ -575,7 +654,8 @@ class StyleSheet(QtCore.QObject):
 
 			QTreeView::item:selected {
 				background-color: none;
-			} ''',
+			} 
+			''',
 
 		'QToolBox': '''
 			QToolBox {
@@ -610,12 +690,14 @@ class StyleSheet(QtCore.QObject):
 			QToolBox::tab:selected {
 				/*font: italic;*/ /* italicize selected tabs */
 				color: {TEXT};
-			} ''',
+			} 
+			''',
 
 		'QAbstractSpinBox': '''
 			QAbstractSpinBox {
 				padding-right: 0px;
-			} ''',
+			} 
+			''',
 
 		'QSlider': '''
 			QSlider {
@@ -653,7 +735,8 @@ class StyleSheet(QtCore.QObject):
 
 			QSlider::sub-page:vertical, QSlider::add-page:horizontal {
 				background: {BACKGROUND};
-			} ''',
+			} 
+			''',
 
 		'QScrollBar': '''
 			QScrollBar {
@@ -726,7 +809,8 @@ class StyleSheet(QtCore.QObject):
 
 			QScrollBar::add-page, QScrollBar::sub-page {
 				background: none;
-			} ''',
+			} 
+			''',
 
 		'QGroupBox': '''
 			QGroupBox {
@@ -743,7 +827,8 @@ class StyleSheet(QtCore.QObject):
 				subcontrol-position: top left; /* position at the top center */
 				background-color: transparent;
 				color: {TEXT};
-			} ''',
+			} 
+			''',
 
 		'QTabBar': '''
 			QTabBar {
@@ -758,7 +843,8 @@ class StyleSheet(QtCore.QObject):
 
 			QTabBar::tab:selected {
 				background: {BACKGROUND};
-			} ''',
+			} 
+			''',
 
 		'QMenu': '''
 			QMenu {
@@ -795,7 +881,8 @@ class StyleSheet(QtCore.QObject):
 			QMenu::indicator {
 				width: 13px;
 				height: 13px;
-			} ''',
+			} 
+			''',
 
 		'QLabel': '''
 			QLabel {
@@ -819,14 +906,16 @@ class StyleSheet(QtCore.QObject):
 
 			QLabel::disabled {
 				color: {TEXT_DISABLED};
-			} ''',
+			} 
+			''',
 
 		'QToolTip': '''
 			QToolTip {
 				background-color: {BACKGROUND};
 				color: {TEXT};
 				border: 0px solid transparent;
-			} ''',
+			} 
+			''',
 
 		'QProgressBar': '''
 			QProgressBar {
@@ -840,7 +929,8 @@ class StyleSheet(QtCore.QObject):
 				width: 1px;
 				margin: 0px;
 				background-color: {HOVER};
-			} ''',
+			} 
+			''',
 
 		'QFrame': '''
 			QFrame {
@@ -848,12 +938,14 @@ class StyleSheet(QtCore.QObject):
 				border-radius: 2px;
 				padding: 2px;
 				background-image: none;
-			} ''',
+			} 
+			''',
 
 		'QTabWidget': '''
 			QTabWidget {
 				
-			} ''',
+			} 
+			''',
 		}
 
 

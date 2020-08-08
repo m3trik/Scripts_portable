@@ -9,18 +9,17 @@ class Uv(Init):
 	def __init__(self, *args, **kwargs):
 		super(Uv, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('uv')
-		self.childUi = self.sb.getUi('uv_submenu')
-
 
 	def pin(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.parentUi.pin
+		pin = self.uv.pin
 
 		if state is 'setMenu':
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='3dsMax UV Editors')
+			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya UV Editors')
+			pin.contextMenu.add(QLabel_, setObjectName='lbl000', setToolTip='Select Type: UV')
+			pin.contextMenu.add(QLabel_, setObjectName='lbl001', setToolTip='Select Type: UV Shell')
 			return
 
 
@@ -28,7 +27,7 @@ class Uv(Init):
 		'''
 		Editors
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.uv.cmb000
 
 		if index is 'setMenu':
 			list_ = ["UV Editor", "UV Set Editor", "UV Tool Kit", "UV Linking: Texture-Centric", "UV Linking: UV-Centric", "UV Linking: Paint Effects/UV", "UV Linking: Hair/UV"]
@@ -51,7 +50,23 @@ class Uv(Init):
 				maxEval('pfxUVLinkingEditor;')
 			elif index==7: #UV Linking: Hair/UV
 				mel.evel('hairUVLinkingEditor;')
-			self.parentUi.cmb000.setCurrentIndex(0)
+			self.uv.cmb000.setCurrentIndex(0)
+
+
+	def lbl000(self):
+		'''
+		Uv Shell Selection Mask
+		'''
+		pm.selectMode(component=1)
+		pm.selectType(meshUVShell=1)
+
+
+	def lbl001(self):
+		'''
+		Uv Selection Mask
+		'''
+		pm.selectMode(component=1)
+		pm.selectType(polymeshUV=1)
 
 
 	def b000(self):
@@ -80,26 +95,6 @@ class Uv(Init):
 				print(error)
 
 
-	def b002(self):
-		'''
-		
-		'''
-
-
-	def b003(self):
-		'''
-		Uv Shell Selection Mask
-		'''
-		pm.selectType (meshUVShell=1)
-
-
-	def b004(self):
-		'''
-		Uv Selection Mask
-		'''
-		pm.selectType (polymeshUV=1)
-
-
 	def b005(self):
 		'''
 		Cut Uv'S
@@ -114,7 +109,7 @@ class Uv(Init):
 		'''
 		Pack UV's
 		'''
-		rotate = self.parentUi.chk001.isChecked() #rotate uv's
+		rotate = self.uv.chk001.isChecked() #rotate uv's
 		obj = rt.selection[0]
 
 		uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv modifier.
@@ -180,7 +175,7 @@ class Uv(Init):
 		'''
 		Auto Unwrap
 		'''
-		scaleMode = self.parentUi.chk000.isChecked() #0 No scale is applied. 1 Uniform scale to fit in unit square. 2 Non proportional scale to fit in unit square.
+		scaleMode = self.uv.chk000.isChecked() #0 No scale is applied. 1 Uniform scale to fit in unit square. 2 Non proportional scale to fit in unit square.
 		objects = rt.selection
 
 		for obj in objects:
@@ -241,8 +236,8 @@ class Uv(Init):
 		'''
 		Move To Uv Space
 		'''
-		u = str(self.parentUi.s000.value())
-		v = str(self.parentUi.s001.value())
+		u = str(self.uv.s000.value())
+		v = str(self.uv.s001.value())
 
 		pm.polyEditUV(u=u, v=v)
 

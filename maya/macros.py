@@ -20,22 +20,23 @@ class Macros(Init):
 		'''
 		Call setMacro for each item.
 		'''
-		self.setMacro('hk_back_face_culling', k='1', cat='Display', ann='Toggle back-face culling')
-		self.setMacro('hk_smooth_preview', k='2', cat='Display', ann='Toggle smooth mesh preview')
-		self.setMacro('hk_isolate_selected', k='F2', cat='Display', ann='Isolate current selection')
-		self.setMacro('hk_grid_and_image_planes', k='F1', cat='Display', ann='Toggle grid and image plane visibility')
-		self.setMacro('hk_frame_selected', k='f', cat='Display', ann='Frame selected by a set amount')
-		self.setMacro('hk_wireframe_on_shaded', k='3', cat='Display', ann='Toggle wireframe on shaded')
-		self.setMacro('hk_xray', k='F3', cat='Display', ann='Toggle xRay all')
-		self.setMacro('hk_wireframe', k='5', cat='Display', ann='Toggle wireframe/shaded/shaded w/texture display')
-		self.setMacro('hk_shading', k='6', cat='Display', ann='Toggle viewport shading')
-		self.setMacro('hk_selection_mode', k='sht+q', cat='Edit', ann='Toggle between object selection & last component selection')
-		self.setMacro('hk_paste_and_rename', k='ctl+v', cat='Edit', ann='Paste and rename removing keyword \'paste\'')
-		self.setMacro('hk_multi_component', k='F5', cat='Edit', ann='Multi-Component Selection')
-		self.setMacro('hk_toggle_component_mask', k='F4', cat='Edit', ann='Toggle Component Selection Mask')
-		self.setMacro('hk_tk_show', k='F12', cat='UI', ann='Display tk marking menu')
-		self.setMacro('hk_hotbox_full', k='sht+z', cat='UI', ann='Display the full version of the hotbox')
-		self.setMacro('hk_toggle_panels', k='9', cat='UI', ann='Toggle UI toolbars')
+		self.setMacro('hk_back_face_culling', k='1', cat='Display', ann='Toggle back-face culling.')
+		self.setMacro('hk_smooth_preview', k='2', cat='Display', ann='Toggle smooth mesh preview.')
+		self.setMacro('hk_isolate_selected', k='F2', cat='Display', ann='Isolate current selection.')
+		self.setMacro('hk_grid_and_image_planes', k='F1', cat='Display', ann='Toggle grid and image plane visibility.')
+		self.setMacro('hk_frame_selected', k='f', cat='Display', ann='Frame selected by a set amount.')
+		self.setMacro('hk_wireframe_on_shaded', k='3', cat='Display', ann='Toggle wireframe on shaded.')
+		self.setMacro('hk_xray', k='F3', cat='Display', ann='Toggle xRay all.')
+		self.setMacro('hk_wireframe', k='5', cat='Display', ann='Toggle wireframe/shaded/shaded w/texture display.')
+		self.setMacro('hk_shading', k='6', cat='Display', ann='Toggle viewport shading.')
+		self.setMacro('hk_selection_mode', k='sht+q', cat='Edit', ann='Toggle between object selection & last component selection.')
+		self.setMacro('hk_paste_and_rename', k='ctl+v', cat='Edit', ann='Paste and rename removing keyword \'paste\'.')
+		self.setMacro('hk_multi_component', k='F5', cat='Edit', ann='Multi-Component Selection.')
+		self.setMacro('hk_toggle_component_mask', k='F4', cat='Edit', ann='Toggle Component Selection Mask.')
+		self.setMacro('hk_tk_show', k='F12', cat='UI', ann='Display tk marking menu.')
+		self.setMacro('hk_hotbox_full', k='sht+z', cat='UI', ann='Display the full version of the hotbox.')
+		self.setMacro('hk_toggle_panels', k='9', cat='UI', ann='Toggle UI toolbars.')
+		self.setMacro('hk_toggle_UV_select_type', k='sht+t', cat='Edit', ann='Toggle UV / UV shell component selection.')
 
 
 	def setMacro(self, name=None, k=None, cat=None, ann=None):
@@ -441,6 +442,22 @@ class Macros(Init):
 
 
 	@staticmethod
+	def hk_toggle_UV_select_type():
+		'''
+		hk_toggle_UV_select_type
+		Toggle between UV & UV shell component selection.
+		'''
+		polymeshUV = pm.selectType(q=1, polymeshUV=1)
+		pm.selectMode(component=1)
+		if polymeshUV:
+			pm.selectType(meshUVShell=1)
+			pm.inViewMessage(statusMessage='Select Type: <hl>UV Shell</hl>', fade=True, position="topCenter")
+		else:
+			pm.selectType(polymeshUV=1)
+			pm.inViewMessage(statusMessage='Select Type: <hl>Polymesh UV</hl>', fade=True, position="topCenter")
+
+
+	@staticmethod
 	def hk_paste_and_rename():
 		'''
 		hk_paste_and_rename
@@ -507,8 +524,42 @@ class Macros(Init):
 
 
 
+	# Selection ------------------------------------------------------------------------------------------------------------------------------
 
-	#UI --------------------------------------------------------------------------------------------------------------------------------------
+	@staticmethod
+	def hk_invert_component_selection():
+		'''
+		hk_invert_component_selection
+		Invert the component selection on the currently selected objects.
+		'''
+		if not pm.selectMode(query=1, component=1): #component select mode
+			return 'Error: Selection must be at the component level.'
+
+		objects = pm.ls(sl=1, objectsOnly=1)
+		selection = pm.ls(sl=1)
+
+		invert=[]
+		for obj in objects:
+			if pm.selectType(query=1, vertex=1): #vertex
+				selectedVertices = pm.filterExpand(selection, selectionMask=31, expand=1)
+				allVertices = pm.filterExpand(obj+'.v[*]', sm=31)
+				invert += {v for v in allVertices if v not in selectedVertices}
+
+			elif pm.selectType(query=1, edge=1): #edge
+				edges = pm.filterExpand(selection, selectionMask=32, expand=1)
+				allEdges = pm.filterExpand(obj+'.e[*]', sm=32)
+				invert += {e for e in allEdges if e not in selectedEdges}
+
+			elif pm.selectType(query=1, facet=1): #face
+				selectedFaces = pm.filterExpand(selection, selectionMask=34, expand=1)
+				allFaces = pm.filterExpand(obj+'.f[*]', sm=34)
+				invert += {f for f in allFaces if f not in selectedFaces}
+
+		pm.select(invert, replace=1)
+
+
+
+	# UI -------------------------------------------------------------------------------------------------------------------------------------
 
 	@staticmethod
 	def hk_tk_show():

@@ -5,27 +5,43 @@ from shared import Menu, Attributes, RichText
 
 
 
-class QPushButton_(QtWidgets.QPushButton, Menu, Attributes, RichText):
+class QCheckBox_(QtWidgets.QCheckBox, Menu, Attributes, RichText):
 	'''
 	
 	'''
 	def __init__(self, parent=None, **kwargs):
+		'''
+		'''
 		super().__init__(parent)
-		RichText.__init__(self, alignment='AlignCenter')
+		RichText.__init__(self)
 
 		self.setAttributes(kwargs)
+
+		self.setCheckBoxRichTextStyle(self.isChecked()) #set the initial style for rich text depending on the current state.
+		self.stateChanged.connect(lambda state: self.setCheckBoxRichTextStyle(state)) #set the style on future state changes.
+
+
+	def setCheckBoxRichTextStyle(self, state):
+		'''
+		
+		'''
+		if self.hasRichText:
+			self.setRichTextStyle(textColor='black' if state>0 else 'white')
 
 
 	def mousePressEvent(self, event):
 		'''
 		args:
-			event=<QEvent>
+			event (QEvent)
+
+		returns:
+			(QEvent)
 		'''
 		if event.button()==QtCore.Qt.RightButton:
 			if self.contextMenu:
 				self.contextMenu.show()
 
-		return QtWidgets.QPushButton.mousePressEvent(self, event)
+		return QtWidgets.QCheckBox.mousePressEvent(self, event)
 
 
 
@@ -40,12 +56,13 @@ if __name__ == "__main__":
 	from PySide2.QtCore import QSize
 	app = QtWidgets.QApplication(sys.argv)
 
-	w = QPushButton_(
+	w = QCheckBox_(
 		parent=None,
-		setObjectName='b000',
-		setText='QPushButton <b>Rich Text</b>',
+		setObjectName='chk000',
+		setText='QCheckBox <b>Rich Text</b>',
 		resize=QSize(125, 45),
 		setWhatsThis='',
+		setChecked=False,
 		setVisible=True,
 	)
 

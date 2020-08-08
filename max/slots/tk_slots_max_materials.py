@@ -141,6 +141,7 @@ class Materials(Init):
 		'''
 		tb = self.ui.tb000
 		if state is 'setMenu':
+			tb.menu_.add('QCheckBox', setText='Current Material', setObjectName='chk010', setToolTip='Use the current material, <br>else use the current viewport selection to get a material.')
 			tb.menu_.add('QCheckBox', setText='All Objects', setObjectName='chk003', setToolTip='Search all scene objects, or only those currently selected.')
 			tb.menu_.add('QCheckBox', setText='Shell', setObjectName='chk005', setToolTip='Select entire shell.')
 			tb.menu_.add('QCheckBox', setText='Invert', setObjectName='chk006', setToolTip='Invert Selection.')
@@ -152,8 +153,10 @@ class Materials(Init):
 		shell = tb.menu_.chk005.isChecked() #Select by material: shell
 		invert = tb.menu_.chk006.isChecked() #Select by material: invert
 		allObjects = tb.menu_.chk003.isChecked() #Search all scene objects
+		currentMaterial = tb.menu_.chk010.isChecked() #Use the current material instead of the material of the current viewport selection.
 
 		objects = rt.selection if not allObjects else None
+		material = self.currentMaterial if currentMaterial else None
 
 		self.selectByMaterialID(self.currentMaterial, objects, shell=shell, invert=invert)
 
@@ -372,7 +375,7 @@ class Materials(Init):
 
 
 	@Slots.message
-	def selectByMaterialID(self, material, objects=None, shell=False, invert=False):
+	def selectByMaterialID(self, material=None, objects=None, shell=False, invert=False):
 		'''
 		Select By Material Id
 	
@@ -384,10 +387,11 @@ class Materials(Init):
 		#ex call:
 		selectByMaterialID(material)
 		'''
-		if not rt.getNumSubMtls(material): #if not a multimaterial
-			mat = material
-		else:
+		if rt.getNumSubMtls(material): #if not a multimaterial
 			return 'Error: No valid stored material. If material is a multimaterial, select a submaterial.'
+
+		if not material:
+			material = self.getMaterial()
 
 		if not objects: #if not selection; use all scene geometry
 			objects = rt.geometry
@@ -415,7 +419,7 @@ class Materials(Init):
 							index = rt.polyop.GetFaceId_(obj, f) #Returns the material ID of the specified face.
 						m = obj.material[index-1] #m = rt.getSubMtl(m, id) #get the material using the ID_ index (account for maxscript arrays starting at index 1)
 
-					if m==mat: #single material
+					if m==material: #single material
 						if shell: #append obj to same and break loop
 							same.append(obj)
 							break
@@ -472,7 +476,7 @@ class Materials(Init):
 
 
 	@Slots.message
-	def getMaterial(self, obj, face=None):
+	def getMaterial(self, obj=None, face=None):
 		'''
 		Get the material from the given object or face components.
 
@@ -482,6 +486,12 @@ class Materials(Init):
 		returns:
 			(obj) material
 		'''
+		if not obj:
+			selection = rt.selection
+			if not selection:
+				return 'Error: Nothing selected. Select an object face, or choose the option: current material.'
+			obj = selection[0]
+
 		mat = obj.material #get material from selection
 
 		if rt.subObjectLevel==4: #if face selection check for multimaterial
