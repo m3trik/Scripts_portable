@@ -1,14 +1,14 @@
 from __future__ import print_function
 from PySide2 import QtCore
-from PySide2.QtUiTools import QUiLoader
-from PySide2.QtWidgets import QApplication
 
 from pydoc import locate
 
-import sys, os.path
+import os.path
 
 try: import shiboken2
 except: from PySide2 import shiboken2
+
+from tk_uiLoader import ui
 
 
 
@@ -20,7 +20,7 @@ class Switchboard(QtCore.QObject):
 	Get/set elements across modules using convenience methods.
 	
 	Ui name/and it's corresponding slot class name should always be the same. (case insensitive) ie. 'polygons' (ui name) will look to build connections to 'Polygons' (class name). 
-	Widget ovjectName/corresponding class method name need to be the same. ie. 'b000' (widget objectName) will try to connect to <b000> class method.
+	Widget objectName/corresponding class method name need to be the same. ie. 'b000' (widget objectName) will try to connect to <b000> class method.
 
 	Ui files are looked for in a sub dir named 'ui'. naming convention is: <ui name>.ui ie. polygons.ui
 	Custom widget modules are looked for in a sub directory named 'widgets'. naming convention: <name capital first char> widget class inside <name lowercase first char>.py module. ie. QLabel_ class inside qLabel_.py module.
@@ -60,30 +60,9 @@ class Switchboard(QtCore.QObject):
 		'''
 		self.parent = parent
 
-		uiLoader = QUiLoader()
-
-		# register any custom widgets.
-		widgetPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'widgets') #get the path to the widget directory.
-		moduleNames = [file_.replace('.py','',-1) for file_ in os.listdir(widgetPath) if file_.startswith('q') and file_.endswith('.py')] #format names using the files in path.
-		for m in moduleNames: #register any custom widgets using the module names.
-			className = m[:1].capitalize()+m[1:] #capitalize first letter of module name to convert to class name
-			path = 'widgets.{0}.{1}'.format(m, className)
-			class_ = locate(path)
-			if class_:
-				uiLoader.registerCustomWidget(class_)
-			else:
-				raise ImportError, path
-
-		# get the path to the directory containing the ui files.
-		uiPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ui') #get absolute path from dir of this module + relative path to directory
-
 		# initialize _sbDict by setting keys for the ui files.
-		for dirpath, dirnames, filenames in os.walk(uiPath):
-			for filename in (f for f in filenames if f.endswith(".ui")):
-				path = os.path.join(dirpath, filename)
-				name = filename.replace('.ui','')
-				d = dirpath[dirpath.rfind('ui\\'):] #slice the absolute path from 'ui\' ie. ui\base_menus_1\sub_menus_2\main_menus_3 from fullpath\ui\base_menus_1\sub_menus_2\main_menus_3
-				self.sbDict[filename.replace('.ui','')] = {'ui':uiLoader.load(path), 'uiLevel':len(d.split('\\'))-1} #ie. {'polygons':{'ui':<ui obj>, uiLevel:<int>}} (the ui level is it's hierarchy)
+		for uiName, v in ui.uiDict.items():
+			self.sbDict[uiName] = {'ui':v['ui'], 'uiLevel':v['level']} #ie. {'polygons':{'ui':<ui obj>, uiLevel:<int>}} (the ui level is it's hierarchy)
 
 
 	@property
@@ -1570,9 +1549,10 @@ class Switchboard(QtCore.QObject):
 
 if __name__=='__main__':
 	#initialize and create a Switchboard instance
-	app = QApplication.instance() #get the app instance if it exists (required by the QUiLoader)
-	if not app:
-		app = QApplication(sys.argv)
+	from tk_uiLoader import app
+
+
+
 
 
 
