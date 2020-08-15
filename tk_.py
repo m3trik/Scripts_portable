@@ -26,6 +26,7 @@ class Tk(QtWidgets.QStackedWidget):
 	args:
 		parent (obj) = the main application's top level window.
 	'''
+
 	def __init__(self, parent=None, preventHide=False, key_show=QtCore.Qt.Key_F12):
 		super(Tk, self).__init__(parent)
 

@@ -1,4 +1,5 @@
 from __future__ import print_function
+from builtins import super
 from PySide2 import QtCore
 
 from pydoc import locate
@@ -54,12 +55,11 @@ class Switchboard(QtCore.QObject):
 	A widgets dict is built as needed for each class when connectSlots (or any other dependant) is called.
 	'''
 
-	def __init__(self, parent):
+	def __init__(self, parent=None):
+		super().__init__(parent)
 		'''
 		Initialize the main dict (_sbDict).
 		'''
-		self.parent = parent
-
 		for uiName, v in UiLoader().uiDict.items():
 			self.sbDict[uiName] = {'ui':	v['ui'], #set a key for each ui.
 								'uiLevel':	v['level']} #ie. {'polygons':{'ui':<ui obj>, uiLevel:<int>}} (the ui level is it's hierarchy)
@@ -278,7 +278,7 @@ class Switchboard(QtCore.QObject):
 			'_currentUi': lambda: self.getUi(),
 
 			'sb': self,
-			'tk': self.parent,
+			'tk': self.parent(),
 		}
 
 		return kwargs
