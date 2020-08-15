@@ -8,7 +8,7 @@ import os.path
 try: import shiboken2
 except: from PySide2 import shiboken2
 
-from tk_uiLoader import ui
+from tk_uiLoader import UiLoader
 
 
 
@@ -27,7 +27,7 @@ class Switchboard(QtCore.QObject):
 
 	nested dictionary structure:
 	_sbDict = {	
-		'<ui name>' : {
+		'<uiName>' : {
 					'ui' : <ui object>,
 					'uiLevel' : int,
 					'class' : <Class>,
@@ -60,15 +60,15 @@ class Switchboard(QtCore.QObject):
 		'''
 		self.parent = parent
 
-		# initialize _sbDict by setting keys for the ui files.
-		for uiName, v in ui.uiDict.items():
-			self.sbDict[uiName] = {'ui':v['ui'], 'uiLevel':v['level']} #ie. {'polygons':{'ui':<ui obj>, uiLevel:<int>}} (the ui level is it's hierarchy)
+		for uiName, v in UiLoader().uiDict.items():
+			self.sbDict[uiName] = {'ui':	v['ui'], #set a key for each ui.
+								'uiLevel':	v['level']} #ie. {'polygons':{'ui':<ui obj>, uiLevel:<int>}} (the ui level is it's hierarchy)
 
 
 	@property
 	def sbDict(self):
 		'''
-		Get the full switchboard dict or one of it's values from a given key.
+		Get the full switchboard dict.
 		'''
 		if not hasattr(self, '_sbDict'):
 			self._sbDict={}
@@ -1549,7 +1549,10 @@ class Switchboard(QtCore.QObject):
 
 if __name__=='__main__':
 	#initialize and create a Switchboard instance
-	from tk_uiLoader import app
+	from PySide2.QtWidgets import QApplication
+	app = QApplication.instance() #get the qApp instance if it exists.
+	if not app:
+		app = QApplication(sys.argv)
 
 
 
