@@ -18,17 +18,10 @@ class Create(Init):
 		'''
 		Get the Transform Node
 		'''
-		transforms = pm.ls(sl=1, type='transform')
-		if not transforms:
-			try:
-				shapeNodes = pm.ls(sl=1, objectsOnly=1)
-				transforms = pm.listRelatives(shapeNodes, parent=1)
-			except:
-				return None
-
-		transform = transforms[0]
-		if not self.create.txt003.text()==transform.name(): #make sure the same field reflects the current working node.
-			self.create.txt003.setText(transform.name())
+		transform = Init.getTransformNode()
+		if transform:
+			if not self.create.txt003.text()==transform.name(): #make sure the same field reflects the current working node.
+				self.create.txt003.setText(transform.name())
 
 		return transform
 

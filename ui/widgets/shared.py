@@ -223,7 +223,7 @@ class Attributes(object):
 			setLayoutDirection_ (str) = set the layout direction using a string value. ie. 'LeftToRight'
 			setAlignment_ (str) = set the alignment using a string value. ie. 'AlignVCenter'
 			setButtonSymbols_ (str) = set button symbols using a string value. ex. ie. 'PlusMinus'
-			minMax_ (str) = set the min, max, and step value using a string value. ex. '.01-10 step.1'
+			setMinMax_ (str) = set the min, max, and step value using a string value. ex. '.01-10 step.1'
 		'''
 		if attr=='copy_':
 			obj.setObjectName(value.objectName())
@@ -257,7 +257,7 @@ class Attributes(object):
 			self.setAttributes({'setButtonSymbols':getattr(QtWidgets.QAbstractSpinBox, value)}, obj)
 
 		#presets
-		elif attr=='minMax_':
+		elif attr=='setMinMax_':
 			self.setMinMax(obj, value)
 
 		elif attr=='setSpinBoxByValue_':

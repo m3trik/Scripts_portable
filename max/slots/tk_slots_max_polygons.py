@@ -98,7 +98,7 @@ class Polygons(Init):
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
-			tb.menu_.add('QDoubleSpinBox', setPrefix='Distance: ', setObjectName='s002', minMax_='0.0000-10 step.001', setValue=0.001, setToolTip='Merge Distance.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Distance: ', setObjectName='s002', setMinMax_='0.0000-10 step.001', setValue=0.001, setToolTip='Merge Distance.')
 			return
 
 		tolerance = float(tb.menu_.s002.value())
@@ -126,7 +126,7 @@ class Polygons(Init):
 		'''
 		tb = self.currentUi.tb001
 		if state is 'setMenu':
-			tb.menu_.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s003', minMax_='0-10000 step1', setValue=0.001, setToolTip='Divisions.')
+			tb.menu_.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s003', setMinMax_='0-10000 step1', setValue=0.001, setToolTip='Divisions.')
 			return
 
 		divisions = tb.menu_.s003.value()
@@ -195,7 +195,7 @@ class Polygons(Init):
 		'''
 		tb = self.currentUi.tb004
 		if state is 'setMenu':
-			tb.menu_.add('QDoubleSpinBox', setPrefix='Width: ', setObjectName='s000', minMax_='0.00-100 step.01', setValue=0.01, setToolTip='Bevel Width.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Width: ', setObjectName='s000', setMinMax_='0.00-100 step.01', setValue=0.01, setToolTip='Bevel Width.')
 			return
 
 		width = float(tb.menu_.s000.value())
@@ -246,7 +246,7 @@ class Polygons(Init):
 		'''
 		tb = self.currentUi.tb006
 		if state is 'setMenu':
-			tb.menu_.add('QDoubleSpinBox', setPrefix='Offset: ', setObjectName='s001', minMax_='0.00-100 step.01', setValue=2.00, setToolTip='Offset amount.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Offset: ', setObjectName='s001', setMinMax_='0.00-100 step.01', setValue=2.00, setToolTip='Offset amount.')
 			return
 
 		offset = float(tb.menu_.s001.value())

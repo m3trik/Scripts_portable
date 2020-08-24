@@ -440,7 +440,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 			cmb.menu_.clear()
 
 	# 		#add spinboxes
-	# 		[cmb.add('QDoubleSpinBox', setObjectName=name, minMax_='0.00-100 step1') for name in self.unpackNames(names)]
+	# 		[cmb.add('QDoubleSpinBox', setObjectName=name, setMinMax_='0.00-100 step1') for name in self.unpackNames(names)]
 
 	# 		#set values
 	# 		self.setSpinboxes(cmb, names, attributes)

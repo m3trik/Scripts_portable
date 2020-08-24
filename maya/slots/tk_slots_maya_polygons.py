@@ -86,7 +86,7 @@ class Polygons(Init):
 		'''
 		tb = self.ui.tb000
 		if state is 'setMenu':
-			tb.menu_.add('QDoubleSpinBox', setPrefix='Distance: ', setObjectName='s002', minMax_='0.0000-10 step.001', setValue=0.001, setToolTip='Merge Distance.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Distance: ', setObjectName='s002', setMinMax_='0.0000-10 step.001', setValue=0.001, setToolTip='Merge Distance.')
 			return
 
 		tolerance = float(tb.menu_.s002.value())
@@ -125,7 +125,7 @@ class Polygons(Init):
 		'''
 		tb = self.ui.tb001
 		if state is 'setMenu':
-			tb.menu_.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s003', minMax_='0-10000 step1', setValue=0, setToolTip='Subdivision Amount.')
+			tb.menu_.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s003', setMinMax_='0-10000 step1', setValue=0, setToolTip='Subdivision Amount.')
 			return
 
 		divisions = tb.menu_.s003.value()
@@ -162,7 +162,7 @@ class Polygons(Init):
 		tb = self.ui.tb003
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='Keep Faces Together', setObjectName='chk002', setChecked=True, setToolTip='Keep edges/faces together.')
-			tb.menu_.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s004', minMax_='1-10000 step1', setValue=1, setToolTip='Subdivision Amount.')
+			tb.menu_.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s004', setMinMax_='1-10000 step1', setValue=1, setToolTip='Subdivision Amount.')
 			return
 
 		keepFacesTogether = tb.menu_.chk002.isChecked() #keep faces/edges together.
@@ -192,7 +192,7 @@ class Polygons(Init):
 		'''
 		tb = self.ui.tb004
 		if state is 'setMenu':
-			tb.menu_.add('QDoubleSpinBox', setPrefix='Width: ', setObjectName='s000', minMax_='0.00-100 step.01', setValue=0.01, setToolTip='Bevel Width.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Width: ', setObjectName='s000', setMinMax_='0.00-100 step.01', setValue=0.01, setToolTip='Bevel Width.')
 			return
 
 		width = float(tb.menu_.s000.value())
@@ -273,7 +273,7 @@ class Polygons(Init):
 		'''
 		tb = self.ui.tb006
 		if state is 'setMenu':
-			tb.menu_.add('QDoubleSpinBox', setPrefix='Offset: ', setObjectName='s001', minMax_='0.00-100 step.01', setValue=2.00, setToolTip='Offset amount.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Offset: ', setObjectName='s001', setMinMax_='0.00-100 step.01', setValue=2.00, setToolTip='Offset amount.')
 			return
 
 		offset = float(tb.menu_.s001.value())

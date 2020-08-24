@@ -142,7 +142,7 @@ class Transform(Init):
 						('chk023', 'Rotate <b>Off</b>'), ('s023', 'degrees:', rotateValue, '1-360 step1')]
 
 				widgets = [cmb.menu_.add(QCheckBox_, setObjectName=i[0], setText=i[1], setTristate=1) if len(i) is 2 
-						else cmb.menu_.add('QDoubleSpinBox', setObjectName=i[0], setPrefix=i[1], setValue=i[2], minMax_=i[3], setDisabled=1) for i in list_]
+						else cmb.menu_.add('QDoubleSpinBox', setObjectName=i[0], setPrefix=i[1], setValue=i[2], setMinMax_=i[3], setDisabled=1) for i in list_]
 
 			except NameError as error:
 				print(error)
@@ -454,6 +454,28 @@ class Transform(Init):
 			self.alignVertices(mode=6,average=avg,edgeloop=loop)
 
 
+	@Slots.message
+	def tb002(self, state=None):
+		'''
+		Snap Closest Verts
+		'''
+		tb = self.ui.tb002
+		if state is 'setMenu':
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Tolerance: ', setObjectName='s001', setMinMax_='.000-100 step.05', setValue=10, setToolTip='Set the max Snap Distance. Vertices with a distance exceeding this value will be ignored.')
+			tb.menu_.add('QCheckBox', setText='Freeze Transforms', setObjectName='chk012', setChecked=True, setToolTip='Freeze Transformations on the object that is being snapped to.')
+			return
+
+		tolerance = tb.menu_.s001.value()
+		freezetransforms = tb.menu_.chk012
+
+		selection = pm.ls(sl=1, objectsOnly=1)
+		if len(selection)>1:
+			obj1, obj2 = selection
+			Init.snapClosestVertex(obj1, obj2, tolerance, freezetransforms)
+		else:
+			return 'Error: Operation requires at least two selected objects.'
+
+
 	def lbl000(self):
 		'''
 		Transform Constraints: Disable All
@@ -473,8 +495,7 @@ class Transform(Init):
 
 	def b000(self):
 		'''
-		Transform -
-
+		Transform negative axis
 		'''
 		#change the textfield to neg value and call performTransformations
 		textfield = float(self.transform.s000.value())
@@ -486,8 +507,7 @@ class Transform(Init):
 
 	def b001(self):
 		'''
-		Transform +
-
+		Transform positive axis
 		'''
 		#change the textfield to pos value and call performTransformations
 		textfield = float(self.transform.s000.value())
@@ -500,17 +520,13 @@ class Transform(Init):
 	def b002(self):
 		'''
 		Freeze Transformations
-
 		'''
-		# mel.eval("performFreezeTransformations(0);")
-		pm.makeIdentity(apply=True) #freeze transforms
-		# pm.makeIdentity (obj, apply=1, t=1, r=1, s=1, n=0, pn=1)
+		pm.makeIdentity(apply=True, translate=True, rotate=True, scale=True) #this is the same as pm.makeIdentity(apply=True)
 
 
 	def b003(self):
 		'''
 		Center Pivot Object
-
 		'''
 		mel.eval("CenterPivot;")
 
@@ -518,7 +534,6 @@ class Transform(Init):
 	def b005(self):
 		'''
 		Move To
-
 		'''
 		sel = rt.getCurrentSelection()
 
@@ -531,7 +546,6 @@ class Transform(Init):
 	def b014(self):
 		'''
 		Center Pivot Component
-
 		'''
 		[pm.xform (s, centerPivot=1) for s in pm.ls (sl=1, objectsOnly=1, flatten=1)]
 		# mel.eval("moveObjectPivotToComponentCentre;")
@@ -540,7 +554,6 @@ class Transform(Init):
 	def b015(self):
 		'''
 		Center Pivot World
-
 		'''
 		mel.eval("xform -worldSpace -pivots 0 0 0;")
 
@@ -548,7 +561,6 @@ class Transform(Init):
 	def b016(self):
 		'''
 		Set To Bounding Box
-
 		'''
 		mel.eval("bt_alignPivotToBoundingBoxWin;")
 
@@ -556,7 +568,6 @@ class Transform(Init):
 	def b017(self):
 		'''
 		Bake Pivot
-
 		'''
 		mel.eval("BakeCustomPivot;")
 
@@ -564,7 +575,6 @@ class Transform(Init):
 	def b032(self):
 		'''
 		Reset Pivot Transforms
-
 		'''
 		mel.eval('''
 		{ string $objs[] = `ls -sl -type transform -type geometryShape`;

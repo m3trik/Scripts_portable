@@ -58,7 +58,7 @@ class Switchboard(QtCore.QObject):
 	def __init__(self, parent=None):
 		super().__init__(parent)
 		'''
-		Initialize the main dict (_sbDict).
+		Initialize the main dict (sbDict).
 		'''
 		for uiName, v in UiLoader().uiDict.items():
 			self.sbDict[uiName] = {'ui':	v['ui'], #set a key for each ui.

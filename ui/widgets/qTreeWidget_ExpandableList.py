@@ -905,7 +905,7 @@ if __name__ == '__main__':
 	# 		setLayoutDirection_ (str) = set the layout direction using a string value. ie. 'LeftToRight'
 	# 		setAlignment_ (str) = set the alignment using a string value. ie. 'AlignVCenter'
 	# 		setButtonSymbols_ (str) = set button symbols using a string value. ex. ie. 'PlusMinus'
-	# 		minMax_ (str) = set the min, max, and step value using a string value. ex. '.01-10 step.1'
+	# 		setMinMax_ (str) = set the min, max, and step value using a string value. ex. '.01-10 step.1'
 	# 	'''
 	# 	if attr=='insertSeparator_':
 	# 		self.insertSeparator(action)
@@ -920,7 +920,7 @@ if __name__ == '__main__':
 	# 		self.setAttributes({'setButtonSymbols':getattr(QtWidgets.QAbstractSpinBox, value)}, action)
 
 	# 	#presets
-	# 	elif attr=='minMax_':
+	# 	elif attr=='setMinMax_':
 	# 		minimum = float(value.split('-')[0])
 	# 		maximum = float(value.split('-')[1].split(' ')[0])
 	# 		step = float(value.split(' ')[1].strip('step'))

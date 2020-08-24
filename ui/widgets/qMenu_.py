@@ -59,7 +59,7 @@ class QMenu_(QtWidgets.QMenu, Attributes):
 			setLayoutDirection_ (str) = ie. 'LeftToRight'
 			setAlignment_ (str) = ie. 'AlignVCenter'
 			setButtonSymbols_ (str) = ie. 'PlusMinus'
-			minMax_ (str) = Set the min, max, and step values with a string. ie. '1-100 step.1'
+			setMinMax_ (str) = Set the min, max, and step values with a string. ie. '1-100 step.1'
 
 		returns:
  			the added widget.
@@ -411,7 +411,7 @@ Promoting a widget in designer to use a custom class:
 	# 		setLayoutDirection_ (str) = set the layout direction using a string value. ie. 'LeftToRight'
 	# 		setAlignment_ (str) = set the alignment using a string value. ie. 'AlignVCenter'
 	# 		setButtonSymbols_ (str) = set button symbols using a string value. ex. ie. 'PlusMinus'
-	# 		minMax_ (str) = set the min, max, and step value using a string value. ex. '.01-10 step.1'
+	# 		setMinMax_ (str) = set the min, max, and step value using a string value. ex. '.01-10 step.1'
 	# 	'''
 	# 	if attr=='copy':
 	# 		self.setObjectName(value.objectName())
@@ -436,7 +436,7 @@ Promoting a widget in designer to use a custom class:
 	# 		self.setAttributes({'setButtonSymbols':getattr(QtWidgets.QAbstractSpinBox, value)}, action)
 
 	# 	#presets
-	# 	elif attr=='minMax_':
+	# 	elif attr=='setMinMax_':
 	# 		self.setMinMax(action, value)
 
 	# 	elif attr=='setSpinBoxByValue_':

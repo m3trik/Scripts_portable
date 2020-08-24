@@ -112,12 +112,37 @@ class Init(Slots):
 
 		ex. loadPlugin('nearestPointOnMesh')
 		'''
-		not cmds.pluginInfo(plugin, query=True, loaded=True) and cmds.loadPlugin(plugin)
+		not pm.pluginInfo(plugin, query=True, loaded=True) and pm.loadPlugin(plugin)
 
 
 	# ------------------------------------------------
 	' Geometry'
 	# ------------------------------------------------
+
+	@staticmethod
+	def getSelectedComponents(type_='vertices'):
+		'''
+		Get the component selection of the given type.
+		'''
+		types = {'vertices':31, 'edges':32, 'faces':34}
+
+		components = pm.filterExpand(selectionMask=types[type_])
+		selectedComponents = [c.split('[')[-1].rstrip(']') for c in components] if components else []
+
+		return selectedComponents
+
+
+	@staticmethod
+	def getComponents(obj, type_='vertices'):
+		'''
+		Get the components of the given type from the given object.
+		'''
+		types = {'vertices':'vtx', 'edges':'e', 'faces':'f'}
+
+		component = getattr(obj, types[type_])
+		components = [component[n] for n in xrange(pm.polyEvaluate(obj, vertex=True))]
+
+		return components
 
 
 	@staticmethod
@@ -314,39 +339,109 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getClosestVerts(set1, set2, tolerance=10000):
+	def getClosestVerts(set1, set2, tolerance=100):
 		'''
-		Get the two closest vertices between the two sets of vertices.
+		Find the two closest vertices between the two sets of vertices.
 
 		args:
-			set1 (obj)(set) = vertex/Vertices.
-			set2 (set) = Vertices.
+			set1 (list) = The first set of vertices.
+			set2 (list) = The second set of vertices.
 			tolerance (int) = Maximum search distance.
 
 		returns:
 			(set) closest vertex pair (<vertex from set1>, <vertex from set2>).
 		'''
-		if not isinstance(set1, (list, tuple, set)):
-			set1 = (set1)
-
-		verticesAndPositions1 = {v:pm.pointPosition(v, world=1) for v in set1}
-		verticesAndPositions2 = {v:pm.pointPosition(v, world=1) for v in set2}
-
-		closestDistance = 2**32-1
-
+		closestDistance=tolerance
 		closestVerts=None
-		closestPosition=[]
-		for v1, v1Pos in verticesAndPositions1.items():
-			for v2, v2Pos in verticesAndPositions2.items(): 
+		for v1 in set1:
+			v1Pos = pm.pointPosition(v1, world=1)
+			for v2 in set2:
+				v2Pos = pm.pointPosition(v2, world=1)
 				distance = Init.getVectorLength(v1Pos, v2Pos)
 
 				if distance < closestDistance:
 					closestDistance = distance
-					closestPosition = v2Pos
 					if closestDistance < tolerance:
 						closestVerts = (v1, v2)
 
 		return closestVerts
+
+
+	@staticmethod
+	def getClosestVertex(vertices, obj, tolerance=10.0, freezeTransforms=False):
+		'''
+		Find the closest vertices from one set of vertices and the vertices of an object.
+
+		args:
+			vertices (list) = A set of vertices.
+			obj (obj) = The reference object in which to find the closest vertex for each vertex in the list of given vertices.
+			tolerance (float) = Maximum search distance.
+			freezeTransforms (bool) = Reset the selected transform and all of its children down to the shape level.
+
+		returns:
+			(dict) closest vertex pairs {<vertex from set1>:<vertex from set2>}.
+
+		ex. obj1, obj2 = selection
+			vertices = Init.getComponents(obj1, 'vertices')
+			closestVerts = getClosestVertex(vertices, obj2, tolerance=10)
+		'''
+		pm.undoInfo(openChunk=1)
+		if freezeTransforms:
+			pm.makeIdentity(obj, apply=True)
+
+		obj2Shape = pm.listRelatives(obj, children=1, shapes=1)[0] #pm.listRelatives(obj, fullPath=False, shapes=True, noIntermediate=True)
+
+		cpmNode = pm.ls(pm.createNode('closestPointOnMesh'))[0] #get the closestPointOnMesh node.
+		pm.connectAttr(obj2Shape.outMesh, cpmNode.inMesh)
+
+		closestVerts={}
+		for v1 in vertices:
+			v1Pos = pm.pointPosition(v1, world=True)
+			pm.setAttr(cpmNode.inPosition, v1Pos[0], v1Pos[1], v1Pos[2], type="double3") #set a compound attribute
+
+			index = pm.getAttr(cpmNode.closestVertexIndex) #vertex Index. | ie. result: [34]
+			v2 = obj2Shape.vtx[index]
+
+			v2Pos = pm.pointPosition(v2, world=True)
+			distance = Init.getVectorLength(v1Pos, v2Pos)
+
+			if distance < tolerance:
+				closestVerts[v1] = v2
+
+		pm.delete(cpmNode)
+		pm.undoInfo(closeChunk=1)
+
+		return closestVerts
+
+
+	@staticmethod
+	def snapClosestVerts(obj1, obj2, tolerance=10.0):
+		'''
+		Snap the vertices from object one to the closest verts on object two.
+
+		args:
+			obj1 (obj) = The object in which the vertices are moved from.
+			obj2 (obj) = The object in which the vertices are moved to.
+			tolerance (float) = Maximum search distance.
+		'''
+		vertices = Init.getComponents(obj1, 'vertices')
+		closestVerts = Init.getClosestVertex(vertices, obj2, tolerance=tolerance)
+
+		progressBar = mel.eval("$container=$gMainProgressBar");
+		pm.progressBar(progressBar, edit=True, beginProgress=True, isInterruptable=True, status="Snapping Vertices ...", maxValue=len(closestVerts)) 
+
+		pm.undoInfo(openChunk=1)
+		for v1, v2 in closestVerts.items():
+			if pm.progressBar(progressBar, query=True, isCancelled=True):
+				break
+
+			v2Pos = pm.pointPosition(v2, world=True)
+			pm.xform(v1, translation=v2Pos, worldSpace=True)
+
+			pm.progressBar(progressBar, edit=True, step=1)
+		pm.undoInfo(closeChunk=1)
+
+		pm.progressBar(progressBar, edit=True, endProgress=True)
 
 
 	@staticmethod
@@ -675,22 +770,55 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getHistoryNode(node, index=0):
+	def getTransformNode(node=None, index=0):
 		'''
-		Get the history node of the given transform. 
+		Get the transform node. 
 
 		args:
-			node (obj) = Transform node.
+			node (obj) = Node. If nothing is given, the current selection will be used.
+			index (int) = Return the transform node at the given index. if Nothing is given, the full list will be returned. ie. index=[:-1] or index=0
+
+		returns:
+			(str) node
+		'''
+		if not node:
+			node = pm.ls(sl=1)
+
+		transforms = pm.ls(node, type='transform')
+		if not transforms:
+			shapeNodes = pm.ls(sl=1, objectsOnly=1)
+			transforms = pm.listRelatives(shapeNodes, parent=1)
+
+		if transforms and index is not None:
+			return transforms[index]
+		else:
+			return transforms
+
+
+	@staticmethod
+	def getHistoryNode(node=None, index=0):
+		'''
+		Get the history node. 
+
+		args:
+			node (obj) = Node. If nothing is given, the current selection will be used.
+			index (int) = Return the transform node at the given index. if Nothing is given, the full list will be returned. ie. index=[:-1] or index=0
 
 		returns:
 			(str) node
 
 		alt method: node.history()[-1]
 		'''
+		if not node:
+			pm.ls(sl=1, type='transform')
+
 		shapes = pm.listRelatives(node, children=1, shapes=1) #get shape node from transform: returns list ie. [nt.Mesh('pConeShape1')]
 		connections = pm.listConnections(shapes, source=1, destination=0) #get incoming connections: returns list ie. [nt.PolyCone('polyCone1')]
 
-		return connections[index]
+		if connections and index is not None:
+			return connections[index]
+		else:
+			return connections
 
 
 	@staticmethod
@@ -1180,6 +1308,54 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 
 
 #deprecated -------------------------------------
+
+
+	# def snapToClosestVertex(vertices, obj, tolerance=0.125):
+	# 	'''
+	# 	This Function Snaps Vertices To Onto The Reference Object.
+
+	# 	args:
+	# 		obj (str) = The object to snap to.
+	# 		vertices (list) = The vertices to snap.
+	# 		tolerance (float) = Max distance.
+	# 	'''
+	# 	Init.loadPlugin('nearestPointOnMesh')
+	# 	nearestPointOnMeshNode = mel.eval('{} {}'.format('nearestPointOnMesh', obj))
+	# 	pm.delete(nearestPointOnMeshNode)
+
+	# 	pm.undoInfo(openChunk=1)
+	# 	for vertex in vertices:
+
+	# 		vertexPosition = pm.pointPosition(vertex, world=True)
+	# 		pm.setAttr('{}.inPosition'.format(nearestPointOnMeshNode), vertexPosition[0], vertexPosition[1], vertexPosition[2])
+	# 		associatedFaceId = pm.getAttr('{}.nearestFaceIndex'.format(nearestPointOnMeshNode))
+	# 		vtxsFaces = pm.filterExpand(pm.polyListComponentConversion('{0}.f[{1}]'.format(obj, associatedFaceId), fromFace=True,  toVertexFace=True), sm=70, expand=True)
+
+	# 		closestDistance = 2**32-1
+
+	# 		closestPosition=[]
+	# 		for vtxsFace in vtxsFaces:
+	# 			associatedVtx = pm.polyListComponentConversion(vtxsFace, fromVertexFace=True, toVertex=True)
+	# 			associatedVtxPosition = pm.pointPosition(associatedVtx, world=True)
+				
+	# 			distance = Init.getVectorLength(vertexPosition, associatedVtxPosition)
+
+	# 			if distance<closestDistance:
+	# 				closestDistance = distance
+	# 				closestPosition = associatedVtxPosition
+				
+	# 			if closestDistance<tolerance:
+	# 				pm.move(closestPosition[0], closestPosition[1], closestPosition[2], vertex, worldSpace=True)
+
+	# 	# pm.delete(nearestPointOnMeshNode)
+	# 	pm.undoInfo(closeChunk=1)
+
+
+
+
+
+
+
 
 # def getContigiousIslands(faces, faceIslands=[]):
 # 	'''

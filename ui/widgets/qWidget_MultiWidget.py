@@ -55,7 +55,7 @@ class QWidget_MultiWidget(QtWidgets.QWidget, Attributes):
 			setLayoutDirection_ (str) = ie. 'LeftToRight'
 			setAlignment_ (str) = ie. 'AlignVCenter'
 			setButtonSymbols_ (str) = ie. 'PlusMinus'
-			minMax_ (str) = Set the min, max, and step values with a string. ie. '1-100 step.1'
+			setMinMax_ (str) = Set the min, max, and step values with a string. ie. '1-100 step.1'
 
 		returns:
  			the added widget.

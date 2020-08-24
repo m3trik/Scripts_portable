@@ -50,7 +50,7 @@ class Normals(Init):
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
-			tb.menu_.add('QSpinBox', setPrefix='Display Size: ', setObjectName='s001', minMax_='1-100 step1', setValue=1, setToolTip='Normal display size.')
+			tb.menu_.add('QSpinBox', setPrefix='Display Size: ', setObjectName='s001', setMinMax_='1-100 step1', setValue=1, setToolTip='Normal display size.')
 			return
 
 		size = float(tb.menu_.s001.value())
@@ -115,7 +115,7 @@ class Normals(Init):
 		'''
 		tb = self.currentUi.tb002
 		if state is 'setMenu':
-			tb.menu_.add('QSpinBox', setPrefix='Angle: ', setObjectName='s000', minMax_='1-180 step1', setValue=30, setToolTip='Angle degree.')
+			tb.menu_.add('QSpinBox', setPrefix='Angle: ', setObjectName='s000', setMinMax_='1-180 step1', setValue=30, setToolTip='Angle degree.')
 			return
 
 		normalAngle = str(tb.menu_.s000.value())
