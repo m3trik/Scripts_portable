@@ -35,23 +35,17 @@ class Display(Init):
 			cmb.addItems_(list_, '')
 			return
 
-		# if index>0:
-		# 	if index==cmb.items.index(''):
-		# 		pass
-		# 	cmb.setCurrentIndex(0)
+		if index>0:
+			if index==cmb.items.index(''):
+				pass
+			cmb.setCurrentIndex(0)
 
 
-	@Slots.message
 	def b000(self):
 		'''
-		Toggle Subdiv Proxy Display
+		Set Wireframe color
 		'''
-		state = self.cycle([1,1,0], 'subdivProxy')
-		try:
-			mel.eval("smoothingDisplayToggle "+str(state))
-		except:
-			traceback.print_exc()
-			return 'Error: Nothing Selected.'
+		pm.mel.objectColorPalette()
 
 
 	def b001(self):

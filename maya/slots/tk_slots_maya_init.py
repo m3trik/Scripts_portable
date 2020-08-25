@@ -415,7 +415,7 @@ class Init(Slots):
 
 
 	@staticmethod
-	def snapClosestVerts(obj1, obj2, tolerance=10.0):
+	def snapClosestVerts(obj1, obj2, tolerance=10.0, freezeTransforms=False):
 		'''
 		Snap the vertices from object one to the closest verts on object two.
 
@@ -423,9 +423,10 @@ class Init(Slots):
 			obj1 (obj) = The object in which the vertices are moved from.
 			obj2 (obj) = The object in which the vertices are moved to.
 			tolerance (float) = Maximum search distance.
+			freezeTransforms (bool) = Reset the selected transform and all of its children down to the shape level.
 		'''
 		vertices = Init.getComponents(obj1, 'vertices')
-		closestVerts = Init.getClosestVertex(vertices, obj2, tolerance=tolerance)
+		closestVerts = Init.getClosestVertex(vertices, obj2, tolerance=tolerance, freezeTransforms=freezeTransforms)
 
 		progressBar = mel.eval("$container=$gMainProgressBar");
 		pm.progressBar(progressBar, edit=True, beginProgress=True, isInterruptable=True, status="Snapping Vertices ...", maxValue=len(closestVerts)) 

@@ -521,7 +521,7 @@ class Transform(Init):
 		selection = pm.ls(sl=1, objectsOnly=1)
 		if len(selection)>1:
 			obj1, obj2 = selection
-			Init.snapClosestVertex(obj1, obj2, tolerance)
+			Init.snapClosestVerts(obj1, obj2, tolerance)
 		else:
 			return 'Error: Operation requires at least two selected objects.'
 

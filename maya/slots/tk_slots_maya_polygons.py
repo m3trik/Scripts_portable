@@ -86,7 +86,7 @@ class Polygons(Init):
 		'''
 		tb = self.ui.tb000
 		if state is 'setMenu':
-			tb.menu_.add('QDoubleSpinBox', setPrefix='Distance: ', setObjectName='s002', setMinMax_='0.0000-10 step.001', setValue=0.001, setToolTip='Merge Distance.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Distance: ', setObjectName='s002', setMinMax_='0.000-10 step.001', setValue=0.001, setToolTip='Merge Distance.')
 			return
 
 		tolerance = float(tb.menu_.s002.value())

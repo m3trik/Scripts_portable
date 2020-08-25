@@ -41,9 +41,9 @@ class Display(Init):
 
 	def b000(self):
 		'''
-		
+		Set Wireframe color
 		'''
-		pass
+		pm.mel.objectColorPalette()
 
 
 	def b001(self):

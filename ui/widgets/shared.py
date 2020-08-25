@@ -7,7 +7,7 @@ from PySide2 import QtCore, QtGui, QtWidgets
 
 class Menu(object):
 	'''
-	Get Menu instances.
+	Get a Menu instance.
 	'''
 	def __init__(self):
 		'''
@@ -275,9 +275,18 @@ class Attributes(object):
 			spinbox (obj) = spinbox widget.
 			value (str) = value as shorthand string. ie. '0.00-100 step1'
 		'''
-		minimum = float(value.split('-')[0])
-		maximum = float(value.split('-')[1].split(' ')[0])
-		step = float(value.split(' ')[1].strip('step'))
+		stepStr = value.split(' ')[1].strip('step')
+		step = float(stepStr)
+		decimals = len(stepStr.split('.')[-1])
+
+		spanStr = value.split('-')
+		minimum = float(spanStr[0])
+		maximum = float(spanStr[1].split(' ')[0])
+
+		if hasattr(spinbox, 'setDecimals'):
+			self.setAttributes({
+				'setDecimals':decimals,
+			}, spinbox)
 
 		self.setAttributes({
 			'setMinimum':minimum, 

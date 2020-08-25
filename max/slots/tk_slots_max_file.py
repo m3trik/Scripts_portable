@@ -62,8 +62,11 @@ class File(Init):
 			cmb.contextMenu.add('QPushButton', setObjectName='b001', setText='Last', setToolTip='Open the most recent file.')
 			return
 
-		list_ = [f.replace('/', '\\') for f in rt.getRecentfiles()]
-		items = cmb.addItems_(list_, "Recent Files", clear=True)
+		recentFiles = [f.replace('/', '\\') for f in rt.getRecentfiles()]
+		items = cmb.addItems_(recentFiles, 'Recent Files:', clear=True)
+
+		#set the text for the open last file button to the last file's name.
+		self.file_submenu.b001.setText(File.getFilenameFromFullPath(recentFiles[0])) if recentFiles else self.file_submenu.b001.setVisible(False)
 
 		if index>0:
 			# force=True; force if maxEval("maxFileName;") else not force #if sceneName prompt user to save; else force open.  also: checkForSave(); If the scene has been modified since the last file save (if any), calling this function displays the message box prompting the user that the scene has been modified and requests to save.
@@ -435,6 +438,34 @@ class File(Init):
 		# 	if replace:
 		# 		newName = obj.replace(from_, to)
 		# 	pm.rename(obj, newName) #Rename the object with the new name
+
+
+	@staticmethod
+	def serverPath(dir_):
+		'''
+		Assure a given directory path string is formatted correctly for a server address.
+		If the string starts with //, replace with \\
+		'''
+		if dir_.startswith('//'): #reformat for server address
+			dir_ = dir_.replace('//', '\\\\')
+
+		return dir_
+
+
+	@staticmethod
+	def getFilenameFromFullPath(fullPath):
+		'''
+		Extract the file name from a path string.
+		
+		args:
+			fullPath (str) = A full path including file name.
+
+		returns:
+			(str) the file name including extension.
+		'''
+		filename = fullPath.split('/')[-1]
+
+		return filename
 
 
 

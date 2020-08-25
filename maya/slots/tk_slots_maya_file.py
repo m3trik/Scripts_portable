@@ -38,6 +38,9 @@ class File(Init):
 		recentFiles = [File.serverPath(f) for f in (list(reversed(pm.optionVar(query='RecentFilesList')))) if "Autosave" not in f]
 		cmb.addItems_(recentFiles, "Recent Files", clear=True)
 
+		#set the text for the open last file button to the last file's name.
+		self.file_submenu.b001.setText(File.getFilenameFromFullPath(recentFiles[0])) if recentFiles else self.file_submenu.b001.setVisible(False)
+
 		if index>0:
 			force=True; force if str(pm.mel.file(query=1, sceneName=1, shortName=1)) else not force #if sceneName prompt user to save; else force open
 			pm.openFile(cmb.items[index], open=1, force=force)
@@ -420,6 +423,22 @@ class File(Init):
 			dir_ = dir_.replace('//', '\\\\')
 
 		return dir_
+
+
+	@staticmethod
+	def getFilenameFromFullPath(fullPath):
+		'''
+		Extract the file name from a path string.
+		
+		args:
+			fullPath (str) = A full path including file name.
+
+		returns:
+			(str) the file name including extension.
+		'''
+		filename = fullPath.split('/')[-1]
+
+		return filename
 
 
 
