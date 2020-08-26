@@ -1,4 +1,5 @@
 from __future__ import print_function
+from builtins import super
 import pymel.core as pm
 import maya.mel as mel
 
@@ -11,7 +12,7 @@ class Macros(Init):
 	Custom scripts with assigned hotkeys.
 	'''
 	def __init__(self, *args, **kwargs):
-		super(Macros, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 		'''
 		'''
 
@@ -118,7 +119,7 @@ class Macros(Init):
 	# Display --------------------------------------------------------------------------------------------------------------------------------
 
 	@staticmethod
-	def setWireframeOnShadedOption(editor, state):
+	def setWireframeOnShadedOption(editor, state, smoothWireframe=True, activeOnly=False):
 		'''
 		Set Wireframe On Shaded.
 
@@ -129,10 +130,9 @@ class Macros(Init):
 		modeIsShaded = pm.modelEditor(editor, query=True, displayAppearance=True) #True if "smoothShaded", "flatShaded".
 
 		if state and not modeIsShaded:
-			pm.modelEditor(editor, edit=True, displayAppearance='smoothShaded', activeOnly=False, wireframeOnShaded=1)
+			pm.modelEditor(editor, edit=True, displayAppearance=True, activeOnly=activeOnly, wireframeOnShaded=1, smoothWireframe=smoothWireframe) #displayAppearance: Possible values: "wireframe", "points", "boundingBox", "smoothShaded", "flatShaded"
 		else:
 			pm.modelEditor(editor, edit=True, wireframeOnShaded=0)
-
 
 
 	@staticmethod
@@ -149,14 +149,13 @@ class Macros(Init):
 			if not state:
 				pm.polyOptions(sel, gl=True, wireBackCulling=True)
 				Macros.setWireframeOnShadedOption(currentPanel, 0)
-				pm.inViewMessage(statusMessage="Back-Face Culling is now <hl>OFF</hl>.\\n<hl>1</hl>", pos='topCenter', fade=True)
+				pm.inViewMessage(statusMessage="Back-Face Culling is now <hl>OFF</hl>.>", pos='topCenter', fade=True)
 			else:
 				pm.polyOptions(sel, gl=True, backCulling=True)
 				Macros.setWireframeOnShadedOption(currentPanel, 1)
-				pm.inViewMessage(statusMessage="Back-Face Culling is now <hl>ON</hl>.\\n<hl>1</hl>", pos='topCenter', fade=True)
+				pm.inViewMessage(statusMessage="Back-Face Culling is now <hl>ON</hl>.", pos='topCenter', fade=True)
 		else:
 			print(" Warning: Nothing selected. ")
-
 
 
 	@staticmethod
@@ -164,13 +163,25 @@ class Macros(Init):
 		'''
 		hk_smooth_preview
 		Toggle smooth mesh preview.
+
+		#smooth mesh attributes:
+		setAttr ($nodeName + ".displaySmoothMesh") $smoothMesh;
+		setAttr ($nodeName + ".smoothMeshSelectionMode") $selMode;
+		setAttr ($nodeName + ".smoothLevel") $newLevel;
+		setAttr ($nodeName + ".displaySubdComps") $subDivs;
+		setAttr ($nodeName + ".continuity") $newCont;
+		setAttr ($nodeName + ".smoothUVs") $smoothUVs;
+		setAttr ($nodeName + ".propagateEdgeHardness") $propEdgeHardness;
+		setAttr ($nodeName + ".keepMapBorders") $newMapBorders;
+		setAttr ($nodeName + ".keepBorder") $keepBorder;
+		setAttr ($nodeName + ".keepHardEdge") $keepHardEdge;
 		'''
 		selection=pm.ls(selection=1)
 		scene=pm.ls(geometry=1)
 
 		#if no object selected smooth all geometry
 		if len(selection)==0:
-			state = Init.cycle([0,1,2], 'hk_smooth_preview')
+			state = Macros.cycle([0,1,2], 'hk_smooth_preview')
 
 			for obj in scene:
 				obj = obj.split('.')[0] #get u'pSphereShape1' from u'pSphereShape1.vtx[105]' if in component mode.
@@ -178,17 +189,17 @@ class Macros(Init):
 				if state is 0: #if pm.getAttr(str(obj) + ".displaySmoothMesh") != 2:
 					pm.setAttr((str(obj) + ".displaySmoothMesh"), 2) #smooth preview on
 					pm.displayPref(wireframeOnShadedActive="none") #selection wireframe off
-					pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview is now <hl>ON</hl>.<br><hl>2</hl>")
+					pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview <hl>ON</hl>.<br>Wireframe <hl>Off</hl>.")
 
 				elif state is 1:
 					pm.setAttr((str(obj) + ".displaySmoothMesh"), 2) #smooth preview on
 					pm.displayPref(wireframeOnShadedActive="full") #selection wireframe off
-					# pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview is now <hl>ON</hl>.<br><hl>2</hl>")
+					pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview <hl>ON</hl>.<br>Wireframe <hl>Full</hl>.")
 
 				else:
 					pm.setAttr((str(obj) + ".displaySmoothMesh"), 0) #smooth preview off
 					pm.displayPref(wireframeOnShadedActive="full") #selection wireframe on
-					pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview is now <hl>OFF</hl>.<br><hl>2</hl>")
+					pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview <hl>OFF</hl>.<br>Wireframe <hl>Full</hl>.")
 
 				if pm.getAttr(str(obj) + ".smoothLevel") != 1:
 					pm.setAttr((str(obj) + ".smoothLevel"), 1)
@@ -200,21 +211,22 @@ class Macros(Init):
 			if pm.getAttr(str(obj) + ".displaySmoothMesh") != 2:
 				pm.setAttr((str(obj) + ".displaySmoothMesh"), 2) #smooth preview on
 				pm.displayPref(wireframeOnShadedActive="none") #selection wireframe off
-				pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview is now <hl>ON</hl>.<br><hl>2</hl>")
+				pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview <hl>ON</hl>.<br>Wireframe <hl>Off</hl>.")
 
 			elif pm.getAttr(str(obj) + ".displaySmoothMesh") == 2 and pm.displayPref(query=1, wireframeOnShadedActive=1)=='none':
 				pm.setAttr((str(obj) + ".displaySmoothMesh"), 2) #smooth preview on
-				pm.displayPref(wireframeOnShadedActive="full") #selection wireframe off
-				# pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview is now <hl>ON</hl>.<br><hl>2</hl>")
+				pm.displayPref(wireframeOnShadedActive="full") #selection wireframe full
+				shapes = pm.listRelatives(selection, children=1, shapes=1) #get shape node from transform: returns list ie. [nt.Mesh('pConeShape1')]
+				[pm.setAttr(s.displaySubdComps, 1) for s in shapes] #turn on display subdivisions for wireframe during smooth preview.
+				pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview <hl>ON</hl>.<br>Wireframe <hl>Full</hl>.")
 
 			else:
 				pm.setAttr((str(obj) + ".displaySmoothMesh"), 0) #smooth preview off
-				pm.displayPref(wireframeOnShadedActive="full") #selection wireframe on
-				pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview is now <hl>OFF</hl>.<br><hl>2</hl>")
+				pm.displayPref(wireframeOnShadedActive="full") #selection wireframe full
+				pm.inViewMessage(position='topCenter', fade=1, statusMessage="S-Div Preview <hl>OFF</hl>.<br>Wireframe <hl>Full</hl>.")
 
 			if pm.getAttr(str(obj) + ".smoothLevel") != 1:
 				pm.setAttr((str(obj) + ".smoothLevel"), 1)
-
 
 
 	@staticmethod
@@ -233,7 +245,6 @@ class Macros(Init):
 			pm.isolateSelect(currentPanel, addSelected=1)
 
 
-
 	@staticmethod
 	def hk_grid_and_image_planes():
 		'''
@@ -247,12 +258,11 @@ class Macros(Init):
 			if not pm.getAttr(attr)==2:
 				pm.setAttr(attr, 2)
 				pm.grid(toggle=1)
-				pm.inViewMessage(statusMessage="Grid is now <hl>ON</hl>.\\n<hl>F1</hl>", pos='topCenter', fade=True)
+				pm.inViewMessage(statusMessage="Grid is now <hl>ON</hl>.", pos='topCenter', fade=True)
 			else:
 				pm.setAttr(attr, 0)
 				pm.grid(toggle=0)
-				pm.inViewMessage(statusMessage="Grid is now <hl>OFF</hl>.\\n<hl>F1</hl>", pos='topCenter', fade=True)
-
+				pm.inViewMessage(statusMessage="Grid is now <hl>OFF</hl>.", pos='topCenter', fade=True)
 
 
 	@staticmethod
@@ -338,23 +348,22 @@ class Macros(Init):
 		Toggle wireframe on shaded.
 		'''
 		currentPanel = pm.getPanel(withFocus=True)
-		mode = pm.displayPref(query=True, wireframeOnShadedActive=True)
+		state = Macros.cycle([0,1,2], 'hk_wireframe_on_shaded')
 
-		if mode=='none':
-			pm.displayPref(wireframeOnShadedActive='reduced')
-			Macros.setWireframeOnShadedOption(currentPanel, 1)
-			pm.inViewMessage(statusMessage="<hl>Wireframe-on-selection</hl> is now <hl>Full</hl>.\\n<hl>3</hl>", pos='topCenter', fade=True)
+		if state is 0:
+			# Macros.setWireframeOnShadedOption(currentPanel, 1, 1)
+			pm.displayPref(wireframeOnShadedActive="full") #selection wireframe full
+			pm.inViewMessage(position='topCenter', fade=1, statusMessage="Wireframe <hl>Full</hl>.")
 
-		if mode=='reduced':
-			pm.displayPref(wireframeOnShadedActive='full')
-			Macros.setWireframeOnShadedOption(currentPanel, 0)
-			pm.inViewMessage(statusMessage="<hl>Wireframe-on-selection</hl> is now <hl>Reduced</hl>.\\n<hl>3</hl>", pos='topCenter', fade=True)
+		if state is 1:
+			# Macros.setWireframeOnShadedOption(currentPanel, 1, 0)
+			pm.displayPref(wireframeOnShadedActive="reduced") #selection wireframe reduced
+			pm.inViewMessage(position='topCenter', fade=1, statusMessage="Wireframe <hl>Reduced</hl>.")
 
-		if mode=='full':
-			pm.displayPref(wireframeOnShadedActive='none')
-			Macros.setWireframeOnShadedOption(currentPanel, 0)
-			pm.inViewMessage(statusMessage="<hl>Wireframe-on-selection</hl> is now <hl>OFF</hl>.\\n<hl>3</hl>", pos='topCenter', fade=True)
-
+		if state is 2:
+			# Macros.setWireframeOnShadedOption(currentPanel, 0, 0)
+			pm.displayPref(wireframeOnShadedActive="none") #selection wireframe off
+			pm.inViewMessage(position='topCenter', fade=1, statusMessage="Wireframe <hl>Off</hl>.")
 
 
 	@staticmethod
@@ -372,7 +381,6 @@ class Macros(Init):
 				pm.displaySurface(obj, xRay=(not state[0]))
 
 
-
 	@staticmethod
 	def hk_wireframe():
 		'''
@@ -386,16 +394,15 @@ class Macros(Init):
 		if pm.modelEditor(currentPanel, exists=True):
 			if not state=="wireframe" and displayTextures==False:
 				pm.modelEditor(currentPanel, edit=1, displayAppearance='smoothShaded', activeOnly=False, displayTextures=True)
-				pm.inViewMessage(statusMessage="modelEditor smoothShaded <hl>True</hl> displayTextures <hl>True</hl>.\\n<hl>5</hl>", pos='topCenter', fade=True)
+				pm.inViewMessage(statusMessage="modelEditor smoothShaded <hl>True</hl> displayTextures <hl>True</hl>.", pos='topCenter', fade=True)
 
 			if state=="wireframe" and displayTextures==True:
 				pm.modelEditor(currentPanel, edit=1, displayAppearance='smoothShaded', activeOnly=False, displayTextures=False)
-				pm.inViewMessage(statusMessage="modelEditor smoothShaded <hl>True</hl> displayTextures <hl>False</hl>.\\n<hl>5</hl>", pos='topCenter', fade=True)
+				pm.inViewMessage(statusMessage="modelEditor smoothShaded <hl>True</hl> displayTextures <hl>False</hl>.>", pos='topCenter', fade=True)
 
 			if not state=="wireframe" and displayTextures==True:
 				pm.modelEditor(currentPanel, edit=1, displayAppearance='wireframe', activeOnly=False)
-				pm.inViewMessage(statusMessage="modelEditor Wireframe <hl>True</hl>.\\n<hl>5</hl>", pos='topCenter', fade=True)
-
+				pm.inViewMessage(statusMessage="modelEditor Wireframe <hl>True</hl>.", pos='topCenter', fade=True)
 
 
 	@staticmethod
@@ -413,16 +420,16 @@ class Macros(Init):
 		if pm.modelEditor (currentPanel, exists=1):
 			if all ([displayAppearance=="wireframe", displayTextures==False, displayLights=="default"]):
 				pm.modelEditor (currentPanel, edit=1, displayAppearance="smoothShaded", displayTextures=False, displayLights="default") #textures off
-				pm.inViewMessage (statusMessage="modelEditor -smoothShaded <hl>true</hl> -displayTextures <hl>false</hl>.\n<hl>4</hl>", fade=True, position="topCenter")
+				pm.inViewMessage (statusMessage="modelEditor -smoothShaded <hl>true</hl> -displayTextures <hl>false</hl>.", fade=True, position="topCenter")
 			elif all ([displayAppearance=="smoothShaded", displayTextures==False, displayLights=="default"]):
 				pm.modelEditor (currentPanel, edit=1, displayAppearance="smoothShaded", displayTextures=True, displayLights="default") #textures on
-				pm.inViewMessage (statusMessage="modelEditor -smoothShaded <hl>true</hl> -displayTextures <hl>true</hl>.\n<hl>4</hl>", fade=True, position="topCenter")	
+				pm.inViewMessage (statusMessage="modelEditor -smoothShaded <hl>true</hl> -displayTextures <hl>true</hl>.", fade=True, position="topCenter")	
 			elif all ([displayAppearance=="smoothShaded", displayTextures==True, displayLights=="default"]):
 				pm.modelEditor (currentPanel, edit=1, displayAppearance="smoothShaded", displayTextures=True, displayLights="active") #lighting on
-				pm.inViewMessage (statusMessage="modelEditor -smoothShaded <hl>true</hl> -displayLights <hl>true</hl>.\n<hl>4</hl>", fade=True, position="topCenter")	
+				pm.inViewMessage (statusMessage="modelEditor -smoothShaded <hl>true</hl> -displayLights <hl>true</hl>.", fade=True, position="topCenter")	
 			else: #use else for starting condition in case settings are changed elsewhere and none of the conditions are met:
 				pm.modelEditor (currentPanel, edit=1, displayAppearance="wireframe", displayTextures=False, displayLights="default") #wireframe
-				pm.inViewMessage (statusMessage="modelEditor -wireframe <hl>true</hl>.\n<hl>4</hl>", fade=True, position="topCenter")
+				pm.inViewMessage (statusMessage="modelEditor -wireframe <hl>true</hl>.", fade=True, position="topCenter")
 
 
 
@@ -485,7 +492,6 @@ class Macros(Init):
 			pm.catch(lambda: pm.evalEcho("rename " + str(obj) + " " + stripped))
 
 
-
 	@staticmethod
 	def hk_multi_component():
 		'''
@@ -493,8 +499,7 @@ class Macros(Init):
 		Multi-Component Selection.
 		'''
 		pm.SelectMultiComponentMask()
-		pm.inViewMessage(statusMessage="<hl>Multi-Component Selection Mode</hl>\\n Mask is now <hl>ON</hl>.\\n<hl>F4</hl>", fade=True, position="topCenter")
-
+		pm.inViewMessage(statusMessage="<hl>Multi-Component Selection Mode</hl><br>Mask is now <hl>ON</hl>.", fade=True, position="topCenter")
 
 
 	@staticmethod
@@ -512,15 +517,15 @@ class Macros(Init):
 		maskFacet=pm.selectType(facet=1, query=1)
 		if maskEdge == 0 and maskFacet == 1:
 			pm.selectType(vertex=True)
-			pm.inViewMessage(position='topCenter', fade=1, statusMessage="<hl>Vertex</hl> Mask is now <hl>ON</hl>.\n<hl>F4</hl>")
+			pm.inViewMessage(position='topCenter', fade=1, statusMessage="<hl>Vertex</hl> Mask is now <hl>ON</hl>.")
 			
 		if maskVertex == 1 and maskFacet == 0:
 			pm.selectType(edge=True)
-			pm.inViewMessage(position='topCenter', fade=1, statusMessage="<hl>Edge</hl> Mask is now <hl>ON</hl>.\n<hl>F4</hl>")
+			pm.inViewMessage(position='topCenter', fade=1, statusMessage="<hl>Edge</hl> Mask is now <hl>ON</hl>.")
 			
 		if maskVertex == 0 and maskEdge == 1:
 			pm.selectType(facet=True)
-			pm.inViewMessage(position='topCenter', fade=1, statusMessage="<hl>Facet</hl> Mask is now <hl>ON</hl>.\n<hl>F4</hl>")
+			pm.inViewMessage(position='topCenter', fade=1, statusMessage="<hl>Facet</hl> Mask is now <hl>ON</hl>.")
 
 
 
@@ -574,7 +579,6 @@ class Macros(Init):
 		tk.show_()
 
 
-
 	@staticmethod
 	def hk_hotbox_full():
 		'''
@@ -583,7 +587,6 @@ class Macros(Init):
 		'''
 		pm.hotBox(polygonsOnlyMenus=1, displayHotbox=1)
 		pm.hotBox()
-
 
 
 	@staticmethod

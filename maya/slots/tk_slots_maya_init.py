@@ -1,4 +1,5 @@
 from __future__ import print_function
+from builtins import super
 from PySide2 import QtGui
 
 from widgets.qMenu_ import QMenu_
@@ -30,7 +31,7 @@ class Init(Slots):
 	App specific methods inherited by all other slot classes.
 	'''
 	def __init__(self, *args, **kwargs):
-		super(Init, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 
 
 	def info(self):
@@ -771,13 +772,15 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getTransformNode(node=None, index=0):
+	def getTransformNode(node=None, index=0, attributes=False, string=''):
 		'''
 		Get the transform node. 
 
 		args:
 			node (obj) = Node. If nothing is given, the current selection will be used.
 			index (int) = Return the transform node at the given index. if Nothing is given, the full list will be returned. ie. index=[:-1] or index=0
+			attributes (bool) = Return the attributes of the node, rather then the node itself.
+			string (str) = 	List only the attributes that match the other criteria AND match the string(s) passed from this flag. String can be a regular expression.
 
 		returns:
 			(str) node
@@ -791,19 +794,52 @@ class Init(Slots):
 			transforms = pm.listRelatives(shapeNodes, parent=1)
 
 		if transforms and index is not None:
-			return transforms[index]
-		else:
-			return transforms
+			transforms = transforms[index]
+		
+		if attributes:
+			transforms = pm.listAttr(transforms, read=1, hasData=1, string=string)
+
+		return transforms
 
 
 	@staticmethod
-	def getHistoryNode(node=None, index=0):
+	def getShapeNode(node=None, index=0, attributes=False, string=''):
+		'''
+		Get the shape node. 
+
+		args:
+			node (obj) = Node. If nothing is given, the current selection will be used.
+			index (int) = Return the shape node at the given index. if Nothing is given, the full list will be returned. ie. index=[:-1] or index=0
+			attributes (bool) = Return the attributes of the node, rather then the node itself.
+			string (str) = 	List only the attributes that match the other criteria AND match the string(s) passed from this flag. String can be a regular expression.
+
+		returns:
+			(str) node
+		'''
+		if not node:
+			pm.ls(sl=1, type='transform')
+
+		shapes = pm.listRelatives(node, children=1, shapes=1) #get shape node from transform: returns list ie. [nt.Mesh('pConeShape1')]
+
+		if shapes and index is not None:
+			shapes = shapes[index]
+		
+		if attributes:
+			shapes = pm.listAttr(shapes, read=1, hasData=1, string=string)
+
+		return shapes
+
+
+	@staticmethod
+	def getHistoryNode(node=None, index=0, attributes=False, string=''):
 		'''
 		Get the history node. 
 
 		args:
 			node (obj) = Node. If nothing is given, the current selection will be used.
 			index (int) = Return the transform node at the given index. if Nothing is given, the full list will be returned. ie. index=[:-1] or index=0
+			attributes (bool) = Return the attributes of the node, rather then the node itself.
+			string (str) = 	List only the attributes that match the other criteria AND match the string(s) passed from this flag. String can be a regular expression.
 
 		returns:
 			(str) node
@@ -817,9 +853,12 @@ class Init(Slots):
 		connections = pm.listConnections(shapes, source=1, destination=0) #get incoming connections: returns list ie. [nt.PolyCone('polyCone1')]
 
 		if connections and index is not None:
-			return connections[index]
-		else:
-			return connections
+			connections = connections[index]
+
+		if attributes:
+			connections = pm.listAttr(connections, read=1, hasData=1, string=string)
+
+		return connections
 
 
 	@staticmethod

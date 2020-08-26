@@ -38,17 +38,17 @@ class Scene(Init):
 			return
 
 		if index>0:
-			if index==contents.index('Node Editor'):
+			if index==cmb.items.index('Node Editor'):
 				mel.eval('NodeEditorWindow;') #
-			elif index==contents.index('Outlinder'):
+			elif index==cmb.items.index('Outlinder'):
 				mel.eval('OutlinerWindow;') #
-			elif index==contents.index('Content Browser'):
+			elif index==cmb.items.index('Content Browser'):
 				mel.eval('ContentBrowserWindow;') #
-			elif index==contents.index('Optimize Scene Size'):
+			elif index==cmb.items.index('Optimize Scene Size'):
 				mel.eval('cleanUpScene 2;')
-			elif index==contents.index('Prefix Hierarchy Names'):
+			elif index==cmb.items.index('Prefix Hierarchy Names'):
 				mel.eval('prefixHierarchy;') #Add a prefix to all hierarchy names.
-			elif index==contents.index('Search and Replace Names'):
+			elif index==cmb.items.index('Search and Replace Names'):
 				mel.eval('SearchAndReplaceNames;') #performSearchReplaceNames 1; #Rename objects in the scene.
 			cmb.setCurrentIndex(0)
 

@@ -342,24 +342,6 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 
 
 
-
-	# def cmb000(self, index=None):
-	# 	'''
-	# 	Editors
-	# 	'''
-	# 	cmb = self.parentUi.cmb000
-		
-	# 	files = ['']
-	# 	contents = cmb.addItems_(files, '')
-
-	# 	if not index:
-	# 		index = cmb.currentIndex()
-	# 	if index!=0:
-	# 		if index==contents.index(''):
-	# 			pass
-	# 		cmb.setCurrentIndex(0)
-
-
 	# def cmb001(self, index=None):
 	# 	'''
 	# 	Cameras

@@ -97,7 +97,7 @@ class Subdivision(Init):
 				mod = ProOptimizer()
 				rt.modpanel.addModToSelection(mod)
 
-			if index==contents.index('Add Divisions'):
+			if index==cmb.items.index('Add Divisions'):
 				maxEval('''
 				Try 
 				(

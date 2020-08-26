@@ -37,39 +37,39 @@ class Nurbs(Init):
 			return
 
 		if index>0:
-			if index==contents.index('Project Curve'):
+			if index==cmb.items.index('Project Curve'):
 				mel.eval("ProjectCurveOnSurfaceOptions;")
-			elif index==contents.index('Duplicate Curve'):
+			elif index==cmb.items.index('Duplicate Curve'):
 				mel.eval("DuplicateCurveOptions;")
-			elif index==contents.index('Create Curve from Poly'):
+			elif index==cmb.items.index('Create Curve from Poly'):
 				mel.eval("CreateCurveFromPolyOptions")
-			elif index==contents.index('Bend Curve'):
+			elif index==cmb.items.index('Bend Curve'):
 				mel.eval("BendCurvesOptions;")
-			elif index==contents.index('Curl Curve'):
+			elif index==cmb.items.index('Curl Curve'):
 				mel.eval("CurlCurvesOptions;")
-			elif index==contents.index('Modify Curve Curvature'):
+			elif index==cmb.items.index('Modify Curve Curvature'):
 				mel.eval("ScaleCurvatureOptions;")
-			elif index==contents.index('Smooth Curve'):
+			elif index==cmb.items.index('Smooth Curve'):
 				mel.eval("SmoothHairCurvesOptions;")
-			elif index==contents.index('Straighten Curves'):
+			elif index==cmb.items.index('Straighten Curves'):
 				mel.eval("StraightenCurvesOptions;")
-			elif index==contents.index('Extrude Curves'):
+			elif index==cmb.items.index('Extrude Curves'):
 				mel.eval("ExtrudeOptions;")
-			elif index==contents.index('Revolve Curves'):
+			elif index==cmb.items.index('Revolve Curves'):
 				mel.eval("RevolveOptions;")
-			elif index==contents.index('Loft Curves'):
+			elif index==cmb.items.index('Loft Curves'):
 				mel.eval("LoftOptions;")
-			elif index==contents.index('Planar Curves'):
+			elif index==cmb.items.index('Planar Curves'):
 				mel.eval("PlanarOptions;")
-			elif index==contents.index('Insert Isoparms'):
+			elif index==cmb.items.index('Insert Isoparms'):
 				mel.eval("InsertIsoparmsOptions;")
-			elif index==contents.index('Insert Knot'):
+			elif index==cmb.items.index('Insert Knot'):
 				mel.eval("InsertKnotOptions;")
-			elif index==contents.index('Rebuild Curve'):
+			elif index==cmb.items.index('Rebuild Curve'):
 				mel.eval("RebuildCurveOptions;")
-			elif index==contents.index('Extend Curve'):
+			elif index==cmb.items.index('Extend Curve'):
 				mel.eval("ExtendCurveOptions;")
-			elif index==contents.index('Extend Curve On Surface'):
+			elif index==cmb.items.index('Extend Curve On Surface'):
 				mel.eval("ExtendCurveOnSurfaceOptions;")
 			cmb.setCurrentIndex(0)
 
@@ -86,17 +86,17 @@ class Nurbs(Init):
 			return
 
 		if index>0:
-			if index==contents.index('Ep Curve Tool'):
+			if index==cmb.items.index('Ep Curve Tool'):
 				mel.eval('EPCurveToolOptions;') #mel.eval('EPCurveTool;')
-			elif index==contents.index('CV Curve Tool'):
+			elif index==cmb.items.index('CV Curve Tool'):
 				mel.eval('CVCurveToolOptions') #mel.eval('CVCurveTool')
-			elif index==contents.index('Bezier Curve Tool'):
+			elif index==cmb.items.index('Bezier Curve Tool'):
 				mel.eval('CreateBezierCurveToolOptions') #mel.eval('CreateBezierCurveTool;')
-			elif index==contents.index('Pencil Curve Tool'):
+			elif index==cmb.items.index('Pencil Curve Tool'):
 				mel.eval('PencilCurveToolOptions;') #mel.eval('PencilCurveTool;')
-			elif index==contents.index('2 Point Circular Arc'):
+			elif index==cmb.items.index('2 Point Circular Arc'):
 				mel.eval('TwoPointArcToolOptions;') #mel.eval("TwoPointArcTool;")
-			elif index==contents.index('3 Point Circular Arc'):
+			elif index==cmb.items.index('3 Point Circular Arc'):
 				mel.eval("ThreePointArcToolOptions;") #mel.eval("ThreePointArcTool;")
 			cmb.setCurrentIndex(0)
 
