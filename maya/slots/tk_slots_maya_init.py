@@ -284,40 +284,6 @@ class Init(Slots):
 
 
 	@staticmethod
-	def shortestEdgePath():
-		'''
-		Select shortest edge path between (two or more) selected edges.
-		'''
-		#returns: list of lists. each containing an edge paths components
-		selectTypeEdge = pm.filterExpand (selectionMask=32) #returns True if selectionMask=Edges
-		if (selectTypeEdge): #if selection is polygon edges, convert to vertices.
-			mel.eval("PolySelectConvert 3;")
-		selection=pm.ls (selection=1, flatten=1)
-
-		vertList=[]
-
-		for objName in selection:
-			objName = str(objName) #ex. "polyShape.vtx[176]"
-			index1 = objName.find("[")
-			index2 = objName.find("]")
-			vertNum = objName[index1+1:index2] #ex. "176"
-			# position = pm.pointPosition(objName) 
-			object_ = objName[:index1-4] #ex. "polyShape"
-			# print(object_, index1, index2#, position)
-			vertList.append(vertNum)
-
-		if (selectTypeEdge):
-			pm.selectType (edge=True)
-
-		paths=[]
-		for index in xrange(3): #get edge path between vertList[0],[1] [1],[2] [2],[3] to make sure everything is selected between the original four vertices/two edges
-			edgePath = pm.polySelect(object_, shortestEdgePath=(int(vertList[index]), int(vertList[index+1])))
-			paths.append(edgePath)
-
-		return paths
-
-
-	@staticmethod
 	def getVectorLength(x, y):
 		'''
 		Get the Magnitude of a Vector.
@@ -517,6 +483,171 @@ class Init(Slots):
 		if selectTypeEdge:
 			pm.selectType (edge=True)
 		pm.undoInfo (closeChunk=True)
+
+
+	@staticmethod
+	def getShortestPath(components=None, step=1):
+		'''
+		Get the shortest path between to vertices or edges.
+
+		args:
+			components (obj) = A Pair of vertices or edges.
+			step (int) = step amount.
+
+		returns:
+			(list) the components that comprise the path as strings.
+		'''
+		import re
+
+		type_ = Init.getObjectType(components[0])
+		
+		result=[]
+		objects = set(pm.ls(components, objectsOnly=1))
+		for obj in objects:
+
+			if type_=='Polygon Edge':
+				components = [pm.ls(pm.polyListComponentConversion(e, fromEdge=1, toVertex=1), flatten=1) for e in components]
+
+			closestVerts = Init.getClosestVerts(components[0], components[1])
+			vertexNumbers = [int(re.findall(r'(?<=\[)[0-9]+(?=:?])', str(s))[0]) for s in closestVerts] #get the vertex numbers as integer values. ie. [818, 1380]
+			edgesLong = pm.polySelect(obj, query=1, shortestEdgePath=(vertexNumbers[0], vertexNumbers[1]))
+			edges = ['{}.e[{}]'.format(obj, int(edge)) for edge in edgesLong]
+
+			if type_=='Polygon Edge':
+				[result.append(e) for e in edges]
+
+			elif type_=='Polygon Vertex':
+				vertices = pm.ls(pm.polyListComponentConversion(edges, fromEdge=1, toVertex=1), flatten=1)
+				[result.append(v) for v in vertices]
+
+		return result
+
+
+	@staticmethod
+	def getPathAlongLoop(components=None, step=1):
+		'''
+		Get the shortest path between to vertices or edges along an edgeloop.
+
+		args:
+			components (obj) = A Pair of vertices, edges, or faces.
+			step (int) = step amount.
+
+		returns:
+			(list) the components that comprise the path as strings.
+		'''
+		import re
+
+		type_ = Init.getObjectType(components[0])
+		
+		result=[]
+		objects = set(pm.ls(components, objectsOnly=1))
+		for obj in objects:
+
+			if type_=='Polygon Vertex':
+				vertices=[]
+				for component in components:
+					edges = pm.ls(pm.polyListComponentConversion(component, fromVertex=1, toEdge=1), flatten=1)
+					_vertices = pm.ls(pm.polyListComponentConversion(edges, fromEdge=1, toVertex=1), flatten=1)
+					vertices.append(_vertices)
+
+				closestVerts = Init.getClosestVerts(vertices[0], vertices[1])
+				_edges = pm.ls(pm.polyListComponentConversion(components+[i for i in closestVerts], fromVertex=1, toEdge=1), flatten=1)
+
+				edges=[]
+				for edge in _edges:
+					verts = pm.ls(pm.polyListComponentConversion(edge, fromEdge=1, toVertex=1), flatten=1)
+					if closestVerts[0] in verts and components[0] in verts or closestVerts[1] in verts and components[1] in verts:
+						edges.append(edge)
+				components = edges
+
+			if type_=='Polygon Face':
+				vertices=[]
+				for component in components:
+					edges = pm.ls(pm.polyListComponentConversion(component, fromFace=1, toEdge=1), flatten=1)
+					_vertices = pm.ls(pm.polyListComponentConversion(edges, fromEdge=1, toVertex=1), flatten=1)
+					vertices.append(_vertices)
+
+				closestVerts1 = Init.getClosestVerts(vertices[0], vertices[1])
+				vertices[0].pop(vertices[0].index(closestVerts1[0])); vertices[1].pop(vertices[1].index(closestVerts1[1])) #delete the first set of closest verts
+				closestVerts2 = Init.getClosestVerts(vertices[0], vertices[1]) #search for the next pair of closest verts
+
+				_edges = pm.ls(pm.polyListComponentConversion(closestVerts1+closestVerts2, fromVertex=1, toEdge=1), flatten=1)
+				edges=[]
+				for edge in _edges:
+					verts = pm.ls(pm.polyListComponentConversion(edge, fromEdge=1, toVertex=1), flatten=1)
+					if closestVerts1[0] in verts and closestVerts2[0] in verts or closestVerts1[1] in verts and closestVerts2[1] in verts:
+						edges.append(edge)
+
+				edgeNum = [int(re.findall(r'(?<=\[)[0-9]+(?=:?])', str(s))[0]) for s in edges] #get the vertex numbers as integer values. ie. [818, 1380]
+				edgesLong = pm.polySelect(obj, query=1, edgeRingPath=(edgeNum[0], edgeNum[1]))
+				edges = ['{}.e[{}]'.format(obj, int(edge)) for edge in edgesLong]
+
+				result = pm.ls(pm.polyListComponentConversion(edges, fromEdge=1, toFace=1), flatten=1)
+
+				return result
+
+			edgeNum = [int(re.findall(r'(?<=\[)[0-9]+(?=:?])', str(s))[0]) for s in components] #get the vertex numbers as integer values. ie. [818, 1380]
+			edgesLong = pm.polySelect(obj, query=1, edgeLoopPath=(edgeNum[0], edgeNum[1]))
+			edges = ['{}.e[{}]'.format(obj, int(edge)) for edge in edgesLong]
+
+			if type_=='Polygon Edge':
+				[result.append(e) for e in edges]
+
+			elif type_=='Polygon Vertex':
+				vertices = [pm.ls(pm.polyListComponentConversion(edges, fromEdge=1, toVertex=1), flatten=1)]
+				[result.append(v) for v in vertices]
+
+		return result
+
+
+	@staticmethod
+	def getEdgeLoop(edges=None, step=1):
+		'''
+		Get the corresponding edgeloop(s) from the given edges.
+
+		args:
+			edges (list) = Polygon Edges.
+			step (int) = step amount.
+
+		returns:
+			(list) the edges that comprise the edgeloops as strings.
+		'''
+		result=[]
+		objects = set(pm.ls(edges, objectsOnly=1))
+		for obj in objects:
+
+			edgeNumbers = [int(str(i).split('[')[-1].split(']')[0]) for i in edges] #[386, 402] from [MeshEdge(u'pCubeShape1.e[386]'), MeshEdge(u'pCubeShape1.e[402]')]
+			edgesLong = pm.polySelect(obj, query=1, edgeLoop=edgeNumbers)
+			edgesAsStrings = ['{}.e[{}]'.format(obj, int(edge)) for edge in edgesLong]
+
+			result.append(edgesAsStrings)
+
+		return result
+
+
+	@staticmethod
+	def getEdgeRing(edges=None, step=1):
+		'''
+		Get the corresponding edgering(s) from the given edges.
+
+		args:
+			edges (list) = Polygon Edges.
+			step (int) = step amount.
+
+		returns:
+			(list) the edges that comprise the edgerings as strings.
+		'''
+		result=[]
+		objects = set(pm.ls(edges, objectsOnly=1))
+		for obj in objects:
+
+			edgeNumbers = [int(str(i).split('[')[-1].split(']')[0]) for i in edges] #[386, 402] from [MeshEdge(u'pCubeShape1.e[386]'), MeshEdge(u'pCubeShape1.e[402]')]
+			edgesLong = pm.polySelect(obj, query=True, edgeRing=edgeNumbers)
+			edgesAsStrings = ['{}.e[{}]'.format(obj, int(edge)) for edge in edgesLong]
+
+			result.append(edgesAsStrings)
+
+		return result
 
 
 	@staticmethod
@@ -732,6 +863,27 @@ class Init(Slots):
 	' DAG objects'
 	# ------------------------------------------------
 
+	@staticmethod
+	def getObjectType(obj):
+		'''
+		Get the object type of a given object.
+
+		args:
+			obj (obj) = maya component.
+
+		returns:
+			(str) type
+		'''
+		types = {0:'Handle', 9:'Nurbs Curve', 10:'Nurbs Surfaces', 11:'Nurbs Curves On Surface', 12:'Polygon', 22:'Locator XYZ', 23:'Orientation Locator', 
+			24:'Locator UV', 28:'Control Vertex', 30:'Edit Point', 31:'Polygon Vertex', 32:'Polygon Edge', 34:'Polygon Face', 35:'Polygon UV', 36:'Subdivision Mesh Point', 
+			37:'Subdivision Mesh Edge', 38:'Subdivision Mesh Face', 39:'Curve Parameter Point', 40:'Curve Knot', 41:'Surface Parameter Point', 42:'Surface Knot', 
+			43:'Surface Range', 44:'Trim Surface Edge', 45:'Surface Isoparm', 46:'Lattice Point', 47:'Particle', 49:'Scale Pivot', 50:'Rotate Pivot', 51:'Select Handle', 
+			68:'Subdivision Surface', 70:'Polygon Vertex Face', 72:'NURBS Surface Face', 73:'Subdivision Mesh UV'}
+
+		for k, v in types.items():
+			if pm.filterExpand(obj, sm=k):
+				return v
+
 
 	@staticmethod
 	def getObjectFromComponent(components):
@@ -740,7 +892,7 @@ class Init(Slots):
 		args:
 			components (str, list) = component name(s)
 		returns:
-			dict - {transform node: [components of that node]}
+			(dict) {transform node: [components of that node]}
 			ie. {'pCube2': ['pCube2.f[21]', 'pCube2.f[22]', 'pCube2.f[25]'], 'pCube1': ['pCube1.f[21]', 'pCube1.f[26]']}
 		'''
 		if type(components) in [str,unicode]:
@@ -1348,6 +1500,41 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 
 
 #deprecated -------------------------------------
+
+
+	# @staticmethod
+	# def shortestEdgePath():
+	# 	'''
+	# 	Select shortest edge path between (two or more) selected edges.
+	# 	'''
+	# 	#returns: list of lists. each containing an edge paths components
+	# 	selectTypeEdge = pm.filterExpand (selectionMask=32) #returns True if selectionMask=Edges
+	# 	if (selectTypeEdge): #if selection is polygon edges, convert to vertices.
+	# 		mel.eval("PolySelectConvert 3;")
+	# 	selection=pm.ls (selection=1, flatten=1)
+
+	# 	vertList=[]
+
+	# 	for objName in selection:
+	# 		objName = str(objName) #ex. "polyShape.vtx[176]"
+	# 		index1 = objName.find("[")
+	# 		index2 = objName.find("]")
+	# 		vertNum = objName[index1+1:index2] #ex. "176"
+	# 		# position = pm.pointPosition(objName) 
+	# 		object_ = objName[:index1-4] #ex. "polyShape"
+	# 		# print(object_, index1, index2#, position)
+	# 		vertList.append(vertNum)
+
+	# 	if (selectTypeEdge):
+	# 		pm.selectType (edge=True)
+
+	# 	paths=[]
+	# 	for index in xrange(3): #get edge path between vertList[0],[1] [1],[2] [2],[3] to make sure everything is selected between the original four vertices/two edges
+	# 		edgePath = pm.polySelect(object_, shortestEdgePath=(int(vertList[index]), int(vertList[index+1])))
+	# 		paths.append(edgePath)
+
+	# 	return paths
+
 
 
 	# def snapToClosestVertex(vertices, obj, tolerance=0.125):

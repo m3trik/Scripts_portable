@@ -439,44 +439,31 @@ class Selection(Init):
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
-			tb.menu_.add('QCheckBox', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
-			tb.menu_.add('QCheckBox', setText='Component Loop', setObjectName='chk001', setChecked=True, setToolTip='Select all contiguous components that form a loop with the current selection.')
-			tb.menu_.add('QCheckBox', setText='Shortest Path', setObjectName='chk002', setToolTip='Shortest component path between two selected vertices or UV\'s.')
+			tb.menu_.add('QRadioButton', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
+			tb.menu_.add('QRadioButton', setText='Component Loop', setObjectName='chk001', setChecked=True, setToolTip='Select all contiguous components that form a loop with the current selection.')
+			tb.menu_.add('QRadioButton', setText='Path Along Loop', setObjectName='chk009', setToolTip='The path along loop between two selected edges, vertices or UV\'s.')
+			tb.menu_.add('QRadioButton', setText='Shortest Path', setObjectName='chk002', setToolTip='The shortest component path between two selected edges, vertices or UV\'s.')
 			tb.menu_.add('QSpinBox', setPrefix='Step: ', setObjectName='s003', setMinMax_='1-100 step1', setValue=1, setToolTip='Step Amount.')
 			return
 
+		edgeRing = tb.menu_.chk000.isChecked()
+		edgeloop = tb.menu_.chk001.isChecked()
+		pathAlongLoop = tb.menu_.chk009.isChecked()
+		shortestPath = tb.menu_.chk002.isChecked()
 		step = tb.menu_.s003.value()
 
-		if tb.menu_.chk000.isChecked(): #Select Ring
+
+		if edgeRing:
 			rt.macros.run('PolyTools', 'Ring')
 
-		elif tb.menu_.chk001.isChecked(): #Select contigious
-			if rt.subObjectLevel==2: #Edge
-				maxEval('''
-				curmod = Modpanel.getcurrentObject()
-				if ( Ribbon_Modeling.IsEditablePoly() ) then
-				(
-					curmod.SelectEdgeRing();
-				)
-				else
-				(
-					curmod.ButtonOp #SelectEdgeRing;
-				)
-				''')
-			elif rt.subObjectLevel==4: #Face
-				pass
-
-		elif tb.menu_.chk002.isChecked(): #Shortest Edge Path
-			self.shortestEdgePath()
-			# maxEval('SelectShortestEdgePathTool;')
-
-		else: #Select Loop
+		elif edgeLoop:
 			rt.macros.run('PolyTools', 'Loop')
-			
-			# if rt.subObjectLevel==2: #Edge
-			# 	mel.eval("selectEveryNEdge;")
-			# elif rt.subObjectLevel==4: #Face
-			# 	self.selectFaceLoop(tolerance=50)
+
+		elif pathAlongLoop:
+			pm.select(self.getPathAlongLoop(selection, step=step))
+
+		elif shortestPath:
+			pm.select(self.getShortestPath(selection, step=step))
 
 
 	def tb001(self, state=None):

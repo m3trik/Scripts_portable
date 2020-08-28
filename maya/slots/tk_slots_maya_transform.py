@@ -371,17 +371,27 @@ class Transform(Init):
 			tb.menu_.add('QCheckBox', setText='X Axis', setObjectName='chk029', setDisabled=True, setToolTip='Align X axis')
 			tb.menu_.add('QCheckBox', setText='Y Axis', setObjectName='chk030', setDisabled=True, setToolTip='Align Y axis')
 			tb.menu_.add('QCheckBox', setText='Z Axis', setObjectName='chk031', setDisabled=True, setToolTip='Align Z axis')
+			tb.menu_.add('QCheckBox', setText='Between Components', setObjectName='chk013', setChecked=True, setToolTip='Align the path along an edge loop between two selected vertices or edges.')
 			tb.menu_.add('QCheckBox', setText='Align Loop', setObjectName='chk007', setToolTip='Align entire edge loop from selected edge(s).')
 			tb.menu_.add('QCheckBox', setText='Average', setObjectName='chk006', setChecked=True, setToolTip='Align to last selected object or average.')
 			tb.menu_.add('QCheckBox', setText='Auto Align', setObjectName='chk010', setChecked=True, setToolTip='')
 			tb.menu_.add('QCheckBox', setText='Auto Align: Two Axes', setObjectName='chk011', setToolTip='')
 			return
 
-		if tb.menu_.chk010.isChecked(): #Auto Align: if checked; set coordinates for auto align:
-			sel = pm.ls(selection=1)
+		betweenTwoComponents = tb.menu_.chk013.isChecked()
+		autoAlign = tb.menu_.chk010.isChecked()
+		autoAlign2Axes = tb.menu_.chk011.isChecked() #Auto Align: Two Axes
 
-			if not len(sel)==0:
-				point = pm.xform(sel[0], q=True, t=True, ws=True)
+		if betweenTwoComponents:
+			selection = pm.ls(sl=1)
+			componentsOnPath = Init.getPathAlongLoop(selection)
+			pm.select(componentsOnPath)
+
+		if autoAlign: #set coordinates for auto align:
+			selection = pm.ls(orderedSelection=1)
+			if len(selection)>1:
+
+				point = pm.xform(selection, q=True, t=True, ws=True)
 				#vertex point 1
 				x1 = round(point[0], 4)
 				y1 = round(point[1], 4)
@@ -397,8 +407,11 @@ class Transform(Init):
 				y = abs(y1-y2)
 				z = abs(z1-z2)
 
-				vertices = pm.polyListComponentConversion(fromEdge=1, toVertexFace=1)
-				vertex = vertices[0] if vertices else None
+				maskEdge = pm.selectType (query=True, edge=True)
+				if maskEdge:
+					vertex = pm.polyListComponentConversion(fromEdge=1, toVertexFace=1)[0]
+				else:
+					vertex = selection[0]
 				vertexTangent = pm.polyNormalPerVertex(vertex, query=True, xyz=True)
 
 				tx = abs(round(vertexTangent[0], 4))
@@ -408,7 +421,7 @@ class Transform(Init):
 				axis = max(x,y,z)
 				tangent = max(tx,ty,tz)
 
-				if tb.menu_.chk011.isChecked(): #Auto Align: Two Axes
+				if autoAlign2Axes:
 					if axis==x: #"yz"
 						self.toggleWidgets(tb.menu_, setChecked='chk030-31', setUnChecked='chk029')
 					if axis==y: #"xz"
@@ -423,7 +436,7 @@ class Transform(Init):
 					if any ([axis==y and tangent==tz, axis==z and tangent==ty]): #"x"
 						self.toggleWidgets(tb.menu_, setChecked='chk029', setUnChecked='chk030-31')
 			else:
-				return 'Warning: An edge must be selected.'
+				return 'Error: Operation requires a component selection.'
 
 		#align
 		x = tb.menu_.chk029.isChecked()

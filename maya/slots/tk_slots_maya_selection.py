@@ -497,7 +497,6 @@ class Selection(Init):
 			pass
 
 
-	@Slots.message
 	def tb000(self, state=None):
 		'''
 		Select Nth
@@ -506,35 +505,30 @@ class Selection(Init):
 		if state is 'setMenu':
 			tb.menu_.add('QRadioButton', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
 			tb.menu_.add('QRadioButton', setText='Component Loop', setObjectName='chk001', setChecked=True, setToolTip='Select all contiguous components that form a loop with the current selection.')
-			tb.menu_.add('QRadioButton', setText='Shortest Path', setObjectName='chk002', setToolTip='Shortest component path between two selected vertices or UV\'s.')
+			tb.menu_.add('QRadioButton', setText='Path Along Loop', setObjectName='chk009', setToolTip='The path along loop between two selected edges, vertices or UV\'s.')
+			tb.menu_.add('QRadioButton', setText='Shortest Path', setObjectName='chk002', setToolTip='The shortest component path between two selected edges, vertices or UV\'s.')
 			tb.menu_.add('QSpinBox', setPrefix='Step: ', setObjectName='s003', setMinMax_='1-100 step1', setValue=1, setToolTip='Step Amount.')
 			return
 
+		edgeRing = tb.menu_.chk000.isChecked()
+		edgeloop = tb.menu_.chk001.isChecked()
+		pathAlongLoop = tb.menu_.chk009.isChecked()
+		shortestPath = tb.menu_.chk002.isChecked()
 		step = tb.menu_.s003.value()
 
-		selectionMask = pm.selectMode (query=True, component=True)
-		maskVertex = pm.selectType (query=True, vertex=True)
-		maskEdge = pm.selectType (query=True, edge=True)
-		maskFacet = pm.selectType (query=True, facet=True)
+		selection = pm.ls(sl=1)
 
-		objects = pm.ls(sl=1)
-		for obj in objects:
-			if pm.objectType(obj, isType='mesh'): 
-				if tb.menu_.chk000.isChecked(): #Select Ring
-					if all([selectionMask==1, maskEdge==1]):
-						pm.polySelect(edgeRing=True)
+		if edgeRing:
+			pm.select(self.getEdgeRing(selection, step=step))
 
-				elif tb.menu_.chk002.isChecked(): #Shortest Edge Path
-					if all([selectionMask==1, maskEdge==1]):
-						import re
-						vertices = [pm.ls(pm.polyListComponentConversion(e, fromEdge=1, toVertex=1), flatten=1) for e in pm.ls(sl=1)]
-						closestVerts = self.getClosestVerts(vertices[0], vertices[1])
-						vertexNumbers = [int(re.findall(r'(?<=\[)[0-9]+(?=:?])', str(s))[0]) for s in closestVerts] #get the vertex numbers as integer values. ie. [818, 1380]
-						pm.polySelect(shortestEdgePath=(vertexNumbers[0], vertexNumbers[1]))
+		elif edgeLoop:
+			pm.select(self.getEdgeLoop(selection, step=step))
 
-				elif tb.menu_.chk001.isChecked(): #Select Loop
-					if all([selectionMask==1, maskEdge==1]):
-						pm.polySelect(edgeLoop=True)
+		elif pathAlongLoop:
+			pm.select(self.getPathAlongLoop(selection, step=step))
+
+		elif shortestPath:
+			pm.select(self.getShortestPath(selection, step=step))
 
 
 	def tb001(self, state=None):

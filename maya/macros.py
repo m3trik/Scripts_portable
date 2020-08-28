@@ -38,6 +38,7 @@ class Macros(Init):
 		self.setMacro('hk_hotbox_full', k='sht+z', cat='UI', ann='Display the full version of the hotbox.')
 		self.setMacro('hk_toggle_panels', k='9', cat='UI', ann='Toggle UI toolbars.')
 		self.setMacro('hk_toggle_UV_select_type', k='sht+t', cat='Edit', ann='Toggle UV / UV shell component selection.')
+		self.setMacro('hk_merge_vertices', k='ctl+m', cat='Edit', ann='Merge vertices on selection.')
 
 
 	def setMacro(self, name=None, k=None, cat=None, ann=None):
@@ -527,6 +528,43 @@ class Macros(Init):
 			pm.selectType(facet=True)
 			pm.inViewMessage(position='topCenter', fade=1, statusMessage="<hl>Facet</hl> Mask is now <hl>ON</hl>.")
 
+
+	@staticmethod
+	def hk_merge_vertices():
+		'''
+		hk_merge_vertices
+		Merge Vertices.
+		'''
+		tolerance = 0.001
+		selection = pm.ls(selection=1, objectsOnly=1)
+
+		if not selection:
+			pm.inViewMessage(statusMessage="Warning: <hl>Nothing selected</hl>.<br>Must select an object or component.", pos='topCenter', fade=True)
+
+		else:
+			for obj in selection:
+
+				if pm.selectMode(query=1, component=1): #merge selected components.
+					if pm.filterExpand(selectionMask=31): #selectionMask=vertices
+						pm.polyMergeVertex(distance=tolerance, alwaysMergeTwoVertices=True, constructionHistory=True)
+					else: #if selection type =edges or facets:
+						mel.eval("MergeToCenter;")
+
+				else: #if object mode. merge all vertices on the selected object.
+					for n, obj in enumerate(selection):
+						if not self.polygons.progressBar.step(n, len(selection)): #register progress while checking for cancellation:
+							break
+
+						# get number of vertices
+						count = pm.polyEvaluate(obj, vertex=1)
+						vertices = str(obj) + ".vtx [0:" + str(count) + "]" # mel expression: select -r geometry.vtx[0:1135];
+						pm.polyMergeVertex(vertices, distance=tolerance, alwaysMergeTwoVertices=False, constructionHistory=False)
+
+					#return to original state
+					pm.select(clear=1)
+
+					for obj in selection:
+						pm.select(obj, add=1)
 
 
 	# Selection ------------------------------------------------------------------------------------------------------------------------------
