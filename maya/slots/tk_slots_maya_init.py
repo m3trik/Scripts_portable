@@ -486,6 +486,45 @@ class Init(Slots):
 
 
 	@staticmethod
+	def getPath(obj, components, type_=''):
+		'''
+		Query the polySelect command for the components along different edge paths.
+
+		args:
+			obj (obj) = The mesh object containing the components.
+			components (obj) = The components used for the query (dependant on the operation type).
+			type_ (str) = The desired return type. 'shortestEdgePath', 'edgeRing', 'edgeRingPath', 'edgeLoop', 'edgeLoopPath'.
+
+		returns:
+			(list) The components comprising the path.
+		'''
+		componentNumbers = [int(str(i).split('[')[-1].split(']')[0]) for i in components] #get the vertex numbers as integer values. ie. [818, 1380]
+
+		edgesLong=None
+		if type_=='shortestEdgePath':
+			edgesLong = pm.polySelect(obj, query=1, shortestEdgePath=(componentNumbers[0], componentNumbers[1])) #(vtx, vtx)
+
+		elif type_=='edgeRing':
+			edgesLong = pm.polySelect(obj, query=1, edgeRing=componentNumbers) #(e..)
+
+		elif type_=='edgeRingPath':
+			edgesLong = pm.polySelect(obj, query=1, edgeRingPath=(componentNumbers[0], componentNumbers[1])) #(e, e)
+
+		elif type_=='edgeLoop':
+			edgesLong = pm.polySelect(obj, query=1, edgeLoop=componentNumbers) #(e..)
+
+		elif type_=='edgeLoopPath':
+			edgesLong = pm.polySelect(obj, query=1, edgeLoopPath=(componentNumbers[0], componentNumbers[1])) #(e, e)
+
+		if not edgesLong:
+			print('# Error: Unable to find path. #')
+			return []
+
+		path = ['{}.e[{}]'.format(obj, int(edge)) for edge in edgesLong]
+		return path
+
+
+	@staticmethod
 	def getShortestPath(components=None, step=1):
 		'''
 		Get the shortest path between to vertices or edges.
@@ -497,8 +536,6 @@ class Init(Slots):
 		returns:
 			(list) the components that comprise the path as strings.
 		'''
-		import re
-
 		type_ = Init.getObjectType(components[0])
 		
 		result=[]
@@ -507,16 +544,13 @@ class Init(Slots):
 
 			if type_=='Polygon Edge':
 				components = [pm.ls(pm.polyListComponentConversion(e, fromEdge=1, toVertex=1), flatten=1) for e in components]
-
-			closestVerts = Init.getClosestVerts(components[0], components[1])
-			vertexNumbers = [int(re.findall(r'(?<=\[)[0-9]+(?=:?])', str(s))[0]) for s in closestVerts] #get the vertex numbers as integer values. ie. [818, 1380]
-			edgesLong = pm.polySelect(obj, query=1, shortestEdgePath=(vertexNumbers[0], vertexNumbers[1]))
-			edges = ['{}.e[{}]'.format(obj, int(edge)) for edge in edgesLong]
-
-			if type_=='Polygon Edge':
+				closestVerts = Init.getClosestVerts(components[0], components[1])
+				edges = Init.getEdgePath(obj, closestVerts, 'shortestEdgePath')
 				[result.append(e) for e in edges]
 
 			elif type_=='Polygon Vertex':
+				closestVerts = Init.getClosestVerts(components[0], components[1])
+				edges = Init.getEdgePath(obj, closestVerts, 'shortestEdgePath')
 				vertices = pm.ls(pm.polyListComponentConversion(edges, fromEdge=1, toVertex=1), flatten=1)
 				[result.append(v) for v in vertices]
 
@@ -535,8 +569,6 @@ class Init(Slots):
 		returns:
 			(list) the components that comprise the path as strings.
 		'''
-		import re
-
 		type_ = Init.getObjectType(components[0])
 		
 		result=[]
@@ -558,9 +590,19 @@ class Init(Slots):
 					verts = pm.ls(pm.polyListComponentConversion(edge, fromEdge=1, toVertex=1), flatten=1)
 					if closestVerts[0] in verts and components[0] in verts or closestVerts[1] in verts and components[1] in verts:
 						edges.append(edge)
-				components = edges
 
-			if type_=='Polygon Face':
+				edges = Init.getEdgePath(obj, edges, 'edgeLoopPath')
+
+				vertices = [pm.ls(pm.polyListComponentConversion(edges, fromEdge=1, toVertex=1), flatten=1)]
+				[result.append(v) for v in vertices]
+
+
+			elif type_=='Polygon Edge':
+				edges = Init.getEdgePath(obj, components, 'edgeLoopPath')
+				[result.append(e) for e in edges]
+
+
+			elif type_=='Polygon Face':
 				vertices=[]
 				for component in components:
 					edges = pm.ls(pm.polyListComponentConversion(component, fromFace=1, toEdge=1), flatten=1)
@@ -578,24 +620,10 @@ class Init(Slots):
 					if closestVerts1[0] in verts and closestVerts2[0] in verts or closestVerts1[1] in verts and closestVerts2[1] in verts:
 						edges.append(edge)
 
-				edgeNum = [int(re.findall(r'(?<=\[)[0-9]+(?=:?])', str(s))[0]) for s in edges] #get the vertex numbers as integer values. ie. [818, 1380]
-				edgesLong = pm.polySelect(obj, query=1, edgeRingPath=(edgeNum[0], edgeNum[1]))
-				edges = ['{}.e[{}]'.format(obj, int(edge)) for edge in edgesLong]
+				edges = Init.getEdgePath(obj, edges, 'edgeRingPath')
 
-				result = pm.ls(pm.polyListComponentConversion(edges, fromEdge=1, toFace=1), flatten=1)
-
-				return result
-
-			edgeNum = [int(re.findall(r'(?<=\[)[0-9]+(?=:?])', str(s))[0]) for s in components] #get the vertex numbers as integer values. ie. [818, 1380]
-			edgesLong = pm.polySelect(obj, query=1, edgeLoopPath=(edgeNum[0], edgeNum[1]))
-			edges = ['{}.e[{}]'.format(obj, int(edge)) for edge in edgesLong]
-
-			if type_=='Polygon Edge':
-				[result.append(e) for e in edges]
-
-			elif type_=='Polygon Vertex':
-				vertices = [pm.ls(pm.polyListComponentConversion(edges, fromEdge=1, toVertex=1), flatten=1)]
-				[result.append(v) for v in vertices]
+				faces = pm.ls(pm.polyListComponentConversion(edges, fromEdge=1, toFace=1), flatten=1)
+				[result.append(f) for f in faces]
 
 		return result
 
@@ -616,11 +644,8 @@ class Init(Slots):
 		objects = set(pm.ls(edges, objectsOnly=1))
 		for obj in objects:
 
-			edgeNumbers = [int(str(i).split('[')[-1].split(']')[0]) for i in edges] #[386, 402] from [MeshEdge(u'pCubeShape1.e[386]'), MeshEdge(u'pCubeShape1.e[402]')]
-			edgesLong = pm.polySelect(obj, query=1, edgeLoop=edgeNumbers)
-			edgesAsStrings = ['{}.e[{}]'.format(obj, int(edge)) for edge in edgesLong]
-
-			result.append(edgesAsStrings)
+			edges = Init.getEdgePath(obj, edges, 'edgeLoop')
+			result.append(edges)
 
 		return result
 
@@ -641,11 +666,8 @@ class Init(Slots):
 		objects = set(pm.ls(edges, objectsOnly=1))
 		for obj in objects:
 
-			edgeNumbers = [int(str(i).split('[')[-1].split(']')[0]) for i in edges] #[386, 402] from [MeshEdge(u'pCubeShape1.e[386]'), MeshEdge(u'pCubeShape1.e[402]')]
-			edgesLong = pm.polySelect(obj, query=True, edgeRing=edgeNumbers)
-			edgesAsStrings = ['{}.e[{}]'.format(obj, int(edge)) for edge in edgesLong]
-
-			result.append(edgesAsStrings)
+			edges = Init.getEdgePath(obj, edges, 'edgeRing')
+			result.append(edges)
 
 		return result
 

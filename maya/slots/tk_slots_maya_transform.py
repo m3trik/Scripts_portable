@@ -383,9 +383,10 @@ class Transform(Init):
 		autoAlign2Axes = tb.menu_.chk011.isChecked() #Auto Align: Two Axes
 
 		if betweenTwoComponents:
-			selection = pm.ls(sl=1)
-			componentsOnPath = Init.getPathAlongLoop(selection)
-			pm.select(componentsOnPath)
+			selection = pm.ls(orderedSelection=1)
+			if len(selection>1):
+				componentsOnPath = Init.getPathAlongLoop(selection[0], selection[-1])
+				pm.select(componentsOnPath)
 
 		if autoAlign: #set coordinates for auto align:
 			selection = pm.ls(orderedSelection=1)
