@@ -161,27 +161,31 @@ class Edit(Init):
 			tb.menu_.add('QCheckBox', setText='Delete Edge Border', setObjectName='chk021', setToolTip='Delete the edge rings of any edges selected.')
 			return
 
-		selectionMask = pm.selectMode (query=True, component=True)
+		deleteRing = tb.menu_.chk000.isChecked()
+		deleteLoop = tb.menu_.chk001.isChecked()
+		deleteBorder = tb.menu_.chk021.isChecked()
+
+		# selectionMask = pm.selectMode (query=True, component=True)
 		maskVertex = pm.selectType (query=True, vertex=True)
 		maskEdge = pm.selectType (query=True, edge=True)
 		maskFacet = pm.selectType (query=True, facet=True)
 
-		objects = pm.ls(sl=1)
+		objects = pm.ls(sl=1, objectsOnly=1)
 		for obj in objects:
 			if pm.objectType(obj, isType='joint'):
 				pm.removeJoint(obj) #remove joints
 
 			elif pm.objectType(obj, isType='mesh'): 
-				if all([selectionMask==1, maskEdge==1]):
-					if tb.menu_.chk000.isChecked(): #delete ring.
+				if maskEdge:
+					if deleteRing:
 						pm.polySelect(edgeRing=True) #select the edge ring.
-					if tb.menu_.chk001.isChecked(): #delete loop.
+					if deleteLoop:
 						pm.polySelect(edgeLoop=True) #select the edge loop.
-					if tb.menu_.chk021.isChecked(): #delete border.
+					if deleteBorder:
 						pm.polySelect(edgeBorder=True) #select connected border edges.
 					pm.polyDelEdge(cleanVertices=True) #delete edges
 
-				elif all([selectionMask==1, maskVertex==1]):
+				elif maskVertex:
 					pm.polyDelVertex() #try delete vertices
 					if pm.ls(sl=1)==objects: #if nothing was deleted:
 						mel.eval('polySelectSp -loop;') #convert selection to edge loop

@@ -423,9 +423,9 @@ class Transform(Init):
 			tb.menu_.add('QCheckBox', setText='X Axis', setObjectName='chk029', setDisabled=True, setToolTip='Align X axis')
 			tb.menu_.add('QCheckBox', setText='Y Axis', setObjectName='chk030', setDisabled=True, setToolTip='Align Y axis')
 			tb.menu_.add('QCheckBox', setText='Z Axis', setObjectName='chk031', setDisabled=True, setToolTip='Align Z axis')
-			tb.menu_.add('QCheckBox', setText='Between Components', setObjectName='chk013', setChecked=True, setToolTip='Align the path along an edge loop between two selected vertices or edges.')
+			tb.menu_.add('QCheckBox', setText='Between Two Components', setObjectName='chk013', setToolTip='Align the path along an edge loop between two selected vertices or edges.')
 			tb.menu_.add('QCheckBox', setText='Align Loop', setObjectName='chk007', setToolTip='Align entire edge loop from selected edge(s).')
-			tb.menu_.add('QCheckBox', setText='Average', setObjectName='chk006', setChecked=True, setToolTip='Align to last selected object or average.')
+			tb.menu_.add('QCheckBox', setText='Average', setObjectName='chk006', setToolTip='Align to last selected object or average.')
 			tb.menu_.add('QCheckBox', setText='Auto Align', setObjectName='chk010', setChecked=True, setToolTip='')
 			tb.menu_.add('QCheckBox', setText='Auto Align: Two Axes', setObjectName='chk011', setToolTip='')
 			return
@@ -434,13 +434,14 @@ class Transform(Init):
 		autoAlign = tb.menu_.chk010.isChecked()
 		autoAlign2Axes = tb.menu_.chk011.isChecked() #Auto Align: Two Axes
 
+		selection = pm.ls(orderedSelection=1)
+
 		if betweenTwoComponents:
-			selection = pm.ls(sl=1)
-			componentsOnPath = Init.getPathAlongLoop(selection)
-			pm.select(componentsOnPath)
+			if len(selection)>1:
+				componentsOnPath = Init.getPathAlongLoop([selection[0], selection[-1]])
+				pm.select(componentsOnPath)
 
 		if autoAlign: #set coordinates for auto align:
-			selection = pm.ls(orderedSelection=1)
 			if len(selection)>1:
 
 				point = pm.xform(selection, q=True, t=True, ws=True)
@@ -461,9 +462,11 @@ class Transform(Init):
 
 				maskEdge = pm.selectType (query=True, edge=True)
 				if maskEdge:
-					vertex = pm.polyListComponentConversion(fromEdge=1, toVertexFace=1)[0]
-				else:
-					vertex = selection[0]
+					selection = pm.polyListComponentConversion(fromEdge=1, toVertexFace=1)
+
+				vertex = selection[0] if selection else None
+				if vertex is None:
+					return 'Error: Unable to get component path.'
 				vertexTangent = pm.polyNormalPerVertex(vertex, query=True, xyz=True)
 
 				tx = abs(round(vertexTangent[0], 4))

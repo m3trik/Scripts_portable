@@ -57,10 +57,10 @@ class File(Init):
 			return
 
 		files = (list(reversed(pm.optionVar(query='RecentProjectsList'))))
-		items = cmb.addItems_(files, "Recent Projects", clear=True)
+		cmb.addItems_(files, "Recent Projects", clear=True)
 
 		if index>0:
-			pm.mel.setProject(items[index]) #mel.eval('setProject "'+items[index]+'"')
+			pm.mel.setProject(cmb.items[index]) #mel.eval('setProject "'+items[index]+'"')
 			cmb.setCurrentIndex(0)
 
 
@@ -74,26 +74,21 @@ class File(Init):
 		if index is 'setMenu':
 			return
 
-		path = os.environ.get('MAYA_AUTOSAVE_FOLDER').split(';')[0] #get autosave dir path from env variable.
-		envPathAutosave = [f for f in os.listdir(path) if f.endswith('.mb') or f.endswith('.ma')] #[file_ for file_ in (list(reversed(pm.optionVar(query='RecentFilesList'))))) if "Autosave" in file_]
+		dir1 = str(pm.workspace(query=1, rd=1))+'autosave' #current project path.
+		dir2 = os.environ.get('MAYA_AUTOSAVE_FOLDER').split(';')[0] #get autosave dir path from env variable.
 
-		projectDirPath = pm.workspace(query=1, rd=1) #current project path.
-		try:
-			projectDirAutosave = [f for f in os.listdir(projectDirPath+'/autosave')]
-		except Exception as error:
-			print (error)
-			projectDirAutosave=[]
-
-		files = envPathAutosave + projectDirAutosave
-		items = cmb.addItems_(files, "Recent Autosave", clear=True)
+		files = File.getAbsoluteFilePaths(dir1) + File.getAbsoluteFilePaths(dir2)
+		cmb.addItems_(files, 'Recent Autosave', clear=True)
 
 		if index>0:
 			force=True
 			if str(pm.mel.file(query=1, sceneName=1, shortName=1)):
 				force=False #if sceneName, prompt user to save; else force open
-			pm.openFile(path+items[index], open=1, force=force)
+
+			pm.openFile(cmb.items[index], open=1, force=force)
 			cmb.setCurrentIndex(0)
-			return path+items[index]
+
+			return cmb.items[index]
 
 
 	def cmb003(self, index=None):
@@ -411,6 +406,26 @@ class File(Init):
 			if replace:
 				newName = obj.replace(from_, to)
 			pm.rename(obj, newName) #Rename the object with the new name
+
+
+	@staticmethod
+	def getAbsoluteFilePaths(directory, endingWith=['mb', 'ma']):
+		'''
+		Get the absolute paths of all the files in a directory and it's sub-folders.
+
+		directory (str) = Root directory path.
+		endingWith (list) = Extension types (as strings) to include. ex. ['mb', 'ma']
+		
+		returns:
+			(list) absolute file paths
+		'''
+		paths=[]
+		for dirpath, _, filenames in os.walk(directory):
+			for f in filenames:
+				if f.split('.')[-1] in endingWith:
+					paths.append(os.path.abspath(os.path.join(dirpath, f)))
+
+		return paths
 
 
 	@staticmethod

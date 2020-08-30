@@ -115,7 +115,7 @@ class Polygons(Init):
 				for obj in selection:
 					pm.select(obj, add=1)
 		else:
-			return 'Warning: <hl>Nothing selected</hl>.<br>Must select an object or component.'
+			return 'Warning: <hl>Nothing selected</hl>.<br>Operation requires an object or vertex selection.'
 
 
 	@Init.attr

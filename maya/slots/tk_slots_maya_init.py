@@ -316,7 +316,7 @@ class Init(Slots):
 			tolerance (int) = Maximum search distance.
 
 		returns:
-			(set) closest vertex pair (<vertex from set1>, <vertex from set2>).
+			(list) closest vertex pair (<vertex from set1>, <vertex from set2>).
 		'''
 		closestDistance=tolerance
 		closestVerts=None
@@ -329,7 +329,7 @@ class Init(Slots):
 				if distance < closestDistance:
 					closestDistance = distance
 					if closestDistance < tolerance:
-						closestVerts = (v1, v2)
+						closestVerts = [v1, v2]
 
 		return closestVerts
 
@@ -486,7 +486,7 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getPath(obj, components, type_=''):
+	def getEdgePath(obj, components, type_=''):
 		'''
 		Query the polySelect command for the components along different edge paths.
 
@@ -583,7 +583,7 @@ class Init(Slots):
 					vertices.append(_vertices)
 
 				closestVerts = Init.getClosestVerts(vertices[0], vertices[1])
-				_edges = pm.ls(pm.polyListComponentConversion(components+[i for i in closestVerts], fromVertex=1, toEdge=1), flatten=1)
+				_edges = pm.ls(pm.polyListComponentConversion(components+closestVerts, fromVertex=1, toEdge=1), flatten=1)
 
 				edges=[]
 				for edge in _edges:
