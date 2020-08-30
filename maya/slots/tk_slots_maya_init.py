@@ -25,7 +25,6 @@ except ImportError as error:
 
 
 
-
 class Init(Slots):
 	'''
 	App specific methods inherited by all other slot classes.
@@ -138,6 +137,9 @@ class Init(Slots):
 		'''
 		Get the components of the given type from the given object.
 		'''
+		if obj isinstance(str, unicode):
+			obj = pm.ls(obj)[0]
+
 		types = {'vertices':'vtx', 'edges':'e', 'faces':'f'}
 
 		component = getattr(obj, types[type_])
@@ -316,22 +318,27 @@ class Init(Slots):
 			tolerance (int) = Maximum search distance.
 
 		returns:
-			(list) closest vertex pair (<vertex from set1>, <vertex from set2>).
+			(list) closest vertex pairs by order of distance (excluding those not meeting the tolerance). (<vertex from set1>, <vertex from set2>).
+
+		ex. verts1 = Init.getComponents('pCube1')
+			verts2 = Init.getComponents('pCube2')
+			closestVerts = getClosestVerts(verts1, verts2)
 		'''
-		closestDistance=tolerance
-		closestVerts=None
+		vertPairsAndDistance={}
 		for v1 in set1:
 			v1Pos = pm.pointPosition(v1, world=1)
 			for v2 in set2:
 				v2Pos = pm.pointPosition(v2, world=1)
 				distance = Init.getVectorLength(v1Pos, v2Pos)
+				if distance<tolerance:
+					vertPairsAndDistance[(v1, v2)] = distance
 
-				if distance < closestDistance:
-					closestDistance = distance
-					if closestDistance < tolerance:
-						closestVerts = [v1, v2]
+		import operator
+		sorted_ = sorted(vertPairsAndDistance.items(), key=operator.itemgetter(1))
 
-		return closestVerts
+		vertPairs = [i[0] for i in sorted_]
+
+		return vertPairs
 
 
 	@staticmethod
@@ -544,12 +551,12 @@ class Init(Slots):
 
 			if type_=='Polygon Edge':
 				components = [pm.ls(pm.polyListComponentConversion(e, fromEdge=1, toVertex=1), flatten=1) for e in components]
-				closestVerts = Init.getClosestVerts(components[0], components[1])
+				closestVerts = Init.getClosestVerts(components[0], components[1])[0]
 				edges = Init.getEdgePath(obj, closestVerts, 'shortestEdgePath')
 				[result.append(e) for e in edges]
 
 			elif type_=='Polygon Vertex':
-				closestVerts = Init.getClosestVerts(components[0], components[1])
+				closestVerts = Init.getClosestVerts(components[0], components[1])[0]
 				edges = Init.getEdgePath(obj, closestVerts, 'shortestEdgePath')
 				vertices = pm.ls(pm.polyListComponentConversion(edges, fromEdge=1, toVertex=1), flatten=1)
 				[result.append(v) for v in vertices]
@@ -582,7 +589,7 @@ class Init(Slots):
 					_vertices = pm.ls(pm.polyListComponentConversion(edges, fromEdge=1, toVertex=1), flatten=1)
 					vertices.append(_vertices)
 
-				closestVerts = Init.getClosestVerts(vertices[0], vertices[1])
+				closestVerts = Init.getClosestVerts(vertices[0], vertices[1])[0]
 				_edges = pm.ls(pm.polyListComponentConversion(components+closestVerts, fromVertex=1, toEdge=1), flatten=1)
 
 				edges=[]
@@ -609,9 +616,8 @@ class Init(Slots):
 					_vertices = pm.ls(pm.polyListComponentConversion(edges, fromEdge=1, toVertex=1), flatten=1)
 					vertices.append(_vertices)
 
-				closestVerts1 = Init.getClosestVerts(vertices[0], vertices[1])
-				vertices[0].pop(vertices[0].index(closestVerts1[0])); vertices[1].pop(vertices[1].index(closestVerts1[1])) #delete the first set of closest verts
-				closestVerts2 = Init.getClosestVerts(vertices[0], vertices[1]) #search for the next pair of closest verts
+				closestVerts1 = Init.getClosestVerts(vertices[0], vertices[1])[0]
+				closestVerts2 = Init.getClosestVerts(vertices[0], vertices[1])[1] #get the next pair of closest verts
 
 				_edges = pm.ls(pm.polyListComponentConversion(closestVerts1+closestVerts2, fromVertex=1, toEdge=1), flatten=1)
 				edges=[]
@@ -1522,6 +1528,34 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 
 
 #deprecated -------------------------------------
+
+
+# def getClosestVerts(set1, set2, tolerance=100):
+# 		'''
+# 		Find the two closest vertices between the two sets of vertices.
+
+# 		args:
+# 			set1 (list) = The first set of vertices.
+# 			set2 (list) = The second set of vertices.
+# 			tolerance (int) = Maximum search distance.
+
+# 		returns:
+# 			(list) closest vertex pair (<vertex from set1>, <vertex from set2>).
+# 		'''
+# 		closestDistance=tolerance
+# 		closestVerts=None
+# 		for v1 in set1:
+# 			v1Pos = pm.pointPosition(v1, world=1)
+# 			for v2 in set2:
+# 				v2Pos = pm.pointPosition(v2, world=1)
+# 				distance = Init.getVectorLength(v1Pos, v2Pos)
+
+# 				if distance < closestDistance:
+# 					closestDistance = distance
+# 					if closestDistance < tolerance:
+# 						closestVerts = [v1, v2]
+
+# 		return closestVerts
 
 
 	# @staticmethod
