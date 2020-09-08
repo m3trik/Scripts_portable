@@ -137,7 +137,7 @@ class Init(Slots):
 		'''
 		Get the components of the given type from the given object.
 		'''
-		if obj isinstance(str, unicode):
+		if isinstance(obj, (str, unicode)):
 			obj = pm.ls(obj)[0]
 
 		types = {'vertices':'vtx', 'edges':'e', 'faces':'f'}
