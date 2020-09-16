@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>262</width>
-    <height>343</height>
+    <width>159</width>
+    <height>196</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -43,8 +43,8 @@
      <rect>
       <x>5</x>
       <y>0</y>
-      <width>246</width>
-      <height>321</height>
+      <width>139</width>
+      <height>151</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
@@ -84,115 +84,132 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout">
          <property name="spacing">
-          <number>12</number>
+          <number>0</number>
          </property>
          <item>
           <widget class="QGroupBox" name="animation">
            <property name="minimumSize">
             <size>
-             <width>0</width>
-             <height>81</height>
+             <width>125</width>
+             <height>20</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>999</width>
+             <width>125</width>
              <height>999</height>
             </size>
            </property>
            <property name="title">
             <string/>
            </property>
-           <widget class="QPushButton" name="b0271">
-            <property name="enabled">
-             <bool>false</bool>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <property name="spacing">
+             <number>0</number>
             </property>
-            <property name="geometry">
-             <rect>
-              <x>5</x>
-              <y>40</y>
-              <width>111</width>
-              <height>19</height>
-             </rect>
+            <property name="leftMargin">
+             <number>0</number>
             </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
+            <property name="topMargin">
+             <number>0</number>
             </property>
-            <property name="toolTip">
-             <string>Render Current Frame</string>
+            <property name="rightMargin">
+             <number>0</number>
             </property>
-            <property name="text">
-             <string>Render</string>
+            <property name="bottomMargin">
+             <number>0</number>
             </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="b1321">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>5</x>
-              <y>60</y>
-              <width>51</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Creates a locator object on the grid</string>
-            </property>
-            <property name="layoutDirection">
-             <enum>Qt::LeftToRight</enum>
-            </property>
-            <property name="text">
-             <string>Locator</string>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="b2211">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>5</x>
-              <y>20</y>
-              <width>111</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Toggle Animation Time and Range Sliders</string>
-            </property>
-            <property name="text">
-             <string>Time &amp; Range Slider</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-           </widget>
+            <item>
+             <widget class="QPushButton" name="b2211">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>999</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Toggle Animation Time and Range Sliders</string>
+              </property>
+              <property name="text">
+               <string>Time &amp; Range Slider</string>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>18</width>
+                <height>18</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="b0271">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>999</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Render Current Frame</string>
+              </property>
+              <property name="text">
+               <string>Render</string>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>18</width>
+                <height>18</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="b1321">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>999</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Creates a locator object on the grid</string>
+              </property>
+              <property name="layoutDirection">
+               <enum>Qt::LeftToRight</enum>
+              </property>
+              <property name="text">
+               <string>Locator</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </item>
          <item>

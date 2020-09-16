@@ -9,9 +9,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>256</width>
-    <height>182</height>
+    <width>284</width>
+    <height>144</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
@@ -43,8 +49,8 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>236</width>
-      <height>146</height>
+      <width>264</width>
+      <height>116</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
@@ -73,203 +79,12 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="1" rowspan="2" colspan="2">
-      <widget class="QGroupBox" name="group000">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>54</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>232</width>
-         <height>64</height>
-        </size>
-       </property>
-       <property name="title">
-        <string> Scene Materials</string>
-       </property>
-       <widget class="QToolButton_" name="tb002">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="geometry">
-         <rect>
-          <x>40</x>
-          <y>35</y>
-          <width>111</width>
-          <height>19</height>
-         </rect>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>111</width>
-          <height>19</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>Assign stored material shader ID</string>
-        </property>
-        <property name="text">
-         <string>Assign Current</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="b002">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>35</y>
-          <width>41</width>
-          <height>19</height>
-         </rect>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>111</width>
-          <height>19</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>Set material shader ID from selection.</string>
-        </property>
-        <property name="text">
-         <string>Get</string>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>18</width>
-          <height>18</height>
-         </size>
-        </property>
-       </widget>
-       <widget class="QToolButton_" name="tb000">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="geometry">
-         <rect>
-          <x>150</x>
-          <y>35</y>
-          <width>81</width>
-          <height>19</height>
-         </rect>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>999</width>
-          <height>19</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>8</pointsize>
-         </font>
-        </property>
-        <property name="toolTip">
-         <string>Select all components with the same material.  
- If nothing is selected; search all geometry.</string>
-        </property>
-        <property name="text">
-         <string>Select</string>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>16</width>
-          <height>16</height>
-         </size>
-        </property>
-       </widget>
-       <widget class="QComboBox_" name="cmb002">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>15</y>
-          <width>231</width>
-          <height>19</height>
-         </rect>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>231</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>19</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>Current material.</string>
-        </property>
-        <property name="maxVisibleItems">
-         <number>40</number>
-        </property>
-        <property name="maxCount">
-         <number>500</number>
-        </property>
-        <property name="sizeAdjustPolicy">
-         <enum>QComboBox::AdjustToContents</enum>
-        </property>
-        <property name="frame">
-         <bool>true</bool>
-        </property>
-        <item>
-         <property name="text">
-          <string>Scene Materials</string>
-         </property>
-        </item>
-       </widget>
-       <widget class="QToolButton_" name="tb001">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="geometry">
-         <rect>
-          <x>215</x>
-          <y>15</y>
-          <width>16</width>
-          <height>19</height>
-         </rect>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>111</width>
-          <height>19</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>8</pointsize>
-         </font>
-        </property>
-        <property name="toolTip">
-         <string>Select all components with the same material.  
- If nothing is selected; search all geometry.</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>16</width>
-          <height>16</height>
-         </size>
-        </property>
-       </widget>
-      </widget>
-     </item>
      <item row="4" column="1" colspan="2">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <layout class="QVBoxLayout" name="verticalLayout">
          <property name="spacing">
-          <number>12</number>
+          <number>0</number>
          </property>
          <item>
           <spacer name="verticalSpacer">
@@ -289,7 +104,7 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <property name="spacing">
-          <number>12</number>
+          <number>0</number>
          </property>
          <item>
           <spacer name="verticalSpacer_2">
@@ -336,6 +151,226 @@
        </property>
       </widget>
      </item>
+     <item row="2" column="1" rowspan="2" colspan="2">
+      <widget class="QGroupBox" name="group000">
+       <property name="minimumSize">
+        <size>
+         <width>262</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>262</width>
+         <height>999</height>
+        </size>
+       </property>
+       <property name="title">
+        <string> Scene Materials</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item row="6" column="0">
+         <widget class="QPushButton" name="b002">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>999</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="toolTip">
+           <string>Set material shader ID from selection.</string>
+          </property>
+          <property name="text">
+           <string>Get</string>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>18</width>
+            <height>18</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QToolButton_" name="tb002">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>999</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="toolTip">
+           <string>Assign stored material shader ID</string>
+          </property>
+          <property name="text">
+           <string>Assign Current</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="3">
+         <widget class="QToolButton_" name="tb001">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>999</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>8</pointsize>
+           </font>
+          </property>
+          <property name="toolTip">
+           <string>Select all components with the same material.  
+ If nothing is selected; search all geometry.</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>16</width>
+            <height>16</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" colspan="3">
+         <widget class="QComboBox_" name="cmb002">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>233</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>260</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="toolTip">
+           <string>Current material.</string>
+          </property>
+          <property name="maxVisibleItems">
+           <number>40</number>
+          </property>
+          <property name="maxCount">
+           <number>500</number>
+          </property>
+          <property name="sizeAdjustPolicy">
+           <enum>QComboBox::AdjustToContents</enum>
+          </property>
+          <property name="frame">
+           <bool>true</bool>
+          </property>
+          <item>
+           <property name="text">
+            <string>Scene Materials</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="6" column="2" colspan="2">
+         <widget class="QToolButton_" name="tb000">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>999</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>8</pointsize>
+           </font>
+          </property>
+          <property name="toolTip">
+           <string>Select all components with the same material.  
+ If nothing is selected; search all geometry.</string>
+          </property>
+          <property name="text">
+           <string>Select</string>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>16</width>
+            <height>16</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
     </layout>
    </widget>
   </widget>
@@ -352,14 +387,14 @@
    <header>widgets.qprogressbar_.h</header>
   </customwidget>
   <customwidget>
-   <class>QToolButton_</class>
-   <extends>QToolButton</extends>
-   <header>widgets.qtoolbutton_.h</header>
-  </customwidget>
-  <customwidget>
    <class>QComboBox_</class>
    <extends>QComboBox</extends>
    <header>widgets.qcombobox_.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QToolButton_</class>
+   <extends>QToolButton</extends>
+   <header>widgets.qtoolbutton_.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>254</width>
-    <height>362</height>
+    <height>196</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -44,7 +44,7 @@
       <x>8</x>
       <y>6</y>
       <width>226</width>
-      <height>321</height>
+      <height>156</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
@@ -84,14 +84,14 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout">
          <property name="spacing">
-          <number>12</number>
+          <number>0</number>
          </property>
         </layout>
        </item>
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <property name="spacing">
-          <number>12</number>
+          <number>0</number>
          </property>
         </layout>
        </item>

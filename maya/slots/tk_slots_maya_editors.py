@@ -1,4 +1,5 @@
 from __future__ import print_function
+from builtins import super
 from tk_slots_maya_init import *
 
 import os.path
@@ -7,24 +8,10 @@ import os.path
 
 class Editors(Init):
 	def __init__(self, *args, **kwargs):
-		super(Editors, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 
-		#construct stacked widget from maya layouts
-		# self.widgetList = ['MainAttributeEditorLayout','MainChannelBoxLayout','ToggledOutlinerLayout','MainToolSettingsLayout','LayerEditorDisplayLayerLayout']
-		self.stackedWidget = self.sb.getUi('dynLayout').stackedWidget
-		# self.stackedWidget = self.sb.getUi('dynLayout').stackedWidget
-		# for w in self.widgetList:
-		# 	self.stackedWidget.addWidget(self.sb.qApp_getWidget(w))
-			# self.stackedWidget.addWidget(self.sb.qApp_getWidget(w))
-
-
-		# self.sb.getUi('dynLayout').setCentralWidget(self.stackedWidget)
-		# self.sb.getUi('dynLayout').addWidget(self.stackedWidget)
-
-		# print(pm.lsUI(
-		# 		numWidgets=True,	#[bool, create]  Reports the number of QT widgets used by Maya.
-		# 		dumpWidgets=True	#[bool, create]  Dump all QT widgets used by Maya.
-		# 		))
+		self.dynLayout = self.sb.getUi('dynLayout')
+		self.stackedWidget = self.dynLayout.stackedWidget
 
 
 	def pin(self, state=None):
@@ -55,76 +42,85 @@ class Editors(Init):
 			cmb.setCurrentIndex(0)
 
 
-	# def setWidgetIndex(self, name):
-	# 	'''
-	# 	Set the active widget in the dynLayout ui.
-	# 	args:
-	# 		name (str) = name of widget
-	# 	returns:
-	# 		the current widget object from the stacked widget.
-	# 	'''
-	# 	print(8*' -')
-	# 	self.stackedWidget.addWidget(self.sb.getWidget(name=name))
-	# 	self.stackedWidget.setCurrentWidget(name)
-	# 	currentWidget = self.stackedWidget.currentWidget()
-	# 	currentWidget.adjustSize()
-	# 	# self.tk.resize(currentWidget.minimumSizeHint())
-	# 	# self.tk.resize(currentWidget.sizeHint())
-	# 	return currentWidget
+	def getEditorWidget(self, name):
+		'''
+		Get a maya widget from a given name.
+
+		args:
+			name (str) = name of widget
+		'''
+		_name = '_'+name
+		if not hasattr(self, _name):
+			w = self.convertToWidget(name)
+			self.stackedWidget.addWidget(w)
+			setattr(self, _name, w)
+
+		return getattr(self, _name)
 
 
-	def i000(self):
+	def v000(self):
 		'''
 		Attributes
 		'''
-		# self.setWidgetIndex('MainAttributeEditorLayout')
-		if pm.workspaceControl('AttributeEditor', exists=1):
-			if pm.workspaceControl('AttributeEditor', query=1, visible=1):
-				pm.workspaceControl('AttributeEditor', edit=1, close=1)
-			else:
-				pm.workspaceControl('AttributeEditor', edit=1, restore=1)
+		name = mel.eval('$tmp=$gAttributeEditorForm')
+		w = self.getEditorWidget(name)
+
+		self.tk.setUi('dynLayout')
+		self.stackedWidget.setCurrentWidget(w)
+		self.tk.resize(640, 480)
+		self.tk.move(QtGui.QCursor.pos() - self.tk.rect().center()) #move window to cursor position and offset from left corner to center
 
 
-	def i001(self):
+	def v001(self):
 		'''
 		Outliner
 		'''
-		# self.setWidgetIndex('ToggledOutlinerLayout')
-		if pm.workspaceControl('Outliner', exists=1):
-			if pm.workspaceControl('Outliner', query=1, visible=1):
-				pm.workspaceControl('Outliner', edit=1, close=1)
-			else:
-				pm.workspaceControl('Outliner', edit=1, restore=1)
+		name = mel.eval('$tmp=$gOutlinerForm')
+		w = self.getEditorWidget(name)
+
+		self.tk.setUi('dynLayout')
+		self.stackedWidget.setCurrentWidget(w)
+		self.tk.resize(260, 640)
+		self.tk.move(QtGui.QCursor.pos() - self.tk.rect().center()) #move window to cursor position and offset from left corner to center
 
 
-	def i002(self):
+	def v002(self):
 		'''
 		Tool
 		'''
-		# self.setWidgetIndex('MainToolSettingsLayout')
-		if pm.workspaceControl('ToolSettings', exists=1):
-			if pm.workspaceControl('ToolSettings', query=1, visible=1):
-				pm.workspaceControl('ToolSettings', edit=1, close=1)
-			else:
-				pm.workspaceControl('ToolSettings', edit=1, restore=1)
+		name = mel.eval('$tmp=$gToolSettingsForm')
+		w = self.getEditorWidget(name)
+
+		self.tk.setUi('dynLayout')
+		self.stackedWidget.setCurrentWidget(w)
+		self.tk.resize(461, 480)
+		self.tk.move(QtGui.QCursor.pos() - self.tk.rect().center()) #move window to cursor position and offset from left corner to center
 
 
-	def i003(self):
+	def v003(self):
 		'''
 		Layers
 		'''
-		# self.setWidgetIndex('LayerEditorDisplayLayerLayout')
-		pm.mel.channelsLayersPrefChange(True) #Preferences: ui elements: Show Layer Editor within Channel Box: Off
-		pm.mel.setLayersVisible(True)
+		name = mel.eval('$tmp=$gLayerEditorForm')
+		w = self.getEditorWidget(name)
+
+		self.tk.setUi('dynLayout')
+		self.stackedWidget.setCurrentWidget(w)
+		self.tk.resize(261, 480)
+		self.tk.move(QtGui.QCursor.pos() - self.tk.rect().center()) #move window to cursor position and offset from left corner to center
 
 
-	def i004(self):
+	def v004(self):
 		'''
 		Channels
 		'''
-		# self.setWidgetIndex('MainChannelBoxLayout')
-		pm.mel.channelsLayersPrefChange(True) #Preferences: ui elements: Show Layer Editor within Channel Box: Off
-		pm.mel.setChannelsVisible(True)
+		name = mel.eval('$tmp=$gChannelsForm')
+		w = self.getEditorWidget(name)
+
+		self.tk.setUi('dynLayout')
+		self.stackedWidget.setCurrentWidget(w)
+		self.tk.resize(640, 480)
+		self.tk.move(QtGui.QCursor.pos() - self.tk.rect().center()) #move window to cursor position and offset from left corner to center
 
 
 
@@ -139,3 +135,5 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
+
+# deprecated: -----------------------------------

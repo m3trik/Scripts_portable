@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>132</width>
-    <height>164</height>
+    <width>146</width>
+    <height>151</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -43,8 +43,8 @@
      <rect>
       <x>5</x>
       <y>10</y>
-      <width>117</width>
-      <height>134</height>
+      <width>131</width>
+      <height>122</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
@@ -84,61 +84,72 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout">
          <property name="spacing">
-          <number>12</number>
+          <number>0</number>
          </property>
          <item>
           <widget class="QGroupBox" name="groupBox">
            <property name="minimumSize">
             <size>
-             <width>0</width>
-             <height>37</height>
+             <width>125</width>
+             <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>111</width>
+             <width>125</width>
              <height>999</height>
             </size>
            </property>
            <property name="title">
             <string>Convert</string>
            </property>
-           <widget class="QComboBox_" name="cmb001">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>15</y>
-              <width>111</width>
-              <height>21</height>
-             </rect>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <property name="spacing">
+             <number>0</number>
             </property>
-            <property name="minimumSize">
-             <size>
-              <width>111</width>
-              <height>21</height>
-             </size>
+            <property name="leftMargin">
+             <number>0</number>
             </property>
-            <property name="maximumSize">
-             <size>
-              <width>0</width>
-              <height>21</height>
-             </size>
+            <property name="topMargin">
+             <number>0</number>
             </property>
-            <property name="maxVisibleItems">
-             <number>40</number>
+            <property name="rightMargin">
+             <number>0</number>
             </property>
-            <property name="sizeAdjustPolicy">
-             <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
-            </property>
-            <property name="frame">
-             <bool>false</bool>
+            <property name="bottomMargin">
+             <number>0</number>
             </property>
             <item>
-             <property name="text">
-              <string>Convert To</string>
-             </property>
+             <widget class="QComboBox_" name="cmb001">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>999</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maxVisibleItems">
+               <number>40</number>
+              </property>
+              <property name="sizeAdjustPolicy">
+               <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
+              </property>
+              <property name="frame">
+               <bool>false</bool>
+              </property>
+              <item>
+               <property name="text">
+                <string>Convert To</string>
+               </property>
+              </item>
+             </widget>
             </item>
-           </widget>
+           </layout>
           </widget>
          </item>
          <item>

@@ -349,10 +349,11 @@ class EventFactoryFilter(QtCore.QObject):
 					self.tk.move(QtGui.QCursor.pos() - ui.rect().center()) #self.tk.ui.rect().center()) #move window to cursor position and offset from left corner to center
 
 				elif self.sb.prefix(self.widget, 'v'):
-					#add the buttons command info to the prevCamera list.
-					method = self.sb.getMethod(self.name, self.widgetName)
-					docString = self.sb.getDocString(self.name, self.widgetName)
-					self.sb.prevCamera(allowCurrent=True, as_list=1).append([method, docString]) #store the camera view
+					if self.name=='cameras':
+						#add the buttons command info to the prevCamera list.
+						method = self.sb.getMethod(self.name, self.widgetName)
+						docString = self.sb.getDocString(self.name, self.widgetName)
+						self.sb.prevCamera(allowCurrent=True, as_list=1).append([method, docString]) #store the camera view
 					#send click signal on mouseRelease.
 					self.widget.click()
 

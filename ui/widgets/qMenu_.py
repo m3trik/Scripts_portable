@@ -22,8 +22,8 @@ class QMenu_(QtWidgets.QMenu, Attributes):
 		self.setStyleSheet('''
 			QMenu {
 				background-color: rgba(127,127,127,175);
-				border: 1px solid white;
-				padding: 10px 10px 10px 10px;
+				border: 1px solid gray;
+				padding: 7px 7px 7px 7px;
 				margin: 5px;
 			}
 
@@ -86,7 +86,7 @@ class QMenu_(QtWidgets.QMenu, Attributes):
 			wAction.setDefaultWidget(w)
 			self.addAction(wAction)
 
-			w.setMinimumSize(w.sizeHint().width(), 20) #self.parent().minimumSizeHint().height()+1) #set child widget height to that of the toolbutton]
+			# w.setMinimumSize(w.sizeHint().width(), 20) #self.parent().minimumSizeHint().height()+1) #set child widget height to that of the toolbutton]
 
 			setattr(self, w.objectName(), w) #add the widget's objectName as a QMenu attribute.
 

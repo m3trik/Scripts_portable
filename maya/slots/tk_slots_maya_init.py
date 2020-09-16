@@ -1,6 +1,8 @@
 from __future__ import print_function
 from builtins import super
-from PySide2 import QtGui
+import os
+
+from PySide2 import QtGui, QtWidgets
 
 from widgets.qMenu_ import QMenu_
 from widgets.qLabel_ import QLabel_
@@ -9,14 +11,13 @@ from widgets.qCheckBox_ import QCheckBox_
 from widgets.qToolButton_ import QToolButton_
 from widgets.qWidget_MultiWidget import QWidget_MultiWidget as MultiWidget
 
-import os
 from tk_slots_ import Slots
 
 #maya dependancies
 try:
 	import maya.mel as mel
 	import pymel.core as pm
-	import maya.OpenMayaUI as omUI
+	import maya.OpenMayaUI as OpenMayaUI
 
 	import shiboken2
 
@@ -892,6 +893,26 @@ class Init(Slots):
 	# ------------------------------------------------
 
 	@staticmethod
+	def getMelGlobals(keyword=None, caseSensitive=False):
+		'''
+		Get global MEL variables.
+
+		args:
+			keyword (str) = search string.
+
+		returns:
+			(list)
+		'''
+		variables = [
+			v for v in sorted(mel.eval('env')) 
+				if not keyword 
+					or (v.count(keyword) if caseSensitive else v.lower().count(keyword.lower()))
+		]
+
+		return variables
+
+
+	@staticmethod
 	def getObjectType(obj):
 		'''
 		Get the object type of a given object.
@@ -1141,6 +1162,34 @@ class Init(Slots):
 	# ------------------------------------------------
 
 
+	@staticmethod
+	def getMayaMainWindow():
+		'''
+		Get the main Maya window as a QtWidgets.QMainWindow instance
+
+		returns:
+			QtGui.QMainWindow instance of the top level Maya windows
+		'''
+		ptr = OpenMayaUI.MQtUtil.mainWindow()
+		if ptr:
+			return shiboken2.wrapInstance(long(ptr), QtWidgets.QWidget)
+
+
+	@staticmethod
+	def convertToWidget(name):
+		'''
+		args:
+			name (str) = name of a Maya UI element of any type. ex. name = mel.eval('$tmp=$gAttributeEditorForm') (from MEL global variable)
+
+		returns:
+			(QWidget) If the object does not exist, returns None
+		'''
+		for f in ('findControl', 'findLayout', 'findMenuItem'):
+			ptr = getattr(OpenMayaUI.MQtUtil, f)(name) #equivalent to: ex. OpenMayaUI.MQtUtil.findControl(name)
+			if ptr:
+				return shiboken2.wrapInstance(long(ptr), QtWidgets.QWidget)
+
+
 	@classmethod
 	def attr(cls, fn):
 		'''
@@ -1170,41 +1219,6 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getMayaMainWindow():
-		'''
-		Get the main Maya window as a QtWidgets.QMainWindow instance
-
-		returns:
-			QtGui.QMainWindow instance of the top level Maya windows
-		'''
-		ptr = omUI.MQtUtil.mainWindow()
-		if ptr:
-			return shiboken2.wrapInstance(long(ptr), QtWidgets.QWidget)
-
-
-
-	@staticmethod
-	def convertToWidget(name):
-		'''
-		args:
-			name (str) = name of a Maya UI element of any type.
-			type_ = <qt object type> - default is QWidget
-
-		returns:
-			the corresponding QWidget or QAction.
-			If the object does not exist, returns None
-		'''
-		ptr = omUI.MQtUtil.findControl(name)
-		if ptr is None:
-			ptr = omUI.MQtUtil.findLayout(name)
-			if ptr is None:
-				ptr = omUI.MQtUtil.findMenuItem(name)
-		if ptr is not None:
-			return shiboken2.wrapInstance(long(ptr), QtWidgets.QWidget)
-
-
-
-	@staticmethod
 	def mainProgressBar(size, name="tk_progressBar", stepAmount=1):
 		'''
 		#add esc key pressed return False
@@ -1212,7 +1226,7 @@ class Init(Slots):
 		args:
 			size (int) = total amount
 			name (str) = name of progress bar created
-	  		stepAmount(int) = increment amount
+			stepAmount(int) = increment amount
 
 		example use-case:
 		mainProgressBar (len(edges), progressCount)
@@ -1221,8 +1235,8 @@ class Init(Slots):
 				break
 		pm.progressBar ("tk_progressBar", edit=1, endProgress=1)
 
-	  	to use main progressBar: name=string $gMainProgressBar
-	  	'''
+		to use main progressBar: name=string $gMainProgressBar
+		'''
 		status = "processing: "+str(size)+"."
 		edit=0
 		if pm.progressBar(name, exists=1):
@@ -1342,8 +1356,8 @@ class Init(Slots):
 										horizontalScrollBarThickness=16))
 		pm.columnLayout(adjustableColumn=True)
 		text_field = str(pm.scrollField(text=(text),
-		                                width=scroll_width,
-		                                height=scroll_height,))
+										width=scroll_width,
+										height=scroll_height,))
 		print(window)
 		pm.setParent('..')
 		pm.showWindow(window)

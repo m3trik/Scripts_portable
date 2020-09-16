@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>152</width>
-    <height>200</height>
+    <height>139</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -48,8 +48,8 @@
      <rect>
       <x>15</x>
       <y>15</y>
-      <width>121</width>
-      <height>131</height>
+      <width>131</width>
+      <height>101</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
@@ -61,59 +61,70 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout">
          <property name="spacing">
-          <number>12</number>
+          <number>0</number>
          </property>
          <item>
           <widget class="QGroupBox" name="group000">
            <property name="minimumSize">
             <size>
-             <width>0</width>
-             <height>39</height>
+             <width>125</width>
+             <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>111</width>
-             <height>73</height>
+             <width>125</width>
+             <height>999</height>
             </size>
            </property>
            <property name="title">
             <string>Mirror</string>
            </property>
-           <widget class="QToolButton_" name="tb000">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>20</y>
-              <width>111</width>
-              <height>19</height>
-             </rect>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <property name="spacing">
+             <number>0</number>
             </property>
-            <property name="minimumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
+            <property name="leftMargin">
+             <number>0</number>
             </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
+            <property name="topMargin">
+             <number>0</number>
             </property>
-            <property name="toolTip">
-             <string>Mirror geometry across an axis.</string>
+            <property name="rightMargin">
+             <number>0</number>
             </property>
-            <property name="text">
-             <string>Mirror -X</string>
+            <property name="bottomMargin">
+             <number>0</number>
             </property>
-            <property name="iconSize">
-             <size>
-              <width>18</width>
-              <height>18</height>
-             </size>
-            </property>
-           </widget>
+            <item>
+             <widget class="QToolButton_" name="tb000">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>999</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Mirror geometry across an axis.</string>
+              </property>
+              <property name="text">
+               <string>Mirror -X</string>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>18</width>
+                <height>18</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </item>
          <item>
@@ -189,11 +200,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QToolButton_</class>
-   <extends>QToolButton</extends>
-   <header>widgets.qtoolbutton_.h</header>
-  </customwidget>
-  <customwidget>
    <class>QPushButton_Draggable</class>
    <extends>QPushButton</extends>
    <header>widgets.qpushbutton_draggable.h</header>
@@ -202,6 +208,11 @@
    <class>QProgressBar_</class>
    <extends>QProgressBar</extends>
    <header>widgets.qprogressbar_.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QToolButton_</class>
+   <extends>QToolButton</extends>
+   <header>widgets.qtoolbutton_.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

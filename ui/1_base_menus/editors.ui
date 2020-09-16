@@ -97,7 +97,7 @@
        <height>121</height>
       </rect>
      </property>
-     <widget class="QPushButton" name="i004">
+     <widget class="QPushButton" name="v004">
       <property name="geometry">
        <rect>
         <x>35</x>
@@ -128,7 +128,7 @@
        <string>Channels</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="i002">
+     <widget class="QPushButton" name="v002">
       <property name="geometry">
        <rect>
         <x>110</x>
@@ -159,7 +159,7 @@
        <string>Tool</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="i000">
+     <widget class="QPushButton" name="v000">
       <property name="geometry">
        <rect>
         <x>25</x>
@@ -190,7 +190,7 @@
        <string>Attributes</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="i001">
+     <widget class="QPushButton" name="v001">
       <property name="geometry">
        <rect>
         <x>195</x>
@@ -221,7 +221,7 @@
        <string>Outliner</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="i003">
+     <widget class="QPushButton" name="v003">
       <property name="geometry">
        <rect>
         <x>185</x>

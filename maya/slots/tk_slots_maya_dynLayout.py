@@ -9,15 +9,12 @@ class DynLayout(Init):
 	def __init__(self, *args, **kwargs):
 		super(DynLayout, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('dynLayout')
-		self.childUi = self.sb.getUi('dynLayout_submenu')
-
 
 	def pin(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.parentUi.pin
+		pin = self.dynLayout.pin
 
 		if state is 'setMenu':
 			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
@@ -29,25 +26,18 @@ class DynLayout(Init):
 		'''
 		Editors
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.dynLayout.cmb000
 		
 		if index is 'setMenu':
 			list_ = ['']
 			cmb.addItems_(list_, '')
 			return
 
-		# if index>0:
-		# 	if index==cmb.items.index(''):
-		# 		pass
-		# 	cmb.setCurrentIndex(0)
+		if index>0:
+			if index==cmb.items.index(''):
+				pass
+			cmb.setCurrentIndex(0)
 
-
-	def b000(self):
-		'''
-		
-
-		'''
-		pass
 
 
 

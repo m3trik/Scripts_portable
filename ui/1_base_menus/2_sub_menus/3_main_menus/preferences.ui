@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>279</width>
-    <height>246</height>
+    <width>296</width>
+    <height>186</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -43,8 +43,8 @@
      <rect>
       <x>20</x>
       <y>18</y>
-      <width>241</width>
-      <height>189</height>
+      <width>264</width>
+      <height>156</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
@@ -106,83 +106,124 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout">
          <property name="spacing">
-          <number>12</number>
+          <number>0</number>
          </property>
          <item>
           <widget class="QGroupBox" name="groupBox_3">
            <property name="minimumSize">
             <size>
-             <width>0</width>
-             <height>96</height>
+             <width>125</width>
+             <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>111</width>
+             <width>125</width>
              <height>999</height>
             </size>
            </property>
            <property name="title">
             <string>App</string>
            </property>
-           <widget class="QPushButton" name="b008">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>55</y>
-              <width>113</width>
-              <height>19</height>
-             </rect>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <property name="spacing">
+             <number>0</number>
             </property>
-            <property name="toolTip">
-             <string>Platonic solids</string>
+            <property name="leftMargin">
+             <number>0</number>
             </property>
-            <property name="text">
-             <string>Hotkeys</string>
+            <property name="topMargin">
+             <number>0</number>
             </property>
-           </widget>
-           <widget class="QPushButton" name="b009">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>35</y>
-              <width>113</width>
-              <height>19</height>
-             </rect>
+            <property name="rightMargin">
+             <number>0</number>
             </property>
-            <property name="text">
-             <string>Plug-ins</string>
+            <property name="bottomMargin">
+             <number>0</number>
             </property>
-           </widget>
-           <widget class="QPushButton" name="b010">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>15</y>
-              <width>113</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="text">
-             <string>App Preferences</string>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="b001">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>75</y>
-              <width>113</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="toolTip">
-             <string>Open color settings editor</string>
-            </property>
-            <property name="text">
-             <string>Ui Color</string>
-            </property>
-           </widget>
+            <item>
+             <widget class="QPushButton" name="b010">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>999</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>App Preferences</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="b009">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>999</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Plug-ins</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="b008">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>999</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Platonic solids</string>
+              </property>
+              <property name="text">
+               <string>Hotkeys</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="b001">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>999</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Open color settings editor</string>
+              </property>
+              <property name="text">
+               <string>Ui Color</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </item>
          <item>
@@ -203,161 +244,177 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <property name="spacing">
-          <number>12</number>
+          <number>0</number>
          </property>
          <item>
           <widget class="QGroupBox" name="groupBox_5">
            <property name="minimumSize">
             <size>
-             <width>0</width>
+             <width>125</width>
              <height>56</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>111</width>
+             <width>125</width>
              <height>999</height>
             </size>
            </property>
            <property name="title">
             <string>Working Units</string>
            </property>
-           <widget class="QComboBox_" name="cmb001">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>15</y>
-              <width>113</width>
-              <height>19</height>
-             </rect>
+           <layout class="QVBoxLayout" name="verticalLayout_4">
+            <property name="spacing">
+             <number>0</number>
             </property>
-            <property name="minimumSize">
-             <size>
-              <width>113</width>
-              <height>0</height>
-             </size>
+            <property name="leftMargin">
+             <number>0</number>
             </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
+            <property name="topMargin">
+             <number>0</number>
             </property>
-            <property name="toolTip">
-             <string>Set working units: Linear</string>
+            <property name="rightMargin">
+             <number>0</number>
             </property>
-            <property name="maxCount">
-             <number>999</number>
-            </property>
-            <property name="sizeAdjustPolicy">
-             <enum>QComboBox::AdjustToContents</enum>
-            </property>
-            <property name="frame">
-             <bool>false</bool>
+            <property name="bottomMargin">
+             <number>0</number>
             </property>
             <item>
-             <property name="text">
-              <string>Linear</string>
-             </property>
+             <widget class="QComboBox_" name="cmb001">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>999</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Set working units: Linear</string>
+              </property>
+              <property name="maxCount">
+               <number>999</number>
+              </property>
+              <property name="sizeAdjustPolicy">
+               <enum>QComboBox::AdjustToContents</enum>
+              </property>
+              <property name="frame">
+               <bool>false</bool>
+              </property>
+              <item>
+               <property name="text">
+                <string>Linear</string>
+               </property>
+              </item>
+             </widget>
             </item>
-           </widget>
-           <widget class="QComboBox_" name="cmb002">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>35</y>
-              <width>113</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>113</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Set working units: Time</string>
-            </property>
-            <property name="maxCount">
-             <number>999</number>
-            </property>
-            <property name="sizeAdjustPolicy">
-             <enum>QComboBox::AdjustToContents</enum>
-            </property>
-            <property name="frame">
-             <bool>false</bool>
-            </property>
             <item>
-             <property name="text">
-              <string>Time</string>
-             </property>
+             <widget class="QComboBox_" name="cmb002">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>999</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Set working units: Time</string>
+              </property>
+              <property name="maxCount">
+               <number>999</number>
+              </property>
+              <property name="sizeAdjustPolicy">
+               <enum>QComboBox::AdjustToContents</enum>
+              </property>
+              <property name="frame">
+               <bool>false</bool>
+              </property>
+              <item>
+               <property name="text">
+                <string>Time</string>
+               </property>
+              </item>
+             </widget>
             </item>
-           </widget>
+           </layout>
           </widget>
          </item>
          <item>
           <widget class="QGroupBox" name="groupBox">
            <property name="minimumSize">
             <size>
-             <width>0</width>
-             <height>34</height>
+             <width>125</width>
+             <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>111</width>
+             <width>125</width>
              <height>999</height>
             </size>
            </property>
            <property name="title">
             <string>Ui Style</string>
            </property>
-           <widget class="QComboBox_" name="cmb000">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>15</y>
-              <width>113</width>
-              <height>19</height>
-             </rect>
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <property name="spacing">
+             <number>0</number>
             </property>
-            <property name="minimumSize">
-             <size>
-              <width>113</width>
-              <height>0</height>
-             </size>
+            <property name="leftMargin">
+             <number>0</number>
             </property>
-            <property name="maximumSize">
-             <size>
-              <width>113</width>
-              <height>19</height>
-             </size>
+            <property name="topMargin">
+             <number>0</number>
             </property>
-            <property name="toolTip">
-             <string>Select shorcut menu set type.</string>
+            <property name="rightMargin">
+             <number>0</number>
             </property>
-            <property name="maxVisibleItems">
-             <number>50</number>
-            </property>
-            <property name="sizeAdjustPolicy">
-             <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
-            </property>
-            <property name="frame">
-             <bool>false</bool>
+            <property name="bottomMargin">
+             <number>0</number>
             </property>
             <item>
-             <property name="text">
-              <string>Style</string>
-             </property>
+             <widget class="QComboBox_" name="cmb000">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>999</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Select shorcut menu set type.</string>
+              </property>
+              <property name="maxVisibleItems">
+               <number>50</number>
+              </property>
+              <property name="sizeAdjustPolicy">
+               <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
+              </property>
+              <property name="frame">
+               <bool>false</bool>
+              </property>
+              <item>
+               <property name="text">
+                <string>Style</string>
+               </property>
+              </item>
+             </widget>
             </item>
-           </widget>
+           </layout>
           </widget>
          </item>
          <item>

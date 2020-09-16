@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>240</width>
+    <width>180</width>
     <height>154</height>
    </rect>
   </property>
@@ -43,8 +43,8 @@
      <rect>
       <x>5</x>
       <y>10</y>
-      <width>226</width>
-      <height>113</height>
+      <width>151</width>
+      <height>116</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
@@ -84,114 +84,144 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout">
          <property name="spacing">
-          <number>12</number>
-         </property>
-        </layout>
-       </item>
-       <item>
-        <layout class="QVBoxLayout" name="verticalLayout_2">
-         <property name="spacing">
-          <number>12</number>
+          <number>0</number>
          </property>
          <item>
           <widget class="QGroupBox" name="groupBox_4">
            <property name="minimumSize">
             <size>
-             <width>0</width>
-             <height>55</height>
+             <width>125</width>
+             <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>111</width>
+             <width>125</width>
              <height>999</height>
             </size>
            </property>
            <property name="title">
             <string>Naming</string>
            </property>
-           <widget class="QLineEdit" name="t000">
-            <property name="enabled">
-             <bool>true</bool>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <property name="spacing">
+             <number>0</number>
             </property>
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>17</y>
-              <width>106</width>
-              <height>19</height>
-             </rect>
+            <property name="leftMargin">
+             <number>0</number>
             </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
+            <property name="topMargin">
+             <number>0</number>
             </property>
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rename: Find&lt;/p&gt;&lt;p&gt;Performs operation on any selected objects. Else, all objects are searched.&lt;/p&gt;&lt;p&gt;wildcards:&lt;/p&gt;&lt;p&gt;*find* - search contains chars&lt;/p&gt;&lt;p&gt;*find - search endswith chars&lt;/p&gt;&lt;p&gt;find* - search startswith chars&lt;/p&gt;&lt;p&gt;find|find - search any of. can be used in conjuction with other modifiers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <property name="rightMargin">
+             <number>0</number>
             </property>
-            <property name="layoutDirection">
-             <enum>Qt::RightToLeft</enum>
+            <property name="bottomMargin">
+             <number>0</number>
             </property>
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>pasted__*</string>
-            </property>
-            <property name="maxLength">
-             <number>99</number>
-            </property>
-            <property name="frame">
-             <bool>false</bool>
-            </property>
-            <property name="placeholderText">
-             <string>find:</string>
-            </property>
-           </widget>
-           <widget class="QLineEdit" name="t001">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>35</y>
-              <width>106</width>
-              <height>19</height>
-             </rect>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>111</width>
-              <height>19</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rename:: Replace with&lt;/p&gt;&lt;p&gt;wildcards:&lt;/p&gt;&lt;p&gt;*to* - replace only 'find'&lt;/p&gt;&lt;p&gt;to* - replace prefix&lt;/p&gt;&lt;p&gt;*to - replace suffix&lt;/p&gt;&lt;p&gt;**to - replace suffix', moves any integers in front of replacement chars&lt;/p&gt;&lt;p&gt;ie. 'poly_low021' to 'poly021_high' if **_high is passed as arg.&lt;/p&gt;&lt;p&gt;ie. 'poly021_low' if only ** is passed as arg.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="layoutDirection">
-             <enum>Qt::RightToLeft</enum>
-            </property>
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="maxLength">
-             <number>99</number>
-            </property>
-            <property name="frame">
-             <bool>false</bool>
-            </property>
-            <property name="placeholderText">
-             <string>Replace:</string>
-            </property>
-           </widget>
+            <item>
+             <widget class="QLineEdit" name="t000">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>999</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rename: Find&lt;/p&gt;&lt;p&gt;Performs operation on any selected objects. Else, all objects are searched.&lt;/p&gt;&lt;p&gt;wildcards:&lt;/p&gt;&lt;p&gt;*find* - search contains chars&lt;/p&gt;&lt;p&gt;*find - search endswith chars&lt;/p&gt;&lt;p&gt;find* - search startswith chars&lt;/p&gt;&lt;p&gt;find|find - search any of. can be used in conjuction with other modifiers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="layoutDirection">
+               <enum>Qt::RightToLeft</enum>
+              </property>
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>pasted__*</string>
+              </property>
+              <property name="maxLength">
+               <number>99</number>
+              </property>
+              <property name="frame">
+               <bool>false</bool>
+              </property>
+              <property name="placeholderText">
+               <string>find:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="t001">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>999</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rename:: Replace with&lt;/p&gt;&lt;p&gt;wildcards:&lt;/p&gt;&lt;p&gt;*to* - replace only 'find'&lt;/p&gt;&lt;p&gt;to* - replace prefix&lt;/p&gt;&lt;p&gt;*to - replace suffix&lt;/p&gt;&lt;p&gt;**to - replace suffix', moves any integers in front of replacement chars&lt;/p&gt;&lt;p&gt;ie. 'poly_low021' to 'poly021_high' if **_high is passed as arg.&lt;/p&gt;&lt;p&gt;ie. 'poly021_low' if only ** is passed as arg.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="layoutDirection">
+               <enum>Qt::RightToLeft</enum>
+              </property>
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="maxLength">
+               <number>99</number>
+              </property>
+              <property name="frame">
+               <bool>false</bool>
+              </property>
+              <property name="placeholderText">
+               <string>Replace:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
           </widget>
          </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="spacing">
+          <number>0</number>
+         </property>
          <item>
           <spacer name="verticalSpacer">
            <property name="orientation">

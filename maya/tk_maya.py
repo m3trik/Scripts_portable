@@ -1,14 +1,18 @@
 from __future__ import print_function
-from tk_ import Tk
-from PySide2.QtWidgets import QApplication
-
-from widgets.qWidget_ProgressIndicator import QWidget_ProgressIndicator
-
 import sys
+
+from PySide2 import QtWidgets
+try: import shiboken2
+except: from PySide2 import shiboken2
 global app
-app = QApplication.instance() #get the qApp instance if it exists.
+app = QtWidgets.QApplication.instance() #get the qApp instance if it exists.
 if not app:
-	app = QApplication(sys.argv)
+	app = QtWidgets.QApplication(sys.argv)
+
+# import maya.OpenMayaUI as OpenMayaUI
+
+from tk_ import Tk
+from widgets.qWidget_ProgressIndicator import QWidget_ProgressIndicator
 
 
 
@@ -23,7 +27,7 @@ class Tk_maya(Tk):
 
 		if not parent:
 			try:
-				parent = next(w for w in app.topLevelWidgets() if w.objectName()=='MayaWindow')
+				parent = self.getMayaMainWindow()
 
 			except Exception as error:
 				print(self.__class__.__name__, error)
@@ -34,6 +38,21 @@ class Tk_maya(Tk):
 		super(Tk_maya, self).__init__(parent)
 
 		# progressIndicator.stop()
+
+
+	def getMayaMainWindow(self):
+		'''
+		Get maya's main window object.
+
+		returns:
+			(QWidget)
+		'''
+		# ptr = OpenMayaUI.MQtUtil.mainWindow()
+		# mayaWin = shiboken2.wrapInstance(long(ptr), QtWidgets.QWidget)
+
+		mayaWin = next(w for w in app.topLevelWidgets() if w.objectName()=='MayaWindow')
+
+		return mayaWin
 
 
 	def showEvent(self, event):
@@ -51,7 +70,7 @@ class Tk_maya(Tk):
 			event = <QEvent>
 		'''
 		if __name__ == "__main__":
-			QApplication.instance().quit()
+			QtWidgets.QApplication.instance().quit()
 			sys.exit() #assure that the sys processes are terminated.
 
 		return Tk.hideEvent(self, event) #super(Tk_maya, self).hideEvent(event)

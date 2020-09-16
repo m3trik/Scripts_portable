@@ -204,67 +204,77 @@ class Attributes(object):
 				self.setCustomAttribute(obj, attr, value)
 
 
-	def setCustomAttribute(self, obj, attr, value):
+	def setCustomAttribute(self, w, attr, value):
 		'''
 		Attributes that throw an AttributeError in 'setAttributes' are sent here, where they can be assigned a value.
 		Custom attributes can be set using a trailing underscore convention to aid readability, and differentiate them from standard attributes.
 
 		args:
-			obj (obj) = obj (obj) = the child obj or widgetAction to set attributes for.
-			attr (str) = custom keyword attribute.
-			value (str) = the value corresponding to the given attr.
+			w (obj) = The child widget or widgetAction to set attributes for.
+			attr (str) = Custom keyword attribute.
+			value (str) = The value corresponding to the given attr.
 
 		attributes:
-			copy_ (obj) = widget to copy attributes from.
-			setSize_ (list) = size as an x and y value. ie. (40, 80)
-			setPosition_ (QPoint)(str) = move to given global position and center. valid string values include: 'cursor', 
+			copy_ (obj) = The widget to copy attributes from.
+			setSize_ (list) = The size as an x and y value. ie. (40, 80)
+			setWidth_ (int) = The desired width.
+			setHeight_ (int) = The desired height.
+			setPosition_ (QPoint)(str) = Move to the given global position and center. valid string values include: 'cursor', 
 			addMenu_ (QMenu) = Used for adding additional menus to a parent menu. ex. parentMenu = QMenu_(); childMenu = QMenu_('Create', addMenu_=parentMenu)
-			insertSeparator_ (bool) = insert a line separater before the new widget.
-			setLayoutDirection_ (str) = set the layout direction using a string value. ie. 'LeftToRight'
-			setAlignment_ (str) = set the alignment using a string value. ie. 'AlignVCenter'
-			setButtonSymbols_ (str) = set button symbols using a string value. ex. ie. 'PlusMinus'
-			setMinMax_ (str) = set the min, max, and step value using a string value. ex. '.01-10 step.1'
+			insertSeparator_ (bool) = Insert a line separater before the new widget.
+			setLayoutDirection_ (str) = Set the layout direction using a string value. ie. 'LeftToRight'
+			setAlignment_ (str) = Set the alignment using a string value. ie. 'AlignVCenter'
+			setButtonSymbols_ (str) = Set button symbols using a string value. ex. ie. 'PlusMinus'
+			setMinMax_ (str) = Set the min, max, and step value using a string value. ex. '.01-10 step.1'
 		'''
 		if attr=='copy_':
-			obj.setObjectName(value.objectName())
-			obj.resize(value.size())
-			obj.setText(value.text())
-			obj.setWhatsThis(value.whatsThis())
+			w.setObjectName(value.objectName())
+			w.resize(value.size())
+			w.setText(value.text())
+			w.setWhatsThis(value.whatsThis())
 
 		elif attr=='setSize_':
 			x, y = value
-			obj.resize(QtCore.QSize(x, y))
+			w.resize(QtCore.QSize(x, y))
+
+		elif attr=='setWidth_':
+			w.setFixedWidth(value)
+			# w.resize(value, w.size().height())
+
+		elif attr=='setHeight_':
+			w.setFixedHeight(value)
+			# w.resize(w.size().width(), value)
 
 		elif attr=='setPosition_':
 			if value is 'cursor':
 				value = QtGui.QCursor.pos()
-			obj.move(obj.mapFromGlobal(value - obj.rect().center())) #move and center
+			w.move(w.mapFromGlobal(value - w.rect().center())) #move and center
 
 		elif attr=='addMenu_':
-			value.addMenu(obj)
+			value.addMenu(w)
 
 		elif attr=='insertSeparator_':
-			if obj.__class__.__name__=='QAction':
-				self.insertSeparator(obj)
+			if w.__class__.__name__=='QAction':
+				self.insertSeparator(w)
 
 		elif attr=='setLayoutDirection_':
-			self.setAttributes({'setLayoutDirection':getattr(QtCore.Qt, value)}, obj)
+			self.setAttributes({'setLayoutDirection':getattr(QtCore.Qt, value)}, w)
 
 		elif attr=='setAlignment_':
-			self.setAttributes({'setAlignment':getattr(QtCore.Qt, value)}, obj)
+			self.setAttributes({'setAlignment':getattr(QtCore.Qt, value)}, w)
 
 		elif attr=='setButtonSymbols_':
-			self.setAttributes({'setButtonSymbols':getattr(QtWidgets.QAbstractSpinBox, value)}, obj)
+			self.setAttributes({'setButtonSymbols':getattr(QtWidgets.QAbstractSpinBox, value)}, w)
 
 		#presets
 		elif attr=='setMinMax_':
-			self.setMinMax(obj, value)
+			self.setMinMax(w, value)
 
 		elif attr=='setSpinBoxByValue_':
-			self.setSpinBoxByValue(obj, value[0], value[1])
+			self.setSpinBoxByValue(w, value[0], value[1])
 
 		else:
-			print('Error: {} has no attribute {}'.format(obj, attr))
+			print('Error: {} has no attribute {}'.format(w, attr))
 
 
 	def setMinMax(self, spinbox, value):

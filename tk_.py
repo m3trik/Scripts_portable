@@ -16,7 +16,7 @@ from widgets.qPushButton_ import QPushButton_
 # ------------------------------------------------
 class Tk(QtWidgets.QStackedWidget):
 	'''
-	Marking menu-style window based on a stacked widget.
+	A marking menu based on a QStackedWidget.
 	Gets and sets signal connections (through the switchboard module).
 	Initializes events for child widgets using the childEvents module.
 	Plots points for paint events in the overlay module.
@@ -24,7 +24,7 @@ class Tk(QtWidgets.QStackedWidget):
 	The various ui's are set by calling 'setUi' with the intended ui name string. ex. Tk().setUi('polygons')
 
 	args:
-		parent (obj) = the main application's top level window.
+		parent (obj) = The main application's top level window.
 	'''
 
 	def __init__(self, parent=None, preventHide=False, key_show=QtCore.Qt.Key_F12):
@@ -61,7 +61,7 @@ class Tk(QtWidgets.QStackedWidget):
 			self.addWidget(ui) #add the ui to the stackedLayout.
 			self.childEvents.initWidgets(name)
 
-		self.resize(self.sb.sizeX, self.sb.sizeY)  #Set the size info for each ui (allows for resizing a stacked widget where otherwise resizing is constrained by the largest widget in the stack)
+		self.resize(self.sb.sizeX, self.sb.sizeY) #Stored ui sizes allow for correct individual resizing where otherwise size would be constrained to the largest widget in the stack)
 		# if self.sb.uiLevel<3:
 		# 	self.showFullScreen()
 		# print('keyboardGrabber:', self.keyboardGrabber())

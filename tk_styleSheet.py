@@ -814,15 +814,15 @@ class StyleSheet(QtCore.QObject):
 
 		'QGroupBox': '''
 			QGroupBox {
-				border: 1px transparent;
+				border: 2px transparent;
 				border-radius: 1px;
-				margin: 4px 0px 0px 0px; /* top, right, bottom, left */ /* leave space at the top for the title */
+				margin: 10px 0px 0px 0px; /* top, right, bottom, left */ /* leave space at the top for the title */
 				background-color: rgba(75,75,75,125);
 			}
 
 			QGroupBox::title {
-				top: -2px;
-				left: 5px;
+				top: -12px;
+				left: 2px;
 
 				subcontrol-position: top left; /* position at the top center */
 				background-color: transparent;
@@ -884,6 +884,27 @@ class StyleSheet(QtCore.QObject):
 			} 
 			''',
 
+		'QMenuBar': '''
+			QMenuBar {
+				background-color: {BACKGROUND};
+				spacing: 1px; /* spacing between menu bar items */
+			}
+
+			QMenuBar::item {
+				padding: 1px 4px;
+				background: transparent;
+				border-radius: 4px;
+			}
+
+			QMenuBar::item:selected { /* when selected using mouse or keyboard */
+				background: {HOVER};
+			}
+
+			QMenuBar::item:pressed {
+				background: {TEXT_HOVER};
+			}
+			''',
+
 		'QLabel': '''
 			QLabel {
 				background-color: {BACKGROUND};
@@ -941,11 +962,47 @@ class StyleSheet(QtCore.QObject):
 			} 
 			''',
 
+		'QSplitter': '''
+			QSplitter::handle {
+				image: url(images/splitter.png);
+			}
+
+			QSplitter::handle:horizontal {
+				width: 2px;
+			}
+
+			QSplitter::handle:vertical {
+				height: 2px;
+			}
+
+			QSplitter::handle:pressed {
+				url(images/splitter_pressed.png);
+			}
+			''',
+
+		'QSplitterHandle': '''
+			QSplitter::handle:horizontal
+			{
+				border-left: 1px solid lightGray;
+			}
+
+			QSplitter::handle:vertical 
+			{
+				border-bottom: 1px solid lightGray;
+			}
+			''',
+
 		'QTabWidget': '''
 			QTabWidget {
 				
 			} 
 			''',
+
+		'QRubberBand': '''
+			QRubberBand {
+				color: 0px solid gray;
+			} 
+		''',
 		}
 
 
