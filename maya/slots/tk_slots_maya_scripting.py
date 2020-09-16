@@ -9,15 +9,6 @@ class Scripting(Init):
 	def __init__(self, *args, **kwargs):
 		super(Scripting, self).__init__(*args, **kwargs)
 
-		# tk_cmdScrollFieldReporter = pm.cmdScrollFieldReporter (
-		# 														height=35,
-		# 														backgroundColor=[0,0,0],
-		# 														highlightColor=[0,0,0],
-		# 														echoAllCommands=False,
-		# 														filterSourceType="")
-
-		# self.scripting.plainTextEdit.appendPlainText(tk_cmdScrollFieldReporter)
-
 
 	def pin(self, state=None):
 		'''
@@ -41,10 +32,10 @@ class Scripting(Init):
 			contents = cmb.addItems_(files, '')
 			return
 
-		# if index>0:
-		# 	if index==cmd.items.index(''):
-		# 		pass
-		# 	cmb.setCurrentIndex(0)
+		if index>0:
+			if index==cmd.items.index(''):
+				pass
+			cmb.setCurrentIndex(0)
 
 
 	def chk000(self, state=None):

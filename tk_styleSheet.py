@@ -521,7 +521,7 @@ class StyleSheet(QtCore.QObject):
 		'QLineEdit': '''
 			QLineEdit {
 				border: 1px solid black;
-				border-radius: 10px;
+				border-radius: 1px;
 				padding: 0 8px;
 				background: {BACKGROUND};
 				color: {TEXT};
@@ -684,7 +684,7 @@ class StyleSheet(QtCore.QObject):
 				color: {TEXT};
 				stop: 0.0 transparent, stop: 0.0 transparent,
 				stop: 0.0 transparent, stop: 0.0 transparent;
-				border-radius: 0px;
+				border-radius: 1px;
 			}
 
 			QToolBox::tab:selected {
@@ -836,7 +836,7 @@ class StyleSheet(QtCore.QObject):
 			}
 
 			QTabBar::tab {
-				border-radius: 0px;
+				border-radius: 1px;
 				padding-top: 1px;
 				margin-top: 1px;
 			}
@@ -893,7 +893,7 @@ class StyleSheet(QtCore.QObject):
 			QMenuBar::item {
 				padding: 1px 4px;
 				background: transparent;
-				border-radius: 4px;
+				border-radius: 1px;
 			}
 
 			QMenuBar::item:selected { /* when selected using mouse or keyboard */
@@ -910,7 +910,7 @@ class StyleSheet(QtCore.QObject):
 				background-color: {BACKGROUND};
 				color: {TEXT};
 				border: 1px solid black;
-				border-radius: 0px;
+				border-radius: 1px;
 				margin: 0px 0px 0px 0px; /* top, right, bottom, left */
 				padding: 0px 5px 0px 5px; /* top, right, bottom, left */
 			}
@@ -956,7 +956,7 @@ class StyleSheet(QtCore.QObject):
 		'QFrame': '''
 			QFrame {
 				border: 0px solid black;
-				border-radius: 2px;
+				border-radius: 1px;
 				padding: 2px;
 				background-image: none;
 			} 

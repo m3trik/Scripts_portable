@@ -82,7 +82,7 @@
        <number>0</number>
       </property>
       <item row="0" column="1" colspan="2">
-       <widget class="QProgressBar" name="progressBar">
+       <widget class="QProgressBar_" name="progressBar">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -152,6 +152,11 @@
    <class>QPushButton_Draggable</class>
    <extends>QPushButton</extends>
    <header>widgets.qpushbutton_draggable.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QProgressBar_</class>
+   <extends>QProgressBar</extends>
+   <header>widgets.qprogressbar_.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

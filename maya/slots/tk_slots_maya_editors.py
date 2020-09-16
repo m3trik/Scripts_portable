@@ -58,17 +58,34 @@ class Editors(Init):
 		return getattr(self, _name)
 
 
+	def showEditor(self, name, width=640, height=480):
+		'''
+		Show, resize, and center the given editor.
+
+		args:
+			name (str) = The name of the editor.
+			width (int) = The editor's desired width.
+			height (int) = The editor's desired height.
+
+		returns:
+			(obj) The editor as a QWidget.
+		'''
+		w = self.getEditorWidget(name)
+
+		self.tk.setUi('dynLayout')
+		self.stackedWidget.setCurrentWidget(w)
+		self.tk.resize(width, height)
+		self.tk.move(QtGui.QCursor.pos() - self.tk.rect().center()) #move window to cursor position and offset from left corner to center
+
+		return w
+
+
 	def v000(self):
 		'''
 		Attributes
 		'''
 		name = mel.eval('$tmp=$gAttributeEditorForm')
-		w = self.getEditorWidget(name)
-
-		self.tk.setUi('dynLayout')
-		self.stackedWidget.setCurrentWidget(w)
-		self.tk.resize(640, 480)
-		self.tk.move(QtGui.QCursor.pos() - self.tk.rect().center()) #move window to cursor position and offset from left corner to center
+		self.showEditor(name, 640, 480)
 
 
 	def v001(self):
@@ -76,12 +93,7 @@ class Editors(Init):
 		Outliner
 		'''
 		name = mel.eval('$tmp=$gOutlinerForm')
-		w = self.getEditorWidget(name)
-
-		self.tk.setUi('dynLayout')
-		self.stackedWidget.setCurrentWidget(w)
-		self.tk.resize(260, 640)
-		self.tk.move(QtGui.QCursor.pos() - self.tk.rect().center()) #move window to cursor position and offset from left corner to center
+		self.showEditor(name, 260, 640)
 
 
 	def v002(self):
@@ -89,12 +101,7 @@ class Editors(Init):
 		Tool
 		'''
 		name = mel.eval('$tmp=$gToolSettingsForm')
-		w = self.getEditorWidget(name)
-
-		self.tk.setUi('dynLayout')
-		self.stackedWidget.setCurrentWidget(w)
-		self.tk.resize(461, 480)
-		self.tk.move(QtGui.QCursor.pos() - self.tk.rect().center()) #move window to cursor position and offset from left corner to center
+		self.showEditor(name, 461, 480)
 
 
 	def v003(self):
@@ -102,12 +109,7 @@ class Editors(Init):
 		Layers
 		'''
 		name = mel.eval('$tmp=$gLayerEditorForm')
-		w = self.getEditorWidget(name)
-
-		self.tk.setUi('dynLayout')
-		self.stackedWidget.setCurrentWidget(w)
-		self.tk.resize(261, 480)
-		self.tk.move(QtGui.QCursor.pos() - self.tk.rect().center()) #move window to cursor position and offset from left corner to center
+		self.showEditor(name, 261, 480)
 
 
 	def v004(self):
@@ -115,12 +117,15 @@ class Editors(Init):
 		Channels
 		'''
 		name = mel.eval('$tmp=$gChannelsForm')
-		w = self.getEditorWidget(name)
+		self.showEditor(name, 640, 480)
 
-		self.tk.setUi('dynLayout')
-		self.stackedWidget.setCurrentWidget(w)
-		self.tk.resize(640, 480)
-		self.tk.move(QtGui.QCursor.pos() - self.tk.rect().center()) #move window to cursor position and offset from left corner to center
+
+	def v006(self):
+		'''
+		Script
+		'''
+		name = mel.eval('$tmp=$gScriptEditorPanel')
+		self.showEditor(name, 640, 480)
 
 
 
