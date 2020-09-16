@@ -22,38 +22,40 @@ class Main(Init):
 			return
 
 		if not any([wItem, column]): #refresh list items -----------------------------
+			#command history
 			recentCommandInfo = self.sb.prevCommand(docString=1, toolTip=1, as_list=1) #Get a list of any recent command names and their toolTips
 			[tree.add('QLabel', 'Recent Commands', refresh=1, setText=s[0], setToolTip=s[1]) 
 				for s in recentCommandInfo]
 
-			selection = pm.ls(sl=1, objectsOnly=1, flatten=1)
-			if selection:
-				history = selection[0].history()[1:]
-				for node in history:
-					parent = tree.add('QLabel', 'History', childHeader=node.name(), refresh=1, setText=node.name())
-					# print(parent, node.name())
-					attributes = Init.getAttributesMEL(node) #get dict containing attributes:values of the history node.
-					spinboxes = [tree.add('QDoubleSpinBox', parent, refresh=1, setSpinBoxByValue_=[k, v])
-						for k, v in attributes.items() 
-							if isinstance(v, (float, int, bool))]
+			#node history
+			# selection = pm.ls(sl=1, objectsOnly=1, flatten=1)
+			# if selection:
+			# 	history = selection[0].history()[1:]
+			# 	for node in history:
+			# 		parent = tree.add('QLabel', 'History', childHeader=node.name(), refresh=1, setText=node.name())
+			# 		# print(parent, node.name())
+			# 		attributes = Init.getAttributesMEL(node) #get dict containing attributes:values of the history node.
+			# 		spinboxes = [tree.add('QDoubleSpinBox', parent, refresh=1, setSpinBoxByValue_=[k, v])
+			# 			for k, v in attributes.items() 
+			# 				if isinstance(v, (float, int, bool))]
 
-					#set signal/slot connections:
-					# widgets = [tree.add(MultiWidget, parent, refresh=1, set_by_value=[k, v])
-					# 	for k, v in attributes.items() 
-					# 		if isinstance(v, (float, int, bool))]
+			# 		#set signal/slot connections:
+			# 		# widgets = [tree.add(MultiWidget, parent, refresh=1, set_by_value=[k, v])
+			# 		# 	for k, v in attributes.items() 
+			# 		# 		if isinstance(v, (float, int, bool))]
 
-					# for multiWidget in widgets:
-					# 	attr = multiWidget.children_(index=0).text()
-					# 	w = multiWidget.children_(index=1)
-					# 	type_ = w.__class__.__name__
+			# 		# for multiWidget in widgets:
+			# 		# 	attr = multiWidget.children_(index=0).text()
+			# 		# 	w = multiWidget.children_(index=1)
+			# 		# 	type_ = w.__class__.__name__
 
-					# 	if type_ in ['QSpinBox', 'QDoubleSpinBox']:
-					# 		w.valueChanged.connect(
-					# 			lambda value, widget=w, node=node: self.setAttributesMEL(node, {attr:w.value()}))
+			# 		# 	if type_ in ['QSpinBox', 'QDoubleSpinBox']:
+			# 		# 		w.valueChanged.connect(
+			# 		# 			lambda value, widget=w, node=node: self.setAttributesMEL(node, {attr:w.value()}))
 
-					[w.valueChanged.connect(
-						lambda value, widget=w, node=node: self.setAttributesMEL(node, {widget.prefix().rstrip(': '):value})) 
-							for w in spinboxes] #set signal/slot connections
+			# 		[w.valueChanged.connect(
+			# 			lambda value, widget=w, node=node: self.setAttributesMEL(node, {widget.prefix().rstrip(': '):value})) 
+			# 				for w in spinboxes] #set signal/slot connections
 			return
 
 		# widget = tree.getWidget(wItem, column)

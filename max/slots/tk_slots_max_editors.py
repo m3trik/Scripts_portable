@@ -119,7 +119,7 @@ class Editors(Init):
 		self.showEditor(name, 640, 480)
 
 
-	def v006(self):
+	def v005(self):
 		'''
 		Script
 		'''

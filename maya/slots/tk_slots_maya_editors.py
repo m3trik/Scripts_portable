@@ -93,7 +93,7 @@ class Editors(Init):
 		Outliner
 		'''
 		name = mel.eval('$tmp=$gOutlinerForm')
-		self.showEditor(name, 260, 640)
+		self.showEditor(name, 260, 740)
 
 
 	def v002(self):
@@ -120,12 +120,13 @@ class Editors(Init):
 		self.showEditor(name, 640, 480)
 
 
-	def v006(self):
+	def v005(self):
 		'''
 		Script
 		'''
-		name = mel.eval('$tmp=$gScriptEditorPanel')
-		self.showEditor(name, 640, 480)
+		pm.mel.ScriptEditor()
+		#name = mel.eval('$tmp=$gScriptEditorPanel')
+		# self.showEditor(name, 640, 480)
 
 
 
