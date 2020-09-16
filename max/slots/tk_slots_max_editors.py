@@ -7,29 +7,17 @@ import os.path
 
 class Editors(Init):
 	def __init__(self, *args, **kwargs):
-		super(Editors, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('editors')
-		self.childUi = self.sb.getUi('editors_submenu')
-
-		#construct stacked widget from maya layouts
-		# self.widgetList = ['MainAttributeEditorLayout','MainChannelBoxLayout','ToggledOutlinerLayout','MainToolSettingsLayout','LayerEditorDisplayLayerLayout']
-		self.stackedWidget = self.sb.getUi('dynLayout').stackedWidget
-		# self.stackedWidget = self.sb.getUi('dynLayout').stackedWidget
-		# for w in self.widgetList:
-		# 	self.stackedWidget.addWidget(self.sb.qApp_getWidget(w))
-			# self.stackedWidget.addWidget(self.sb.qApp_getWidget(w))
-
-
-		# self.sb.getUi('dynLayout').setCentralWidget(self.stackedWidget)
-		# self.sb.getUi('dynLayout').addWidget(self.stackedWidget)
+		self.dynLayout = self.sb.getUi('dynLayout')
+		self.stackedWidget = self.dynLayout.stackedWidget
 
 
 	def pin(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.parentUi.pin
+		pin = self.editors.pin
 
 		if state is 'setMenu':
 			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
@@ -40,70 +28,103 @@ class Editors(Init):
 		'''
 		Editors
 		'''
-		cmb = self.parentUi.cmb000
-
+		cmb = self.editors.cmb000
+		
 		if index is 'setMenu':
 			list_ = ['']
 			cmb.addItems_(list_, '')
 			return
 
-		# if index>0:
-		# 	if index==cmb.items.index(''):
-		# 		pass
-		# 	cmb.setCurrentIndex(0)
+		if index>0:
+			if index==cmb.items.index(''):
+				pass
+			cmb.setCurrentIndex(0)
 
 
-	def setWidgetIndex(self, name):
+	def getEditorWidget(self, name):
 		'''
-		Set the active widget in the dynLayout ui.
+		Get a maya widget from a given name.
+
 		args:
 			name (str) = name of widget
-		returns:
-			the current widget object from the stacked widget.
 		'''
-		print(8*' -')
-		self.stackedWidget.addWidget(self.sb.getWidget(name=name))
-		self.stackedWidget.setCurrentWidget(name)
-		currentWidget = self.stackedWidget.currentWidget()
-		currentWidget.adjustSize()
-		# self.tk.resize(currentWidget.minimumSizeHint())
-		# self.tk.resize(currentWidget.sizeHint())
-		return currentWidget
+		_name = '_'+name
+		if not hasattr(self, _name):
+			w = self.convertToWidget(name)
+			self.stackedWidget.addWidget(w)
+			setattr(self, _name, w)
+
+		return getattr(self, _name)
 
 
-	def i000(self):
+	def showEditor(self, name, width=640, height=480):
+		'''
+		Show, resize, and center the given editor.
+
+		args:
+			name (str) = The name of the editor.
+			width (int) = The editor's desired width.
+			height (int) = The editor's desired height.
+
+		returns:
+			(obj) The editor as a QWidget.
+		'''
+		w = self.getEditorWidget(name)
+
+		self.tk.setUi('dynLayout')
+		self.stackedWidget.setCurrentWidget(w)
+		self.tk.resize(width, height)
+		self.tk.move(QtGui.QCursor.pos() - self.tk.rect().center()) #move window to cursor position and offset from left corner to center
+
+		return w
+
+
+	def v000(self):
 		'''
 		Attributes
 		'''
-		self.setWidgetIndex('MainAttributeEditorLayout')
+		name = mel.eval('$tmp=$gAttributeEditorForm')
+		self.showEditor(name, 640, 480)
 
 
-	def i001(self):
+	def v001(self):
 		'''
 		Outliner
 		'''
-		self.setWidgetIndex('ToggledOutlinerLayout')
+		name = mel.eval('$tmp=$gOutlinerForm')
+		self.showEditor(name, 260, 640)
 
 
-	def i002(self):
+	def v002(self):
 		'''
 		Tool
 		'''
-		self.setWidgetIndex('MainToolSettingsLayout')
+		name = mel.eval('$tmp=$gToolSettingsForm')
+		self.showEditor(name, 461, 480)
 
 
-	def i003(self):
+	def v003(self):
 		'''
 		Layers
 		'''
-		self.setWidgetIndex('LayerEditorDisplayLayerLayout')
+		name = mel.eval('$tmp=$gLayerEditorForm')
+		self.showEditor(name, 261, 480)
 
 
-	def i004(self):
+	def v004(self):
 		'''
 		Channels
 		'''
-		self.setWidgetIndex('MainChannelBoxLayout')
+		name = mel.eval('$tmp=$gChannelsForm')
+		self.showEditor(name, 640, 480)
+
+
+	def v006(self):
+		'''
+		Script
+		'''
+		name = mel.eval('$tmp=$gScriptEditorPanel')
+		self.showEditor(name, 640, 480)
 
 
 
