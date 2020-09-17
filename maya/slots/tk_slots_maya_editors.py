@@ -93,6 +93,9 @@ class Editors(Init):
 		Outliner
 		'''
 		name = mel.eval('$tmp=$gOutlinerForm')
+		# panel = pm.outlinerPanel()
+		# outliner = pm.outlinerPanel(panel, query=True,outlinerEditor=True)
+		# name = pm.outlinerEditor(outliner, edit=True, mainListConnection='worldList', selectionConnection='modelList', showShapes=False, showReferenceNodes=False, showReferenceMembers=False, showAttributes=False, showConnected=False, showAnimCurvesOnly=False, autoExpand=False, showDagOnly=True, ignoreDagHierarchy=False, expandConnections=False, showNamespace=True, showCompounds=True, showNumericAttrsOnly=False, highlightActive=True, autoSelectNewObjects=False, doNotSelectNewObjects=False, transmitFilters=False, showSetMembers=True, setFilter='defaultSetFilter', ignoreHiddenAttribute=False)
 		self.showEditor(name, 260, 740)
 
 

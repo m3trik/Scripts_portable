@@ -13,16 +13,6 @@ class Transform(Init):
 		#set input masks for text fields
 		# self.transform.t000.setInputMask("00.00") #change to allow for neg values
 
-		try: #component constraints. query and set initial value
-			state = pm.xformConstraint(query=True, type=True)
-			'''
-			if state == 'edge':
-				self.transform.cmb001.
-			if state == 'surface':
-				self.transform.cmb001.
-			'''
-		except NameError:
-			pass
 
 
 	def pin(self, state=None):
@@ -63,31 +53,24 @@ class Transform(Init):
 		cmb = self.transform.cmb001
 
 		if index is 'setMenu':
-			cmb.contextMenu.add(QLabel_, setObjectName='lbl000', setText='Disable All', setToolTip='Disable all constraints.')
+			cmb.popupStyle = 'qmenu'
+			cmb.contextMenu.add(QLabel_, setText='Disable All', setObjectName='lbl001', setToolTip='Disable all transform snapping.')
 
-			list_ = ['Edge', 'Surface', 'Make Live']
-			cmb.addItems_(list_, 'Off')
+			#query and set current states:
+			edge_constraint = True if pm.xformConstraint(query=1, type=1)=='edge' else False
+			surface_constraint = True if pm.xformConstraint(query=1, type=1)=='surface' else False
+			live_object = True if pm.ls(live=1) else False
+
+			try:
+				list_ = [('chk024', 'Edge', edge_constraint),
+						('chk025', 'Surface', surface_constraint),
+						('chk026', 'Make Live', live_object)]
+
+				widgets = [cmb.menu_.add(QCheckBox_, setObjectName=i[0], setText=i[1], setChecked=i[2]) for i in list_]
+
+			except NameError as error:
+				print(error)
 			return
-
-		if index>0:
-			if index==cmb.items.index('Edge'):
-				pm.xformConstraint(type='edge') #pm.manipMoveSetXformConstraint(edge=True);
-			elif index==cmb.items.index('Surface'):
-				pm.xformConstraint(type='surface') #pm.manipMoveSetXformConstraint(surface=True);
-			elif index==cmb.items.index('Make Live'):
-				selection = pm.ls(sl=1, objectsOnly=1)
-				if not selection:
-					cmb.setCurrentIndex(0)
-					return 'Error: Nothing Selected.'
-				pm.makeLive(selection[0]) #construction planes, nurbs surfaces and polygon meshes can be made live. makeLive supports one live object at a time.
-				self.viewPortMessage('Make Live: <hl>On</hl> {0}'.format(selection[0].name()))
-				self._makeLiveState = True
-		else:
-			pm.xformConstraint(type='none') #pm.manipMoveSetXformConstraint(none=True);
-			if hasattr(self, '_makeLiveState') and self._makeLiveState:
-				pm.makeLive(none=True)
-				self._makeLiveStat = False
-				self.viewPortMessage('Make Live: <hl>Off</hl>')
 
 
 	def cmb002(self, index=None):
@@ -189,6 +172,53 @@ class Transform(Init):
 
 		cmb = self.transform.cmb003
 		cmb.setCurrentText('Off') if not any((state, cmb.menu_.chk021.isChecked(), cmb.menu_.chk022.isChecked())) else cmb.setCurrentText('On')
+
+
+	def chk024(self, state=None):
+		'''
+		Transform Contraints: Edge
+		'''
+		if state:
+			pm.xformConstraint(type='edge') #pm.manipMoveSetXformConstraint(edge=True);
+		else:
+			pm.xformConstraint(type='none') #pm.manipMoveSetXformConstraint(none=True);
+
+		cmb = self.transform.cmb001
+		cmb.setCurrentText('Off') if not any((state, cmb.menu_.chk025.isChecked(), cmb.menu_.chk026.isChecked())) else cmb.setCurrentText('On')
+
+
+	def chk025(self, state=None):
+		'''
+		Transform Contraints: Surface
+		'''
+		if state:
+			pm.xformConstraint(type='surface') #pm.manipMoveSetXformConstraint(surface=True);
+		else:
+			pm.xformConstraint(type='none') #pm.manipMoveSetXformConstraint(none=True);
+
+		cmb = self.transform.cmb001
+		cmb.setCurrentText('Off') if not any((state, cmb.menu_.chk024.isChecked(), cmb.menu_.chk026.isChecked())) else cmb.setCurrentText('On')
+
+
+	def chk026(self, state=None):
+		'''
+		Transform Contraints: Make Live
+		'''
+		cmb = self.transform.cmb001
+		chk = cmb.menu_.chk026
+
+		selection = pm.ls(sl=1, objectsOnly=1)
+		if state and selection:
+			live_object = pm.ls(live=1)
+			shape = self.getShapeNode(selection[0])
+			if not shape in live_object:
+				pm.makeLive(selection) #construction planes, nurbs surfaces and polygon meshes can be made live. makeLive supports one live object at a time.
+				# self.viewPortMessage('Make Live: <hl>On</hl> {0}'.format(selection[0].name()))
+		else:
+			pm.makeLive(none=True)
+			# self.viewPortMessage('Make Live: <hl>Off</hl>')
+
+		cmb.setCurrentText('Off') if not any((state, cmb.menu_.chk024.isChecked(), cmb.menu_.chk025.isChecked())) else cmb.setCurrentText('On')
 
 
 	def s021(self, value=None):
@@ -509,6 +539,15 @@ class Transform(Init):
 		cmb.setCurrentText('Off') if not any((cmb.menu_.chk021.isChecked(), cmb.menu_.chk022.isChecked(), cmb.menu_.chk023.isChecked())) else cmb.setCurrentText('On')
 
 
+	def lbl002(self):
+		'''
+		Transform Tool Snapping: Disable All
+		'''
+		cmb = self.transform.cmb001
+		self.toggleWidgets(setUnChecked='chk024-26')
+		cmb.setCurrentText('Off') if not any((cmb.menu_.chk024.isChecked(), cmb.menu_.chk025.isChecked(), cmb.menu_.chk026.isChecked())) else cmb.setCurrentText('On')
+
+
 	def b000(self):
 		'''
 		Transform negative axis
@@ -544,7 +583,7 @@ class Transform(Init):
 		'''
 		Center Pivot Object
 		'''
-		mel.eval("CenterPivot;")
+		pm.mel.CenterPivot()
 
 
 	def b005(self):
@@ -559,6 +598,24 @@ class Transform(Init):
 		source.center = target.center
 
 
+	def b012(self):
+		'''
+		Make Live (Toggle)
+		'''
+		cmb = self.transform.cmb001
+		selection = pm.ls(sl=1, objectsOnly=1)
+
+		if selection:
+			live_object = pm.ls(live=1)
+			shape = self.getShapeNode(selection[0])
+			if not shape in live_object:
+				self.chk026(state=1)
+				cmb.menu_.chk026.setChecked(True)
+		else:
+			self.chk026(state=0)
+			cmb.menu_.chk026.setChecked(False)
+
+
 	def b014(self):
 		'''
 		Center Pivot Component
@@ -571,7 +628,7 @@ class Transform(Init):
 		'''
 		Center Pivot World
 		'''
-		mel.eval("xform -worldSpace -pivots 0 0 0;")
+		pm.xform(pivots=(0, 0, 0), worldSpace=1)
 
 
 	def b016(self):
@@ -585,17 +642,23 @@ class Transform(Init):
 		'''
 		Bake Pivot
 		'''
-		mel.eval("BakeCustomPivot;")
+		pm.mel.BakeCustomPivot()
 
 
 	def b032(self):
 		'''
 		Reset Pivot Transforms
 		'''
-		mel.eval('''
-		{ string $objs[] = `ls -sl -type transform -type geometryShape`;
-		if (size($objs) > 0) { xform -cp; } manipPivot -rp -ro; };
-		''')
+		objs = pm.ls(type=['transform', 'geometryShape'], sl=1)
+		if len(objs)>0:
+			pm.xform(cp=1)
+			
+		pm.manipPivot(ro=1, rp=1)
+
+
+
+
+
 
 
 
@@ -605,3 +668,56 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
+
+
+
+# deprecated ------------------------------------
+
+	# @Slots.message
+	# def cmb001(self, index=None):
+	# 	'''
+	# 	Transform Contraints
+
+	# 	constrain along normals #checkbox option for edge amd surface constaints
+	# 	setXformConstraintAlongNormal false;
+	# 	'''
+	# 	cmb = self.transform.cmb001
+
+	# 	if index is 'setMenu':
+	# 		cmb.contextMenu.add(QLabel_, setObjectName='lbl000', setText='Disable All', setToolTip='Disable all constraints.')
+
+	# 		list_ = ['Edge', 'Surface', 'Make Live']
+	# 		cmb.addItems_(list_, 'Off')
+	# 		return
+
+	# 	live_object = pm.ls(live=1)
+	# 	print ("live_object:", live_object)
+	# 	# if not live_object and index==cmb.items.index('Make Live'):
+	# 	# 	cmb.setCurrentIndex(0)
+
+	# 	if index>0:
+	# 		if index==cmb.items.index('Edge'):
+	# 			pm.xformConstraint(type='edge') #pm.manipMoveSetXformConstraint(edge=True);
+			
+	# 		elif index==cmb.items.index('Surface'):
+	# 			pm.xformConstraint(type='surface') #pm.manipMoveSetXformConstraint(surface=True);
+			
+	# 		elif index==cmb.items.index('Make Live'):
+	# 			print ('3')
+	# 			selection = pm.ls(sl=1, objectsOnly=1)
+	# 			if not selection and not live_object:
+	# 				print ('not selection and not live_object')
+	# 				cmb.setCurrentIndex(0)
+	# 				return 'Error: Nothing Selected.'
+
+	# 			if not live_object:
+	# 				print ('not live_object')
+	# 				pm.makeLive(selection) #construction planes, nurbs surfaces and polygon meshes can be made live. makeLive supports one live object at a time.
+	# 				self.viewPortMessage('Make Live: <hl>On</hl> {0}'.format(selection[0].name()))
+	# 	else:
+	# 		print ('0')
+	# 		pm.xformConstraint(type='none') #pm.manipMoveSetXformConstraint(none=True);
+	# 		if live_object:
+	# 			print ('none')
+	# 			pm.makeLive(none=True)
+	# 			self.viewPortMessage('Make Live: <hl>Off</hl>')
