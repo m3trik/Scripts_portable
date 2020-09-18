@@ -86,7 +86,7 @@ class QMenu_(QtWidgets.QMenu, Attributes):
 			wAction.setDefaultWidget(w)
 			self.addAction(wAction)
 
-			# w.setMinimumSize(w.sizeHint().width(), 20) #self.parent().minimumSizeHint().height()+1) #set child widget height to that of the toolbutton]
+			w.setMinimumSize(w.sizeHint().width(), 20) #self.parent().minimumSizeHint().height()+1)
 
 			setattr(self, w.objectName(), w) #add the widget's objectName as a QMenu attribute.
 
