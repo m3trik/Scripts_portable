@@ -62,11 +62,11 @@ class File(Init):
 			cmb.contextMenu.add('QPushButton', setObjectName='b001', setText='Last', setToolTip='Open the most recent file.')
 			return
 
-		recentFiles = [f.replace('/', '\\') for f in rt.getRecentfiles()]
+		recentFiles = [File.formatPath(f) for f in rt.getRecentfiles()]
 		items = cmb.addItems_(recentFiles, 'Recent Files:', clear=True)
 
 		#set the text for the open last file button to the last file's name.
-		self.file_submenu.b001.setText(File.getFilenameFromFullPath(recentFiles[0])) if recentFiles else self.file_submenu.b001.setVisible(False)
+		self.file_submenu.b001.setText(File.getNameFromFullPath(recentFiles[0])) if recentFiles else self.file_submenu.b001.setVisible(False)
 
 		if index>0:
 			# force=True; force if maxEval("maxFileName;") else not force #if sceneName prompt user to save; else force open.  also: checkForSave(); If the scene has been modified since the last file save (if any), calling this function displays the message box prompting the user that the scene has been modified and requests to save.
@@ -88,9 +88,9 @@ class File(Init):
 
 		items = cmb.addItems_(list_, "Recent Projects", clear=True)
 
-		# if index>0:
-		# 	maxEval('setProject "'+items[index]+'"')
-		# 	cmb.setCurrentIndex(0)
+		if index>0:
+			maxEval('setProject "'+items[index]+'"')
+			cmb.setCurrentIndex(0)
 
 
 	def cmb002(self, index=None):
@@ -210,18 +210,15 @@ class File(Init):
 			cmb.contextMenu.add(QLabel_, setObjectName='lbl004', setText='Root', setToolTip='Open the project directory.')
 			return
 
-		path = MaxPlus.PathManager.GetProjectFolderDir() #current project path.
+		path = File.formatPath(MaxPlus.PathManager.GetProjectFolderDir()) #current project path.
 		list_ = [f for f in os.listdir(path)]
 
-		project = MaxPlus.PathManager.GetProjectFolderDir().split('\\')[-1] #add current project path string to label. strip path and trailing '/'
+		project = File.getNameFromFullPath(path) #add current project path string to label. strip path and trailing '/'
 
 		cmb.addItems_(list_, project, clear=True)
 
-
 		if index>0:
-			dir_= path+list_[index-1]
-			if dir_.startswith('//'): #reformat for server address
-				dir_ = dir_.replace('/', '\\')
+			dir_ = path+list_[index-1] #reformat for network address
 			os.startfile(dir_)
 			cmb.setCurrentIndex(0)
 
@@ -384,9 +381,7 @@ class File(Init):
 		Open current project root
 		'''
 		dir_ = rt.getRecentfiles() #current project path.
-
-		if dir_.startswith('//'): #reformat for server address
-			dir_ = dir_.replace('/', '\\')
+		dir_ = File.formatPath(dir_) #reformat for network address
 		os.startfile(dir_)
 
 
@@ -441,31 +436,34 @@ class File(Init):
 
 
 	@staticmethod
-	def serverPath(dir_):
+	def formatPath(dir_):
 		'''
-		Assure a given directory path string is formatted correctly for a server address.
-		If the string starts with //, replace with \\
+		Assure a given directory path string is formatted correctly.
+		Replace any backslashes with forward slashes.
 		'''
-		if dir_.startswith('//'): #reformat for server address
-			dir_ = dir_.replace('//', '\\\\')
+		formatted_dir = dir_.replace('/', '\\') #assure any single slash is forward.
 
-		return dir_
+		return formatted_dir
 
 
 	@staticmethod
-	def getFilenameFromFullPath(fullPath):
+	def getNameFromFullPath(fullPath):
 		'''
-		Extract the file name from a path string.
-		
+		Extract the file or dir name from a path string.
+
 		args:
 			fullPath (str) = A full path including file name.
 
 		returns:
-			(str) the file name including extension.
+			(str) the dir or file name including extension.
 		'''
-		filename = fullPath.split('/')[-1]
+		name = fullPath.split('/')[-1]
+		if len(fullPath)==len(name):
+			name = fullPath.split('\\')[-1]
+			if not name:
+				name = fullPath.split('\\')[-2]
 
-		return filename
+		return name
 
 
 

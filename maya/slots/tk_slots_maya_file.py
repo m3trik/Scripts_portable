@@ -35,11 +35,11 @@ class File(Init):
 			cmb.contextMenu.add('QPushButton', setObjectName='b001', setText='Last', setToolTip='Open the most recent file.')
 			return
 
-		recentFiles = [File.serverPath(f) for f in (list(reversed(pm.optionVar(query='RecentFilesList')))) if "Autosave" not in f]
+		recentFiles = [File.formatPath(f) for f in (list(reversed(pm.optionVar(query='RecentFilesList')))) if "Autosave" not in f]
 		cmb.addItems_(recentFiles, "Recent Files", clear=True)
 
 		#set the text for the open last file button to the last file's name.
-		self.file_submenu.b001.setText(File.getFilenameFromFullPath(recentFiles[0])) if recentFiles else self.file_submenu.b001.setVisible(False)
+		self.file_submenu.b001.setText(File.getNameFromFullPath(recentFiles[0])) if recentFiles else self.file_submenu.b001.setVisible(False)
 
 		if index>0:
 			force=True; force if str(pm.mel.file(query=1, sceneName=1, shortName=1)) else not force #if sceneName prompt user to save; else force open
@@ -187,15 +187,15 @@ class File(Init):
 			cmb.contextMenu.add(QLabel_, setObjectName='lbl004', setText='Root', setToolTip='Open the project directory.')
 			return
 
-		path = pm.workspace(query=1, rd=1) #current project path.
+		path = File.formatPath(pm.workspace(query=1, rd=1)) #current project path.
 		list_ = [f for f in os.listdir(path)]
 
-		project = pm.workspace(query=1, rd=1).split('/')[-2] #add current project path string to label. strip path and trailing '/'
+		project = File.getNameFromFullPath(path) #add current project path string to label. strip path and trailing '/'
 
 		cmb.addItems_(list_, project, clear=True)
 
 		if index>0:
-			os.startfile(File.serverPath(path+list_[index-1]))
+			os.startfile(path+list_[index-1])
 			cmb.setCurrentIndex(0)
 
 
@@ -351,7 +351,7 @@ class File(Init):
 		Open current project root
 		'''
 		dir_ = pm.workspace(query=1, rd=1) #current project path.
-		os.startfile(File.serverPath(dir_))
+		os.startfile(File.formatPath(dir_))
 
 
 	def b001(self):
@@ -429,31 +429,34 @@ class File(Init):
 
 
 	@staticmethod
-	def serverPath(dir_):
+	def formatPath(dir_):
 		'''
-		Assure a given directory path string is formatted correctly for a server address.
-		If the string starts with //, replace with \\
+		Assure a given directory path string is formatted correctly.
+		Replace any backslashes with forward slashes.
 		'''
-		if dir_.startswith('//'): #reformat for server address
-			dir_ = dir_.replace('//', '\\\\')
+		formatted_dir = dir_.replace('/', '\\') #assure any single slash is forward.
 
-		return dir_
+		return formatted_dir
 
 
 	@staticmethod
-	def getFilenameFromFullPath(fullPath):
+	def getNameFromFullPath(fullPath):
 		'''
-		Extract the file name from a path string.
-		
+		Extract the file or dir name from a path string.
+
 		args:
 			fullPath (str) = A full path including file name.
 
 		returns:
-			(str) the file name including extension.
+			(str) the dir or file name including extension.
 		'''
-		filename = fullPath.split('/')[-1]
+		name = fullPath.split('/')[-1]
+		if len(fullPath)==len(name):
+			name = fullPath.split('\\')[-1]
+			if not name:
+				name = fullPath.split('\\')[-2]
 
-		return filename
+		return name
 
 
 
