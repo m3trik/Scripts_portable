@@ -392,7 +392,7 @@
               </property>
               <property name="minimumSize">
                <size>
-                <width>21</width>
+                <width>24</width>
                 <height>20</height>
                </size>
               </property>
@@ -444,7 +444,7 @@
               </property>
               <property name="minimumSize">
                <size>
-                <width>21</width>
+                <width>24</width>
                 <height>20</height>
                </size>
               </property>
@@ -496,7 +496,7 @@
               </property>
               <property name="minimumSize">
                <size>
-                <width>21</width>
+                <width>24</width>
                 <height>20</height>
                </size>
               </property>
@@ -548,13 +548,13 @@
               </property>
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>24</width>
                 <height>20</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>999</width>
+                <width>24</width>
                 <height>20</height>
                </size>
               </property>
@@ -588,7 +588,7 @@
               </property>
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>23</width>
                 <height>20</height>
                </size>
               </property>
@@ -1104,11 +1104,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QToolButton_</class>
-   <extends>QToolButton</extends>
-   <header>widgets.qtoolbutton_.h</header>
-  </customwidget>
-  <customwidget>
    <class>QPushButton_Draggable</class>
    <extends>QPushButton</extends>
    <header>widgets.qpushbutton_draggable.h</header>
@@ -1122,6 +1117,11 @@
    <class>QComboBox_</class>
    <extends>QComboBox</extends>
    <header>widgets.qcombobox_.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QToolButton_</class>
+   <extends>QToolButton</extends>
+   <header>widgets.qtoolbutton_.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

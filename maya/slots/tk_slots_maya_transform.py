@@ -56,12 +56,11 @@ class Transform(Init):
 			cmb.popupStyle = 'qmenu'
 			cmb.contextMenu.add(QLabel_, setText='Disable All', setObjectName='lbl001', setToolTip='Disable all transform snapping.')
 
-			#query and set current states:
-			edge_constraint = True if pm.xformConstraint(query=1, type=1)=='edge' else False
-			surface_constraint = True if pm.xformConstraint(query=1, type=1)=='surface' else False
-			live_object = True if pm.ls(live=1) else False
+			try: #query and set current states:
+				edge_constraint = True if pm.xformConstraint(query=1, type=1)=='edge' else False
+				surface_constraint = True if pm.xformConstraint(query=1, type=1)=='surface' else False
+				live_object = True if pm.ls(live=1) else False
 
-			try:
 				list_ = [('chk024', 'Edge', edge_constraint),
 						('chk025', 'Surface', surface_constraint),
 						('chk026', 'Make Live', live_object)]
@@ -392,9 +391,9 @@ class Transform(Init):
 	@Slots.message
 	def tb001(self, state=None):
 		'''
-		Align Vertices
+		Align Components
 
-		Auto Align finds the axis with the largest variance, and set the axis checkboxes accordingly before performing a regular align.
+		Auto Align finds the axis with the largest variance, and sets the axis checkboxes accordingly before performing a regular align.
 		'''
 		tb = self.ui.tb001
 		if state is 'setMenu':

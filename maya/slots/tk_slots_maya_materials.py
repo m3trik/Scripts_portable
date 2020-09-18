@@ -143,7 +143,7 @@ class Materials(Init):
 		'''
 		tb = self.ui.tb000
 		if state is 'setMenu':
-			tb.menu_.add('QCheckBox', setText='Current Material', setObjectName='chk010', setToolTip='Use the current material, <br>else use the current viewport selection to get a material.')
+			tb.menu_.add('QCheckBox', setText='Current Material', setObjectName='chk010', setChecked=True, setToolTip='Use the current material, <br>else use the current viewport selection to get a material.')
 			tb.menu_.add('QCheckBox', setText='All Objects', setObjectName='chk003', setToolTip='Search all scene objects, or only those currently selected.')
 			tb.menu_.add('QCheckBox', setText='Shell', setObjectName='chk005', setToolTip='Select entire shell.')
 			tb.menu_.add('QCheckBox', setText='Invert', setObjectName='chk006', setToolTip='Invert Selection.')

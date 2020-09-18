@@ -447,7 +447,7 @@ class Selection(Init):
 			return
 
 		edgeRing = tb.menu_.chk000.isChecked()
-		edgeloop = tb.menu_.chk001.isChecked()
+		edgeLoop = tb.menu_.chk001.isChecked()
 		pathAlongLoop = tb.menu_.chk009.isChecked()
 		shortestPath = tb.menu_.chk002.isChecked()
 		step = tb.menu_.s003.value()
