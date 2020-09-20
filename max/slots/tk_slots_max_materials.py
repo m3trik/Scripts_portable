@@ -9,7 +9,7 @@ class Materials(Init):
 	def __init__(self, *args, **kwargs):
 		super(Materials, self).__init__(*args, **kwargs)
 
-		self.currentMaterials=None
+		self.currentMats=None
 		self.randomMat=None
 
 		self.materials_submenu.b003.setVisible(False)
@@ -21,7 +21,7 @@ class Materials(Init):
 		Get the current material using the current index of the materials combobox.
 		'''
 		text = self.materials.cmb002.currentText()
-		return self.currentMaterials[text]
+		return self.currentMats[text] if text else None
 
 
 	def pin(self, state=None):
@@ -93,7 +93,7 @@ class Materials(Init):
 			self.renameMaterial()
 			self.lbl001(setEditable=False)
 			return
-
+ 
 		try:
 			sceneMaterials = self.materials.tb001.menu_.chk000.isChecked()
 			idMapMaterials = self.materials.tb001.menu_.chk001.isChecked()
@@ -106,32 +106,47 @@ class Materials(Init):
 		elif idMapMaterials:
 			materials = self.getSceneMaterials(startingWith=['ID_'])
 
-		mats = sorted([mat for mat in set(materials)])
-		matNames = [mat.name for mat in mats]
-		contents = cmb.addItems_(matNames, clear=True)
+
+		self.currentMats = {mat.name:mat for mat in sorted(list(set(materials)))}
+		cmb.addItems_(self.currentMats.keys(), clear=True)
 
 		#create and set icons with color swatch
-		for i in range(len(mats)): #create icons with color swatch
-			try:
-				r = int(mats[i].diffuse.r) #convert from float value
-				g = int(mats[i].diffuse.g)
-				b = int(mats[i].diffuse.b)
-				pixmap = QtGui.QPixmap(100,100)
-				pixmap.fill(QtGui.QColor.fromRgb(r, g, b))
-				cmb.setItemIcon(i, QtGui.QIcon(pixmap))
-			except AttributeError:
-				pass
+		for i, mat in enumerate(self.currentMats.keys()):
+			icon = Materials.getColorSwatchIcon(mat)
+			cmb.setItemIcon(i, icon) if icon else None
 
-		if index is None:
-			index = cmb.currentIndex()
-		# else:
-		# 	cmb.setCurrentIndex(index):
-
-		self.currentMaterials = {name:mats[i] for i, name in enumerate(matNames)} #add mat objects to materials dictionary. 'mat name'=key, <mat object>=value
-
+		#set submenu assign material button attributes
 		self.materials_submenu.b003.setText('Assign '+cmb.currentText())
+		icon = Materials.getColorSwatchIcon(cmb.currentText(), [15, 15])
+		self.materials_submenu.b003.setIcon(icon) if icon else None
 		self.materials_submenu.b003.setMinimumWidth(self.materials_submenu.b003.minimumSizeHint().width()+25)
 		self.materials_submenu.b003.setVisible(True if cmb.currentText() else False)
+
+
+	@staticmethod
+	def getColorSwatchIcon(mat, size=[20, 20]):
+		'''
+		Get an icon with a color fill matching the given materials RBG value.
+
+		args:
+			mat (obj)(str) = The material or the material's name.
+			size (list) = Desired icon size. [width, height]
+
+		returns:
+			(obj) pixmap icon.
+		'''
+		try:
+			mat = next(m for m in Materials.getSceneMaterials() if m.name==mat) if isinstance(mat, (str, unicode)) else mat #get the mat object if a string name is given.
+			r = int(mat.diffuse.r) #convert from float value
+			g = int(mat.diffuse.g)
+			b = int(mat.diffuse.b)
+			pixmap = QtGui.QPixmap(size[0],size[1])
+			pixmap.fill(QtGui.QColor.fromRgb(r, g, b))
+
+			return QtGui.QIcon(pixmap)
+
+		except (StopIteration, AttributeError):
+			pass
 
 
 	@Slots.message
@@ -207,8 +222,8 @@ class Materials(Init):
 				if self.materials.tb001.menu_.chk001.isChecked():
 					self.cmb002() #refresh the combobox
 				else:
-					self.materials.tb001.menu_.chk001.setChecked(True) #set combobox to ID map mode. toggling the checkbox refreshes the combobox.
-				self.materials.cmb002.setCurrentItem(name) #set the combobox index to the new mat #self.cmb002.setCurrentIndex(self.cmb002.findText(name))
+					self.materials.tb001.menu_.chk001.setChecked(True) #set comboBox to ID map mode. toggling the checkbox refreshes the combobox.
+				self.materials.cmb002.setCurrentItem(mat.name) #set the comboBox index to the new mat #self.cmb002.setCurrentIndex(self.cmb002.findText(name))
 			else:
 				return 'Error: No valid object/s selected.'
 
@@ -228,7 +243,7 @@ class Materials(Init):
 		'''
 		if self.materials.tb001.menu_.chk001.isChecked(): #ID map mode
 			try:
-				mat = self.currentMaterials[self.materials.cmb002.currentText()] #get object from string key
+				mat = self.currentMats[self.materials.cmb002.currentText()] #get object from string key
 			except:
 				return 'Error: No stored material or no valid object selected.'
 		else: #Stored material mode
@@ -519,7 +534,8 @@ class Materials(Init):
 
 		args:
 			name (str) = material name.
-			prefix (str) = name prefix.
+			prefix (str) = Optional string to be appended to the beginning of the name.
+
 		returns:
 			(obj) material
 		'''
@@ -528,7 +544,6 @@ class Materials(Init):
 
 		if name is None: #create name from rgb values
 			name = '_'.join([prefix, str(rgb[0]), str(rgb[1]), str(rgb[2])])
-		name = prefix+name
 		
 		#create shader
 		mat = rt.StandardMaterial()

@@ -211,32 +211,37 @@ class File(Init):
 			tb.menu_.add('QCheckBox', setText='Quit', setObjectName='chk002', setToolTip='Quit after save.')
 			return
 
+		increment = tb.menu_.chk001.isChecked()
+		ASCII = tb.menu_.chk003.isChecked()
+		wireframe = tb.menu_.chk000.isChecked()
+		quit = tb.menu_.chk002.isChecked()
+
 		preSaveScript = ''
 		postSaveScript = ''
 
 		type_ = 'mayaBinary'
-		if tb.menu_.chk003.isChecked(): #toggle ascii/ binary
+		if ASCII: #toggle ascii/ binary
 			type_ = 'mayaAscii' #type: mayaAscii, mayaBinary, mel, OBJ, directory, plug-in, audio, move, EPS, Adobe(R) Illustrator(R)
 
-		if tb.menu_.chk000.isChecked():
+		if wireframe:
 			mel.eval('DisplayWireframe;')
 
 		#get scene name and file path
 		fullPath = str(mel.eval('file -query -sceneName;')) #ie. O:/Cloud/____Graphics/______project_files/elise.proj/elise.scenes/.maya/elise_mid.009.mb
 		index = fullPath.rfind('/')+1
 		curFullName = fullPath[index:] #ie. elise_mid.009.mb
-		currentPath = fullPath[:index] #ie. O:/Cloud/____Graphics/______project_files/elise.proj/elise.scenes/.maya/
-		
-		if tb.menu_.chk001.isChecked(): #increment filename
+		path = fullPath[:index] #ie. O:/Cloud/____Graphics/______project_files/elise.proj/elise.scenes/.maya/
+
+		if increment: #increment filename
 			newName = File.incrementFileName(curFullName)
-			File.deletePreviousFiles(curFullName)
-			pm.saveAs (currentPath+newName, force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
-			print('{0} {1}'.format('Result:', currentPath+newName))
+			File.deletePreviousFiles(curFullName, path)
+			pm.saveAs (path+newName, force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
+			print('{0} {1}'.format('Result:', path+newName))
 		else:	#save without renaming
 			pm.saveFile (force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
-			print('{0} {1}'.format('Result:', currentPath+currentName,))
+			print('{0} {1}'.format('Result:', path+currentName,))
 
-		if tb.menu_.chk002.isChecked(): #quit maya
+		if quit: #quit maya
 			import time
 			for timer in range(5):
 				self.viewPortMessage('Shutting Down:<hl>'+str(timer)+'</hl>')
@@ -275,7 +280,7 @@ class File(Init):
 
 
 	@staticmethod
-	def deletePreviousFiles(fileName, numberOfPreviousFiles=5):
+	def deletePreviousFiles(fileName, path, numberOfPreviousFiles=5):
 		'''
 		Delete older files.
 
@@ -297,7 +302,7 @@ class File(Init):
 			oldPrefix = '000'[:-len(str(oldNum))]+str(oldNum) #prefix the appropriate amount of zeros in front of the old number
 			oldName = name+'.'+oldPrefix #ie. elise_mid.007
 			try: #search recursively through the project folder and delete any old folders with the old filename
-				dir_ =  os.path.abspath(os.path.join(currentPath, "../.."))
+				dir_ =  os.path.abspath(os.path.join(path, "../.."))
 				for root, directories, files in os.walk(dir_):
 					for filename in files:
 						if all([filename==oldName+ext for ext in ('.ma','.ma.swatches','.mb','.mb.swatches')]):
@@ -307,7 +312,7 @@ class File(Init):
 							except:
 								pass
 			except OSError:
-				print('{0} {1}'.format('Error: Could not delete', currentPath+oldName))
+				print('{0} {1}'.format('Error: Could not delete', path+oldName))
 				pass
 
 

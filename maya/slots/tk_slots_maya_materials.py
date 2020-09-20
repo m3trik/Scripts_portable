@@ -9,7 +9,7 @@ class Materials(Init):
 	def __init__(self, *args, **kwargs):
 		super(Materials, self).__init__(*args, **kwargs)
 
-		self.currentMaterials=None
+		self.currentMats=None
 		self.randomMat=None
 
 		self.materials_submenu.b003.setVisible(False)
@@ -21,7 +21,7 @@ class Materials(Init):
 		Get the current material using the current index of the materials combobox.
 		'''
 		text = self.materials.cmb002.currentText()
-		return self.currentMaterials[text]
+		return self.currentMats[text] if text else None
 
 
 	def pin(self, state=None):
@@ -113,27 +113,47 @@ class Materials(Init):
 		elif favoriteMaterials:
 			materials = self.getFavoriteMaterials()
 
-		mats = sorted([mat for mat in set(materials)])
-		matNames = [m.name() if hasattr(m,'name') else str(m) for m in mats]
-		contents = cmb.addItems_(matNames, clear=True)
+
+		self.currentMats = {mat.name():mat for mat in sorted(list(set(materials))) if hasattr(mat,'name')}
+		cmb.addItems_(self.currentMats.keys(), clear=True)
 
 		#create and set icons with color swatch
-		for i in range(len(mats)):
-			try:
-				r = int(pm.getAttr(matNames[i]+'.colorR')*255) #convert from 0-1 to 0-255 value and then to an integer
-				g = int(pm.getAttr(matNames[i]+'.colorG')*255)
-				b = int(pm.getAttr(matNames[i]+'.colorB')*255)
-				pixmap = QtGui.QPixmap(100,100)
-				pixmap.fill(QtGui.QColor.fromRgb(r, g, b))
-				cmb.setItemIcon(i, QtGui.QIcon(pixmap))
-			except AttributeError:
-				pass
+		for i, mat in enumerate(self.currentMats.keys()):
+			icon = Materials.getColorSwatchIcon(mat)
+			cmb.setItemIcon(i, icon) if icon else None
 
-		self.currentMaterials = {name:mats[i] for i, name in enumerate(matNames)} #add mat objects to materials dictionary. 'mat name'=key, <mat object>=value
-
+		#set submenu assign material button attributes
 		self.materials_submenu.b003.setText('Assign '+cmb.currentText())
+		icon = Materials.getColorSwatchIcon(cmb.currentText(), [15, 15])
+		self.materials_submenu.b003.setIcon(icon) if icon else None
 		self.materials_submenu.b003.setMinimumWidth(self.materials_submenu.b003.minimumSizeHint().width()+25)
 		self.materials_submenu.b003.setVisible(True if cmb.currentText() else False)
+
+
+	@staticmethod
+	def getColorSwatchIcon(mat, size=[20, 20]):
+		'''
+		Get an icon with a color fill matching the given materials RBG value.
+
+		args:
+			mat (obj)(str) = The material or the material's name.
+			size (list) = Desired icon size.
+
+		returns:
+			(obj) pixmap icon.
+		'''
+		try:
+			matName = mat.name() if not isinstance(mat, (str, unicode)) else mat #get the string name if a mat object is given.
+			r = int(pm.getAttr(matName+'.colorR')*255) #convert from 0-1 to 0-255 value and then to an integer
+			g = int(pm.getAttr(matName+'.colorG')*255)
+			b = int(pm.getAttr(matName+'.colorB')*255)
+			pixmap = QtGui.QPixmap(size[0],size[1])
+			pixmap.fill(QtGui.QColor.fromRgb(r, g, b))
+
+			return QtGui.QIcon(pixmap)
+
+		except AttributeError:
+			pass
 
 
 	@Slots.message
@@ -232,7 +252,7 @@ class Materials(Init):
 		'''
 		if self.materials.tb001.menu_.chk001.isChecked(): #ID map mode
 			try:
-				mat = self.currentMaterials[self.materials.cmb002.currentText()] #get object from string key
+				mat = self.currentMats[self.materials.cmb002.currentText()] #get object from string key
 			except:
 				return '# Error: No stored material or no valid object selected.'
 		else: #Stored material mode
@@ -465,7 +485,7 @@ class Materials(Init):
 
 		args:
 			name (str) = material name.
-			prefix (str) = name prefix.
+			prefix (str) = Optional string to be appended to the beginning of the name.
 
 		returns:
 			(obj) material
@@ -474,8 +494,7 @@ class Materials(Init):
 		rgb = [random.randint(0, 255) for _ in range(3)] #generate a list containing 3 values between 0-255
 
 		if name is None: #create name from rgb values
-			name = '_'.join([str(rgb[0]), str(rgb[1]), str(rgb[2])])
-		name = prefix+name
+			name = '_'.join([prefix, str(rgb[0]), str(rgb[1]), str(rgb[2])])
 
 		#create shader
 		mat = pm.shadingNode('lambert', asShader=1, name=name)
