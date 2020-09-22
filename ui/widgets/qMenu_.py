@@ -10,11 +10,13 @@ class QMenu_(QtWidgets.QMenu, Attributes):
 		position (str)(obj) = Desired menu position relative to it's parent. 
 						valid values are: 'cursorPos', 'center', 'top', 'bottom', 'right', 'left', 
 						'topLeft', 'topRight', 'bottomRight', 'bottomLeft', or <QWidget>. Setting a widget to this property, positions the menu in relation to the given widget.
+		menu_type (str) = Menu style. valid parameters are: 'standard', 'context'
 	'''
-	def __init__(self, parent=None, position='bottomLeft', **kwargs):
+	def __init__(self, parent=None, position='bottomLeft', menu_type='standard', **kwargs):
 		super(QMenu_, self).__init__(parent)
 
 		self.position=position
+		self.menu_type=menu_type
 
 		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint|QtCore.Qt.WindowStaysOnTopHint)
 		self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
@@ -40,11 +42,11 @@ class QMenu_(QtWidgets.QMenu, Attributes):
 	@property
 	def containsMenuItems(self):
 		'''
-		Query whether a menu has been constructed.
+		Query whether any child objects have been added to the menu.
 		'''
-		if not self.children_():
-			return False
-		return True
+		state = True if self.children_() else False
+
+		return state
 
 
 	def add(self, w, **kwargs):
@@ -90,6 +92,8 @@ class QMenu_(QtWidgets.QMenu, Attributes):
 
 			setattr(self, w.objectName(), w) #add the widget's objectName as a QMenu attribute.
 
+			self.addToContextMenuToolTip(w)
+
 			#connect to 'setLastActiveChild' when signal activated.
 			if hasattr(w, 'released'):
 				w.released.connect(lambda widget=w: self.setLastActiveChild(widget))
@@ -120,6 +124,7 @@ class QMenu_(QtWidgets.QMenu, Attributes):
 				children = children[index]
 			except IndexError:
 				children = None
+
 		return children
 
 
@@ -176,25 +181,27 @@ class QMenu_(QtWidgets.QMenu, Attributes):
 		return lastActive
 
 
-	def contextMenuToolTip(self):
+	def addToContextMenuToolTip(self, menuItem):
 		'''
-		Creates an html formatted toolTip combining the toolTips of any context menu items.
+		Add an item to the context menu toolTip.
 
-		returns:
-			(str) formatted toolTip.
+		args:
+			menuItem (obj) = The item to add.
 		'''
+		p = self.parent()
+		if not all([self.menu_type is 'context', p]):
+			return
+
 		if not hasattr(self, '_contextMenuToolTip'):
-			self._contextMenuToolTip=''
-			menuItems = self.children_()
-			if menuItems:
-				self._contextMenuToolTip = '<br><br><u>Context menu items:</u>'
-				for menuItem in menuItems:
-					try:
-						self._contextMenuToolTip = '{0}<br>  <b>{1}</b> - {2}'.format(self._contextMenuToolTip, menuItem.text(), menuItem.toolTip())
-					except AttributeError:
-						pass
+			self._contextMenuToolTip = '<u>Context menu items:</u>'
+			p.setToolTip('{}<br><br>{}'.format(p.toolTip(), self._contextMenuToolTip)) #initialize the toolTip.
 
-		return self._contextMenuToolTip
+		try:
+			contextMenuToolTip = '<b>{}</b> - {}'.format(menuItem.text(), menuItem.toolTip())
+			p.setToolTip('{}<br>{}'.format(p.toolTip(), contextMenuToolTip))
+
+		except AttributeError:
+			pass
 
 
 	def leaveEvent(self, event):
@@ -221,6 +228,14 @@ class QMenu_(QtWidgets.QMenu, Attributes):
 					pass
 
 		return super(QMenu_, self).hide()
+
+
+	def show(self):
+		'''
+		Show the menu.
+		'''
+		if self.containsMenuItems: #prevent show if the menu is empty.
+			return super(QMenu_, self).show()
 
 
 	def showEvent(self, event):
@@ -301,6 +316,28 @@ Promoting a widget in designer to use a custom class:
 '''
 
 # depricated ------------------------------------------------------------------------
+
+
+# def contextMenuToolTip(self):
+# 		'''
+# 		Creates an html formatted toolTip while appending the toolTips of any context menu items.
+
+# 		returns:
+# 			(str) formatted toolTip.
+# 		'''
+# 		if not hasattr(self, '_contextMenuToolTip'):
+# 			self._contextMenuToolTip=''
+# 			menuItems = self.children_()
+# 			print ('menuItems:', menuItems)
+# 			if menuItems:
+# 				self._contextMenuToolTip = '<br><br><u>Context menu items:</u>'
+# 				for menuItem in menuItems:
+# 					try:
+# 						self._contextMenuToolTip = '{0}<br>  <b>{1}</b> - {2}'.format(self._contextMenuToolTip, menuItem.text(), menuItem.toolTip())				
+# 					except AttributeError:
+# 						pass
+
+# 		return self._contextMenuToolTip
 
 
 	# def addMenus(self, menus):

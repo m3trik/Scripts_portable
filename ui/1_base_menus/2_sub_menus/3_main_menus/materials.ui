@@ -332,14 +332,8 @@
             <height>20</height>
            </size>
           </property>
-          <property name="font">
-           <font>
-            <pointsize>8</pointsize>
-           </font>
-          </property>
           <property name="toolTip">
-           <string>Select all components with the same material.  
- If nothing is selected; search all geometry.</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select all components with the same material. &lt;/p&gt;&lt;p&gt;If nothing is selected; search all geometry.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
            <string>Select</string>

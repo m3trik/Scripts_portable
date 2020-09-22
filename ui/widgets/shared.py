@@ -32,10 +32,9 @@ class Menu(object):
 		'''
 		if not hasattr(self, '_contextMenu'):
 			from qMenu_ import QMenu_
-			self._contextMenu = QMenu_(self, position='cursorPos')
+			self._contextMenu = QMenu_(self, position='cursorPos', menu_type='context')
 
 		return self._contextMenu
-
 
 
 class RichText(object):

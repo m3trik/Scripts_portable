@@ -740,8 +740,8 @@ class StyleSheet(QtCore.QObject):
 
 		'QScrollBar': '''
 			QScrollBar {
-				border: 1px solid {PRESSED};
-				background: {PRESSED};
+				border: 1px solid transparent;
+				background: {BACKGROUND};
 			}
 
 			QScrollBar:horizontal {
@@ -755,8 +755,8 @@ class StyleSheet(QtCore.QObject):
 			}
 
 			QScrollBar::handle {
-				background: {BACKGROUND};
-				border: 1px solid {PRESSED};
+				background: {PRESSED};
+				border: 1px solid transparent;
 			}
 
 			QScrollBar::handle:horizontal {

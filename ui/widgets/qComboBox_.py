@@ -121,8 +121,9 @@ class QComboBox_(QtWidgets.QComboBox, Menu, Attributes):
 				self.menu_.visible=False
 			return	
 
-		width = self.minimumSizeHint().width()
-		self.view().setMinimumWidth(width)
+		else:
+			width = self.sizeHint().width()
+			self.view().setMinimumWidth(width)
 
 		super(QComboBox_, self).showPopup()
 
@@ -197,9 +198,6 @@ class QComboBox_(QtWidgets.QComboBox, Menu, Attributes):
 		args:
 			event=<QEvent>
 		'''
-		contextMenuToolTip = self.menu_.contextMenuToolTip()
-		if contextMenuToolTip:
-			self.setToolTip('{0}{1}'.format(self.toolTip(), contextMenuToolTip))
 
 		return QtWidgets.QComboBox.showEvent(self, event)
 

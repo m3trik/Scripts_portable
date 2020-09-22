@@ -9,10 +9,8 @@ class Transform(Init):
 	def __init__(self, *args, **kwargs):
 		super(Transform, self).__init__(*args, **kwargs)
 
-
 		#set input masks for text fields
 		# self.transform.t000.setInputMask("00.00") #change to allow for neg values
-
 
 
 	def pin(self, state=None):
@@ -411,7 +409,7 @@ class Transform(Init):
 		autoAlign = tb.menu_.chk010.isChecked()
 		autoAlign2Axes = tb.menu_.chk011.isChecked() #Auto Align: Two Axes
 
-		selection = pm.ls(orderedSelection=1)
+		selection = pm.ls(orderedSelection=1, flatten=1)
 
 		if betweenTwoComponents:
 			if len(selection)>1:

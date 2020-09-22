@@ -591,7 +591,7 @@ class Init(Slots):
 					vertices.append(_vertices)
 
 				closestVerts = Init.getClosestVerts(vertices[0], vertices[1])[0]
-				_edges = pm.ls(pm.polyListComponentConversion(components+closestVerts, fromVertex=1, toEdge=1), flatten=1)
+				_edges = pm.ls(pm.polyListComponentConversion(list(components)+list(closestVerts), fromVertex=1, toEdge=1), flatten=1)
 
 				edges=[]
 				for edge in _edges:
