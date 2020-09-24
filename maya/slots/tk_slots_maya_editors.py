@@ -84,31 +84,32 @@ class Editors(Init):
 		'''
 		Attributes
 		'''
-		name = mel.eval('$tmp=$gAttributeEditorForm')
-		self.showEditor(name, 640, 480)
+		# e = mel.eval('$tmp=$gAttributeEditorForm')
+		# self.showEditor(e, 640, 480)
+		pm.mel.AttributeEditor()
 
 
 	def v001(self):
 		'''
 		Outliner
 		'''
-		# name = mel.eval('$tmp=$gOutlinerForm')
+		e = mel.eval('$tmp=$gOutlinerForm')
 
-		if not hasattr(self, 'outlinerEditor_'):
-			panel = pm.outlinerPanel()
-			self.outliner_ = pm.outlinerPanel(panel, query=True, outlinerEditor=True)
-			pm.outlinerEditor(self.outliner_, edit=True, mainListConnection='worldList', selectionConnection='modelList', showShapes=False, showReferenceNodes=False, showReferenceMembers=False, showAttributes=False, showConnected=False, showAnimCurvesOnly=False, autoExpand=False, showDagOnly=True, ignoreDagHierarchy=False, expandConnections=False, showNamespace=True, showCompounds=True, showNumericAttrsOnly=False, highlightActive=True, autoSelectNewObjects=False, doNotSelectNewObjects=False, transmitFilters=False, showSetMembers=True, setFilter='defaultSetFilter', ignoreHiddenAttribute=False)
+		# if not hasattr(self, 'outlinerEditor_'):
+		# 	panel = pm.outlinerPanel()
+		# 	self.outliner_ = pm.outlinerPanel(panel, query=True, outlinerEditor=True)
+		# 	pm.outlinerEditor(self.outliner_, edit=True, mainListConnection='worldList', selectionConnection='modelList', showShapes=False, showReferenceNodes=False, showReferenceMembers=False, showAttributes=False, showConnected=False, showAnimCurvesOnly=False, autoExpand=False, showDagOnly=True, ignoreDagHierarchy=False, expandConnections=False, showNamespace=True, showCompounds=True, showNumericAttrsOnly=False, highlightActive=True, autoSelectNewObjects=False, doNotSelectNewObjects=False, transmitFilters=False, showSetMembers=True, setFilter='defaultSetFilter', ignoreHiddenAttribute=False)
 
-		o = pm.outlinerEditor(self.outliner_, edit=True, showSelected=True) #expand to the current selection in the outliner.
-		w = self.showEditor(o, 260, 740)
+		# e = pm.outlinerEditor(self.outliner_, edit=True, showSelected=True) #expand to the current selection in the outliner.
+		w = self.showEditor(e, 260, 740)
 
 
 	def v002(self):
 		'''
 		Tool
 		'''
-		# name = mel.eval('$tmp=$gToolSettingsForm')
-		# self.showEditor(name, 461, 480)
+		# e = mel.eval('$tmp=$gToolSettingsForm')
+		# self.showEditor(e, 461, 480)
 		print(pm.toolPropertyWindow())
 
 
@@ -116,26 +117,25 @@ class Editors(Init):
 		'''
 		Layers
 		'''
-		name = mel.eval('$tmp=$gLayerEditorForm')
-		self.showEditor(name, 320, 480)
+		e = mel.eval('$tmp=$gLayerEditorForm')
+		self.showEditor(e, 320, 480)
 
 
 	def v004(self):
 		'''
 		Channels
 		'''
-		name = mel.eval('$tmp=$gChannelsForm')
-		self.showEditor(name, 320, 640)
+		e = mel.eval('$tmp=$gChannelsForm')
+		self.showEditor(e, 320, 640)
 
 
 	def v005(self):
 		'''
 		Script
 		'''
+		#e = mel.eval('$tmp=$gScriptEditorPanel')
+		# self.showEditor(e, 640, 480)
 		pm.mel.ScriptEditor()
-		#name = mel.eval('$tmp=$gScriptEditorPanel')
-		# self.showEditor(name, 640, 480)
-
 
 
 

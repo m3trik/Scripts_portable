@@ -91,11 +91,7 @@ class Materials(Init):
 			cmb.contextMenu.add(QLabel_, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current material.')
 			cmb.contextMenu.add(QLabel_, setText='Delete All Unused Materials', setObjectName='lbl003', setToolTip='Delete All unused materials.')
 			cmb.beforePopupShown.connect(self.cmb002) #refresh comboBox contents before showing it's popup.
-			return
-
-		if cmb.lineEdit():
-			self.renameMaterial()
-			self.lbl001(setEditable=False)
+			cmb.returnPressed.connect(lambda: self.lbl001(setEditable=False))
 			return
 
 		try:
@@ -130,32 +126,6 @@ class Materials(Init):
 		b.setIcon(icon) if icon else None
 		b.setMinimumWidth(b.minimumSizeHint().width()+25)
 		b.setVisible(True if cmb.currentText() else False)
-
-
-	@staticmethod
-	def getColorSwatchIcon(mat, size=[20, 20]):
-		'''
-		Get an icon with a color fill matching the given materials RBG value.
-
-		args:
-			mat (obj)(str) = The material or the material's name.
-			size (list) = Desired icon size.
-
-		returns:
-			(obj) pixmap icon.
-		'''
-		try:
-			matName = mat.name() if not isinstance(mat, (str, unicode)) else mat #get the string name if a mat object is given.
-			r = int(pm.getAttr(matName+'.colorR')*255) #convert from 0-1 to 0-255 value and then to an integer
-			g = int(pm.getAttr(matName+'.colorG')*255)
-			b = int(pm.getAttr(matName+'.colorB')*255)
-			pixmap = QtGui.QPixmap(size[0],size[1])
-			pixmap.fill(QtGui.QColor.fromRgb(r, g, b))
-
-			return QtGui.QIcon(pixmap)
-
-		except AttributeError:
-			pass
 
 
 	@Slots.message
@@ -278,12 +248,17 @@ class Materials(Init):
 		'''
 		Rename Material: Set cmb002 as editable and disable widgets.
 		'''
+		cmb = self.materials.cmb002
+
 		if setEditable:
-			self.materials.cmb002.setEditable(True)
-			# self.materials.cmb002.lineEdit().returnPressed.connect(self.renameMaterial)
+			self._mat = self.currentMat
+			cmb.setEditable(True)
 			self.toggleWidgets(self.materials, setDisabled='b002,lbl000,tb000,tb002')
 		else:
-			self.materials.cmb002.setEditable(False)
+			mat = self._mat
+			newMatName = cmb.currentText()
+			self.renameMaterial(mat, newMatName)
+			cmb.setEditable(False)
 			self.toggleWidgets(self.materials, setEnabled='b002,lbl000,tb000,tb002')
 
 
@@ -372,22 +347,44 @@ class Materials(Init):
 		self.tb002()
 
 
-	def renameMaterial(self):
+	@staticmethod
+	def getColorSwatchIcon(mat, size=[20, 20]):
+		'''
+		Get an icon with a color fill matching the given materials RBG value.
+
+		args:
+			mat (obj)(str) = The material or the material's name.
+			size (list) = Desired icon size.
+
+		returns:
+			(obj) pixmap icon.
+		'''
+		try:
+			matName = mat.name() if not isinstance(mat, (str, unicode)) else mat #get the string name if a mat object is given.
+			r = int(pm.getAttr(matName+'.colorR')*255) #convert from 0-1 to 0-255 value and then to an integer
+			g = int(pm.getAttr(matName+'.colorG')*255)
+			b = int(pm.getAttr(matName+'.colorB')*255)
+			pixmap = QtGui.QPixmap(size[0],size[1])
+			pixmap.fill(QtGui.QColor.fromRgb(r, g, b))
+
+			return QtGui.QIcon(pixmap)
+
+		except AttributeError:
+			pass
+
+
+	def renameMaterial(self, mat, newMatName):
 		'''
 		Rename Material
 		'''
 		cmb = self.materials.cmb002 #scene materials
-		newMatName = cmb.currentText()
 
-		if self.currentMat and self.currentMat.name!=newMatName:
-			if self.materials.tb001.menu_.chk001.isChecked(): #Rename ID map Material
-				prefix = 'ID_'
-				if not newMatName.startswith(prefix):
-					newMatName = prefix+newMatName
-
+		curMatName = mat.name()
+		if curMatName!=newMatName:
 			cmb.setItemText(cmb.currentIndex(), newMatName)
 			try:
-				pm.rename(self.currentMat.name(), newMatName)
+				pm.rename(curMatName, newMatName)
+
 			except RuntimeError as error:
 				cmb.setItemText(cmb.currentIndex(), str(error.strip('\n')))
 

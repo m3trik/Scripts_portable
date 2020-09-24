@@ -89,11 +89,7 @@ class Materials(Init):
 			cmb.contextMenu.add(QLabel_, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current material.')
 			cmb.contextMenu.add(QLabel_, setText='Delete All Unused Materials', setObjectName='lbl003', setToolTip='Delete All unused materials.')
 			cmb.beforePopupShown.connect(self.cmb002) #refresh comboBox contents before showing it's popup.
-			return
-
-		if cmb.lineEdit():
-			self.renameMaterial()
-			self.lbl001(setEditable=False)
+			cmb.returnPressed.connect(lambda: self.lbl001(setEditable=False))
 			return
  
 		try:
@@ -277,35 +273,19 @@ class Materials(Init):
 		rt.redrawViews()
 
 
-	def renameMaterial(self):
-		'''
-		Rename Material
-		'''
-		cmb = self.materials.cmb002 #scene materials
-		newMatName = cmb.currentText()
-
-		if self.currentMat and self.currentMat.name!=newMatName:
-			if self.materials.tb001.menu_.chk001.isChecked(): #Rename ID map Material
-				prefix = 'ID_'
-				if not newMatName.startswith(prefix):
-					newMatName = prefix+newMatName
-
-			cmb.setItemText(cmb.currentIndex(), newMatName)
-			try:
-				self.currentMat.name = newMatName
-			except RuntimeError as error:
-				cmb.setItemText(cmb.currentIndex(), str(error.strip('\n')))
-
-
 	def lbl001(self, setEditable=True):
 		'''
 		Rename Material: Set cmb002 as editable and disable widgets.
 		'''
 		if setEditable:
+			self._mat = self.currentMat
 			self.materials.cmb002.setEditable(True)
 			# self.materials.cmb002.lineEdit().returnPressed.connect(self.renameMaterial)
 			self.toggleWidgets(self.materials, setDisabled='b002,lbl000,tb000,tb002')
 		else:
+			mat = self._mat
+			newMatName = cmb.currentText()
+			self.renameMaterial(mat, newMatName)
 			self.materials.cmb002.setEditable(False)
 			self.toggleWidgets(self.materials, setEnabled='b002,lbl000,tb000,tb002')
 
@@ -393,6 +373,21 @@ class Materials(Init):
 		self.materials.tb002.menu_.chk009.setChecked(True)
 		self.materials.tb002.setText('Assign New')
 		self.tb002()
+
+
+	def renameMaterial(self, mat, newMatName):
+		'''
+		Rename Material
+		'''
+		cmb = self.materials.cmb002 #scene materials
+
+		curMatName = mat.name
+		if curMatName!=newMatName:
+			cmb.setItemText(cmb.currentIndex(), newMatName)
+			try:
+				curMatName = newMatName
+			except RuntimeError as error:
+				cmb.setItemText(cmb.currentIndex(), str(error.strip('\n')))
 
 
 	@Slots.message
