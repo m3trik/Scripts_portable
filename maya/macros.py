@@ -17,28 +17,34 @@ class Macros(Init):
 		'''
 
 
-	def setMacros(self):
+	def setMacros(self, macros=[]):
 		'''
-		Call setMacro for each item.
+		Extends setMacro to accept a list of tuples.
 		'''
-		self.setMacro('hk_back_face_culling', k='1', cat='Display', ann='Toggle back-face culling.')
-		self.setMacro('hk_smooth_preview', k='2', cat='Display', ann='Toggle smooth mesh preview.')
-		self.setMacro('hk_isolate_selected', k='F2', cat='Display', ann='Isolate current selection.')
-		self.setMacro('hk_grid_and_image_planes', k='F1', cat='Display', ann='Toggle grid and image plane visibility.')
-		self.setMacro('hk_frame_selected', k='f', cat='Display', ann='Frame selected by a set amount.')
-		self.setMacro('hk_wireframe_on_shaded', k='3', cat='Display', ann='Toggle wireframe on shaded.')
-		self.setMacro('hk_xray', k='F3', cat='Display', ann='Toggle xRay all.')
-		self.setMacro('hk_wireframe', k='5', cat='Display', ann='Toggle wireframe/shaded/shaded w/texture display.')
-		self.setMacro('hk_shading', k='6', cat='Display', ann='Toggle viewport shading.')
-		self.setMacro('hk_selection_mode', k='sht+q', cat='Edit', ann='Toggle between object selection & last component selection.')
-		self.setMacro('hk_paste_and_rename', k='ctl+v', cat='Edit', ann='Paste and rename removing keyword \'paste\'.')
-		self.setMacro('hk_multi_component', k='F5', cat='Edit', ann='Multi-Component Selection.')
-		self.setMacro('hk_toggle_component_mask', k='F4', cat='Edit', ann='Toggle Component Selection Mask.')
-		self.setMacro('hk_tk_show', k='F12', cat='UI', ann='Display tk marking menu.')
-		self.setMacro('hk_hotbox_full', k='sht+z', cat='UI', ann='Display the full version of the hotbox.')
-		self.setMacro('hk_toggle_panels', k='9', cat='UI', ann='Toggle UI toolbars.')
-		self.setMacro('hk_toggle_UV_select_type', k='sht+t', cat='Edit', ann='Toggle UV / UV shell component selection.')
-		self.setMacro('hk_merge_vertices', k='ctl+m', cat='Edit', ann='Merge vertices on selection.')
+		if not macros:
+			macros = [
+				('hk_back_face_culling', '1', 'Display', 'Toggle back-face culling.'),
+				('hk_smooth_preview', '2', 'Display', 'Toggle smooth mesh preview.'),
+				('hk_isolate_selected', 'F2', 'Display', 'Isolate current selection.'),
+				('hk_grid_and_image_planes', 'F1', 'Display', 'Toggle grid and image plane visibility.'),
+				('hk_frame_selected', 'f', 'Display', 'Frame selected by a set amount.'),
+				('hk_wireframe_on_shaded', '3', 'Display', 'Toggle wireframe on shaded.'),
+				('hk_xray', 'F3', 'Display', 'Toggle xRay all.'),
+				('hk_wireframe', '5', 'Display', 'Toggle wireframe/shaded/shaded w/texture display.'),
+				('hk_shading', '6', 'Display', 'Toggle viewport shading.'),
+				('hk_selection_mode', 'sht+q', 'Edit', 'Toggle between object selection & last component selection.'),
+				('hk_paste_and_rename', 'ctl+v', 'Edit', 'Paste and rename removing keyword \'paste\'.'),
+				('hk_multi_component', 'F5', 'Edit', 'Multi-Component Selection.'),
+				('hk_toggle_component_mask', 'F4', 'Edit', 'Toggle Component Selection Mask.'),
+				('hk_tk_show', 'F12', 'UI', 'Display tk marking menu.'),
+				('hk_hotbox_full', 'sht+z', 'UI', 'Display the full version of the hotbox.'),
+				('hk_toggle_panels', '9', 'UI', 'Toggle UI toolbars.'),
+				('hk_toggle_UV_select_type', 'sht+t', 'Edit', 'Toggle UV / UV shell component selection.'),
+				('hk_merge_vertices', 'ctl+m', 'Edit', 'Merge vertices on selection.'),
+			]
+
+		for m in macros:
+			self.setMacro(*m)
 
 
 	def setMacro(self, name=None, k=None, cat=None, ann=None):
@@ -455,14 +461,16 @@ class Macros(Init):
 		hk_toggle_UV_select_type
 		Toggle between UV & UV shell component selection.
 		'''
-		polymeshUV = pm.selectType(q=1, polymeshUV=1)
+		meshUVShell = pm.selectType(q=1, meshUVShell=1)
+		# polymeshUV = pm.selectType(q=1, polymeshUV=1)
 		pm.selectMode(component=1)
-		if polymeshUV:
-			pm.selectType(meshUVShell=1)
-			pm.inViewMessage(statusMessage='Select Type: <hl>UV Shell</hl>', fade=True, position="topCenter")
-		else:
+
+		if meshUVShell:
 			pm.selectType(polymeshUV=1)
 			pm.inViewMessage(statusMessage='Select Type: <hl>Polymesh UV</hl>', fade=True, position="topCenter")
+		else:
+			pm.selectType(meshUVShell=1)
+			pm.inViewMessage(statusMessage='Select Type: <hl>UV Shell</hl>', fade=True, position="topCenter")
 
 
 	@staticmethod

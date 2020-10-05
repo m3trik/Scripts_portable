@@ -55,6 +55,7 @@ class Mirror(Init):
 
 
 	@Slots.message
+	@Init.attr
 	def tb000(self, state=None):
 		'''
 		Mirror Geometry
@@ -79,32 +80,32 @@ class Mirror(Init):
 
 		if axis=='X': #'x'
 			axisDirection = 1 #mirror toward negative axis
-			a = 0 #axis
+			axis_ = 0 #axis
 			x=-1; y=1; z=1 #scale values
 
 		elif axis=='-X': #'-x'
 			axisDirection = 0 #mirror toward positive axis
-			a = 1 #0=-x, 1=x, 2=-y, 3=y, 4=-z, 5=z 
+			axis_ = 1 #0=-x, 1=x, 2=-y, 3=y, 4=-z, 5=z 
 			x=-1; y=1; z=1 #if instance: used to negatively scale
 
 		elif axis=='Y': #'y'
 			axisDirection = 1
-			a = 2
+			axis_ = 2
 			x=1; y=-1; z=1
 
 		elif axis=='-Y': #'-y'
 			axisDirection = 0
-			a = 3
+			axis_ = 3
 			x=1; y=-1; z=1
 
 		elif axis=='Z': #'z'
 			axisDirection = 1
-			a = 4
+			axis_ = 4
 			x=1; y=1; z=-1
 
 		elif axis=='-Z': #'-z'
 			axisDirection = 0
-			a = 5
+			axis_ = 5
 			x=1; y=1; z=-1
 
 		selection = pm.ls(sl=1, objectsOnly=1)
@@ -112,16 +113,16 @@ class Mirror(Init):
 			return 'Warning: Nothing Selected.'
 
 		pm.undoInfo(openChunk=1)
-		for obj in [n for n in pm.listRelatives(selection, allDescendents=1) if pm.objectType(n, isType='mesh')]: #get any mesh type child nodes of obj.
-			if cutMesh:
-				self.deleteAlongAxis(obj, axis) #delete mesh faces that fall inside the specified axis.
+		objects = [n for n in pm.listRelatives(selection, allDescendents=1) if pm.objectType(n, isType='mesh')] #get any mesh type child nodes of obj.
+		if cutMesh:
+			self.deleteAlongAxis(objects, axis) #delete mesh faces that fall inside the specified axis.
 
-			if instance: #create instance and scale negatively
-				inst = pm.instance(obj) # bt_convertToMirrorInstanceMesh(0); #x=0, y=1, z=2, -x=3, -y=4, -z=5
-				pm.xform(inst, scale=[x,y,z]) #pm.scale(z,x,y, pivot=(0,0,0), relative=1) #swap the xyz values to transform the instanced node
+		if instance: #create instance and scale negatively
+			inst = pm.instance(objects) # bt_convertToMirrorInstanceMesh(0); #x=0, y=1, z=2, -x=3, -y=4, -z=5
+			return pm.xform(inst, scale=[x,y,z]) #pm.scale(z,x,y, pivot=(0,0,0), relative=1) #swap the xyz values to transform the instanced node
 
-			else: #mirror
-				pm.polyMirrorFace(obj, mirrorAxis=axisDirection, direction=a, mergeMode=1, mergeThresholdType=1, mergeThreshold=mergeThreshold, worldSpace=0, smoothingAngle=30, flipUVs=0, ch=0) #mirrorPosition x, y, z - This flag specifies the position of the custom mirror axis plane
+		else: #mirror
+			return pm.polyMirrorFace(objects, mirrorAxis=axisDirection, direction=axis_, mergeMode=1, mergeThresholdType=1, mergeThreshold=mergeThreshold, worldSpace=0, smoothingAngle=30, flipUVs=0, ch=1) #mirrorPosition x, y, z - This flag specifies the position of the custom mirror axis plane
 		pm.undoInfo(closeChunk=1)
 
 
@@ -145,32 +146,32 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 
 # if axis=='X': #'x'
 # 			axisDirection = 0 #positive axis
-# 			a = 0 #axis
+# 			axis_ = 0 #axis
 # 			x=-1; y=1; z=1 #scale values
 
 # 		elif axis=='-X': #'-x'
 # 			axisDirection = 1 #negative axis
-# 			a = 1 #0=-x, 1=x, 2=-y, 3=y, 4=-z, 5=z 
+# 			axis_ = 1 #0=-x, 1=x, 2=-y, 3=y, 4=-z, 5=z 
 # 			x=-1; y=1; z=1 #if instance: used to negatively scale
 
 # 		elif axis=='Y': #'y'
 # 			axisDirection = 0
-# 			a = 2
+# 			axis_ = 2
 # 			x=1; y=-1; z=1
 
 # 		elif axis=='-Y': #'-y'
 # 			axisDirection = 1
-# 			a = 3
+# 			axis_ = 3
 # 			x=1; y=-1; z=1
 
 # 		elif axis=='Z': #'z'
 # 			axisDirection = 0
-# 			a = 4
+# 			axis_ = 4
 # 			x=1; y=1; z=-1
 
 # 		elif axis=='-Z': #'-z'
 # 			axisDirection = 1
-# 			a = 5
+# 			axis_ = 5
 # 			x=1; y=1; z=-1
 
 	# def chk000(self, state=None):

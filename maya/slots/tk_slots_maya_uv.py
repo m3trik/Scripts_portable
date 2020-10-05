@@ -18,8 +18,8 @@ class Uv(Init):
 
 		if state is 'setMenu':
 			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya UV Editors')
-			pin.contextMenu.add(QLabel_, setObjectName='lbl000', setToolTip='Select Type: UV')
-			pin.contextMenu.add(QLabel_, setObjectName='lbl001', setToolTip='Select Type: UV Shell')
+			pin.contextMenu.add(QLabel_, setObjectName='lbl000', setText='Select Type: UV', setToolTip='Select Type: UV')
+			pin.contextMenu.add(QLabel_, setObjectName='lbl001', setText='Select Type: UV Shell', setToolTip='Select Type: UV Shell')
 			return
 
 
@@ -75,27 +75,63 @@ class Uv(Init):
 		'''
 		Cut Uv Hard Edges
 		'''
-		mel.eval("cutUvHardEdge ();")
+		pm.mel.cutUvHardEdge()
 
 
 	def b001(self):
 		'''
 		Flip Uv
 		'''
-		mel.eval("performPolyForceUV flip 0;")
+		pm.mel.performPolyForceUV('flip', 0)
+
+
+	def b002(self):
+		'''
+		Transfer Uv's
+		'''
+		sel = pm.ls(orderedSelection=1, flatten=1)
+		if len(sel)<2:
+			return 'Error: The operation requires the selection of two polygon objects.'
+
+		from_ = sel[0]
+		to = sel[-1]
+		pm.transferAttributes(from_, to, transferUVs=2) # 0:no UV sets, 1:single UV set (specified by sourceUVSet and targetUVSet args), and 2:all UV sets are transferred.
+		return 'Result: UV sets transferred from: {} to: {}.'.format(from_.name(), to.name())
 
 
 	def b005(self):
 		'''
 		Cut Uv'S
 		'''
-		pm.polyMapCut()
+		objects = pm.ls(selection=1, objectsOnly=1, flatten=1)
+
+		for obj in objects:
+			sel = pm.ls(obj, sl=1)
+			pm.polyMapCut()
 
 
 	@Init.attr
 	def b006(self):
 		'''
 		Pack UV's
+
+		pm.u3dLayout:
+			layoutScaleMode (int),
+			multiObject (bool),
+			mutations (int),
+			packBox (float, float, float, float),
+			preRotateMode (int),
+			preScaleMode (int),
+			resolution (int),
+			rotateMax (float),
+			rotateMin (float),
+			rotateStep (float),
+			shellSpacing (float),
+			tileAssignMode (int),
+			tileMargin (float),
+			tileU (int),
+			tileV (int),
+			translate (bool)
 		'''
 		rotate = self.uv.chk001.isChecked() #rotate uv's
 		rotateMax = 0.0
@@ -103,58 +139,56 @@ class Uv(Init):
 			rotateMax = 360.0
 
 		obj = pm.ls(sl=1)
-		return pm.u3dLayout(obj, resolution=2048, preScaleMode=1, packBox=[0,1,0,1], rotateMax=rotateMax) #layoutScaleMode (int), multiObject (bool), mutations (int), packBox (float, float, float, float), preRotateMode (int), preScaleMode (int), resolution (int), rotateMax (float), rotateMin (float), rotateStep (float), shellSpacing (float), tileAssignMode (int), tileMargin (float), tileU (int), tileV (int), translate (bool)
+		return pm.u3dLayout(obj, resolution=2048, preScaleMode=1, shellSpacing=.75, tileMargin=.75, packBox=[0,1,0,1], rotateMax=rotateMax) #layoutScaleMode (int), multiObject (bool), mutations (int), packBox (float, float, float, float), preRotateMode (int), preScaleMode (int), resolution (int), rotateMax (float), rotateMin (float), rotateStep (float), shellSpacing (float), tileAssignMode (int), tileMargin (float), tileU (int), tileV (int), translate (bool)
 
 
 	def b007(self):
 		'''
 		Display Checkered Pattern
 		'''
-		mel.eval('''
-		$state = `textureWindow -query -displayCheckered polyTexturePlacementPanel1`;
-		textureWindow -edit -displayCheckered (!$state) polyTexturePlacementPanel1;
-		''')		
+		state = pm.textureWindow('polyTexturePlacementPanel1', displayCheckered=1, query=1)
+		pm.textureWindow('polyTexturePlacementPanel1', edit=1, displayCheckered=(not state))	
 
 
 	def b008(self):
 		'''
 		Adjust Checkered Size
 		'''
-		mel.eval("bt_textureEditorCheckerSize;")
+		pm.mel.bt_textureEditorCheckerSize()
 
 
 	def b009(self):
 		'''
 		Borders
 		'''
-		mel.eval('''
-		textureWindowCreatePopupContextMenu "polyTexturePlacementPanel1popupMenusShift";
-		int $borders[] = `polyOptions -query -displayMapBorder`;
-		float $borderWidth[] = `optionVar -query displayPolyBorderEdgeSize`;
-		polyOptions -displayMapBorder (!$borders[0]) -sizeBorder $borderWidth[1];
-		''')
+		pm.mel.textureWindowCreatePopupContextMenu("polyTexturePlacementPanel1popupMenusShift")
+		borders = pm.polyOptions(query=1, displayMapBorder=1)
+		borderWidth = pm.optionVar(query='displayPolyBorderEdgeSize')
+		pm.polyOptions(displayMapBorder=(not borders[0]), sizeBorder=borderWidth[1])
 
 
 	def b010(self):
 		'''
 		Distortion
 		'''
-		mel.eval('''
-		string $winName[] = `getPanel -scriptType polyTexturePlacementPanel`;
-		int $state = `textureWindow -query -displayDistortion $winName[0]`;
-		if ($state != 1)
-			textureWindow -edit -displayDistortion 1 $winName[0];
-		else
-			textureWindow -edit -displayDistortion 0 $winName[0];
-		''')
+		winName = pm.getPanel(scriptType='polyTexturePlacementPanel')
+		state = int(pm.textureWindow(winName[0], query=1, displayDistortion=1))
+
+		if state!=1:
+			pm.textureWindow(winName[0], edit=1, displayDistortion=1)
+		else:
+			pm.textureWindow(winName[0], edit=1, displayDistortion=0)
 
 
-	@Init.attr
 	def b011(self):
 		'''
 		Sew Uv'S
 		'''
-		return pm.polyMapSew()
+		objects = pm.ls(selection=1, objectsOnly=1, flatten=1)
+
+		for obj in objects:
+			sel = pm.ls(obj, sl=1)
+			pm.polyMapSew(sel)
 
 
 	@Init.attr
@@ -181,28 +215,31 @@ class Uv(Init):
 		'''
 		Auto Map Multiple
 		'''
-		mel.eval('bt_autoMapMultipleMeshes;')
+		pm.mel.bt_autoMapMultipleMeshes()
 
 
 	def b014(self):
 		'''
 		Rotate On Last
 		'''
-		mel.eval('bt_checkSelectionOrderPref; bt_rotateUVsAroundLastWin;')
+		pm.mel.bt_checkSelectionOrderPref()
+		pm.mel.bt_rotateUVsAroundLastWin()
 
 
 	def b015(self):
 		'''
 		Flip Horizontally On Last
 		'''
-		mel.eval('bt_checkSelectionOrderPref; bt_polyflipUVsAcrossLast 0;')
+		pm.mel.bt_checkSelectionOrderPref()
+		pm.mel.bt_polyflipUVsAcrossLast(0)
 
 
 	def b016(self):
 		'''
 		Flip Vertically On Last
 		'''
-		mel.eval('bt_checkSelectionOrderPref; bt_polyflipUVsAcrossLast 1;')
+		pm.mel.bt_checkSelectionOrderPref()
+		pm.mel.bt_polyflipUVsAcrossLast(1)
 
 
 	def b017(self):
@@ -217,14 +254,14 @@ class Uv(Init):
 		'''
 		Unfold Uv'S
 		'''
-		mel.eval('performUnfold 0;')
+		pm.mel.performUnfold(0)
 
 
 	def b019(self):
 		'''
 		Optimize Uv'S
 		'''
-		mel.eval('performPolyOptimizeUV 0;')
+		pm.mel.performPolyOptimizeUV(0)
 
 
 	@Init.attr
@@ -232,26 +269,26 @@ class Uv(Init):
 		'''
 		Move To Uv Space
 		'''
-		u = str(self.uv.s000.value())
-		v = str(self.uv.s001.value())
+		u = int(self.uv.s000.value())
+		v = int(self.uv.s001.value())
 
-		return pm.polyEditUV(u=u, v=v)
+		return pm.polyEditUV(u=u, v=v, relative=True)
 
 
 	def b021(self):
 		'''
 		Straighten Uv
 		'''
-		mel.eval('texStraightenUVs "UV" 30;')
+		pm.mel.texStraightenUVs("UV", 30)
 
 
-	@Init.attr
 	def b022(self):
 		'''
 		Stack Similar
 		'''
 		obj = pm.ls(sl=1)
-		return pm.polyUVStackSimilarShells(obj, to=0.1)
+		similar = pm.polyUVStackSimilarShells(obj, to=0.1)
+
 
 
 

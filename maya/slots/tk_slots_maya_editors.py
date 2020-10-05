@@ -138,6 +138,50 @@ class Editors(Init):
 		pm.mel.ScriptEditor()
 
 
+	def v006(self):
+		'''
+		Dependancy Graph
+
+		$editorName = ($panelName+"HyperGraphEd");
+		hyperGraph -e 
+			-graphLayoutStyle "hierarchicalLayout" 
+			-orientation "horiz" 
+			-mergeConnections 0
+			-zoom 1
+			-animateTransition 0
+			-showRelationships 1
+			-showShapes 0
+			-showDeformers 0
+			-showExpressions 0
+			-showConstraints 0
+			-showConnectionFromSelected 0
+			-showConnectionToSelected 0
+			-showConstraintLabels 0
+			-showUnderworld 0
+			-showInvisible 0
+			-transitionFrames 1
+			-opaqueContainers 0
+			-freeform 0
+			-imagePosition 0 0 
+			-imageScale 1
+			-imageEnabled 0
+			-graphType "DAG" 
+			-heatMapDisplay 0
+			-updateSelection 1
+			-updateNodeAdded 1
+			-useDrawOverrideColor 0
+			-limitGraphTraversal -1
+			-range 0 0 
+			-iconSize "smallIcons" 
+			-showCachedConnections 0
+			$editorName // 
+		'''
+		#e = mel.eval('$tmp=$gHyperGraphPanel')
+		# self.showEditor(e, 640, 480)
+		pm.mel.HypergraphHierarchyWindow()
+
+
+
 
 
 

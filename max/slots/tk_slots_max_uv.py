@@ -95,6 +95,20 @@ class Uv(Init):
 				print(error)
 
 
+	def b002(self):
+		'''
+		Transfer Uv's
+		'''
+		sel = pm.ls(orderedSelection=1, flatten=1)
+		if len(sel)<2:
+			return 'Error: The operation requires the selection of two polygon objects.'
+
+		from_ = sel[0]
+		to = sel[-1]
+		pm.transferAttributes(from_, to, transferUVs=2) # 0:no UV sets, 1:single UV set (specified by sourceUVSet and targetUVSet args), and 2:all UV sets are transferred.
+		return 'Result: UV sets transferred from: {} to: {}.'.format(from_.name(), to.name())
+
+
 	def b005(self):
 		'''
 		Cut Uv'S
@@ -236,8 +250,8 @@ class Uv(Init):
 		'''
 		Move To Uv Space
 		'''
-		u = str(self.uv.s000.value())
-		v = str(self.uv.s001.value())
+		u = int(self.uv.s000.value())
+		v = int(self.uv.s001.value())
 
 		pm.polyEditUV(u=u, v=v)
 

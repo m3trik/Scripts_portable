@@ -55,27 +55,27 @@ class Polygons(Init):
 
 		if index>0:
 			if index==cmb.items.index('Extrude'):
-				mel.eval("PolyExtrudeOptions;")
+				pm.mel.PolyExtrudeOptions()
 			elif index==cmb.items.index('Bevel'):
-				mel.eval('BevelPolygonOptions;')
+				pm.mel.BevelPolygonOptions()
 			elif index==cmb.items.index('Bridge'):
-				mel.eval("BridgeEdgeOptions;")
+				pm.mel.BridgeEdgeOptions()
 			elif index==cmb.items.index('Combine'):
-				mel.eval('CombinePolygonsOptions;')
+				pm.mel.CombinePolygonsOptions()
 			elif index==cmb.items.index('Merge Vertex'):
-				mel.eval('PolyMergeOptions;')
+				pm.mel.PolyMergeOptions()
 			elif index==cmb.items.index('Offset Edgeloop'):
-				mel.eval("DuplicateEdgesOptions;")
+				pm.mel.DuplicateEdgesOptions()
 			elif index==cmb.items.index('Edit Edgeflow'):
-				mel.eval("PolyEditEdgeFlowOptions;")
+				pm.mel.PolyEditEdgeFlowOptions()
 			elif index==cmb.items.index('Extract Curve'):
-				mel.eval('CreateCurveFromPolyOptions;')
+				pm.mel.CreateCurveFromPolyOptions()
 			elif index==cmb.items.index('Poke'):
-				mel.eval("PokePolygonOptions;")
+				pm.mel.PokePolygonOptions()
 			elif index==cmb.items.index('Wedge'):
-				mel.eval("WedgePolygonOptions;")
+				pm.mel.WedgePolygonOptions()
 			elif index==cmb.items.index('Assign Invisible'):
-				mel.eval("PolyAssignSubdivHoleOptions;")
+				pm.mel.PolyAssignSubdivHoleOptions()
 			cmb.setCurrentIndex(0)
 
 
@@ -90,18 +90,23 @@ class Polygons(Init):
 			return
 
 		tolerance = float(tb.menu_.s002.value())
-		selection = pm.ls(selection=1, objectsOnly=1)
+		objects = pm.ls(selection=1, objectsOnly=1, flatten=1)
+		componentMode = pm.selectMode(query=1, component=1)
 
-		if selection:
-			if pm.selectMode(query=1, component=1): #merge selected components.
+		if not objects:
+			return 'Warning: <hl>Nothing selected</hl>.<br>Operation requires an object or vertex selection.'
+
+		for obj in objects:
+			objSelVerts = pm.ls(obj, sl=1)
+			if componentMode: #merge selected components.
 				if pm.filterExpand(selectionMask=31): #selectionMask=vertices
-					pm.polyMergeVertex(distance=tolerance, alwaysMergeTwoVertices=True, constructionHistory=True)
+					pm.polyMergeVertex(sel, distance=tolerance, alwaysMergeTwoVertices=True, constructionHistory=True)
 				else: #if selection type =edges or facets:
-					mel.eval("MergeToCenter;")
+					pm.mel.MergeToCenter()
 
 			else: #if object mode. merge all vertices on the selected object.
-				for n, obj in enumerate(selection):
-					if not self.polygons.progressBar.step(n, len(selection)): #register progress while checking for cancellation:
+				for n, vert in enumerate(sel):
+					if not self.polygons.progressBar.step(n, len(sel)): #register progress while checking for cancellation:
 						break
 
 					# get number of vertices
@@ -111,11 +116,7 @@ class Polygons(Init):
 
 				#return to original state
 				pm.select(clear=1)
-
-				for obj in selection:
-					pm.select(obj, add=1)
-		else:
-			return 'Warning: <hl>Nothing selected</hl>.<br>Operation requires an object or vertex selection.'
+				pm.select(objects)
 
 
 	@Init.attr
@@ -218,52 +219,19 @@ class Polygons(Init):
 		edgeMask = pm.selectType (query=True, edge=True)
 		facetMask = pm.selectType (query=True, facet=True)
 
+		sel = pm.ls(sl=1)
+		if not sel:
+			return 'Error: Nothing selected.'
+
 		if vertexMask:
-			mel.eval("polySplitVertex()")
+			pm.mel.polySplitVertex()
 
-		if facetMask:
-			maskVertex = pm.selectType (query=True, vertex=True)
-			if maskVertex:
-				mel.eval("DetachComponent;")
-			else:
-				selFace = pm.ls (ni=1, sl=1)
-				selObj = pm.ls (objectsOnly=1, noIntermediate=1, sl=1) #to errorcheck if more than 1 obj selected
+		elif facetMask:
+			extract = pm.polyChipOff(sel, ch=1, kft=1, dup=0, off=0)
+			return extract
 
-				if len(selFace) < 1:
-					return 'Warning: Nothing selected.'
-
-				# if len(selObj) > 1:
-				# 	return 'Warning: Only components from a single object can be extracted.'
-
-				else:
-					mel.eval("DetachComponent;")
-					# pm.undoInfo (openChunk=1)
-					# sel = str(selFace[0]).split(".") #creates ex. ['polyShape', 'f[553]']
-					# print(sel)
-					# extractedObject = "extracted_"+sel[0]
-					# pm.duplicate (sel[0], name=extractedObject)
-					# if tb.menu_.chk007.isChecked(): #delete original
-					# 	pm.delete (selFace)
-
-					# allFace = [] #populate a list of all faces in the duplicated object
-					# numFaces = pm.polyEvaluate(extractedObject, face=1)
-					# num=0
-					# for _ in range(numFaces):
-					# 	allFace.append(extractedObject+".f["+str(num)+"]")
-					# 	num+=1
-
-					# extFace = [] #faces to keep
-					# for face in selFace:
-					# 	fNum = str(face.split(".")[0]) #ex. f[4]
-					# 	extFace.append(extractedObject+"."+fNum)
-
-					# delFace = [x for x in allFace if x not in extFace] #all faces not in extFace
-					# pm.delete (delFace)
-
-					# pm.select (extractedObject)
-					# pm.xform (cpc=1) #center pivot
-					# pm.undoInfo (closeChunk=1)
-					# return extractedObject
+		else:
+			pm.mel.DetachComponent()
 
 
 	@Init.attr
@@ -328,13 +296,13 @@ class Polygons(Init):
 			return
 
 		if tb.menu_.chk011.isChecked(): #union
-			mel.eval("polyPerformBooleanAction 1 o 0;") #PolygonBooleanIntersection;
+			pm.mel.PolygonBooleanIntersection()
 
 		if tb.menu_.chk012.isChecked(): #difference
-			mel.eval("polyPerformBooleanAction 2 o 0;") #PolygonBooleanDifference;
+			pm.mel.PolygonBooleanDifference()
 
 		if tb.menu_.chk013.isChecked(): #intersection
-			mel.eval("polyPerformBooleanAction 3 o 0;") #PolygonBooleanIntersection;
+			pm.mel.PolygonBooleanIntersection()
 
 
 	@Init.attr
@@ -374,8 +342,8 @@ class Polygons(Init):
 		'''
 		Collapse Component
 		'''
-		# mel.eval("MergeToCenter;") #collapse vertices
-		mel.eval('PolygonCollapse;')
+		# pm.mel.MergeToCenter() #collapse vertices
+		pm.mel.PolygonCollapse()
 
 
 	@Init.attr
@@ -391,64 +359,56 @@ class Polygons(Init):
 		'''
 		Multi-Cut Tool
 		'''
-		mel.eval('dR_multiCutTool;')
+		pm.mel.dR_multiCutTool()
 
 
 	def b021(self):
 		'''
 		Connect Border Edges
 		'''
-		mel.eval("performPolyConnectBorders 0;")
+		pm.mel.performPolyConnectBorders(0)
 
 
 	def b022(self):
 		'''
 		Attach
 		'''
-		mel.eval("dR_connectTool;")
+		pm.mel.dR_connectTool()
 
 
 	def b028(self):
 		'''
 		Quad Draw
 		'''
-		mel.eval("dR_quadDrawTool;")
+		pm.mel.dR_quadDrawTool()
 
 
 	def b032(self):
 		'''
 		Poke
 		'''
-		mel.eval("PokePolygon;")
+		pm.mel.PokePolygon()
 
 
 	def b034(self):
 		'''
 		Wedge
 		'''
-		mel.eval("WedgePolygon;")
+		pm.mel.WedgePolygon()
 
 
 	def b038(self):
 		'''
 		Assign Invisible
 		'''
-		mel.eval("polyHole -assignHole 1;")
+		pm.polyHole(assignHole=1)
 
 
 	def b043(self):
 		'''
 		Target Weld
 		'''
-		mel.eval("dR_targetWeldTool;")
-
-		#max method:
-		# for obj in rt.selection:
-		# 	vertexNum = [i.index for i in obj.selectedVerts]
-		# 	target = rt.polyOp.getVert(obj, index[-1])
-			
-		# 	for vNum in vertexNum:
-		# 		rt.polyop.weldVerts (obj, vertexNum[0], vNum, target)
+		pm.mel.dR_targetWeldTool()
 
 
 	def b045(self):
@@ -458,9 +418,9 @@ class Polygons(Init):
 		symmetryOn = pm.symmetricModelling(query=True, symmetry=True) #query symmetry state
 		if symmetryOn:
 			pm.symmetricModelling(symmetry=False)
-		mel.eval("setPolygonDisplaySettings(\"vertIDs\");") #set vertex id on
-		mel.eval("doBakeNonDefHistory( 1, {\"pre\"});") #history must be deleted
-		mel.eval("performPolyReorderVertex;") #start vertex reorder ctx
+		pm.mel.setPolygonDisplaySettings("vertIDs") #set vertex id on
+		pm.mel.doBakeNonDefHistory(1, "pre") #history must be deleted
+		pm.mel.performPolyReorderVertex() #start vertex reorder ctx
 
 
 	def b046(self):
@@ -472,55 +432,55 @@ class Polygons(Init):
 		facetMask = pm.selectType (query=True, facet=True)
 
 		if facetMask:
-			mel.eval("performPolyPoke 1;")
+			pm.mel.performPolyPoke(1)
 
 		if edgeMask:
-			mel.eval("polySubdivideEdge -ws 0 -s 0 -dv 1 -ch 0;")
+			pm.polySubdivideEdge(ws=0, s=0, dv=1, ch=0)
 
 		if vertexMask:
-			mel.eval("polyChamferVtx 0 0.25 0;")
+			pm.mel.polyChamferVtx(0, 0.25, 0)
 
 
 	def b047(self):
 		'''
 		Insert Edgeloop
 		'''
-		mel.eval("SplitEdgeRingTool;")
+		pm.mel.SplitEdgeRingTool()
 
 
 	def b048(self):
 		'''
 		Collapse Edgering
 		'''
-		mel.eval("bt_polyCollapseEdgeRingTool;")
+		pm.mel.bt_polyCollapseEdgeRingTool()
 
 
 	def b049(self):
 		'''
 		Slide Edge Tool
 		'''
-		mel.eval("SlideEdgeTool;")
+		pm.mel.SlideEdgeTool()
 
 
 	def b050(self):
 		'''
 		Spin Edge
 		'''
-		mel.eval("bt_polySpinEdgeTool;")
+		pm.mel.bt_polySpinEdgeTool()
 
 
 	def b051(self):
 		'''
 		Offset Edgeloop
 		'''
-		mel.eval("performPolyDuplicateEdge 0;")
+		pm.mel.performPolyDuplicateEdge(0)
 
 
 	def b053(self):
 		'''
 		Edit Edge Flow
 		'''
-		mel.eval("PolyEditEdgeFlow;")
+		pm.mel.PolyEditEdgeFlow()
 
 
 
@@ -538,4 +498,67 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
-#b008, b010, b011, b019, b024-27, b058, b059, b060
+
+
+# deprecated:
+
+# @Slots.message
+# 	def tb005(self, state=None):
+# 		'''
+# 		Detach
+# 		'''
+# 		tb = self.ui.tb005
+# 		if state is 'setMenu':
+# 			# tb.menu_.add('QCheckBox', setText='Delete Original', setObjectName='chk007', setChecked=True, setToolTip='Delete original selected faces.')
+# 			return
+
+# 		vertexMask = pm.selectType (query=True, vertex=True)
+# 		edgeMask = pm.selectType (query=True, edge=True)
+# 		facetMask = pm.selectType (query=True, facet=True)
+
+# 		if vertexMask:
+# 			mel.eval("polySplitVertex()")
+
+# 		if facetMask:
+# 			maskVertex = pm.selectType (query=True, vertex=True)
+# 			if maskVertex:
+# 				mel.eval("DetachComponent;")
+# 			else:
+# 				selFace = pm.ls(ni=1, sl=1)
+# 				selObj = pm.ls(objectsOnly=1, noIntermediate=1, sl=1) #to errorcheck if more than 1 obj selected
+
+# 				if len(selFace) < 1:
+# 					return 'Warning: Nothing selected.'
+
+# 				# if len(selObj) > 1:
+# 				# 	return 'Warning: Only components from a single object can be extracted.'
+
+# 				else:
+# 					mel.eval("DetachComponent;")
+# 					# pm.undoInfo (openChunk=1)
+# 					# sel = str(selFace[0]).split(".") #creates ex. ['polyShape', 'f[553]']
+# 					# print(sel)
+# 					# extractedObject = "extracted_"+sel[0]
+# 					# pm.duplicate (sel[0], name=extractedObject)
+# 					# if tb.menu_.chk007.isChecked(): #delete original
+# 					# 	pm.delete (selFace)
+
+# 					# allFace = [] #populate a list of all faces in the duplicated object
+# 					# numFaces = pm.polyEvaluate(extractedObject, face=1)
+# 					# num=0
+# 					# for _ in range(numFaces):
+# 					# 	allFace.append(extractedObject+".f["+str(num)+"]")
+# 					# 	num+=1
+
+# 					# extFace = [] #faces to keep
+# 					# for face in selFace:
+# 					# 	fNum = str(face.split(".")[0]) #ex. f[4]
+# 					# 	extFace.append(extractedObject+"."+fNum)
+
+# 					# delFace = [x for x in allFace if x not in extFace] #all faces not in extFace
+# 					# pm.delete (delFace)
+
+# 					# pm.select (extractedObject)
+# 					# pm.xform (cpc=1) #center pivot
+# 					# pm.undoInfo (closeChunk=1)
+# 					# return extractedObject

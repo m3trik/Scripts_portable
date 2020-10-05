@@ -426,10 +426,11 @@ class Init(Slots):
 		Align vertices.
 
 		args:
-			mode(int) = possible values are align: 0-YZ, 1-XZ, 2-XY, 3-X, 4-Y, 5-Z, 6-XYZ 
-			average=bool - align to average of all selected vertices. else, align to last selected
-			edgeloop=bool - align vertices in edgeloop from a selected edge
-		ex. self.alignVertices(mode=3,average=True,edgeloop=True)
+			mode (int) = possible values are align: 0-YZ, 1-XZ, 2-XY, 3-X, 4-Y, 5-Z, 6-XYZ 
+			average (bool) = align to average of all selected vertices. else, align to last selected
+			edgeloop (bool) = align vertices in edgeloop from a selected edge
+
+		ex. self.alignVertices(mode=3, average=True, edgeloop=True)
 		'''
 		pm.undoInfo (openChunk=True)
 		selectTypeEdge = pm.selectType (query=True, edge=True)
@@ -439,15 +440,15 @@ class Init(Slots):
 
 		mel.eval('PolySelectConvert 3;') #convert to vertices
 		
-		selection=pm.ls(selection=1, flatten=1)
-		lastSelected=pm.ls(tail=1, selection=1, flatten=1)
-		alignTo=pm.xform(lastSelected, query=1, translation=1, worldSpace=1)
-		alignX=alignTo[0]
-		alignY=alignTo[1]
-		alignZ=alignTo[2]
+		selection = pm.ls(selection=1, flatten=1)
+		lastSelected = pm.ls(tail=1, selection=1, flatten=1)
+		alignTo = pm.xform(lastSelected, query=1, translation=1, worldSpace=1)
+		alignX = alignTo[0]
+		alignY = alignTo[1]
+		alignZ = alignTo[2]
 		
 		if average:
-			xyz=pm.xform(selection, query=1, translation=1, worldSpace=1)
+			xyz = pm.xform(selection, query=1, translation=1, worldSpace=1)
 			x = xyz[0::3]
 			y = xyz[1::3]
 			z = xyz[2::3]
@@ -455,38 +456,28 @@ class Init(Slots):
 			alignY = float(sum(y))/(len(xyz)/3)
 			alignZ = float(sum(z))/(len(xyz)/3)
 
-		if len(selection) == 0:
-			viewPortMessage("No vertices selected")
-			
 		if len(selection)<2:
+			if len(selection)==0:
+				viewPortMessage("No vertices selected")
 			viewPortMessage("Selection must contain at least two vertices")
-			
+
 		for vertex in selection:
-			vertexXYZ=pm.xform(vertex, query=1, translation=1, worldSpace=1)
-			vertX=vertexXYZ[0]
-			vertY=vertexXYZ[1]
-			vertZ=vertexXYZ[2]
+			vertexXYZ = pm.xform(vertex, query=1, translation=1, worldSpace=1)
+			vertX = vertexXYZ[0]
+			vertY = vertexXYZ[1]
+			vertZ = vertexXYZ[2]
 			
-			if mode == 0: #align YZ
-				pm.xform(vertex, translation=(vertX, alignY, alignZ), worldSpace=1)
-				
-			if mode == 1: #align XZ
-				pm.xform(vertex, translation=(alignX, vertY, alignZ), worldSpace=1)
-				
-			if mode == 2: #align XY
-				pm.xform(vertex, translation=(alignX, alignY, vertZ), worldSpace=1)
+			modes = {
+				0:(vertX, alignY, alignZ), #align YZ
+				1:(alignX, vertY, alignZ), #align XZ
+				2:(alignX, alignY, vertZ), #align XY
+				3:(alignX, vertY, vertZ),
+				4:(vertX, alignY, vertZ),
+				5:(vertX, vertY, alignZ),
+				6:(alignX, alignY, alignZ), #align XYZ
+			}
 
-			if mode == 3:
-				pm.xform(vertex, translation=(alignX, vertY, vertZ), worldSpace=1)
-			
-			if mode == 4:
-				pm.xform(vertex, translation=(vertX, alignY, vertZ), worldSpace=1)
-			
-			if mode == 5:
-				pm.xform(vertex, translation=(vertX, vertY, alignZ), worldSpace=1)
-
-			if mode == 6: #align XYZ
-				pm.xform(vertex, translation=(alignX, alignY, alignZ), worldSpace=1)
+			pm.xform(vertex, translation=modes[mode], worldSpace=1)
 
 		if selectTypeEdge:
 			pm.selectType (edge=True)
@@ -652,7 +643,7 @@ class Init(Slots):
 		for obj in objects:
 
 			edges = Init.getEdgePath(obj, edges, 'edgeLoop')
-			result.append(edges)
+			[result.append(i) for i in edges]
 
 		return result
 
@@ -674,7 +665,7 @@ class Init(Slots):
 		for obj in objects:
 
 			edges = Init.getEdgePath(obj, edges, 'edgeRing')
-			result.append(edges)
+			[result.append(i) for i in edges]
 
 		return result
 

@@ -156,23 +156,23 @@ class Display(Init):
 		'''
 		index = self.cycle([0,1,2,3,4], 'componentID')
 
-		visible = pm.polyOptions (query=1, displayItemNumbers=1)
+		visible = pm.polyOptions(query=1, displayItemNumbers=1)
 		dinArray = [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]
 
 		if index == 4:
 			i=0
 			for _ in range(4):
 				if visible[i] == True:
-					pm.polyOptions (relative=1, displayItemNumbers=dinArray[i], activeObjects=1)
+					pm.polyOptions(relative=1, displayItemNumbers=dinArray[i], activeObjects=1)
 				i+=1
 
 		if visible[index] != True and index != 4:
-			pm.polyOptions (relative=1, displayItemNumbers=dinArray[index], activeObjects=1)
+			pm.polyOptions(relative=1, displayItemNumbers=dinArray[index], activeObjects=1)
 
 			i=0
 			for _ in range(4):
 				if visible[i] == True and i != index:
-					pm.polyOptions (relative=1, displayItemNumbers=dinArray[i], activeObjects=1)
+					pm.polyOptions(relative=1, displayItemNumbers=dinArray[i], activeObjects=1)
 				i+=1
 
 		if index == 0:
