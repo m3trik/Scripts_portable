@@ -9,26 +9,23 @@ class Duplicate(Init):
 	def __init__(self, *args, **kwargs):
 		super(Duplicate, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('duplicate')
-		self.childUi = self.sb.getUi('duplicate_submenu')
+		self.duplicate.s000.valueChanged.connect(self.radialArray) #update radial array
+		self.duplicate.s001.valueChanged.connect(self.radialArray) 
 
-		self.parentUi.s000.valueChanged.connect(self.radialArray) #update radial array
-		self.parentUi.s001.valueChanged.connect(self.radialArray) 
-
-		self.parentUi.s002.valueChanged.connect(self.duplicateArray) #update duplicate array
-		self.parentUi.s003.valueChanged.connect(self.duplicateArray)
-		self.parentUi.s004.valueChanged.connect(self.duplicateArray)
-		self.parentUi.s005.valueChanged.connect(self.duplicateArray)
-		self.parentUi.s007.valueChanged.connect(self.duplicateArray) 
-		self.parentUi.s008.valueChanged.connect(self.duplicateArray)
-		self.parentUi.s009.valueChanged.connect(self.duplicateArray)
+		self.duplicate.s002.valueChanged.connect(self.duplicateArray) #update duplicate array
+		self.duplicate.s003.valueChanged.connect(self.duplicateArray)
+		self.duplicate.s004.valueChanged.connect(self.duplicateArray)
+		self.duplicate.s005.valueChanged.connect(self.duplicateArray)
+		self.duplicate.s007.valueChanged.connect(self.duplicateArray) 
+		self.duplicate.s008.valueChanged.connect(self.duplicateArray)
+		self.duplicate.s009.valueChanged.connect(self.duplicateArray)
 
 
 	def pin(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.parentUi.pin
+		pin = self.duplicate.pin
 
 		if state is 'setMenu':
 			pin.contextMenu.add(QComboBox_, setObjectName='cmb001', setToolTip='')
@@ -40,7 +37,7 @@ class Duplicate(Init):
 		'''
 		Editors
 		'''
-		cmb = self.parentUi.cmb001
+		cmb = self.duplicate.cmb001
 		
 		if index is 'setMenu':
 			files = ['']
@@ -71,7 +68,7 @@ class Duplicate(Init):
 		'''
 		Duplicate: Translate To Components
 		'''
-		if self.parentUi.chk007.isChecked():
+		if self.duplicate.chk007.isChecked():
 			self.toggleWidgets(setEnabled='chk008,b034,cmb000', setDisabled='chk000,chk009,s005')
 			self.b034()
 		else:
@@ -86,7 +83,7 @@ class Duplicate(Init):
 		global radialPivot
 		radialPivot=[]
 		#add support for averaging multiple components.
-		if self.parentUi.chk010.isChecked():
+		if self.duplicate.chk010.isChecked():
 			selection = pm.ls (selection=1, flatten=1)
 			try:
 				pivot = pm.xform (selection, query=1, translation=1, relative=1)
@@ -97,10 +94,10 @@ class Duplicate(Init):
 			# radialPivot.extend ([pivot[0],pivot[1],pivot[2]])
 			radialPivot.extend (pivot) #extend the list contents
 			text = str(int(pivot[0]))+","+str(int(pivot[1]))+","+str(int(pivot[2])) #convert to int to
-			self.parentUi.chk010.setText(text)
+			self.duplicate.chk010.setText(text)
 		else:
 			del radialPivot[:]
-			self.parentUi.chk010.setText("Set Pivot")
+			self.duplicate.chk010.setText("Set Pivot")
 
 
 	def chk011(self, state=None):
@@ -141,10 +138,10 @@ class Duplicate(Init):
 		'''
 		Radial Array: Preview
 		'''
-		setPivot = self.parentUi.chk010.isChecked() #set pivot point
-		instance = self.parentUi.chk011.isChecked() #instance object
+		setPivot = self.duplicate.chk010.isChecked() #set pivot point
+		instance = self.duplicate.chk011.isChecked() #instance object
 
-		if self.parentUi.chk015.isChecked():
+		if self.duplicate.chk015.isChecked():
 			self.toggleWidgets(setEnabled='b003')
 
 			selection = pm.ls (selection=1, type="transform", flatten=1)
@@ -160,13 +157,13 @@ class Duplicate(Init):
 					pm.select (object_)
 					objectName = str(object_)
 
-					numDuplicates = int(self.parentUi.s000.value())
-					angle = float(self.parentUi.s001.value())
+					numDuplicates = int(self.duplicate.s000.value())
+					angle = float(self.duplicate.s001.value())
 
 					x=y=z = 0
-					if self.parentUi.chk012.isChecked(): x = angle
-					if self.parentUi.chk013.isChecked(): y = angle
-					if self.parentUi.chk014.isChecked(): z = angle
+					if self.duplicate.chk012.isChecked(): x = angle
+					if self.duplicate.chk013.isChecked(): y = angle
+					if self.duplicate.chk014.isChecked(): z = angle
 
 					pm.undoInfo (openChunk=1)
 					for i in xrange(1,numDuplicates):
@@ -266,17 +263,17 @@ class Duplicate(Init):
 		'''
 		Duplicate: Preview
 		'''
-		if self.parentUi.chk016.isChecked():
+		if self.duplicate.chk016.isChecked():
 			self.toggleWidgets(setEnabled='b002')
 
-			instance = self.parentUi.chk000.isChecked()
-			numOfDuplicates = int(self.parentUi.s005.value())
-			keepFacesTogether = self.parentUi.chk009.isChecked()
-			transXYZ = [float(self.parentUi.s002.value()),float(self.parentUi.s003.value()),float(self.parentUi.s004.value())]
-			rotXYZ =  [float(self.parentUi.s007.value()),float(self.parentUi.s008.value()),float(self.parentUi.s009.value())]
-			translateToComponent = self.parentUi.chk007.isChecked()
-			alignToNormal = self.parentUi.chk008.isChecked()
-			componentList = [self.parentUi.cmb000.itemText(i) for i in range(self.parentUi.cmb000.count())]
+			instance = self.duplicate.chk000.isChecked()
+			numOfDuplicates = int(self.duplicate.s005.value())
+			keepFacesTogether = self.duplicate.chk009.isChecked()
+			transXYZ = [float(self.duplicate.s002.value()),float(self.duplicate.s003.value()),float(self.duplicate.s004.value())]
+			rotXYZ =  [float(self.duplicate.s007.value()),float(self.duplicate.s008.value()),float(self.duplicate.s009.value())]
+			translateToComponent = self.duplicate.chk007.isChecked()
+			alignToNormal = self.duplicate.chk008.isChecked()
+			componentList = [self.duplicate.cmb000.itemText(i) for i in range(self.duplicate.cmb000.count())]
 			
 			try: pm.delete(duplicateObjList[1:]) #delete all the geometry in the list, except the original obj
 			except e as error:
@@ -364,7 +361,7 @@ class Duplicate(Init):
 		'''
 		Duplicate: Create
 		'''
-		self.parentUi.chk016.setChecked(False) #must be in the false unchecked state to catch the create flag in chk015
+		self.duplicate.chk016.setChecked(False) #must be in the false unchecked state to catch the create flag in chk015
 		self.chk016(create=True)
 
 
@@ -372,7 +369,7 @@ class Duplicate(Init):
 		'''
 		Radial Array: Create
 		'''
-		self.parentUi.chk015.setChecked(False) #must be in the false unchecked state to catch the create flag in chk015
+		self.duplicate.chk015.setChecked(False) #must be in the false unchecked state to catch the create flag in chk015
 		self.chk015(create=True)
 
 
@@ -381,7 +378,7 @@ class Duplicate(Init):
 		'''
 		Select Instanced Objects
 		'''
-		if self.parentUi.chk016.isChecked(): #select all instances
+		if self.duplicate.chk016.isChecked(): #select all instances
 			import maya.OpenMaya as om
 			#get all Instanced objects
 			instances = []
@@ -417,7 +414,7 @@ class Duplicate(Init):
 		'''
 		Add Selected Components To cmb000
 		'''
-		self.comboBox(self.parentUi.cmb000, pm.ls(selection=1, flatten=1))
+		self.comboBox(self.duplicate.cmb000, pm.ls(selection=1, flatten=1))
 
 
 

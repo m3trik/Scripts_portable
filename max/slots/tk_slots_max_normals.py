@@ -9,17 +9,14 @@ class Normals(Init):
 	def __init__(self, *args, **kwargs):
 		super(Normals, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('normals')
-		self.childUi = self.sb.getUi('normals_submenu')
-
-		self.parentUi.b003.setText('Hard Edge Display')
+		self.normals.b003.setText('Hard Edge Display')
 
 
 	def pin(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.parentUi.pin
+		pin = self.normals.pin
 
 		if state is 'setMenu':
 			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
@@ -30,17 +27,17 @@ class Normals(Init):
 		'''
 		Editors
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.normals.cmb000
 
 		if index is 'setMenu':
 			list_ = ['']
 			cmb.addItems_(list_, '')
 			return
 
-		# if index>0:
-		# 	if index==cmb.items.index(''):
-		# 		pass
-		# 	cmb.setCurrentIndex(0)
+		if index>0:
+			if index==cmb.items.index(''):
+				pass
+			cmb.setCurrentIndex(0)
 
 
 	@Slots.message
@@ -111,7 +108,7 @@ class Normals(Init):
 
 	def tb002(self, state=None):
 		'''
-		Set Normal Angle
+		Set Normal By Angle
 		'''
 		tb = self.currentUi.tb002
 		if state is 'setMenu':
@@ -155,7 +152,7 @@ class Normals(Init):
 		print('Error: No 3ds Version.')
 		tb.setDisabled(True)
 		# all_ = tb.menu_.chk001.isChecked()
-		# state = self.parentUi.chk002.isChecked()#pm.polyNormalPerVertex(vertex, query=1, freezeNormal=1)
+		# state = self.normals.chk002.isChecked()#pm.polyNormalPerVertex(vertex, query=1, freezeNormal=1)
 		# selection = pm.ls (selection=1, objectsOnly=1)
 		# maskObject = pm.selectMode (query=1, object=1)
 		# maskVertex = pm.selectType (query=1, vertex=1)
@@ -185,6 +182,26 @@ class Normals(Init):
 		# 		return 'Error: Selection must be object or vertex.'
 		# else:
 		# 	return Error: No object selected.'
+
+
+	def tb004(self, state=None):
+		'''
+		Average Normals
+		'''
+		tb = self.currentUi.tb004
+		if state is 'setMenu':
+			tb.menu_.add('QCheckBox', setText='By UV Shell', setObjectName='chk003', setToolTip='Average the normals of each object\'s faces per UV shell.')
+			return
+
+		byUvShell = tb.menu_.chk003.isChecked()
+
+		if byUvShell:
+			sets_ = Init.getUvShellSets(obj)
+			for set_ in sets_:
+				pm.polySetToFaceNormal(set_)
+				pm.polyAverageNormal(set_)
+		else:
+			maxEval('macros.run "PolyTools" "SmoothSelection"')
 
 
 	def b001(self):
@@ -224,13 +241,6 @@ class Normals(Init):
 		Set To Face
 		'''
 		maxEval('macros.run "PolyTools" "HardSelection"')
-
-
-	def b007(self):
-		'''
-		Average Normals
-		'''
-		maxEval('macros.run "PolyTools" "SmoothSelection"')
 
 
 	def b009(self):

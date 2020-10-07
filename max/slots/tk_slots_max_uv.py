@@ -49,8 +49,22 @@ class Uv(Init):
 			elif index==6: #UV Linking: Paint Effects/UV
 				maxEval('pfxUVLinkingEditor;')
 			elif index==7: #UV Linking: Hair/UV
-				mel.evel('hairUVLinkingEditor;')
+				maxEval('hairUVLinkingEditor;')
 			self.uv.cmb000.setCurrentIndex(0)
+
+
+	# def chk001(self, state):
+	# 	'''
+	# 	Auto Unwrap: Scale Mode CheckBox
+	# 	'''
+	# 	tb = self.currentUi.tb001
+	# 	if state==0:
+	# 		tb.menu_.chk001.setText('Scale Mode 0')
+	# 	if state==1:
+	# 		tb.menu_.chk001.setText('Scale Mode 1')
+	# 		self.toggleWidgets(tb.menu_, setUnChecked='chk002-6')
+	# 	if state==2:
+	# 		tb.menu_.chk001.setText('Scale Mode 2')
 
 
 	def lbl000(self):
@@ -67,6 +81,81 @@ class Uv(Init):
 		'''
 		pm.selectMode(component=1)
 		pm.selectType(polymeshUV=1)
+
+
+	def tb000(self, state=None):
+		'''
+		Pack UV's
+
+		pm.u3dLayout:
+			layoutScaleMode (int),
+			multiObject (bool),
+			mutations (int),
+			packBox (float, float, float, float),
+			preRotateMode (int),
+			preScaleMode (int),
+			resolution (int),
+			rotateMax (float),
+			rotateMin (float),
+			rotateStep (float),
+			shellSpacing (float),
+			tileAssignMode (int),
+			tileMargin (float),
+			tileU (int),
+			tileV (int),
+			translate (bool)
+		'''
+		tb = self.currentUi.tb000
+		if state is 'setMenu':
+			tb.menu_.add('QCheckBox', setText='Rotate', setObjectName='chk000', setToolTip='Allow shell rotation during packing.')
+			return
+
+		rotate = tb.menu_.chk000.isChecked()
+
+		obj = rt.selection[0]
+
+		uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv modifier.
+		uv.pack(1, 0.01, True, rotate, True) #Lets you pack the texture vertex elements so that they fit within a square space.
+		# --method - 0 is a linear packing algorithm fast but not that efficient, 1 is a recursive algorithm slower but more efficient.
+		# --spacing - the gap between cluster in percentage of the edge distance of the square
+		# --normalize - determines whether the clusters will be fit to 0 to 1 space.
+		# --rotate - determines whether a cluster will be rotated so it takes up less space.
+		# --fillholes - determines whether smaller clusters will be put in the holes of the larger cluster.
+
+
+	@Init.attr
+	def tb001(self, state=None):
+		'''
+		Auto Unwrap
+		'''
+		tb = self.currentUi.tb001
+		if state is 'setMenu':
+			tb.menu_.add('QCheckBox', setText='Scale Mode 0', setObjectName='chk001', setTristate=True, setToolTip='0 - No scale is applied.<br>1 - Uniform scale to fit in unit square.<br>2 - Non proportional scale to fit in unit square.')
+			tb.menu_.add('QRadioButton', setText='Seam Only', setObjectName='chk002', setToolTip='Cut seams only.')
+			tb.menu_.add('QRadioButton', setText='Planar', setObjectName='chk003', setToolTip='Create UV texture coordinates for the current selection by using a planar projection shape.')
+			tb.menu_.add('QRadioButton', setText='Cylindrical', setObjectName='chk004', setToolTip='Create UV texture coordinates for the current selection, using a cylidrical projection that gets wrapped around the mesh.<br>Best suited for completely enclosed cylidrical shapes with no holes or projections on the surface.')
+			tb.menu_.add('QRadioButton', setText='Spherical', setObjectName='chk005', setToolTip='Create UV texture coordinates for the current selection, using a spherical projection that gets wrapped around the mesh.<br>Best suited for completely enclosed spherical shapes with no holes or projections on the surface.')
+			tb.menu_.add('QRadioButton', setText='Normal-Based', setObjectName='chk006', setToolTip='Create UV texture coordinates for the current selection by creating a planar projection based on the average vector of it\'s face normals.')
+			
+			# tb.menu_.chk001.toggled.connect(lambda state: self.toggleWidgets(tb.menu_, setUnChecked='chk002-3') if state==1 else None)
+			return
+
+		scaleMode = self.uv.chk001.isChecked()
+		seamOnly = self.uv.chk002.isChecked()
+		planarUnwrap = self.uv.chk003.isChecked()
+		cylindricalUnwrap = self.uv.chk004.isChecked()
+		sphericalUnwrap = self.uv.chk005.isChecked()
+		normalBasedUnwrap = self.uv.chk006.isChecked()
+
+		objects = rt.selection
+
+		for obj in objects:
+			try:
+				uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv modifier.
+				uv.FlattenBySmoothingGroup(scaleMode, False, 0.2)
+
+			except Exception as error:
+				print(error)
 
 
 	def b000(self):
@@ -119,22 +208,6 @@ class Uv(Init):
 		uv.breakSelected()
 
 
-	def b006(self):
-		'''
-		Pack UV's
-		'''
-		rotate = self.uv.chk001.isChecked() #rotate uv's
-		obj = rt.selection[0]
-
-		uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv modifier.
-		uv.pack(1, 0.01, True, rotate, True) #Lets you pack the texture vertex elements so that they fit within a square space.
-		# --method - 0 is a linear packing algorithm fast but not that efficient, 1 is a recursive algorithm slower but more efficient.
-		# --spacing - the gap between cluster in percentage of the edge distance of the square
-		# --normalize - determines whether the clusters will be fit to 0 to 1 space.
-		# --rotate - determines whether a cluster will be rotated so it takes up less space.
-		# --fillholes - determines whether smaller clusters will be put in the holes of the larger cluster.
-
-
 	def b007(self):
 		'''
 		Display Checkered Pattern
@@ -183,21 +256,6 @@ class Uv(Init):
 
 		uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv modifier.
 		uv.stitchVerts(True, 1.0) #(align, bias) --Bias of 0.0 the vertices will move to the source and 1.0 they will move to the target. 
-
-
-	def b012(self):
-		'''
-		Auto Unwrap
-		'''
-		scaleMode = self.uv.chk000.isChecked() #0 No scale is applied. 1 Uniform scale to fit in unit square. 2 Non proportional scale to fit in unit square.
-		objects = rt.selection
-
-		for obj in objects:
-			try:
-				uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv modifier.
-				uv.FlattenBySmoothingGroup(scaleMode, False, 0.2)
-			except Exception as error:
-				print(error)
 
 
 	def b013(self):

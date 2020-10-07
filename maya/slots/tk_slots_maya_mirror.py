@@ -79,32 +79,32 @@ class Mirror(Init):
 		mergeThreshold = tb.menu_.s000.value()
 
 		if axis=='X': #'x'
-			axisDirection = 1 #mirror toward negative axis
+			axisDirection = 0 #mirror toward negative axis
 			axis_ = 0 #axis
 			x=-1; y=1; z=1 #scale values
 
 		elif axis=='-X': #'-x'
-			axisDirection = 0 #mirror toward positive axis
+			axisDirection = 1 #mirror toward positive axis
 			axis_ = 1 #0=-x, 1=x, 2=-y, 3=y, 4=-z, 5=z 
 			x=-1; y=1; z=1 #if instance: used to negatively scale
 
 		elif axis=='Y': #'y'
-			axisDirection = 1
+			axisDirection = 0
 			axis_ = 2
 			x=1; y=-1; z=1
 
 		elif axis=='-Y': #'-y'
-			axisDirection = 0
+			axisDirection = 1
 			axis_ = 3
 			x=1; y=-1; z=1
 
 		elif axis=='Z': #'z'
-			axisDirection = 1
+			axisDirection = 0
 			axis_ = 4
 			x=1; y=1; z=-1
 
 		elif axis=='-Z': #'-z'
-			axisDirection = 0
+			axisDirection = 1
 			axis_ = 5
 			x=1; y=1; z=-1
 
@@ -114,15 +114,20 @@ class Mirror(Init):
 
 		pm.undoInfo(openChunk=1)
 		objects = [n for n in pm.listRelatives(selection, allDescendents=1) if pm.objectType(n, isType='mesh')] #get any mesh type child nodes of obj.
-		if cutMesh:
-			self.deleteAlongAxis(objects, axis) #delete mesh faces that fall inside the specified axis.
 
-		if instance: #create instance and scale negatively
-			inst = pm.instance(objects) # bt_convertToMirrorInstanceMesh(0); #x=0, y=1, z=2, -x=3, -y=4, -z=5
-			return pm.xform(inst, scale=[x,y,z]) #pm.scale(z,x,y, pivot=(0,0,0), relative=1) #swap the xyz values to transform the instanced node
+		for obj in objects:
+			if cutMesh:
+				self.deleteAlongAxis(obj, axis) #delete mesh faces that fall inside the specified axis.
 
-		else: #mirror
-			return pm.polyMirrorFace(objects, mirrorAxis=axisDirection, direction=axis_, mergeMode=1, mergeThresholdType=1, mergeThreshold=mergeThreshold, worldSpace=0, smoothingAngle=30, flipUVs=0, ch=1) #mirrorPosition x, y, z - This flag specifies the position of the custom mirror axis plane
+			if instance: #create instance and scale negatively
+				inst = pm.instance(obj) # bt_convertToMirrorInstanceMesh(0); #x=0, y=1, z=2, -x=3, -y=4, -z=5
+				pm.xform(inst, scale=[x,y,z]) #pm.scale(z,x,y, pivot=(0,0,0), relative=1) #swap the xyz values to transform the instanced node
+				return inst if len(objects)==1 else inst 
+
+			else: #mirror
+				polyMirrorFace = pm.polyMirrorFace(obj, mirrorAxis=axisDirection, direction=axis_, mergeMode=1, mergeThresholdType=1, mergeThreshold=mergeThreshold, worldSpace=0, smoothingAngle=30, flipUVs=0, ch=1) #mirrorPosition x, y, z - This flag specifies the position of the custom mirror axis plane
+				return polyMirrorFace if len(objects)==1 else polyMirrorFace
+
 		pm.undoInfo(closeChunk=1)
 
 

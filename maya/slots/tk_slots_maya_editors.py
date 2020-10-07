@@ -110,15 +110,16 @@ class Editors(Init):
 		'''
 		# e = mel.eval('$tmp=$gToolSettingsForm')
 		# self.showEditor(e, 461, 480)
-		print(pm.toolPropertyWindow())
+		pm.toolPropertyWindow()
 
 
 	def v003(self):
 		'''
 		Layers
 		'''
-		e = mel.eval('$tmp=$gLayerEditorForm')
-		self.showEditor(e, 320, 480)
+		# e = mel.eval('$tmp=$gLayerEditorForm')
+		# self.showEditor(e, 320, 480)
+		pm.mel.OpenLayerEditor()
 
 
 	def v004(self):

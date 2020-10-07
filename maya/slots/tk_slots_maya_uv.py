@@ -55,6 +55,20 @@ class Uv(Init):
 			cmb.setCurrentIndex(0)
 
 
+	def chk001(self, state):
+		'''
+		Auto Unwrap: Scale Mode CheckBox
+		'''
+		tb = self.currentUi.tb001
+		if state==0:
+			tb.menu_.chk001.setText('Scale Mode 0')
+		if state==1:
+			tb.menu_.chk001.setText('Scale Mode 1')
+			self.toggleWidgets(tb.menu_, setUnChecked='chk002-6')
+		if state==2:
+			tb.menu_.chk001.setText('Scale Mode 2')
+
+
 	def lbl000(self):
 		'''
 		Uv Shell Selection Mask
@@ -69,6 +83,102 @@ class Uv(Init):
 		'''
 		pm.selectMode(component=1)
 		pm.selectType(polymeshUV=1)
+
+
+	def tb000(self, state=None):
+		'''
+		Pack UV's
+
+		pm.u3dLayout:
+			layoutScaleMode (int),
+			multiObject (bool),
+			mutations (int),
+			packBox (float, float, float, float),
+			preRotateMode (int),
+			preScaleMode (int),
+			resolution (int),
+			rotateMax (float),
+			rotateMin (float),
+			rotateStep (float),
+			shellSpacing (float),
+			tileAssignMode (int),
+			tileMargin (float),
+			tileU (int),
+			tileV (int),
+			translate (bool)
+		'''
+		tb = self.currentUi.tb000
+		if state is 'setMenu':
+			tb.menu_.add('QCheckBox', setText='Rotate', setObjectName='chk000', setToolTip='Allow shell rotation during packing.')
+			return
+
+		rotate = tb.menu_.chk000.isChecked()
+
+		rotateMax = 0.0
+		if rotate:
+			rotateMax = 360.0
+
+		sel = pm.ls(sl=1)
+		packUv = pm.u3dLayout(sel, resolution=2048, preScaleMode=1, shellSpacing=.005, tileMargin=.005, packBox=[0,1,0,1], rotateMax=rotateMax) #layoutScaleMode (int), multiObject (bool), mutations (int), packBox (float, float, float, float), preRotateMode (int), preScaleMode (int), resolution (int), rotateMax (float), rotateMin (float), rotateStep (float), shellSpacing (float), tileAssignMode (int), tileMargin (float), tileU (int), tileV (int), translate (bool)
+
+
+	@Init.attr
+	def tb001(self, state=None):
+		'''
+		Auto Unwrap
+		'''
+		tb = self.currentUi.tb001
+		if state is 'setMenu':
+			tb.menu_.add('QCheckBox', setText='Scale Mode 0', setObjectName='chk001', setTristate=True, setToolTip='0 - No scale is applied.<br>1 - Uniform scale to fit in unit square.<br>2 - Non proportional scale to fit in unit square.')
+			tb.menu_.add('QRadioButton', setText='Seam Only', setObjectName='chk002', setToolTip='Cut seams only.')
+			tb.menu_.add('QRadioButton', setText='Planar', setObjectName='chk003', setToolTip='Create UV texture coordinates for the current selection by using a planar projection shape.')
+			tb.menu_.add('QRadioButton', setText='Cylindrical', setObjectName='chk004', setToolTip='Create UV texture coordinates for the current selection, using a cylidrical projection that gets wrapped around the mesh.<br>Best suited for completely enclosed cylidrical shapes with no holes or projections on the surface.')
+			tb.menu_.add('QRadioButton', setText='Spherical', setObjectName='chk005', setToolTip='Create UV texture coordinates for the current selection, using a spherical projection that gets wrapped around the mesh.<br>Best suited for completely enclosed spherical shapes with no holes or projections on the surface.')
+			tb.menu_.add('QRadioButton', setText='Normal-Based', setObjectName='chk006', setToolTip='Create UV texture coordinates for the current selection by creating a planar projection based on the average vector of it\'s face normals.')
+			
+			# tb.menu_.chk001.toggled.connect(lambda state: self.toggleWidgets(tb.menu_, setUnChecked='chk002-3') if state==1 else None)
+			return
+
+		scaleMode = self.uv.chk001.isChecked()
+		seamOnly = self.uv.chk002.isChecked()
+		planarUnwrap = self.uv.chk003.isChecked()
+		cylindricalUnwrap = self.uv.chk004.isChecked()
+		sphericalUnwrap = self.uv.chk005.isChecked()
+		normalBasedUnwrap = self.uv.chk006.isChecked()
+
+		selection = pm.ls(selection=1, flatten=1)
+		for obj in selection:
+			try:
+				if seamOnly:
+					autoSeam = pm.u3dAutoSeam(obj, s=0, p=1)
+					return autoSeam if len(selection)==1 else autoSeam
+
+				elif any((cylindricalUnwrap, sphericalUnwrap, planarUnwrap)):
+					unwrapType = 'Planar'
+					if cylindricalUnwrap:
+						unwrapType = 'Cylindrical'
+					elif sphericalUnwrap:
+						unwrapType = 'Spherical'
+					objFaces = Init.getSelectedComponents('faces', obj)
+					if not objFaces:
+						objFaces = Init.getComponents(obj, 'faces')
+					pm.polyProjection(objFaces, type=unwrapType, insertBeforeDeformers=1, smartFit=1)
+
+				elif normalBasedUnwrap:
+					pm.mel.texNormalProjection(1, 1, obj) #Normal-Based unwrap
+
+				else:
+					polyAutoProjection = pm.polyAutoProjection (obj, layoutMethod=0, optimize=1, insertBeforeDeformers=1, scaleMode=scaleMode, createNewMap=False, #Create a new UV set, as opposed to editing the current one, or the one given by the -uvSetName flag.
+						projectBothDirections=0, #If "on" : projections are mirrored on directly opposite faces. If "off" : projections are not mirrored on opposite faces. 
+						layout=2, #0 UV pieces are set to no layout. 1 UV pieces are aligned along the U axis. 2 UV pieces are moved in a square shape.
+						planes=6, #intermediate projections used. Valid numbers are 4, 5, 6, 8, and 12
+						percentageSpace=0.2, #percentage of the texture area which is added around each UV piece.
+						worldSpace=0) #1=world reference. 0=object reference.
+
+					return polyAutoProjection if len(selection)==1 else polyAutoProjection
+
+			except Exception as error:
+				print(error)
 
 
 	def b000(self):
@@ -103,48 +213,16 @@ class Uv(Init):
 		'''
 		Cut Uv'S
 		'''
-		objects = pm.ls(selection=1, objectsOnly=1, flatten=1)
+		objects = pm.ls(selection=1, objectsOnly=1, shapes=1, flatten=1)
 
 		for obj in objects:
 			sel = pm.ls(obj, sl=1)
-			pm.polyMapCut()
-
-
-	@Init.attr
-	def b006(self):
-		'''
-		Pack UV's
-
-		pm.u3dLayout:
-			layoutScaleMode (int),
-			multiObject (bool),
-			mutations (int),
-			packBox (float, float, float, float),
-			preRotateMode (int),
-			preScaleMode (int),
-			resolution (int),
-			rotateMax (float),
-			rotateMin (float),
-			rotateStep (float),
-			shellSpacing (float),
-			tileAssignMode (int),
-			tileMargin (float),
-			tileU (int),
-			tileV (int),
-			translate (bool)
-		'''
-		rotate = self.uv.chk001.isChecked() #rotate uv's
-		rotateMax = 0.0
-		if rotate:
-			rotateMax = 360.0
-
-		obj = pm.ls(sl=1)
-		return pm.u3dLayout(obj, resolution=2048, preScaleMode=1, shellSpacing=.75, tileMargin=.75, packBox=[0,1,0,1], rotateMax=rotateMax) #layoutScaleMode (int), multiObject (bool), mutations (int), packBox (float, float, float, float), preRotateMode (int), preScaleMode (int), resolution (int), rotateMax (float), rotateMin (float), rotateStep (float), shellSpacing (float), tileAssignMode (int), tileMargin (float), tileU (int), tileV (int), translate (bool)
+			pm.polyMapCut(sel)
 
 
 	def b007(self):
 		'''
-		Display Checkered Pattern
+		Display: Checkered Pattern
 		'''
 		state = pm.textureWindow('polyTexturePlacementPanel1', displayCheckered=1, query=1)
 		pm.textureWindow('polyTexturePlacementPanel1', edit=1, displayCheckered=(not state))	
@@ -159,7 +237,7 @@ class Uv(Init):
 
 	def b009(self):
 		'''
-		Borders
+		Display: Borders
 		'''
 		pm.mel.textureWindowCreatePopupContextMenu("polyTexturePlacementPanel1popupMenusShift")
 		borders = pm.polyOptions(query=1, displayMapBorder=1)
@@ -169,7 +247,7 @@ class Uv(Init):
 
 	def b010(self):
 		'''
-		Distortion
+		Display: Distortion
 		'''
 		winName = pm.getPanel(scriptType='polyTexturePlacementPanel')
 		state = int(pm.textureWindow(winName[0], query=1, displayDistortion=1))
@@ -180,35 +258,17 @@ class Uv(Init):
 			pm.textureWindow(winName[0], edit=1, displayDistortion=0)
 
 
+	@Init.attr
 	def b011(self):
 		'''
 		Sew Uv'S
 		'''
-		objects = pm.ls(selection=1, objectsOnly=1, flatten=1)
+		objects = pm.ls(selection=1, objectsOnly=1, shapes=1, flatten=1)
 
 		for obj in objects:
 			sel = pm.ls(obj, sl=1)
-			pm.polyMapSew(sel)
 
-
-	@Init.attr
-	def b012(self):
-		'''
-		Auto Unwrap
-		'''
-		scaleMode = self.uv.chk000.isChecked() #0 No scale is applied. 1 Uniform scale to fit in unit square. 2 Non proportional scale to fit in unit square.
-		objects = pm.ls(selection=1, objectsOnly=1, flatten=1) #get shape nodes
-
-		for obj in objects:
-			try:
-				return pm.polyAutoProjection (obj, layoutMethod=0, optimize=1, insertBeforeDeformers=1, scaleMode=scaleMode, createNewMap=False, #Create a new UV set, as opposed to editing the current one, or the one given by the -uvSetName flag.
-					projectBothDirections=0, #If "on" : projections are mirrored on directly opposite faces. If "off" : projections are not mirrored on opposite faces. 
-					layout=2, #0 UV pieces are set to no layout. 1 UV pieces are aligned along the U axis. 2 UV pieces are moved in a square shape.
-					planes=6, #intermediate projections used. Valid numbers are 4, 5, 6, 8, and 12
-					percentageSpace=0.2, #percentage of the texture area which is added around each UV piece.
-					worldSpace=0) #1=world reference. 0=object reference.
-			except Exception as error:
-				print(error)
+			return pm.polyMapSew(sel) if len(objects)==1 else pm.polyMapSew(sel)
  
 
 	def b013(self):
@@ -286,8 +346,10 @@ class Uv(Init):
 		'''
 		Stack Similar
 		'''
+		tol = 0.5
 		obj = pm.ls(sl=1)
-		similar = pm.polyUVStackSimilarShells(obj, to=0.1)
+
+		similar = pm.polyUVStackSimilarShells(obj, tolerance=tol)
 
 
 

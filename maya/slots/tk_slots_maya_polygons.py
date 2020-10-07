@@ -97,16 +97,16 @@ class Polygons(Init):
 			return 'Warning: <hl>Nothing selected</hl>.<br>Operation requires an object or vertex selection.'
 
 		for obj in objects:
-			objSelVerts = pm.ls(obj, sl=1)
+			object_vert_sel = pm.ls(obj, sl=1)
 			if componentMode: #merge selected components.
 				if pm.filterExpand(selectionMask=31): #selectionMask=vertices
-					pm.polyMergeVertex(sel, distance=tolerance, alwaysMergeTwoVertices=True, constructionHistory=True)
+					pm.polyMergeVertex(object_vert_sel, distance=tolerance, alwaysMergeTwoVertices=True, constructionHistory=True)
 				else: #if selection type =edges or facets:
 					pm.mel.MergeToCenter()
 
 			else: #if object mode. merge all vertices on the selected object.
-				for n, vert in enumerate(sel):
-					if not self.polygons.progressBar.step(n, len(sel)): #register progress while checking for cancellation:
+				for n, vert in enumerate(object_vert_sel):
+					if not self.polygons.progressBar.step(n, len(object_vert_sel)): #register progress while checking for cancellation:
 						break
 
 					# get number of vertices
@@ -219,15 +219,15 @@ class Polygons(Init):
 		edgeMask = pm.selectType (query=True, edge=True)
 		facetMask = pm.selectType (query=True, facet=True)
 
-		sel = pm.ls(sl=1)
-		if not sel:
+		component_sel = pm.ls(sl=1)
+		if not component_sel:
 			return 'Error: Nothing selected.'
 
 		if vertexMask:
 			pm.mel.polySplitVertex()
 
 		elif facetMask:
-			extract = pm.polyChipOff(sel, ch=1, kft=1, dup=0, off=0)
+			extract = pm.polyChipOff(component_sel, ch=1, kft=1, dup=0, off=0)
 			return extract
 
 		else:
@@ -334,8 +334,8 @@ class Polygons(Init):
 		'''
 		cuttingDirection = 'Y' #valid values: 'x','y','z' A value of 'x' will cut the object along the YZ plane cutting through the center of the bounding box. 'y':ZX. 'z':XY.
 
-		sel = pm.ls(sl=1)
-		return pm.polyCut(sel, cuttingDirection=cuttingDirection, ch=1)
+		component_sel = pm.ls(sl=1)
+		return pm.polyCut(component_sel, cuttingDirection=cuttingDirection, ch=1)
 
 
 	def b009(self):

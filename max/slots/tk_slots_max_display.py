@@ -9,15 +9,12 @@ class Display(Init):
 	def __init__(self, *args, **kwargs):
 		super(Display, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('display')
-		self.childUi = self.sb.getUi('display_submenu')
-
 
 	def pin(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.parentUi.pin
+		pin = self.display.pin
 
 		if state is 'setMenu':
 			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
@@ -28,7 +25,7 @@ class Display(Init):
 		'''
 		Editors
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.display.cmb000
 
 		if index is 'setMenu':
 			list_ = ['']
@@ -137,7 +134,7 @@ class Display(Init):
 		'''
 		Override Material
 		'''
-		if self.parentUi.chk000.isChecked(): #override with UV checker material
+		if self.display.chk000.isChecked(): #override with UV checker material
 			self.toggleMaterialOverride(checker=1)
 		else:
 			self.toggleMaterialOverride()

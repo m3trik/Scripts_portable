@@ -121,22 +121,15 @@ class Init(Slots):
 	# ------------------------------------------------
 
 	@staticmethod
-	def getSelectedComponents(type_='vertices'):
-		'''
-		Get the component selection of the given type.
-		'''
-		types = {'vertices':31, 'edges':32, 'faces':34}
-
-		components = pm.filterExpand(selectionMask=types[type_])
-		selectedComponents = [c.split('[')[-1].rstrip(']') for c in components] if components else []
-
-		return selectedComponents
-
-
-	@staticmethod
-	def getComponents(obj, type_='vertices'):
+	def getComponents(obj, type_):
 		'''
 		Get the components of the given type from the given object.
+
+		args:
+			obj (obj) = The polygonal object to get the components of.
+
+		returns:
+			(list) component objects.
 		'''
 		if isinstance(obj, (str, unicode)):
 			obj = pm.ls(obj)[0]
@@ -144,9 +137,80 @@ class Init(Slots):
 		types = {'vertices':'vtx', 'edges':'e', 'faces':'f'}
 
 		component = getattr(obj, types[type_])
-		components = [component[n] for n in xrange(pm.polyEvaluate(obj, vertex=True))]
+		
+		if type_ is 'vertices':
+			num_of_components = pm.polyEvaluate(obj, vertex=True)
+		if type_ is 'edges':
+			num_of_components = pm.polyEvaluate(obj, edge=True)
+		if type_ is 'faces':
+			num_of_components = pm.polyEvaluate(obj, face=True)
+
+		components = [component[n] for n in xrange(num_of_components)]
 
 		return components
+
+
+	@staticmethod
+	def getSelectedComponents(type_, obj=None, returnType='obj'):
+		'''
+		Get the component selection of the given type.
+
+		args:
+			obj (obj) = If a polygonal object is given, then only selected components from that object will be returned.
+
+		returns:
+			(list) component objects.
+		'''
+		types = {'vertices':31, 'edges':32, 'faces':34}
+
+		if obj:
+			components = pm.filterExpand(pm.ls(obj, sl=1), selectionMask=types[type_])
+		else:
+			components = pm.filterExpand(selectionMask=types[type_])
+
+		if returnType is 'str':
+			selectedComponents = [str(c.split('[')[-1].rstrip(']')) for c in components] if components else []
+		if returnType is 'int':
+			selectedComponents = [int(c.split('[')[-1].rstrip(']')) for c in components] if components else []
+		if returnType is 'obj':
+			attrs = {'vertices':'vtx', 'edges':'e', 'faces':'f'}
+			selectedComponents = [getattr(obj, attrs[type_])[n] for n in xrange(len(components))] if components else []
+
+		return selectedComponents
+
+
+	@staticmethod
+	def getUvShellSets(objects=None):
+		'''
+		Get All UV shells and their corresponding sets of faces.
+
+		args:
+			objects (obj)(list) = Polygon object(s).
+
+		returns:
+			(dict) ex. {0L:[[MeshFace(u'pShape.f[0]'), MeshFace(u'pShape.f[1]')], 1L:[[MeshFace(u'pShape.f[2]'), MeshFace(u'pShape.f[3]')]}
+		'''
+		if not objects:
+			objects = pm.ls(selection=1, objectsOnly=1, transforms=1, flatten=1)
+
+		if not isinstance(objects, (list, set, tuple)):
+			objects=[objects]
+
+		shells={}
+		for obj in objects:
+			faces = Init.getComponents(obj, 'faces')
+			for face in faces:
+				shell_Id = pm.polyEvaluate(face, uvShellIds=True)
+
+				try:
+					shells[shell_Id[0]].append(face)
+				except KeyError:
+					try:
+						shells[shell_Id[0]]=[face]
+					except IndexError:
+						pass
+
+		return shells
 
 
 	@staticmethod
@@ -321,8 +385,8 @@ class Init(Slots):
 		returns:
 			(list) closest vertex pairs by order of distance (excluding those not meeting the tolerance). (<vertex from set1>, <vertex from set2>).
 
-		ex. verts1 = Init.getComponents('pCube1')
-			verts2 = Init.getComponents('pCube2')
+		ex. verts1 = Init.getComponents('pCube1', 'vertices')
+			verts2 = Init.getComponents('pCube2', 'vertices')
 			closestVerts = getClosestVerts(verts1, verts2)
 		'''
 		vertPairsAndDistance={}
@@ -1534,6 +1598,28 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 
 #deprecated -------------------------------------
 
+
+# @staticmethod
+# 	def getSelectedComponents(type_, obj=None):
+# 		'''
+# 		Get the component selection of the given type.
+
+# 		args:
+# 			obj (obj) = If a polygonal object is given, then only selected components from that object will be returned.
+
+# 		returns:
+# 			(list) component objects.
+# 		'''
+# 		types = {'vertices':31, 'edges':32, 'faces':34}
+
+# 		if obj:
+# 			components = pm.filterExpand(pm.ls(obj, sl=1), selectionMask=types[type_])
+# 		else:
+# 			components = pm.filterExpand(selectionMask=types[type_])
+
+# 		selectedComponents = [c.split('[')[-1].rstrip(']') for c in components] if components else []
+
+# 		return selectedComponents
 
 # def getClosestVerts(set1, set2, tolerance=100):
 # 		'''

@@ -9,15 +9,12 @@ class Normals(Init):
 	def __init__(self, *args, **kwargs):
 		super(Normals, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('normals')
-		self.childUi = self.sb.getUi('normals_submenu')
-
 
 	def pin(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.parentUi.pin
+		pin = self.normals.pin
 
 		if state is 'setMenu':
 			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
@@ -28,17 +25,17 @@ class Normals(Init):
 		'''
 		Editors
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.normals.cmb000
 
 		if index is 'setMenu':
 			list_ = ['']
 			cmb.addItems_(list_, '')
 			return
 
-		# if index>0:
-		# 	if index==cmd.items.index(''):
-		# 		pass
-		# 	cmb.setCurrentIndex(0)
+		if index>0:
+			if index==cmd.items.index(''):
+				pass
+			cmb.setCurrentIndex(0)
 
 
 	def tb000(self, state=None):
@@ -57,14 +54,17 @@ class Normals(Init):
 			pm.polyOptions (displayNormal=0, sizeNormal=0)
 			pm.polyOptions (displayTangent=False)
 			self.viewPortMessage("Normals Display <hl>Off</hl>.")
+
 		if state ==1: #facet
 			pm.polyOptions (displayNormal=1, facet=True, sizeNormal=size)
 			pm.polyOptions (displayTangent=False)
 			self.viewPortMessage("<hl>Facet</hl> Normals Display <hl>On</hl>.")
+
 		if state ==2: #Vertex
 			pm.polyOptions (displayNormal=1, point=True, sizeNormal=size)
 			pm.polyOptions (displayTangent=False)
 			self.viewPortMessage("<hl>Vertex</hl> Normals Display <hl>On</hl>.")
+
 		if state ==3: #tangent
 			pm.polyOptions (displayTangent=True)
 			pm.polyOptions (displayNormal=0)
@@ -80,32 +80,35 @@ class Normals(Init):
 			tb.menu_.add('QCheckBox', setText='Soften non-creased', setObjectName='chk000', setToolTip='Soften all non-creased edges.')
 			return
 
-		mel.eval("PolySelectConvert 2")
-		edges = pm.polyListComponentConversion (toEdge=1)
-		edges = pm.ls (edges, flatten=1)
-
-		pm.undoInfo (openChunk=1)
-		self.mainProgressBar(len(edges))
-
 		soften = tb.menu_.chk000.isChecked()
+
+		mel.eval("PolySelectConvert 2")
+		edges = pm.polyListComponentConversion(toEdge=1)
+		edges = pm.ls(edges, flatten=1)
+
+		pm.undoInfo(openChunk=1)
+		self.mainProgressBar(len(edges))
 
 		for edge in edges:
 			pm.progressBar("tk_progressBar", edit=1, step=1)
 			if pm.progressBar("tk_progressBar", query=1, isCancelled=1):
 				break
+
 			crease = pm.polyCrease (edge, query=1, value=1)
 			# print(edge, crease[0])
 			if crease[0]>0:
 				pm.polySoftEdge (edge, angle=30)
 			elif soften:
 				pm.polySoftEdge (edge, angle=180)
+
 		pm.progressBar("tk_progressBar", edit=1, endProgress=1)
 		pm.undoInfo(closeChunk=1)
 
 
+	@Init.attr
 	def tb002(self, state=None):
 		'''
-		Set Normal Angle
+		Set Normals By Angle
 		'''
 		tb = self.currentUi.tb002
 		if state is 'setMenu':
@@ -113,8 +116,13 @@ class Normals(Init):
 			return
 
 		normalAngle = str(tb.menu_.s000.value())
-		pm.polySetToFaceNormal (setUserNormal=1) #reset to face
-		pm.polySoftEdge (angle=normalAngle) #smooth if angle is lower than specified amount. default 30
+
+		objects = pm.ls(selection=1, objectsOnly=1, flatten=1)
+		for obj in objects:
+			sel = pm.ls(obj, sl=1)
+			pm.polySetToFaceNormal(sel, setUserNormal=1) #reset to face
+			polySoftEdge = pm.polySoftEdge(sel, angle=normalAngle) #smooth if angle is lower than specified amount. default 30
+			return polySoftEdge if len(objects)==1 else polySoftEdge
 
 
 	@Slots.message
@@ -160,53 +168,78 @@ class Normals(Init):
 			return 'Warning: No object selected.'
 
 
+	def tb004(self, state=None):
+		'''
+		Average Normals
+		'''
+		tb = self.currentUi.tb004
+		if state is 'setMenu':
+			tb.menu_.add('QCheckBox', setText='By UV Shell', setObjectName='chk003', setToolTip='Average the normals of each object\'s faces per UV shell.')
+			return
+
+		byUvShell = tb.menu_.chk003.isChecked()
+
+		pm.undoInfo(openChunk=1)
+
+		objects = pm.ls(selection=1, objectsOnly=1, transforms=1, flatten=1)
+		for obj in objects:
+
+			if byUvShell:
+				sets_ = Init.getUvShellSets(obj)
+				for set_ in sets_.values():
+					pm.polySetToFaceNormal(set_)
+					pm.polyAverageNormal(set_)
+			else:
+				pm.polySetToFaceNormal()
+				pm.polyAverageNormal()
+
+		pm.undoInfo(closeChunk=1)
+
+
 	def b001(self):
 		'''
 		Soften Edge Normal
 		'''
-		pm.polySoftEdge (angle=180, constructionHistory=0)
+		pm.polySoftEdge(angle=180, constructionHistory=0)
 
 
 	def b002(self):
 		'''
 		Harden Edge Normal
 		'''
-		pm.polySoftEdge (angle=0, constructionHistory=0)
+		pm.polySoftEdge(angle=0, constructionHistory=0)
 
 
 	def b003(self):
 		'''
 		Soft Edge Display
 		'''
-		mel.eval('int $g_cond[1]=`polyOptions -q -ae`; if ($g_cond[0]) polyOptions -se; else polyOptions -ae;')
+		g_cond = pm.polyOptions(q=1, ae=1)
+		if g_cond[0]:
+			pm.polyOptions(se=1)
+		else:
+			pm.polyOptions(ae=1)
 
 
 	def b005(self):
 		'''
 		Maya Bonus Tools: Adjust Vertex Normals
 		'''
-		mel.eval('bgAdjustVertexNormalsWin;')
+		pm.mel.bgAdjustVertexNormalsWin()
 
 
 	def b006(self):
 		'''
 		Set To Face
 		'''
-		mel.eval('polySetToFaceNormal;')
-
-
-	def b007(self):
-		'''
-		Average Normals
-		'''
-		mel.eval('polySetToFaceNormal;polyAverageNormal;')
+		pm.polySetToFaceNormal()
 
 
 	def b009(self):
 		'''
 		Harden Uv Edges
 		'''
-		def createArrayFromSelection (): #(string sel[])	/* returns a string array of the selected transform nodes
+		def createArrayFromSelection(): #(string sel[])	/* returns a string array of the selected transform nodes
 			pm.select (hierarchy=1)
 			nodes = pm.ls (selection=1, transforms=1)
 			groupedNodes = pm.listRelatives (type="transform") #if the nodes are grouped then just get the children
@@ -248,12 +281,11 @@ class Normals(Init):
 		'''
 		Reverse Normals
 		'''
-		mel.eval('ReversePolygonNormals;')
+		pm.mel.ReversePolygonNormals()
 
 
 
 		
-
 
 
 
