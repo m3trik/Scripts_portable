@@ -109,7 +109,7 @@ class Uv(Init):
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
-			tb.menu_.add('QCheckBox', setText='Rotate', setObjectName='chk000', setToolTip='Allow shell rotation during packing.')
+			tb.menu_.add('QCheckBox', setText='Rotate', setObjectName='chk000', setChecked=True, setToolTip='Allow shell rotation during packing.')
 			return
 
 		rotate = tb.menu_.chk000.isChecked()
@@ -129,13 +129,13 @@ class Uv(Init):
 		'''
 		tb = self.currentUi.tb001
 		if state is 'setMenu':
-			tb.menu_.add('QCheckBox', setText='Scale Mode 0', setObjectName='chk001', setTristate=True, setToolTip='0 - No scale is applied.<br>1 - Uniform scale to fit in unit square.<br>2 - Non proportional scale to fit in unit square.')
+			tb.menu_.add('QCheckBox', setText='Scale Mode 1', setObjectName='chk001', setTristate=True, setChecked=True, setToolTip='0 - No scale is applied.<br>1 - Uniform scale to fit in unit square.<br>2 - Non proportional scale to fit in unit square.')
 			tb.menu_.add('QRadioButton', setText='Seam Only', setObjectName='chk002', setToolTip='Cut seams only.')
 			tb.menu_.add('QRadioButton', setText='Planar', setObjectName='chk003', setToolTip='Create UV texture coordinates for the current selection by using a planar projection shape.')
 			tb.menu_.add('QRadioButton', setText='Cylindrical', setObjectName='chk004', setToolTip='Create UV texture coordinates for the current selection, using a cylidrical projection that gets wrapped around the mesh.<br>Best suited for completely enclosed cylidrical shapes with no holes or projections on the surface.')
 			tb.menu_.add('QRadioButton', setText='Spherical', setObjectName='chk005', setToolTip='Create UV texture coordinates for the current selection, using a spherical projection that gets wrapped around the mesh.<br>Best suited for completely enclosed spherical shapes with no holes or projections on the surface.')
 			tb.menu_.add('QRadioButton', setText='Normal-Based', setObjectName='chk006', setToolTip='Create UV texture coordinates for the current selection by creating a planar projection based on the average vector of it\'s face normals.')
-			
+
 			# tb.menu_.chk001.toggled.connect(lambda state: self.toggleWidgets(tb.menu_, setUnChecked='chk002-3') if state==1 else None)
 			return
 
