@@ -205,115 +205,27 @@ class File(Init):
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
-			tb.menu_.add('QCheckBox', setText='ASCII', setObjectName='chk003', setChecked=True, setToolTip='Toggle ASCII or binary file type.')
-			tb.menu_.add('QCheckBox', setText='Wireframe', setObjectName='chk000', setChecked=True, setToolTip='Set view to wireframe before save.')
+			tb.menu_.add('QCheckBox', setText='Wireframe', setObjectName='chk000', setToolTip='Set view to wireframe before save.')
 			tb.menu_.add('QCheckBox', setText='Increment', setObjectName='chk001', setChecked=True, setToolTip='Append and increment a unique integer value.')
 			tb.menu_.add('QCheckBox', setText='Quit', setObjectName='chk002', setToolTip='Quit after save.')
 			return
 
-		increment = tb.menu_.chk001.isChecked()
-		ASCII = tb.menu_.chk003.isChecked()
 		wireframe = tb.menu_.chk000.isChecked()
+		increment = tb.menu_.chk001.isChecked()
 		quit = tb.menu_.chk002.isChecked()
 
-		preSaveScript = ''
-		postSaveScript = ''
-
-		type_ = 'mayaBinary'
-		if ASCII: #toggle ascii/ binary
-			type_ = 'mayaAscii' #type: mayaAscii, mayaBinary, mel, OBJ, directory, plug-in, audio, move, EPS, Adobe(R) Illustrator(R)
-
 		if wireframe:
-			mel.eval('DisplayWireframe;')
+			pm.mel.DisplayWireframe()
 
-		#get scene name and file path
-		fullPath = str(mel.eval('file -query -sceneName;')) #ie. O:/Cloud/____Graphics/______project_files/elise.proj/elise.scenes/.maya/elise_mid.009.mb
-		index = fullPath.rfind('/')+1
-		curFullName = fullPath[index:] #ie. elise_mid.009.mb
-		path = fullPath[:index] #ie. O:/Cloud/____Graphics/______project_files/elise.proj/elise.scenes/.maya/
-
-		if increment: #increment filename
-			newName = File.incrementFileName(curFullName)
-			File.deletePreviousFiles(curFullName, path)
-			pm.saveAs (path+newName, force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
-			print('{0} {1}'.format('Result:', path+newName))
-		else:	#save without renaming
-			pm.saveFile (force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
-			print('{0} {1}'.format('Result:', path+currentName,))
+		if increment:
+			pm.mel.IncrementAndSave()
 
 		if quit: #quit maya
 			import time
 			for timer in range(5):
 				self.viewPortMessage('Shutting Down:<hl>'+str(timer)+'</hl>')
 				time.sleep(timer)
-			mel.eval("quit;")
-			# pm.Quit()
-
-
-	@staticmethod
-	def incrementFileName(fileName):
-		'''
-		Increment the given file name.
-
-		args:
-			fileName (str) = file name with extension. ie. elise_mid.ma
-
-		returns:
-			(str) incremented name. ie. elise_mid.000.ma
-		'''
-		import re
-
-		#remove filetype extention
-		currentName = fileName[:fileName.rfind('.')] #name without extension ie. elise_mid.009 from elise_mid.009.mb
-		#get file number
-		numExt = re.search(r'\d+$', currentName) #check if the last chars are numberic
-		if numExt is not None:
-			name = currentName[:currentName.rfind('.')] #strip off the number ie. elise_mid from elise_mid.009
-			num = int(numExt.group())+1 #get file number and add 1 ie. 9 becomes 10
-			prefix = '000'[:-len(str(num))]+str(num) #prefix '000' removing zeros according to num length ie. 009 becomes 010
-			newName = name+'.'+prefix #ie. elise_mid.010
-			
-		else:
-			newName = currentName+'.001'
-
-		return newName
-
-
-	@staticmethod
-	def deletePreviousFiles(fileName, path, numberOfPreviousFiles=5):
-		'''
-		Delete older files.
-
-		args:
-			fileName (str) = file name with extension. ie. elise_mid.ma
-			numberOfPreviousFiles (int) = Number of previous copies to keep.
-		'''
-		import re, os
-
-		#remove filetype extention
-		currentName = fileName[:fileName.rfind('.')] #name without extension ie. elise_mid.009 from elise_mid.009.mb
-		#get file number
-		numExt = re.search(r'\d+$', currentName) #check if the last chars are numberic
-		if numExt is not None:
-			name = currentName[:currentName.rfind('.')] #strip off the number ie. elise_mid from elise_mid.009
-			num = int(numExt.group())+1 #get file number and add 1 ie. 9 becomes 10
-
-			oldNum = num-numberOfPreviousFiles
-			oldPrefix = '000'[:-len(str(oldNum))]+str(oldNum) #prefix the appropriate amount of zeros in front of the old number
-			oldName = name+'.'+oldPrefix #ie. elise_mid.007
-			try: #search recursively through the project folder and delete any old folders with the old filename
-				dir_ =  os.path.abspath(os.path.join(path, "../.."))
-				for root, directories, files in os.walk(dir_):
-					for filename in files:
-						if all([filename==oldName+ext for ext in ('.ma','.ma.swatches','.mb','.mb.swatches')]):
-							try:
-								import os
-								os.remove(filename)
-							except:
-								pass
-			except OSError:
-				print('{0} {1}'.format('Error: Could not delete', path+oldName))
-				pass
+			pm.mel.quit() # pm.Quit()
 
 
 	def lbl000(self):
@@ -476,3 +388,124 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
+
+
+
+# deprecated:
+
+
+	# def tb000(self, state=None):
+	# 	'''
+	# 	Save
+	# 	'''
+	# 	tb = self.currentUi.tb000
+	# 	if state is 'setMenu':
+	# 		tb.menu_.add('QCheckBox', setText='ASCII', setObjectName='chk003', setChecked=True, setToolTip='Toggle ASCII or binary file type.')
+	# 		tb.menu_.add('QCheckBox', setText='Wireframe', setObjectName='chk000', setChecked=True, setToolTip='Set view to wireframe before save.')
+	# 		tb.menu_.add('QCheckBox', setText='Increment', setObjectName='chk001', setChecked=True, setToolTip='Append and increment a unique integer value.')
+	# 		tb.menu_.add('QCheckBox', setText='Quit', setObjectName='chk002', setToolTip='Quit after save.')
+	# 		return
+
+	# 	increment = tb.menu_.chk001.isChecked()
+	# 	ASCII = tb.menu_.chk003.isChecked()
+	# 	wireframe = tb.menu_.chk000.isChecked()
+	# 	quit = tb.menu_.chk002.isChecked()
+
+	# 	preSaveScript = ''
+	# 	postSaveScript = ''
+
+	# 	type_ = 'mayaBinary'
+	# 	if ASCII: #toggle ascii/ binary
+	# 		type_ = 'mayaAscii' #type: mayaAscii, mayaBinary, mel, OBJ, directory, plug-in, audio, move, EPS, Adobe(R) Illustrator(R)
+
+	# 	if wireframe:
+	# 		mel.eval('DisplayWireframe;')
+
+	# 	#get scene name and file path
+	# 	fullPath = str(mel.eval('file -query -sceneName;')) #ie. O:/Cloud/____Graphics/______project_files/elise.proj/elise.scenes/.maya/elise_mid.009.mb
+	# 	index = fullPath.rfind('/')+1
+	# 	curFullName = fullPath[index:] #ie. elise_mid.009.mb
+	# 	path = fullPath[:index] #ie. O:/Cloud/____Graphics/______project_files/elise.proj/elise.scenes/.maya/
+
+	# 	if increment: #increment filename
+	# 		newName = File.incrementFileName(curFullName)
+	# 		File.deletePreviousFiles(curFullName, path)
+	# 		pm.saveAs (path+newName, force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
+	# 		print('{0} {1}'.format('Result:', path+newName))
+	# 	else:	#save without renaming
+	# 		pm.saveFile (force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
+	# 		print('{0} {1}'.format('Result:', path+currentName,))
+
+	# 	if quit: #quit maya
+	# 		import time
+	# 		for timer in range(5):
+	# 			self.viewPortMessage('Shutting Down:<hl>'+str(timer)+'</hl>')
+	# 			time.sleep(timer)
+	# 		mel.eval("quit;")
+	# 		# pm.Quit()
+
+
+	# @staticmethod
+	# def incrementFileName(fileName):
+	# 	'''
+	# 	Increment the given file name.
+
+	# 	args:
+	# 		fileName (str) = file name with extension. ie. elise_mid.ma
+
+	# 	returns:
+	# 		(str) incremented name. ie. elise_mid.000.ma
+	# 	'''
+	# 	import re
+
+	# 	#remove filetype extention
+	# 	currentName = fileName[:fileName.rfind('.')] #name without extension ie. elise_mid.009 from elise_mid.009.mb
+	# 	#get file number
+	# 	numExt = re.search(r'\d+$', currentName) #check if the last chars are numberic
+	# 	if numExt is not None:
+	# 		name = currentName[:currentName.rfind('.')] #strip off the number ie. elise_mid from elise_mid.009
+	# 		num = int(numExt.group())+1 #get file number and add 1 ie. 9 becomes 10
+	# 		prefix = '000'[:-len(str(num))]+str(num) #prefix '000' removing zeros according to num length ie. 009 becomes 010
+	# 		newName = name+'.'+prefix #ie. elise_mid.010
+			
+	# 	else:
+	# 		newName = currentName+'.001'
+
+	# 	return newName
+
+
+	# @staticmethod
+	# def deletePreviousFiles(fileName, path, numberOfPreviousFiles=5):
+	# 	'''
+	# 	Delete older files.
+
+	# 	args:
+	# 		fileName (str) = file name with extension. ie. elise_mid.ma
+	# 		numberOfPreviousFiles (int) = Number of previous copies to keep.
+	# 	'''
+	# 	import re, os
+
+	# 	#remove filetype extention
+	# 	currentName = fileName[:fileName.rfind('.')] #name without extension ie. elise_mid.009 from elise_mid.009.mb
+	# 	#get file number
+	# 	numExt = re.search(r'\d+$', currentName) #check if the last chars are numberic
+	# 	if numExt is not None:
+	# 		name = currentName[:currentName.rfind('.')] #strip off the number ie. elise_mid from elise_mid.009
+	# 		num = int(numExt.group())+1 #get file number and add 1 ie. 9 becomes 10
+
+	# 		oldNum = num-numberOfPreviousFiles
+	# 		oldPrefix = '000'[:-len(str(oldNum))]+str(oldNum) #prefix the appropriate amount of zeros in front of the old number
+	# 		oldName = name+'.'+oldPrefix #ie. elise_mid.007
+	# 		try: #search recursively through the project folder and delete any old folders with the old filename
+	# 			dir_ =  os.path.abspath(os.path.join(path, "../.."))
+	# 			for root, directories, files in os.walk(dir_):
+	# 				for filename in files:
+	# 					if all([filename==oldName+ext for ext in ('.ma','.ma.swatches','.mb','.mb.swatches')]):
+	# 						try:
+	# 							import os
+	# 							os.remove(filename)
+	# 						except:
+	# 							pass
+	# 		except OSError:
+	# 			print('{0} {1}'.format('Error: Could not delete', path+oldName))
+	# 			pass
