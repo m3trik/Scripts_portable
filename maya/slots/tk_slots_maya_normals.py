@@ -181,17 +181,21 @@ class Normals(Init):
 
 		pm.undoInfo(openChunk=1)
 
-		objects = pm.ls(selection=1, objectsOnly=1, transforms=1, flatten=1)
+		objects = pm.ls(selection=1, objectsOnly=1, flatten=1)
 		for obj in objects:
 
 			if byUvShell:
+				obj = pm.ls(obj, transforms=1)
 				sets_ = Init.getUvShellSets(obj)
 				for set_ in sets_.values():
 					pm.polySetToFaceNormal(set_)
 					pm.polyAverageNormal(set_)
 			else:
-				pm.polySetToFaceNormal()
-				pm.polyAverageNormal()
+				sel = pm.ls(obj, sl=1)
+				if not sel:
+					sel = obj
+				pm.polySetToFaceNormal(sel)
+				pm.polyAverageNormal(sel)
 
 		pm.undoInfo(closeChunk=1)
 

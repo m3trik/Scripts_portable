@@ -109,10 +109,10 @@ class Uv(Init):
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
-			tb.menu_.add('QCheckBox', setText='Rotate', setObjectName='chk000', setChecked=True, setToolTip='Allow shell rotation during packing.')
+			tb.menu_.add('QCheckBox', setText='Rotate', setObjectName='chk007', setChecked=True, setToolTip='Allow shell rotation during packing.')
 			return
 
-		rotate = tb.menu_.chk000.isChecked()
+		rotate = tb.menu_.chk007.isChecked()
 
 		rotateMax = 0.0
 		if rotate:
@@ -129,6 +129,7 @@ class Uv(Init):
 		'''
 		tb = self.currentUi.tb001
 		if state is 'setMenu':
+			tb.menu_.add('QRadioButton', setText='Standard', setObjectName='chk000', setChecked=True, setToolTip='Create UV texture coordinates for the selected object or faces by automatically finding the best UV placement using simultanious projections from multiple planes.')
 			tb.menu_.add('QCheckBox', setText='Scale Mode 1', setObjectName='chk001', setTristate=True, setChecked=True, setToolTip='0 - No scale is applied.<br>1 - Uniform scale to fit in unit square.<br>2 - Non proportional scale to fit in unit square.')
 			tb.menu_.add('QRadioButton', setText='Seam Only', setObjectName='chk002', setToolTip='Cut seams only.')
 			tb.menu_.add('QRadioButton', setText='Planar', setObjectName='chk003', setToolTip='Create UV texture coordinates for the current selection by using a planar projection shape.')
@@ -139,6 +140,7 @@ class Uv(Init):
 			# tb.menu_.chk001.toggled.connect(lambda state: self.toggleWidgets(tb.menu_, setUnChecked='chk002-3') if state==1 else None)
 			return
 
+		standardUnwrap = self.uv.chk000.isChecked()
 		scaleMode = self.uv.chk001.isChecked()
 		seamOnly = self.uv.chk002.isChecked()
 		planarUnwrap = self.uv.chk003.isChecked()
@@ -167,7 +169,7 @@ class Uv(Init):
 				elif normalBasedUnwrap:
 					pm.mel.texNormalProjection(1, 1, obj) #Normal-Based unwrap
 
-				else:
+				elif standardUnwrap:
 					polyAutoProjection = pm.polyAutoProjection (obj, layoutMethod=0, optimize=1, insertBeforeDeformers=1, scaleMode=scaleMode, createNewMap=False, #Create a new UV set, as opposed to editing the current one, or the one given by the -uvSetName flag.
 						projectBothDirections=0, #If "on" : projections are mirrored on directly opposite faces. If "off" : projections are not mirrored on opposite faces. 
 						layout=2, #0 UV pieces are set to no layout. 1 UV pieces are aligned along the U axis. 2 UV pieces are moved in a square shape.
@@ -324,17 +326,6 @@ class Uv(Init):
 		pm.mel.performPolyOptimizeUV(0)
 
 
-	@Init.attr
-	def b020(self):
-		'''
-		Move To Uv Space
-		'''
-		u = int(self.uv.s000.value())
-		v = int(self.uv.s001.value())
-
-		return pm.polyEditUV(u=u, v=v, relative=True)
-
-
 	def b021(self):
 		'''
 		Straighten Uv
@@ -350,6 +341,61 @@ class Uv(Init):
 		obj = pm.ls(sl=1)
 
 		similar = pm.polyUVStackSimilarShells(obj, tolerance=tol)
+
+
+	def b023(self):
+		'''
+		Move To Uv Space: Left
+		'''
+		Uv.moveSelectedToUvSpace(-1, 0) #move left
+
+
+	def b024(self):
+		'''
+		Move To Uv Space: Down
+		'''
+		Uv.moveSelectedToUvSpace(0, -1) #move down
+
+
+	def b025(self):
+		'''
+		Move To Uv Space: Up
+		'''
+		Uv.moveSelectedToUvSpace(0, 1) #move up
+
+
+	def b026(self):
+		'''
+		Move To Uv Space: Right
+		'''
+		Uv.moveSelectedToUvSpace(1, 0) #move right
+
+
+	@staticmethod
+	def moveSelectedToUvSpace(u, v, relative=True):
+		'''
+		Move sny selected objects to the given u and v coordinates.
+
+		args:
+			u (int) = u coordinate.
+			v (int) = v coordinate.
+			relative (bool) = Move relative or absolute.
+		'''
+		selection = pm.ls(sl=1)
+		if not selection:
+			print('# Error: Nothing selected. #')
+
+		objects = pm.ls(sl=1, objectsOnly=1)
+		objectMode = pm.selectMode(query=1, object=1)
+
+		if objects and objectMode:
+			for obj in objects:
+				pm.selectMode(component=1)
+				pm.selectType(meshUVShell=1)
+				faces = Init.getComponents(obj, 'faces', flatten=False)
+				pm.select(faces, add=True)
+
+		pm.polyEditUV(u=u, v=v, relative=relative)
 
 
 

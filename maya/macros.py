@@ -466,6 +466,16 @@ class Macros(Init):
 		pm.selectMode(component=1)
 
 		if meshUVShell:
+			#select all uv shells if in object mode and objects are selected.
+			objects = pm.ls(sl=1, objectsOnly=1)
+			objectMode = pm.selectMode(query=1, object=1)
+			if objects and objectMode:
+				for obj in objects:
+					pm.selectMode(component=1)
+					pm.selectType(meshUVShell=1)
+					faces = Init.getComponents(obj, 'faces', flatten=False)
+					pm.select(faces, add=True)
+
 			pm.selectType(polymeshUV=1)
 			pm.inViewMessage(statusMessage='Select Type: <hl>Polymesh UV</hl>', fade=True, position="topCenter")
 		else:

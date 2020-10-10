@@ -107,10 +107,10 @@ class Uv(Init):
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
-			tb.menu_.add('QCheckBox', setText='Rotate', setObjectName='chk000', setToolTip='Allow shell rotation during packing.')
+			tb.menu_.add('QCheckBox', setText='Rotate', setObjectName='chk007', setToolTip='Allow shell rotation during packing.')
 			return
 
-		rotate = tb.menu_.chk000.isChecked()
+		rotate = tb.menu_.chk007.isChecked()
 
 		obj = rt.selection[0]
 
@@ -130,16 +130,18 @@ class Uv(Init):
 		'''
 		tb = self.currentUi.tb001
 		if state is 'setMenu':
-			tb.menu_.add('QCheckBox', setText='Scale Mode 0', setObjectName='chk001', setTristate=True, setToolTip='0 - No scale is applied.<br>1 - Uniform scale to fit in unit square.<br>2 - Non proportional scale to fit in unit square.')
+			tb.menu_.add('QRadioButton', setText='Standard', setObjectName='chk000', setChecked=True, setToolTip='Create UV texture coordinates for the selected object or faces by automatically finding the best UV placement using simultanious projections from multiple planes.')
+			tb.menu_.add('QCheckBox', setText='Scale Mode 1', setObjectName='chk001', setTristate=True, setChecked=True, setToolTip='0 - No scale is applied.<br>1 - Uniform scale to fit in unit square.<br>2 - Non proportional scale to fit in unit square.')
 			tb.menu_.add('QRadioButton', setText='Seam Only', setObjectName='chk002', setToolTip='Cut seams only.')
 			tb.menu_.add('QRadioButton', setText='Planar', setObjectName='chk003', setToolTip='Create UV texture coordinates for the current selection by using a planar projection shape.')
 			tb.menu_.add('QRadioButton', setText='Cylindrical', setObjectName='chk004', setToolTip='Create UV texture coordinates for the current selection, using a cylidrical projection that gets wrapped around the mesh.<br>Best suited for completely enclosed cylidrical shapes with no holes or projections on the surface.')
 			tb.menu_.add('QRadioButton', setText='Spherical', setObjectName='chk005', setToolTip='Create UV texture coordinates for the current selection, using a spherical projection that gets wrapped around the mesh.<br>Best suited for completely enclosed spherical shapes with no holes or projections on the surface.')
 			tb.menu_.add('QRadioButton', setText='Normal-Based', setObjectName='chk006', setToolTip='Create UV texture coordinates for the current selection by creating a planar projection based on the average vector of it\'s face normals.')
-			
+
 			# tb.menu_.chk001.toggled.connect(lambda state: self.toggleWidgets(tb.menu_, setUnChecked='chk002-3') if state==1 else None)
 			return
 
+		standardUnwrap = self.uv.chk000.isChecked()
 		scaleMode = self.uv.chk001.isChecked()
 		seamOnly = self.uv.chk002.isChecked()
 		planarUnwrap = self.uv.chk003.isChecked()
@@ -150,12 +152,13 @@ class Uv(Init):
 		objects = rt.selection
 
 		for obj in objects:
-			try:
-				uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv modifier.
-				uv.FlattenBySmoothingGroup(scaleMode, False, 0.2)
+			if standardUnwrap:
+				try:
+					uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv modifier.
+					uv.FlattenBySmoothingGroup(scaleMode, False, 0.2)
 
-			except Exception as error:
-				print(error)
+				except Exception as error:
+					print(error)
 
 
 	def b000(self):
@@ -304,16 +307,6 @@ class Uv(Init):
 		'''
 
 
-	def b020(self):
-		'''
-		Move To Uv Space
-		'''
-		u = int(self.uv.s000.value())
-		v = int(self.uv.s001.value())
-
-		pm.polyEditUV(u=u, v=v)
-
-
 	def b021(self):
 		'''
 		Straighten Uv
@@ -329,6 +322,60 @@ class Uv(Init):
 		Stack Similar
 		'''
 
+
+	def b023(self):
+		'''
+		Move To Uv Space: Left
+		'''
+		Uv.moveSelectedToUvSpace(-1, 0) #move left
+
+
+	def b024(self):
+		'''
+		Move To Uv Space: Down
+		'''
+		Uv.moveSelectedToUvSpace(0, -1) #move down
+
+
+	def b025(self):
+		'''
+		Move To Uv Space: Up
+		'''
+		Uv.moveSelectedToUvSpace(0, 1) #move up
+
+
+	def b026(self):
+		'''
+		Move To Uv Space: Right
+		'''
+		Uv.moveSelectedToUvSpace(1, 0) #move right
+
+
+	@staticmethod
+	def moveSelectedToUvSpace(u, v, relative=True):
+		'''
+		Move sny selected objects to the given u and v coordinates.
+
+		args:
+			u (int) = u coordinate.
+			v (int) = v coordinate.
+			relative (bool) = Move relative or absolute.
+		'''
+		selection = pm.ls(sl=1)
+		if not selection:
+			print('# Error: Nothing selected. #')
+
+		objects = pm.ls(sl=1, objectsOnly=1)
+		objectMode = pm.selectMode(query=1, object=1)
+
+		if objects and objectMode:
+			for obj in objects:
+				pm.selectMode(component=1)
+				pm.selectType(meshUVShell=1)
+				faces = Init.getComponents(obj, 'faces', flatten=False)
+				pm.select(faces, add=True)
+
+		pm.polyEditUV(u=u, v=v, relative=relative)
 
 
 

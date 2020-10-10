@@ -93,11 +93,14 @@ class QPushButton_Draggable(QtWidgets.QPushButton, Menu, Attributes, RichText):
 		#move window:
 		curPos = self.window().mapToGlobal(self.window().pos())
 		globalPos = event.globalPos()
-		if self.__mouseMovePos:
+
+		try: #if hasattr(self, '__mouseMovePos'):
 			diff = globalPos - self.__mouseMovePos
 
 			self.window().move(self.window().mapFromGlobal(curPos + diff))
 			self.__mouseMovePos = globalPos
+		except AttributeError:
+			pass
 
 		return QtWidgets.QPushButton.mouseMoveEvent(self, event)
 

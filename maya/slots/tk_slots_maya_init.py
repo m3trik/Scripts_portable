@@ -121,31 +121,22 @@ class Init(Slots):
 	# ------------------------------------------------
 
 	@staticmethod
-	def getComponents(obj, type_):
+	def getComponents(obj, type_, flatten=True):
 		'''
 		Get the components of the given type from the given object.
 
 		args:
 			obj (obj) = The polygonal object to get the components of.
+			flatten (bool) = Flattens the returned list of objects so that each component is identified individually. (much faster)
 
 		returns:
 			(list) component objects.
 		'''
 		if isinstance(obj, (str, unicode)):
 			obj = pm.ls(obj)[0]
-
-		types = {'vertices':'vtx', 'edges':'e', 'faces':'f'}
-
-		component = getattr(obj, types[type_])
 		
-		if type_ is 'vertices':
-			num_of_components = pm.polyEvaluate(obj, vertex=True)
-		if type_ is 'edges':
-			num_of_components = pm.polyEvaluate(obj, edge=True)
-		if type_ is 'faces':
-			num_of_components = pm.polyEvaluate(obj, face=True)
-
-		components = [component[n] for n in xrange(num_of_components)]
+		types = {'vertices':'vtx', 'edges':'e', 'faces':'f'}
+		components = pm.ls('{}.{}[*]'.format(obj, types[type_]), flatten=flatten)
 
 		return components
 

@@ -9,9 +9,6 @@ class Transform(Init):
 	def __init__(self, *args, **kwargs):
 		super(Transform, self).__init__(*args, **kwargs)
 
-		#set input masks for text fields
-		# self.transform.t000.setInputMask("00.00") #change to allow for neg values
-
 
 	def pin(self, state=None):
 		'''
@@ -83,23 +80,23 @@ class Transform(Init):
 
 		if index>0:
 			if index==cmb.items.index('Point to Point'):
-				mel.eval('SnapPointToPointOptions;') #performSnapPtToPt 1; Select any type of point object or component.
+				pm.mel.SnapPointToPointOptions() #performSnapPtToPt 1; Select any type of point object or component.
 			elif index==cmb.items.index('2 Points to 2 Points'):
-				mel.eval('Snap2PointsTo2PointsOptions;') #performSnap2PtTo2Pt 1; Select any type of point object or component.
+				pm.mel.Snap2PointsTo2PointsOptions() #performSnap2PtTo2Pt 1; Select any type of point object or component.
 			elif index==cmb.items.index('3 Points to 3 Points'):
-				mel.eval('Snap3PointsTo3PointsOptions;') #performSnap3PtTo3Pt 1; Select any type of point object or component.
+				pm.mel.Snap3PointsTo3PointsOptions() #performSnap3PtTo3Pt 1; Select any type of point object or component.
 			elif index==cmb.items.index('Align Objects'):
-				mel.eval('performAlignObjects 1;') #Align the selected objects.
+				pm.mel.performAlignObjects(1) #Align the selected objects.
 			elif index==cmb.items.index('Position Along Curve'):
-				mel.eval('PositionAlongCurve;') #Position selected objects along a selected curve.
+				pm.mel.PositionAlongCurve() #Position selected objects along a selected curve.
 				# import maya.app.general.positionAlongCurve
 				# maya.app.general.positionAlongCurve.positionAlongCurve()
 			elif index==cmb.items.index('Align Tool'):
-				mel.eval('SetAlignTool;') #setToolTo alignToolCtx; Align the selection to the last selected object.
+				pm.mel.SetAlignTool() #setToolTo alignToolCtx; Align the selection to the last selected object.
 			elif index==cmb.items.index('Snap Together Tool'):
-				mel.eval('SetSnapTogetherToolOptions;') #setToolTo snapTogetherToolCtx; toolPropertyWindow;) Snap two objects together.
+				pm.mel.SetSnapTogetherToolOptions() #setToolTo snapTogetherToolCtx; toolPropertyWindow;) Snap two objects together.
 			elif index==cmb.items.index('Orient to Vertex/Edge Tool'):
-				mel.eval('orientToTool;') #Orient To Vertex/Edge
+				pm.mel.orientToTool() #Orient To Vertex/Edge
 
 
 	def cmb003(self, index=None):
@@ -127,6 +124,17 @@ class Transform(Init):
 			except NameError as error:
 				print(error)
 			return
+
+
+	def chk014(self, state=None):
+		'''
+		Snap: Toggle Rotation 22.5
+		'''
+		cmb = self.transform.cmb003
+		cmb.menu_.chk023.setChecked(True)
+		cmb.menu_.s023.setValue(22.5)
+		state = 1 if self.transform_submenu.chk014.isChecked() else 0
+		self.chk023(state=state)
 
 
 	def chk021(self, state=None):
@@ -242,36 +250,6 @@ class Transform(Init):
 		pm.texRotateContext('texRotateContext', edit=1, snapValue=value) #uv rotate context
 
 
-	def chk005(self, state=None):
-		'''
-		Transform: Scale
-
-		'''
-		self.toggleWidgets(setUnChecked='chk008-9', setChecked='chk000-2')
-		self.transform.s000.setValue(2)
-		self.transform.s000.setSingleStep(1)
-
-
-	def chk008(self, state=None):
-		'''
-		Transform: Move
-
-		'''
-		self.toggleWidgets(setUnChecked='chk005,chk009,chk000-2')
-		self.transform.s000.setValue(0.1)
-		self.transform.s000.setSingleStep(0.1)
-
-
-	def chk009(self, state=None):
-		'''
-		Transform: Rotate
-
-		'''
-		self.toggleWidgets(setUnChecked='chk005,chk008,chk000-2')
-		self.transform.s000.setValue(45)
-		self.transform.s000.setSingleStep(5)
-
-
 	def chk010(self, state=None):
 		'''
 		Align Vertices: Auto Align
@@ -280,53 +258,6 @@ class Transform(Init):
 			self.toggleWidgets(setDisabled='chk029-31')
 		else:
 			self.toggleWidgets(setEnabled='chk029-31')
-
-
-	def transformChecks(self):
-		floatXYZ = float(self.transform.s000.text())
-		floatX=floatY=floatZ = 0
-
-		if self.transform.chk005.isChecked():
-			currentScale = pm.xform (query=1, scale=1)
-			floatX = round(currentScale[0], 2)
-			floatY = round(currentScale[1], 2)
-			floatZ = round(currentScale[2], 2)
-
-		if self.transform.chk000.isChecked():
-			floatX = floatXYZ
-		if self.transform.chk001.isChecked():
-			floatY = floatXYZ
-		if self.transform.chk002.isChecked():
-			floatZ = floatXYZ
-
-		xyz = [floatX, floatY, floatZ]
-		return xyz
-
-
-	def performTransformations(self): #transform
-		relative = bool(self.transform.chk003.isChecked())#Move absolute/relative toggle
-		worldspace = bool(self.transform.chk004.isChecked())#Move object/worldspace toggle
-		xyz = self.transformChecks()
-		
-		#Scale selected.
-		if self.transform.chk005.isChecked():
-			if xyz[0] != -1: #negative values are only valid in relative mode and cannot scale relatively by one so prevent the math below which would scale incorrectly in this case.
-				#convert the decimal place system xform uses for negative scale values to an standard negative value
-				if xyz[0] < 0:
-					xyz[0] = xyz[0]/10.*2.5
-				if xyz[1] < 0:
-					xyz[1] = xyz[1]/10.*2.5
-				if xyz[2] < 0:
-					xyz[2] = xyz[2]/10.*2.5
-				pm.xform (relative=relative, worldSpace=worldspace, objectSpace=(not worldspace), scale=(xyz[0], xyz[1], xyz[2]))
-	
-		#Move selected relative/absolute, object/worldspace by specified amount.
-		if self.transform.chk008.isChecked():
-			pm.xform (relative=relative, worldSpace=worldspace, objectSpace=(not worldspace), translation=(xyz[0], xyz[1], xyz[2]))
-
-		#Rotate selected
-		if self.transform.chk009.isChecked():
-			pm.xform (relative=relative, worldSpace=worldspace, objectSpace=(not worldspace), rotation=(xyz[0], xyz[1], xyz[2]))
 
 
 	def tb000(self, state=None):
@@ -545,30 +476,6 @@ class Transform(Init):
 		cmb.setCurrentText('Off') if not any((cmb.menu_.chk024.isChecked(), cmb.menu_.chk025.isChecked(), cmb.menu_.chk026.isChecked())) else cmb.setCurrentText('On')
 
 
-	def b000(self):
-		'''
-		Transform negative axis
-		'''
-		#change the textfield to neg value and call performTransformations
-		textfield = float(self.transform.s000.value())
-		if textfield >=0:
-			newText = -textfield
-			self.transform.s000.setValue(newText)
-		self.performTransformations()
-
-
-	def b001(self):
-		'''
-		Transform positive axis
-		'''
-		#change the textfield to pos value and call performTransformations
-		textfield = float(self.transform.s000.value())
-		if textfield <0:
-			newText = abs(textfield)
-			self.transform.s000.setValue(newText)
-		self.performTransformations()
-
-
 	def b002(self):
 		'''
 		Freeze Transformations
@@ -669,6 +576,136 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 
 
 # deprecated ------------------------------------
+
+
+	# def s002(self, value=None):
+	# 	'''
+	# 	Transform: Set Step
+	# 	'''
+	# 	value = self.transform.s002.value()
+	# 	self.transform.s000.setStep(value)
+
+	# def s000(self, value=None):
+		# '''
+		# Transform: Perform Transformations
+		# '''
+		# objects = pm.ls(sl=1, objectsOnly=1)
+		# xyz = self.getTransformValues()
+		# self.performTransformations(objects, xyz)
+
+	# def chk005(self, state=None):
+	# 	'''
+	# 	Transform: Scale
+
+	# 	'''
+	# 	self.toggleWidgets(setUnChecked='chk008-9', setChecked='chk000-2')
+	# 	self.transform.s000.setValue(2)
+	# 	self.transform.s000.setSingleStep(1)
+
+
+	# def chk008(self, state=None):
+	# 	'''
+	# 	Transform: Move
+
+	# 	'''
+	# 	self.toggleWidgets(setUnChecked='chk005,chk009,chk000-2')
+	# 	self.transform.s000.setValue(0.1)
+	# 	self.transform.s000.setSingleStep(0.1)
+
+
+	# def chk009(self, state=None):
+	# 	'''
+	# 	Transform: Rotate
+
+	# 	'''
+	# 	self.toggleWidgets(setUnChecked='chk005,chk008,chk000-2')
+	# 	self.transform.s000.setValue(45)
+	# 	self.transform.s000.setSingleStep(5)
+
+	# def b000(self):
+	# 	'''
+	# 	Transform negative axis
+	# 	'''
+	# 	#change the textfield to neg value and call performTransformations
+	# 	textfield = float(self.transform.s000.value())
+	# 	if textfield >=0:
+	# 		newText = -textfield
+	# 		self.transform.s000.setValue(newText)
+	# 	self.performTransformations()
+
+
+	# def b001(self):
+	# 	'''
+	# 	Transform positive axis
+	# 	'''
+	# 	#change the textfield to pos value and call performTransformations
+	# 	textfield = float(self.transform.s000.value())
+	# 	if textfield <0:
+	# 		newText = abs(textfield)
+	# 		self.transform.s000.setValue(newText)
+	# 	self.performTransformations()
+
+
+	# 	def getTransformValues(self):
+	# 	'''
+	# 	Get the XYZ transform values from the various ui widgets.
+	# 	'''
+	# 	x = self.transform.chk000.isChecked()
+	# 	y = self.transform.chk001.isChecked()
+	# 	z = self.transform.chk002.isChecked()
+	# 	relative = self.transform.chk005.isChecked()
+
+	# 	amount = self.transform.s002.value() #use the step as the transform amount
+	# 	floatX=floatY=floatZ = 0
+
+	# 	if relative: #else absolute.
+	# 		currentScale = pm.xform(query=1, scale=1)
+	# 		floatX = round(currentScale[0], 2)
+	# 		floatY = round(currentScale[1], 2)
+	# 		floatZ = round(currentScale[2], 2)
+
+	# 	if x:
+	# 		floatX = amount
+	# 	if y:
+	# 		floatY = amount
+	# 	if z:
+	# 		floatZ = amount
+
+	# 	xyz = [floatX, floatY, floatZ]
+	# 	return xyz
+
+
+	# def performTransformations(self, objects, xyz): #transform
+	# 	'''
+
+	# 	'''
+	# 	relative = bool(self.transform.chk003.isChecked())#Move absolute/relative toggle
+	# 	worldspace = bool(self.transform.chk004.isChecked())#Move object/worldspace toggle
+		
+	# 	scale = self.transform.chk005.isChecked()
+	# 	move = self.transform.chk008.isChecked()
+	# 	rotate = self.transform.chk009.isChecked()
+
+	# 	#Scale selected.
+	# 	if scale:
+	# 		if xyz[0] != -1: #negative values are only valid in relative mode and cannot scale relatively by one so prevent the math below which would scale incorrectly in this case.
+	# 			#convert the decimal place system xform uses for negative scale values to an standard negative value
+	# 			if xyz[0] < 0:
+	# 				xyz[0] = xyz[0]/10.*2.5
+	# 			if xyz[1] < 0:
+	# 				xyz[1] = xyz[1]/10.*2.5
+	# 			if xyz[2] < 0:
+	# 				xyz[2] = xyz[2]/10.*2.5
+	# 			pm.xform(objects, relative=relative, worldSpace=worldspace, objectSpace=(not worldspace), scale=(xyz[0], xyz[1], xyz[2]))
+
+	# 	#Move selected relative/absolute, object/worldspace by specified amount.
+	# 	if move:
+	# 		pm.xform(objects, relative=relative, worldSpace=worldspace, objectSpace=(not worldspace), translation=(xyz[0], xyz[1], xyz[2]))
+
+	# 	#Rotate selected
+	# 	if rotate:
+	# 		pm.xform(objects, relative=relative, worldSpace=worldspace, objectSpace=(not worldspace), rotation=(xyz[0], xyz[1], xyz[2]))
+
 
 	# @Slots.message
 	# def cmb001(self, index=None):

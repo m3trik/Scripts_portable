@@ -34,12 +34,12 @@ class Edit(Init):
 
 		if index>0:
 			if index==cmb.items.index('Cleanup'):
-				mel.eval('CleanupPolygonOptions;')
+				pm.mel.CleanupPolygonOptions()
 			if index==cmb.items.index('Transfer: Attribute Values'):
-				mel.eval('TransferAttributeValuesOptions;')
+				pm.mel.TransferAttributeValuesOptions()
 				# mel.eval('performTransferAttributes 1;') #Transfer Attributes Options
 			if index==cmb.items.index('Transfer: Shading Sets'):
-				mel.eval('performTransferShadingSets 1;')
+				pm.mel.performTransferShadingSets(1)
 			cmb.setCurrentIndex(0)
 
 
@@ -216,39 +216,32 @@ class Edit(Init):
 		pm.undoInfo(closeChunk=1)
 
 
-	def b001(self):
-		'''
-
-		'''
-		pass
-
-
 	def b021(self):
 		'''
 		Tranfer Maps
 		'''
-		mel.eval('performSurfaceSampling 1;')
+		pm.mel.performSurfaceSampling(1)
 
 
 	def b022(self):
 		'''
 		Transfer Vertex Order
 		'''
-		mel.eval('TransferVertexOrder;')
+		pm.mel.TransferVertexOrder()
 
 
 	def b023(self):
 		'''
 		Transfer Attribute Values
 		'''
-		mel.eval('TransferAttributeValues;')
+		pm.mel.TransferAttributeValues()
 
 
 	def b027(self):
 		'''
 		Shading Sets
 		'''
-		mel.eval('performTransferShadingSets 0;')
+		pm.mel.performTransferShadingSets(0)
 
 
 

@@ -10,22 +10,6 @@ class Transform(Init):
 		super(Transform, self).__init__(*args, **kwargs)
 
 
-		#set input masks for text fields
-		# self.transform.t000.setInputMask("00.00") #change to allow for neg values
-
-		try: #component constraints. query and set initial value
-			state = pm.xformConstraint(query=True, type=True)
-			'''
-			if state == 'edge':
-				self.transform.cmb001.
-			if state == 'surface':
-				self.transform.cmb001.
-			'''
-
-		except NameError:
-			pass
-
-
 	def pin(self, state=None):
 		'''
 		Context menu
@@ -48,10 +32,10 @@ class Transform(Init):
 			cmb.addItems_(files, '')
 			return
 
-		# if inde>0:
-		# 	if index==cmb.items.index(''):
-		# 		pass
-		# 	cmb.setCurrentIndex(0)
+		if inde>0:
+			if index==cmb.items.index(''):
+				pass
+			cmb.setCurrentIndex(0)
 
 
 	def cmb001(self, index=None):
@@ -152,6 +136,17 @@ class Transform(Init):
 			except NameError as error:
 				print(error)
 			return
+
+
+	def chk014(self, state=None):
+		'''
+		Snap: Toggle Rotation 15
+		'''
+		cmb = self.transform.cmb003
+		cmb.menu_.chk023.setChecked(True)
+		cmb.menu_.s023.setValue(22.5)
+		state = 1 if self.transform_submenu.chk014.isChecked() else 0
+		self.chk023(state=state)
 
 
 	def chk021(self, state=None):
@@ -264,36 +259,6 @@ class Transform(Init):
 				print (fn, '|', state)
 
 
-	def chk005(self, state=None):
-		'''
-		Transform: Scale
-
-		'''
-		self.toggleWidgets(setUnChecked='chk008-9', setChecked='chk000-2')
-		self.transform.s000.setValue(2)
-		self.transform.s000.setSingleStep(1)
-
-
-	def chk008(self, state=None):
-		'''
-		Transform: Move
-
-		'''
-		self.toggleWidgets(setUnChecked='chk005,chk009,chk000-2')
-		self.transform.s000.setValue(0.1)
-		self.transform.s000.setSingleStep(0.1)
-
-
-	def chk009(self, state=None):
-		'''
-		Transform: Rotate
-
-		'''
-		self.toggleWidgets(setUnChecked='chk005,chk008,chk000-2')
-		self.transform.s000.setValue(45)
-		self.transform.s000.setSingleStep(5)
-
-
 	def chk010(self, state=None):
 		'''
 		Align Vertices: Auto Align
@@ -302,58 +267,6 @@ class Transform(Init):
 			self.toggleWidgets(setDisabled='chk029-31')
 		else:
 			self.toggleWidgets(setEnabled='chk029-31')
-
-
-	def transformChecks(self):
-		'''
-
-		'''
-		floatXYZ = float(self.transform.s000.text())
-		floatX=floatY=floatZ = 0
-
-		if self.transform.chk005.isChecked():
-			currentScale = pm.xform (query=1, scale=1)
-			floatX = round(currentScale[0], 2)
-			floatY = round(currentScale[1], 2)
-			floatZ = round(currentScale[2], 2)
-
-		if self.transform.chk000.isChecked():
-			floatX = floatXYZ
-		if self.transform.chk001.isChecked():
-			floatY = floatXYZ
-		if self.transform.chk002.isChecked():
-			floatZ = floatXYZ
-
-		xyz = [floatX, floatY, floatZ]
-		return xyz
-
-	def performTransformations(self): #transform
-		'''
-
-		'''
-		relative = bool(self.transform.chk003.isChecked())#Move absolute/relative toggle
-		worldspace = bool(self.transform.chk004.isChecked())#Move object/worldspace toggle
-		xyz = self.transformChecks()
-		
-		#Scale selected.
-		if self.transform.chk005.isChecked():
-			if xyz[0] != -1: #negative values are only valid in relative mode and cannot scale relatively by one so prevent the math below which would scale incorrectly in this case.
-				#convert the decimal place system xform uses for negative scale values to an standard negative value
-				if xyz[0] < 0:
-					xyz[0] = xyz[0]/10.*2.5
-				if xyz[1] < 0:
-					xyz[1] = xyz[1]/10.*2.5
-				if xyz[2] < 0:
-					xyz[2] = xyz[2]/10.*2.5
-				pm.xform (relative=relative, worldSpace=worldspace, objectSpace=(not worldspace), scale=(xyz[0], xyz[1], xyz[2]))
-	
-		#Move selected relative/absolute, object/worldspace by specified amount.
-		if self.transform.chk008.isChecked():
-			pm.xform (relative=relative, worldSpace=worldspace, objectSpace=(not worldspace), translation=(xyz[0], xyz[1], xyz[2]))
-
-		#Rotate selected
-		if self.transform.chk009.isChecked():
-			pm.xform (relative=relative, worldSpace=worldspace, objectSpace=(not worldspace), rotation=(xyz[0], xyz[1], xyz[2]))
 
 
 	def tb000(self, state=None):
@@ -559,30 +472,6 @@ class Transform(Init):
 		cmb.setCurrentText('Off') if not any((state, cmb.menu_.chk021.isChecked(), cmb.menu_.chk023.isChecked())) else cmb.setCurrentText('On')
 
 
-	def b000(self):
-		'''
-		Transform: negative
-		'''
-		#change the textfield to neg value and call performTransformations
-		textfield = float(self.transform.s000.value())
-		if textfield >=0:
-			newText = -textfield
-			self.transform.s000.setValue(newText)
-		self.performTransformations()
-
-
-	def b001(self):
-		'''
-		Transform: positive
-		'''
-		#change the textfield to pos value and call performTransformations
-		textfield = float(self.transform.s000.value())
-		if textfield <0:
-			newText = abs(textfield)
-			self.transform.s000.setValue(newText)
-		self.performTransformations()
-
-
 	def b002(self):
 		'''
 		Freeze Transformations
@@ -653,9 +542,7 @@ class Transform(Init):
 
 
 
-
 	
-
 
 
 
@@ -666,7 +553,33 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # Notes
 # -----------------------------------------------
 
+# deprecated:
+
 # maxEval('max tti')
 
 # maxEval('macros.run \"PolyTools\" \"TransformTools\")
 
+
+
+	# def b000(self):
+	# 	'''
+	# 	Transform: negative
+	# 	'''
+	# 	#change the textfield to neg value and call performTransformations
+	# 	textfield = float(self.transform.s000.value())
+	# 	if textfield >=0:
+	# 		newText = -textfield
+	# 		self.transform.s000.setValue(newText)
+	# 	self.performTransformations()
+
+
+	# def b001(self):
+	# 	'''
+	# 	Transform: positive
+	# 	'''
+	# 	#change the textfield to pos value and call performTransformations
+	# 	textfield = float(self.transform.s000.value())
+	# 	if textfield <0:
+	# 		newText = abs(textfield)
+	# 		self.transform.s000.setValue(newText)
+	# 	self.performTransformations()
