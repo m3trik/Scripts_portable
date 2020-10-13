@@ -112,6 +112,7 @@ class Uv(Init):
 			tb.menu_.add('QCheckBox', setText='Rotate', setObjectName='chk007', setChecked=True, setToolTip='Allow shell rotation during packing.')
 			return
 
+		scale = 1
 		rotate = tb.menu_.chk007.isChecked()
 
 		rotateMax = 0.0
@@ -119,7 +120,7 @@ class Uv(Init):
 			rotateMax = 360.0
 
 		sel = pm.ls(sl=1)
-		packUv = pm.u3dLayout(sel, resolution=2048, preScaleMode=1, shellSpacing=.005, tileMargin=.005, packBox=[0,1,0,1], rotateMax=rotateMax) #layoutScaleMode (int), multiObject (bool), mutations (int), packBox (float, float, float, float), preRotateMode (int), preScaleMode (int), resolution (int), rotateMax (float), rotateMin (float), rotateStep (float), shellSpacing (float), tileAssignMode (int), tileMargin (float), tileU (int), tileV (int), translate (bool)
+		packUv = pm.u3dLayout(sel, resolution=2048, preScaleMode=scale, shellSpacing=.005, tileMargin=.005, packBox=[0,1,0,1], rotateMax=rotateMax) #layoutScaleMode (int), multiObject (bool), mutations (int), packBox (float, float, float, float), preRotateMode (int), preScaleMode (int), resolution (int), rotateMax (float), rotateMin (float), rotateStep (float), shellSpacing (float), tileAssignMode (int), tileMargin (float), tileU (int), tileV (int), translate (bool)
 
 
 	@Init.attr
@@ -337,10 +338,11 @@ class Uv(Init):
 		'''
 		Stack Similar
 		'''
-		tol = 0.5
-		obj = pm.ls(sl=1)
+		sel = Uv.UvShellSelection() #assure the correct selection mask.
 
-		similar = pm.polyUVStackSimilarShells(obj, tolerance=tol)
+		tol = 0.5
+
+		similar = pm.polyUVStackSimilarShells(sel, tolerance=tol)
 
 
 	def b023(self):
@@ -381,11 +383,21 @@ class Uv(Init):
 			v (int) = v coordinate.
 			relative (bool) = Move relative or absolute.
 		'''
+		sel = Uv.UvShellSelection() #assure the correct selection mask.
+
+		pm.polyEditUV(sel, u=u, v=v, relative=relative)
+
+
+	@Slots.message
+	def UvShellSelection():
+		'''
+		Convert any object selections to uv shell selections.
+		'''
 		selection = pm.ls(sl=1)
 		if not selection:
-			print('# Error: Nothing selected. #')
+			return 'Error: Nothing selected.'
 
-		objects = pm.ls(sl=1, objectsOnly=1)
+		objects = pm.ls(selection, objectsOnly=1)
 		objectMode = pm.selectMode(query=1, object=1)
 
 		if objects and objectMode:
@@ -395,8 +407,7 @@ class Uv(Init):
 				faces = Init.getComponents(obj, 'faces', flatten=False)
 				pm.select(faces, add=True)
 
-		pm.polyEditUV(u=u, v=v, relative=relative)
-
+		return pm.ls(sl=1)
 
 
 

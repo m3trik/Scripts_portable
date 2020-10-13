@@ -337,6 +337,13 @@ class Polygons(Init):
 		# rt.detachElement(obj)
 
 
+	def b003(self):
+		'''
+		Symmetrize
+		'''
+		pm.mel.Symmetrize()
+
+
 	def b004(self):
 		'''
 		Slice

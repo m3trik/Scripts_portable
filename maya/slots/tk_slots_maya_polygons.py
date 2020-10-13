@@ -317,14 +317,21 @@ class Polygons(Init):
 		'''
 		Fill Holes
 		'''
-		mel.eval('FillHole;')
+		pm.mel.FillHole()
 
 
 	def b002(self):
 		'''
 		Separate
 		'''
-		mel.eval('SeparatePolygon;')
+		pm.mel.SeparatePolygon()
+
+
+	def b003(self):
+		'''
+		Symmetrize
+		'''
+		pm.mel.Symmetrize()
 
 
 	@Init.attr
