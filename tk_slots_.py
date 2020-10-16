@@ -481,6 +481,7 @@ class Slots(QtCore.QObject):
 		'''
 		Spawns a message box with the given text.
 		Prints a formatted version of the given string, stripped of html tags, to the console.
+		Supports HTML formatting.
 
 		args:
 			location (str)(point) = move the messagebox to the specified location. Can be given as a qpoint or string value. default is: 'topMiddle'

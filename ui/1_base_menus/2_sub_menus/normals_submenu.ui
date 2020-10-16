@@ -87,37 +87,6 @@
      <string>Normals</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="b007">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>370</x>
-      <y>280</y>
-      <width>66</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>111</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="toolTip">
-     <string>Average Edge Normals</string>
-    </property>
-    <property name="text">
-     <string>Average</string>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>18</width>
-      <height>18</height>
-     </size>
-    </property>
-   </widget>
    <widget class="QToolButton_" name="tb001">
     <property name="enabled">
      <bool>true</bool>
@@ -132,7 +101,7 @@
     </property>
     <property name="maximumSize">
      <size>
-      <width>111</width>
+      <width>999</width>
       <height>19</height>
      </size>
     </property>
@@ -163,7 +132,7 @@
     </property>
     <property name="maximumSize">
      <size>
-      <width>111</width>
+      <width>999</width>
       <height>19</height>
      </size>
     </property>
@@ -194,7 +163,7 @@
     </property>
     <property name="maximumSize">
      <size>
-      <width>111</width>
+      <width>999</width>
       <height>19</height>
      </size>
     </property>
@@ -225,7 +194,7 @@
     </property>
     <property name="maximumSize">
      <size>
-      <width>111</width>
+      <width>999</width>
       <height>19</height>
      </size>
     </property>
@@ -256,7 +225,7 @@
     </property>
     <property name="maximumSize">
      <size>
-      <width>111</width>
+      <width>999</width>
       <height>19</height>
      </size>
     </property>
@@ -265,6 +234,43 @@
     </property>
     <property name="text">
      <string>Set To Face</string>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>18</width>
+      <height>18</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QToolButton_" name="tb004">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>280</y>
+      <width>66</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>999</width>
+      <height>19</height>
+     </size>
+    </property>
+    <property name="toolTip">
+     <string>Average Edge Normals</string>
+    </property>
+    <property name="text">
+     <string>Average</string>
     </property>
     <property name="iconSize">
      <size>

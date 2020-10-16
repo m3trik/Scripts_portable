@@ -166,155 +166,123 @@ class Cameras(Init):
 		'''
 		Cameras: Back View
 		'''
-		mel.eval('''
-		if (`objExists back`)
-		{
-		  lookThru back;
-		}
-		else
-		{
-		  //create camera
-		  string $cameraName[] = `camera`;
-		  //cameraName[0] = camera node
-		  //cameraName[1] = camera shape node
+		if pm.objExists('back'):
+			pm.lookThru('back')
 
-		  //rename camera node
-		  rename($cameraName[0], "back");
-		  lookThru back;
+		else:
+			cameraName=pm.camera()
+			#create camera
+			#cameraName[0] = camera node
+			#cameraName[1] = camera shape node
+			#rename camera node
+			pm.rename(cameraName[0], "back")
+			pm.lookThru('back')
 
-		  //initialize the camera view
-		  viewSet -back;
+			#initialize the camera view
+			pm.viewSet(back=1)
 
-		  //add to camera group
-		  if (`objExists cameras`)
-		  {
-			parent back cameras;
-		  }
-		}
-		''')
+			#add to camera group
+			if pm.objExists('cameras'):
+				pm.parent('back', 'cameras')
 
 
 	def v001(self):
 		'''
 		Cameras: Top View
 		'''
-		pm.lookThru ("topShape")
+		pm.lookThru("topShape")
 
 
 	def v002(self):
 		'''
 		Cameras: Right View
 		'''
-		pm.lookThru ("sideShape")
+		pm.lookThru("sideShape")
 
 
 	def v003(self):
 		'''
 		Cameras: Left View
 		'''
-		mel.eval('''
-		if (`objExists left`)
-		{
-		  lookThru left;
-		}
-		else
-		{
-		  string $cameraName[] = `camera`;
-		  //cameraName[0] = camera node
-		  //cameraName[1] = camera shape node
+		if pm.objExists('left'):
+			pm.lookThru('left')
 
-		  rename($cameraName[0], "left");
-		  lookThru left;
+		else:
+			cameraName = pm.camera()
+			#cameraName[0] = camera node
+			#cameraName[1] = camera shape node
+			pm.rename(cameraName[0], "left")
+			pm.lookThru('left')
 
-		  //initialize the camera view
-		  viewSet -leftSide;
+			#initialize the camera view
+			pm.viewSet(leftSide=1)
 
-		  //add to camera group
-		  if (`objExists cameras`)
-		  {
-			parent left cameras;
-		  }
-		}
-		''')
+			#add to camera group
+			if pm.objExists('cameras'):
+				pm.parent('left', 'cameras')
 
 
 	def v004(self):
 		'''
 		Cameras: Perspective View
 		'''
-		pm.lookThru ("perspShape")
+		pm.lookThru("perspShape")
 
 
 	def v005(self):
 		'''
 		Cameras: Front View
 		'''
-		pm.lookThru ("frontShape")
+		pm.lookThru("frontShape")
 
 
 	def v006(self):
 		'''
 		Cameras: Bottom View
 		'''
-		mel.eval('''
-		if (`objExists bottom`)
-		{
-		  lookThru bottom;
-		}
-		else
-		{
-		  //create camera
-		  string $cameraName[] = `camera`;
-		  //cameraName[0] = camera node
-		  //cameraName[1] = camera shape node
+		if pm.objExists('bottom'):
+			pm.lookThru('bottom')
 
-		  //rename camera node
-		  rename($cameraName[0], "bottom");
-		  lookThru bottom;
+		else:
+			cameraName = pm.camera()
+			#create camera
+			#cameraName[0] = camera node
+			#cameraName[1] = camera shape node
+			pm.rename(cameraName[0], "bottom") #rename camera node
+			pm.lookThru('bottom')
 
-		  //initialize the camera view
-		  viewSet -bottom;
-
-		  //add to camera group
-		  if (`objExists cameras`)
-		  {
-			parent bottom cameras;
-		  }
-		}
-		''')
+			#initialize the camera view
+			pm.viewSet(bottom=1)
+			#add to camera group
+			if pm.objExists('cameras'):
+				pm.parent('bottom', 'cameras')
 
 
 	def v007(self):
 		'''
 		Cameras: Align View
 		'''
-		mel.eval('''
-		$cameraExists = `objExists alignToPoly`; //check exists if not create camera
-		if ($cameraExists != 1)
-		{ 
-			string $camera[] = `camera`;
-			string $cameraShape = $camera[1];
+		cameraExists = pm.objExists('alignToPoly')
 
-			rename $camera[0] ("alignToPoly");
-			hide alignToPoly;
-		}
+		if cameraExists != 1: #if no camera exists; create camera
+			camera = pm.camera()
+			cameraShape = camera[1]
+			pm.rename(camera[0], 
+				("alignToPoly"))
+			pm.hide('alignToPoly')
+			
+		isPerspective = int(not pm.camera('alignToPoly', query=1, orthographic=1))
+		#check if camera view is orthoraphicz
+		if isPerspective:
+			pm.viewPlace('alignToPoly', ortho=1)
 
-		int $isPerspective = !`camera -query -orthographic alignToPoly`; //check if camera view is orthoraphicz
-		if ($isPerspective) 
-		{
-			viewPlace -ortho alignToPoly;
-		}
+		pm.lookThru('alignToPoly')
+		pm.AlignCameraToPolygon()
+		pm.viewFit(fitFactor=5.0)
 
-		lookThru alignToPoly;
-		AlignCameraToPolygon;
-		viewFit -fitFactor 5.0;
-
-		//add to camera group
-		if (`objExists cameras`)
-		{
-			parent alignToPoly cameras;
-		}
-		''')
+		#add to camera group
+		if pm.objExists('cameras'):
+			pm.parent('alignToPoly', 'cameras')
 
 
 	@staticmethod
@@ -322,33 +290,24 @@ class Cameras(Init):
 		'''
 		Group Cameras
 		'''
-		mel.eval('''
-			if (`objExists cameras`)
-			{
-			  print "Group 'cameras' already exists";
-			}
-			else
-			{
-			  group -world -name cameras side front top persp;
-			  hide cameras;
-			  // Now add non-default cameras to group
-			  if (`objExists back`)
-			  {
-			  	parent back cameras;
-			  }
-			  if (`objExists bottom`)
-			  {
-			  	parent bottom cameras;
-			  }
-			  if (`objExists left`)
-			  {
-			  	parent left cameras;
-			  }
-			  if (`objExists alignToPoly`)
-			  {
-			  	parent alignToPoly cameras;
-			  }
-			}''')
+		if pm.objExists('cameras'):
+			print("Group 'cameras' already exists")
+
+		else:
+			pm.group('side', 'front', 'top', 'persp', world=1, name='cameras')
+			pm.hide('cameras')
+			# Now add non-default cameras to group
+			if pm.objExists('back'):
+				pm.parent('back', 'cameras')
+				
+			if pm.objExists('bottom'):
+				pm.parent('bottom', 'cameras')
+				
+			if pm.objExists('left'):
+				pm.parent('left', 'cameras')
+				
+			if pm.objExists('alignToPoly'):
+				pm.parent('alignToPoly', 'cameras')
 
 
 	@staticmethod

@@ -18,8 +18,6 @@ class Uv(Init):
 
 		if state is 'setMenu':
 			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya UV Editors')
-			pin.contextMenu.add(QLabel_, setObjectName='lbl000', setText='Select Type: UV', setToolTip='Select Type: UV')
-			pin.contextMenu.add(QLabel_, setObjectName='lbl001', setText='Select Type: UV Shell', setToolTip='Select Type: UV Shell')
 			return
 
 
@@ -67,22 +65,6 @@ class Uv(Init):
 			self.toggleWidgets(tb.menu_, setUnChecked='chk002-6')
 		if state==2:
 			tb.menu_.chk001.setText('Scale Mode 2')
-
-
-	def lbl000(self):
-		'''
-		Uv Shell Selection Mask
-		'''
-		pm.selectMode(component=1)
-		pm.selectType(meshUVShell=1)
-
-
-	def lbl001(self):
-		'''
-		Uv Selection Mask
-		'''
-		pm.selectMode(component=1)
-		pm.selectType(polymeshUV=1)
 
 
 	def tb000(self, state=None):
@@ -204,12 +186,15 @@ class Uv(Init):
 		'''
 		sel = pm.ls(orderedSelection=1, flatten=1)
 		if len(sel)<2:
-			return 'Error: The operation requires the selection of two polygon objects.'
+			Slots.messageBox('Error: The operation requires the selection of two polygon objects.')
 
+		pm.undo(openChunk=1)
 		from_ = sel[0]
-		to = sel[-1]
-		pm.transferAttributes(from_, to, transferUVs=2) # 0:no UV sets, 1:single UV set (specified by sourceUVSet and targetUVSet args), and 2:all UV sets are transferred.
-		return 'Result: UV sets transferred from: {} to: {}.'.format(from_.name(), to.name())
+		to = sel[1:]
+
+		[pm.transferAttributes(from_, i, transferUVs=2) for i in to] # 0:no UV sets, 1:single UV set (specified by sourceUVSet and targetUVSet args), and 2:all UV sets are transferred.
+		Slots.messageBox('Result: UV sets transferred from: {} to: {}.'.format(from_.name(), to.name()))
+		pm.undo(closeChunk=1)
 
 
 	def b005(self):
@@ -331,7 +316,9 @@ class Uv(Init):
 		'''
 		Straighten Uv
 		'''
-		pm.mel.texStraightenUVs("UV", 30)
+		angle = 30
+
+		pm.mel.texStraightenUVs("UV", angle)
 
 
 	def b022(self):
@@ -339,10 +326,9 @@ class Uv(Init):
 		Stack Similar
 		'''
 		sel = Uv.UvShellSelection() #assure the correct selection mask.
-
 		tol = 0.5
 
-		similar = pm.polyUVStackSimilarShells(sel, tolerance=tol)
+		pm.polyUVStackSimilarShells(sel, tolerance=tol)
 
 
 	def b023(self):
@@ -388,26 +374,35 @@ class Uv(Init):
 		pm.polyEditUV(sel, u=u, v=v, relative=relative)
 
 
-	@Slots.message
+	@staticmethod
 	def UvShellSelection():
 		'''
-		Convert any object selections to uv shell selections.
+		Select all faces of any selected geometry, and switch the component mode to uv shell, 
+		if the current selection is not maskFacet, maskUv, or maskUvShell.
+
+		returns:
+			(list) the selected faces.
 		'''
 		selection = pm.ls(sl=1)
 		if not selection:
-			return 'Error: Nothing selected.'
+			Slots.messageBox('Error: Nothing selected.')
 
 		objects = pm.ls(selection, objectsOnly=1)
 		objectMode = pm.selectMode(query=1, object=1)
 
-		if objects and objectMode:
+		maskFacet = pm.selectType(query=1, facet=1)
+		maskUv = pm.selectType(query=1, polymeshUV=1)
+		maskUvShell = pm.selectType(query=1, meshUVShell=1)
+
+		if all((objects, objectMode)) or not any((objectMode, maskFacet, maskUv, maskUvShell)):
+
 			for obj in objects:
 				pm.selectMode(component=1)
 				pm.selectType(meshUVShell=1)
 				faces = Init.getComponents(obj, 'faces', flatten=False)
-				pm.select(faces, add=True)
+				selection = pm.select(faces, add=True)
 
-		return pm.ls(sl=1)
+		return selection
 
 
 

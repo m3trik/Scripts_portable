@@ -227,7 +227,7 @@ class Init(Slots):
 				pm.polySelectConstraint(disable=1)
 				#Populate an in-view message
 				nGons = pm.polyEvaluate(faceComponent=1)
-				self.viewPortMessage("<hl>"+str(nGons[0])+"</hl> N-Gon(s) found.")
+				Init.viewPortMessage("<hl>"+str(nGons[0])+"</hl> N-Gon(s) found.")
 
 
 	@staticmethod
@@ -513,8 +513,8 @@ class Init(Slots):
 
 		if len(selection)<2:
 			if len(selection)==0:
-				viewPortMessage("No vertices selected")
-			viewPortMessage("Selection must contain at least two vertices")
+				Init.viewPortMessage("No vertices selected")
+			Init.viewPortMessage("Selection must contain at least two vertices")
 
 		for vertex in selection:
 			vertexXYZ = pm.xform(vertex, query=1, translation=1, worldSpace=1)
@@ -822,7 +822,8 @@ class Init(Slots):
 		return node
 
 
-	def deleteAlongAxis(self, obj, axis):
+	@staticmethod
+	def deleteAlongAxis(obj, axis):
 		'''
 		Delete components of the given mesh object along the specified axis.
 
@@ -831,13 +832,13 @@ class Init(Slots):
 			axis (str) = Axis to delete on. ie. '-x' Components belonging to the mesh object given in the 'obj' arg, that fall on this axis, will be deleted. 
 		'''
 		for node in [n for n in pm.listRelatives(obj, allDescendents=1) if pm.objectType(n, isType='mesh')]: #get any mesh type child nodes of obj.
-			faces = self.getAllFacesOnAxis(node, axis)
+			faces = Init.getAllFacesOnAxis(node, axis)
 			if len(faces)==pm.polyEvaluate(node, face=1): #if all faces fall on the specified axis.
 				pm.delete(node) #delete entire node
 			else:
 				pm.delete(faces) #else, delete any individual faces.
 
-		self.viewPortMessage("Delete faces on <hl>"+axis.upper()+"</hl>.")
+		Init.viewPortMessage("Delete faces on <hl>"+axis.upper()+"</hl>.")
 
 
 
@@ -1321,7 +1322,7 @@ class Init(Slots):
 			assistMessage (str) = The user assistance message to be displayed, (accepts html formatting).
 			position (str) = position on screen. possible values are: topCenter","topRight","midLeft","midCenter","midCenterTop","midCenterBot","midRight","botLeft","botCenter","botRight"
 
-		ex. self.viewPortMessage("shutting down:<hl>"+str(timer)+"</hl>")
+		ex. viewPortMessage("shutting down:<hl>"+str(timer)+"</hl>")
 		'''
 		fontSize=10
 		fade=1

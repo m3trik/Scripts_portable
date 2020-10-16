@@ -10,6 +10,23 @@ class Uv(Init):
 		super(Uv, self).__init__(*args, **kwargs)
 
 
+	@property
+	def uvModifier():
+		'''
+		Get the UV modifier for the current object.
+		If one doesn't exist, a UV modifier will be added to the selected object.
+
+		returns:
+			(obj) uv modifier.
+		'''
+		selection = rt.selection
+		if not selection:
+			Slots.messageBox('Error: Nothing selected.')
+
+		mod = self.getModifier(selection[0], 'Unwrap_UVW', -1) #get/set the uv xform modifier.
+		return mod
+
+
 	def pin(self, state=None):
 		'''
 		Context menu
@@ -18,8 +35,6 @@ class Uv(Init):
 
 		if state is 'setMenu':
 			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya UV Editors')
-			pin.contextMenu.add(QLabel_, setObjectName='lbl000', setToolTip='Select Type: UV')
-			pin.contextMenu.add(QLabel_, setObjectName='lbl001', setToolTip='Select Type: UV Shell')
 			return
 
 
@@ -67,43 +82,16 @@ class Uv(Init):
 	# 		tb.menu_.chk001.setText('Scale Mode 2')
 
 
-	def lbl000(self):
-		'''
-		Uv Shell Selection Mask
-		'''
-		pm.selectMode(component=1)
-		pm.selectType(meshUVShell=1)
-
-
-	def lbl001(self):
-		'''
-		Uv Selection Mask
-		'''
-		pm.selectMode(component=1)
-		pm.selectType(polymeshUV=1)
-
-
 	def tb000(self, state=None):
 		'''
 		Pack UV's
 
-		pm.u3dLayout:
-			layoutScaleMode (int),
-			multiObject (bool),
-			mutations (int),
-			packBox (float, float, float, float),
-			preRotateMode (int),
-			preScaleMode (int),
-			resolution (int),
-			rotateMax (float),
-			rotateMin (float),
-			rotateStep (float),
-			shellSpacing (float),
-			tileAssignMode (int),
-			tileMargin (float),
-			tileU (int),
-			tileV (int),
-			translate (bool)
+		#pack command: Lets you pack the texture vertex elements so that they fit within a square space.
+		# --method - 0 is a linear packing algorithm fast but not that efficient, 1 is a recursive algorithm slower but more efficient.
+		# --spacing - the gap between cluster in percentage of the edge distance of the square
+		# --normalize - determines whether the clusters will be fit to 0 to 1 space.
+		# --rotate - determines whether a cluster will be rotated so it takes up less space.
+		# --fillholes - determines whether smaller clusters will be put in the holes of the larger cluster.
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
@@ -114,13 +102,7 @@ class Uv(Init):
 
 		obj = rt.selection[0]
 
-		uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv modifier.
-		uv.pack(1, 0.01, True, rotate, True) #Lets you pack the texture vertex elements so that they fit within a square space.
-		# --method - 0 is a linear packing algorithm fast but not that efficient, 1 is a recursive algorithm slower but more efficient.
-		# --spacing - the gap between cluster in percentage of the edge distance of the square
-		# --normalize - determines whether the clusters will be fit to 0 to 1 space.
-		# --rotate - determines whether a cluster will be rotated so it takes up less space.
-		# --fillholes - determines whether smaller clusters will be put in the holes of the larger cluster.
+		self.uvModifier.pack(1, 0.01, True, rotate, True)
 
 
 	@Init.attr
@@ -154,8 +136,7 @@ class Uv(Init):
 		for obj in objects:
 			if standardUnwrap:
 				try:
-					uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv modifier.
-					uv.FlattenBySmoothingGroup(scaleMode, False, 0.2)
+					self.uvModifier.FlattenBySmoothingGroup(scaleMode, False, 0.2)
 
 				except Exception as error:
 					print(error)
@@ -165,6 +146,7 @@ class Uv(Init):
 		'''
 		Cut Uv Hard Edges
 		'''
+		pass
 
 
 	def b001(self):
@@ -179,7 +161,7 @@ class Uv(Init):
 
 		for obj in objects:
 			try:
-				uv = self.getModifier(obj, 'UVW_Xform', -1) #get/set the uv xform modifier.
+				uv = self.uvModifier #get/set the uv xform modifier.
 				uv.U_Flip = u
 				uv.V_Flip = v
 				uv.W_Flip = w
@@ -193,22 +175,19 @@ class Uv(Init):
 		'''
 		sel = pm.ls(orderedSelection=1, flatten=1)
 		if len(sel)<2:
-			return 'Error: The operation requires the selection of two polygon objects.'
+			Slots.messageBox('Error: The operation requires the selection of two polygon objects.')
 
 		from_ = sel[0]
 		to = sel[-1]
 		pm.transferAttributes(from_, to, transferUVs=2) # 0:no UV sets, 1:single UV set (specified by sourceUVSet and targetUVSet args), and 2:all UV sets are transferred.
-		return 'Result: UV sets transferred from: {} to: {}.'.format(from_.name(), to.name())
+		Slots.messageBox('Result: UV sets transferred from: {} to: {}.'.format(from_.name(), to.name()))
 
 
 	def b005(self):
 		'''
 		Cut Uv'S
 		'''
-		obj = rt.selection[0]
-
-		uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv modifier.
-		uv.breakSelected()
+		self.uvModifier.breakSelected()
 
 
 	def b007(self):
@@ -242,12 +221,10 @@ class Uv(Init):
 		Distortion
 		'''
 		# actionMan.executeAction 2077580866 "40177"  -- Unwrap UVW: Show Edge Distortion
-		obj = rt.selection[0]
+		mod = self.uvModifier #get/set the uv modifier.
 
-		uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv modifier.
-
-		state = uv.localDistortion
-		uv.localDistortion = not state
+		state = mod.localDistortion
+		mod.localDistortion = not state
 		return '{0}{1}'.format('localDistortion:', not state)
 
 
@@ -255,10 +232,7 @@ class Uv(Init):
 		'''
 		Sew Uv'S
 		'''
-		obj = rt.selection[0]
-
-		uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv modifier.
-		uv.stitchVerts(True, 1.0) #(align, bias) --Bias of 0.0 the vertices will move to the source and 1.0 they will move to the target. 
+		self.uvModifier.stitchVerts(True, 1.0) #(align, bias) --Bias of 0.0 the vertices will move to the source and 1.0 they will move to the target. 
 
 
 	def b013(self):
@@ -295,32 +269,27 @@ class Uv(Init):
 		'''
 		Unfold Uv'S
 		'''
-		obj = rt.selection[0]
-
-		uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv xform modifier.
-		uv.relax(1, 0.01, True, True)
+		self.uvModifier.relax(1, 0.01, True, True)
 
 
 	def b019(self):
 		'''
 		Optimize Uv'S
 		'''
-
+		# self.uvModifier.
 
 	def b021(self):
 		'''
 		Straighten Uv
 		'''
-		obj = rt.selection[0]
-
-		uv = self.getModifier(obj, 'Unwrap_UVW', -1) #get/set the uv xform modifier.
-		uv.Straighten()
+		self.uvModifier.Straighten()
 
 
 	def b022(self):
 		'''
 		Stack Similar
 		'''
+		# self.uvModifier.
 
 
 	def b023(self):
@@ -361,21 +330,9 @@ class Uv(Init):
 			v (int) = v coordinate.
 			relative (bool) = Move relative or absolute.
 		'''
-		selection = pm.ls(sl=1)
-		if not selection:
-			print('# Error: Nothing selected. #')
+		mod = self.uvModifier
 
-		objects = pm.ls(sl=1, objectsOnly=1)
-		objectMode = pm.selectMode(query=1, object=1)
-
-		if objects and objectMode:
-			for obj in objects:
-				pm.selectMode(component=1)
-				pm.selectType(meshUVShell=1)
-				faces = Init.getComponents(obj, 'faces', flatten=False)
-				pm.select(faces, add=True)
-
-		pm.polyEditUV(u=u, v=v, relative=relative)
+		pm.polyEditUV(sel, u=u, v=v, relative=relative)
 
 
 

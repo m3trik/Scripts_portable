@@ -206,11 +206,12 @@ class Edit(Init):
 			self.connect_('chk006-9', 'toggled', self.chk006_9, tb.menu_)
 			return
 
-		selection = pm.ls(sl=1, objectsOnly=1)
 		axis = self.getAxisFromCheckBoxes('chk006-9', tb.menu_)
 
 		pm.undoInfo(openChunk=1)
-		for obj in selection:
+		objects = pm.ls(sl=1, objectsOnly=1)
+
+		for obj in objects:
 			self.deleteAlongAxis(obj, axis)
 		pm.undoInfo(closeChunk=1)
 
