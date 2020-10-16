@@ -189,6 +189,9 @@ class Editors(Init):
 			if text=='UV Linking: Hair/UV':
 				pm.mel.HairUVSetLinkingEditor()
 
+		self.tk.hide()
+
+
 	def cmb000(self, index=None):
 		'''
 		Editors

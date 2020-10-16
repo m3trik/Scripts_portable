@@ -142,6 +142,56 @@ class Uv(Init):
 					print(error)
 
 
+	def tb002(self, state=None):
+		'''
+		Stack Similar
+		'''
+		tb = self.currentUi.tb002
+		if state is 'setMenu':
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Tolerance:   ', setObjectName='s000', setMinMax_='0.0-10 step.05', setValue=0.05, setToolTip='Stack shells with uv\'s within the given range.')
+			return
+
+		tolerance = tb.menu_.s000.value()
+		sel = Uv.UvShellSelection() #assure the correct selection mask.
+
+		pm.polyUVStackSimilarShells(sel, tolerance=tolerance)
+
+
+	def tb003(self, state=None):
+		'''
+		Select By Type
+		'''
+		tb = self.currentUi.tb003
+		if state is 'setMenu':
+			tb.menu_.add('QRadioButton', setText='Back-Facing', setObjectName='chk008', setToolTip='Select all back-facing (using counter-clockwise winding order) components for the current selection.')
+			tb.menu_.add('QRadioButton', setText='Front-Facing', setObjectName='chk009', setToolTip='Select all front-facing (using counter-clockwise winding order) components for the current selection.')
+			tb.menu_.add('QRadioButton', setText='Overlapping', setObjectName='chk010', setToolTip='Select all components that share the same uv space.')
+			tb.menu_.add('QRadioButton', setText='Non-Overlapping', setObjectName='chk011', setToolTip='Select all components that do not share the same uv space.')
+			tb.menu_.add('QRadioButton', setText='Texture Borders', setObjectName='chk012', setToolTip='Select all components on the borders of uv shells.')
+			tb.menu_.add('QRadioButton', setText='Unmapped', setObjectName='chk013', setChecked=True, setToolTip='Select unmapped faces in the current uv set.')
+			return
+
+		back_facing = self.uv.chk008.isChecked()
+		front_facing = self.uv.chk009.isChecked()
+		overlapping = self.uv.chk010.isChecked()
+		nonOverlapping = self.uv.chk011.isChecked()
+		textureBorders = self.uv.chk012.isChecked()
+		unmapped = self.uv.chk013.isChecked()
+
+		if back_facing:
+			pm.mel.selectUVFaceOrientationComponents({}, 0, 2, 1)
+		elif front_facing:
+			pm.mel.selectUVFaceOrientationComponents({}, 0, 1, 1)
+		elif overlapping:
+			pm.mel.selectUVOverlappingComponents(1, 0)
+		elif nonOverlapping:
+			pm.mel.selectUVOverlappingComponents(0, 0)
+		elif textureBorders:
+			pm.mel.selectUVBorderComponents({}, "", 1)
+		elif unmapped:
+			pm.mel.selectUnmappedFaces()
+
+
 	def b000(self):
 		'''
 		Cut Uv Hard Edges
@@ -283,13 +333,6 @@ class Uv(Init):
 		Straighten Uv
 		'''
 		self.uvModifier.Straighten()
-
-
-	def b022(self):
-		'''
-		Stack Similar
-		'''
-		# self.uvModifier.
 
 
 	def b023(self):
