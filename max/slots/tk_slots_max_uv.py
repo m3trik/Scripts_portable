@@ -65,21 +65,97 @@ class Uv(Init):
 				maxEval('pfxUVLinkingEditor;')
 			elif index==7: #UV Linking: Hair/UV
 				maxEval('hairUVLinkingEditor;')
-			self.uv.cmb000.setCurrentIndex(0)
+			cmb.setCurrentIndex(0)
 
 
-	# def chk001(self, state):
-	# 	'''
-	# 	Auto Unwrap: Scale Mode CheckBox
-	# 	'''
-	# 	tb = self.currentUi.tb001
-	# 	if state==0:
-	# 		tb.menu_.chk001.setText('Scale Mode 0')
-	# 	if state==1:
-	# 		tb.menu_.chk001.setText('Scale Mode 1')
-	# 		self.toggleWidgets(tb.menu_, setUnChecked='chk002-6')
-	# 	if state==2:
-	# 		tb.menu_.chk001.setText('Scale Mode 2')
+	def cmb001(self, index=None):
+		'''
+		Display
+		'''
+		cmb = self.uv.cmb001
+
+		if index is 'setMenu':
+			cmb.popupStyle = 'qmenu'
+
+			try:
+				checkered = pm.textureWindow('polyTexturePlacementPanel1', displayCheckered=1, query=1)
+				borders = pm.polyOptions(query=1, displayMapBorder=1)
+				distortion = pm.textureWindow(pm.getPanel(scriptType='polyTexturePlacementPanel'), query=1, displayDistortion=1)
+
+				cmb.menu_.add(QCheckBox_, setObjectName='chk014', setText='Checkered', setChecked=checkered, setToolTip='')
+				cmb.menu_.add(QCheckBox_, setObjectName='chk015', setText='Borders', setChecked=borders, setToolTip='')
+				cmb.menu_.add(QCheckBox_, setObjectName='chk016', setText='Distortion', setChecked=distortion, setToolTip='')
+
+			except NameError as error:
+				print(error)
+			return
+
+
+	def cmb002(self, index=None):
+		'''
+		Editors
+		'''
+		cmb = self.uv.cmb002
+
+		if index is 'setMenu':
+			list_ = ['Flip', 'Flip Horizontally On Last', 'Flip Vertically On Last', 'Rotate On Last']
+			cmb.addItems_(list_, 'Transform:')
+			return
+
+		if index>0: #hide hotbox then perform operation
+			self.tk.hide()
+			if index==cmb.items.index('Flip'):
+				Uv.flipUV()
+			elif index==cmb.items.index('Flip Horizontally On Last'):
+				pass
+			elif index==cmb.items.index('Flip Vertically On Last'):
+				pass
+			elif index==cmb.items.index('Rotate On Last'):
+				pass
+			cmb.setCurrentIndex(0)
+
+
+	def chk001(self, state):
+		'''
+		Auto Unwrap: Scale Mode CheckBox
+		'''
+		pass
+
+
+	def chk014(self):
+		'''
+		Display: Checkered Pattern
+		'''
+		cmb = self.uv.cmb001
+		state = cmb.menu_.chk014.isChecked()
+
+		self.toggleMaterialOverride(checker=state)
+
+
+	def chk015(self):
+		'''
+		Display: Borders
+		'''
+		cmb = self.uv.cmb001
+		state = cmb.menu_.chk015.isChecked()
+
+		borderWidth = pm.optionVar(query='displayPolyBorderEdgeSize')[1]
+		borders = pm.polyOptions(displayMapBorder=state, sizeBorder=borderWidth)
+
+
+	@Slots.message
+	def chk016(self):
+		'''
+		Display: Distortion
+		'''
+		cmb = self.uv.cmb001
+		state = cmb.menu_.chk016.isChecked()
+
+		# actionMan.executeAction 2077580866 "40177"  -- Unwrap UVW: Show Edge Distortion
+		mod = self.uvModifier #get/set the uv modifier.
+
+		mod.localDistortion = state
+		return '{0}{1}'.format('localDistortion:', state)
 
 
 	def tb000(self, state=None):
@@ -192,31 +268,28 @@ class Uv(Init):
 			pm.mel.selectUnmappedFaces()
 
 
+	def tb004(self, state=None):
+		'''
+		Unfold
+		'''
+		tb = self.currentUi.tb004
+		if state is 'setMenu':
+			tb.menu_.add('QCheckBox', setText='Optimize', setObjectName='chk017', setChecked=True, setToolTip='The Optimize UV Tool evens out the spacing between UVs on a mesh, fixing areas of distortion (overlapping UVs).')
+			return
+
+		optimize = self.tb.menu_.chk017.isChecked()
+
+		# if optimize:
+		# 	# self.uvModifier.
+		# else:
+		self.uvModifier.relax(1, 0.01, True, True)
+
+
 	def b000(self):
 		'''
 		Cut Uv Hard Edges
 		'''
 		pass
-
-
-	def b001(self):
-		'''
-		Flip UV
-		'''
-		u = 1
-		v = 0
-		w = 0
-
-		objects = rt.selection
-
-		for obj in objects:
-			try:
-				uv = self.uvModifier #get/set the uv xform modifier.
-				uv.U_Flip = u
-				uv.V_Flip = v
-				uv.W_Flip = w
-			except Exception as error:
-				print(error)
 
 
 	def b002(self):
@@ -240,44 +313,6 @@ class Uv(Init):
 		self.uvModifier.breakSelected()
 
 
-	def b007(self):
-		'''
-		Display Checkered Pattern
-		'''
-		self.toggleMaterialOverride(checker=1)		
-
-
-	def b008(self):
-		'''
-		Adjust Checkered Size
-		'''
-
-
-	def b009(self):
-		'''
-		Borders
-		'''
-		'''
-		textureWindowCreatePopupContextMenu "polyTexturePlacementPanel1popupMenusShift";
-		int $borders[] = `polyOptions -query -displayMapBorder`;
-		float $borderWidth[] = `optionVar -query displayPolyBorderEdgeSize`;
-		polyOptions -displayMapBorder (!$borders[0]) -sizeBorder $borderWidth[1];
-		'''
-
-
-	@Slots.message
-	def b010(self):
-		'''
-		Distortion
-		'''
-		# actionMan.executeAction 2077580866 "40177"  -- Unwrap UVW: Show Edge Distortion
-		mod = self.uvModifier #get/set the uv modifier.
-
-		state = mod.localDistortion
-		mod.localDistortion = not state
-		return '{0}{1}'.format('localDistortion:', not state)
-
-
 	def b011(self):
 		'''
 		Sew Uv'S
@@ -289,44 +324,15 @@ class Uv(Init):
 		'''
 		Auto Map Multiple
 		'''
-
-
-	def b014(self):
-		'''
-		Rotate On Last
-		'''
-
-
-	def b015(self):
-		'''
-		Flip Horizontally On Last
-		'''
-
-
-	def b016(self):
-		'''
-		Flip Vertically On Last
-		'''
+		pass
 
 
 	def b017(self):
 		'''
 		Align Uv Shells
 		'''
+		pass
 
-
-	def b018(self):
-		'''
-		Unfold Uv'S
-		'''
-		self.uvModifier.relax(1, 0.01, True, True)
-
-
-	def b019(self):
-		'''
-		Optimize Uv'S
-		'''
-		# self.uvModifier.
 
 	def b021(self):
 		'''
@@ -376,6 +382,29 @@ class Uv(Init):
 		mod = self.uvModifier
 
 		pm.polyEditUV(sel, u=u, v=v, relative=relative)
+
+
+	@staticmethod
+	def flipUV(objects=None):
+		'''
+		
+		'''
+		u = 1
+		v = 0
+		w = 0
+
+		if not objects:
+			objects = rt.selection
+
+		for obj in objects:
+			try:
+				uv = self.uvModifier #get/set the uv xform modifier.
+				uv.U_Flip = u
+				uv.V_Flip = v
+				uv.W_Flip = w
+
+			except Exception as error:
+				print(error)
 
 
 

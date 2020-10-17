@@ -53,6 +53,57 @@ class Uv(Init):
 			cmb.setCurrentIndex(0)
 
 
+	def cmb001(self, index=None):
+		'''
+		Display
+		'''
+		cmb = self.uv.cmb001
+
+		if index is 'setMenu':
+			cmb.popupStyle = 'qmenu'
+
+			try:
+				panel = pm.getPanel(scriptType='polyTexturePlacementPanel')
+				checkered = pm.textureWindow(panel, displayCheckered=1, query=1)
+				borders = True if pm.polyOptions(query=1, displayMapBorder=1) else False
+				distortion = pm.textureWindow(panel, query=1, displayDistortion=1)
+
+				cmb.menu_.add(QCheckBox_, setObjectName='chk014', setText='Checkered', setChecked=checkered, setToolTip='')
+				cmb.menu_.add(QCheckBox_, setObjectName='chk015', setText='Borders', setChecked=borders, setToolTip='')
+				cmb.menu_.add(QCheckBox_, setObjectName='chk016', setText='Distortion', setChecked=distortion, setToolTip='')
+
+			except NameError as error:
+				print(error)
+			return
+
+
+	def cmb002(self, index=None):
+		'''
+		Transform
+		'''
+		cmb = self.uv.cmb002
+
+		if index is 'setMenu':
+			list_ = ['Flip', 'Flip Horizontally On Last', 'Flip Vertically On Last', 'Rotate On Last']
+			cmb.addItems_(list_, 'Transform:')
+			return
+
+		if index>0: #hide hotbox then perform operation
+			self.tk.hide()
+			if index==cmb.items.index('Flip'):
+				pm.mel.performPolyForceUV('flip', 0)
+			elif index==cmb.items.index('Flip Horizontally On Last'):
+				pm.mel.bt_checkSelectionOrderPref()
+				pm.mel.bt_polyflipUVsAcrossLast(0)
+			elif index==cmb.items.index('Flip Vertically On Last'):
+				pm.mel.bt_checkSelectionOrderPref()
+				pm.mel.bt_polyflipUVsAcrossLast(1)
+			elif index==cmb.items.index('Rotate On Last'):
+				pm.mel.bt_checkSelectionOrderPref()
+				pm.mel.bt_rotateUVsAroundLastWin()
+			cmb.setCurrentIndex(0)
+
+
 	def chk001(self, state):
 		'''
 		Auto Unwrap: Scale Mode CheckBox
@@ -65,6 +116,39 @@ class Uv(Init):
 			self.toggleWidgets(tb.menu_, setUnChecked='chk002-6')
 		if state==2:
 			tb.menu_.chk001.setText('Scale Mode 2')
+
+
+	def chk014(self):
+		'''
+		Display: Checkered Pattern
+		'''
+		cmb = self.uv.cmb001
+		state = cmb.menu_.chk014.isChecked()
+
+		panel = pm.getPanel(scriptType='polyTexturePlacementPanel')
+		pm.textureWindow(panel, edit=1, displayCheckered=state)
+
+
+	def chk015(self):
+		'''
+		Display: Borders
+		'''
+		cmb = self.uv.cmb001
+		state = cmb.menu_.chk015.isChecked()
+
+		borderWidth = pm.optionVar(query='displayPolyBorderEdgeSize')[1]
+		borders = pm.polyOptions(displayMapBorder=state, sizeBorder=borderWidth)
+
+
+	def chk016(self):
+		'''
+		Display: Distortion
+		'''
+		cmb = self.uv.cmb001
+		state = cmb.menu_.chk016.isChecked()
+
+		panel = pm.getPanel(scriptType='polyTexturePlacementPanel')
+		pm.textureWindow(panel, edit=1, displayDistortion=state)
 
 
 	def tb000(self, state=None):
@@ -172,7 +256,7 @@ class Uv(Init):
 		'''
 		tb = self.currentUi.tb002
 		if state is 'setMenu':
-			tb.menu_.add('QDoubleSpinBox', setPrefix='Tolerance:   ', setObjectName='s000', setMinMax_='0.0-10 step.05', setValue=0.05, setToolTip='Stack shells with uv\'s within the given range.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Tolerance: ', setObjectName='s000', setMinMax_='0.0-10 step.05', setValue=0.05, setToolTip='Stack shells with uv\'s within the given range.')
 			return
 
 		tolerance = tb.menu_.s000.value()
@@ -216,18 +300,28 @@ class Uv(Init):
 			pm.mel.selectUnmappedFaces()
 
 
+	def tb004(self, state=None):
+		'''
+		Unfold
+		'''
+		tb = self.currentUi.tb004
+		if state is 'setMenu':
+			tb.menu_.add('QCheckBox', setText='Optimize', setObjectName='chk017', setChecked=True, setToolTip='The Optimize UV Tool evens out the spacing between UVs on a mesh, fixing areas of distortion (overlapping UVs).')
+			return
+
+		optimize = self.tb.menu_.chk017.isChecked()
+
+		if optimize:
+			pm.mel.performPolyOptimizeUV(0)
+		else:
+			pm.mel.performUnfold(0)
+
+
 	def b000(self):
 		'''
 		Cut Uv Hard Edges
 		'''
 		pm.mel.cutUvHardEdge()
-
-
-	def b001(self):
-		'''
-		Flip Uv
-		'''
-		pm.mel.performPolyForceUV('flip', 0)
 
 
 	def b002(self):
@@ -258,44 +352,6 @@ class Uv(Init):
 			pm.polyMapCut(sel)
 
 
-	def b007(self):
-		'''
-		Display: Checkered Pattern
-		'''
-		state = pm.textureWindow('polyTexturePlacementPanel1', displayCheckered=1, query=1)
-		pm.textureWindow('polyTexturePlacementPanel1', edit=1, displayCheckered=(not state))	
-
-
-	def b008(self):
-		'''
-		Adjust Checkered Size
-		'''
-		pm.mel.bt_textureEditorCheckerSize()
-
-
-	def b009(self):
-		'''
-		Display: Borders
-		'''
-		pm.mel.textureWindowCreatePopupContextMenu("polyTexturePlacementPanel1popupMenusShift")
-		borders = pm.polyOptions(query=1, displayMapBorder=1)
-		borderWidth = pm.optionVar(query='displayPolyBorderEdgeSize')
-		pm.polyOptions(displayMapBorder=(not borders[0]), sizeBorder=borderWidth[1])
-
-
-	def b010(self):
-		'''
-		Display: Distortion
-		'''
-		winName = pm.getPanel(scriptType='polyTexturePlacementPanel')
-		state = int(pm.textureWindow(winName[0], query=1, displayDistortion=1))
-
-		if state!=1:
-			pm.textureWindow(winName[0], edit=1, displayDistortion=1)
-		else:
-			pm.textureWindow(winName[0], edit=1, displayDistortion=0)
-
-
 	@Init.attr
 	def b011(self):
 		'''
@@ -316,50 +372,12 @@ class Uv(Init):
 		pm.mel.bt_autoMapMultipleMeshes()
 
 
-	def b014(self):
-		'''
-		Rotate On Last
-		'''
-		pm.mel.bt_checkSelectionOrderPref()
-		pm.mel.bt_rotateUVsAroundLastWin()
-
-
-	def b015(self):
-		'''
-		Flip Horizontally On Last
-		'''
-		pm.mel.bt_checkSelectionOrderPref()
-		pm.mel.bt_polyflipUVsAcrossLast(0)
-
-
-	def b016(self):
-		'''
-		Flip Vertically On Last
-		'''
-		pm.mel.bt_checkSelectionOrderPref()
-		pm.mel.bt_polyflipUVsAcrossLast(1)
-
-
 	def b017(self):
 		'''
 		Align Uv Shells
 		'''
 		from AlignUVShells import *
 		AlignUVShellsWindow()
-
-
-	def b018(self):
-		'''
-		Unfold Uv'S
-		'''
-		pm.mel.performUnfold(0)
-
-
-	def b019(self):
-		'''
-		Optimize Uv'S
-		'''
-		pm.mel.performPolyOptimizeUV(0)
 
 
 	def b021(self):

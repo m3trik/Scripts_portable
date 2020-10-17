@@ -63,6 +63,8 @@ class Editors(Init):
 		text = tree.getWidgetText(wItem, column)
 		header = tree.getHeaderFromColumn(column)
 
+		self.tk.hide() #hide the menu before opening an external editor.
+
 		if header=='General Editors':
 			if text=='Attribute Editor':
 				pm.mel.AttributeEditor()
@@ -188,8 +190,6 @@ class Editors(Init):
 				pm.mel.PFXUVSetLinkingEditor()
 			if text=='UV Linking: Hair/UV':
 				pm.mel.HairUVSetLinkingEditor()
-
-		self.tk.hide()
 
 
 	def cmb000(self, index=None):
