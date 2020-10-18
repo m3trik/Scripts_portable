@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>288</width>
-    <height>320</height>
+    <height>306</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -270,77 +270,6 @@
             <property name="spacing">
              <number>0</number>
             </property>
-            <item row="9" column="0" colspan="2">
-             <widget class="QPushButton" name="b013">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>20</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>999</width>
-                <height>20</height>
-               </size>
-              </property>
-              <property name="toolTip">
-               <string>Create an automatic mapping projection node to control multiple meshes</string>
-              </property>
-              <property name="text">
-               <string>Auto Map Multi</string>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>18</width>
-                <height>18</height>
-               </size>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QPushButton" name="b011">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>20</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>999</width>
-                <height>20</height>
-               </size>
-              </property>
-              <property name="toolTip">
-               <string>Sew the selected UV edges</string>
-              </property>
-              <property name="text">
-               <string>Sew</string>
-              </property>
-              <property name="autoDefault">
-               <bool>true</bool>
-              </property>
-              <property name="default">
-               <bool>false</bool>
-              </property>
-              <property name="flat">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
             <item row="6" column="0" colspan="2">
              <widget class="QToolButton_" name="tb001">
               <property name="enabled">
@@ -412,8 +341,8 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="0">
-             <widget class="QPushButton" name="b005">
+            <item row="1" column="1">
+             <widget class="QPushButton" name="b011">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -430,10 +359,10 @@
                </size>
               </property>
               <property name="toolTip">
-               <string>Cut the selected UV edges</string>
+               <string>Sew the selected UV edges</string>
               </property>
               <property name="text">
-               <string>Cut</string>
+               <string>Sew</string>
               </property>
               <property name="autoDefault">
                <bool>true</bool>
@@ -471,13 +400,116 @@
               </property>
              </widget>
             </item>
+            <item row="1" column="0">
+             <widget class="QPushButton" name="b005">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>999</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Cut the selected UV edges</string>
+              </property>
+              <property name="text">
+               <string>Cut</string>
+              </property>
+              <property name="autoDefault">
+               <bool>true</bool>
+              </property>
+              <property name="default">
+               <bool>false</bool>
+              </property>
+              <property name="flat">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
            </layout>
-           <zorder>b013</zorder>
            <zorder>tb004</zorder>
            <zorder>tb001</zorder>
            <zorder>b000</zorder>
            <zorder>b005</zorder>
            <zorder>b011</zorder>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox_9">
+           <property name="minimumSize">
+            <size>
+             <width>125</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>125</width>
+             <height>999</height>
+            </size>
+           </property>
+           <property name="title">
+            <string>Transfer</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_5">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <item row="0" column="0">
+             <widget class="QPushButton" name="b002">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>999</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Pack UV's</string>
+              </property>
+              <property name="text">
+               <string>Transfer UV Sets</string>
+              </property>
+              <property name="autoDefault">
+               <bool>true</bool>
+              </property>
+              <property name="default">
+               <bool>false</bool>
+              </property>
+              <property name="flat">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </item>
          <item>
@@ -533,8 +565,8 @@
             <property name="spacing">
              <number>0</number>
             </property>
-            <item row="5" column="0">
-             <widget class="QPushButton" name="b023">
+            <item row="7" column="2">
+             <widget class="QPushButton" name="b025">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -565,7 +597,7 @@
                <string>Move Relative: Move the selected shells to a UV space relative to their current position.</string>
               </property>
               <property name="text">
-               <string>⇦</string>
+               <string>⇧</string>
               </property>
               <property name="iconSize">
                <size>
@@ -575,8 +607,8 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="0" colspan="4">
-             <widget class="QPushButton" name="b021">
+            <item row="7" column="3">
+             <widget class="QPushButton" name="b026">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -588,81 +620,7 @@
               </property>
               <property name="minimumSize">
                <size>
-                <width>0</width>
-                <height>20</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>999</width>
-                <height>20</height>
-               </size>
-              </property>
-              <property name="toolTip">
-               <string>Straighten UV edge loops along U and/or V</string>
-              </property>
-              <property name="text">
-               <string>Straighten</string>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>18</width>
-                <height>18</height>
-               </size>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0" colspan="4">
-             <widget class="QPushButton" name="b017">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>20</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>999</width>
-                <height>20</height>
-               </size>
-              </property>
-              <property name="toolTip">
-               <string>Align UV shells in the texture editor</string>
-              </property>
-              <property name="text">
-               <string>Align UV Shells</string>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>18</width>
-                <height>18</height>
-               </size>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="1">
-             <widget class="QPushButton" name="b024">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>31</width>
+                <width>32</width>
                 <height>20</height>
                </size>
               </property>
@@ -681,7 +639,7 @@
                <string>Move Relative: Move the selected shells to a UV space relative to their current position.</string>
               </property>
               <property name="text">
-               <string>⇩</string>
+               <string>⇨</string>
               </property>
               <property name="iconSize">
                <size>
@@ -728,8 +686,17 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="0" colspan="4">
-             <widget class="QComboBox_" name="cmb002">
+            <item row="3" column="0" colspan="4">
+             <widget class="QToolButton_" name="tb005">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -743,23 +710,58 @@
                </size>
               </property>
               <property name="toolTip">
-               <string>Selection contraints.</string>
+               <string>Straighten UV edge loops along U and/or V</string>
               </property>
-              <property name="editable">
-               <bool>false</bool>
+              <property name="text">
+               <string>Straighten</string>
               </property>
-              <property name="sizeAdjustPolicy">
-               <enum>QComboBox::AdjustToContents</enum>
+              <property name="iconSize">
+               <size>
+                <width>18</width>
+                <height>18</height>
+               </size>
               </property>
-              <item>
-               <property name="text">
-                <string>Transform:</string>
-               </property>
-              </item>
              </widget>
             </item>
-            <item row="5" column="2">
-             <widget class="QPushButton" name="b025">
+            <item row="5" column="0" colspan="4">
+             <widget class="QToolButton_" name="tb006">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>999</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Distribute selected UV's along an axis.</string>
+              </property>
+              <property name="text">
+               <string>Distribute</string>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>18</width>
+                <height>18</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="1">
+             <widget class="QPushButton" name="b024">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -790,7 +792,7 @@
                <string>Move Relative: Move the selected shells to a UV space relative to their current position.</string>
               </property>
               <property name="text">
-               <string>⇧</string>
+               <string>⇩</string>
               </property>
               <property name="iconSize">
                <size>
@@ -800,8 +802,8 @@
               </property>
              </widget>
             </item>
-            <item row="5" column="3">
-             <widget class="QPushButton" name="b026">
+            <item row="7" column="0">
+             <widget class="QPushButton" name="b023">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -813,7 +815,7 @@
               </property>
               <property name="minimumSize">
                <size>
-                <width>32</width>
+                <width>31</width>
                 <height>20</height>
                </size>
               </property>
@@ -832,7 +834,74 @@
                <string>Move Relative: Move the selected shells to a UV space relative to their current position.</string>
               </property>
               <property name="text">
-               <string>⇨</string>
+               <string>⇦</string>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>18</width>
+                <height>18</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" colspan="4">
+             <widget class="QComboBox_" name="cmb002">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>999</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Selection contraints.</string>
+              </property>
+              <property name="editable">
+               <bool>false</bool>
+              </property>
+              <property name="sizeAdjustPolicy">
+               <enum>QComboBox::AdjustToContents</enum>
+              </property>
+              <item>
+               <property name="text">
+                <string>Transform:</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="2" column="0" colspan="4">
+             <widget class="QToolButton_" name="tb007">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>999</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Scale selected UV shells until they match a specified texel density px/unit.</string>
+              </property>
+              <property name="text">
+               <string>Set Texel Densitiy</string>
               </property>
               <property name="iconSize">
                <size>
@@ -900,76 +969,6 @@
               </property>
               <property name="text">
                <string>Pack</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QGroupBox" name="groupBox_9">
-           <property name="minimumSize">
-            <size>
-             <width>125</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>125</width>
-             <height>999</height>
-            </size>
-           </property>
-           <property name="title">
-            <string>Transfer</string>
-           </property>
-           <layout class="QGridLayout" name="gridLayout_5">
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <item row="0" column="0">
-             <widget class="QPushButton" name="b002">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>20</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>999</width>
-                <height>20</height>
-               </size>
-              </property>
-              <property name="toolTip">
-               <string>Pack UV's</string>
-              </property>
-              <property name="text">
-               <string>Transfer UV Sets</string>
-              </property>
-              <property name="autoDefault">
-               <bool>true</bool>
-              </property>
-              <property name="default">
-               <bool>false</bool>
-              </property>
-              <property name="flat">
-               <bool>false</bool>
               </property>
              </widget>
             </item>

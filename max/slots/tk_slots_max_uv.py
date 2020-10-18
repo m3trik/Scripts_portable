@@ -93,25 +93,35 @@ class Uv(Init):
 
 	def cmb002(self, index=None):
 		'''
-		Editors
+		Transform
 		'''
 		cmb = self.uv.cmb002
 
 		if index is 'setMenu':
-			list_ = ['Flip', 'Flip Horizontally On Last', 'Flip Vertically On Last', 'Rotate On Last']
+			list_ = ['Flip U', 'Flip V', 'Align U Left', 'Align U Middle', 'Align U Right', 'Align V Top', 'Align V Middle', 'Align V Bottom', 'Linear Align']
 			cmb.addItems_(list_, 'Transform:')
 			return
 
-		if index>0: #hide hotbox then perform operation
-			self.tk.hide()
-			if index==cmb.items.index('Flip'):
-				Uv.flipUV()
-			elif index==cmb.items.index('Flip Horizontally On Last'):
-				pass
-			elif index==cmb.items.index('Flip Vertically On Last'):
-				pass
-			elif index==cmb.items.index('Rotate On Last'):
-				pass
+		if index>0:
+			self.tk.hide() #hide hotbox then perform operation
+			if index==cmb.items.index('Flip U'):
+				pm.polyFlipUV(flipType=0, local=1, usePivot=1, pivotU=0, pivotV=0)
+			elif index==cmb.items.index('Flip V'):
+				pm.polyFlipUV(flipType=1, local=1, usePivot=1, pivotU=0, pivotV=0)
+			elif index==cmb.items.index('Align U Left'):
+				pm.mel.performAlignUV('minU')
+			elif index==cmb.items.index('Align U Middle'):
+				pm.mel.performAlignUV('avgU')
+			elif index==cmb.items.index('Align U Right'):
+				pm.mel.performAlignUV('maxU')
+			elif index==cmb.items.index('Align U Top'):
+				pm.mel.performAlignUV('maxV')
+			elif index==cmb.items.index('Align U Middle'):
+				pm.mel.performAlignUV('avgV')
+			elif index==cmb.items.index('Align U Bottom'):
+				pm.mel.performAlignUV('minV')
+			elif index==cmb.items.index('Linear Align'):
+				pm.mel.performLinearAlignUV()
 			cmb.setCurrentIndex(0)
 
 
@@ -220,17 +230,26 @@ class Uv(Init):
 
 	def tb002(self, state=None):
 		'''
-		Stack Similar
+		Stack
 		'''
 		tb = self.currentUi.tb002
 		if state is 'setMenu':
-			tb.menu_.add('QDoubleSpinBox', setPrefix='Tolerance:   ', setObjectName='s000', setMinMax_='0.0-10 step.05', setValue=0.05, setToolTip='Stack shells with uv\'s within the given range.')
+			tb.menu_.add('QCheckBox', setText='Orient', setObjectName='chk021', setChecked=True, setToolTip='Orient UV shells to run parallel with the most adjacent U or V axis.')
+			tb.menu_.add('QCheckBox', setText='Stack Similar', setObjectName='chk022', setChecked=True, setToolTip='Stack only shells that fall within the set tolerance.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Tolerance: ', setObjectName='s000', setMinMax_='0.0-10 step.05', setValue=0.05, setToolTip='Stack shells with uv\'s within the given range.')
 			return
 
+		orient = tb.menu_.chk021.isChecked()
+		stackSimilar = tb.menu_.chk022.isChecked()
 		tolerance = tb.menu_.s000.value()
 		sel = Uv.UvShellSelection() #assure the correct selection mask.
 
-		pm.polyUVStackSimilarShells(sel, tolerance=tolerance)
+		if stackSimilar:
+			pm.polyUVStackSimilarShells(sel, tolerance=tolerance)
+		else:
+			pm.mel.texStackShells([])
+		if orient:
+			pm.mel.texOrientShells()
 
 
 	def tb003(self, state=None):
@@ -285,6 +304,72 @@ class Uv(Init):
 		self.uvModifier.relax(1, 0.01, True, True)
 
 
+	def tb005(self, state=None):
+		'''
+		Straighten Uv
+		'''
+		tb = self.currentUi.tb005
+		if state is 'setMenu':
+			tb.menu_.add('QSpinBox', setPrefix='Angle: ', setObjectName='s001', setMinMax_='0-360 step1', setValue=30, setToolTip='Set the maximum angle used for straightening uv\'s.')
+			tb.menu_.add('QCheckBox', setText='Straighten U', setObjectName='chk018', setChecked=True, setToolTip='Unfold UV\'s along a horizonal contraint.')
+			tb.menu_.add('QCheckBox', setText='Straighten V', setObjectName='chk019', setChecked=True, setToolTip='Unfold UV\'s along a vertical constaint.')
+			tb.menu_.add('QCheckBox', setText='Straighten Shell', setObjectName='chk020', setToolTip='Straighten a UV shell by unfolding UV\'s around a selected UV\'s edgeloop.')
+			return
+
+		u = tb.menu_.chk018.isChecked()
+		v = tb.menu_.chk019.isChecked()
+		angle = tb.menu_.s001.value()
+		straightenShell = tb.menu_.chk020.isChecked()
+
+		# if u:
+		# 	contraint = 'U'
+		# if v:
+		# 	constaint = 'V' if not u else 'UV'
+
+		self.uvModifier.Straighten()
+
+		# if straightenShell:
+		# 	pm.mel.texStraightenShell()
+
+
+	def tb006(self, state=None):
+		'''
+		Distribute
+		'''
+		tb = self.currentUi.tb006
+		if state is 'setMenu':
+			tb.menu_.add('QRadioButton', setText='Distribute U', setObjectName='chk023', setChecked=True, setToolTip='Distribute along U.')
+			tb.menu_.add('QRadioButton', setText='Distribute V', setObjectName='chk024', setToolTip='Distribute along V.')
+			return
+
+		u = tb.menu_.chk023.isChecked()
+		v = tb.menu_.chk024.isChecked()
+		
+		if u:
+			pm.mel.texDistributeShells(0, 0, "right", []) #'left', 'right'
+		if v:
+			pm.mel.texDistributeShells(0, 0, "down", []) #'up', 'down'
+
+
+	def tb007(self, state=None):
+		'''
+		Set Texel Density
+		'''
+		tb = self.currentUi.tb007
+		if state is 'setMenu':
+			tb.menu_.add('QSpinBox', setPrefix='Map Size: ', setObjectName='s002', setMinMax_='512-32768 step1024', setValue=2048, setToolTip='Set the map used as reference when getting texel density.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Texel Density: ', setObjectName='s003', setMinMax_='0.00-128 step8', setValue=32, setToolTip='Set the desired texel density.')
+			tb.menu_.add('QPushButton', setText='Get Texel Density', setObjectName='b099', setChecked=True, setToolTip='Get the average texel density of any selected faces.')
+
+			tb.menu_.b099.released.connect(lambda: tb.menu_.s003.setValue(float(pm.mel.texGetTexelDensity(tb.menu_.s002.value())))) #get and set texel density value.
+			return
+
+		mapSize = tb.menu_.s002.value()
+		density = tb.menu_.s003.value()
+
+		pm.mel.texSetTexelDensity(density, mapSize)
+
+
 	def b000(self):
 		'''
 		Cut Uv Hard Edges
@@ -318,27 +403,6 @@ class Uv(Init):
 		Sew Uv'S
 		'''
 		self.uvModifier.stitchVerts(True, 1.0) #(align, bias) --Bias of 0.0 the vertices will move to the source and 1.0 they will move to the target. 
-
-
-	def b013(self):
-		'''
-		Auto Map Multiple
-		'''
-		pass
-
-
-	def b017(self):
-		'''
-		Align Uv Shells
-		'''
-		pass
-
-
-	def b021(self):
-		'''
-		Straighten Uv
-		'''
-		self.uvModifier.Straighten()
 
 
 	def b023(self):
