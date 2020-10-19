@@ -181,14 +181,16 @@ class Uv(Init):
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
-			tb.menu_.add('QCheckBox', setText='Rotate', setObjectName='chk007', setToolTip='Allow shell rotation during packing.')
+			tb.menu_.add('QCheckBox', setText='Scale', setObjectName='chk025', setChecked=True, setToolTip='Allow shell scaling during packing.')
+			tb.menu_.add('QCheckBox', setText='Rotate', setObjectName='chk007', setChecked=True, setToolTip='Allow shell rotation during packing.')
 			return
 
+		scale = tb.menu_.chk025.isChecked()
 		rotate = tb.menu_.chk007.isChecked()
 
 		obj = rt.selection[0]
 
-		self.uvModifier.pack(1, 0.01, True, rotate, True)
+		self.uvModifier.pack(1, 0.01, scale, rotate, True) #(method, spacing, normalize, rotate, fillholes)
 
 
 	@Init.attr

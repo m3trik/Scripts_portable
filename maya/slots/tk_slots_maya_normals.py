@@ -187,7 +187,7 @@ class Normals(Init):
 			if byUvShell:
 				obj = pm.ls(obj, transforms=1)
 				sets_ = Init.getUvShellSets(obj)
-				for set_ in sets_.values():
+				for set_ in sets_:
 					pm.polySetToFaceNormal(set_)
 					pm.polyAverageNormal(set_)
 			else:

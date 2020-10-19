@@ -182,18 +182,39 @@ class Uv(Init):
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
+			tb.menu_.add('QCheckBox', setText='Scale', setObjectName='chk025', setChecked=True, setToolTip='Allow shell scaling during packing.')
 			tb.menu_.add('QCheckBox', setText='Rotate', setObjectName='chk007', setChecked=True, setToolTip='Allow shell rotation during packing.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Rotate Step: ', setObjectName='s007', setMinMax_='0.0-360 step1', setValue=0.5, setToolTip='Set the allowed rotation increment contraint.')
+			tb.menu_.add(QCheckBox_, setText='Stack Similar: 1', setObjectName='chk026', setTristate=True, setCheckState_=0, setToolTip='Find Similar shells. <br>state 1: Find similar shells, and pack one of each, ommiting the rest.<br>state 2: Find similar shells, and stack during packing (can be very slow).')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Stack Similar Tolerance: ', setObjectName='s006', setMinMax_='0.0-10 step.1', setValue=0.5, setToolTip='Stack shells with uv\'s within the given range.')
+			tb.menu_.add('QSpinBox', setPrefix='UDIM: ', setObjectName='s004', setMinMax_='1001-1200 step1', setValue=1001, setToolTip='Set the desired UDIM tile space.')
+			tb.menu_.add('QSpinBox', setPrefix='Map Size: ', setObjectName='s005', setMinMax_='512-8192 step512', setValue=2048, setToolTip='UV map resolution.')
+
+			tb.menu_.chk026.stateChanged.connect(lambda state: tb.menu_.chk026.setText('Stack Similar: '+str(state)))
 			return
 
-		scale = 1
+		scale = tb.menu_.chk025.isChecked()
 		rotate = tb.menu_.chk007.isChecked()
+		rotateStep = tb.menu_.s007.value()
+		UDIM = tb.menu_.s004.value()
+		mapSize = tb.menu_.s005.value()
+		similar = tb.menu_.chk026.checkState_()
+		tolerance = tb.menu_.s006.value()
 
-		rotateMax = 0.0
-		if rotate:
-			rotateMax = 360.0
+		U,D,I,M = [int(i) for i in str(UDIM)]
 
-		sel = pm.ls(sl=1)
-		packUv = pm.u3dLayout(sel, resolution=2048, preScaleMode=scale, shellSpacing=.005, tileMargin=.005, packBox=[0,1,0,1], rotateMax=rotateMax) #layoutScaleMode (int), multiObject (bool), mutations (int), packBox (float, float, float, float), preRotateMode (int), preScaleMode (int), resolution (int), rotateMax (float), rotateMin (float), rotateStep (float), shellSpacing (float), tileAssignMode (int), tileMargin (float), tileU (int), tileV (int), translate (bool)
+		sel = Uv.UvShellSelection() #assure the correct selection mask.
+		if similar > 0:
+			dissimilar = pm.polyUVStackSimilarShells(sel, tolerance=tolerance, onlyMatch=True)
+			dissimilarUVs = [s.split(' ') for s in dissimilar] #.
+			dissimilarFaces = pm.polyListComponentConversion(dissimilarUVs, fromUV=1, toFace=1)
+			pm.u3dLayout(dissimilarFaces, resolution=mapSize, preScaleMode=scale, preRotateMode=rotate, rotateStep=rotateStep, shellSpacing=.005, tileMargin=.005, packBox=[M-1, D, I, U]) #layoutScaleMode (int), multiObject (bool), mutations (int), packBox (float, float, float, float), preRotateMode (int), preScaleMode (int), resolution (int), rotateMax (float), rotateMin (float), rotateStep (float), shellSpacing (float), tileAssignMode (int), tileMargin (float), tileU (int), tileV (int), translate (bool)
+		if similar is 2:
+			similarFaces = [f for f in pm.ls(sel, flatten=1) if f not in pm.ls(dissimilarFaces, flatten=1)]
+			pm.polyUVStackSimilarShells(similarFaces+dissimilarFaces, tolerance=tolerance)
+
+		else:
+			pm.u3dLayout(sel, resolution=mapSize, preScaleMode=scale, preRotateMode=rotate, rotateStep=rotateStep, shellSpacing=.005, tileMargin=.005, packBox=[M-1, D, I, U]) #layoutScaleMode (int), multiObject (bool), mutations (int), packBox (float, float, float, float), preRotateMode (int), preScaleMode (int), resolution (int), rotateMax (float), rotateMin (float), rotateStep (float), shellSpacing (float), tileAssignMode (int), tileMargin (float), tileU (int), tileV (int), translate (bool)
 
 
 	@Init.attr
@@ -265,7 +286,7 @@ class Uv(Init):
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='Orient', setObjectName='chk021', setChecked=True, setToolTip='Orient UV shells to run parallel with the most adjacent U or V axis.')
 			tb.menu_.add('QCheckBox', setText='Stack Similar', setObjectName='chk022', setChecked=True, setToolTip='Stack only shells that fall within the set tolerance.')
-			tb.menu_.add('QDoubleSpinBox', setPrefix='Tolerance: ', setObjectName='s000', setMinMax_='0.0-10 step.05', setValue=0.05, setToolTip='Stack shells with uv\'s within the given range.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Tolerance: ', setObjectName='s000', setMinMax_='0.0-10 step.1', setValue=0.5, setToolTip='Stack shells with uv\'s within the given range.')
 			return
 
 		orient = tb.menu_.chk021.isChecked()
@@ -515,8 +536,8 @@ class Uv(Init):
 			for obj in objects:
 				pm.selectMode(component=1)
 				pm.selectType(meshUVShell=1)
-				faces = Init.getComponents(obj, 'faces', flatten=False)
-				selection = pm.select(faces, add=True)
+				selection = Init.getComponents(obj, 'faces', flatten=False)
+				pm.select(selection, add=True)
 
 		return selection
 

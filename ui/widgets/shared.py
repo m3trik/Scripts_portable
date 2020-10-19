@@ -225,6 +225,7 @@ class Attributes(object):
 			setAlignment_ (str) = Set the alignment using a string value. ie. 'AlignVCenter'
 			setButtonSymbols_ (str) = Set button symbols using a string value. ex. ie. 'PlusMinus'
 			setMinMax_ (str) = Set the min, max, and step value using a string value. ex. '.01-10 step.1'
+			setCheckState_ (int) = Set a tri-state checkbox state using an integer value. 0(unchecked), 1(partially checked), 2(checked).
 		'''
 		if attr=='copy_':
 			w.setObjectName(value.objectName())
@@ -271,6 +272,10 @@ class Attributes(object):
 
 		elif attr=='setSpinBoxByValue_':
 			self.setSpinBoxByValue(w, value[0], value[1])
+
+		elif attr=='setCheckState_':
+			state = {0:QtCore.Qt.CheckState.Unchecked, 1:QtCore.Qt.CheckState.PartiallyChecked, 2:QtCore.Qt.CheckState.Checked}
+			w.setCheckState(state[value])
 
 		else:
 			print('Error: {} has no attribute {}'.format(w, attr))

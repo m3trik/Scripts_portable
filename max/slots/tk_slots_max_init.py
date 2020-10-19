@@ -1,5 +1,8 @@
 from __future__ import print_function
-from PySide2 import QtGui
+from builtins import super
+import os
+
+from PySide2 import QtGui, QtWidgets, QtCore
 
 from widgets.qMenu_ import QMenu_
 from widgets.qLabel_ import QLabel_
@@ -8,7 +11,6 @@ from widgets.qCheckBox_ import QCheckBox_
 from widgets.qToolButton_ import QToolButton_
 from widgets.qWidget_MultiWidget import QWidget_MultiWidget as MultiWidget
 
-import os
 from tk_slots_ import Slots
 
 #3ds Max dependancies

@@ -2,7 +2,7 @@ from __future__ import print_function
 from builtins import super
 import os
 
-from PySide2 import QtGui, QtWidgets
+from PySide2 import QtGui, QtWidgets, QtCore
 
 from widgets.qMenu_ import QMenu_
 from widgets.qLabel_ import QLabel_
@@ -121,22 +121,29 @@ class Init(Slots):
 	# ------------------------------------------------
 
 	@staticmethod
-	def getComponents(obj, type_, flatten=True):
+	def getComponents(objects, type_, flatten=True):
 		'''
 		Get the components of the given type from the given object.
 
 		args:
-			obj (obj) = The polygonal object to get the components of.
+			objects (obj)(list) = The polygonal object(s) to get the components of.
 			flatten (bool) = Flattens the returned list of objects so that each component is identified individually. (much faster)
 
 		returns:
 			(list) component objects.
 		'''
-		if isinstance(obj, (str, unicode)):
-			obj = pm.ls(obj)[0]
-		
+		if isinstance(objects, (str, unicode)):
+			objects = pm.ls(objects)
+
+		if not isinstance(objects, (list, set, tuple)):
+			objects=[objects]
+
 		types = {'vertices':'vtx', 'edges':'e', 'faces':'f'}
-		components = pm.ls('{}.{}[*]'.format(obj, types[type_]), flatten=flatten)
+
+		components=[]
+		for obj in objects:
+			cmpts = pm.ls('{}.{}[*]'.format(obj, types[type_]), flatten=flatten)
+			components+=cmpts
 
 		return components
 
@@ -171,15 +178,16 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getUvShellSets(objects=None):
+	def getUvShellSets(objects=None, returnType='shells'):
 		'''
 		Get All UV shells and their corresponding sets of faces.
 
 		args:
-			objects (obj)(list) = Polygon object(s).
+			objects (obj)(list) = Polygon object(s) or Polygon face(s).
+			returnType (str) = The desired returned type. valid values are: 'shells', 'shellIDs'. If None is given, the full dict will be returned.
 
 		returns:
-			(dict) ex. {0L:[[MeshFace(u'pShape.f[0]'), MeshFace(u'pShape.f[1]')], 1L:[[MeshFace(u'pShape.f[2]'), MeshFace(u'pShape.f[3]')]}
+			(list)(dict) dependant on the given returnType arg. ex. {0L:[[MeshFace(u'pShape.f[0]'), MeshFace(u'pShape.f[1]')], 1L:[[MeshFace(u'pShape.f[2]'), MeshFace(u'pShape.f[3]')]}
 		'''
 		if not objects:
 			objects = pm.ls(selection=1, objectsOnly=1, transforms=1, flatten=1)
@@ -187,19 +195,28 @@ class Init(Slots):
 		if not isinstance(objects, (list, set, tuple)):
 			objects=[objects]
 
-		shells={}
-		for obj in objects:
-			faces = Init.getComponents(obj, 'faces')
-			for face in faces:
-				shell_Id = pm.polyEvaluate(face, uvShellIds=True)
+		objectType = Init.getObjectType(objects[0])
+		if objectType=='Polygon Face':
+			faces = objects
+		else:
+			faces = getComponents(objects, 'faces')
 
+		shells={}
+		for face in faces:
+			shell_Id = pm.polyEvaluate(face, uvShellIds=True)
+
+			try:
+				shells[shell_Id[0]].append(face)
+			except KeyError:
 				try:
-					shells[shell_Id[0]].append(face)
-				except KeyError:
-					try:
-						shells[shell_Id[0]]=[face]
-					except IndexError:
-						pass
+					shells[shell_Id[0]]=[face]
+				except IndexError:
+					pass
+
+		if returnType=='shells':
+			shells = shells.values()
+		elif returnType=='shellIDs':
+			shells = shells.keys()
 
 		return shells
 
@@ -1589,6 +1606,41 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 
 
 #deprecated -------------------------------------
+
+
+# @staticmethod
+# 	def getUvShellSets(objects=None):
+# 		'''
+# 		Get All UV shells and their corresponding sets of faces.
+
+# 		args:
+# 			objects (obj)(list) = Polygon object(s).
+
+# 		returns:
+# 			(dict) ex. {0L:[[MeshFace(u'pShape.f[0]'), MeshFace(u'pShape.f[1]')], 1L:[[MeshFace(u'pShape.f[2]'), MeshFace(u'pShape.f[3]')]}
+# 		'''
+# 		if not objects:
+# 			objects = pm.ls(selection=1, objectsOnly=1, transforms=1, flatten=1)
+
+# 		if not isinstance(objects, (list, set, tuple)):
+# 			objects=[objects]
+
+# 		shells={}
+# 		for obj in objects:
+# 			faces = Init.getComponents(obj, 'faces')
+# 			for face in faces:
+# 				shell_Id = pm.polyEvaluate(face, uvShellIds=True)
+
+# 				try:
+# 					shells[shell_Id[0]].append(face)
+# 				except KeyError:
+# 					try:
+# 						shells[shell_Id[0]]=[face]
+# 					except IndexError:
+# 						pass
+
+# 		return shells
+
 
 
 # @staticmethod

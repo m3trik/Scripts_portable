@@ -29,6 +29,19 @@ class QCheckBox_(QtWidgets.QCheckBox, Menu, Attributes, RichText):
 			self.setRichTextStyle(textColor='black' if state>0 else 'white')
 
 
+	def checkState_(self):
+		'''
+		Get the state of a checkbox as an integer value.
+		Simplifies working with tri-state checkboxes.
+		'''
+		if self.isTristate():		
+			state = {QtCore.Qt.CheckState.Unchecked:0, QtCore.Qt.CheckState.PartiallyChecked:1, QtCore.Qt.CheckState.Checked:2}
+			return state[self.checkState()]
+
+		else:
+			return 1 if self.isChecked() else 0
+
+
 	def mousePressEvent(self, event):
 		'''
 		args:
