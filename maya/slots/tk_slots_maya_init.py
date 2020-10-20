@@ -713,8 +713,7 @@ class Init(Slots):
 		result=[]
 		objects = set(pm.ls(edges, objectsOnly=1))
 		for obj in objects:
-
-			edges = Init.getEdgePath(obj, edges, 'edgeLoop')
+			edges = Init.getEdgePath(obj, pm.ls(edges, flatten=1), 'edgeLoop')
 			[result.append(i) for i in edges]
 
 		return result
@@ -736,7 +735,7 @@ class Init(Slots):
 		objects = set(pm.ls(edges, objectsOnly=1))
 		for obj in objects:
 
-			edges = Init.getEdgePath(obj, edges, 'edgeRing')
+			edges = Init.getEdgePath(obj, pm.ls(edges, flatten=1), 'edgeRing')
 			[result.append(i) for i in edges]
 
 		return result
