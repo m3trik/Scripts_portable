@@ -33,74 +33,90 @@ class Init(Slots):
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 
+		try:
+			self.init.hud.shown.connect(self.construct_hud)
+		except AttributeError: #(an inherited class)
+			pass
 
-	def info(self):
-		'''
-		Get current scene attributes. Only those with relevant values will be displayed.
 
-		returns:
-			{dict} - current object attributes.
+	def construct_hud(self):
 		'''
-		infoDict={}
+		Add current scene attributes to the hud lineEdit.
+		Only those with relevant values will be displayed.
+		'''
+		hud = self.init.hud
+
 		try:
 			selection = pm.ls(selection=1)
 		except NameError:
-			return infoDict
+			return
 
 		symmetry = pm.symmetricModelling(query=1, symmetry=1);
-		if symmetry: axis = pm.symmetricModelling(query=1, axis=1); infoDict.update({'Symmetry Axis: ':axis.upper()}) #symmetry axis
+		if symmetry:
+			axis = pm.symmetricModelling(query=1, axis=1)
+			hud.insertText('Symmetry Axis: <font style="color: Yellow;">{}'.format(axis.upper())) #symmetry axis
 
 		xformConstraint = pm.xformConstraint(query=True, type=True)
-		if xformConstraint=='none': xformConstraint=None; infoDict.update({'Xform Constrait: ':xformConstraint}) #transform constraits
+		if xformConstraint=='none':
+			xformConstraint=None
+		if xformConstraint:
+			hud.insertText('Xform Constrait: <font style="color: Yellow;">{}'.format(xformConstraint)) #transform constraits
 
 		if selection:
 			if pm.selectMode(query=1, object=1): #object mode:
 				if pm.selectType(query=1, allObjects=1): #get object/s
 
 					selectedObjects = pm.ls(selection=1, objectsOnly=1)
-					name_and_type = ['{0} : {1}'.format(i.name(), pm.objectType(i)) for i in selectedObjects] #ie. ['pCube1:transform', 'pSphere1:transform']
-					infoDict.update({'Selection: ':name_and_type}) #currently selected objects by name and type.
+					name_and_type = ['<font style="color: Yellow;">{0}<font style="color: LightGray;">:{1}'.format(i.name(), pm.objectType(i)) for i in selectedObjects] #ie. ['pCube1:transform', 'pSphere1:transform']
+					name_and_type_str = str(name_and_type).translate(None, '[]\'') #format as single string.
+					hud.insertText('Selected: {}'.format(name_and_type_str)) #currently selected objects by name and type.
 
 					objectFaces = pm.polyEvaluate(selectedObjects, face=True)
 					if type(objectFaces)==int:
-						infoDict.update({'Faces: ':format(objectFaces, ',d')}) #add commas each 3 decimal places.
+						hud.insertText('Faces: <font style="color: Yellow;">{}'.format(objectFaces, ',d')) #add commas each 3 decimal places.
 
-					# objectTris = pm.polyEvaluate(selectedObjects, triangle=True)
-					# if type(objectTris)==int:
-					# 	infoDict.update({'Tris: ':format(objectTris, ',d')}) #add commas each 3 decimal places.
+					objectTris = pm.polyEvaluate(selectedObjects, triangle=True)
+					if type(objectTris)==int:
+						hud.insertText('Tris: <font style="color: Yellow;">{}'.format(objectTris, ',d')) #add commas each 3 decimal places.
+
+					objectUVs = pm.polyEvaluate(selectedObjects, uvcoord=True)
+					if type(objectUVs)==int:
+						hud.insertText('UVs: <font style="color: Yellow;">{}'.format(objectUVs, ',d')) #add commas each 3 decimal places.
 
 			elif pm.selectMode(query=1, component=1): #component mode:
 				if pm.selectType(query=1, vertex=1): #get vertex selection info
-					vertices = pm.filterExpand(selectionMask=31)
-					selectedVerts = [v.split('[')[-1].rstrip(']') for v in vertices] if vertices else [] #pm.polyEvaluate(vertexComponent=1);
-					collapsedList = self.collapseList(selectedVerts, limit=6)
-					numVerts = pm.polyEvaluate (selection[0], vertex=1)
-					infoDict.update({'Vertices: '+str(len(selectedVerts))+'/'+str(numVerts):collapsedList}) #selected verts
+					type_ = 'Verts'
+					num_selected = pm.polyEvaluate(vertexComponent=1)
+					total_num = pm.polyEvaluate(selection, vertex=1)
 
 				elif pm.selectType(query=1, edge=1): #get edge selection info
-					edges = pm.filterExpand(selectionMask=32)
-					selectedEdges = [e.split('[')[-1].rstrip(']') for e in edges] if edges else [] #pm.polyEvaluate(edgeComponent=1);
-					collapsedList = self.collapseList(selectedEdges, limit=6)
-					numEdges = pm.polyEvaluate (selection[0], edge=1)
-					infoDict.update({'Edges: '+str(len(selectedEdges))+'/'+str(numEdges):collapsedList}) #selected edges
+					type_ = 'Edges'
+					num_selected = pm.polyEvaluate(edgeComponent=1)
+					total_num = pm.polyEvaluate(selection, edge=1)
 
 				elif pm.selectType(query=1, facet=1): #get face selection info
-					faces = pm.filterExpand(selectionMask=34)
-					selectedFaces = [f.split('[')[-1].rstrip(']') for f in faces] if faces else [] #pm.polyEvaluate(faceComponent=1);
-					collapsedList = self.collapseList(selectedFaces, limit=6)
-					numFaces = pm.polyEvaluate (selection[0], face=1)
-					infoDict.update({'Faces: '+str(len(selectedFaces))+'/'+str(numFaces):collapsedList}) #selected faces
+					type_ = 'Faces'
+					num_selected = pm.polyEvaluate(faceComponent=1)
+					total_num = pm.polyEvaluate(selection, face=1)
+
+				elif pm.selectType(query=1, polymeshUV=1): #get uv selection info
+					type_ = 'UVs'
+					num_selected = pm.polyEvaluate(uvComponent=1)
+					total_num = pm.polyEvaluate(selection, uvcoord=1)
+
+				if all((type_, num_selected, total_num)):
+					hud.insertText('Selected {}: <font style="color: Yellow;">{} <font style="color: LightGray;">/{}'.format(type_, num_selected, total_num)) #selected components
 
 
-			# selectedUVs = pm.polyEvaluate(uvComponent=1); 
-			# if type(selectedUvs)==int: infoDict.update({"Selected UV's: ":selectedUVs}) #selected uv's
+		prevCommand = self.sb.prevCommand(docString=True)
+		if prevCommand:
+			hud.insertText('Prev Command: <font style="color: Yellow;">{}'.format(prevCommand))  #get button text from last used command
 
-		prevCommand = self.sb.prevCommand(docString=True); infoDict.update({"Prev Command: ":prevCommand})  #get button text from last used command
-		# prevUi = self.sb.previousName(omitLevel=[0,1,2]); infoDict.update({"Prev UI: ":prevUi.replace('_', '').title()})  #get the last level 3 ui name string.
-		# prevCamera = self.sb.prevCamera(docString=True); infoDict.update({"Prev Camera: ":prevCamera})  #get the previously used camera.
+		# prevUi = self.sb.previousName(omitLevel=[0,1,2])
+		# hud.insertText('Prev UI: {}'.format(prevUi.replace('_', '').title())) #get the last level 3 ui name string.
 
-		return infoDict
-
+		# prevCamera = self.sb.prevCamera(docString=True)
+		# hud.insertText('Prev Camera: {}'.format(prevCamera)) #get the previously used camera.
 
 
 	@staticmethod
@@ -114,6 +130,10 @@ class Init(Slots):
 		ex. loadPlugin('nearestPointOnMesh')
 		'''
 		not pm.pluginInfo(plugin, query=True, loaded=True) and pm.loadPlugin(plugin)
+
+
+
+
 
 
 	# ------------------------------------------------

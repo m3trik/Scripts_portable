@@ -184,7 +184,7 @@ class Tk(QtWidgets.QStackedWidget):
 		if event.key()==self.key_show and not event.isAutoRepeat():
 			pass
 
-		return QtWidgets.QStackedWidget.keyPressEvent(self, event)
+			return QtWidgets.QStackedWidget.keyPressEvent(self, event)
 
 
 	def keyReleaseEvent(self, event):
@@ -195,7 +195,7 @@ class Tk(QtWidgets.QStackedWidget):
 		if event.key()==self.key_show and not event.isAutoRepeat():
 			self.hide()
 
-		return QtWidgets.QStackedWidget.keyReleaseEvent(self, event)
+			return QtWidgets.QStackedWidget.keyReleaseEvent(self, event)
 
 
 	def mousePressEvent(self, event):
@@ -211,13 +211,13 @@ class Tk(QtWidgets.QStackedWidget):
 			self.drawPath.append(self.mapToGlobal(self.rect().center()))
 
 			if event.button()==QtCore.Qt.LeftButton:
-				self.setUi('cameras')
+				self.setUi('main')
 
 			elif event.button()==QtCore.Qt.MiddleButton:
 				self.setUi('editors')
 
 			elif event.button()==QtCore.Qt.RightButton:
-				self.setUi('main')
+				self.setUi('cameras')
 
 		return QtWidgets.QStackedWidget.mousePressEvent(self, event)
 
@@ -253,10 +253,10 @@ class Tk(QtWidgets.QStackedWidget):
 			self.repeatLastCameraView()
 
 		elif event.button()==QtCore.Qt.LeftButton:
-			self.repeatLastCommand()
+			self.repeatLastUi()
 
 		elif event.button()==QtCore.Qt.MiddleButton:
-			self.repeatLastUi()
+			self.repeatLastCommand()
 
 		return QtWidgets.QStackedWidget.mouseDoubleClickEvent(self, event)
 
@@ -304,10 +304,8 @@ class Tk(QtWidgets.QStackedWidget):
 		self.sb.gcProtect(clear=True) #clear any garbage protected items.
 
 		self.setUi('init')
-		#run once on launch. update the info textEdit.
-		method = self.sb.getMethod(self.sb.name, 'info')
-		if callable(method):
-			self.sb.ui.info.insertText(method())
+		# 	method = self.sb.getMethod(self.sb.name, 'hud') #run once on launch. update the hud textEdit in the init module.
+		# 	method()
 
 		self.move(QtGui.QCursor.pos() - self.rect().center()) #move window to cursor position and offset from left corner to center
 		# self.sb.ui.staticWindow.move(self.sb.ui.staticWindow.pos()+QtGui.QCursor.pos())

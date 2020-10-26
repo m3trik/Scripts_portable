@@ -34,68 +34,75 @@ class Init(Slots):
 	def __init__(self, *args, **kwargs):
 		super(Init, self).__init__(*args, **kwargs)
 
+		try:
+			self.init.hud.shown.connect(self.construct_hud)
+		except AttributeError: #(an inherited class)
+			pass
 
-	def info(self):
-		'''
-		Get current scene attributes. Only those with relevant values will be displayed.
 
-		returns:
-			(dict) current object attributes.
+	def construct_hud(self):
 		'''
-		infoDict={}
+		Add current scene attributes to a lineEdit.
+		Only those with relevant values will be displayed.
+		'''
+		hud = self.init.hud
+
 		try:
 			selection = rt.selection
 		except AttributeError:
-			return infoDict
+			return
+
+		if selection:
+			level = rt.subObjectLevel
+			if level==0: #object level
+				name_and_type = ['<font style="color: Yellow;">{0}<font style="color: LightGray;">:{1}'.format(s.name, rt.classOf(s.baseObject)) for s in selection]
+				name_and_type_str = str(name_and_type).translate(None, '[]\'') #format as single string.
+				hud.insertText('Selected: <font style="color: Yellow;">{}'.format(name_and_type_str)) #currently selected objects
+
+			for obj in rt.selection:
+				type_ = str(rt.classOf(obj))
+
+				symmetry = obj.modifiers[rt.Symmetry]
+				if symmetry:
+					int_ = symmetry.axis
+					axis = {0:'x', 1:'y', 2:'z'}
+					hud.insertText('Symmetry Axis: <font style="color: Yellow;">{}'.format(axis[int_].upper())) #symmetry axis
+
+				# xformConstraint = pm.xformConstraint(query=True, type=True)
+				# if xformConstraint=='none':
+				# 	xformConstraint=None
+				# if xformConstraint:
+				# 	hud.insertText('Xform Constrait: <font style="color: Yellow;">{}'.format(xformConstraint)) #transform constraits
+
+				if type_=='Editable_Poly' or type_=='Edit_Poly':
+					if level==1: #get vertex info
+						type_ = 'Verts'
+						selected = Init.bitArrayToArray(rt.polyop.getVertSelection(obj))
+						total_num = rt.polyop.getNumVerts(obj)
+
+					elif level==2: #get edge info
+						type_ = 'Edges'
+						selected = Init.bitArrayToArray(rt.polyop.getEdgeSelection(obj))
+						total_num = rt.polyop.getNumEdges(obj)
+
+					elif level==4: #get face info
+						type_ = 'Faces'
+						selected = Init.bitArrayToArray(rt.polyop.getFaceSelection(obj))
+						total_num = rt.polyop.getNumFaces(obj)
+
+					if all((type_, num_selected, total_num)):
+						hud.insertText('Selected {}: <font style="color: Yellow;">{} <font style="color: LightGray;">/{}'.format(type_, len(selected), total_num)) #selected components
 
 
-		level = rt.subObjectLevel
-		if not level: #object level 0
-			selCount = len(selection) #number of selected objects
-			selectedObjects={}; [selectedObjects.setdefault(str(rt.classOf(s.baseObject)),[]).append(str(s.name)) for s in selection] #for any selected objects, set object type as key and append object names as value. if key doesn't exist, use setdefault to initialize an empty list and append. ie. {'joint': ['joint_root_0', 'joint_lower_L8', 'joint_lower_L3']}
-			infoDict.update({'Selection: ':selectedObjects}) #currently selected objects
+		prevCommand = self.sb.prevCommand(docString=True)
+		if prevCommand:
+			hud.insertText('Prev Command: <font style="color: Yellow;">{}'.format(prevCommand))  #get button text from last used command
 
-		for obj in rt.selection:
-			type_ = str(rt.classOf(obj))
+		# prevUi = self.sb.previousName(omitLevel=[0,1,2])
+		# hud.insertText('Prev UI: {}'.format(prevUi.replace('_', '').title())) #get the last level 3 ui name string.
 
-			symmetry = obj.modifiers[rt.Symmetry]
-			if symmetry:
-				s = symmetry.axis;
-				if s==0: axis='x';
-				if s==1: axis='y';
-				if s==2: axis='z';
-				infoDict.update({'Symmetry Axis: ':axis.upper()}) #symmetry axis
-
-			# xformConstraint = pm.xformConstraint(query=True, type=True)
-			# if xformConstraint=='none': xformConstraint=None; infoDict.update({"Xform Constrait: ":xformConstraint}) #transform constraits
-
-			if type_=='Editable_Poly' or type_=='Edit_Poly':
-				if level==1: #get vertex info
-					selectedVerts = Init.bitArrayToArray(rt.polyop.getVertSelection(obj))
-					collapsedList = self.collapseList(selectedVerts, limit=6)
-					numVerts = rt.polyop.getNumVerts(obj)
-					infoDict.update({'Vertices: '+str(len(selectedVerts))+'/'+str(numVerts):collapsedList}) #selected verts
-
-				elif level==2: #get edge info
-					selectedEdges = Init.bitArrayToArray(rt.polyop.getEdgeSelection(obj))
-					collapsedList = self.collapseList(selectedEdges, limit=6)
-					numEdges = rt.polyop.getNumEdges(obj)
-					infoDict.update({'Edges: '+str(len(selectedEdges))+'/'+str(numEdges):collapsedList}) #selected edges
-
-				elif level==4: #get face info
-					selectedFaces = Init.bitArrayToArray(rt.polyop.getFaceSelection(obj))
-					collapsedList = self.collapseList(selectedFaces, limit=6)
-					numFaces = rt.polyop.getNumFaces(obj)
-					infoDict.update({'Faces: '+str(len(selectedFaces))+'/'+str(numFaces):collapsedList}) #selected faces
-
-
-			# selectedUVs = ; infoDict.update({"Selected UV's: ":selectedUVs}) #selected uv's
-
-		prevCommand = self.sb.prevCommand(docString=True); infoDict.update({"Prev Command: ":prevCommand})  #get button text from last used command
-		# prevUi = self.sb.previousName(omitLevel=[0,1,2]); infoDict.update({"Prev UI: ":prevUi.replace('_', '').title()})  #get the last level 3 ui name string.
-		# prevCamera = self.sb.prevCamera(docString=True); infoDict.update({"Prev Camera: ":prevCamera})  #get the previously used camera.
-
-		return infoDict
+		# prevCamera = self.sb.prevCamera(docString=True)
+		# hud.insertText('Prev Camera: {}'.format(prevCamera)) #get the previously used camera.
 
 
 

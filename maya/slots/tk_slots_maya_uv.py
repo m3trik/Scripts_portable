@@ -188,7 +188,7 @@ class Uv(Init):
 			tb.menu_.add(QCheckBox_, setText='Stack Similar: 2', setObjectName='chk026', setTristate=True, setCheckState_=2, setToolTip='Find Similar shells. <br>state 1: Find similar shells, and pack one of each, ommiting the rest.<br>state 2: Find similar shells, and stack during packing (can be very slow).')
 			tb.menu_.add('QDoubleSpinBox', setPrefix='Stack Similar Tolerance: ', setObjectName='s006', setMinMax_='0.0-10 step.1', setValue=1.0, setToolTip='Stack shells with uv\'s within the given range.')
 			tb.menu_.add('QSpinBox', setPrefix='UDIM: ', setObjectName='s004', setMinMax_='1001-1200 step1', setValue=1001, setToolTip='Set the desired UDIM tile space.')
-			tb.menu_.add('QSpinBox', setPrefix='Map Size: ', setObjectName='s005', setMinMax_='0-8192 step512', setValue=2048, setToolTip='UV map resolution.')
+			tb.menu_.add('QSpinBox', setPrefix='Map Size: ', setObjectName='s005', setMinMax_='512-8192 step512', setValue=2048, setToolTip='UV map resolution.')
 
 			tb.menu_.chk025.stateChanged.connect(lambda state: tb.menu_.chk025.setText('Pre-Scale Mode: '+str(state)))
 			tb.menu_.chk007.stateChanged.connect(lambda state: tb.menu_.chk007.setText('Pre-Rotate Mode: '+str(state)))
@@ -343,6 +343,25 @@ class Uv(Init):
 	def tb004(self, state=None):
 		'''
 		Unfold
+
+		Synopsis: u3dUnfold [flags] [String...]
+		Flags:
+		  -bi -borderintersection  on|off
+		 -ite -iterations          Int
+		  -ms -mapsize             Int
+		   -p -pack                on|off
+		  -rs -roomspace           Int
+		  -tf -triangleflip        on|off
+
+		Synopsis: u3dOptimize [flags] [String...]
+		Flags:
+		  -bi -borderintersection  on|off
+		 -ite -iterations          Int
+		  -ms -mapsize             Int
+		 -pow -power               Int
+		  -rs -roomspace           Int
+		  -sa -surfangle           Float
+		  -tf -triangleflip        on|off
 		'''
 		tb = self.currentUi.tb004
 		if state is 'setMenu':
@@ -353,11 +372,12 @@ class Uv(Init):
 		optimize = tb.menu_.chk017.isChecked()
 		amount = tb.menu_.s008.value()
 
-		pm.mel.performUnfold(0)
+		pm.undo(openChunk=1)
+		pm.u3dUnfold(iterations=1, pack=0, borderintersection=1, triangleflip=1, mapsize=2048, roomspace=0) #pm.mel.performUnfold(0)
 
 		if optimize:
-			for _ in range(amount):
-				pm.mel.performPolyOptimizeUV(0)
+			u3dOptimize(iterations=amount, power=1, surfangle=1, borderintersection=0, triangleflip=1, mapsize=2048, roomspace=0) #pm.mel.performPolyOptimizeUV(0)
+		pm.undo(closeChunk=1)
 
 
 	def tb005(self, state=None):
@@ -413,7 +433,7 @@ class Uv(Init):
 		'''
 		tb = self.currentUi.tb007
 		if state is 'setMenu':
-			tb.menu_.add('QSpinBox', setPrefix='Map Size: ', setObjectName='s002', setMinMax_='0-32768 step512', setValue=2048, setToolTip='Set the map used as reference when getting texel density.')
+			tb.menu_.add('QSpinBox', setPrefix='Map Size: ', setObjectName='s002', setMinMax_='512-8192 step512', setValue=2048, setToolTip='Set the map used as reference when getting texel density.')
 			tb.menu_.add('QDoubleSpinBox', setPrefix='Texel Density: ', setObjectName='s003', setMinMax_='0.00-128 step8', setValue=32, setToolTip='Set the desired texel density.')
 			tb.menu_.add('QPushButton', setText='Get Texel Density', setObjectName='b099', setChecked=True, setToolTip='Get the average texel density of any selected faces.')
 

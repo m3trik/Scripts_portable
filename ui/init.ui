@@ -61,7 +61,7 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <widget class="QTextEdit_" name="info">
+   <widget class="QTextEdit_" name="hud">
     <property name="geometry">
      <rect>
       <x>195</x>

@@ -24,40 +24,29 @@ class QTextEdit_(QtWidgets.QTextEdit, Attributes):
 	'''
 	
 	'''
+	shown = QtCore.Signal()
+	hidden = QtCore.Signal()
+
 	def __init__(self, parent=None, **kwargs):
 		super(QTextEdit_, self).__init__(parent)
 
 		self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
 
-		# self.setStyleSheet('''
-		# 	QTextEdit {
-		# 		background-color: transparent';
-		# 		color: white;
-		# 		selection-background-color: grey;
-		# 		selection-color: white;
-		# }''')
-
 		self.viewport().setAutoFillBackground(False)
-		self.setTextBackgroundColor(QtGui.QColor(50, 50, 50))
+		# self.setTextBackgroundColor(QtGui.QColor(50, 50, 50))
 
 		self.setAttributes(kwargs)
 
 
-	def insertText(self, dict_):
+	def insertText(self, text):
 		'''
-		args:
-			dict_ = {dict} - contents to add.  for each key if there is a value, the key and value pair will be added.
-		'''
-		highlight = QtGui.QColor(255, 255, 0)
-		baseColor = QtGui.QColor(185, 185, 185)
+		Append a new paragraph to the textEdit.
 
-		#populate the textedit with any values
-		for key, value in dict_.items():
-			if value:
-				self.setTextColor(baseColor)
-				self.append(key) #textEdit.append(key+str(value))
-				self.setTextColor(highlight)
-				self.insertPlainText(str(value))
+		args:
+			text (str) = A value to append to the lineEdit as a new paragraph. The value is converted to a string if it isn't already.
+		'''
+		baseStyle = '<font style="color: LightGray; background-color: rgb(50, 50, 50);">'
+		self.append(baseStyle+str(text)) #Appends a new paragraph with the given text to the end of the textEdit.
 
 
 	def showEvent(self, event):
@@ -65,6 +54,9 @@ class QTextEdit_(QtWidgets.QTextEdit, Attributes):
 		args:
 			event=<QEvent>
 		'''
+		self.shown.emit()
+
+		# self.resize(self.sizeHint())
 
 		return QtWidgets.QTextEdit.showEvent(self, event)
 
@@ -74,9 +66,14 @@ class QTextEdit_(QtWidgets.QTextEdit, Attributes):
 		args:
 			event=<QEvent>
 		'''
+		self.hidden.emit()
+
 		self.clear()
 
 		return QtWidgets.QTextEdit.hideEvent(self, event)
+
+
+
 
 
 
@@ -88,6 +85,10 @@ if __name__ == "__main__":
 	qApp = QtWidgets.QApplication(sys.argv)
 		
 	w = QTextEdit_()
+
+	w.insertText('Selected: <font style="color: Yellow;">8 <font style="color: LightGray;">/1486 faces')
+	w.insertText('Previous Camera: <font style="color: Yellow;">Perspective')
+
 	w.show()
 	sys.exit(qApp.exec_())
 
@@ -97,5 +98,24 @@ if __name__ == "__main__":
 # Notes
 # -----------------------------------------------
 
+# deprecated:
+
 # if pm.progressBar ("tk_progressBar", query=1, isCancelled=1):
 	# break
+
+
+	# def insertText(self, dict_):
+	# 	'''
+	# 	args:
+	# 		dict_ = {dict} - contents to add.  for each key if there is a value, the key and value pair will be added.
+	# 	'''
+	# 	highlight = QtGui.QColor(255, 255, 0)
+	# 	baseColor = QtGui.QColor(185, 185, 185)
+
+	# 	#populate the textedit with any values
+	# 	for key, value in dict_.items():
+	# 		if value:
+	# 			self.setTextColor(baseColor)
+	# 			self.append(key) #Appends a new paragraph with text to the end of the text edit.
+	# 			self.setTextColor(highlight)
+	# 			self.insertPlainText(str(value)) #inserts text at the current cursor position.
