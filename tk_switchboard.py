@@ -267,11 +267,13 @@ class Switchboard(QtCore.QObject):
 		childUi = self.getUi(name, level=2)
 		parentUi = self.getUi(name, level=3)
 
+		submenu_name = self.getUiName(name, level=2)
+
 		kwargs = {
 			name: parentUi, #ie. 'polygons': <PySide2.QtWidgets.QMainWindow object at 0x000001D97BCEB0C8>
-			self.getUiName(name, level=2): childUi, #ie. 'polygons_submenu': <PySide2.QtWidgets.QMainWindow object at 0x000001D978D8A708>
+			submenu_name: childUi, #ie. 'polygons_submenu': <PySide2.QtWidgets.QMainWindow object at 0x000001D978D8A708>
 
-			'_ui': lambda parentUi=parentUi: self.getUi() 
+			'_ui': lambda parentUi=parentUi: self.getUi()
 				if self.getUi() in [v for k, v in self.uiList().items() if self.getUiName(parentUi) in k] #if the current ui is not one of the parent ui's children or the parent ui itself, default to the parent ui.
 					else parentUi,
 
@@ -302,8 +304,7 @@ class Switchboard(QtCore.QObject):
 		className = n[0].upper()+n[1:] #capitalize the first char of name to get the class name.
 		path = 'tk_slots_{0}_{1}.{2}'.format(mainAppWindowName, n, className) #ie. 'tk_slots_maya_init.Init'
 		kwargs = self.getClassKwargs(n)
-		class_ = self.getClassInstance(path,
-									**kwargs) #get the class instance while passing in any keyword arguments into **kwargs.
+		class_ = self.getClassInstance(path, **kwargs) #get the class instance while passing in any keyword arguments into **kwargs.
 
 		return class_
 

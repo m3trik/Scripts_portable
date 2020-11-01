@@ -317,9 +317,12 @@ class Polygons(Init):
 
 	def b000(self):
 		'''
-		
+		Circularize
 		'''
-		pass
+		obj = rt.selection[0]
+		vertices = rt.polyop.getVertSelection(obj)
+		
+		Init.circularize(vertices)
 
 
 	def b001(self):
@@ -349,7 +352,7 @@ class Polygons(Init):
 		Slice
 		'''
 		rt.macros.run('Ribbon - Modeling', 'CutsQuickSlice')
-		
+
 
 	def b009(self):
 		'''
@@ -462,7 +465,8 @@ class Polygons(Init):
 
 		for obj in rt.selection:
 			if level==1:
-				mel.eval("performPolyPoke 1;")
+				vertex = rt.polyop.getVertSelection(obj)
+				rt.polyop.breakVerts(obj, vertex)
 
 			if level==2:
 				position = 0.5

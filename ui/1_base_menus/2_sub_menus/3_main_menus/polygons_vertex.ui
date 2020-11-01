@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>149</width>
-    <height>152</height>
+    <height>154</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -148,7 +148,7 @@
       <x>10</x>
       <y>0</y>
       <width>131</width>
-      <height>131</height>
+      <height>136</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
@@ -223,8 +223,8 @@
             <property name="spacing">
              <number>0</number>
             </property>
-            <item row="0" column="0" colspan="2">
-             <widget class="QToolButton_" name="tb000">
+            <item row="2" column="0" colspan="2">
+             <widget class="QPushButton" name="b045">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -241,16 +241,25 @@
                </size>
               </property>
               <property name="toolTip">
-               <string>Merge selected components.  (default: to center)</string>
+               <string>Re-order vertex ID's using 3 adjacent vertices selected from the same polygon.</string>
               </property>
               <property name="text">
-               <string>Merge</string>
+               <string>Re-order</string>
               </property>
               <property name="iconSize">
                <size>
                 <width>18</width>
                 <height>18</height>
                </size>
+              </property>
+              <property name="autoDefault">
+               <bool>false</bool>
+              </property>
+              <property name="default">
+               <bool>false</bool>
+              </property>
+              <property name="flat">
+               <bool>false</bool>
               </property>
              </widget>
             </item>
@@ -322,8 +331,8 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="0" colspan="2">
-             <widget class="QPushButton" name="b045">
+            <item row="0" column="0" colspan="2">
+             <widget class="QToolButton_" name="tb000">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -340,25 +349,16 @@
                </size>
               </property>
               <property name="toolTip">
-               <string>Re-order vertex ID's using 3 adjacent vertices selected from the same polygon.</string>
+               <string>Merge selected components.  (default: to center)</string>
               </property>
               <property name="text">
-               <string>Re-order</string>
+               <string>Merge</string>
               </property>
               <property name="iconSize">
                <size>
                 <width>18</width>
                 <height>18</height>
                </size>
-              </property>
-              <property name="autoDefault">
-               <bool>false</bool>
-              </property>
-              <property name="default">
-               <bool>false</bool>
-              </property>
-              <property name="flat">
-               <bool>false</bool>
               </property>
              </widget>
             </item>
@@ -410,6 +410,11 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>QToolButton_</class>
+   <extends>QToolButton</extends>
+   <header>widgets.qtoolbutton_.h</header>
+  </customwidget>
+  <customwidget>
    <class>QPushButton_Draggable</class>
    <extends>QPushButton</extends>
    <header>widgets.qpushbutton_draggable.h</header>
@@ -418,11 +423,6 @@
    <class>QProgressBar_</class>
    <extends>QProgressBar</extends>
    <header>widgets.qprogressbar_.h</header>
-  </customwidget>
-  <customwidget>
-   <class>QToolButton_</class>
-   <extends>QToolButton</extends>
-   <header>widgets.qtoolbutton_.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

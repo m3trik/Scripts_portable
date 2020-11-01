@@ -1,7 +1,6 @@
-from __future__ import print_function
 import sys
 
-from PySide2 import QtWidgets
+from PySide2 import QtWidgets, QtCore
 try: import shiboken2
 except: from PySide2 import shiboken2
 global app
@@ -16,18 +15,18 @@ from widgets.qWidget_ProgressIndicator import QWidget_ProgressIndicator
 
 
 
-class Tk_maya(Tk):
+class Tk_blender(Tk):
 	'''
-	Tk class overridden for use with Autodesk Maya.
+	Tk class overridden for use with Blender.
 
 	args:
 		parent = Application top level window instance.
 	'''
-	def __init__(self, parent=None):
+	def __init__(self, parent=None, preventHide=False, key_show=QtCore.Qt.Key_F12):
 
 		if not parent:
 			try:
-				parent = self.getMayaMainWindow()
+				parent = self.getMainWindow()
 
 			except Exception as error:
 				print(self.__class__.__name__, error)
@@ -35,24 +34,21 @@ class Tk_maya(Tk):
 		# progressIndicator = QWidget_ProgressIndicator()
 		# progressIndicator.start()
 
-		super(Tk_maya, self).__init__(parent)
+		super().__init__(parent)
 
 		# progressIndicator.stop()
 
 
-	def getMayaMainWindow(self):
+	def getMainWindow(self):
 		'''
-		Get maya's main window object.
+		Get blender's main window object.
 
 		returns:
 			(QWidget)
 		'''
-		# ptr = OpenMayaUI.MQtUtil.mainWindow()
-		# mayaWin = shiboken2.wrapInstance(long(ptr), QtWidgets.QWidget)
+		main_window = QApplication.instance().blender_widget
 
-		mayaWin = next(w for w in app.topLevelWidgets() if w.objectName()=='MayaWindow')
-
-		return mayaWin
+		return main_window
 
 
 	def showEvent(self, event):
@@ -82,11 +78,13 @@ class Instance():
 	'''
 	instances={}
 
-	def __init__(self, parent=None):
+	def __init__(self, parent=None, preventHide=False, key_show=QtCore.Qt.Key_F12):
 		'''
 		'''
 		self.parent = parent
 		self.activeWindow_ = None
+		self.preventHide = preventHide
+		self.key_show = key_show
 
 
 	def _getInstance(self):
@@ -98,7 +96,7 @@ class Instance():
 
 		if self.activeWindow_ is None or self.activeWindow_.isVisible():
 			name = 'tk'+str(len(self.instances))
-			setattr(self, name, Tk_maya(self.parent))
+			setattr(self, name, Tk_blender(self.parent, self.preventHide, self.key_show))
 			self.activeWindow_ = getattr(self, name)
 			self.instances[name] = self.activeWindow_
 
@@ -122,12 +120,14 @@ class Instance():
 if __name__ == "__main__":
 	import sys
 
-	#create a generic parent object to run the code outside of maya.
+	#create a generic parent object to run the code outside of blender.
 	from PySide2.QtWidgets import QWidget
 	dummyParent = QWidget()
-	dummyParent.setObjectName('MayaWindow')
+	# dummyParent.setObjectName('BlenderWindow')
 
-	Instance(dummyParent).show_() #Tk_maya(dummyParent).show()
+	import cProfile
+	cProfile.run('Instance(dummyParent).show_()')
+	# Instance(dummyParent).show_() #Tk_blender(dummyParent).show()
 	sys.exit(app.exec_())
 
 

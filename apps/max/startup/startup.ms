@@ -47,17 +47,16 @@ python.Init()
 --load the python path setup file and user macros.
 
 --get current dir path:
-file = getThisScriptFilename() --ie. "C:\__portable\_scripts\max\startup\startup.ms"
-dir_ = substring file 1 (findString file ("max")-2) --take substring from index 1 to the index of max in file string
+filePath = getThisScriptFilename() --ie. "C:\__portable\_scripts\apps\max\startup\startup.ms"
+dir_root = substring filePath 1 (findString filePath ("apps")-2) --take substring from index 1 to the index of max in file string
 
+ui_dir = dir_root+"/ui"
+scripts_dir	= dir_root+"/apps/max"
+slots_dir = scripts_dir+"/slots"
+startup_dir = scripts_dir+"/startup"
 
 --append to system path:
-paths = #(
-		dir_,
-		dir_+"/ui",
-		dir_+"/max",
-		dir_+"/max/slots"
-		)
+paths = #(dir_root, ui_dir, scripts_dir, slots_dir, startup_dir)
 
 
 python.Execute "import sys"
@@ -88,7 +87,7 @@ function PerformDelayedTasks sender evt = (
 	-- commands --
 
 	-- user macros:
-	FileIn (dir_+"/max/macros.ms")
+	FileIn (scripts_dir+"/macros.ms")
 
 	-- statusPanel
 	statusPanel.visible = true

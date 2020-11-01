@@ -69,7 +69,7 @@ to allow for as little overhead as possible in development and maintainence.  Na
 -----------------------------------------------
 
 ######
-* pressed hotkey shows instance. release hides;
+* a pressed hotkey shows an instance. release hides;
 
 * mouse not pressed: heads up info
 
@@ -81,11 +81,13 @@ to allow for as little overhead as possible in development and maintainence.  Na
 
 * middle mouse down: shows embedded app ui (ie. maya's outliner, or max's modifier stack).
 
-* double right mouseclick: produces last used orthographic view.
+* double right mouseclick: shows the last opened sub-menu.
 
-* double middle mouseclick: produces last sub-menu.
+* double middle mouseclick: 
 
-* double left mouseclick: repeats last command.
+* double left mouseclick: shows last used orthographic view.
+
+* show hotkey + r key: repeats last command.
 
 * dragging the area at the top of the widget moves the window and pins it open.
 
@@ -104,16 +106,33 @@ to allow for as little overhead as possible in development and maintainence.  Na
 (Assuming the default windows directory structure).
 
 In maya:
-* add \maya\tk_slots_maya directory to maya.env
+* add \apps\maya\slots directory to maya.env
  (MAYA_SCRIPT_PATH=<dir>)
  
 In 3ds Max:
-* add \max\startup directory to system path by navigating in app to:
+* add \apps\max\startup directory to system path by navigating in app to:
  main menu> customize> additional startup scripts
 
-Adding additional ui's:
-* Drop the qt designer ui file into the ui folder.
-* Add a shortcut somewhere in the main ui (with the ui name in the 'whats this' attribute).
-* Create corresponding class of the same name following the naming convention and inheritance of existing slot modules.  
 
-The default hotkey for launching the menu set is f12. This is because I usually remap f12 to the windows key. This can be changed in the tk_ module.
+Launching the menu:
+The default hotkey for launching the menu set is f12. (I remap f12 to the windows key) 
+This can be changed by passing the desired key value to the 'key_show" argument when calling an instance of the main module (tk_):
+ex. call:
+```
+	from PySide2 import QtCore
+	def hk_tk_show():
+		'''
+		hk_tk_show
+		Display tk marking menu.
+		'''
+		if 'tk' not in locals() and 'tk' not in globals():
+			from tk_maya import Instance
+			tk = Instance(key_show=QtCore.Qt.Key_Z) #holding the Z key will show the menu.
+
+		tk.show_()
+```
+
+Adding additional ui's:
+* Drop a qt designer ui file into the ui folder.
+* Add a shortcut somewhere in the 'main' ui (with the ui name in the 'whats this' attribute).
+* Create corresponding class of the same name following the naming convention and inheritance of existing slot modules.  

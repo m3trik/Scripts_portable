@@ -627,12 +627,16 @@ class Macros(Init):
 		'''
 		hk_tk_show
 		Display tk marking menu.
+
+		profile: Prints the total running time, times each function separately, and tells you how many times each function was called.
 		'''
 		if 'tk' not in locals() and 'tk' not in globals():
 			from tk_maya import Instance
 			tk = Instance()
 
 		tk.show_()
+		# import cProfile
+		# cProfile.run('tk.show_()')
 
 
 	@staticmethod

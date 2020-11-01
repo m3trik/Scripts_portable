@@ -148,7 +148,7 @@
       <x>10</x>
       <y>0</y>
       <width>264</width>
-      <height>396</height>
+      <height>402</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
@@ -1977,6 +1977,11 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>QToolButton_</class>
+   <extends>QToolButton</extends>
+   <header>widgets.qtoolbutton_.h</header>
+  </customwidget>
+  <customwidget>
    <class>QPushButton_Draggable</class>
    <extends>QPushButton</extends>
    <header>widgets.qpushbutton_draggable.h</header>
@@ -1985,11 +1990,6 @@
    <class>QProgressBar_</class>
    <extends>QProgressBar</extends>
    <header>widgets.qprogressbar_.h</header>
-  </customwidget>
-  <customwidget>
-   <class>QToolButton_</class>
-   <extends>QToolButton</extends>
-   <header>widgets.qtoolbutton_.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -12,21 +12,24 @@ version = versions.current()
 
 #maya python path----------------------------------------------------
 #get %MAYA_SCRIPT_PATH% directories
-dir_ = next((s for s in os.environ['MAYA_SCRIPT_PATH'].split(';') if '__portable/_scripts/' in s), None)
+MAYA_SCRIPT_PATH = os.environ['MAYA_SCRIPT_PATH'].split(';')
+dir_ = next((s for s in MAYA_SCRIPT_PATH if s.endswith('/apps/maya')), None)
 
 if dir_:
-	dir_ = dir_.rstrip('/maya')
+	dir_root = dir_.replace('/apps/maya', '')
 else: #if path not found, print error and current paths set in maya.env
-	print('Error: dir not found in MAYA_SCRIPT_PATH. '+os.path.splitext(os.path.basename(__file__))[0]) #print error and module name.
-	print('MAYA_SCRIPT_PATH: '+ str([s for s in os.environ['MAYA_SCRIPT_PATH'].split(';')]))
+	module_name = os.path.splitext(os.path.basename(__file__))[0]
+	print('Error: {}: dir not found in MAYA_SCRIPT_PATH.'.format(module_name)) #print error and module name.
+	print('MAYA_SCRIPT_PATH: {}'.format(MAYA_SCRIPT_PATH))
+
+
+ui_dir = dir_root+"/ui"
+scripts_dir	= dir_root+"/apps/maya"
+slots_dir = scripts_dir+"/slots"
+
 
 #append to system path:
-paths = [
-	dir_,
-	dir_+'/ui',
-	dir_+'/maya',
-	dir_+'/maya/slots',
-	]
+paths = [dir_root, ui_dir, scripts_dir, slots_dir]
 
 for path in paths:
 	sys.path.append(path)

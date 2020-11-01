@@ -1,6 +1,8 @@
 from __future__ import print_function
 from tk_ import Tk
 
+from PySide2 import QtCore
+
 try:
 	import MaxPlus
 except ImportError as error:
@@ -15,17 +17,29 @@ class Tk_max(Tk):
 	args:
 		parent = main application top level window object.
 	'''
-	def __init__(self, parent=None):
+	def __init__(self, parent=None, preventHide=False, key_show=QtCore.Qt.Key_F12):
 
 		if not parent:
 			try:
-				parent = MaxPlus.GetQMaxMainWindow()
+				parent = self.getMainWindow()
 				parent.setObjectName('MaxWindow')
 
 			except Exception as error:
 				print(self.__class__.__name__, error)
 
 		super(Tk_max, self).__init__(parent)
+
+
+	def getMainWindow(self):
+		'''
+		Get maya's main window object.
+
+		returns:
+			(QWidget)
+		'''
+		main_window = MaxPlus.GetQMaxMainWindow()
+
+		return main_window
 
 
 	def showEvent(self, event):
@@ -66,11 +80,13 @@ class Instance():
 	'''
 	instances={}
 
-	def __init__(self, parent=None):
+	def __init__(self, parent=None, preventHide=False, key_show=QtCore.Qt.Key_F12):
 		'''
 		'''
 		self.parent = parent
 		self.activeWindow_ = None
+		self.preventHide = preventHide
+		self.key_show = key_show
 
 
 	def _getInstance(self):
@@ -82,7 +98,7 @@ class Instance():
 
 		if self.activeWindow_ is None or self.activeWindow_.isVisible():
 			name = 'tk'+str(len(self.instances))
-			setattr(self, name, Tk_max(self.parent))
+			setattr(self, name, Tk_max(self.parent, self.preventHide, self.key_show))
 			self.activeWindow_ = getattr(self, name)
 			self.instances[name] = self.activeWindow_
 
@@ -116,7 +132,9 @@ if __name__ == "__main__":
 	dummyParent = QWidget()
 	dummyParent.setObjectName('MaxWindow')
 
-	Instance(dummyParent).show_() #Tk_max(p).show()
+	import cProfile
+	cProfile.run('Instance(dummyParent).show_()')
+	# Instance(dummyParent).show_() #Tk_max(p).show()
 	sys.exit(app.exec_())
 
 

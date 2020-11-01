@@ -30,8 +30,9 @@ class Tk(QtWidgets.QStackedWidget):
 	def __init__(self, parent=None, preventHide=False, key_show=QtCore.Qt.Key_F12):
 		super(Tk, self).__init__(parent)
 
-		self.key_show = key_show
 		self.preventHide = preventHide
+		self.key_show = key_show
+		self.key_repeatLastCommand = QtCore.Qt.Key_R
 
 		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint)
 		self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
@@ -181,10 +182,10 @@ class Tk(QtWidgets.QStackedWidget):
 		args:
 			event = <QEvent>
 		'''
-		if event.key()==self.key_show and not event.isAutoRepeat():
-			pass
+		if event.key()==self.key_repeatLastCommand and not event.isAutoRepeat():
+			self.repeatLastCommand()
 
-			return QtWidgets.QStackedWidget.keyPressEvent(self, event)
+		return QtWidgets.QStackedWidget.keyPressEvent(self, event)
 
 
 	def keyReleaseEvent(self, event):
@@ -195,7 +196,7 @@ class Tk(QtWidgets.QStackedWidget):
 		if event.key()==self.key_show and not event.isAutoRepeat():
 			self.hide()
 
-			return QtWidgets.QStackedWidget.keyReleaseEvent(self, event)
+		return QtWidgets.QStackedWidget.keyReleaseEvent(self, event)
 
 
 	def mousePressEvent(self, event):
@@ -256,7 +257,7 @@ class Tk(QtWidgets.QStackedWidget):
 			self.repeatLastUi()
 
 		elif event.button()==QtCore.Qt.MiddleButton:
-			self.repeatLastCommand()
+			pass
 
 		return QtWidgets.QStackedWidget.mouseDoubleClickEvent(self, event)
 

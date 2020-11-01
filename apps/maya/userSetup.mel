@@ -1,0 +1,17 @@
+// execute userSetup.py
+python ("import os");
+python ("MAYA_SCRIPT_PATH = os.environ['MAYA_SCRIPT_PATH'].split(';')");
+python ("dir_ = next((s for s in MAYA_SCRIPT_PATH if s.endswith('/apps/maya')), None)");
+python ("execfile(dir_+'/userSetup.py')");
+
+
+
+
+
+
+
+
+
+// -------------------------------------------------------
+// Notes:
+// -------------------------------------------------------

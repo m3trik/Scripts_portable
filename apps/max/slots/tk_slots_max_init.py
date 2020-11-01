@@ -53,20 +53,19 @@ class Init(Slots):
 			return
 
 		if selection:
-			level = rt.subObjectLevel
-			if level==0: #object level
-				name_and_type = ['<font style="color: Yellow;">{0}<font style="color: LightGray;">:{1}'.format(s.name, rt.classOf(s.baseObject)) for s in selection]
-				name_and_type_str = str(name_and_type).translate(None, '[]\'') #format as single string.
-				hud.insertText('Selected: <font style="color: Yellow;">{}'.format(name_and_type_str)) #currently selected objects
-
-			for obj in rt.selection:
-				type_ = str(rt.classOf(obj))
-
+			if len(selection) is 1:
+				obj = selection[0]
 				symmetry = obj.modifiers[rt.Symmetry]
 				if symmetry:
 					int_ = symmetry.axis
 					axis = {0:'x', 1:'y', 2:'z'}
 					hud.insertText('Symmetry Axis: <font style="color: Yellow;">{}'.format(axis[int_].upper())) #symmetry axis
+
+			level = rt.subObjectLevel
+			if level==0: #object level
+				name_and_type = ['<font style="color: Yellow;">{0}<font style="color: LightGray;">:{1}'.format(obj.name, rt.classOf(obj.baseObject)) for obj in selection]
+				name_and_type_str = str(name_and_type).translate(None, '[]\'') #format as single string.
+				hud.insertText('Selected: <font style="color: Yellow;">{}'.format(name_and_type_str)) #currently selected objects
 
 				# xformConstraint = pm.xformConstraint(query=True, type=True)
 				# if xformConstraint=='none':
@@ -74,7 +73,10 @@ class Init(Slots):
 				# if xformConstraint:
 				# 	hud.insertText('Xform Constrait: <font style="color: Yellow;">{}'.format(xformConstraint)) #transform constraits
 
-				if type_=='Editable_Poly' or type_=='Edit_Poly':
+			elif level>0: #component level
+				obj = selection[0]
+				objType = rt.classOf(obj.baseObject)
+				if objType=='Editable_Poly' or objType=='Edit_Poly':
 					if level==1: #get vertex info
 						type_ = 'Verts'
 						selected = Init.bitArrayToArray(rt.polyop.getVertSelection(obj))
@@ -85,13 +87,25 @@ class Init(Slots):
 						selected = Init.bitArrayToArray(rt.polyop.getEdgeSelection(obj))
 						total_num = rt.polyop.getNumEdges(obj)
 
+					elif level==3: #get border info
+						type_ = 'Borders'
+						# rt.polyop.SetSelection #Edge ((polyOp.getOpenEdges $) as bitarray)
+						selected = Init.bitArrayToArray(rt.polyop.getBorderSelection(obj))
+						total_num = rt.polyop.getNumBorders(obj)
+
 					elif level==4: #get face info
 						type_ = 'Faces'
 						selected = Init.bitArrayToArray(rt.polyop.getFaceSelection(obj))
 						total_num = rt.polyop.getNumFaces(obj)
 
+					elif level==5: #get element info
+						type_ = 'Elements'
+						selected = Init.bitArrayToArray(rt.polyop.getElementSelection(obj))
+						total_num = rt.polyop.getNumElements(obj)
+
+					num_selected = len(selected)
 					if all((type_, num_selected, total_num)):
-						hud.insertText('Selected {}: <font style="color: Yellow;">{} <font style="color: LightGray;">/{}'.format(type_, len(selected), total_num)) #selected components
+						hud.insertText('Selected {}: <font style="color: Yellow;">{} <font style="color: LightGray;">/{}'.format(type_, num_selected, total_num)) #selected components
 
 
 		prevCommand = self.sb.prevCommand(docString=True)
@@ -194,6 +208,37 @@ class Init(Slots):
 			Edit_Poly: (modPanel.getCurrentObject()).SetSelection #Edge &selEdges 
 		)	
 		redrawViews()
+		''')
+
+
+	def circularize(self):
+		'''
+		Circularize a set of vertices on a circle or an elipse.
+
+		tm = (matrix3 [-0.99596,0.022911,-0.0868241] [-0.0229109,0.870065,0.492404] [0.086824,0.492404,-0.866025] [-18.3751,-66.1508,30.969])
+		c = [-18.3751,-66.1508,30.969]
+		s = [-123.81,-63.7254,21.7775]
+		u = [0.086824,0.492404,-0.866025]
+
+		pCircle = pointCircle c s u 20
+		'''
+		maxEval('''
+		fn pointCircle center startPoint upVector n = (
+			rad = distance center startPoint
+			dir = normalize (startPoint - center)
+			crossVector = normalize (cross (normalize (startPoint - center)) upVector)
+			tm = (matrix3 upVector crossVector dir center)
+
+			p3Array = #()
+
+			for i = 1 to n do (
+				preRotateX tm (360.0 / n)
+				append p3Array ([0,0,rad] * tm)
+			)
+
+			return p3Array
+		)
+		pointCircle()
 		''')
 
 
@@ -689,7 +734,7 @@ class Init(Slots):
 				*or list of bit arrays
 
 		returns:
-			list containing indices of on (True) bits
+			(list) containing values of the indices of the on (True) bits.
 		'''
 		if len(bitArray):
 			if type(bitArray[0])!=bool: #if list of bitArrays: flatten
@@ -701,9 +746,10 @@ class Init(Slots):
 			return [i+1 for i, bit in enumerate(bitArray) if bit==1]
 
 
-
-	try: #alternate bitArray to array function.
+	try:
 		'''
+		Alternate bitArray to array function.
+
 		args:
 			bitArray=bit array
 		
@@ -737,7 +783,6 @@ class Init(Slots):
 			rt.maxOps.CollapseNodeTo(obj, index, False)
 
 
-
 	@staticmethod
 	def toggleXraySelected():
 		'''
@@ -749,7 +794,6 @@ class Init(Slots):
 			obj.xray = toggle
 
 
-
 	@staticmethod
 	def toggleBackfaceCull():
 		'''
@@ -759,7 +803,6 @@ class Init(Slots):
 
 		for obj in rt.Geometry:
 			obj.backfacecull = toggle
-
 
 
 	@staticmethod
@@ -974,6 +1017,56 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
+
+#deprecated:
+
+	# @staticmethod
+	# def splitNonManifoldVertex(obj, vertex):
+	# 	'''
+	# 	Separate a connected vertex of non-manifold geometry where the faces share a single vertex.
+
+	# 	args:
+	# 		obj (obj) = A polygon object.
+	# 		vertex (int) = A single vertex number of the given polygon object.
+	# 	'''
+	# 	connected_faces = rt.polyop.getFacesUsingVert(obj, vertex)
+
+	# 	rt.polyop.breakVerts(obj, vertex)
+
+	# 	#get a list for the vertices of each face that is connected to the original vertex.
+	# 	verts_sorted_by_face=[]
+	# 	for face in Init.bitArrayToArray(connected_faces):
+	# 		connected_verts = rt.polyop.getVertsUsingFace(obj, face)
+	# 		verts_sorted_by_face.append(Init.bitArrayToArray(connected_verts))
+
+
+	# 	out=[] #1) take first set A from list. 2) for each other set B in the list do if B has common element(s) with A join B into A; remove B from list. 3) repeat 2. until no more overlap with A. 4) put A into outpup. 5) repeat 1. with rest of list.
+	# 	while len(verts_sorted_by_face)>0:
+	# 		first, rest = verts_sorted_by_face[0], verts_sorted_by_face[1:] #first, *rest = edges
+	# 		first = set(first)
+
+	# 		lf = -1
+	# 		while len(first)>lf:
+	# 			lf = len(first)
+
+	# 			rest2=[]
+	# 			for r in rest:
+	# 				if len(first.intersection(set(r)))>0:
+	# 					first |= set(r)
+	# 				else:
+	# 					rest2.append(r)     
+	# 			rest = rest2
+
+	# 		out.append(first)
+	# 		verts_sorted_by_face = rest
+
+
+	# 	for vertex_set in out:
+	# 		obj.weldThreshold = 0.001
+	# 		rt.polyop.weldVertsByThreshold(obj, list(vertex_set))
+
+
+	# 	rt.polyop.setVertSelection(obj, vertex)
 
 
 

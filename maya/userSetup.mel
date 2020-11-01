@@ -1,4 +1,0 @@
-// explicit path:
-python ("import os");
-python ("path = os.path.expandvars('%CLOUD%/__portable/_scripts/maya/userSetup.py')");
-python ("execfile(path)");
