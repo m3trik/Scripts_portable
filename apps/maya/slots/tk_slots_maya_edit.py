@@ -59,9 +59,10 @@ class Edit(Init):
 		tb = self.ui.tb000
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='All Geometry', setObjectName='chk005', setToolTip='Clean All scene geometry.')
-			tb.menu_.add('QCheckBox', setText='Repair', setObjectName='chk004', setToolTip='Repair matching geometry. (else: select)')
+			tb.menu_.add(QCheckBox_, setText='Select Only', setObjectName='chk004', setTristate=True, setCheckState_=2, setToolTip='Select and/or Repair matching geometry. <br>0: Repair Only<br>1: Repair and Select<br>2: Select Only')
 			tb.menu_.add('QCheckBox', setText='N-Gons', setObjectName='chk002', setChecked=True, setToolTip='Find N-gons.')
 			tb.menu_.add('QCheckBox', setText='Non-Manifold Geometry', setObjectName='chk017', setChecked=True, setToolTip='Check for nonmanifold polys.')
+			tb.menu_.add('QCheckBox', setText='Non-Manifold Vertex', setObjectName='chk021', setToolTip='A connected vertex of non-manifold geometry where the faces share a single vertex.')
 			tb.menu_.add('QCheckBox', setText='Quads', setObjectName='chk010', setToolTip='Check for quad sided polys.')
 			tb.menu_.add('QCheckBox', setText='Concave', setObjectName='chk011', setToolTip='Check for concave polys.')
 			tb.menu_.add('QCheckBox', setText='Non-Planar', setObjectName='chk003', setToolTip='Check for non-planar polys.')
@@ -69,17 +70,21 @@ class Edit(Init):
 			tb.menu_.add('QCheckBox', setText='Lamina', setObjectName='chk018', setToolTip='Check for lamina polys.')
 			tb.menu_.add('QCheckBox', setText='Shared UV\'s', setObjectName='chk016', setToolTip='Unshare uvs that are shared across vertices.')
 			# tb.menu_.add('QCheckBox', setText='Invalid Components', setObjectName='chk019', setToolTip='Check for invalid components.')
-			tb.menu_.add('QCheckBox', setText='Split Non-Manifold Vertex', setObjectName='chk021', setToolTip='Separate a connected vertex of non-manifold geometry where the faces share a single vertex.')
 			tb.menu_.add('QCheckBox', setText='Zero Face Area', setObjectName='chk013', setToolTip='Check for 0 area faces.')
-			tb.menu_.add('QDoubleSpinBox', setPrefix='Face Area Tolerance:   ', setObjectName='s006', setMinMax_='0.0-10 step.001', setValue=0.001, setToolTip='Tolerance for face areas.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Face Area Tolerance:   ', setObjectName='s006', setDisabled=True, setMinMax_='0.0-10 step.001', setValue=0.001, setToolTip='Tolerance for face areas.')
 			tb.menu_.add('QCheckBox', setText='Zero Length Edges', setObjectName='chk014', setToolTip='Check for 0 length edges.')
-			tb.menu_.add('QDoubleSpinBox', setPrefix='Edge Length Tolerance: ', setObjectName='s007', setMinMax_='0.0-10 step.001', setValue=0.001, setToolTip='Tolerance for edge length.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Edge Length Tolerance: ', setObjectName='s007', setDisabled=True, setMinMax_='0.0-10 step.001', setValue=0.001, setToolTip='Tolerance for edge length.')
 			tb.menu_.add('QCheckBox', setText='Zero UV Face Area', setObjectName='chk015', setToolTip='Check for 0 uv face area.')
-			tb.menu_.add('QDoubleSpinBox', setPrefix='UV Face Area Tolerance:', setObjectName='s008', setMinMax_='0.0-10 step.001', setValue=0.001, setToolTip='Tolerance for uv face areas.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='UV Face Area Tolerance:', setObjectName='s008', setDisabled=True, setMinMax_='0.0-10 step.001', setValue=0.001, setToolTip='Tolerance for uv face areas.')
+
+			tb.menu_.chk004.stateChanged.connect(lambda state: tb.menu_.chk004.setText({0:'Repair Only',1:'Repair AND Select',2:'Select Only'}[state]))
+			tb.menu_.chk013.toggled.connect(lambda state: tb.menu_.s006.setEnabled(True if state else False))
+			tb.menu_.chk014.toggled.connect(lambda state: tb.menu_.s007.setEnabled(True if state else False))
+			tb.menu_.chk015.toggled.connect(lambda state: tb.menu_.s008.setEnabled(True if state else False))
 			return
 
 		allMeshes = int(tb.menu_.chk005.isChecked()) #[0] All selectable meshes
-		selectOnly = int(not tb.menu_.chk004.isChecked())+1 #[1] Only perform a selection [0:clean, 1:select and clean, 2:select]
+		selectOnly = tb.menu_.chk004.checkState_() #[1] Only perform a selection (0:repair, 1:repair & select, 2:select)
 		historyOn = 1 #[2] keep construction history
 		quads = int(tb.menu_.chk010.isChecked()) #[3] check for quads polys
 		nsided = int(tb.menu_.chk002.isChecked()) #[4] check for n-sided polys
@@ -102,24 +107,29 @@ class Edit(Init):
 		# 	scene = pm.ls(visible=1, geometry=1)
 		# 	[pm.select (geometry, add=1) for geometry in scene]
 
+		objects = pm.ls(sl=1, transforms=1)
+
+		if any((quads,nsided,concave,holed,nonplanar,zeroGeom,zeroEdge,zeroMap,sharedUVs,nonmanifold,invalidComponents)):
+			arg_list = '"{0}","{1}","{2}","{3}","{4}","{5}","{6}","{7}","{8}","{9}","{10}","{11}","{12}","{13}","{14}","{15}","{16}","{17}"'.format(
+					allMeshes, selectOnly, historyOn, quads, nsided, concave, holed, nonplanar, zeroGeom, 
+					zeroGeomTol, zeroEdge, zeroEdgeTol, zeroMap, zeroMapTol, sharedUVs, nonmanifold, lamina, invalidComponents)
+			command = 'polyCleanupArgList 4 {'+arg_list+'}' # command = 'polyCleanup '+arg_list #(not used because of arg count error, also the quotes in the arg list would need to be removed). 
+			print (command)
+			mel.eval(command)
+
 		if splitNonManifoldVertex: #Split Non-Manifold Vertex
-			objects = pm.ls(sl=1, transforms=1)
-			if selectOnly:
-				nonManifoldVerts = Init.findNonManifoldVertex(objects)
+			if selectOnly==2:
+				Init.findNonManifoldVertex(objects)
 			else:
-				vertices = Init.getSelectedComponents('vertices', objects)
-				if not vertices:
-					vertices = Init.getComponents(objects, 'vertices', flatten=True)
-				for vertex in vertices:
-					Init.splitNonManifoldVertex(vertex)
+				select = False if selectOnly==0 else True
+				nonManifoldVerts = Init.getSelectedComponents('vertices', objects) #user selection
+				if not nonManifoldVerts:
+					nonManifoldVerts = Init.findNonManifoldVertex(objects, select=select) # vertices = Init.getComponents(objects, 'vertices', flatten=True)
 
-
-		arg_list = '"{0}","{1}","{2}","{3}","{4}","{5}","{6}","{7}","{8}","{9}","{10}","{11}","{12}","{13}","{14}","{15}","{16}","{17}"'.format(
-				allMeshes, selectOnly, historyOn, quads, nsided, concave, holed, nonplanar, zeroGeom, 
-				zeroGeomTol, zeroEdge, zeroEdgeTol, zeroMap, zeroMapTol, sharedUVs, nonmanifold, lamina, invalidComponents)
-		command = 'polyCleanupArgList 4 {'+arg_list+'}' # command = 'polyCleanup '+arg_list #(not used because of arg count error, also the quotes in the arg list would need to be removed). 
-		print (command)
-		mel.eval(command)
+				pm.undoInfo(openChunk=1)
+				for vertex in nonManifoldVerts:
+					Init.splitNonManifoldVertex(vertex, select=select)
+				pm.undoInfo(closeChunk=1)
 
 
 	def tb001(self, state=None):

@@ -470,7 +470,7 @@ class Init(Slots):
 			vertices = Init.getComponents(obj1, 'vertices')
 			closestVerts = getClosestVertex(vertices, obj2, tolerance=10)
 		'''
-		pm.undoInfo(openChunk=1)
+		pm.undoInfo(openChunk=True)
 		if freezeTransforms:
 			pm.makeIdentity(obj, apply=True)
 
@@ -494,7 +494,7 @@ class Init(Slots):
 				closestVerts[v1] = v2
 
 		pm.delete(cpmNode)
-		pm.undoInfo(closeChunk=1)
+		pm.undoInfo(closeChunk=True)
 
 		return closestVerts
 
@@ -516,7 +516,7 @@ class Init(Slots):
 		progressBar = mel.eval("$container=$gMainProgressBar");
 		pm.progressBar(progressBar, edit=True, beginProgress=True, isInterruptable=True, status="Snapping Vertices ...", maxValue=len(closestVerts)) 
 
-		pm.undoInfo(openChunk=1)
+		pm.undoInfo(openChunk=True)
 		for v1, v2 in closestVerts.items():
 			if pm.progressBar(progressBar, query=True, isCancelled=True):
 				break
@@ -525,7 +525,7 @@ class Init(Slots):
 			pm.xform(v1, translation=v2Pos, worldSpace=True)
 
 			pm.progressBar(progressBar, edit=True, step=1)
-		pm.undoInfo(closeChunk=1)
+		pm.undoInfo(closeChunk=True)
 
 		pm.progressBar(progressBar, edit=True, endProgress=True)
 
@@ -601,12 +601,12 @@ class Init(Slots):
 
 		args:
 			objects (str)(obj) = A polygon mesh or a list of meshes.
-			select (bool) = Select any found non-manifold vertices.
+			select (bool) = Select any found non-manifold vertices. (default is True)
 
 		returns:
 			(list) any found non-manifold verts.
 		'''
-		pm.undoInfo(openChunk=1)
+		pm.undoInfo(openChunk=True)
 
 		nonManifoldVerts=set()
 
@@ -649,7 +649,7 @@ class Init(Slots):
 			if len(out)>1:
 				nonManifoldVerts.add(vertex)
 
-		pm.undoInfo(closeChunk=1)
+		pm.undoInfo(closeChunk=True)
 
 		if select:
 			pm.select(nonManifoldVerts, add=1)
@@ -657,14 +657,15 @@ class Init(Slots):
 
 
 	@staticmethod
-	def splitNonManifoldVertex(vertex):
+	def splitNonManifoldVertex(vertex, select=True):
 		'''
 		Separate a connected vertex of non-manifold geometry where the faces share a single vertex.
 
 		args:
 			vertex (str)(obj) = A single polygon vertex.
+			select (bool) = Select the vertex after the operation. (default is True)
 		'''
-		pm.undoInfo(openChunk=1)
+		pm.undoInfo(openChunk=True)
 
 		connected_faces = pm.polyListComponentConversion(vertex, fromVertex=1, toFace=1) #pm.mel.PolySelectConvert(1) #convert to faces
 		connected_faces_flat = pm.ls(connected_faces, flatten=1) #selectedFaces = pm.ls(sl=1, flatten=1)
@@ -705,10 +706,11 @@ class Init(Slots):
 		for vertex_set in out:
 			pm.polyMergeVertex(vertex_set, distance=0.001)
 
+		pm.select(vertex_set, deselect=1) #deselect the vertices that were selected during the polyMergeVertex operation.
+		if select:
+			pm.select(vertex, add=1)
 
-		pm.select(vertex)
-
-		pm.undoInfo(closeChunk=1)
+		pm.undoInfo(closeChunk=True)
 
 
 	@staticmethod
@@ -1895,7 +1897,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	nearestPointOnMeshNode = mel.eval('{} {}'.format('nearestPointOnMesh', obj))
 	# 	pm.delete(nearestPointOnMeshNode)
 
-	# 	pm.undoInfo(openChunk=1)
+	# 	pm.undoInfo(openChunk=True)
 	# 	for vertex in vertices:
 
 	# 		vertexPosition = pm.pointPosition(vertex, world=True)
@@ -1920,7 +1922,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 				pm.move(closestPosition[0], closestPosition[1], closestPosition[2], vertex, worldSpace=True)
 
 	# 	# pm.delete(nearestPointOnMeshNode)
-	# 	pm.undoInfo(closeChunk=1)
+	# 	pm.undoInfo(closeChunk=True)
 
 
 
