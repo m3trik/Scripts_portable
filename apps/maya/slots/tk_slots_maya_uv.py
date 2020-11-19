@@ -18,6 +18,7 @@ class Uv(Init):
 
 		if state is 'setMenu':
 			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya UV Editors')
+			pin.contextMenu.add('QPushButton', setText='Create UV Snapshot', setObjectName='b001', setToolTip='Save an image file of the current UV layout.')
 			return
 
 
@@ -372,12 +373,12 @@ class Uv(Init):
 		optimize = tb.menu_.chk017.isChecked()
 		amount = tb.menu_.s008.value()
 
-		pm.undo(openChunk=1)
+		pm.undoInfo(openChunk=1)
 		pm.u3dUnfold(iterations=1, pack=0, borderintersection=1, triangleflip=1, mapsize=2048, roomspace=0) #pm.mel.performUnfold(0)
 
 		if optimize:
-			u3dOptimize(iterations=amount, power=1, surfangle=1, borderintersection=0, triangleflip=1, mapsize=2048, roomspace=0) #pm.mel.performPolyOptimizeUV(0)
-		pm.undo(closeChunk=1)
+			pm.u3dOptimize(iterations=amount, power=1, surfangle=1, borderintersection=0, triangleflip=1, mapsize=2048, roomspace=0) #pm.mel.performPolyOptimizeUV(0)
+		pm.undoInfo(closeChunk=1)
 
 
 	def tb005(self, state=None):
@@ -453,6 +454,13 @@ class Uv(Init):
 		pm.mel.cutUvHardEdge()
 
 
+	def b001(self):
+		'''
+		Create UV Snapshot
+		'''
+		pm.mel.UVCreateSnapshot()
+
+
 	def b002(self):
 		'''
 		Transfer Uv's
@@ -461,13 +469,13 @@ class Uv(Init):
 		if len(sel)<2:
 			Slots.messageBox('Error: The operation requires the selection of two polygon objects.')
 
-		pm.undo(openChunk=1)
+		pm.undoInfo(openChunk=1)
 		from_ = sel[0]
 		to = sel[1:]
 
 		[pm.transferAttributes(from_, i, transferUVs=2) for i in to] # 0:no UV sets, 1:single UV set (specified by sourceUVSet and targetUVSet args), and 2:all UV sets are transferred.
 		Slots.messageBox('Result: UV sets transferred from: {} to: {}.'.format(from_.name(), to.name()))
-		pm.undo(closeChunk=1)
+		pm.undoInfo(closeChunk=1)
 
 
 	def b005(self):

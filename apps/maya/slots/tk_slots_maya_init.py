@@ -104,8 +104,10 @@ class Init(Slots):
 					num_selected = pm.polyEvaluate(uvComponent=1)
 					total_num = pm.polyEvaluate(selection, uvcoord=1)
 
-				if all((type_, num_selected, total_num)):
+				try:
 					hud.insertText('Selected {}: <font style="color: Yellow;">{} <font style="color: LightGray;">/{}'.format(type_, num_selected, total_num)) #selected components
+				except NameError:
+					pass
 
 
 		prevCommand = self.sb.prevCommand(docString=True)
@@ -286,26 +288,6 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getBorderFaces(faces, includeBordered=False):
-		'''
-		Get any faces attached to the given faces.
-		args:
-			faces (unicode, str, list) = faces to get bordering faces for.
-			includeBordered (bool) = optional. return the bordered face with the results.
-		returns:
-			list - the border faces of the given faces.
-		'''
-		adjEdges = pm.polyListComponentConversion(faces, fromFace=1, toEdge=1)
-		adjFaces = pm.polyListComponentConversion(adjEdges, toFace=1, fromEdge=1)
-		expanded = pm.filterExpand(adjFaces, expand=True, selectionMask=34) #keep faces as individual elements.
-
-		if includeBordered:
-			return list(str(f) for f in expanded) #convert unicode to str.
-		else:
-			return list(str(f) for f in expanded if f not in faces) #convert unicode to str and exclude the original faces.
-
-
-	@staticmethod
 	def getContigiousIslands(faces, faceIslands=[]):
 		'''
 		Get a list containing sets of adjacent polygon faces grouped by islands.
@@ -366,6 +348,26 @@ class Init(Slots):
 
 
 	@staticmethod
+	def getBorderFaces(faces, includeBordered=False):
+		'''
+		Get any faces attached to the given faces.
+		args:
+			faces (unicode, str, list) = faces to get bordering faces for.
+			includeBordered (bool) = optional. return the bordered face with the results.
+		returns:
+			list - the border faces of the given faces.
+		'''
+		adjEdges = pm.polyListComponentConversion(faces, fromFace=1, toEdge=1)
+		adjFaces = pm.polyListComponentConversion(adjEdges, toFace=1, fromEdge=1)
+		expanded = pm.filterExpand(adjFaces, expand=True, selectionMask=34) #keep faces as individual elements.
+
+		if includeBordered:
+			return list(str(f) for f in expanded) #convert unicode to str.
+		else:
+			return list(str(f) for f in expanded if f not in faces) #convert unicode to str and exclude the original faces.
+
+
+	@staticmethod
 	def getBorderEdgeFromFace(faces=None):
 		'''
 		Get border edges from faces. (edges not shared by any other face)
@@ -397,7 +399,7 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getVectorLength(x, y):
+	def getDistanceBetweenTwoPoints(x, y):
 		'''
 		Get the Magnitude of a Vector.
 
@@ -408,14 +410,141 @@ class Init(Slots):
 		returns:
 			(float) Magnitude Of The Vector.
 		'''
-		import math
+		from math import sqrt
 		dX = x[0] - y[0]
 		dY = x[1] - y[1]
 		dZ = x[2] - y[2]
 
-		length = math.sqrt( dX * dX + dY * dY + dZ * dZ )
+		length = sqrt(dX*dX + dY*dY + dZ*dZ)
 
 		return length
+
+
+	@staticmethod
+	def getDistanceBetweenTwoObjects(obj1, obj2):
+		'''
+		Get the magnatude of a vector using the center points of two given objects.
+
+		args:
+			obj1 (obj)(str) = Object or object name.
+			obj2 (obj)(str) = Object or object name.
+
+		returns:
+			(float)
+		# xmin, ymin, zmin, xmax, ymax, zmax = pm.exactWorldBoundingBox(startAndEndCurves)
+		'''
+		x1, y1, z1 = pm.objectCenter(obj1)
+		x2, y2, z2 = pm.objectCenter(obj2)
+
+		from math import sqrt
+		distance = sqrt(pow((x1-x2),2) + pow((y1-y2),2) + pow((z1-z2),2))
+
+		return distance
+
+
+	@staticmethod
+	def getClosestCV(cvs, curves, tolerance=0.0):
+		'''
+		Find the closest control vertex between the given vertices, CVs, or objects and each of the given curves.
+
+		args:
+			cvs (str)(obj)(list) = Polygon vertices, control vertices, or objects.
+			curves (str)(obj)(list) = The reference object in which to find the closest CV for each vertex in the list of given vertices.
+			tolerance (int)(float) = Maximum search distance. Default is 0.0, which turns off the tolerance flag.
+
+		returns:
+			(dict) closest vertex/cv pairs (one pair for each given curve) ex. {<vertex from set1>:<vertex from set2>}.
+
+		ex. 
+			vertices = Init.getComponents(obj1, 'vertices')
+			closestVerts = getClosestCV(curve0, curves)
+		'''
+		pm.undoInfo(openChunk=True)
+		cvs = pm.ls(cvs, flatten=1) #assure cvs is a list (in case of str or single object).
+
+		npcNode = pm.ls(pm.createNode('nearestPointOnCurve'))[0] #create a nearestPointOnCurve node.
+
+		result={}
+		for curve in pm.ls(curves):
+
+			pm.connectAttr(curve.worldSpace, npcNode.inputCurve, force=1) #Connect the curve's worldSpace geometry to the npc node.
+
+			for cv in cvs:
+				pos = pm.pointPosition(cv)
+				pm.setAttr(npcNode.inPosition, pos)
+
+				distance = Init.getDistanceBetweenTwoPoints(pos, pm.getAttr(npcNode.position))
+				p = pm.getAttr(npcNode.parameter)
+				if not tolerance:
+					result[cv] = p
+				elif distance < tolerance:
+					result[cv] = p
+
+		pm.delete(npcNode)
+
+		pm.undoInfo(closeChunk=True)
+
+		return result
+
+
+	@staticmethod
+	def getCVs(curves, returnType='CV', rebuildCurves=False):
+		'''
+		Get a dict containing CV's of the given curve(s) and their corresponding point positions.
+
+		args:
+			curves (str)(obj)(list) = The curves to get CV info from.
+			returnType (str) = The desired returned values. Default is 'CV'.
+				valid values are: 
+				'CV' - Return a list of all CV's for the given curves.
+				'numberOf' - Return an integer representing the total number of cvs for all the curves given.
+				'parameter', 'position', 'tangent', 'normalizedTangent', 'normal', 'normalizedNormal', 'curvatureRadius', 'curvatureCenter'
+				- Return a dict with CV's as keys and the returnType as their corresponding values.
+				ex. {NurbsCurveCV(u'polyToCurveShape7.cv[5]'): [-12.186520865542082, 15.260936896515751, -369.6159740743584]}
+			rebuildCurves (bool) = Rebuild each curve with a parameter range of 0-1.
+
+		returns:
+			(dict)(list)(int)
+
+		ex. cvParam = getCVs(startCurve, 'parameters') #get the curves CVs and their corresponding U parameter values.
+		'''
+		if rebuildCurves:
+			pm.rebuildCurve(curves, keepRange=0) #(0)parameter 0-1, (1)keep original range, (2)parameter 0-number of spans.
+
+		result={}
+
+		for curve in pm.ls(curves):
+
+			parameters = Init.getClosestCV(curve.cv, curve) #use getClosestCV to get the parameter location for each of the curves CVs.
+			for cv, p in parameters.items():
+
+				if returnType is 'position': # Get cv position
+					v = pm.pointOnCurve(curve, parameter=p, position=True)
+				elif returnType is 'tangent': # Get cv tangent
+					v = pm.pointOnCurve(curve, parameter=p, tangent=True)
+				elif returnType is 'normalizedTangent':
+					v = pm.pointOnCurve(curve, parameter=p, normalizedTangent=True)
+				elif returnType is 'normal': # Get cv normal
+					v = pm.pointOnCurve(curve, parameter=p, normal=True)
+				elif returnType is 'normalizedNormal':
+					v = pm.pointOnCurve(curve, parameter=p, normalizedNormal=True) #Returns the (x,y,z) normalized normal of curve1 at parameter 0.5.
+				elif returnType is 'curvatureRadius': # Get cv curvature
+					v = pm.pointOnCurve(curve, parameter=p, curvatureRadius=True) #Returns the curvature radius of curve1 at parameter 0.5.
+				elif returnType is 'curvatureCenter':
+					v = pm.pointOnCurve(curve, parameter=p, curvatureCenter=True)
+				elif returnType is 'parameter': #Return the CVs parameter.
+					v = p
+				else:
+					v = None
+
+				result[cv] = v
+
+		if returnType is 'CV':
+			return result.keys()
+		elif returnType is 'numberOf':
+			return len(result)
+		else:
+			return result
 
 
 	@staticmethod
@@ -440,7 +569,7 @@ class Init(Slots):
 			v1Pos = pm.pointPosition(v1, world=1)
 			for v2 in set2:
 				v2Pos = pm.pointPosition(v2, world=1)
-				distance = Init.getVectorLength(v1Pos, v2Pos)
+				distance = Init.getDistanceBetweenTwoPoints(v1Pos, v2Pos)
 				if distance<tolerance:
 					vertPairsAndDistance[(v1, v2)] = distance
 
@@ -453,14 +582,14 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getClosestVertex(vertices, obj, tolerance=10.0, freezeTransforms=False):
+	def getClosestVertex(vertices, obj, tolerance=0.0, freezeTransforms=False):
 		'''
-		Find the closest vertices from one set of vertices and the vertices of an object.
+		Find the closest vertex of the given object for each vertex in the list of given vertices.
 
 		args:
 			vertices (list) = A set of vertices.
 			obj (obj) = The reference object in which to find the closest vertex for each vertex in the list of given vertices.
-			tolerance (float) = Maximum search distance.
+			tolerance (float) = Maximum search distance. Default is 0.0, which turns off the tolerance flag.
 			freezeTransforms (bool) = Reset the selected transform and all of its children down to the shape level.
 
 		returns:
@@ -476,8 +605,8 @@ class Init(Slots):
 
 		obj2Shape = pm.listRelatives(obj, children=1, shapes=1)[0] #pm.listRelatives(obj, fullPath=False, shapes=True, noIntermediate=True)
 
-		cpmNode = pm.ls(pm.createNode('closestPointOnMesh'))[0] #get the closestPointOnMesh node.
-		pm.connectAttr(obj2Shape.outMesh, cpmNode.inMesh)
+		cpmNode = pm.ls(pm.createNode('closestPointOnMesh'))[0] #create a closestPointOnMesh node.
+		pm.connectAttr(obj2Shape.outMesh, cpmNode.inMesh, force=1) #object's shape mesh output to the cpm node.
 
 		closestVerts={}
 		for v1 in vertices:
@@ -488,9 +617,11 @@ class Init(Slots):
 			v2 = obj2Shape.vtx[index]
 
 			v2Pos = pm.pointPosition(v2, world=True)
-			distance = Init.getVectorLength(v1Pos, v2Pos)
+			distance = Init.getDistanceBetweenTwoPoints(v1Pos, v2Pos)
 
-			if distance < tolerance:
+			if not tolerance:
+				closestVerts[v1] = v2
+			elif distance < tolerance:
 				closestVerts[v1] = v2
 
 		pm.delete(cpmNode)
@@ -1319,7 +1450,7 @@ class Init(Slots):
 		for attr in pm.listAttr(node):
 			if not attr in exclude and (attr in include if include else attr not in include): #ie. pm.getAttr('polyCube1.subdivisionsDepth')
 				try:
-					attributes[attr] = pm.getAttr(node+'.'+attr)
+					attributes[attr] = pm.getAttr(node+'.'+attr, silent=True)
 				except Exception as error:
 					print (error)
 
@@ -1839,7 +1970,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # 			v1Pos = pm.pointPosition(v1, world=1)
 # 			for v2 in set2:
 # 				v2Pos = pm.pointPosition(v2, world=1)
-# 				distance = Init.getVectorLength(v1Pos, v2Pos)
+# 				distance = Init.getDistanceBetweenTwoPoints(v1Pos, v2Pos)
 
 # 				if distance < closestDistance:
 # 					closestDistance = distance
@@ -1912,7 +2043,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 			associatedVtx = pm.polyListComponentConversion(vtxsFace, fromVertexFace=True, toVertex=True)
 	# 			associatedVtxPosition = pm.pointPosition(associatedVtx, world=True)
 				
-	# 			distance = Init.getVectorLength(vertexPosition, associatedVtxPosition)
+	# 			distance = Init.getDistanceBetweenTwoPoints(vertexPosition, associatedVtxPosition)
 
 	# 			if distance<closestDistance:
 	# 				closestDistance = distance

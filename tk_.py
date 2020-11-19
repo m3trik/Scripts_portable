@@ -212,13 +212,13 @@ class Tk(QtWidgets.QStackedWidget):
 			self.drawPath.append(self.mapToGlobal(self.rect().center()))
 
 			if event.button()==QtCore.Qt.LeftButton:
-				self.setUi('main')
+				self.setUi('cameras')
 
 			elif event.button()==QtCore.Qt.MiddleButton:
 				self.setUi('editors')
 
 			elif event.button()==QtCore.Qt.RightButton:
-				self.setUi('cameras')
+				self.setUi('main')
 
 		return QtWidgets.QStackedWidget.mousePressEvent(self, event)
 

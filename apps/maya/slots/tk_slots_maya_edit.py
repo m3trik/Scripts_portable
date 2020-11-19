@@ -77,7 +77,7 @@ class Edit(Init):
 			tb.menu_.add('QCheckBox', setText='Zero UV Face Area', setObjectName='chk015', setToolTip='Check for 0 uv face area.')
 			tb.menu_.add('QDoubleSpinBox', setPrefix='UV Face Area Tolerance:', setObjectName='s008', setDisabled=True, setMinMax_='0.0-10 step.001', setValue=0.001, setToolTip='Tolerance for uv face areas.')
 
-			tb.menu_.chk004.stateChanged.connect(lambda state: tb.menu_.chk004.setText({0:'Repair Only',1:'Repair AND Select',2:'Select Only'}[state]))
+			tb.menu_.chk004.stateChanged.connect(lambda state: tb.menu_.chk004.setText({0:'Repair',1:'Repair AND Select',2:'Select Only'}[state]))
 			tb.menu_.chk013.toggled.connect(lambda state: tb.menu_.s006.setEnabled(True if state else False))
 			tb.menu_.chk014.toggled.connect(lambda state: tb.menu_.s007.setEnabled(True if state else False))
 			tb.menu_.chk015.toggled.connect(lambda state: tb.menu_.s008.setEnabled(True if state else False))

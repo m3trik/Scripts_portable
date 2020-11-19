@@ -18,7 +18,7 @@ class DynLayout(Init):
 
 		if state is 'setMenu':
 			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
-
+			pin.contextMenu.add('QPushButton', setText='Delete History', setObjectName='b000', setToolTip='')
 			return
 
 
@@ -29,7 +29,7 @@ class DynLayout(Init):
 		cmb = self.dynLayout.cmb000
 		
 		if index is 'setMenu':
-			list_ = ['']
+			list_ = []
 			cmb.addItems_(list_, '')
 			return
 
@@ -37,6 +37,15 @@ class DynLayout(Init):
 			if index==cmb.items.index(''):
 				pass
 			cmb.setCurrentIndex(0)
+
+
+	def b000(self):
+		'''
+		'''
+		self.sb.getMethod('edit', 'tb001')()
+
+
+
 
 
 

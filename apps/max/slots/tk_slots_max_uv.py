@@ -35,6 +35,7 @@ class Uv(Init):
 
 		if state is 'setMenu':
 			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya UV Editors')
+			pin.contextMenu.add('QPushButton', setText='Create UV Snapshot', setObjectName='b001', setToolTip='Save an image file of the current UV layout.')
 			return
 
 
@@ -375,6 +376,13 @@ class Uv(Init):
 	def b000(self):
 		'''
 		Cut Uv Hard Edges
+		'''
+		pass
+
+
+	def b001(self):
+		'''
+		Create UV Snapshot
 		'''
 		pass
 
