@@ -143,78 +143,75 @@ class Init(Slots):
 	# ------------------------------------------------
 
 	@staticmethod
-	def getComponents(objects, type_, flatten=True):
+	def getComponents(componentType=None, objects=None, selection=False, returnType=unicode, flatten=False):
 		'''
-		Get the components of the given type from the given object.
+		Get the components of the given type.
 
 		args:
-			objects (obj)(list) = The polygonal object(s) to get the components of.
-			flatten (bool) = Flattens the returned list of objects so that each component is identified individually. (much faster)
+			componentType (str) = The desired component mask. valid values are: 'vtx'(vertices), 'e'(edges), 'f'(faces), 'cv'(control vertices).
+			objects (obj)(list) = The object(s) to get the components of.
+			selection (bool) = Filter to currently selected objects.
+			returnType (type) = The desired returned object type. valid values are: unicode, str, int, object.
+			flatten (bool) = Flattens the returned list of objects so that each component is identified individually.
 
 		returns:
-			(list) component objects.
+			(list)(dict) Dependant on flags.
 		'''
-		if isinstance(objects, (str, unicode)):
-			objects = pm.ls(objects)
-
-		if not isinstance(objects, (list, set, tuple)):
-			objects=[objects]
-
-		types = {'vertices':'vtx', 'edges':'e', 'faces':'f'}
-
+		mask = {'vtx':31, 'e':32, 'f':34, 'cv':28}
 		components=[]
-		for obj in objects:
-			cmpts = pm.ls('{}.{}[*]'.format(obj, types[type_]), flatten=flatten)
-			components+=cmpts
 
-		return components
-
-
-	@staticmethod
-	def getSelectedComponents(componentType, objects=None, returnType=str):
-		'''
-		Get the component selection of the given type.
-
-		args:
-			componentType (str) = The desired component type. (valid values are: 'vertices', 'edges', 'faces')
-			objects (obj)(list) = If polygonal object(s) are given, then only selected components from those object(s) will be returned.
-			returnType (str) = Desired output style.
-					ex. str (default) = [u'test_cube:pCube1.vtx[0]']
-						int = {nt.Mesh(u'test_cube:pCube1Shape'): set([0])}
-						object = [MeshVertex(u'test_cube:pCube1Shape.vtx[0]')]
-
-		returns:
-			(list)(dict) components (based on given 'componentType' and 'returnType' value).
-		'''
-		types = {'vertices':31, 'edges':32, 'faces':34}
-
-		if objects:
-			selection = pm.ls(objects, sl=1)
-			components = pm.filterExpand(selection, selectionMask=types[componentType])
+		if selection:
+			if objects:
+				transforms = pm.ls(objects, sl=1, transforms=1)
+				if transforms:
+					selected_shapes=[]
+					for obj in transforms:
+						selected_shapes+=pm.ls('{}.{}[*]'.format(obj, componentType), flatten=flatten)
+				else:
+					shapes = Init.getShapeNode(objects)
+					selected_shapes = pm.ls(shapes, sl=1)
+				components = pm.filterExpand(selected_shapes, selectionMask=mask[componentType], expand=flatten)
+			else:
+				transforms = pm.ls(sl=1, transforms=1)
+				if transforms:
+					for obj in transforms:
+						components+=pm.ls('{}.{}[*]'.format(obj, componentType), flatten=flatten)
+				else:
+					components = pm.filterExpand(selectionMask=mask[componentType], expand=flatten)
 		else:
-			components = pm.filterExpand(selectionMask=types[componentType])
+			for obj in pm.ls(objects):
+				components+=pm.ls('{}.{}[*]'.format(obj, componentType), flatten=flatten)
 
+		if not components:
+			components=[]
 
-		if returnType is str:
-			selectedComponents = components
+		if returnType is unicode:
+			result = [unicode(c) for c in components]
 
-		if returnType is int:
-			selectedComponents={}
+		elif returnType is str:
+			result = [str(c) for c in components]
+
+		elif returnType is int:
+			result={}
 			for c in components:
 				obj = pm.ls(c, objectsOnly=1)[0]
-				componentNum = int(c.split('[')[-1].rstrip(']'))
+				num = c.split('[')[-1].rstrip(']')
 
-				if obj in selectedComponents:
-					selectedComponents[obj].add(componentNum)
+				if flatten:
+					componentNum = int(num)
 				else:
-					selectedComponents[obj] = {componentNum}
+					n = [int(n) for n in num.split(':')]
+					componentNum = tuple(n) if len(n)>1 else n[0]
 
-		if returnType is object:
-			attrs = {'vertices':'vtx', 'edges':'e', 'faces':'f'}
-			selectedComponents = [getattr(pm.ls(c, objectsOnly=1)[0], attrs[componentType])[n] for n, c in enumerate(components)] if components else []
+				if obj in result:
+					result[obj].append(componentNum)
+				else:
+					result[obj] = [componentNum]
 
+		elif returnType is object:
+			result = pm.ls(components)
 
-		return selectedComponents
+		return result
 
 
 	@staticmethod
@@ -239,7 +236,7 @@ class Init(Slots):
 		if objectType=='Polygon Face':
 			faces = objects
 		else:
-			faces = getComponents(objects, 'faces')
+			faces = Init.getComponents('f', objects)
 
 		shells={}
 		for face in faces:
@@ -259,6 +256,50 @@ class Init(Slots):
 			shells = shells.keys()
 
 		return shells
+
+
+	@staticmethod
+	def getUvShellBorderEdges(objects):
+		'''
+		Get the edges that make up any UV islands of the given objects.
+
+		args:
+			objects (str)(obj)(list) = Polygon mesh objects.
+
+		returns:
+			(list) uv border edges.
+		'''
+		mesh_edges=[]
+		for obj in pm.ls(objects, objectsOnly=1):
+			try: # Try to get edges from provided objects.
+				mesh_edges.extend(pm.ls(pm.polyListComponentConversion(obj, te=True), fl=True, l=True))
+			except:
+				pass
+
+		if len(mesh_edges)<=0: # Error if no valid objects were found
+			raise RuntimeError('No valid mesh objects or components were provided.')
+
+		pm.progressWindow(t='Find UV Border Edges', pr=0, max=len(mesh_edges), ii=True) # Start progressWindow
+		
+		uv_border_edges = list() # Find and return uv border edges
+		for edge in mesh_edges:  # Filter through the mesh(s) edges.
+
+			if pm.progressWindow(q=True, ic=True): # Kill if progress window is cancelled
+				pm.progressWindow(ep=True)  # End progressWindow
+				raise RuntimeError('Cancelled by user.')
+
+			pm.progressWindow(e=True, s=1, st=edge) # Update the progress window status
+			
+			edge_uvs = pm.ls(pm.polyListComponentConversion(edge, tuv=True), fl=True)
+			edge_faces = pm.ls(pm.polyListComponentConversion(edge, tf=True), fl=True)
+			if len(edge_uvs) > 2:  # If an edge has more than two uvs, it is a uv border edge.
+				uv_border_edges.append(edge)
+			elif len(edge_faces) < 2:  # If an edge has less than 2 faces, it is a border edge.
+				uv_border_edges.append(edge)
+
+		pm.progressWindow(ep=True) # End progressWindow
+
+		return uv_border_edges
 
 
 	@staticmethod
@@ -399,35 +440,13 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getDistanceBetweenTwoPoints(x, y):
-		'''
-		Get the Magnitude of a Vector.
-
-		args:
-			x (tuple) = Point X.
-			y (tuple) = Point Y.
-
-		returns:
-			(float) Magnitude Of The Vector.
-		'''
-		from math import sqrt
-		dX = x[0] - y[0]
-		dY = x[1] - y[1]
-		dZ = x[2] - y[2]
-
-		length = sqrt(dX*dX + dY*dY + dZ*dZ)
-
-		return length
-
-
-	@staticmethod
 	def getDistanceBetweenTwoObjects(obj1, obj2):
 		'''
 		Get the magnatude of a vector using the center points of two given objects.
 
 		args:
-			obj1 (obj)(str) = Object or object name.
-			obj2 (obj)(str) = Object or object name.
+			obj1 (obj)(str) = Object, object name, or point (x,y,z).
+			obj2 (obj)(str) = Object, object name, or point (x,y,z).
 
 		returns:
 			(float)
@@ -443,12 +462,12 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getClosestCV(cvs, curves, tolerance=0.0):
+	def getClosestCV(x, curves, tolerance=0.0):
 		'''
 		Find the closest control vertex between the given vertices, CVs, or objects and each of the given curves.
 
 		args:
-			cvs (str)(obj)(list) = Polygon vertices, control vertices, or objects.
+			x (str)(obj)(list) = Polygon vertices, control vertices, objects, or points given as (x,y,z) tuples.
 			curves (str)(obj)(list) = The reference object in which to find the closest CV for each vertex in the list of given vertices.
 			tolerance (int)(float) = Maximum search distance. Default is 0.0, which turns off the tolerance flag.
 
@@ -456,11 +475,11 @@ class Init(Slots):
 			(dict) closest vertex/cv pairs (one pair for each given curve) ex. {<vertex from set1>:<vertex from set2>}.
 
 		ex. 
-			vertices = Init.getComponents(obj1, 'vertices')
+			vertices = Init.getComponents('vtx', objects)
 			closestVerts = getClosestCV(curve0, curves)
 		'''
 		pm.undoInfo(openChunk=True)
-		cvs = pm.ls(cvs, flatten=1) #assure cvs is a list (in case of str or single object).
+		x = pm.ls(x, flatten=1) #assure x arg is a list (if given as str or single object).
 
 		npcNode = pm.ls(pm.createNode('nearestPointOnCurve'))[0] #create a nearestPointOnCurve node.
 
@@ -469,16 +488,19 @@ class Init(Slots):
 
 			pm.connectAttr(curve.worldSpace, npcNode.inputCurve, force=1) #Connect the curve's worldSpace geometry to the npc node.
 
-			for cv in cvs:
-				pos = pm.pointPosition(cv)
+			for i in x:
+				if not isinstance(i, (tuple, list, set)):
+					pos = pm.pointPosition(i)
+				else:
+					pos = i
 				pm.setAttr(npcNode.inPosition, pos)
 
 				distance = Init.getDistanceBetweenTwoPoints(pos, pm.getAttr(npcNode.position))
 				p = pm.getAttr(npcNode.parameter)
 				if not tolerance:
-					result[cv] = p
+					result[i] = p
 				elif distance < tolerance:
-					result[cv] = p
+					result[i] = p
 
 		pm.delete(npcNode)
 
@@ -488,38 +510,44 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getCVs(curves, returnType='CV', rebuildCurves=False):
+	def getCvInfo(c, returnType='cv', filter_=[]):
 		'''
 		Get a dict containing CV's of the given curve(s) and their corresponding point positions.
 
 		args:
-			curves (str)(obj)(list) = The curves to get CV info from.
-			returnType (str) = The desired returned values. Default is 'CV'.
+			c (str)(obj)(list) = Curves or CVs to get CV info from.
+			returnType (str) = The desired returned values. Default is 'cv'.
 				valid values are: 
-				'CV' - Return a list of all CV's for the given curves.
-				'numberOf' - Return an integer representing the total number of cvs for all the curves given.
-				'parameter', 'position', 'tangent', 'normalizedTangent', 'normal', 'normalizedNormal', 'curvatureRadius', 'curvatureCenter'
+				'cv' - Return a list of all CV's for the given curves.
+				'count' - Return an integer representing the total number of cvs for each of the curves given.
+				'parameter', 'position', 'index', 'localPosition', 'tangent', 'normalizedTangent', 'normal', 'normalizedNormal', 'curvatureRadius', 'curvatureCenter'
 				- Return a dict with CV's as keys and the returnType as their corresponding values.
 				ex. {NurbsCurveCV(u'polyToCurveShape7.cv[5]'): [-12.186520865542082, 15.260936896515751, -369.6159740743584]}
-			rebuildCurves (bool) = Rebuild each curve with a parameter range of 0-1.
+			filter_ (str)(obj)(list) = Value(s) to filter for in the returned results.
 
 		returns:
-			(dict)(list)(int)
+			(dict)(list)(int) returns a list if more than one object is returned, else just a single value.
 
-		ex. cvParam = getCVs(startCurve, 'parameters') #get the curves CVs and their corresponding U parameter values.
+		ex. cv_tan = getCvInfo(curve.cv[0:2],'tangent') #get CV tangents for cvs 0-2.
+		ex. cvParam = getCvInfo(curve, 'parameters') #get the curves CVs and their corresponding U parameter values.
+		ex. filtered = getCvInfo(<curve>, 'normal', <normal>) #filter results for those that match the given value.
 		'''
-		if rebuildCurves:
-			pm.rebuildCurve(curves, keepRange=0) #(0)parameter 0-1, (1)keep original range, (2)parameter 0-number of spans.
-
 		result={}
+		for curve in pm.ls(c):
 
-		for curve in pm.ls(curves):
+			if '.cv' in str(curve): #if CV given.
+				cvs = curve
+				curve = pm.listRelatives(cvs, parent=1)
+			else: #if curve(s) given
+				cvs = curve.cv
 
-			parameters = Init.getClosestCV(curve.cv, curve) #use getClosestCV to get the parameter location for each of the curves CVs.
+			parameters = Init.getClosestCV(cvs, curve) #use getClosestCV to get the parameter location for each of the curves CVs.
 			for cv, p in parameters.items():
 
 				if returnType is 'position': # Get cv position
 					v = pm.pointOnCurve(curve, parameter=p, position=True)
+				elif returnType is 'localPosition':
+					v = pm.getAttr(cv) # local cv position
 				elif returnType is 'tangent': # Get cv tangent
 					v = pm.pointOnCurve(curve, parameter=p, tangent=True)
 				elif returnType is 'normalizedTangent':
@@ -532,19 +560,68 @@ class Init(Slots):
 					v = pm.pointOnCurve(curve, parameter=p, curvatureRadius=True) #Returns the curvature radius of curve1 at parameter 0.5.
 				elif returnType is 'curvatureCenter':
 					v = pm.pointOnCurve(curve, parameter=p, curvatureCenter=True)
-				elif returnType is 'parameter': #Return the CVs parameter.
+				elif returnType is 'parameter': # Return the CVs parameter.
 					v = p
+				elif returnType is 'count': # total number of cv's for the curve.
+					result[curve] = len(Init.getCvInfo(curve))
+					break
+				elif returnType is 'index': # index of the cv
+					s = str(cv)
+					v = int(s[s.index('[')+1:s.index(']')])
 				else:
 					v = None
 
 				result[cv] = v
 
-		if returnType is 'CV':
-			return result.keys()
-		elif returnType is 'numberOf':
-			return len(result)
-		else:
-			return result
+		if returnType is 'cv':
+			result = result.keys()
+
+		if filter_:
+			if not isinstance(filter_, (tuple, set, list)):
+				filter_ = list(filter_)
+			try:
+				result = {k:v for k,v in result.items() if any((v in filter_, v==filter_))}
+			except AttributeError:
+				result = [i for i in result if any((i in filter_, i==filter_))]
+
+		if len(result) is 1:
+			try:
+				result = result.values()[0]
+			except AttributeError, TypeError:
+				result = result[0]
+
+		return result
+
+
+	@staticmethod
+	def getCrossProductOfCurves(curves, normalize=1, values=False):
+		'''
+		Get the cross product of two vectors using points derived from the given curves.
+
+		args:
+			curves (str)(obj)(list) = Nurbs curve(s).
+			normalize (float) = (0) Do not normalize. (1) Normalize standard. (value other than 0 or 1) Normalize using the given float value as desired length.
+			values (bool) = Return only a list of the cross product vector values [(<Vx>, <Vy>, <Vz>)] instead of the full dict {<curve1>:(<Vx>, <Vy>, <Vz>)}.
+
+		returns:
+			(dict)(list)
+		'''
+		result={}
+		for curve in pm.ls(curves):
+			p0 = pm.objectCenter(curve)
+
+			cvs = Init.getComponents('cv', curve, returnType=object, flatten=1)
+			cvPos = Init.getCvInfo(curve, 'position')
+			p1 = cvPos[cvs[0]]
+			p2 = cvPos[cvs[(len(cvs)/2)]]
+
+			n1 = Init.getCrossProduct(p0, p1, p2, normalize=normalize)
+
+			result[curve] = n1
+
+		if values:
+			result = result.values()
+		return result
 
 
 	@staticmethod
@@ -560,8 +637,8 @@ class Init(Slots):
 		returns:
 			(list) closest vertex pairs by order of distance (excluding those not meeting the tolerance). (<vertex from set1>, <vertex from set2>).
 
-		ex. verts1 = Init.getComponents('pCube1', 'vertices')
-			verts2 = Init.getComponents('pCube2', 'vertices')
+		ex. verts1 = Init.getComponents('vtx', 'pCube1')
+			verts2 = Init.getComponents('vtx', 'pCube2')
 			closestVerts = getClosestVerts(verts1, verts2)
 		'''
 		vertPairsAndDistance={}
@@ -596,7 +673,7 @@ class Init(Slots):
 			(dict) closest vertex pairs {<vertex from set1>:<vertex from set2>}.
 
 		ex. obj1, obj2 = selection
-			vertices = Init.getComponents(obj1, 'vertices')
+			vertices = Init.getComponents('vtx', obj1)
 			closestVerts = getClosestVertex(vertices, obj2, tolerance=10)
 		'''
 		pm.undoInfo(openChunk=True)
@@ -641,7 +718,7 @@ class Init(Slots):
 			tolerance (float) = Maximum search distance.
 			freezeTransforms (bool) = Reset the selected transform and all of its children down to the shape level.
 		'''
-		vertices = Init.getComponents(obj1, 'vertices')
+		vertices = Init.getComponents('vtx', obj1)
 		closestVerts = Init.getClosestVertex(vertices, obj2, tolerance=tolerance, freezeTransforms=freezeTransforms)
 
 		progressBar = mel.eval("$container=$gMainProgressBar");
@@ -741,7 +818,7 @@ class Init(Slots):
 
 		nonManifoldVerts=set()
 
-		vertices = Init.getComponents(objects, 'vertices')
+		vertices = Init.getComponents('vtx', objects)
 		for vertex in vertices:
 
 			connected_faces = pm.polyListComponentConversion(vertex, fromVertex=1, toFace=1) #pm.mel.PolySelectConvert(1) #convert to faces
@@ -1239,6 +1316,101 @@ class Init(Slots):
 
 
 
+
+
+	# ------------------------------------------------
+	' TRANSFORMATION'
+	# ------------------------------------------------
+
+	@staticmethod
+	def aimObjectAt(obj, target_pos, aim_vect=(1,0,0), up_vect=(0,1,0)):
+		'''
+		Aim supplied object at supplied world space position.
+
+		Args:
+			obj (str)(obj) = Transform node.
+			target_pos (tuple) = The (x,y,z) world position to aim at.
+			aim_vect (tuple) = Local axis to aim at the target position.
+			up_vect (tuple) = Secondary axis aim vector.
+		 '''
+		target = pm.createNode('transform')
+
+		pm.xform(target, translation=target_pos, absolute=True)
+		const = pm.aimConstraint((target, obj), aim=aim_vect, worldUpVector=up_vect, worldUpType="vector")
+
+		pm.delete(const, target)
+
+
+	@staticmethod
+	def rotateAxis(obj, target_pos):
+		''' 
+		Aim transform <obj> at world space point <target>.
+		All rotations in rotated channel, geometry is transformed so it does not appear to move during this transformation
+
+		Args:
+			obj (str)(obj) = Transform node.
+			target_pos (tuple) = An (x,y,z) world position.
+		'''
+		obj = pm.ls(obj)[0]
+		Init.aimObjectAt(obj, target_pos)
+
+		try:
+			c = obj.v[:]
+		except TypeError:
+			c = obj.cv[:]
+
+		wim = pm.getAttr(obj.worldInverseMatrix)
+		pm.xform(c, matrix=wim)
+
+		pos = pm.xform(obj, q=True, translation=True, absolute=True, worldSpace=True)
+		pm.xform(c, translation=pos, relative=True, worldSpace=True)
+
+
+	@staticmethod
+	def getOrientation(obj, returnType='point'):
+		'''
+		Get an objects orientation.
+
+		args:
+			obj (str)(obj) = The object to get the orientation of.
+			returnType (str) = The desired returned value type. (valid: 'point', 'vector')(default: 'point')
+
+		returns:
+			(tuple)
+		'''
+		obj = pm.ls(obj)[0]
+
+		world_matrix = pm.xform(obj, q=True, matrix=True, worldSpace=True)
+		rAxis = pm.getAttr(obj.rotateAxis)
+		if any((rAxis[0], rAxis[1], rAxis[2])):
+			print('# Warning: {} has a modified .rotateAxis of {} which is included in the result. #'.format(obj, rAxis))
+
+		if returnType is 'vector':
+			from maya.api.OpenMaya import MVector
+
+			result = (
+				MVector(world_matrix[0:3]),
+				MVector(world_matrix[4:7]),
+				MVector(world_matrix[8:11])
+			)
+
+		else:
+			result = (
+				world_matrix[0:3],
+				world_matrix[4:7],
+				world_matrix[8:11]
+			)
+
+		return result
+
+
+
+
+
+
+
+
+
 	# ------------------------------------------------
 	' DAG objects'
 	# ------------------------------------------------
@@ -1286,30 +1458,40 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getObjectFromComponent(components):
+	def getObjectFromComponent(components, returnType='transform'):
 		'''
-		Get the object's transform node from the given components.
+		Get the object's transform, shape, or history node from the given components.
+
 		args:
-			components (str, list) = component name(s)
+			components (str)(obj(list) = Component(s).
+			returnType (str) = The desired returned node type. (valid: 'transform','shape','history')(default: 'transform')
+
 		returns:
 			(dict) {transform node: [components of that node]}
 			ie. {'pCube2': ['pCube2.f[21]', 'pCube2.f[22]', 'pCube2.f[25]'], 'pCube1': ['pCube1.f[21]', 'pCube1.f[26]']}
 		'''
-		if type(components) in [str,unicode]:
+		if not isinstance(components,(list, tuple, set)):
 			components = [components]
 
-		transforms={}
+		result={}
 		for component in components:
-			component = str(component)
-			shapeNode = str(pm.listRelatives(component, parent=1)[0])
-			transform = str(pm.listRelatives(shapeNode, parent=1)[0])
+			shapeNode = pm.listRelatives(component, parent=1)[0]
+			transform = pm.listRelatives(shapeNode, parent=1)[0]
+
+			if returnType is 'transform':
+				node = transform
+			elif returnType is 'shape':
+				node = shapeNode
+			elif returnType is 'history':
+				history = pm.listConnections(shapeNode, source=1, destination=0)[0] #get incoming connections: returns list ie. [nt.PolyCone('polyCone1')]
+				node = history
 
 			try:
-				transforms[transform].append(component)
+				result[node].append(component)
 			except:
-				transforms[transform] = [component]
+				result[node] = [component]
 
-		return transforms
+		return result
 
 
 	@staticmethod
@@ -1895,6 +2077,80 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 #deprecated -------------------------------------
 
 
+	# def getComponents(objects, type_, flatten=True):
+	# 	'''
+	# 	Get the components of the given type from the given object.
+
+	# 	args:
+	# 		objects (obj)(list) = The polygonal object(s) to get the components of.
+	# 		flatten (bool) = Flattens the returned list of objects so that each component is identified individually. (much faster)
+
+	# 	returns:
+	# 		(list) component objects.
+	# 	'''
+	# 	if isinstance(objects, (str, unicode)):
+	# 		objects = pm.ls(objects)
+
+	# 	if not isinstance(objects, (list, set, tuple)):
+	# 		objects=[objects]
+
+	# 	types = {'vertices':'vtx', 'edges':'e', 'faces':'f'}
+
+	# 	components=[]
+	# 	for obj in objects:
+	# 		cmpts = pm.ls('{}.{}[*]'.format(obj, types[type_]), flatten=flatten)
+	# 		components+=cmpts
+
+	# 	return components
+
+
+	# @staticmethod
+	# def getSelectedComponents(componentType, objects=None, returnType=str):
+	# 	'''
+	# 	Get the component selection of the given type.
+
+	# 	args:
+	# 		componentType (str) = The desired component type. (valid values are: 'vertices', 'edges', 'faces')
+	# 		objects (obj)(list) = If polygonal object(s) are given, then only selected components from those object(s) will be returned.
+	# 		returnType (str) = Desired output style.
+	# 				ex. str (default) = [u'test_cube:pCube1.vtx[0]']
+	# 					int = {nt.Mesh(u'test_cube:pCube1Shape'): set([0])}
+	# 					object = [MeshVertex(u'test_cube:pCube1Shape.vtx[0]')]
+
+	# 	returns:
+	# 		(list)(dict) components (based on given 'componentType' and 'returnType' value).
+	# 	'''
+	# 	types = {'vertices':31, 'edges':32, 'faces':34}
+
+	# 	if objects:
+	# 		selection = pm.ls(objects, sl=1)
+	# 		components = pm.filterExpand(selection, selectionMask=types[componentType])
+	# 	else:
+	# 		components = pm.filterExpand(selectionMask=types[componentType])
+
+
+	# 	if returnType is str:
+	# 		selectedComponents = components
+
+	# 	if returnType is int:
+	# 		selectedComponents={}
+	# 		for c in components:
+	# 			obj = pm.ls(c, objectsOnly=1)[0]
+	# 			componentNum = int(c.split('[')[-1].rstrip(']'))
+
+	# 			if obj in selectedComponents:
+	# 				selectedComponents[obj].add(componentNum)
+	# 			else:
+	# 				selectedComponents[obj] = {componentNum}
+
+	# 	if returnType is object:
+	# 		attrs = {'vertices':'vtx', 'edges':'e', 'faces':'f'}
+	# 		selectedComponents = [getattr(pm.ls(c, objectsOnly=1)[0], attrs[componentType])[n] for n, c in enumerate(components)] if components else []
+
+
+	# 	return selectedComponents
+
+
 # @staticmethod
 # 	def getUvShellSets(objects=None):
 # 		'''
@@ -1914,7 +2170,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 
 # 		shells={}
 # 		for obj in objects:
-# 			faces = Init.getComponents(obj, 'faces')
+# 			faces = Init.getComponents(obj, 'f')
 # 			for face in faces:
 # 				shell_Id = pm.polyEvaluate(face, uvShellIds=True)
 

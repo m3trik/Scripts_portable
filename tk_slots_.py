@@ -503,6 +503,313 @@ class Slots(QtCore.QObject):
 
 
 
+	# ----------------------------------------------------------------------------------------------------------
+	' MATH '
+	# ----------------------------------------------------------------------------------------------------------
+
+	@staticmethod
+	def getVectorFromTwoPoints(startPoint, endPoint):
+		'''
+		Get a directional vector from a given start and end point.
+
+		args:
+			startPoint (tuple) = The vectors start point as x, y, z values.
+			endPoint (tuple) = The vectors end point as x, y, z values.
+
+		returns:
+			(tuple) vector.
+		'''
+		x1, y1, z1 = startPoint
+		x2, y2, z2 = endPoint
+
+		result = (
+			x1 - x2,
+			y1 - y2,
+			z1 - z2,
+		)
+
+		return result
+
+
+	@staticmethod
+	def normalize(vector, amount=1):
+		'''
+		Normalize a vector
+
+		args:
+			vector (vector) = The vector to normalize.
+			amount (float) = (1) Normalize standard. (value other than 0 or 1) Normalize using the given float value as desired length.
+		
+		returns:
+			(tuple)
+		'''
+		length = Slots.getMagnitude(vector)
+		x, y, z = vector
+
+		result = (
+			x /length *amount,
+			y /length *amount,
+			z /length *amount
+		)
+
+		return result
+
+
+	@staticmethod
+	def getMagnitude(vector):
+		'''
+		Get the magnatude (length) of a given vector.
+
+		args:
+			vector (tuple) = Vector xyz values.
+
+		returns:
+			(float)
+		'''
+		from math import sqrt
+
+		x, y, z = vector
+		length = sqrt(x**2 + y**2 + z**2)
+
+		return length
+
+
+	@staticmethod
+	def getCrossProduct(p1, p2, p3=None, normalize=0):
+		'''
+		Get the cross product of two vectors, using 2 vectors, or 3 points.
+
+		args:
+			p1 (vector)(point) = xyz point value as a tuple.
+			p2 (vector)(point) = xyz point value as a tuple.
+			p3 (point) = xyz point value as a tuple (used when working with point values instead of vectors).
+			normalize (float) = (0) Do not normalize. (1) Normalize standard. (value other than 0 or 1) Normalize using the given float value as desired length.
+
+		returns:
+			(tuple)
+		'''
+		if p3 is not None: #convert points to vectors and unpack.
+			v1x, v1y, v1z = (
+				p2[0] - p1[0],
+				p2[1] - p1[1], 
+				p2[2] - p1[2]
+			)
+
+			v2x, v2y, v2z = (
+				p3[0] - p1[0], 
+				p3[1] - p1[1], 
+				p3[2] - p1[2]
+			)
+		else: #unpack vector.
+			v1x, v1y, v1z = p1
+			v2x, v2y, v2z = p2
+
+		result = (
+			(v1y*v2z) - (v1z*v2y), 
+			(v1z*v2x) - (v1x*v2z), 
+			(v1x*v2y) - (v1y*v2x)
+		)
+
+		if normalize:
+			result = Slots.normalize(result, normalize)
+
+		return result
+
+
+	@staticmethod
+	def movePointRelative(p, d, v=None):
+		'''
+		Move a point relative to it's current position.
+
+		args:
+			p (tuple) = A points x, y, z values.
+			d (tuple)(float) = The distance to move. (use a float value when moving along a vector)
+			v (tuple) = Optional: A vectors x, y, z values can be given to move the point along that vector.
+		'''
+		x, y, z = p
+
+		if v is not None: #move along a vector if one is given.
+			if not isinstance(d, (float, int)):
+				print('# Warning: The distance parameter requires an integer or float value when moving along a vector. {} given. #'.format(type(d)))
+			dx, dy, dz = Slots.normalize(v, d)
+		else:
+			dx, dy, dz = d
+
+		result = (
+			x + dx,
+			y + dy,
+			z + dz
+		)
+
+		return result
+
+
+	@staticmethod
+	def movePointAlongVectorTowardPoint(point, toward, vect, dist):
+		'''
+		Move a point along a given vector in the direction of another point.
+
+		args:
+			point (tuple) = The point to move given as (x,y,z).
+			toward (tuple) = The point to move toward.
+			vect (tuple) = A vector to move the point along.
+			dist (float) = The linear amount to move the point.
+		
+		returns:
+			(tuple) point.
+		'''
+		for i in [dist, -dist]: #move in pos and neg direction, and determine which is moving closer to the reference point.
+			p = Slots.movePointRelative(point, i, vect)
+			d = Slots.getDistanceBetweenTwoPoints(p, toward)
+			if d<=d:
+				result = p
+
+		return result
+
+
+	@staticmethod
+	def getDistanceBetweenTwoPoints(p1, p2):
+		'''
+		Get the vector between two points, and return it's magnitude.
+
+		args:
+			p1 (tuple) = Point 1.
+			p2 (tuple) = Point 2.
+
+		returns:
+			(float)
+		'''
+		from math import sqrt
+		
+		p1x, p1y, p1z = p1
+		p2x, p2y, p2z = p2
+
+		vX = p1x - p2x
+		vY = p1y - p2y
+		vZ = p1z - p2z
+
+		vector = (vX, vY, vZ)
+		length = Slots.getMagnitude(vector)
+
+		return length
+
+
+	@staticmethod
+	def getCenterPointBetweenTwoPoints(p1, p2):
+		'''
+		Get the point in the middle of two given points.
+
+		args:
+			p1 (tuple) = Point as x,y,z values.
+			p2 (tuple) = Point as x,y,z values.
+
+		returns:
+			(tuple)
+		'''
+		Ax, Ay, Az = p1
+		Bx, By, Bz = p2
+
+		result = (
+			(Ax+Bx) /2,
+			(Ay+By) /2,
+			(Az+Bz) /2
+		)
+
+		return result
+
+
+	@staticmethod
+	def getAngleFrom2Vectors(v1, v2, degree=False):
+		'''
+		Get an angle from two given vectors.
+
+		args:
+			v1 (point) = A vectors xyz values as a tuple.
+			v2 (point) = A vectors xyz values as a tuple.
+			degree (bool) = Convert the radian result to degrees.
+
+		returns:
+			(float)
+		'''
+		from math import acos, degrees
+
+		def dotproduct(v1, v2):
+			return sum((a*b) for a, b in zip(v1, v2))
+
+		def length(v):
+			return (dotproduct(v, v))**0.5
+
+		result = acos(dotproduct(v1, v2) / (length(v1) * length(v2)))
+
+		if degree:
+			result = round(degrees(result), 2)
+		return result
+
+
+	@staticmethod
+	def getAngleFrom3Points(a, b, c, degree=False):
+		'''
+		Get the opposing angle from 3 given points.
+
+		args:
+			a (point) = A points xyz values as a tuple.
+			b (point) = A points xyz values as a tuple.
+			c (point) = A points xyz values as a tuple.
+			degree (bool) = Convert the radian result to degrees.
+
+		returns:
+			(float)
+		'''
+		from math import sqrt, acos, degrees
+
+		ba = [aa-bb for aa,bb in zip(a,b)] #create vectors from points
+		bc = [cc-bb for cc,bb in zip(c,b)]
+
+		nba = sqrt(sum((x**2.0 for x in ba))) #normalize vector
+		ba = [x/nba for x in ba]
+
+		nbc = sqrt(sum((x**2.0 for x in bc)))
+		bc = [x/nbc for x in bc]
+
+		scalar = sum((aa*bb for aa,bb in zip(ba,bc))) #get scalar from normalized vectors
+
+		angle = acos(scalar)#get the angle in radian
+
+		if degree:
+			angle = round(degrees(angle), 2)
+		return angle
+
+
+	@staticmethod
+	def getTwoSidesOfASATriangle(a1, a2, s, unit='degrees'):
+		'''
+		Get the length of two sides of a triangle, given two angles, and the length of the side in-between.
+
+		args:
+			a1 (float) = Angle in radians or degrees. (unit flag must be set if value given in radians)
+			a2 (float) = Angle in radians or degrees. (unit flag must be set if value given in radians)
+			s (float) = The distance of the side between the two given angles.
+			unit (str) = Specify whether the angle values are given in degrees or radians. (valid: 'radians', 'degrees')(default: degrees)
+
+		returns:
+			(tuple)
+		'''
+		from math import sin, radians
+
+		if unit is 'degrees':
+			a1, a2 = radians(a1), radians(a2)
+
+		a3 = 3.14159 - a1 - a2
+
+		result = (
+			(s/sin(a3)) * sin(a1),
+			(s/sin(a3)) * sin(a2)
+		)
+
+		return result
+
+
+
 
 
 

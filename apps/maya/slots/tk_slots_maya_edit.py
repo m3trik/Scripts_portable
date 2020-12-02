@@ -122,9 +122,9 @@ class Edit(Init):
 				Init.findNonManifoldVertex(objects)
 			else:
 				select = False if selectOnly==0 else True
-				nonManifoldVerts = Init.getSelectedComponents('vertices', objects) #user selection
+				nonManifoldVerts = Init.getComponents('vtx', objects, selection=1) #user selection
 				if not nonManifoldVerts:
-					nonManifoldVerts = Init.findNonManifoldVertex(objects, select=select) # vertices = Init.getComponents(objects, 'vertices', flatten=True)
+					nonManifoldVerts = Init.findNonManifoldVertex(objects, select=select) # vertices = Init.getComponents('vtx', objects, flatten=True)
 
 				pm.undoInfo(openChunk=1)
 				for vertex in nonManifoldVerts:

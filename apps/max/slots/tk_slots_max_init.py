@@ -178,7 +178,6 @@ class Init(Slots):
 	' Geometry'
 	# ------------------------------------------------
 
-
 	@staticmethod
 	def selectFaceLoop(tolerance, includeOpenEdges=False):
 		'''

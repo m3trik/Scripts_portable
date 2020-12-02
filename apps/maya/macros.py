@@ -473,7 +473,7 @@ class Macros(Init):
 				for obj in objects:
 					pm.selectMode(component=1)
 					pm.selectType(meshUVShell=1)
-					faces = Init.getComponents(obj, 'faces', flatten=False)
+					faces = Init.getComponents('f', obj, flatten=False)
 					pm.select(faces, add=True)
 
 			pm.selectType(polymeshUV=1)

@@ -186,7 +186,7 @@ class Uv(Init):
 			tb.menu_.add(QCheckBox_, setText='Pre-Scale Mode: 1', setObjectName='chk025', setTristate=True, setCheckState_=1, setToolTip='Allow shell scaling during packing.')
 			tb.menu_.add(QCheckBox_, setText='Pre-Rotate Mode: 1', setObjectName='chk007', setTristate=True, setCheckState_=1, setToolTip='Allow shell rotation during packing.')
 			tb.menu_.add('QDoubleSpinBox', setPrefix='Rotate Step: ', setObjectName='s007', setMinMax_='0.0-360 step22.5', setValue=22.5, setToolTip='Set the allowed rotation increment contraint.')
-			tb.menu_.add(QCheckBox_, setText='Stack Similar: 2', setObjectName='chk026', setTristate=True, setCheckState_=2, setToolTip='Find Similar shells. <br>state 1: Find similar shells, and pack one of each, ommiting the rest.<br>state 2: Find similar shells, and stack during packing (can be very slow).')
+			tb.menu_.add(QCheckBox_, setText='Stack Similar: 2', setObjectName='chk026', setTristate=True, setCheckState_=2, setToolTip='Find Similar shells. <br>state 1: Find similar shells, and pack one of each, ommiting the rest.<br>state 2: Find similar shells, and stack during packing.')
 			tb.menu_.add('QDoubleSpinBox', setPrefix='Stack Similar Tolerance: ', setObjectName='s006', setMinMax_='0.0-10 step.1', setValue=1.0, setToolTip='Stack shells with uv\'s within the given range.')
 			tb.menu_.add('QSpinBox', setPrefix='UDIM: ', setObjectName='s004', setMinMax_='1001-1200 step1', setValue=1001, setToolTip='Set the desired UDIM tile space.')
 			tb.menu_.add('QSpinBox', setPrefix='Map Size: ', setObjectName='s005', setMinMax_='512-8192 step512', setValue=2048, setToolTip='UV map resolution.')
@@ -260,9 +260,9 @@ class Uv(Init):
 						unwrapType = 'Cylindrical'
 					elif sphericalUnwrap:
 						unwrapType = 'Spherical'
-					objFaces = Init.getSelectedComponents('faces', obj)
+					objFaces = Init.getComponents('f', obj, selection=1)
 					if not objFaces:
-						objFaces = Init.getComponents(obj, 'faces')
+						objFaces = Init.getComponents('f', obj)
 					pm.polyProjection(objFaces, type=unwrapType, insertBeforeDeformers=1, smartFit=1)
 
 				elif normalBasedUnwrap:
@@ -489,7 +489,6 @@ class Uv(Init):
 			pm.polyMapCut(sel)
 
 
-	@Init.attr
 	def b011(self):
 		'''
 		Sew Uv'S
@@ -499,7 +498,7 @@ class Uv(Init):
 		for obj in objects:
 			sel = pm.ls(obj, sl=1)
 
-			return pm.polyMapSew(sel) if len(objects)==1 else pm.polyMapSew(sel)
+			pm.polyMapSew(sel) if len(objects)==1 else pm.polyMapSew(sel)
  
 
 	def b023(self):
@@ -570,7 +569,7 @@ class Uv(Init):
 			for obj in objects:
 				pm.selectMode(component=1)
 				pm.selectType(meshUVShell=1)
-				selection = Init.getComponents(obj, 'faces', flatten=False)
+				selection = Init.getComponents('f', obj, flatten=False)
 				pm.select(selection, add=True)
 
 		return selection

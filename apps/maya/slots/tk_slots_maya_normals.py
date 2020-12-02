@@ -243,42 +243,12 @@ class Normals(Init):
 		'''
 		Harden Uv Edges
 		'''
-		def createArrayFromSelection(): #(string sel[])	/* returns a string array of the selected transform nodes
-			pm.select (hierarchy=1)
-			nodes = pm.ls (selection=1, transforms=1)
-			groupedNodes = pm.listRelatives (type="transform") #if the nodes are grouped then just get the children
+		selection = pm.ls(sl=True, l=True)
 
-			if groupedNodes[0] != "":	#check to see if the nodes are grouped
-				size = len(groupedNodes)
-				clear (nodes)
-				appendStringArray(nodes, groupedNodes, size)
-			return nodes
+		uv_border_edges = Init.getUvShellBorderEdges(selection)
+		pm.polySoftEdge(uv_border_edges, angle=0, ch=1)
 
-		uvBorder=edgeUVs=finalBorder=[]
-		nodes = createArrayFromSelection()
-
-		for node in nodes:
-			pm.select (node, replace=1)
-			pm.polyNormalPerVertex (unFreezeNormal=True)
-			pm.polySoftEdge (node, angle=180, constructionHistory=1)
-			mel.eval('select -replace '+node+'.map["*"];')
-
-			mel.eval("polySelectBorderShell 1;")
-
-			uvBorder = pm.polyListComponentConversion (toEdge=1, internal=1)
-			uvBorder = pm.ls (uvBorder, flatten=1)
-
-			pm.clear(finalBorder)
-
-			for curEdge in uvBorder:
-				edgeUVs = pm.polyListComponentConversion (curEdge, toUv=1)
-				edgeUVs = pm.ls (edgeUVs, flatten=1)
-
-				if len(edgeUVs) >2:
-					finalBorder[len(finalBorder)] = curEdge
-				pm.polySoftEdge (finalBorder, angle=0, constructionHistory=1)
-
-			pm.select (nodes, replace=1)
+		pm.select(uv_border_edges)
 
 
 	def b010(self):
