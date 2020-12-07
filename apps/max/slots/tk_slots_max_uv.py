@@ -16,7 +16,7 @@ class Uv(Init):
 		Get the UV modifier for the current object.
 		If one doesn't exist, a UV modifier will be added to the selected object.
 
-		returns:
+		:Return:
 			(obj) uv modifier.
 		'''
 		selection = rt.selection
@@ -34,7 +34,7 @@ class Uv(Init):
 		pin = self.uv.pin
 
 		if state is 'setMenu':
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya UV Editors')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='Maya UV Editors')
 			pin.contextMenu.add('QPushButton', setText='Create UV Snapshot', setObjectName='b001', setToolTip='Save an image file of the current UV layout.')
 			return
 
@@ -83,9 +83,9 @@ class Uv(Init):
 				borders = pm.polyOptions(query=1, displayMapBorder=1)
 				distortion = pm.textureWindow(pm.getPanel(scriptType='polyTexturePlacementPanel'), query=1, displayDistortion=1)
 
-				cmb.menu_.add(QCheckBox_, setObjectName='chk014', setText='Checkered', setChecked=checkered, setToolTip='')
-				cmb.menu_.add(QCheckBox_, setObjectName='chk015', setText='Borders', setChecked=borders, setToolTip='')
-				cmb.menu_.add(QCheckBox_, setObjectName='chk016', setText='Distortion', setChecked=distortion, setToolTip='')
+				cmb.menu_.add(widgets.TkCheckBox, setObjectName='chk014', setText='Checkered', setChecked=checkered, setToolTip='')
+				cmb.menu_.add(widgets.TkCheckBox, setObjectName='chk015', setText='Borders', setChecked=borders, setToolTip='')
+				cmb.menu_.add(widgets.TkCheckBox, setObjectName='chk016', setText='Distortion', setChecked=distortion, setToolTip='')
 
 			except NameError as error:
 				print(error)
@@ -448,7 +448,7 @@ class Uv(Init):
 		'''
 		Move sny selected objects to the given u and v coordinates.
 
-		args:
+		:Parameters:
 			u (int) = u coordinate.
 			v (int) = v coordinate.
 			relative (bool) = Move relative or absolute.

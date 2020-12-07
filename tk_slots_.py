@@ -17,7 +17,7 @@ class Slots(QtCore.QObject):
 	def __init__(self, parent=None, *args, **kwargs):
 		super(Slots, self).__init__(parent)
 		'''
-		kwargs: (passed in via the switchboard module's 'getClassFromUiName' method.)
+		kw:Parameters: (passed in via the switchboard module's 'getClassFromUiName' method.)
 			_ui (method) = returns the current ui for the current class; else the parent ui.
 			_currentUi (method) = returns the current ui.
 			name (ui) = ui of <name> ie. self.polygons for the ui of filename polygons
@@ -53,12 +53,12 @@ class Slots(QtCore.QObject):
 		Get a list of corresponding objects from a shorthand string.
 		ie. 's000,b002,cmb011-15' would return object list: [<s000>, <b002>, <cmb011>, <cmb012>, <cmb013>, <cmb014>, <cmb015>]
 
-		args:
+		:Parameters:
 			class_ (obj) = Class object
 			objectNames (str) = Names separated by ','. ie. 's000,b004-7'. b004-7 specifies buttons b004-b007.  
 			showError (bool) = Show attribute error if item doesnt exist
 
-		returns:
+		:Return:
 			(list) of corresponding objects
 
 		#ex call: getObjects(self.ui, 's000,b002,cmb011-15')
@@ -81,12 +81,12 @@ class Slots(QtCore.QObject):
 		'''
 		Get attributes for a given object.
 
-		args:
+		:Parameters:
 			obj (obj) = The object to get the attributes of.
 			include (list) = Attributes to include. All other will be omitted. Exclude takes dominance over include. Meaning, if the same attribute is in both lists, it will be excluded.
 			exclude (list) = Attributes to exclude from the returned dictionay. ie. [u'Position',u'Rotation',u'Scale',u'renderable',u'isHidden',u'isFrozen',u'selected']
 
-		returns:
+		:Return:
 			(dict) {'string attribute': current value}
 		'''
 		return {attr:getattr(obj, attr) 
@@ -100,7 +100,7 @@ class Slots(QtCore.QObject):
 		'''
 		Set attributes for a given object.
 
-		args:
+		:Parameters:
 			obj (obj) = The object to set attributes for.
 			attributes = dictionary {'string attribute': value} - attributes and their correponding value to set
 		'''
@@ -113,7 +113,7 @@ class Slots(QtCore.QObject):
 		'''
 		Connect multiple signals to multiple slots at once.
 
-		args:
+		:Parameters:
 			widgets (str)(obj)(list) = ie. 'chk000-2' or [tb.menu_.chk000, tb.menu_.chk001]
 			signals (str)(list) = ie. 'toggled' or [toggled]
 			slots (obj)(list) = ie. self.cmb002 or [self.cmb002]
@@ -154,14 +154,14 @@ class Slots(QtCore.QObject):
 		'''
 		Launch a popup window containing the given objects attributes.
 
-		args:
+		:Parameters:
 			obj (obj) = The object to get the attributes of.
 			attributes (dict) = {'attribute':<value>}
 			fn (method) = Set an alternative method to call on widget signal. 
 				fn two arguments. The object to get the attributes for, and a dict containing attribute:value pairs. ex. fn(obj, {'attribute':<value>}
 		'''
-		from widgets.qMenu_ import QMenu_
-		menu = QMenu_(position='cursorPos', setVisible=True)
+		from widgets.tkMenu import TkMenu
+		menu = TkMenu(position='cursorPos', setVisible=True)
 
 		spinboxes = [menu.add('QDoubleSpinBox', setSpinBoxByValue_=[k, v]) for 
 			k, v in attributes.items() 
@@ -197,7 +197,7 @@ class Slots(QtCore.QObject):
 		If the second widget does not have an attribute it will silently skip it.
 		Attributes starting with '__' are ignored.
 
-		args:
+		:Parameters:
 			widgets (str)(list) = Widget objectNames as string or list of widget objects. string shorthand style: ie. 'b000-12,b022'
 			from_ui (obj) = The ui to sync to. default is the current ui.
 			op (int) = Which widgets to sync. 1) the given widgets, 2) the given widgets and their parents, 3) all widgets.
@@ -246,7 +246,7 @@ class Slots(QtCore.QObject):
 		'''
 		Set multiple boolean properties, for multiple widgets, on multiple ui's at once.
 
-		args:
+		:Parameters:
 			*args = dynamic ui object/s. If no ui's are given, then the parent and child uis will be used.
 			*kwargs = keyword: - the property to modify. ex. setChecked, setUnChecked, setEnabled, setDisabled, setVisible, setHidden
 					value: string of objectNames - objectNames separated by ',' ie. 'b000-12,b022'
@@ -274,7 +274,7 @@ class Slots(QtCore.QObject):
 		'''
 		Set multiple properties, for multiple widgets, on multiple ui's at once.
 
-		args:
+		:Parameters:
 			*args = arg [0] (str) String of objectNames. - objectNames separated by ',' ie. 'b000-12,b022'
 					arg [1:] dynamic ui object/s.  If no ui's are given, then the parent and child uis will be used.
 			*kwargs = keyword: - the property to modify. ex. setText, setValue, setEnabled, setDisabled, setVisible, setHidden
@@ -295,7 +295,7 @@ class Slots(QtCore.QObject):
 		'''
 		Set the given checkbox's check states to reflect the specified axis.
 
-		args:
+		:Parameters:
 			checkboxes (str)(list) = 3 or 4 (or six with explicit negative values) checkboxes.
 			axis (str) = Axis to set. Valid text: '-','X','Y','Z','-X','-Y','-Z' ('-' indicates a negative axis in a four checkbox setup)
 
@@ -318,7 +318,7 @@ class Slots(QtCore.QObject):
 		'''
 		Get the intended axis value as a string from the given checkbox's check states.
 
-		args:
+		:Parameters:
 			checkboxes (str)(list) = 3 or 4 (or six with explicit negative values) checkboxes. Valid text: '-','X','Y','Z','-X','-Y','-Z' ('-' indicates a negative axis in a four checkbox setup)
 
 		ex call: self.getAxisFromCheckBoxes('chk000-3')
@@ -349,7 +349,7 @@ class Slots(QtCore.QObject):
 		Each time this function is called, it returns the next number in the sequence
 		using the name string as an identifier key.
 		
-		args:
+		:Parameters:
 			sequence (list) = sequence to cycle through. ie. [1,2,3].
 			name (str) = identifier. used as a key to get the sequence value from the dict.
 			
@@ -375,10 +375,10 @@ class Slots(QtCore.QObject):
 		Get a list of individual names from a single name string.
 		If you are looking to get multiple objects from a name string, call 'getObjects' directly instead.
 
-		args:
+		:Parameters:
 			nameString = string consisting of widget names separated by commas. ie. 'v000, b004-6'
 
-		returns:
+		:Return:
 			unpacked names. ie. ['v000','b004','b005','b006']
 		'''
 		packed_names = [n.strip() for n in nameString.split(',') if '-' in n] #build list of all widgets passed in containing '-'
@@ -401,12 +401,12 @@ class Slots(QtCore.QObject):
 		Convert a list of integers to a collapsed sequential string format.
 		ie. [19,22,23,24,25,26] to ['19', '22..26']
 
-		args:
+		:Parameters:
 			list_ (list) = A list of integers
 			compress (bool) = Trim redundant chars from the second half of a compressed set. ie. ['19', '22-32', '1225-6'] from ['19', '22..32', '1225..1226']
 			returnAsString (bool) = Return a single string value instead of a list.
 
-		returns:
+		:Return:
 			(list) or (str) if 'returnAsString'.
 		'''
 		list_ = [str(x) for x in list_] #make sure the list is made up of strings.
@@ -455,8 +455,8 @@ class Slots(QtCore.QObject):
 		'''
 		'''
 		if not hasattr(self, '_progressBar'):
-			from widgets.qProgressBar_ import QProgressBar_
-			self._progressBar = QProgressBar_(self.tk)
+			from widgets.tkProgressBar import TkProgressBar
+			self._progressBar = TkProgressBar(self.tk)
 
 		try:
 			self.currentUi.progressBar.step1
@@ -483,13 +483,13 @@ class Slots(QtCore.QObject):
 		Prints a formatted version of the given string, stripped of html tags, to the console.
 		Supports HTML formatting.
 
-		args:
+		:Parameters:
 			location (str)(point) = move the messagebox to the specified location. Can be given as a qpoint or string value. default is: 'topMiddle'
 			timeout (int) = time in seconds before the messagebox auto closes.
 		'''
 		if not hasattr(self, '_messageBox'):
-			from widgets.qMessageBox_ import QMessageBox_
-			self._messageBox = QMessageBox_(self.tk.parent())
+			from widgets.tkMessageBox import TkMessageBox
+			self._messageBox = TkMessageBox(self.tk.parent())
 
 		self._messageBox.location = location
 		self._messageBox.timeout = timeout
@@ -512,11 +512,11 @@ class Slots(QtCore.QObject):
 		'''
 		Get a directional vector from a given start and end point.
 
-		args:
+		:Parameters:
 			startPoint (tuple) = The vectors start point as x, y, z values.
 			endPoint (tuple) = The vectors end point as x, y, z values.
 
-		returns:
+		:Return:
 			(tuple) vector.
 		'''
 		x1, y1, z1 = startPoint
@@ -536,11 +536,11 @@ class Slots(QtCore.QObject):
 		'''
 		Normalize a vector
 
-		args:
+		:Parameters:
 			vector (vector) = The vector to normalize.
 			amount (float) = (1) Normalize standard. (value other than 0 or 1) Normalize using the given float value as desired length.
 		
-		returns:
+		:Return:
 			(tuple)
 		'''
 		length = Slots.getMagnitude(vector)
@@ -560,10 +560,10 @@ class Slots(QtCore.QObject):
 		'''
 		Get the magnatude (length) of a given vector.
 
-		args:
+		:Parameters:
 			vector (tuple) = Vector xyz values.
 
-		returns:
+		:Return:
 			(float)
 		'''
 		from math import sqrt
@@ -579,13 +579,13 @@ class Slots(QtCore.QObject):
 		'''
 		Get the cross product of two vectors, using 2 vectors, or 3 points.
 
-		args:
+		:Parameters:
 			p1 (vector)(point) = xyz point value as a tuple.
 			p2 (vector)(point) = xyz point value as a tuple.
 			p3 (point) = xyz point value as a tuple (used when working with point values instead of vectors).
 			normalize (float) = (0) Do not normalize. (1) Normalize standard. (value other than 0 or 1) Normalize using the given float value as desired length.
 
-		returns:
+		:Return:
 			(tuple)
 		'''
 		if p3 is not None: #convert points to vectors and unpack.
@@ -621,7 +621,7 @@ class Slots(QtCore.QObject):
 		'''
 		Move a point relative to it's current position.
 
-		args:
+		:Parameters:
 			p (tuple) = A points x, y, z values.
 			d (tuple)(float) = The distance to move. (use a float value when moving along a vector)
 			v (tuple) = Optional: A vectors x, y, z values can be given to move the point along that vector.
@@ -649,13 +649,13 @@ class Slots(QtCore.QObject):
 		'''
 		Move a point along a given vector in the direction of another point.
 
-		args:
+		:Parameters:
 			point (tuple) = The point to move given as (x,y,z).
 			toward (tuple) = The point to move toward.
 			vect (tuple) = A vector to move the point along.
 			dist (float) = The linear amount to move the point.
 		
-		returns:
+		:Return:
 			(tuple) point.
 		'''
 		for i in [dist, -dist]: #move in pos and neg direction, and determine which is moving closer to the reference point.
@@ -672,11 +672,11 @@ class Slots(QtCore.QObject):
 		'''
 		Get the vector between two points, and return it's magnitude.
 
-		args:
+		:Parameters:
 			p1 (tuple) = Point 1.
 			p2 (tuple) = Point 2.
 
-		returns:
+		:Return:
 			(float)
 		'''
 		from math import sqrt
@@ -699,11 +699,11 @@ class Slots(QtCore.QObject):
 		'''
 		Get the point in the middle of two given points.
 
-		args:
+		:Parameters:
 			p1 (tuple) = Point as x,y,z values.
 			p2 (tuple) = Point as x,y,z values.
 
-		returns:
+		:Return:
 			(tuple)
 		'''
 		Ax, Ay, Az = p1
@@ -723,12 +723,12 @@ class Slots(QtCore.QObject):
 		'''
 		Get an angle from two given vectors.
 
-		args:
+		:Parameters:
 			v1 (point) = A vectors xyz values as a tuple.
 			v2 (point) = A vectors xyz values as a tuple.
 			degree (bool) = Convert the radian result to degrees.
 
-		returns:
+		:Return:
 			(float)
 		'''
 		from math import acos, degrees
@@ -751,13 +751,13 @@ class Slots(QtCore.QObject):
 		'''
 		Get the opposing angle from 3 given points.
 
-		args:
+		:Parameters:
 			a (point) = A points xyz values as a tuple.
 			b (point) = A points xyz values as a tuple.
 			c (point) = A points xyz values as a tuple.
 			degree (bool) = Convert the radian result to degrees.
 
-		returns:
+		:Return:
 			(float)
 		'''
 		from math import sqrt, acos, degrees
@@ -785,13 +785,13 @@ class Slots(QtCore.QObject):
 		'''
 		Get the length of two sides of a triangle, given two angles, and the length of the side in-between.
 
-		args:
+		:Parameters:
 			a1 (float) = Angle in radians or degrees. (unit flag must be set if value given in radians)
 			a2 (float) = Angle in radians or degrees. (unit flag must be set if value given in radians)
 			s (float) = The distance of the side between the two given angles.
 			unit (str) = Specify whether the angle values are given in degrees or radians. (valid: 'radians', 'degrees')(default: degrees)
 
-		returns:
+		:Return:
 			(tuple)
 		'''
 		from math import sin, radians
@@ -831,7 +831,7 @@ print (os.path.splitext(os.path.basename(__file__))[0])
 	# 	Call a method from a class outside of the current ui.
 	# 	Momentarily switches to the ui of the given method for the call, before returning to the previous ui.
 
-	# 	args:
+	# 	:Parameters:
 	# 		name (str) = ui name.
 	# 		method (str) = method name.
 	# 	'''
@@ -851,7 +851,7 @@ print (os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	Set multiple spinbox values and adjust for the data type.
 
-	# 	args:
+	# 	:Parameters:
 	# 		ui = <dynamic ui>
 	# 		spinboxes (str)(list) = Packed spinbox names or object list. ie. 's001-4, s007' or [<s001>, <s002>, <s003>, <s004>, <s007>]
 	# 		attributes = {'string key':value}
@@ -895,7 +895,7 @@ print (os.path.splitext(os.path.basename(__file__))[0])
 	# def setComboBox(self, comboBox, text):
 	# 	'''
 	# 	Set the given comboBox's index using a text string.
-	# 	args:
+	# 	:Parameters:
 	# 		comboBox (str) = comboBox name (will also be used as the methods name).
 	# 		text (str) = text of the index to switch to.
 	# 	'''
@@ -908,9 +908,9 @@ print (os.path.splitext(os.path.basename(__file__))[0])
 	# @staticmethod
 	# def msg(string, prefix='', inView=False):
 	# 	'''
-	# 	args:
+	# 	:Parameters:
 	# 		string (str) = message string.
-	# 	returns:
+	# 	:Return:
 	# 		(str) formatted string.
 	# 	'''
 	# 	if prefix:
@@ -921,9 +921,9 @@ print (os.path.splitext(os.path.basename(__file__))[0])
 	# def getUiObject(self, widgets):
 	# 	'''
 	# 	Get ui objects from name strings.
-	# 	args:
+	# 	:Parameters:
 	# 		widgets (str) = ui object names
-	# 	returns:
+	# 	:Return:
 	# 		list of corresponding ui objects	
 	# 	'''
 	# 	objects=[]
@@ -941,7 +941,7 @@ print (os.path.splitext(os.path.basename(__file__))[0])
 	# def setButtons(self, ui, checked=None, unchecked=None, enable=None, disable=None, visible=None, invisible=None):
 	# 	'''
 	# 	Set various states for multiple buttons at once.
-	# 	args:
+	# 	:Parameters:
 	# 		setButtons = dynamic ui object
 	# 		checked/unchecked/enable/disable/visible/invisible (str) = the names of buttons to modify separated by ','. ie. 'b000,b001,b022'
 
@@ -976,12 +976,12 @@ print (os.path.splitext(os.path.basename(__file__))[0])
 
 # def setSpinboxes(ui, spinboxNames='s000-15', values=[]):
 # 	'''
-# 	args:	 ui=<dynamic ui>
+# 	:Parameters:	 ui=<dynamic ui>
 # 			 spinboxNames (str) = spinbox string object names (used in place of the range argument). ie. 's001-4, s007'.  
 # 						  default value will try to add values to spinboxes starting at s000 and add values in order skipping any spinboxes not found in the ui.
 # 			 values=int or [(tuple) list] - tuple representing a string prefix label and value, and/or just a value. [(string prefix,int value)] ie. [("size",5), 20, ("width",8)]
 	
-# 	returns: list of values without prefix
+# 	:Return: list of values without prefix
 # 	ex. self.setSpinboxes (self.ui, values=[("width",1),("length ratio",1),("patches U",1),("patches V",1)]) #range. dict 'value's will be added to corresponding spinbox starting at s000 through s003.
 # 	ex. self.setSpinboxes (self.ui, spinboxNames='s000', values=[('size',5)]) #explicit;  set single s000 with a label 'size' and value of 5. multiple spinboxes can be set this way. specify a range of spinboxes using 's010-18'.
 # 	'''
@@ -1033,11 +1033,11 @@ print (os.path.splitext(os.path.basename(__file__))[0])
 	# def comboBox(comboBox, items, title=None):
 	# 	'''
 	# 	Set comboBox items.
-	# 	args:
+	# 	:Parameters:
 	# 		comboBox = QComboBox object - list of items to fill the comboBox with
 	# 		title (str) = optional value for the first index of the comboBox's list
 
-	# 	returns:
+	# 	:Return:
 	# 		comboBox's current item list minus any title.
 	# 	ex. comboBox (self.ui.cmb003, ["Import file", "Import Options"], "Import")
 	# 	'''

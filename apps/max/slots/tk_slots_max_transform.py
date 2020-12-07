@@ -17,7 +17,7 @@ class Transform(Init):
 		pin = self.transform.pin
 
 		if state is 'setMenu':
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='')
 			return
 
 
@@ -53,7 +53,7 @@ class Transform(Init):
 			cmb.contextMenu.add('QRadioButton', setObjectName='chk018', setText='Body Shapes', setToolTip='')
 			cmb.contextMenu.add('QRadioButton', setObjectName='chk019', setText='NURBS', setToolTip='')
 			cmb.contextMenu.add('QRadioButton', setObjectName='chk020', setText='Point Cloud Shapes', setToolTip='')
-			cmb.contextMenu.add(QLabel_, setObjectName='lbl000', setText='Disable All', setToolTip='Disable all constraints.')
+			cmb.contextMenu.add(widgets.TkLabel, setObjectName='lbl000', setText='Disable All', setToolTip='Disable all constraints.')
 			self.connect_('chk017-20', 'toggled', self.cmb001, cmb.contextMenu) #connect to this method on toggle
 			return
 
@@ -119,7 +119,7 @@ class Transform(Init):
 
 		if index is 'setMenu':
 			cmb.popupStyle = 'qmenu'
-			cmb.contextMenu.add(QLabel_, setText='Disable All', setObjectName='lbl001', setToolTip='Disable all transform snapping.')
+			cmb.contextMenu.add(widgets.TkLabel, setText='Disable All', setObjectName='lbl001', setToolTip='Disable all transform snapping.')
 
 			try:
 				moveValue = pm.manipMoveContext('Move', q=True, snapValue=True)
@@ -130,7 +130,7 @@ class Transform(Init):
 						('chk022', 'Scale <b>Off</b>'), ('s022', 'increment:', scaleValue, '1-1000 step1'), 
 						('chk023', 'Rotate <b>Off</b>'), ('s023', 'degrees:', rotateValue, '1-360 step1')]
 
-				widgets = [cmb.menu_.add(QCheckBox_, setObjectName=i[0], setText=i[1], setTristate=1) if len(i) is 2 
+				widgets = [cmb.menu_.add(widgets.TkCheckBox, setObjectName=i[0], setText=i[1], setTristate=1) if len(i) is 2 
 						else cmb.menu_.add('QDoubleSpinBox', setObjectName=i[0], setPrefix=i[1], setValue=i[2], setMinMax_=i[3], setDisabled=1) for i in list_]
 
 			except NameError as error:
@@ -230,7 +230,7 @@ class Transform(Init):
 		'''
 		Grid and Snap Settings: Modify grid and snap states.
 
-		args:
+		:Parameters:
 			fn (str) = Snap string name.
 			state (bool) = Desired snap state.
 

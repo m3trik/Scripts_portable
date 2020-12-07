@@ -9,7 +9,7 @@ class EventFactoryFilter(QtCore.QObject):
 	'''
 	Event filter for dynamic ui objects.
 
-	args:
+	:Parameters:
 		parent (obj) = parent widget.
 	'''
 	_mouseOver=[] #list of widgets currently under the mouse cursor.
@@ -33,7 +33,7 @@ class EventFactoryFilter(QtCore.QObject):
 		'''
 		Set Initial widget states.
 
-		args:
+		:Parameters:
 			name (str) = ui name.
 			widgets (str)(list) = <QWidgets> if no arg is given, the operation will be performed on all widgets of the given ui name.
 		'''
@@ -72,7 +72,7 @@ class EventFactoryFilter(QtCore.QObject):
 				widget.installEventFilter(self)
 				# print (widgetName if widgetName else widget)
 
-				if widgetType in ['QToolButton_', 'QPushButton_Draggable', 'QComboBox_', 'QTreeWidget_ExpandableList']:
+				if widgetType in ['TkToolButton', 'TkPushButton_Draggable', 'TkComboBox', 'TkTreeWidget_ExpandableList']:
 					if callable(classMethod):
 						classMethod('setMenu')
 
@@ -85,7 +85,7 @@ class EventFactoryFilter(QtCore.QObject):
 						widget.setVisible(False)
 
 			#finally, add any of the widget's children.
-			exclude = ['QTreeWidget_ExpandableList'] #, 'QObject', 'QBoxLayout', 'QFrame', 'QAbstractItemView', 'QHeaderView', 'QItemSelectionModel', 'QItemDelegate', 'QScrollBar', 'QScrollArea', 'QValidator', 'QStyledItemDelegate', 'QPropertyAnimation'] #, 'QAction', 'QWidgetAction'
+			exclude = ['TkTreeWidget_ExpandableList'] #, 'QObject', 'QBoxLayout', 'QFrame', 'QAbstractItemView', 'QHeaderView', 'QItemSelectionModel', 'QItemDelegate', 'QScrollBar', 'QScrollArea', 'QValidator', 'QStyledItemDelegate', 'QPropertyAnimation'] #, 'QAction', 'QWidgetAction'
 			[self.addWidgets(name, w) for w in widget.children() if w not in widgets and not widgetType in exclude]
 			# print(name, [w.objectName() for w in widget.children() if w not in widgets and not widgetType in exclude])
 
@@ -95,7 +95,7 @@ class EventFactoryFilter(QtCore.QObject):
 		Convenience method for adding additional widgets to the switchboard dict,
 		and initializing them by setting connections, event filters, and stylesheets.
 
-		args:
+		:Parameters:
 			name (str) = name of the parent ui.
 			widgets (obj)(list) = widget or list of widgets.
 		'''
@@ -111,12 +111,12 @@ class EventFactoryFilter(QtCore.QObject):
 		Get the widget(s) currently under the mouse cursor, and manage mouse grab and event handling for those widgets.
 		Used to trigger widget evemts while in the mouse button down state.
 
-		args:
+		:Parameters:
 			name (str) = ui name.
 		'''
 		# print([i.objectName() for i in self.sb.getWidget(name=name) if name=='cameras']), '---'
 		ui = self.sb.getUi(name)
-		widgetsUnderMouse=[] #list of widgets currently under the mouse cursor and their parents. in hierarchical order. ie. [[<widgets.qPushButton_.QPushButton_ object at 0x00000000045F6948>, <PySide2.QtWidgets.QMainWindow object at 0x00000000045AA8C8>, <__main__.Tk_max object at 0x000000000361F508>, <PySide2.QtWidgets.QWidget object at 0x00000000036317C8>]]
+		widgetsUnderMouse=[] #list of widgets currently under the mouse cursor and their parents. in hierarchical order. ie. [[<widgets.tkPushButton.TkPushButton object at 0x00000000045F6948>, <PySide2.QtWidgets.QMainWindow object at 0x00000000045AA8C8>, <__main__.Tk_max object at 0x000000000361F508>, <PySide2.QtWidgets.QWidget object at 0x00000000036317C8>]]
 		for widget in self.sb.getWidget(name=name): #all widgets from the current ui.
 			if hasattr(widget, 'rect'): #ignore any widgets not having the 'rect' attribute.
 				try:
@@ -159,7 +159,7 @@ class EventFactoryFilter(QtCore.QObject):
 		'''
 		Adjust the given widget's size to fit contents and re-center.
 
-		args:
+		:Parameters:
 			widget = <widget object> - widget to resize.
 			paddingX (int) = additional width to be applied.
 			paddingY (int) = additional height to be applied.
@@ -178,9 +178,9 @@ class EventFactoryFilter(QtCore.QObject):
 		ie. 'enterEvent' from QtCore.QEvent.Type.Enter,
 		ie. 'mousePressEvent' from QtCore.QEvent.Type.MouseButtonPress
 
-		args:
+		:Parameters:
 			event = <QEvent>
-		returns:
+		:Return:
 			'string' - formatted method name
 		'''
 		e = str(event.type()).split('.')[-1] #get the event name ie. 'Enter' from QtCore.QEvent.Type.Enter
@@ -196,7 +196,7 @@ class EventFactoryFilter(QtCore.QObject):
 		from the event type string.  ie. self.enterEvent(event) from 'QtCore.QEvent.Type.Enter'
 		This allows for forwarding of all events without each having to be explicity stated.
 
-		args:
+		:Parameters:
 			widget = <QWidget>
 			event = <QEvent>
 		'''
@@ -250,7 +250,7 @@ class EventFactoryFilter(QtCore.QObject):
 	# ------------------------------------------------
 	def showEvent(self, event):
 		'''
-		args:
+		:Parameters:
 			event = <QEvent>
 		'''
 		if self.widgetName=='mainWindow':
@@ -259,19 +259,19 @@ class EventFactoryFilter(QtCore.QObject):
 		elif self.widgetName=='info':
 			EventFactoryFilter.resizeAndCenterWidget(self.widget)
 
-		if self.widgetType in ['QComboBox_', 'QTreeWidget_ExpandableList']:
+		if self.widgetType in ['TkComboBox', 'TkTreeWidget_ExpandableList']:
 			try:
 				self.classMethod()
 			except (AttributeError, NameError, TypeError) as error:
 				print(self.__class__.__name__, self.name, self.widgetName, error)
 
-			if self.widgetType=='QTreeWidget_ExpandableList':
+			if self.widgetType=='TkTreeWidget_ExpandableList':
 				self.addWidgets(self.name, self.widget.newWidgets) #removeWidgets=self.widget._gcWidgets.keys()
 
 
 	def hideEvent(self, event):
 		'''
-		args:
+		:Parameters:
 			event = <QEvent>
 		'''
 		if self.widgetName=='mainWindow':
@@ -282,7 +282,7 @@ class EventFactoryFilter(QtCore.QObject):
 
 	def enterEvent(self, event):
 		'''
-		args:
+		:Parameters:
 			event = <QEvent>
 		'''
 		self._mouseHover.emit(True)
@@ -307,7 +307,7 @@ class EventFactoryFilter(QtCore.QObject):
 
 	def leaveEvent(self, event):
 		'''
-		args:
+		:Parameters:
 			event = <QEvent>
 		'''
 		self._mouseHover.emit(False)
@@ -319,7 +319,7 @@ class EventFactoryFilter(QtCore.QObject):
 
 	def mousePressEvent(self, event):
 		'''
-		args:
+		:Parameters:
 			event = <QEvent>
 		'''
 		self._mousePressPos = event.globalPos() #mouse positon at press
@@ -328,7 +328,7 @@ class EventFactoryFilter(QtCore.QObject):
 
 	def mouseMoveEvent(self, event):
 		'''
-		args:
+		:Parameters:
 			event = <QEvent>
 		'''
 		if hasattr(self, '__mouseMovePos'):
@@ -339,7 +339,7 @@ class EventFactoryFilter(QtCore.QObject):
 
 	def mouseReleaseEvent(self, event):
 		'''
-		args:
+		:Parameters:
 			event = <QEvent>
 		'''
 		if self.widget.underMouse(): #if self.widget.rect().contains(event.pos()): #if mouse over widget:

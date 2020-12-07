@@ -19,7 +19,7 @@ class Preferences(Init):
 		pin = self.preferences.pin
 
 		if state is 'setMenu':
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb003', setToolTip='')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb003', setToolTip='')
 			return
 
 

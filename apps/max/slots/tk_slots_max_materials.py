@@ -31,7 +31,7 @@ class Materials(Init):
 		pin = self.materials.pin
 
 		if state is 'setMenu':
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb001', setToolTip='3dsMax Material Editors')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb001', setToolTip='3dsMax Material Editors')
 			return
 
 
@@ -76,7 +76,7 @@ class Materials(Init):
 		'''
 		Material list
 
-		args:
+		:Parameters:
 			index (int) = parameter on activated, currentIndexChanged, and highlighted signals.
 		'''
 		cmb = self.materials.cmb002
@@ -84,10 +84,10 @@ class Materials(Init):
 		b = self.materials_submenu.b003
 
 		if index is 'setMenu':
-			cmb.contextMenu.add(QLabel_, setText='Open in Editor', setObjectName='lbl000', setToolTip='Open material in editor.')
-			cmb.contextMenu.add(QLabel_, setText='Rename', setObjectName='lbl001', setToolTip='Rename the current material.')
-			cmb.contextMenu.add(QLabel_, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current material.')
-			cmb.contextMenu.add(QLabel_, setText='Delete All Unused Materials', setObjectName='lbl003', setToolTip='Delete All unused materials.')
+			cmb.contextMenu.add(widgets.TkLabel, setText='Open in Editor', setObjectName='lbl000', setToolTip='Open material in editor.')
+			cmb.contextMenu.add(widgets.TkLabel, setText='Rename', setObjectName='lbl001', setToolTip='Rename the current material.')
+			cmb.contextMenu.add(widgets.TkLabel, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current material.')
+			cmb.contextMenu.add(widgets.TkLabel, setText='Delete All Unused Materials', setObjectName='lbl003', setToolTip='Delete All unused materials.')
 			cmb.beforePopupShown.connect(self.cmb002) #refresh comboBox contents before showing it's popup.
 			cmb.returnPressed.connect(lambda: self.lbl001(setEditable=False))
 			return
@@ -126,11 +126,11 @@ class Materials(Init):
 		'''
 		Get an icon with a color fill matching the given materials RBG value.
 
-		args:
+		:Parameters:
 			mat (obj)(str) = The material or the material's name.
 			size (list) = Desired icon size. [width, height]
 
-		returns:
+		:Return:
 			(obj) pixmap icon.
 		'''
 		try:
@@ -473,9 +473,9 @@ class Materials(Init):
 		'''
 		Get All Materials from the current scene.
 
-		args:
+		:Parameters:
 			startingWith (list) = Filters material names starting with any of the strings in the given list. ie. ['ID_']
-		returns:
+		:Return:
 			(list) materials.
 		'''
 		materials=[] #get any scene material that does not start with 'Material'
@@ -496,10 +496,10 @@ class Materials(Init):
 		'''
 		Get the material from the given object or face components.
 
-		args:
+		:Parameters:
 			obj (obj) = Mesh object.
 			face (int) = Face number.
-		returns:
+		:Return:
 			(obj) material
 		'''
 		if not obj:
@@ -533,11 +533,11 @@ class Materials(Init):
 		'''
 		Creates a random material.
 
-		args:
+		:Parameters:
 			name (str) = material name.
 			prefix (str) = Optional string to be appended to the beginning of the name.
 
-		returns:
+		:Return:
 			(obj) material
 		'''
 		import random

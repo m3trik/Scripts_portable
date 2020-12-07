@@ -1017,11 +1017,11 @@ class StyleSheet(QtCore.QObject):
 		'''
 		Get the styleSheet for the given widgetType.
 
-		args:
+		:Parameters:
 			widgetType (str) = The class name of the widget. ie. 'QLabel'
 			style (str) = The color value set to use. valid values are: 'standard', 'dark'
 
-		returns:
+		:Return:
 			(str) css styleSheet
 		'''
 		try:
@@ -1041,7 +1041,7 @@ class StyleSheet(QtCore.QObject):
 		Set the styleSheet for the given widgets.
 		Set the style for a specific widget by using the '#' syntax and the widget's objectName. ie. QWidget#mainWindow
 
-		args:
+		:Parameters:
 			name (str) = name of the parent ui.
 			widgets (obj)(list) = widget or list of widgets.
 			ratio (int) = The ratio of widget size, text length in relation to the amount of padding applied.

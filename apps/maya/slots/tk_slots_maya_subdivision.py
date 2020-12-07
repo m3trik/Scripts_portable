@@ -17,9 +17,9 @@ class Subdivision(Init):
 		pin = self.subdivision.pin
 
 		if state is 'setMenu':
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya Subdivision Editiors.')
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb002', setToolTip='Maya Subdivision Operations.')
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb001', setToolTip='Smooth Proxy.')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='Maya Subdivision Editiors.')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb002', setToolTip='Maya Subdivision Operations.')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb001', setToolTip='Smooth Proxy.')
 			return
 
 

@@ -4,16 +4,10 @@ import os
 
 from PySide2 import QtGui, QtWidgets, QtCore
 
-from widgets.qMenu_ import QMenu_
-from widgets.qLabel_ import QLabel_
-from widgets.qComboBox_ import QComboBox_
-from widgets.qCheckBox_ import QCheckBox_
-from widgets.qToolButton_ import QToolButton_
-from widgets.qWidget_MultiWidget import QWidget_MultiWidget as MultiWidget
-
+from ui import widgets
 from tk_slots_ import Slots
 
-#maya dependancies
+# Maya dependancies
 try:
 	import maya.mel as mel
 	import pymel.core as pm
@@ -126,7 +120,7 @@ class Init(Slots):
 		'''
 		Loads A Plugin.
 		
-		args:
+		:Parameters:
 			plugin (str) = The desired plugin to load.
 
 		ex. loadPlugin('nearestPointOnMesh')
@@ -147,36 +141,47 @@ class Init(Slots):
 		'''
 		Get the components of the given type.
 
-		args:
+		:Parameters:
 			componentType (str) = The desired component mask. valid values are: 'vtx'(vertices), 'e'(edges), 'f'(faces), 'cv'(control vertices).
 			objects (obj)(list) = The object(s) to get the components of.
 			selection (bool) = Filter to currently selected objects.
-			returnType (type) = The desired returned object type. valid values are: unicode, str, int, object.
+			returnType (type) = The desired returned object type. (valid: unicode, str, int, object)(default: unicode)
 			flatten (bool) = Flattens the returned list of objects so that each component is identified individually.
 
-		returns:
+		:Return:
 			(list)(dict) Dependant on flags.
 		'''
+		if not componentType: #get component type from the current selection.
+			if selection:
+				o = pm.ls(sl=1)
+				t = Init.getObjectType(o)
+				types = {'Polygon Vertex':'vtx', 'Polygon Edge':'e', 'Polygon Face':'f'}
+				componentType = types[t] if t in types else None
+				if not componentType:
+					return
+			else:
+				return
+
 		mask = {'vtx':31, 'e':32, 'f':34, 'cv':28}
 		components=[]
 
 		if selection:
 			if objects:
 				transforms = pm.ls(objects, sl=1, transforms=1)
-				if transforms:
+				if transforms: #get ALL selected components, FILTERING for those of the given transform object(s).
 					selected_shapes=[]
 					for obj in transforms:
 						selected_shapes+=pm.ls('{}.{}[*]'.format(obj, componentType), flatten=flatten)
-				else:
+				else: #get selected components, FILTERING for those of the given tranform object(s).
 					shapes = Init.getShapeNode(objects)
 					selected_shapes = pm.ls(shapes, sl=1)
 				components = pm.filterExpand(selected_shapes, selectionMask=mask[componentType], expand=flatten)
 			else:
 				transforms = pm.ls(sl=1, transforms=1)
 				if transforms:
-					for obj in transforms:
+					for obj in transforms: #get ALL selected components, for each selected transform object.
 						components+=pm.ls('{}.{}[*]'.format(obj, componentType), flatten=flatten)
-				else:
+				else: ##get selected components.
 					components = pm.filterExpand(selectionMask=mask[componentType], expand=flatten)
 		else:
 			for obj in pm.ls(objects):
@@ -219,11 +224,11 @@ class Init(Slots):
 		'''
 		Get All UV shells and their corresponding sets of faces.
 
-		args:
+		:Parameters:
 			objects (obj)(list) = Polygon object(s) or Polygon face(s).
 			returnType (str) = The desired returned type. valid values are: 'shells', 'shellIDs'. If None is given, the full dict will be returned.
 
-		returns:
+		:Return:
 			(list)(dict) dependant on the given returnType arg. ex. {0L:[[MeshFace(u'pShape.f[0]'), MeshFace(u'pShape.f[1]')], 1L:[[MeshFace(u'pShape.f[2]'), MeshFace(u'pShape.f[3]')]}
 		'''
 		if not objects:
@@ -263,10 +268,10 @@ class Init(Slots):
 		'''
 		Get the edges that make up any UV islands of the given objects.
 
-		args:
+		:Parameters:
 			objects (str)(obj)(list) = Polygon mesh objects.
 
-		returns:
+		:Return:
 			(list) uv border edges.
 		'''
 		mesh_edges=[]
@@ -332,10 +337,10 @@ class Init(Slots):
 	def getContigiousIslands(faces, faceIslands=[]):
 		'''
 		Get a list containing sets of adjacent polygon faces grouped by islands.
-		args:
+		:Parameters:
 			faces (list) = polygon faces to be filtered for adjacent.
 			faceIslands (list) = optional. list of sets. ability to add faces from previous calls to the return value.
-		returns:
+		:Return:
 			list of sets of adjacent faces.
 		'''
 		l=[]
@@ -370,7 +375,7 @@ class Init(Slots):
 		'''
 		Get all faces on a specified axis
 
-		args:
+		:Parameters:
 			obj=<geometry> - object to perform the operation on. 
 			axis (str) = representing axis ie. "x"
 			localspace=bool - specify world or local space
@@ -392,10 +397,10 @@ class Init(Slots):
 	def getBorderFaces(faces, includeBordered=False):
 		'''
 		Get any faces attached to the given faces.
-		args:
+		:Parameters:
 			faces (unicode, str, list) = faces to get bordering faces for.
 			includeBordered (bool) = optional. return the bordered face with the results.
-		returns:
+		:Return:
 			list - the border faces of the given faces.
 		'''
 		adjEdges = pm.polyListComponentConversion(faces, fromFace=1, toEdge=1)
@@ -413,9 +418,9 @@ class Init(Slots):
 		'''
 		Get border edges from faces. (edges not shared by any other face)
 
-		args:
+		:Parameters:
 			faces (str, unicode, list) = ie. 'poly.f[696]' or ['polyShape.f[696]']. If no arguement is given, the current selection will be used.
-		returns:
+		:Return:
 			list of border edges.
 		ex. getBorderEdgeFromFace(['poly.f[696]', 'poly.f[705:708]'])
 		'''
@@ -444,11 +449,11 @@ class Init(Slots):
 		'''
 		Get the magnatude of a vector using the center points of two given objects.
 
-		args:
+		:Parameters:
 			obj1 (obj)(str) = Object, object name, or point (x,y,z).
 			obj2 (obj)(str) = Object, object name, or point (x,y,z).
 
-		returns:
+		:Return:
 			(float)
 		# xmin, ymin, zmin, xmax, ymax, zmax = pm.exactWorldBoundingBox(startAndEndCurves)
 		'''
@@ -466,12 +471,12 @@ class Init(Slots):
 		'''
 		Find the closest control vertex between the given vertices, CVs, or objects and each of the given curves.
 
-		args:
+		:Parameters:
 			x (str)(obj)(list) = Polygon vertices, control vertices, objects, or points given as (x,y,z) tuples.
 			curves (str)(obj)(list) = The reference object in which to find the closest CV for each vertex in the list of given vertices.
 			tolerance (int)(float) = Maximum search distance. Default is 0.0, which turns off the tolerance flag.
 
-		returns:
+		:Return:
 			(dict) closest vertex/cv pairs (one pair for each given curve) ex. {<vertex from set1>:<vertex from set2>}.
 
 		ex. 
@@ -514,7 +519,7 @@ class Init(Slots):
 		'''
 		Get a dict containing CV's of the given curve(s) and their corresponding point positions.
 
-		args:
+		:Parameters:
 			c (str)(obj)(list) = Curves or CVs to get CV info from.
 			returnType (str) = The desired returned values. Default is 'cv'.
 				valid values are: 
@@ -525,7 +530,7 @@ class Init(Slots):
 				ex. {NurbsCurveCV(u'polyToCurveShape7.cv[5]'): [-12.186520865542082, 15.260936896515751, -369.6159740743584]}
 			filter_ (str)(obj)(list) = Value(s) to filter for in the returned results.
 
-		returns:
+		:Return:
 			(dict)(list)(int) returns a list if more than one object is returned, else just a single value.
 
 		ex. cv_tan = getCvInfo(curve.cv[0:2],'tangent') #get CV tangents for cvs 0-2.
@@ -598,12 +603,12 @@ class Init(Slots):
 		'''
 		Get the cross product of two vectors using points derived from the given curves.
 
-		args:
+		:Parameters:
 			curves (str)(obj)(list) = Nurbs curve(s).
 			normalize (float) = (0) Do not normalize. (1) Normalize standard. (value other than 0 or 1) Normalize using the given float value as desired length.
 			values (bool) = Return only a list of the cross product vector values [(<Vx>, <Vy>, <Vz>)] instead of the full dict {<curve1>:(<Vx>, <Vy>, <Vz>)}.
 
-		returns:
+		:Return:
 			(dict)(list)
 		'''
 		result={}
@@ -629,12 +634,12 @@ class Init(Slots):
 		'''
 		Find the two closest vertices between the two sets of vertices.
 
-		args:
+		:Parameters:
 			set1 (list) = The first set of vertices.
 			set2 (list) = The second set of vertices.
 			tolerance (int) = Maximum search distance.
 
-		returns:
+		:Return:
 			(list) closest vertex pairs by order of distance (excluding those not meeting the tolerance). (<vertex from set1>, <vertex from set2>).
 
 		ex. verts1 = Init.getComponents('vtx', 'pCube1')
@@ -663,13 +668,13 @@ class Init(Slots):
 		'''
 		Find the closest vertex of the given object for each vertex in the list of given vertices.
 
-		args:
+		:Parameters:
 			vertices (list) = A set of vertices.
 			obj (obj) = The reference object in which to find the closest vertex for each vertex in the list of given vertices.
 			tolerance (float) = Maximum search distance. Default is 0.0, which turns off the tolerance flag.
 			freezeTransforms (bool) = Reset the selected transform and all of its children down to the shape level.
 
-		returns:
+		:Return:
 			(dict) closest vertex pairs {<vertex from set1>:<vertex from set2>}.
 
 		ex. obj1, obj2 = selection
@@ -712,7 +717,7 @@ class Init(Slots):
 		'''
 		Snap the vertices from object one to the closest verts on object two.
 
-		args:
+		:Parameters:
 			obj1 (obj) = The object in which the vertices are moved from.
 			obj2 (obj) = The object in which the vertices are moved to.
 			tolerance (float) = Maximum search distance.
@@ -743,7 +748,7 @@ class Init(Slots):
 		'''
 		Align vertices.
 
-		args:
+		:Parameters:
 			mode (int) = possible values are align: 0-YZ, 1-XZ, 2-XY, 3-X, 4-Y, 5-Z, 6-XYZ 
 			average (bool) = align to average of all selected vertices. else, align to last selected
 			edgeloop (bool) = align vertices in edgeloop from a selected edge
@@ -807,11 +812,11 @@ class Init(Slots):
 		'''
 		Locate a connected vertex of non-manifold geometry where the faces share a single vertex.
 
-		args:
+		:Parameters:
 			objects (str)(obj) = A polygon mesh or a list of meshes.
 			select (bool) = Select any found non-manifold vertices. (default is True)
 
-		returns:
+		:Return:
 			(list) any found non-manifold verts.
 		'''
 		pm.undoInfo(openChunk=True)
@@ -869,7 +874,7 @@ class Init(Slots):
 		'''
 		Separate a connected vertex of non-manifold geometry where the faces share a single vertex.
 
-		args:
+		:Parameters:
 			vertex (str)(obj) = A single polygon vertex.
 			select (bool) = Select the vertex after the operation. (default is True)
 		'''
@@ -926,12 +931,12 @@ class Init(Slots):
 		'''
 		Query the polySelect command for the components along different edge paths.
 
-		args:
+		:Parameters:
 			obj (obj) = The mesh object containing the components.
 			components (obj) = The components used for the query (dependant on the operation type).
 			type_ (str) = The desired return type. 'shortestEdgePath', 'edgeRing', 'edgeRingPath', 'edgeLoop', 'edgeLoopPath'.
 
-		returns:
+		:Return:
 			(list) The components comprising the path.
 		'''
 		componentNumbers = [int(str(i).split('[')[-1].split(']')[0]) for i in components] #get the vertex numbers as integer values. ie. [818, 1380]
@@ -965,11 +970,11 @@ class Init(Slots):
 		'''
 		Get the shortest path between to vertices or edges.
 
-		args:
+		:Parameters:
 			components (obj) = A Pair of vertices or edges.
 			step (int) = step amount.
 
-		returns:
+		:Return:
 			(list) the components that comprise the path as strings.
 		'''
 		type_ = Init.getObjectType(components[0])
@@ -998,11 +1003,11 @@ class Init(Slots):
 		'''
 		Get the shortest path between to vertices or edges along an edgeloop.
 
-		args:
+		:Parameters:
 			components (obj) = A Pair of vertices, edges, or faces.
 			step (int) = step amount.
 
-		returns:
+		:Return:
 			(list) the components that comprise the path as strings.
 		'''
 		type_ = Init.getObjectType(components[0])
@@ -1068,11 +1073,11 @@ class Init(Slots):
 		'''
 		Get the corresponding edgeloop(s) from the given edges.
 
-		args:
+		:Parameters:
 			edges (list) = Polygon Edges.
 			step (int) = step amount.
 
-		returns:
+		:Return:
 			(list) the edges that comprise the edgeloops as strings.
 		'''
 		result=[]
@@ -1089,11 +1094,11 @@ class Init(Slots):
 		'''
 		Get the corresponding edgering(s) from the given edges.
 
-		args:
+		:Parameters:
 			edges (list) = Polygon Edges.
 			step (int) = step amount.
 
-		returns:
+		:Return:
 			(list) the edges that comprise the edgerings as strings.
 		'''
 		result=[]
@@ -1111,9 +1116,9 @@ class Init(Slots):
 		'''
 		Get the center point from the given component.
 
-		args: alignToNormal=bool - 
+		:Parameters: alignToNormal=bool - 
 
-		returns: [float list] - x, y, z  coordinate values.
+		:Return: [float list] - x, y, z  coordinate values.
 		'''
 		if ".vtx" in str(component):
 			x = pm.polyNormalPerVertex (component, query=1, x=1)
@@ -1159,7 +1164,7 @@ class Init(Slots):
 		'''
 		Create a circular polygon plane.
 
-		args:
+		:Parameters:
 			axis (str) = 'x','y','z' 
 			numPoints(int) = number of outer points
 			radius=int
@@ -1208,7 +1213,7 @@ class Init(Slots):
 		'''
 		Delete components of the given mesh object along the specified axis.
 
-		args:
+		:Parameters:
 			obj (obj) = Mesh object.
 			axis (str) = Axis to delete on. ie. '-x' Components belonging to the mesh object given in the 'obj' arg, that fall on this axis, will be deleted. 
 		'''
@@ -1233,9 +1238,9 @@ class Init(Slots):
 		'''
 		Get the normal vectors from the given poly object.
 		If no argument is given the normals for the current selection will be returned.
-		args:
+		:Parameters:
 			name (str) = polygon mesh or component.
-		returns:
+		:Return:
 			dict - {int:[float, float, float]} face id & vector xyz.
 		'''
 		type_ = pm.objectType(name)
@@ -1254,11 +1259,11 @@ class Init(Slots):
 		else: #get face normals from the user component selection.
 			normals = pm.polyInfo(faceNormals=1) #returns the face normals of selected faces
 
-		regex = "[A-Z]*_[A-Z]* *[0-9]*: "
+		regEx = "[A-Z]*_[A-Z]* *[0-9]*: "
 
 		dict_={}
 		for n in normals:
-			l = list(s.replace(regex,'') for s in n.split(' ') if s) #['FACE_NORMAL', '150:', '0.935741', '0.110496', '0.334931\n']
+			l = list(s.replace(regEx,'') for s in n.split(' ') if s) #['FACE_NORMAL', '150:', '0.935741', '0.110496', '0.334931\n']
 
 			key = int(l[1].strip(':')) #int face number as key ie. 150
 			value = list(float(i) for i in l[-3:])  #vector list as value. ie. [[0.935741, 0.110496, 0.334931]]
@@ -1271,14 +1276,14 @@ class Init(Slots):
 	def getFacesWithSimilarNormals(faces, transforms=[], similarFaces=[], rangeX=0.1, rangeY=0.1, rangeZ=0.1):
 		'''
 		Get normals that fall within an X,Y,Z tolerance.
-		args:
+		:Parameters:
 			faces (list) = ['polygon faces'] - faces to find similar normals for.
 			similarFaces (list) = optional ability to add faces from previous calls to the return value.
 			transforms (list) = [<shape nodes>] - objects to check faces on. If none are given the objects containing the given faces will be used.
 			rangeX = float - x axis tolerance
 			rangeY = float - y axis tolerance
 			rangeZ = float - z axis tolerance
-		returns:
+		:Return:
 			list - list of faces that fall within the normal range.
 		'''
 		faces = list(str(f) for f in faces) #work on a copy of the argument so that removal of elements doesn't effect the passed in list.
@@ -1371,11 +1376,11 @@ class Init(Slots):
 		'''
 		Get an objects orientation.
 
-		args:
+		:Parameters:
 			obj (str)(obj) = The object to get the orientation of.
 			returnType (str) = The desired returned value type. (valid: 'point', 'vector')(default: 'point')
 
-		returns:
+		:Return:
 			(tuple)
 		'''
 		obj = pm.ls(obj)[0]
@@ -1420,10 +1425,10 @@ class Init(Slots):
 		'''
 		Get global MEL variables.
 
-		args:
+		:Parameters:
 			keyword (str) = search string.
 
-		returns:
+		:Return:
 			(list)
 		'''
 		variables = [
@@ -1436,15 +1441,16 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getObjectType(obj):
+	def getObjectType(obj, returnType='objectType'):
 		'''
-		Get the object type of a given object.
+		Get the type of a given object.
 
-		args:
+		:Parameters:
 			obj (obj) = maya component.
+			returnType (str) = Specify the returned value type. 'mask' returns an integer. (valid: 'objectType', 'mask')(default: 'objectType')
 
-		returns:
-			(str) type
+		:Return:
+			(str)(int) type
 		'''
 		types = {0:'Handle', 9:'Nurbs Curve', 10:'Nurbs Surfaces', 11:'Nurbs Curves On Surface', 12:'Polygon', 22:'Locator XYZ', 23:'Orientation Locator', 
 			24:'Locator UV', 28:'Control Vertex', 30:'Edit Point', 31:'Polygon Vertex', 32:'Polygon Edge', 34:'Polygon Face', 35:'Polygon UV', 36:'Subdivision Mesh Point', 
@@ -1454,7 +1460,7 @@ class Init(Slots):
 
 		for k, v in types.items():
 			if pm.filterExpand(obj, sm=k):
-				return v
+				return v if returnType is 'objectType' else k
 
 
 	@staticmethod
@@ -1462,11 +1468,11 @@ class Init(Slots):
 		'''
 		Get the object's transform, shape, or history node from the given components.
 
-		args:
+		:Parameters:
 			components (str)(obj(list) = Component(s).
 			returnType (str) = The desired returned node type. (valid: 'transform','shape','history')(default: 'transform')
 
-		returns:
+		:Return:
 			(dict) {transform node: [components of that node]}
 			ie. {'pCube2': ['pCube2.f[21]', 'pCube2.f[22]', 'pCube2.f[25]'], 'pCube1': ['pCube1.f[21]', 'pCube1.f[26]']}
 		'''
@@ -1506,17 +1512,17 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getTransformNode(node=None, index=0, attributes=False, string=''):
+	def getTransformNode(node=None, index=0, attributes=False, regEx=''):
 		'''
 		Get the transform node. 
 
-		args:
+		:Parameters:
 			node (obj) = Node. If nothing is given, the current selection will be used.
 			index (int) = Return the transform node at the given index. if Nothing is given, the full list will be returned. ie. index=[:-1] or index=0
 			attributes (bool) = Return the attributes of the node, rather then the node itself.
-			string (str) = 	List only the attributes that match the other criteria AND match the string(s) passed from this flag. String can be a regular expression.
+			regEx (str) = 	List only the attributes that match the string(s) passed from this flag. String can be a regular expression.
 
-		returns:
+		:Return:
 			(str) node
 		'''
 		if not node:
@@ -1531,51 +1537,53 @@ class Init(Slots):
 			transforms = transforms[index]
 		
 		if attributes:
-			transforms = pm.listAttr(transforms, read=1, hasData=1, string=string)
+			transforms = pm.listAttr(transforms, read=1, hasData=1, string=regEx)
 
 		return transforms
 
 
 	@staticmethod
-	def getShapeNode(node=None, index=0, attributes=False, string=''):
+	def getShapeNode(node=None, index=0, attributes=False, regEx=''):
 		'''
 		Get the shape node. 
 
-		args:
+		:Parameters:
 			node (obj) = Node. If nothing is given, the current selection will be used.
 			index (int) = Return the shape node at the given index. if Nothing is given, the full list will be returned. ie. index=[:-1] or index=0
 			attributes (bool) = Return the attributes of the node, rather then the node itself.
-			string (str) = 	List only the attributes that match the other criteria AND match the string(s) passed from this flag. String can be a regular expression.
+			regEx (str) = 	List only the attributes that match the string(s) passed from this flag. String can be a regular expression.
 
-		returns:
+		:Return:
 			(str) node
 		'''
 		if not node:
 			pm.ls(sl=1, type='transform')
 
 		shapes = pm.listRelatives(node, children=1, shapes=1) #get shape node from transform: returns list ie. [nt.Mesh('pConeShape1')]
+		if not shapes:
+			shapes = pm.ls(node, type='shape')
 
 		if shapes and index is not None:
 			shapes = shapes[index]
 		
 		if attributes:
-			shapes = pm.listAttr(shapes, read=1, hasData=1, string=string)
+			shapes = pm.listAttr(shapes, read=1, hasData=1, string=regEx)
 
 		return shapes
 
 
 	@staticmethod
-	def getHistoryNode(node=None, index=0, attributes=False, string=''):
+	def getHistoryNode(node=None, index=0, attributes=False, regEx=''):
 		'''
 		Get the history node. 
 
-		args:
+		:Parameters:
 			node (obj) = Node. If nothing is given, the current selection will be used.
 			index (int) = Return the transform node at the given index. if Nothing is given, the full list will be returned. ie. index=[:-1] or index=0
 			attributes (bool) = Return the attributes of the node, rather then the node itself.
-			string (str) = 	List only the attributes that match the other criteria AND match the string(s) passed from this flag. String can be a regular expression.
+			regEx (str) = 	List only the attributes that match the string(s) passed from this flag. String can be a regular expression.
 
-		returns:
+		:Return:
 			(str) node
 
 		alt method: node.history()[-1]
@@ -1590,7 +1598,7 @@ class Init(Slots):
 			connections = connections[index]
 
 		if attributes:
-			connections = pm.listAttr(connections, read=1, hasData=1, string=string)
+			connections = pm.listAttr(connections, read=1, hasData=1, string=regEx)
 
 		return connections
 
@@ -1611,12 +1619,12 @@ class Init(Slots):
 		'''
 		Get node attributes and their corresponding values as a dict.
 
-		args:
+		:Parameters:
 			node (obj) = Transform node.
 			include (list) = Attributes to include. All other will be omitted. Exclude takes dominance over include. Meaning, if the same attribute is in both lists, it will be excluded.
 			exclude (list) = Attributes to exclude from the returned dictionay. ie. ['Position','Rotation','Scale','renderable','isHidden','isFrozen','selected']
 
-		returns:
+		:Return:
 			(dict) {'string attribute': current value}
 		'''
 		if not all((include, exclude)):
@@ -1644,7 +1652,7 @@ class Init(Slots):
 		'''
 		Set node attribute values using a dict. 
 
-		args:
+		:Parameters:
 			node (obj) = Transform node.
 			attributes (dict) = Attributes and their correponding value to set. ie. {'string attribute': value}
 
@@ -1661,7 +1669,7 @@ class Init(Slots):
 		'''
 		A convenience procedure for connecting common attributes between two nodes.
 
-		args:
+		:Parameters:
 			attr () = 
 			place () = 
 			file () = 
@@ -1700,7 +1708,7 @@ class Init(Slots):
 		'''
 		Get the main Maya window as a QtWidgets.QMainWindow instance
 
-		returns:
+		:Return:
 			QtGui.QMainWindow instance of the top level Maya windows
 		'''
 		ptr = OpenMayaUI.MQtUtil.mainWindow()
@@ -1711,10 +1719,10 @@ class Init(Slots):
 	@staticmethod
 	def convertToWidget(name):
 		'''
-		args:
+		:Parameters:
 			name (str) = name of a Maya UI element of any type. ex. name = mel.eval('$tmp=$gAttributeEditorForm') (from MEL global variable)
 
-		returns:
+		:Return:
 			(QWidget) If the object does not exist, returns None
 		'''
 		for f in ('findControl', 'findLayout', 'findMenuItem'):
@@ -1736,7 +1744,7 @@ class Init(Slots):
 		'''
 		Launch a popup window containing the given objects attributes.
 
-		args:
+		:Parameters:
 			obj (obj) = The object to get the attributes of.
 			include (list) = Attributes to include. All other will be omitted. Exclude takes dominance over include. Meaning, if the same attribute is in both lists, it will be excluded.
 			exclude (list) = Attributes to exclude from the returned dictionay. ie. ['Position','Rotation','Scale','renderable','isHidden','isFrozen','selected']
@@ -1756,7 +1764,7 @@ class Init(Slots):
 		'''
 		#add esc key pressed return False
 
-		args:
+		:Parameters:
 			size (int) = total amount
 			name (str) = name of progress bar created
 			stepAmount(int) = increment amount
@@ -1802,7 +1810,7 @@ class Init(Slots):
 	@staticmethod
 	def viewPortMessage(message='', statusMessage='', assistMessage='', position='topCenter'):
 		'''
-		args:
+		:Parameters:
 			message (str) = The message to be displayed, (accepts html formatting). General message, inherited by -amg/assistMessage and -smg/statusMessage.
 			statusMessage (str) = The status info message to be displayed (accepts html formatting).
 			assistMessage (str) = The user assistance message to be displayed, (accepts html formatting).
@@ -1936,7 +1944,7 @@ class Init(Slots):
 		'''
 		Convert a string representing mel code into a string representing python code.
 
-		args:
+		:Parameters:
 			mel (str) = string containing mel code.
 			excludeFromInput (list) (list) = of strings specifying series of chars to strip from the Input.
 			excludeFromOutput (list) (list) = of strings specifying series of chars to strip from the Output.
@@ -1968,7 +1976,7 @@ class Init(Slots):
 
 	@staticmethod
 	def commandHelp(command): #mel command help
-		#args: command (str) = mel command
+		#:Parameters: command (str) = mel command
 		command = ('help ' + command)
 		modtext = (mel.eval(command))
 		outputscrollField (modtext, "command help", 1.0, 1.0) #text, window_title, width, height
@@ -1976,7 +1984,7 @@ class Init(Slots):
 
 	@staticmethod
 	def keywordSearch (keyword): #keyword command search
-		#args: keyword (str) = 
+		#:Parameters: keyword (str) = 
 		keyword = ('help -list' + '"*' + keyword + '*"')
 		array = sorted(mel.eval(keyword))
 		outputTextField(array, "keyword search")
@@ -2081,11 +2089,11 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	Get the components of the given type from the given object.
 
-	# 	args:
+	# 	:Parameters:
 	# 		objects (obj)(list) = The polygonal object(s) to get the components of.
 	# 		flatten (bool) = Flattens the returned list of objects so that each component is identified individually. (much faster)
 
-	# 	returns:
+	# 	:Return:
 	# 		(list) component objects.
 	# 	'''
 	# 	if isinstance(objects, (str, unicode)):
@@ -2109,7 +2117,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	Get the component selection of the given type.
 
-	# 	args:
+	# 	:Parameters:
 	# 		componentType (str) = The desired component type. (valid values are: 'vertices', 'edges', 'faces')
 	# 		objects (obj)(list) = If polygonal object(s) are given, then only selected components from those object(s) will be returned.
 	# 		returnType (str) = Desired output style.
@@ -2117,7 +2125,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 					int = {nt.Mesh(u'test_cube:pCube1Shape'): set([0])}
 	# 					object = [MeshVertex(u'test_cube:pCube1Shape.vtx[0]')]
 
-	# 	returns:
+	# 	:Return:
 	# 		(list)(dict) components (based on given 'componentType' and 'returnType' value).
 	# 	'''
 	# 	types = {'vertices':31, 'edges':32, 'faces':34}
@@ -2156,10 +2164,10 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # 		'''
 # 		Get All UV shells and their corresponding sets of faces.
 
-# 		args:
+# 		:Parameters:
 # 			objects (obj)(list) = Polygon object(s).
 
-# 		returns:
+# 		:Return:
 # 			(dict) ex. {0L:[[MeshFace(u'pShape.f[0]'), MeshFace(u'pShape.f[1]')], 1L:[[MeshFace(u'pShape.f[2]'), MeshFace(u'pShape.f[3]')]}
 # 		'''
 # 		if not objects:
@@ -2191,10 +2199,10 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # 		'''
 # 		Get the component selection of the given type.
 
-# 		args:
+# 		:Parameters:
 # 			obj (obj) = If a polygonal object is given, then only selected components from that object will be returned.
 
-# 		returns:
+# 		:Return:
 # 			(list) component objects.
 # 		'''
 # 		types = {'vertices':31, 'edges':32, 'faces':34}
@@ -2212,12 +2220,12 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # 		'''
 # 		Find the two closest vertices between the two sets of vertices.
 
-# 		args:
+# 		:Parameters:
 # 			set1 (list) = The first set of vertices.
 # 			set2 (list) = The second set of vertices.
 # 			tolerance (int) = Maximum search distance.
 
-# 		returns:
+# 		:Return:
 # 			(list) closest vertex pair (<vertex from set1>, <vertex from set2>).
 # 		'''
 # 		closestDistance=tolerance
@@ -2241,7 +2249,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	Select shortest edge path between (two or more) selected edges.
 	# 	'''
-	# 	#returns: list of lists. each containing an edge paths components
+	# 	#:Return: list of lists. each containing an edge paths components
 	# 	selectTypeEdge = pm.filterExpand (selectionMask=32) #returns True if selectionMask=Edges
 	# 	if (selectTypeEdge): #if selection is polygon edges, convert to vertices.
 	# 		mel.eval("PolySelectConvert 3;")
@@ -2275,7 +2283,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	This Function Snaps Vertices To Onto The Reference Object.
 
-	# 	args:
+	# 	:Parameters:
 	# 		obj (str) = The object to snap to.
 	# 		vertices (list) = The vertices to snap.
 	# 		tolerance (float) = Max distance.
@@ -2321,10 +2329,10 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # def getContigiousIslands(faces, faceIslands=[]):
 # 	'''
 # 	Get a list containing sets of adjacent polygon faces grouped by islands.
-# 	args:
+# 	:Parameters:
 # 		faces (list) = polygon faces to be filtered for adjacent.
 # 		faceIslands (list) = optional. list of sets. ability to add faces from previous calls to the return value.
-# 	returns:
+# 	:Return:
 # 		list of sets of adjacent faces.
 # 	'''
 # 	face=None

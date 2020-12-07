@@ -44,11 +44,11 @@ class File(Init):
 		pin = self.file.pin
 
 		if state is 'setMenu':
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb005', setToolTip='')
-			pin.contextMenu.add(QToolButton_, setObjectName='tb000', setText='Save', setToolTip='')
-			pin.contextMenu.add(QLabel_, setObjectName='lbl001', setText='Minimize App', setToolTip='Minimize the main application.')
-			pin.contextMenu.add(QLabel_, setObjectName='lbl002', setText='Maximize App', setToolTip='Restore the main application.')
-			pin.contextMenu.add(QLabel_, setObjectName='lbl003', setText='Close App', setToolTip='Close the main application.')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb005', setToolTip='')
+			pin.contextMenu.add(widgets.TkToolButton, setObjectName='tb000', setText='Save', setToolTip='')
+			pin.contextMenu.add(widgets.TkLabel, setObjectName='lbl001', setText='Minimize App', setToolTip='Minimize the main application.')
+			pin.contextMenu.add(widgets.TkLabel, setObjectName='lbl002', setText='Maximize App', setToolTip='Restore the main application.')
+			pin.contextMenu.add(widgets.TkLabel, setObjectName='lbl003', setText='Close App', setToolTip='Close the main application.')
 			return
 
 
@@ -205,9 +205,9 @@ class File(Init):
 		cmb = self.file.cmb006
 
 		if index is 'setMenu':
-			cmb.contextMenu.add(QComboBox_, setObjectName='cmb001', setToolTip='Current project directory root.')
-			cmb.contextMenu.add(QLabel_, setObjectName='lbl000', setText='Set', setToolTip='Set the project directory.')
-			cmb.contextMenu.add(QLabel_, setObjectName='lbl004', setText='Root', setToolTip='Open the project directory.')
+			cmb.contextMenu.add(widgets.TkComboBox, setObjectName='cmb001', setToolTip='Current project directory root.')
+			cmb.contextMenu.add(widgets.TkLabel, setObjectName='lbl000', setText='Set', setToolTip='Set the project directory.')
+			cmb.contextMenu.add(widgets.TkLabel, setObjectName='lbl004', setText='Root', setToolTip='Open the project directory.')
 			return
 
 		path = File.formatPath(MaxPlus.PathManager.GetProjectFolderDir()) #current project path.
@@ -279,10 +279,10 @@ class File(Init):
 		'''
 		Increment the given file name.
 
-		args:
+		:Parameters:
 			fileName (str) = file name with extension. ie. elise_mid.ma
 
-		returns:
+		:Return:
 			(str) incremented name. ie. elise_mid.000.ma
 		'''
 		import re
@@ -308,7 +308,7 @@ class File(Init):
 		'''
 		Delete older files.
 
-		args:
+		:Parameters:
 			fileName (str) = file name with extension. ie. elise_mid.ma
 			numberOfPreviousFiles (int) = Number of previous copies to keep.
 		'''
@@ -456,10 +456,10 @@ class File(Init):
 		'''
 		Extract the file or dir name from a path string.
 
-		args:
+		:Parameters:
 			fullPath (str) = A full path including file name.
 
-		returns:
+		:Return:
 			(str) the dir or file name including extension.
 		'''
 		name = fullPath.split('/')[-1]

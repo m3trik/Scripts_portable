@@ -37,7 +37,7 @@ class Create(Init):
 		pin = self.create.pin
 
 		if state is 'setMenu':
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb003', setToolTip='')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb003', setToolTip='')
 			return
 
 
@@ -77,7 +77,7 @@ class Create(Init):
 		'''
 		Undo previous rotation and rotate on the specified axis.
 		uses an external rotation dictionary.
-		args:
+		:Parameters:
 			axis (str) = axis to rotate on. ie. '-x'
 			node (obj) = transform node.
 		'''
@@ -355,7 +355,7 @@ class Create(Init):
 	def createPrimitive(self, catagory1, catagory2):
 		'''
 		ie. createPrimitive('Polygons', 'Cube')
-		args:
+		:Parameters:
 			catagory1 (str) = type
 			catagory2 (str) = type
 		'''
@@ -418,7 +418,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	Get/Set Primitive Attributes.
 
-	# 	args:
+	# 	:Parameters:
 	# 		index (int) = parameter on activated, currentIndexChanged, and highlighted signals.
 	# 		attributes (dict) = Attibute and it's corresponding value. ie. {width:10}
 	# 		clear (bool) = Clear any previous items.
@@ -456,7 +456,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	Populate the attributes comboBox with attributes of the given node.
 
-	# 	args:
+	# 	:Parameters:
 	# 		node (obj) = Scene object.
 	# 	'''
 	# 	exclude = ['getmxsprop', 'setmxsprop', 'typeInHeight', 'typeInLength', 'typeInPos', 'typeInWidth', 'typeInDepth', 
@@ -471,7 +471,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	Set node attributes from multiple spinbox values.
 
-	# 	args:
+	# 	:Parameters:
 	# 		index(int) = optional index of the spinbox that called this function. ie. 5 from s005
 	# 	'''
 	# 	spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.create.cmb002.children_()} #current spinbox values. ie. from s000 get the value of six and add it to the list

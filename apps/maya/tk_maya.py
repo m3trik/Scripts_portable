@@ -9,10 +9,10 @@ app = QtWidgets.QApplication.instance() #get the qApp instance if it exists.
 if not app:
 	app = QtWidgets.QApplication(sys.argv)
 
-# import maya.OpenMayaUI as OpenMayaUI
+# import maya.OpenMayaUI as omui
 
 from tk_ import Tk
-from widgets.qWidget_ProgressIndicator import QWidget_ProgressIndicator
+from ui import widgets
 
 
 
@@ -20,7 +20,7 @@ class Tk_maya(Tk):
 	'''
 	Tk class overridden for use with Autodesk Maya.
 
-	args:
+	:Parameters:
 		parent = Application top level window instance.
 	'''
 	def __init__(self, parent=None, preventHide=False, key_show=QtCore.Qt.Key_F12):
@@ -32,7 +32,7 @@ class Tk_maya(Tk):
 			except Exception as error:
 				print(self.__class__.__name__, error)
 
-		# progressIndicator = QWidget_ProgressIndicator()
+		# progressIndicator = widgets.TkWidget_ProgressIndicator()
 		# progressIndicator.start()
 
 		super(Tk_maya, self).__init__(parent)
@@ -44,7 +44,7 @@ class Tk_maya(Tk):
 		'''
 		Get maya's main window object.
 
-		returns:
+		:Return:
 			(QWidget)
 		'''
 		# ptr = OpenMayaUI.MQtUtil.mainWindow()
@@ -57,7 +57,7 @@ class Tk_maya(Tk):
 
 	def showEvent(self, event):
 		'''
-		args:
+		:Parameters:
 			event = <QEvent>
 		'''
 
@@ -66,7 +66,7 @@ class Tk_maya(Tk):
 
 	def hideEvent(self, event):
 		'''
-		args:
+		:Parameters:
 			event = <QEvent>
 		'''
 		if __name__ == "__main__":
@@ -129,9 +129,9 @@ if __name__ == "__main__":
 	dummyParent = QWidget()
 	dummyParent.setObjectName('MayaWindow')
 
-	import cProfile
-	cProfile.run('Instance(dummyParent).show_()')
-	# Instance(dummyParent).show_() #Tk_maya(dummyParent).show()
+	# import cProfile
+	# cProfile.run('Instance(dummyParent).show_()')
+	Instance(dummyParent).show_() #Tk_maya(dummyParent).show()
 	sys.exit(app.exec_())
 
 

@@ -19,8 +19,8 @@ class Menu(object):
 		Get the menu.
 		'''
 		if not hasattr(self, '_menu'):
-			from qMenu_ import QMenu_
-			self._menu = QMenu_(self)
+			from tkMenu import TkMenu
+			self._menu = TkMenu(self)
 
 		return self._menu
 
@@ -31,8 +31,8 @@ class Menu(object):
 		Get the context menu.
 		'''
 		if not hasattr(self, '_contextMenu'):
-			from qMenu_ import QMenu_
-			self._contextMenu = QMenu_(self, position='cursorPos', menu_type='context')
+			from tkMenu import TkMenu
+			self._contextMenu = TkMenu(self, position='cursorPos', menu_type='context')
 
 		return self._contextMenu
 
@@ -42,7 +42,7 @@ class RichText(object):
 	Rich text support for widgets.
 	Text with rich text formatting will be set as rich text, otherwise it will be handled as usual.
 
-	args:
+	:Parameters:
 		parent (obj) = parent widget.
 		alignment (str) = text alignment. valid values are: 'AlignLeft', 'AlignCenter', 'AlignRight'
 	'''
@@ -61,7 +61,7 @@ class RichText(object):
 		'''
 		Query whether the widget contains rich text.
 
-		returns:
+		:Return:
 			(bool)
 		'''
 		if not hasattr(self, '_hasRichText'):
@@ -110,7 +110,7 @@ class RichText(object):
 			Set the rich text label text.
 			Add whitespace to the actual widget text until it matches the sizeHint of what it would containing the richTextLabel's text.
 
-		args:
+		:Parameters:
 			text (str) = The desired widget's display text.
 		'''
 		if text and all(i in text for i in ('<','>')): #check the text string for rich text formatting.
@@ -135,7 +135,7 @@ class RichText(object):
 
 	def richText(self):
 		'''
-		returns:
+		:Return:
 			(str) the widget's or the richTextLabel's text.
 		'''
 		if self.hasRichText:
@@ -150,7 +150,7 @@ class RichText(object):
 		'''
 		The richTextSizeHint is the sizeHint of the actual widget if it were containing the text.
 
-		returns:
+		:Return:
 			(str) the widget's or the richTextLabel's sizeHint.
 		'''
 		if self.hasRichText:
@@ -174,12 +174,12 @@ class Attributes(object):
 		Works with attributes passed in as a dict or kwargs.
 		If attributes are passed in as a dict, kwargs are ignored.
 
-		args:
+		:Parameters:
 			attributes (dict) = keyword attributes and their corresponding values.
 			obj (obj) = the child obj or widgetAction to set attributes for. (default=None)
 			#order (list) = list of string keywords. ie. ['setPosition_', 'setVisible']. attributes in this list will be set last, by list order. an example would be setting move positions after setting resize arguments, or showing the widget only after other attributes have been set.
 
-		kwargs:
+		kw:Parameters:
 			set any keyword arguments.
 		'''
 		if not attributes:
@@ -208,7 +208,7 @@ class Attributes(object):
 		Attributes that throw an AttributeError in 'setAttributes' are sent here, where they can be assigned a value.
 		Custom attributes can be set using a trailing underscore convention to aid readability, and differentiate them from standard attributes.
 
-		args:
+		:Parameters:
 			w (obj) = The child widget or widgetAction to set attributes for.
 			attr (str) = Custom keyword attribute.
 			value (str) = The value corresponding to the given attr.
@@ -219,7 +219,7 @@ class Attributes(object):
 			setWidth_ (int) = The desired width.
 			setHeight_ (int) = The desired height.
 			setPosition_ (QPoint)(str) = Move to the given global position and center. valid string values include: 'cursor', 
-			addMenu_ (QMenu) = Used for adding additional menus to a parent menu. ex. parentMenu = QMenu_(); childMenu = QMenu_('Create', addMenu_=parentMenu)
+			addMenu_ (QMenu) = Used for adding additional menus to a parent menu. ex. parentMenu = TkMenu(); childMenu = TkMenu('Create', addMenu_=parentMenu)
 			insertSeparator_ (bool) = Insert a line separater before the new widget.
 			setLayoutDirection_ (str) = Set the layout direction using a string value. ie. 'LeftToRight'
 			setAlignment_ (str) = Set the alignment using a string value. ie. 'AlignVCenter'
@@ -285,7 +285,7 @@ class Attributes(object):
 		'''
 		Set the minimum, maximum, and step values for a spinbox using a shorthand string value.
 
-		args:
+		:Parameters:
 			spinbox (obj) = spinbox widget.
 			value (str) = value as shorthand string. ie. '0.00-100 step1'
 		'''
@@ -313,7 +313,7 @@ class Attributes(object):
 	def setSpinBoxByValue(self, spinbox, attribute, value):
 		'''
 		
-		args:
+		:Parameters:
 			spinbox (obj) = spinbox widget.
 			attribute (str) = object attribute.
 			value (multi) = attribute value.
@@ -354,13 +354,13 @@ class Attributes(object):
 		'''
 		Move the decimal place in a given number.
 
-		args:
+		:Parameters:
 			decimal_places (int) = decimal places to move. (works only with values 0 and below.)
 		
-		returns:
+		:Return:
 			(float) the given number with it's decimal place moved by the desired amount.
 		
-		ex. moveDecimalPoint(11.05, -2) returns: 0.1105
+		ex. moveDecimalPoint(11.05, -2) :Return: 0.1105
 		'''
 		for _ in range(abs(decimal_places)):
 

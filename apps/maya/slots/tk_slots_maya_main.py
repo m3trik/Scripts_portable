@@ -40,7 +40,7 @@ class Main(Init):
 			# 				if isinstance(v, (float, int, bool))]
 
 			# 		#set signal/slot connections:
-			# 		# widgets = [tree.add(MultiWidget, parent, refresh=1, set_by_value=[k, v])
+			# 		# widgets = [tree.add(widgets.MultiWidget, parent, refresh=1, set_by_value=[k, v])
 			# 		# 	for k, v in attributes.items() 
 			# 		# 		if isinstance(v, (float, int, bool))]
 

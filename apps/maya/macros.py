@@ -51,7 +51,7 @@ class Macros(Init):
 		'''
 		Sets a default runtime command with a keyboard shotcut.
 
-		args:
+		:Parameters:
 			name (str) = The command name you provide must be unique. The name itself must begin with an alphabetic character or underscore followed by alphanumeric characters or underscores.
 			cat (str) = catagory - Category for the command.
 			ann (str) = annotation - Description of the command.
@@ -108,11 +108,11 @@ class Macros(Init):
 		The source code is returned as a single string.
 		Removes lines containing '@' or 'def ' ie. @staticmethod.
 
-		args:
+		:Parameters:
 			cmd = module, class, method, function, traceback, frame, or code object.
 			removeTabs (int) = remove x instances of '\t' from each line.
 
-		returns:
+		:Return:
 			A Multi-line string.
 		'''
 		from inspect import getsource
@@ -130,7 +130,7 @@ class Macros(Init):
 		'''
 		Set Wireframe On Shaded.
 
-		args:
+		:Parameters:
 			editor (str) = The panel name.
 			state (bool) = The desired on or off state.
 		'''

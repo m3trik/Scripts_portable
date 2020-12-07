@@ -1,5 +1,4 @@
 from __future__ import print_function
-from tk_ import Tk
 
 from PySide2 import QtCore
 
@@ -8,13 +7,16 @@ try:
 except ImportError as error:
 	print(error)
 
+from tk_ import Tk
+from ui import widgets
+
 
 
 class Tk_max(Tk):
 	'''
 	Tk class overridden for use with Autodesk 3ds max.
 
-	args:
+	:Parameters:
 		parent = main application top level window object.
 	'''
 	def __init__(self, parent=None, preventHide=False, key_show=QtCore.Qt.Key_F12):
@@ -34,7 +36,7 @@ class Tk_max(Tk):
 		'''
 		Get maya's main window object.
 
-		returns:
+		:Return:
 			(QWidget)
 		'''
 		main_window = MaxPlus.GetQMaxMainWindow()
@@ -44,7 +46,7 @@ class Tk_max(Tk):
 
 	def showEvent(self, event):
 		'''
-		args:
+		:Parameters:
 			event = <QEvent>
 		'''
 		try:
@@ -58,7 +60,7 @@ class Tk_max(Tk):
 
 	def hideEvent(self, event):
 		'''
-		args:
+		:Parameters:
 			event = <QEvent>
 		'''
 		try:

@@ -30,7 +30,7 @@ class Symmetry(Init):
 		pin = self.parentUi.pin
 
 		if state is 'setMenu':
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='')
 			return
 
 

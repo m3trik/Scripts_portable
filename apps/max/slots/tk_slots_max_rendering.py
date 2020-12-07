@@ -27,7 +27,7 @@ class Rendering(Init):
 		pin = self.parentUi.pin
 
 		if state is 'setMenu':
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb001', setToolTip='')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb001', setToolTip='')
 			return
 
 

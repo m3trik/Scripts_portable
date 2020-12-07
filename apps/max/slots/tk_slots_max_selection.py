@@ -36,12 +36,12 @@ class Selection(Init):
 		pin = self.selection.pin
 
 		if state is 'setMenu':
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb001', setToolTip='')
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb004', setToolTip='Set the select tool type.')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb001', setToolTip='')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb004', setToolTip='Set the select tool type.')
 			pin.contextMenu.add('QCheckBox', setText='Ignore Backfacing', setObjectName='chk004', setToolTip='Ignore backfacing components during selection.')
 			pin.contextMenu.add('QCheckBox', setText='Soft Selection', setObjectName='chk008', setToolTip='Toggle soft selection mode.')
-			pin.contextMenu.add(QLabel_, setText='Grow Selection', setObjectName='lbl003', setToolTip='Grow the current selection.')
-			pin.contextMenu.add(QLabel_, setText='Shrink Selection', setObjectName='lbl004', setToolTip='Shrink the current selection.')
+			pin.contextMenu.add(widgets.TkLabel, setText='Grow Selection', setObjectName='lbl003', setToolTip='Grow the current selection.')
+			pin.contextMenu.add(widgets.TkLabel, setText='Shrink Selection', setObjectName='lbl004', setToolTip='Shrink the current selection.')
 			return
 
 
@@ -261,10 +261,10 @@ class Selection(Init):
 		cmb = self.selection.cmb000
 
 		if index is 'setMenu':
-			cmb.contextMenu.add(QLabel_, setText='Select', setObjectName='lbl005', setToolTip='Select the current set elements.')
-			cmb.contextMenu.add(QLabel_, setText='New', setObjectName='lbl000', setToolTip='Create a new selection set.')
-			cmb.contextMenu.add(QLabel_, setText='Modify', setObjectName='lbl001', setToolTip='Modify the current set by renaming and/or changing the selection.')
-			cmb.contextMenu.add(QLabel_, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current set.')
+			cmb.contextMenu.add(widgets.TkLabel, setText='Select', setObjectName='lbl005', setToolTip='Select the current set elements.')
+			cmb.contextMenu.add(widgets.TkLabel, setText='New', setObjectName='lbl000', setToolTip='Create a new selection set.')
+			cmb.contextMenu.add(widgets.TkLabel, setText='Modify', setObjectName='lbl001', setToolTip='Modify the current set by renaming and/or changing the selection.')
+			cmb.contextMenu.add(widgets.TkLabel, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current set.')
 			cmb.returnPressed.connect(lambda m=cmb.contextMenu.lastActiveChild: getattr(self, m(name=1))()) #connect to the last pressed child widget's corresponding method after return pressed. ie. self.lbl000 if cmb.lbl000 was clicked last.
 			cmb.currentIndexChanged.connect(self.lbl005) #select current set on index change.
 			cmb.beforePopupShown.connect(self.cmb000) #refresh comboBox contents before showing it's popup.
@@ -523,7 +523,7 @@ class Selection(Init):
 		'''
 		Selection Sets: Create a new selection set.
 
-		args:
+		:Parameters:
 			name (str) = The desired name of the new set.
 		'''
 		if rt.isValidObj(name): # obj!=rt.undefined
@@ -549,7 +549,7 @@ class Selection(Init):
 		'''
 		Selection Sets: Modify Current by renaming or changing the set members.
 
-		args:
+		:Parameters:
 			name (str) = Name of an existing selection set.
 		'''
 		sel = self.currentSelection
@@ -576,12 +576,12 @@ class Selection(Init):
 		'''
 		Get a set or set info by name.
 
-		args:
+		:Parameters:
 			name (str) = Set name.
 			index (str)(int) = Desired return value type. Valid values are: 0:'set'(default), 1:'object', 2:'objectLevel' 4:'set_array'.
 			objects (list) = The group of objects to get the set from.
 
-		returns:
+		:Return:
 			depending on the given index:
 			(obj) <set> <object>
 			(int) <object level>
@@ -614,10 +614,10 @@ class Selection(Init):
 		Get selection sets for a group of objects in the given list.
 		Returns Object and Sub-Object Level sets.
 
-		args:
+		:Parameters:
 			objects (list) = The objects to get sets from. ie. rt.cameras (default is rt.geometry)
 
-		returns:
+		:Return:
 			(dict) {'set name':[<set>, <object>, <object level as int>, <set array>]}
 		'''
 		if includeEmptySets:
@@ -639,11 +639,11 @@ class Selection(Init):
 		'''
 		Get the array containing a set by array type.
 
-		args:
+		:Parameters:
 			obj (obj) = Parent obj of the array.
 			index (int) = Array type. 
 
-		returns:
+		:Return:
 			(array) maxscript array object.
 		'''
 		type_ = {0:'', 1:'vertices', 2:'edges', 3:'borders', 4:'faces'}
@@ -661,11 +661,11 @@ class Selection(Init):
 		'''
 		Gets any existing selection sets for the given object.
 
-		args:
+		:Parameters:
 			obj (obj) = The object to get sets for. If no object is given, any empty sets will be returned.
 			level (int) = The sub-object level. Valid values are: 0(obj), 1(vertices), 2(edges), 3(borders), 4(faces)
 
-		returns:
+		:Return:
 			(dict) {'set name':<set>}
 		'''
 		if level is None: #if level isn't given:

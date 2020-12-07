@@ -17,7 +17,7 @@ class Transform(Init):
 		pin = self.transform.pin
 
 		if state is 'setMenu':
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='')
 			return
 
 
@@ -49,7 +49,7 @@ class Transform(Init):
 
 		if index is 'setMenu':
 			cmb.popupStyle = 'qmenu'
-			cmb.contextMenu.add(QLabel_, setText='Disable All', setObjectName='lbl001', setToolTip='Disable all transform snapping.')
+			cmb.contextMenu.add(widgets.TkLabel, setText='Disable All', setObjectName='lbl001', setToolTip='Disable all transform snapping.')
 
 			try: #query and set current states:
 				edge_constraint = True if pm.xformConstraint(query=1, type=1)=='edge' else False
@@ -60,7 +60,7 @@ class Transform(Init):
 						('chk025', 'Surface', surface_constraint),
 						('chk026', 'Make Live', live_object)]
 
-				widgets = [cmb.menu_.add(QCheckBox_, setObjectName=i[0], setText=i[1], setChecked=i[2]) for i in list_]
+				widgets_ = [cmb.menu_.add(widgets.TkCheckBox, setObjectName=i[0], setText=i[1], setChecked=i[2]) for i in list_]
 
 			except NameError as error:
 				print(error)
@@ -107,7 +107,7 @@ class Transform(Init):
 
 		if index is 'setMenu':
 			cmb.popupStyle = 'qmenu'
-			cmb.contextMenu.add(QLabel_, setText='Disable All', setObjectName='lbl001', setToolTip='Disable all transform snapping.')
+			cmb.contextMenu.add(widgets.TkLabel, setText='Disable All', setObjectName='lbl001', setToolTip='Disable all transform snapping.')
 
 			try:
 				moveValue = pm.manipMoveContext('Move', q=True, snapValue=True)
@@ -118,7 +118,7 @@ class Transform(Init):
 						('chk022', 'Scale <b>Off</b>'), ('s022', 'increment:', scaleValue, '1-1000 step1'), 
 						('chk023', 'Rotate <b>Off</b>'), ('s023', 'degrees:', rotateValue, '1-360 step1')]
 
-				widgets = [cmb.menu_.add(QCheckBox_, setObjectName=i[0], setText=i[1], setTristate=1) if len(i) is 2 
+				widgets_ = [cmb.menu_.add(widgets.TkCheckBox, setObjectName=i[0], setText=i[1], setTristate=1) if len(i) is 2 
 						else cmb.menu_.add('QDoubleSpinBox', setObjectName=i[0], setPrefix=i[1], setValue=i[2], setMinMax_=i[3], setDisabled=1) for i in list_]
 
 			except NameError as error:
@@ -718,7 +718,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	cmb = self.transform.cmb001
 
 	# 	if index is 'setMenu':
-	# 		cmb.contextMenu.add(QLabel_, setObjectName='lbl000', setText='Disable All', setToolTip='Disable all constraints.')
+	# 		cmb.contextMenu.add(widgets.TkLabel, setObjectName='lbl000', setText='Disable All', setToolTip='Disable all constraints.')
 
 	# 		list_ = ['Edge', 'Surface', 'Make Live']
 	# 		cmb.addItems_(list_, 'Off')

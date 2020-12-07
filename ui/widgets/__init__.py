@@ -1,17 +1,25 @@
-# from importlib import import_module
+#!/usr/bin/env python
+# import os, pkgutil
+# from pydoc import locate
 
-# import os
+# __all_ = list(module for _, module, _ in pkgutil.iter_modules([os.path.dirname(__file__)]))
 
 
-# #import package modules
-# modules = [os.path.splitext(i)[0] for i in os.listdir(os.path.dirname(__file__)) if i.endswith('.py')]
+from widgets.tkMenu import TkMenu
+from widgets.tkLabel import TkLabel
+from widgets.tkComboBox import TkComboBox
+from widgets.tkCheckBox import TkCheckBox
+from widgets.tkToolButton import TkToolButton
+from widgets.tkWidget_MultiWidget import TkWidget_MultiWidget as MultiWidget
 
-# if __name__=='__main__':
-# 	__package__ = 'widgets'
-# __all__ = [
-# 	import_module('.{0}'.format(m), package=__package__) # import_module('.%s' % f, __package__)
-# 	for m in modules
-# 	if m is not '__init__'
-# ]
 
-# del import_module
+
+
+
+
+
+
+
+# -----------------------------------------------
+# Notes
+# -----------------------------------------------

@@ -9,7 +9,7 @@ import os.path
 try: import shiboken2
 except: from PySide2 import shiboken2
 
-from tk_uiLoader import UiLoader
+from ui import UiLoader
 
 
 
@@ -24,7 +24,7 @@ class Switchboard(QtCore.QObject):
 	Widget objectName/corresponding class method name need to be the same. ie. 'b000' (widget objectName) will try to connect to <b000> class method.
 
 	Ui files are looked for in a sub dir named 'ui'. naming convention is: <ui name>.ui ie. polygons.ui
-	Custom widget modules are looked for in a sub directory named 'widgets'. naming convention: <name capital first char> widget class inside <name lowercase first char>.py module. ie. QLabel_ class inside qLabel_.py module.
+	Custom widget modules are looked for in a sub directory named 'widgets'. naming convention: <name capital first char> widget class inside <name lowercase first char>.py module. ie. TkLabel class inside tkLabel.py module.
 
 	nested dictionary structure:
 	_sbDict = {	
@@ -61,8 +61,10 @@ class Switchboard(QtCore.QObject):
 		Initialize the main dict (sbDict).
 		'''
 		for uiName, v in UiLoader().uiDict.items():
-			self.sbDict[uiName] = {'ui':	v['ui'], #set a key for each ui.
-								'uiLevel':	v['level']} #ie. {'polygons':{'ui':<ui obj>, uiLevel:<int>}} (the ui level is it's hierarchy)
+			self.sbDict[uiName] = {
+				'ui': v['ui'], #set a key for each ui.
+				'uiLevel': v['level'] #ie. {'polygons':{'ui':<ui obj>, uiLevel:<int>}} (the ui level is it's hierarchy)
+			}
 
 
 	@property
@@ -81,7 +83,7 @@ class Switchboard(QtCore.QObject):
 		Extends the fuctionality of the 'addWidget' method to support adding multiple widgets.
 		If widgets is None; the method will attempt to add all widgets from the ui of the given name.
 
-		args:
+		:Parameters:
 			name (str) = name of the parent ui to construct connections for.
 			widgets (list) = widget objects to be added. If none are given all objects from the ui will be added.
 		'''
@@ -97,12 +99,12 @@ class Switchboard(QtCore.QObject):
 		'''
 		Adds a widget to the widgets dict under the given (ui) name.
 
-		args:
+		:Parameters:
 			name (str) = name of the parent ui to construct connections for.
 			widget (obj) = widget to be added.
 			objectName (str) = widget's name.
 
-		returns:
+		:Return:
 			<widget object>
 		'''
 		name = str(name) #prevent unicode
@@ -117,7 +119,7 @@ class Switchboard(QtCore.QObject):
 			setattr(ui, objectName, widget)
 
 		class_ = self.getClassFromUiName(name) #get the corresponding slot class from the ui name.
-		derivedType = self._getDerivedType(widget) #the base class of any custom widgets.  ie. 'QPushButton' from 'QPushButton_'
+		derivedType = self._getDerivedType(widget) #the base class of any custom widgets.  ie. 'QPushButton' from 'TkPushButton'
 		signalType = self.getDefaultSignalType(derivedType) #get the default signal type for the widget as a string. ie. 'released' from 'QPushButton'
 		signalInstance = getattr(widget, signalType, None) #add signal to widget. ie. <widget.valueChanged>
 		method = getattr(class_, objectName, None) #use 'objectName' to get the corresponding method of the same name. ie. get method <b006> from widget 'b006' else None
@@ -143,7 +145,7 @@ class Switchboard(QtCore.QObject):
 		'''
 		Remove widget keys from the widgets dict.
 
-		args:
+		:Parameters:
 			widgets (obj)(list) = single or list of QWidgets.
 			name (str) = ui name.
 		'''
@@ -164,10 +166,10 @@ class Switchboard(QtCore.QObject):
 		'''
 		Dictionary holding widget information.
 
-		args:
+		:Parameters:
 			name (str) = name of ui/class. ie. 'polygons'
 
-		returns:
+		:Return:
 			connection dict of given name with widget/method name string as key.
 		ex. {'widgets' : {
 						'<widget>':{
@@ -192,10 +194,10 @@ class Switchboard(QtCore.QObject):
 		'''
 		Works with attributes passed in as a dict or kwargs.
 		If attributes are passed in as a dict, kwargs are ignored.
-		args:
+		:Parameters:
 			attributes (dict) = keyword attributes and their corresponding values.
 			#order (list) = list of string keywords. ie. ['move', 'setVisible']. attributes in this list will be set last, in order of the list. an example would be setting move positions after setting resize arguments.
-		kwargs:
+		kw:Parameters:
 			set any keyword arguments.
 		'''
 		if not attributes:
@@ -220,11 +222,11 @@ class Switchboard(QtCore.QObject):
 		'''
 		Set a unique object name for the given widget based on the pattern name000.
 
-		args:
+		:Parameters:
 			widget (obj) = The child widget to set an object name for.
 			name (str) = Ui name.
 
-		returns:
+		:Return:
 			(str) the widgets object name.
 		'''
 		if not name:
@@ -258,10 +260,10 @@ class Switchboard(QtCore.QObject):
 		'''
 		Get keyword arguments for the given ui name.
 
-		args:
+		:Parameters:
 			name (str) = ui name. ie. 'polygons'
 
-		returns:
+		:Return:
 			(dict) packed keyword arguments. ie. {'_currentUi': <function <lambda> at 0x000001D97BCFCAC8>, '_ui': <function <lambda> at 0x000001D97BCFCA58>, 'tk': <PySide2.QtWidgets.QWidget object at 0x000001D94E1E9D88>, 'polygons_submenu': <PySide2.QtWidgets.QMainWindow object at 0x000001D978D8A708>, 'sb': <tk_switchboard.Switchboard object at 0x000001D97BD7D1C8>, 'polygons': <PySide2.QtWidgets.QMainWindow object at 0x000001D97BCEB0C8>}
 		'''
 		childUi = self.getUi(name, level=2)
@@ -291,10 +293,10 @@ class Switchboard(QtCore.QObject):
 		Get the slot class corresponding to the given ui name.  ie. <Polygons> from 'polygons'
 		If the name is a submenu, the parent class will be returned. ie. <Polygons> from 'polygons_submenu'		
 
-		args:
+		:Parameters:
 			name (str) = ui name. ie. 'polygons'
 
-		returns:
+		:Return:
 			(obj) class obj
 		'''
 		n = name.split('_')[0] #get ie. 'polygons' from 'polygons_submenu' in cases where a submenu shares the same slot class of it's parent menu.
@@ -313,10 +315,10 @@ class Switchboard(QtCore.QObject):
 		'''
 		Get the default signal type for a given widget type.
 
-		args:
+		:Parameters:
 			widgetType (str) = Widget class name. ie. 'QPushButton'
 
-		returns:
+		:Return:
 			(str) signal ie. 'released'
 		'''
 		signals = { #the default signal to be associated with each widget type.
@@ -348,11 +350,11 @@ class Switchboard(QtCore.QObject):
 		'''
 		Get the widget object with attached signal (ie. b001.onPressed) from the given widget name.
 
-		args:
+		:Parameters:
 			name (str) = name of ui. ie. 'polygons'
 			objectName (str) = optional widget name. ie. 'b001'
 
-		returns:
+		:Return:
 			if objectName: (obj) widget object with attached signal (ie. b001.onPressed) of the given widget name.
 			else: (list) all of the signals associated with the given name as a list.
 		'''
@@ -382,7 +384,7 @@ class Switchboard(QtCore.QObject):
 		Connects signals/slots from the widgets for the given ui.
 		Works with both single slots or multiple slots given as a list.
 
-		args:
+		:Parameters:
 			name (str) = ui name
 			widgets (obj)(list) = QWidget
 		'''
@@ -411,7 +413,7 @@ class Switchboard(QtCore.QObject):
 		Disconnects signals/slots from the widgets for the given ui.
 		Works with both single slots or multiple slots given as a list.
 
-		args:
+		:Parameters:
 			name (str) = ui name
 			widgets (obj)(list) = QWidget
 		'''
@@ -439,11 +441,11 @@ class Switchboard(QtCore.QObject):
 		'''
 		Get a list of either all ui names, all ui object's, or both as key/value pairs in a dict.
 
-		args:
+		:Parameters:
 			names (bool) = return string ui list
 			ui (bool) =	return dynamic ui list
 
-		returns:
+		:Return:
 			if name: return list of ui names
 			if ui: return list of dynamic ui objects
 			else: dict of ui names strings as keys, and corresponding ui objects as values. ie. {'ui name':<ui object>}
@@ -460,13 +462,13 @@ class Switchboard(QtCore.QObject):
 		'''
 		Get the dynamic ui using its string name, or if no argument is given, return the current ui.
 
-		args:
+		:Parameters:
 			name (str)(obj) = Name of class. ie. 'polygons' (by default getUi returns the current ui)
 				also supports passing in a ui object to access parameters setAsCurrent and level.
 			setAsCurrent (bool) = Set the ui name as the currently active ui. (default: False)
 			level (int) = Get the ui of the given level. (2:submenu, 3:main_menu)
 
-		returns:
+		:Return:
 			if name: corresponding dynamic ui object of given name from the key 'uiList'.
 			else: current dynamic ui object
 		'''
@@ -502,10 +504,10 @@ class Switchboard(QtCore.QObject):
 		'''
 		Get the ui for the given widget.
 
-		args:
+		:Parameters:
 			widget (obj) = QWidget
 
-		returns:
+		:Return:
 			 (obj) ui. ie. <polygons> from <somewidget>
 		'''
 		return next((self.getUi(k) for k,v in self.sbDict.items() if type(v) is dict and 'widgets' in v and widget in v['widgets']), None)
@@ -515,10 +517,10 @@ class Switchboard(QtCore.QObject):
 		'''
 		The 'name' list is used for various things such as; maintaining a history of ui's that have been called.
 
-		args:
+		:Parameters:
 			index (int)(str) = index or name of the ui.
 
-		returns:
+		:Return:
 			(str) corresponding ui name.
 		'''
 		if not 'name' in self.sbDict:
@@ -537,14 +539,14 @@ class Switchboard(QtCore.QObject):
 		Get the ui name as a string.
 		If no argument is given, the name for the current ui will be returned.
 
-		args:
+		:Parameters:
 			ui (obj)(str) = Use ui object to get its corresponding name. (the default behavior is to return the current ui name)
 						also supports passing in a string value of a known name to use with the camelCase, pascalCase, and level parameters.
 			camelCase (bool) = Return name with first letter lowercase. (default: False)
 			pascalCase (bool) = Return name with first letter capitalized. (default: False)
 			level (int) = Get the ui of the given level. (2:submenu, 3:main_menu)
 
-		returns:
+		:Return:
 			(str) - ui name.
 		'''
 		if not 'name' in self.sbDict:
@@ -579,10 +581,10 @@ class Switchboard(QtCore.QObject):
 		'''
 		Get the ui name from the given widget.
 
-		args:
+		:Parameters:
 			widget (obj) = QWidget
 
-		returns:
+		:Return:
 			 (str) ui name. ie. 'polygons' from <somewidget>
 		'''
 		return next((k for k,v in self.sbDict.items() if type(v) is dict and 'widgets' in v and widget in v['widgets']), None)
@@ -592,10 +594,10 @@ class Switchboard(QtCore.QObject):
 		'''
 		Get the ui name from the given method.
 
-		args:
+		:Parameters:
 			widget (obj) = QWidget
 
-		returns:
+		:Return:
 			 (str) ui name. ie. 'polygons' from <somewidget>
 		'''
 		for name, value in self.sbDict.items():
@@ -611,7 +613,7 @@ class Switchboard(QtCore.QObject):
 		'''
 		Get the ui name from a given nested key.
 
-		args:
+		:Parameters:
 			nestedKey (key) = The key of a nested dict to get the ui of.
 			_uiName (key) = internal use. The key from the top-level dict. (ie. 'polygons') which is later returned as the uiName if a key match is found in a directly nested dict.
 			_nested_dict (dict) = internal use. Recursive call.
@@ -637,10 +639,10 @@ class Switchboard(QtCore.QObject):
 		'''
 		Get the ui name from a given nested Value.
 
-			args:
+			:Parameters:
 				nestedValue (value) = The value of a nested dict to get the ui of.
 
-			returns:
+			:Return:
 				(list) of uiNames that contain the given nestedValue.
 
 			ex. self.getUiNameFromValue('cmb002') #returns the names of all ui with a dict containing value 'cmb002'.
@@ -657,10 +659,10 @@ class Switchboard(QtCore.QObject):
 		'''
 		Get the index of the given ui name in the uiList.
 
-		args:
+		:Parameters:
 			name (str) = name of class. ie. 'polygons'
 
-		returns:
+		:Return:
 			if name: index of given name from the key 'uiList'.
 			else: index of current ui
 		'''
@@ -677,11 +679,11 @@ class Switchboard(QtCore.QObject):
 		If no size is given, the minimum ui size needed to frame its
 		contents will be used. If no name is given, the current ui will be used.
 
-		args:
+		:Parameters:
 			name (str) = optional ui name
 			size = [int, int] - optional width and height as an integer list. [width, height]
 
-		returns:
+		:Return:
 			ui size info as integer values in a list. [width, hight]
 		'''
 		if not name:
@@ -699,7 +701,7 @@ class Switchboard(QtCore.QObject):
 		'''
 		Set the X (width) value for the current ui.
 
-		args:
+		:Parameters:
 			name (str) = the name of the ui to set the width for.
 			width (int) = X size as an int
 		'''
@@ -711,7 +713,7 @@ class Switchboard(QtCore.QObject):
 		'''
 		Set the Y (height) value for the current ui.
 
-		args:
+		:Parameters:
 			name (str) = the name of the ui to set the height for.
 			height (int) = Y size as an int
 		'''
@@ -723,14 +725,14 @@ class Switchboard(QtCore.QObject):
 		'''
 		Get the size info for each ui (allows for resizing a stacked widget where ordinarily resizing is constrained by the largest widget in the stack)
 
-		args:
+		:Parameters:
 			name (str) = ui name to get size from.
 			width (int) = returns width of current ui
 			height (int) = returns hight of current ui
 			percentWidth (int) = returns a percentage of the width
 			percentHeight = int returns a percentage of the height
 
-		returns:
+		:Return:
 			if width: returns width as int
 			if height: returns height as int
 			if percentWidth: returns the percentage of the width as an int
@@ -759,10 +761,10 @@ class Switchboard(QtCore.QObject):
 		'''
 		Get the X (width) value for the current ui.
 
-		args:
+		:Parameters:
 			name (str) = ui name to get size from.
 
-		returns:
+		:Return:
 			returns width as int
 		'''
 		return self.getUiSize(name=name, width=True)
@@ -772,10 +774,10 @@ class Switchboard(QtCore.QObject):
 		'''
 		Get the Y (height) value for the current ui.
 
-		args:
+		:Parameters:
 			name (str) = ui name to get size from.
 
-		returns:
+		:Return:
 			returns width as int
 		'''
 		return self.getUiSize(name=name, height=True)
@@ -785,10 +787,10 @@ class Switchboard(QtCore.QObject):
 		'''
 		Set parent application.
 
-		args:
+		:Parameters:
 			app = app object.
 
-		returns:
+		:Return:
 			string name of app
 		'''
 		self.sbDict['mainAppWindow'] = app
@@ -800,10 +802,10 @@ class Switchboard(QtCore.QObject):
 		'''
 		Get parent application if any.
 
-		args:
+		:Parameters:
 			objectName (bool) = get string name of app. (by default getMainAppWindow returns app object)
 
-		returns:
+		:Return:
 			app object or string name
 		'''
 		if not 'mainAppWindow' in self.sbDict:
@@ -825,12 +827,12 @@ class Switchboard(QtCore.QObject):
 		'''
 		Case insensitive. Class string keys are stored lowercase regardless of how they are recieved.
 
-		args:
+		:Parameters:
 			class_ (str)(obj) = module name.class to import and store class. 
 					ie.  ie. 'polygons', 'tk_slots_max_polygons.Polygons', or <tk_slots_max_polygons.Polygons>
 			name (str) = optional name key to store the class under (else the class name will be used).
 
-		returns:
+		:Return:
 			class object.
 		'''
 		if isinstance(class_, (str, unicode)): #if arg given as string or unicode:
@@ -858,11 +860,11 @@ class Switchboard(QtCore.QObject):
 		Case insensitive. (Class string keys are lowercase and any given string will be converted automatically)
 		If class is not in self.sbDict, getClassInstance will attempt to use setClassInstance() to first store the class.
 
-		args:
+		:Parameters:
 			class_ (str)(obj) = module name.class to import and store class.
 				ie. 'polygons', 'tk_slots_max_polygons.Polygons', or <tk_slots_max_polygons.Polygons>
 
-		returns:
+		:Return:
 			class object.
 		'''
 		if isinstance(class_, (str, unicode)): #if arg given as string or unicode:
@@ -889,12 +891,12 @@ class Switchboard(QtCore.QObject):
 		'''
 		Case insensitive. Get the widget object/s from the given ui and objectName.
 
-		args:
+		:Parameters:
 			objectName (str) = optional name of widget. ie. 'b000'
 			name (str)(obj) = name of ui. ie. 'polygons'. If no name is given, the current ui will be used.
 						 	A ui object can be passed into this parameter, which will be used to get it's corresponding name. 
 
-		returns:
+		:Return:
 			(obj) if objectName:  widget object with the given name from the current ui.
 				  if name and objectName: widget object with the given name from the given ui name.
 			(list) if name: all widgets for the given ui.
@@ -917,11 +919,11 @@ class Switchboard(QtCore.QObject):
 		'''
 		Get the widget's stored string objectName.
 
-		args:
+		:Parameters:
 			widget (obj) = QWidget
 			name (str) = name of ui. ie. 'polygons'. If no name is given, the current ui will be used.
 
-		returns:
+		:Return:
 			if widget: (str) the stored objectName for the given widget.
 			if not widget: (list) all names.
 			if name: stored objectNames for the given ui name.
@@ -950,12 +952,12 @@ class Switchboard(QtCore.QObject):
 		Get widget type class name as a string.
 		ie. 'QPushButton' from pushbutton type widget.
 
-		args:
+		:Parameters:
 			widget = 'string'  - name of widget/widget
 				*or <object> -widget
 			name (str) = name of dynamic ui (else use current ui)
 
-		returns:
+		:Return:
 			'string' - the corresponding widget class name
 		'''
 		if isinstance(widget, (str, unicode)):
@@ -982,10 +984,10 @@ class Switchboard(QtCore.QObject):
 		Internal use. Get the base class of a custom widget.
 		If the type is a standard widget, the derived type will be that widget's type.
 
-		args:
-			widget (obj) = QWidget. ie. widget with class name: 'QPushButton_'
+		:Parameters:
+			widget (obj) = QWidget. ie. widget with class name: 'TkPushButton'
 
-		returns:
+		:Return:
 			(string) base class name. ie. 'QPushButton'
 		'''
 		# print(widget.__class__.__mro__)
@@ -1000,12 +1002,12 @@ class Switchboard(QtCore.QObject):
 		Get the base class of a custom widget.
 		If the type is a standard widget, the derived type will be that widget's type.
 
-		args:
+		:Parameters:
 			widget (str)(obj) = QWidget or it's objectName.
 			name (str) = ui name.
 
-		returns:
-			(string) base class name. ie. 'QPushButton' from a custom widget with class name: 'QPushButton_'
+		:Return:
+			(string) base class name. ie. 'QPushButton' from a custom widget with class name: 'TkPushButton'
 		'''
 		if isinstance(widget, (str, unicode)):
 			objectName = self.sbDict[name]['widgets'][widget] #use the stored objectName as a more reliable key.
@@ -1030,11 +1032,11 @@ class Switchboard(QtCore.QObject):
 		'''
 		Get the method(s) associated with the given ui / widget.
 
-		args:
+		:Parameters:
 			name (str) = name of class. ie. 'polygons'
 			widget (str)(obj) = widget, widget's objectName, or method name.
 
-		returns:
+		:Return:
 			if widget: corresponding method object to given widget.
 			else: all of the methods associated to the given ui name as a list.
 
@@ -1065,12 +1067,12 @@ class Switchboard(QtCore.QObject):
 
 	def getDocString(self, name, widgetName, first_line_only=True, unformatted=False):
 		'''
-		args:
+		:Parameters:
 			name (str) = optional name of class. ie. 'polygons'. else, use current name.
 			widgetName (str) = name of method. ie. 'b001'
 			unformatted = bool return entire unedited docString
 
-		returns:
+		:Return:
 			if unformatted: the entire stored docString
 			else: edited docString; name of method
 		'''
@@ -1103,14 +1105,14 @@ class Switchboard(QtCore.QObject):
 		Get the previously called ui name string, or a list of ui name strings ordered by use.
 		It does so by pulling from the 'name' list which keeps a list of the ui names as they are called. ie. ['previousName2', 'previousName1', 'currentName']
 
-		args:
+		:Parameters:
 			previousIndex (bool) = Return the index of the last valid previously opened ui name.
 			allowDuplicates (bool) = Applicable when returning as_list. Allows for duplicate names in the returned list.
 			omitLevel (int)(list) = Remove instances of the given ui level(s) from the results. Default is [] which omits nothing.
 			allowCurrent (bool) = Allow the currentName. Default is off.
 			as_list (bool) = Returns the full list of previously called names. By default duplicates are removed.
 
-		returns:
+		:Return:
 			with no arguments given - string name of previously opened ui.
 			if previousIndex: int - index of previously opened ui
 			if as_list: returns [list of string names]
@@ -1149,12 +1151,12 @@ class Switchboard(QtCore.QObject):
 		'''
 		Get previous commands and relevant information.
 
-		args:
+		:Parameters:
 			docString (bool) = return the docString of last command. Default is off.
 			method (bool) = return the method of last command. Default is off.
 			toolTip (bool) = return the commands toolTip.
 
-		returns:
+		:Return:
 			(str) if docString: 'string' description (derived from the last used command method's docString) (as_list: [string list] all docStrings, in order of use)
 			(obj) if method: method of last used command. when combined with as_list; [<method object> list} all methods, in order of use)
 			(str) if toolTip: the commands toolTip.
@@ -1212,12 +1214,12 @@ class Switchboard(QtCore.QObject):
 
 	def prevCamera(self, docString=False, method=False, allowCurrent=False, as_list=False):
 		'''
-		args:
+		:Parameters:
 			docString (bool) = return the docString of last camera command. Default is off.
 			method (bool) = return the method of last camera command. Default is off.
 			allowCurrent (bool) = allow the current camera. Default is off.
 
-		returns:
+		:Return:
 			if docString: 'string' description (derived from the last used camera command's docString) (as_list: [string list] all docStrings, in order of use)
 			if method: method of last used camera command. (as_list: [<method object> list} all methods, in order of use)
 			if as_list: list of lists with <method object> as first element and <docString> as second. ie. [[<v001>, 'camera: persp']]
@@ -1265,10 +1267,10 @@ class Switchboard(QtCore.QObject):
 		'''
 		Protect given object from garbage collection.
 
-		args:
+		:Parameters:
 			obj (obj) = obj to add to the protected list.
 
-		returns:
+		:Return:
 			(list) of protected objects.
 		'''
 		if not 'gcProtect' in self.sbDict:
@@ -1287,13 +1289,13 @@ class Switchboard(QtCore.QObject):
 		'''
 		Get objects from any nested object in _nested_dict using a given key or value.
 
-		args:
+		:Parameters:
 			obj (key)(value) = Key or Value. The object to get the 'type_' of return value from.
 			type_ (str) = Desired return type. valid values are: 'value', 'valuesFromKey', 'keysFromValue', 'namesFromValue'
 			_nested_dict (dict) = internal use. default is sbDict
 			_nested_list (list) = internal use.
 
-		returns:
+		:Return:
 			(list) depending on the specified type.
 
 		ex. call:
@@ -1326,15 +1328,15 @@ class Switchboard(QtCore.QObject):
 		'''
 		Get all parent keys from a nested value.
 
-		args:
+		:Parameters:
 			value (value) = The nested value to get keys for.
 			_nested_dict (dict) = internal use.
 
-		returns:
+		:Return:
 			(list) parent keys
 
 		ex. call:
-		getParentKeys('cmb002') returns all parent keys of the given value. ex. ['polygons', 'widgets', '<widgets.QComboBox_.QComboBox_ object at 0x0000016B6C078908>', 'widgetName'] ...
+		getParentKeys('cmb002') returns all parent keys of the given value. ex. ['polygons', 'widgets', '<widgets.TkComboBox.TkComboBox object at 0x0000016B6C078908>', 'widgetName'] ...
 		'''
 		if _nested_dict is None:
 			_nested_dict = self.sbDict
@@ -1358,10 +1360,10 @@ class Switchboard(QtCore.QObject):
 		level 2: sub_menus
 		level 3: main_menus
 
-		args:
+		:Parameters:
 			name (str)(obj) = The ui name or ui object to get level of. ie. 'polygons' or <polygons>
 
-		returns:
+		:Return:
 			ui level as an integer.
 		'''
 		if not name:
@@ -1384,11 +1386,11 @@ class Switchboard(QtCore.QObject):
 		ex. prefix('b023') returns 'b'
 		if the second 'prefix' arg is given, then the method checks if the given objectName has the prefix, and the return value is bool.
 
-		args:
+		:Parameters:
 			widget (str)(obj) = widget or it's objectName.
 			prefix (str)(list) = optional; check if the given objectName startwith this prefix.
 
-		returns:
+		:Return:
 			if prefix arg given:
 				(bool) - True if correct format else; False.
 			else:
@@ -1440,10 +1442,10 @@ class Switchboard(QtCore.QObject):
 		'''
 		Convert a given obj to a list if it isn't a list, set, or tuple already.
 
-		args:
+		:Parameters:
 			x () = unknown object type.
 
-		returns:
+		:Return:
 			(list)
 		'''
 		if not isinstance(x, (list,set,tuple)):
@@ -1456,11 +1458,11 @@ class Switchboard(QtCore.QObject):
 		'''
 		Get the parent widget at the top of the hierarchy for the given widget.
 
-		args:
+		:Parameters:
 			widget (obj) = QWidget
 			index (int) = (optional) index. Last index is top level.
 
-		returns:
+		:Return:
 			(list)
 		'''
 		parentWidgets=[]
@@ -1478,11 +1480,11 @@ class Switchboard(QtCore.QObject):
 		'''
 		Get the parent widget at the top of the hierarchy for the given widget.
 
-		args:
+		:Parameters:
 			widget (obj) = QWidget
 			index (int) = (optional) index. Last index is top level.
 
-		returns:
+		:Return:
 			(QWidget)
 		'''
 		return self.getParentWidgets[index]
@@ -1493,10 +1495,10 @@ class Switchboard(QtCore.QObject):
 		'''
 		Get Qt window/s
 
-		args:
+		:Parameters:
 			name (str) = optional name of window (widget.objectName)
 
-		returns:
+		:Return:
 			if name: corresponding <window object>
 			else: return a dictionary of all windows {windowName:window}
 		'''
@@ -1512,10 +1514,10 @@ class Switchboard(QtCore.QObject):
 		'''
 		Get Qt widget/s
 
-		args:
+		:Parameters:
 			name (str) = optional name of widget (widget.objectName)
 
-		returns:
+		:Return:
 			if name: corresponding <widget object>
 			else: return a dictionary of all widgets {objectName:widget}
 		'''
@@ -1576,9 +1578,9 @@ sbDict={
 				'ui': '<polygons ui object>',
 				'uiLevel': 3,
 				'size': [210, 480],
-				'widgets': {'<widgets.QComboBox_.QComboBox_ object at 0x0000016B6C078908>': {
+				'widgets': {'<widgets.TkComboBox.TkComboBox object at 0x0000016B6C078908>': {
 									'widgetName': 'cmb002', 
-									'widgetType': 'QComboBox_', 
+									'widgetType': 'TkComboBox', 
 									'derivedType': 'QComboBox', 
 									'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000016B62BC5780>',
 									'prefix':'cmb', 
@@ -1596,18 +1598,18 @@ sbDict = {
 'materials': {
 	'widgets': {
 		'<PySide2.QtWidgets.QVBoxLayout object at 0x0000000003D07208>': {'widgetType': 'QVBoxLayout', 'widgetName': 'verticalLayout_2', 'derivedType': 'QVBoxLayout', 'signalInstance': None, 'docString': None, 'prefix': None, 'method': None}, 
-		'<widgets.qToolButton_.QToolButton_ object at 0x0000000003D04E08>': {'widgetType': 'QToolButton_', 'widgetName': 'tb002', 'derivedType': 'QToolButton', 'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000000002A463D8>', 'docString': None, 'prefix': 'tb', 'method': '<bound method Materials.wrapper of <tk_slots_max_materials.Materials object at 0x0000000003D547C8>>'}, 
+		'<widgets.tkToolButton.TkToolButton object at 0x0000000003D04E08>': {'widgetType': 'TkToolButton', 'widgetName': 'tb002', 'derivedType': 'QToolButton', 'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000000002A463D8>', 'docString': None, 'prefix': 'tb', 'method': '<bound method Materials.wrapper of <tk_slots_max_materials.Materials object at 0x0000000003D547C8>>'}, 
 		'<PySide2.QtWidgets.QGroupBox object at 0x0000000003D07248>': {'widgetType': 'QGroupBox', 'widgetName': 'group000', 'derivedType': 'QGroupBox', 'signalInstance': None, 'docString': None, 'prefix': 'group', 'method': None}, 
 		'<PySide2.QtWidgets.QPushButton object at 0x0000000003D07288>': {'widgetType': 'QPushButton', 'widgetName': 'b002', 'derivedType': 'QPushButton', 'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000000002A46390>', 'docString': None, 'prefix': 'b', 'method': '<bound method Materials.wrapper of <tk_slots_max_materials.Materials object at 0x0000000003D547C8>>'}, 
-		'<widgets.qToolButton_.QToolButton_ object at 0x0000000003D04FC8>': {'widgetType': 'QToolButton_', 'widgetName': 'tb001', 'derivedType': 'QToolButton', 'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000000002A46408>', 'docString': '\n\t\tStored Material Options\n\t\t', 'prefix': 'tb', 'method': '<bound method Materials.tb001 of <tk_slots_max_materials.Materials object at 0x0000000003D547C8>>'}, 
+		'<widgets.tkToolButton.TkToolButton object at 0x0000000003D04FC8>': {'widgetType': 'TkToolButton', 'widgetName': 'tb001', 'derivedType': 'QToolButton', 'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000000002A46408>', 'docString': '\n\t\tStored Material Options\n\t\t', 'prefix': 'tb', 'method': '<bound method Materials.tb001 of <tk_slots_max_materials.Materials object at 0x0000000003D547C8>>'}, 
 		'<PySide2.QtWidgets.QWidget object at 0x0000000003D070C8>': {'widgetType': 'QWidget', 'widgetName': 'mainWindow', 'derivedType': 'QWidget', 'signalInstance': None, 'docString': None, 'prefix': 'mainWindow', 'method': None}, 
-		'<widgets.qProgressBar_.QProgressBar_ object at 0x0000000003D07088>': {'widgetType': 'QProgressBar_', 'widgetName': 'progressBar', 'derivedType': 'QProgressBar', 'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000000002A463F0>', 'docString': None, 'prefix': 'progressBar', 'method': None}, 
-		'<widgets.qComboBox_.QComboBox_ object at 0x0000000003D04F08>': {'widgetType': 'QComboBox_', 'widgetName': 'cmb002', 'derivedType': 'QComboBox', 'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000000002A46378>', 'docString': '\n\t\tMaterial list\n\n\t\targs:\n\t\t\tindex (int) = parameter on activated, currentIndexChanged, and highlighted signals.\n\t\t', 'prefix': 'cmb', 'method': '<bound method Materials.cmb002 of <tk_slots_max_materials.Materials object at 0x0000000003D547C8>>'}, 
-		'<widgets.qPushButton_Draggable.QPushButton_Draggable object at 0x0000000003D04D88>': {'widgetType': 'QPushButton_Draggable', 'widgetName': 'pin', 'derivedType': 'QPushButton', 'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000000002A463A8>', 'docString': '\n\t\tContext menu\n\t\t', 'prefix': 'pin', 'method': '<bound method Materials.pin of <tk_slots_max_materials.Materials object at 0x0000000003D547C8>>'}, 
+		'<widgets.tkProgressBar.TkProgressBar object at 0x0000000003D07088>': {'widgetType': 'TkProgressBar', 'widgetName': 'progressBar', 'derivedType': 'QProgressBar', 'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000000002A463F0>', 'docString': None, 'prefix': 'progressBar', 'method': None}, 
+		'<widgets.tkComboBox.TkComboBox object at 0x0000000003D04F08>': {'widgetType': 'TkComboBox', 'widgetName': 'cmb002', 'derivedType': 'QComboBox', 'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000000002A46378>', 'docString': '\n\t\tMaterial list\n\n\t\t:Parameters:\n\t\t\tindex (int) = parameter on activated, currentIndexChanged, and highlighted signals.\n\t\t', 'prefix': 'cmb', 'method': '<bound method Materials.cmb002 of <tk_slots_max_materials.Materials object at 0x0000000003D547C8>>'}, 
+		'<widgets.tkPushButton_Draggable.TkPushButton_Draggable object at 0x0000000003D04D88>': {'widgetType': 'TkPushButton_Draggable', 'widgetName': 'pin', 'derivedType': 'QPushButton', 'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000000002A463A8>', 'docString': '\n\t\tContext menu\n\t\t', 'prefix': 'pin', 'method': '<bound method Materials.pin of <tk_slots_max_materials.Materials object at 0x0000000003D547C8>>'}, 
 		'<PySide2.QtWidgets.QGridLayout object at 0x0000000003D07148>': {'widgetType': 'QGridLayout', 'widgetName': 'gridLayout_2', 'derivedType': 'QGridLayout', 'signalInstance': None, 'docString': None, 'prefix': None, 'method': None}, 
 		'<PySide2.QtWidgets.QHBoxLayout object at 0x0000000003D07188>': {'widgetType': 'QHBoxLayout', 'widgetName': 'horizontalLayout', 'derivedType': 'QHBoxLayout', 'signalInstance': None, 'docString': None, 'prefix': 'horizontalLayout', 'method': None}, 
 		'<PySide2.QtWidgets.QVBoxLayout object at 0x0000000003D071C8>': {'widgetType': 'QVBoxLayout', 'widgetName': 'verticalLayout', 'derivedType': 'QVBoxLayout', 'signalInstance': None, 'docString': None, 'prefix': 'verticalLayout', 'method': None}, 
-		'<widgets.qToolButton_.QToolButton_ object at 0x0000000003D04E88>': {'widgetType': 'QToolButton_', 'widgetName': 'tb000', 'derivedType': 'QToolButton', 'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000000002A46420>', 'docString': None, 'prefix': 'tb', 'method': '<bound method Materials.wrapper of <tk_slots_max_materials.Materials object at 0x0000000003D547C8>>'}, 
+		'<widgets.tkToolButton.TkToolButton object at 0x0000000003D04E88>': {'widgetType': 'TkToolButton', 'widgetName': 'tb000', 'derivedType': 'QToolButton', 'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000000002A46420>', 'docString': None, 'prefix': 'tb', 'method': '<bound method Materials.wrapper of <tk_slots_max_materials.Materials object at 0x0000000003D547C8>>'}, 
 		'<PySide2.QtWidgets.QWidget object at 0x0000000003D07108>': {'widgetType': 'QWidget', 'widgetName': 'layoutWidget_2', 'derivedType': 'QWidget', 'signalInstance': None, 'docString': None, 'prefix': None, 'method': None}
 		}, 
 	'size': [256, 182], 
@@ -1634,10 +1636,10 @@ sbDict = {
 # 	'''
 # 	Check if a nested key exists .
 
-# 	args:
+# 	:Parameters:
 # 		(str) dict keys in order of hierarchy.  ie. 'polygons', 'widgets', 'b001', 'method'
 
-# 	returns:
+# 	:Return:
 # 		(bool)
 # 	'''
 # 	if len(args)==1:
@@ -1665,9 +1667,9 @@ sbDict = {
 	# 	'''
 	# 	Get all widgets for a ui.
 
-	# 	args:
+	# 	:Parameters:
 	# 		name (str) = name of ui. ie. 'polygons'. If no name is given, the current ui will be used.
-	# 	returns:
+	# 	:Return:
 	# 		all widgets for the given ui.
 	# 	'''
 	# 	return self.getWidget(name=name)
@@ -1678,7 +1680,7 @@ sbDict = {
 	# 	'''
 	# 	Get previous names as a list (containing duplicates).
 
-	# 	returns:
+	# 	:Return:
 	# 		list
 	# 	'''
 	# 	return self.previousName(as_list=True, allowDuplicates=True)
@@ -1689,7 +1691,7 @@ sbDict = {
 	# 	'''
 	# 	Get previous names as a list (duplicates removed).
 
-	# 	returns:
+	# 	:Return:
 	# 		list
 	# 	'''
 	# 	return self.previousName(allowLevel0=1, as_list=1)
@@ -1698,9 +1700,9 @@ sbDict = {
 # 	'''
 # 	Get the ui name from any object existing in 'widgets'.
 
-# 	args:
+# 	:Parameters:
 # 		obj = <object> - 
-# 	returns:
+# 	:Return:
 # 		 'string' - the corresponding method name from the given object.
 # 		 ex. 'polygons' from <widget>
 # 	'''

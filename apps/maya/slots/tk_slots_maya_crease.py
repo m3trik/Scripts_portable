@@ -32,7 +32,7 @@ class Crease(Init):
 		pin = self.crease.pin
 
 		if state is 'setMenu':
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya Crease Editors')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='Maya Crease Editors')
 			return
 
 

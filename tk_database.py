@@ -10,7 +10,7 @@ class Database():
 	'''
 	def __init__(self, database):
 		'''
-		args:
+		:Parameters:
 			database (str) = An absoute path to the database file. 
 							':memory:' will create a new database that resides in RAM instead of a file on disk.
 							If you just give a filename, the program will create the database file in the current working directory.
@@ -30,7 +30,7 @@ class Database():
 		'''
 		Create a table.
 
-		args:
+		:Parameters:
 			tables (str)(list) = SQL create table statement(s).
 		'''
 		if not isinstance(tables, (set, tuple, list)):
@@ -48,12 +48,12 @@ class Database():
 		'''
 		Insert values into a table.
 
-		args:
+		:Parameters:
 			table (str) = table.
 			args (list) = column values.
 			kwargs (dict) = column:value pairs for assigning values to specific columns.
 
-		returns:
+		:Return:
 			(int) the value generated for a column during the last INSERT or, UPDATE operation.
 		'''
 		columns = '' #omit the columns argument if no columns are given.
@@ -77,7 +77,7 @@ class Database():
 		'''
 		Update all values of a table, or those matching a given condition.
 
-		args:
+		:Parameters:
 			table (str) = table. 
 			condition (str) = SQL condition statement. You can combine any number of conditions using AND or OR operators.
 			kwargs (dict) = column:value pairs for assigning values to specific columns.
@@ -109,7 +109,7 @@ class Database():
 		'''
 		Select all of a table's content, or those matching a given condition.
 
-		args:
+		:Parameters:
 			table (str) = The table in which to perform the selection.
 			condition (str) = SQL condition statement. You can combine any number of conditions using AND or OR operators.
 		'''
@@ -129,7 +129,7 @@ class Database():
 		'''
 		Delete all rows, or those matching a given condition.
 
-		args:
+		:Parameters:
 			table (str) = The table in which to perform the delete operation.
 			condition (str) = SQL condition statement. You can combine any number of conditions using AND or OR operators.
 		'''

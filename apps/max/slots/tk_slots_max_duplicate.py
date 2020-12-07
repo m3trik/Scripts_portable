@@ -28,7 +28,7 @@ class Duplicate(Init):
 		pin = self.duplicate.pin
 
 		if state is 'setMenu':
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb001', setToolTip='')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb001', setToolTip='')
 
 			return
 
@@ -214,9 +214,9 @@ class Duplicate(Init):
 	def getComponentPoint(component, alignToNormal=False):
 		'''
 		get the center point from the given component.
-		args: alignToNormal=bool - 
+		:Parameters: alignToNormal=bool - 
 
-		returns: [float list] - x, y, z  coordinate values.
+		:Return: [float list] - x, y, z  coordinate values.
 		'''
 		if ".vtx" in str(component):
 			x = pm.polyNormalPerVertex (component, query=1, x=1)

@@ -7,7 +7,7 @@ from tk_switchboard import Switchboard
 from tk_overlay import OverlayFactoryFilter
 from tk_styleSheet import StyleSheet
 from tk_childEvents import EventFactoryFilter
-from widgets.qPushButton_ import QPushButton_
+from widgets.tkPushButton import TkPushButton
 
 
 
@@ -23,7 +23,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 	The various ui's are set by calling 'setUi' with the intended ui name string. ex. Tk().setUi('polygons')
 
-	args:
+	:Parameters:
 		parent (obj) = The main application's top level window.
 	'''
 
@@ -53,7 +53,7 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		Set the stacked Widget's index.
 
-		args:
+		:Parameters:
 			name (str) = name of ui.
 		'''
 		ui = self.sb.getUi(name, setAsCurrent=True) #Get the ui of the given name, and set it as the current ui in the switchboard module, which amoung other things, sets connections.
@@ -90,7 +90,7 @@ class Tk(QtWidgets.QStackedWidget):
 		Set the stacked widgets index to the submenu associated with the given widget.
 		Positions the new ui to line up with the previous ui's button that called the new ui.
 
-		args:
+		:Parameters:
 			widget (QWidget) = the widget that called this method.
 			name (str) = name of ui.
 		'''
@@ -125,10 +125,10 @@ class Tk(QtWidgets.QStackedWidget):
 		Sets the parent ui of a submenu, if it has not been set before.
 		Setting the parent ui first constructs dependancies needed for the submenu.
 
-		args:
+		:Parameters:
 			name (str) = name of the child ui. ie. 'polygons_component_submenu'
 
-		returns:
+		:Return:
 			(obj) the parent ui.
 		'''
 		parentUi = self.sb.getUi(name, level=3) #get the parent ui.
@@ -141,7 +141,7 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		Remove the last entry from the widget and draw paths for the given ui name.
 
-		args:
+		:Parameters:
 			name (str) = name of ui to remove entry for.
 		'''
 		names = [i[2] for i in self.widgetPath] #get the ui names in widgetPath. ie. 'edit_submenu'
@@ -157,16 +157,16 @@ class Tk(QtWidgets.QStackedWidget):
 		Initializes the new buttons by adding them to the switchboard dict, setting connections, event filters, and stylesheets.
 		The previous widget information is derived from the widget and draw paths.
 
-		args:
+		:Parameters:
 			name (str) = name of ui to duplicate the widgets to.
 		'''
-		w0 = QPushButton_(parent=self.sb.getUi(name), setObjectName='return_', setSize_=(45, 45), setPosition_=self.drawPath[0]) #create an invisible return button at the start point.
+		w0 = TkPushButton(parent=self.sb.getUi(name), setObjectName='return_', setSize_=(45, 45), setPosition_=self.drawPath[0]) #create an invisible return button at the start point.
 		self.childEvents.addWidgets(name, w0) #initialize the widget to set things like the event filter and styleSheet.
 
 		if self.sb.getUiLevel(self.sb.previousName(omitLevel=3))==2: #if submenu: recreate widget/s from the previous ui that are in the current path.
 			for i in range(2, len(self.widgetPath)+1): #for index in widgetPath starting at 2:
 				prevWidget = self.widgetPath[-i][0] #assign the index a neg value to count from the back of the list (starting at -2).
-				w1 = QPushButton_(parent=self.sb.getUi(name), copy_=prevWidget, setPosition_=self.widgetPath[-i][1], setVisible=True)
+				w1 = TkPushButton(parent=self.sb.getUi(name), copy_=prevWidget, setPosition_=self.widgetPath[-i][1], setVisible=True)
 				self.childEvents.addWidgets(name, w1) #initialize the widget to set things like the event filter and styleSheet.
 				self.childEvents._mouseOver.append(w1)
 				w1.grabMouse() #set widget to receive mouse events.
@@ -179,7 +179,7 @@ class Tk(QtWidgets.QStackedWidget):
 	# ------------------------------------------------
 	def keyPressEvent(self, event):
 		'''
-		args:
+		:Parameters:
 			event = <QEvent>
 		'''
 		if event.key()==self.key_repeatLastCommand and not event.isAutoRepeat():
@@ -190,7 +190,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 	def keyReleaseEvent(self, event):
 		'''
-		args:
+		:Parameters:
 			event = <QEvent>
 		'''
 		if event.key()==self.key_show and not event.isAutoRepeat():
@@ -201,7 +201,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 	def mousePressEvent(self, event):
 		'''
-		args:
+		:Parameters:
 			event = <QEvent>
 		'''
 		if self.sb.uiLevel<3:
@@ -225,7 +225,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 	def mouseMoveEvent(self, event):
 		'''
-		args:
+		:Parameters:
 			event = <QEvent>
 		'''
 		if self.sb.uiLevel<3:
@@ -236,7 +236,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 	def mouseReleaseEvent(self, event):
 		'''
-		args:
+		:Parameters:
 			event = <QEvent>
 		'''
 		if self.sb.uiLevel>0 and self.sb.uiLevel<3:
@@ -247,7 +247,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 	def mouseDoubleClickEvent(self, event):
 		'''
-		args:
+		:Parameters:
 			event = <QEvent>
 		'''
 		if event.button()==QtCore.Qt.RightButton:
@@ -266,7 +266,7 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		Called on focus events.
 
-		args:
+		:Parameters:
 			old (obj) = The previously focused widget.
 			new (obj) = The current widget with focus.
 		'''
@@ -279,7 +279,7 @@ class Tk(QtWidgets.QStackedWidget):
 		'''
 		Prevents hide event under certain circumstances.
 
-		args:
+		:Parameters:
 			force (bool) = override preventHide.
 		'''
 		if force or not self.preventHide:
@@ -288,7 +288,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 	def hideEvent(self, event):
 		'''
-		args:
+		:Parameters:
 			event = <QEvent>
 		'''
 		if __name__ == "__main__":
@@ -299,7 +299,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 	def showEvent(self, event):
 		'''
-		args:
+		:Parameters:
 			event = <QEvent>
 		'''
 		self.sb.gcProtect(clear=True) #clear any garbage protected items.

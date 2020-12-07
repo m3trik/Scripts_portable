@@ -10,7 +10,7 @@ from maya.OpenMayaUI import MQtUtil
 # dependancies: scriptEditorOutput.mel
 class SyntaxHighlighter(QtGui.QSyntaxHighlighter):
 	'''
-	args:
+	:Parameters:
 		parent=parent's widget
 	'''
 	def __init__(self, parent):
@@ -21,7 +21,7 @@ class SyntaxHighlighter(QtGui.QSyntaxHighlighter):
 	def highlightBlock(self, text):
 		'''
 		apply color-syntaxing to text
-		args:
+		:Parameters:
 			text=text input
 		'''
 		rules = [(QtGui.QColor( 90,  90,  90), r"^(//|#).+$"),         #grey 90, 90, 90

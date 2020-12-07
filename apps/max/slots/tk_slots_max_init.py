@@ -4,16 +4,10 @@ import os
 
 from PySide2 import QtGui, QtWidgets, QtCore
 
-from widgets.qMenu_ import QMenu_
-from widgets.qLabel_ import QLabel_
-from widgets.qComboBox_ import QComboBox_
-from widgets.qCheckBox_ import QCheckBox_
-from widgets.qToolButton_ import QToolButton_
-from widgets.qWidget_MultiWidget import QWidget_MultiWidget as MultiWidget
-
+from ui import widgets
 from tk_slots_ import Slots
 
-#3ds Max dependancies
+# 3ds Max dependancies
 try:
 	import MaxPlus
 	from pymxs import runtime as rt
@@ -133,12 +127,12 @@ class Init(Slots):
 		'''
 		Get node attributes and their corresponding values as a dict.
 
-		args:
+		:Parameters:
 			node (obj) = Transform node.
 			include (list) = Attributes to include. All other will be omitted. Exclude takes dominance over include. Meaning, if the same attribute is in both lists, it will be excluded.
 			exclude (list) = Attributes to exclude from the returned dictionay. ie. [u'Position',u'Rotation',u'Scale',u'renderable',u'isHidden',u'isFrozen',u'selected']
 
-		returns:
+		:Return:
 			(dict) {'string attribute': current value}
 
 		# print (rt.showProperties(obj))
@@ -160,7 +154,7 @@ class Init(Slots):
 		'''
 		Set history node attributes using the transform node.
 
-		args:
+		:Parameters:
 			node (obj) = Transform node.
 			attributes (dict) = Attributes and their correponding value to set. ie. {'string attribute': value}
 		'''
@@ -181,7 +175,7 @@ class Init(Slots):
 	@staticmethod
 	def selectFaceLoop(tolerance, includeOpenEdges=False):
 		'''
-		args:
+		:Parameters:
 			tolerance (float) = Face normal tolerance.
 			includeOpenEdges (bool) = 
 		'''
@@ -246,11 +240,11 @@ class Init(Slots):
 		'''
 		Get edges between min and max angle.
 
-		args:
+		:Parameters:
 			minAngle (float) = minimum search angle tolerance.
 			maxAngle (float) = maximum search angle tolerance.
 
-		returns:
+		:Return:
 			(list) edges within the given range.
 		'''
 		edgelist=[]
@@ -275,10 +269,10 @@ class Init(Slots):
 		'''
 		Detach editable_mesh elements into new objects.
 
-		args:
+		:Parameters:
 			obj (obj) = polygon object.
 
-		returns:
+		:Return:
 			(list) detached objects.
 		'''
 		elementArray = []
@@ -311,7 +305,7 @@ class Init(Slots):
 		'''
 		Gets the currently selected objects or object components.
 
-		returns:
+		:Return:
 			(array) current selection as a maxscript array.
 		'''
 		sel = rt.selection
@@ -338,10 +332,10 @@ class Init(Slots):
 		'''
 		Get a list of vertices of a given object whether it is an editable mesh or polygon.
 
-		args:
+		:Parameters:
 			obj (obj) = polygon or mesh object.
 
-		returns:
+		:Return:
 			(list) vertex list.		
 		'''
 		try:
@@ -357,10 +351,10 @@ class Init(Slots):
 		'''
 		Get a list of the selected vertices of a given object whether it is an editable mesh or polygon.
 
-		args:
+		:Parameters:
 			obj (obj) = polygon or mesh object.
 
-		returns:
+		:Return:
 			(list) vertex list.		
 		'''
 		try:
@@ -376,10 +370,10 @@ class Init(Slots):
 		'''
 		Get a list of faces of a given object whether it is an editable mesh or polygon.
 
-		args:
+		:Parameters:
 			obj (obj) = polygon or mesh object.
 
-		returns:
+		:Return:
 			(list) edge list.		
 		'''
 		try:
@@ -395,10 +389,10 @@ class Init(Slots):
 		'''
 		Get a list of the selected edges of a given object whether it is an editable mesh or polygon.
 
-		args:
+		:Parameters:
 			obj (obj) = polygon or mesh object.
 
-		returns:
+		:Return:
 			(list) edge list.		
 		'''
 		try:
@@ -414,10 +408,10 @@ class Init(Slots):
 		'''
 		Get a list of faces of a given object whether it is an editable mesh or polygon.
 
-		args:
+		:Parameters:
 			obj (obj) = polygon or mesh object.
 
-		returns:
+		:Return:
 			(list) facet list.		
 		'''
 		try:
@@ -433,10 +427,10 @@ class Init(Slots):
 		'''
 		Get a list of the selected faces of a given object whether it is an editable mesh or polygon.
 
-		args:
+		:Parameters:
 			obj (obj) = polygon or mesh object.
 
-		returns:
+		:Return:
 			(list) facet list.		
 		'''
 		try:
@@ -456,7 +450,7 @@ class Init(Slots):
 		create edge alignment tool and then use subObjectLevel check to call either that function or this one from the same buttons.
 		to save ui space; have a single align button, x, y, z, and align 'all' checkboxes and a tolerance textfield.
 
-		args:
+		:Parameters:
 			selection (list) = vertex selection
 			mode (int) = valid values are: 0 (YZ), 1 (XZ), 2 (XY), 3 (X), 4 (Y), 5 (Z)
 
@@ -559,7 +553,7 @@ class Init(Slots):
 	@staticmethod
 	def scaleObject (size, x, y ,z):
 		'''
-		args:
+		:Parameters:
 			size (float) = Scale amount
 			x (bool) = Scale in the x direction.
 			y (bool) = Scale in the y direction.
@@ -711,7 +705,7 @@ class Init(Slots):
 		'''
 		Delete components of the given mesh object along the specified axis.
 
-		args:
+		:Parameters:
 			obj (obj) = Mesh object.
 			axis (str) = Axis to delete on. ie. '-x' Components belonging to the mesh object given in the 'obj' arg, that fall on this axis, will be deleted. 
 		'''
@@ -728,11 +722,11 @@ class Init(Slots):
 	@staticmethod
 	def bitArrayToArray(bitArray):
 		'''
-		args:
+		:Parameters:
 			bitArray=bit array
 				*or list of bit arrays
 
-		returns:
+		:Return:
 			(list) containing values of the indices of the on (True) bits.
 		'''
 		if len(bitArray):
@@ -749,7 +743,7 @@ class Init(Slots):
 		'''
 		Alternate bitArray to array function.
 
-		args:
+		:Parameters:
 			bitArray=bit array
 		
 		ie. rt.bitArrayToArray(bitArray)
@@ -765,7 +759,7 @@ class Init(Slots):
 	@staticmethod
 	def convertToEditPoly(prompt=False):
 		'''
-		args:
+		:Parameters:
 			prompt=bool - prompt user before execution
 		'''
 		for obj in rt.selection:
@@ -809,7 +803,7 @@ class Init(Slots):
 		'''
 		Toggle override all materials in the scene.
 
-		args:
+		:Parameters:
 			checker (bool) = Override with UV checkered material.
 		'''
 		state = Slots.cycle([0,1], 'OverrideMateridal') #toggle 0/1
@@ -826,10 +820,10 @@ class Init(Slots):
 	@staticmethod
 	def displayWireframeOnMesh(state=None, query=False):
 		'''
-		args:
+		:Parameters:
 			state=bool - display wireframe on mesh in viewport True/False
 			query=bool - return current state
-		returns:
+		:Return:
 			bool (current state) if query
 		'''
 		currentState = MaxPlus.ViewportManager.GetActiveViewportShowEdgeFaces()
@@ -889,7 +883,7 @@ class Init(Slots):
 	@staticmethod
 	def setSubObjectLevel(level):
 		'''
-		args:
+		:Parameters:
 			level (int) = set component mode. 0(object), 1(vertex), 2(edge), 3(border), 4(face), 5(element)
 		'''
 		maxEval ('max modify mode') #set focus: modifier panel.
@@ -914,12 +908,12 @@ class Init(Slots):
 		'''
 		Gets (and sets (if needed)) the given modifer for the given object at the given index.
 		
-		args:
+		:Parameters:
 			obj = <object> - the object to add or retrieve the modifier from.
 			modifier (str) = modifier name.
 			index (int) = place modifier before given index. default is at the top of the stack.
 						Negative indices place the modifier from the bottom of the stack.
-		returns:
+		:Return:
 			modifier
 		'''
 		m = obj.modifiers[modifier] #check the stack for the given modifier.
@@ -962,7 +956,7 @@ class Init(Slots):
 		'''
 		Launch a popup window containing the given objects attributes.
 
-		args:
+		:Parameters:
 			obj (obj) = The object to get the attributes of.
 			include (list) = Attributes to include. All other will be omitted. Exclude takes dominance over include. Meaning, if the same attribute is in both lists, it will be excluded.
 			exclude (list) = Attributes to exclude from the returned dictionay. ie. [u'Position',u'Rotation',u'Scale',u'renderable',u'isHidden',u'isFrozen',u'selected']
@@ -983,7 +977,7 @@ class Init(Slots):
 	@Slots.message
 	def maxUiSetChecked(self, id, table, item, state=True, query=False):
 		'''
-		args:
+		:Parameters:
 			id (str) = actionMan ID
 			table (int) = actionMan table
 			item (int) = actionMan item number
@@ -1024,7 +1018,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	Separate a connected vertex of non-manifold geometry where the faces share a single vertex.
 
-	# 	args:
+	# 	:Parameters:
 	# 		obj (obj) = A polygon object.
 	# 		vertex (int) = A single vertex number of the given polygon object.
 	# 	'''
@@ -1072,7 +1066,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# def setComboBox(self, comboBox, index):
 	# 	'''
 	# 	Set the given comboBox's index using a text string.
-	# 	args:
+	# 	:Parameters:
 	# 		comboBox (str) = comboBox name (will also be used as the methods name).
 	# 		index = int or 'string' - text of the index to switch to.
 	# 	'''

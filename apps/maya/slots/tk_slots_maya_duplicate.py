@@ -28,7 +28,7 @@ class Duplicate(Init):
 		pin = self.duplicate.pin
 
 		if state is 'setMenu':
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='')
 
 			return
 
@@ -330,9 +330,9 @@ class Duplicate(Init):
 	def getInstances(object_=None):
 		'''
 		get any intances of given object, or if no object given, get all instanced objects in the scene.
-		args:
+		:Parameters:
 			object=<scene object>
-		returns:
+		:Return:
 			any instances.
 		'''
 		instances=[]

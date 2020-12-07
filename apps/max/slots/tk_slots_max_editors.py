@@ -20,7 +20,7 @@ class Editors(Init):
 		pin = self.editors.pin
 
 		if state is 'setMenu':
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='')
 			return
 
 
@@ -212,7 +212,7 @@ class Editors(Init):
 		'''
 		Get a maya widget from a given name.
 
-		args:
+		:Parameters:
 			name (str) = name of widget
 		'''
 		_name = '_'+name
@@ -228,12 +228,12 @@ class Editors(Init):
 		'''
 		Show, resize, and center the given editor.
 
-		args:
+		:Parameters:
 			name (str) = The name of the editor.
 			width (int) = The editor's desired width.
 			height (int) = The editor's desired height.
 
-		returns:
+		:Return:
 			(obj) The editor as a QWidget.
 		'''
 		w = self.getEditorWidget(name)

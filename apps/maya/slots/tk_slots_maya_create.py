@@ -33,7 +33,7 @@ class Create(Init):
 		pin = self.create.pin
 
 		if state is 'setMenu':
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='')
 			return
 
 
@@ -74,7 +74,7 @@ class Create(Init):
 		undo previous rotation and rotate on the specified axis.
 		uses an external rotation dictionary.
 
-		args:
+		:Parameters:
 			axis (str) = axis to rotate on. ie. '-x'
 			node (obj) = transform node.
 		'''
@@ -297,7 +297,7 @@ class Create(Init):
 	def createPrimitive(self, catagory1, catagory2):
 		'''
 		ie. createPrimitive('Polygons', 'Cube')
-		args:
+		:Parameters:
 			type1 (str) = 
 			type2 (str) = 
 		'''

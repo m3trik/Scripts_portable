@@ -17,7 +17,7 @@ class Edit(Init):
 		pin = self.edit.pin
 
 		if state is 'setMenu':
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya Editors')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='Maya Editors')
 			return
 
 
@@ -59,7 +59,7 @@ class Edit(Init):
 		tb = self.ui.tb000
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='All Geometry', setObjectName='chk005', setToolTip='Clean All scene geometry.')
-			tb.menu_.add(QCheckBox_, setText='Select Only', setObjectName='chk004', setTristate=True, setCheckState_=2, setToolTip='Select and/or Repair matching geometry. <br>0: Repair Only<br>1: Repair and Select<br>2: Select Only')
+			tb.menu_.add(widgets.TkCheckBox, setText='Select Only', setObjectName='chk004', setTristate=True, setCheckState_=2, setToolTip='Select and/or Repair matching geometry. <br>0: Repair Only<br>1: Repair and Select<br>2: Select Only')
 			tb.menu_.add('QCheckBox', setText='N-Gons', setObjectName='chk002', setChecked=True, setToolTip='Find N-gons.')
 			tb.menu_.add('QCheckBox', setText='Non-Manifold Geometry', setObjectName='chk017', setChecked=True, setToolTip='Check for nonmanifold polys.')
 			tb.menu_.add('QCheckBox', setText='Non-Manifold Vertex', setObjectName='chk021', setToolTip='A connected vertex of non-manifold geometry where the faces share a single vertex.')

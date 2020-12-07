@@ -11,7 +11,7 @@ if not app:
 # import maya.OpenMayaUI as OpenMayaUI
 
 from tk_ import Tk
-from widgets.qWidget_ProgressIndicator import QWidget_ProgressIndicator
+from widgets.tkWidget_ProgressIndicator import TkWidget_ProgressIndicator
 
 
 
@@ -19,7 +19,7 @@ class Tk_blender(Tk):
 	'''
 	Tk class overridden for use with Blender.
 
-	args:
+	:Parameters:
 		parent = Application top level window instance.
 	'''
 	def __init__(self, parent=None, preventHide=False, key_show=QtCore.Qt.Key_F12):
@@ -31,7 +31,7 @@ class Tk_blender(Tk):
 			except Exception as error:
 				print(self.__class__.__name__, error)
 
-		# progressIndicator = QWidget_ProgressIndicator()
+		# progressIndicator = TkWidget_ProgressIndicator()
 		# progressIndicator.start()
 
 		super().__init__(parent)
@@ -43,7 +43,7 @@ class Tk_blender(Tk):
 		'''
 		Get blender's main window object.
 
-		returns:
+		:Return:
 			(QWidget)
 		'''
 		main_window = QApplication.instance().blender_widget
@@ -53,7 +53,7 @@ class Tk_blender(Tk):
 
 	def showEvent(self, event):
 		'''
-		args:
+		:Parameters:
 			event = <QEvent>
 		'''
 
@@ -62,7 +62,7 @@ class Tk_blender(Tk):
 
 	def hideEvent(self, event):
 		'''
-		args:
+		:Parameters:
 			event = <QEvent>
 		'''
 		if __name__ == "__main__":

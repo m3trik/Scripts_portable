@@ -38,7 +38,7 @@ class Overlay(QtWidgets.QWidget):
 
 	def paintEvent(self, event):
 		'''
-		args:
+		:Parameters:
 			event=<QEvent>
 		'''
 		if self.parent.sb.uiLevel>0 and self.parent.sb.uiLevel<3:
@@ -79,7 +79,7 @@ class Overlay(QtWidgets.QWidget):
 
 	def mousePressEvent(self, event):
 		'''
-		args:
+		:Parameters:
 			event=<QEvent>
 		'''
 		# self.painter.eraseRect(self.rect())
@@ -90,7 +90,7 @@ class Overlay(QtWidgets.QWidget):
 
 	def mouseMoveEvent(self, event):
 		'''
-		args:
+		:Parameters:
 			event=<QEvent>
 		'''
 		self.mouseEventPos = event.pos()
@@ -117,7 +117,7 @@ class OverlayFactoryFilter(QtCore.QObject):
 
 	def eventFilter(self, widget, event):
 		'''
-		args:
+		:Parameters:
 			widget=<QWidget>
 			event=<QEvent>
 		'''

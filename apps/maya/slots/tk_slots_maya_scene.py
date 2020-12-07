@@ -22,7 +22,7 @@ class Scene(Init):
 		pin = self.parentUi.pin
 
 		if state is 'setMenu':
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='Maya Scene Editors')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='Maya Scene Editors')
 			return
 
 
@@ -55,7 +55,7 @@ class Scene(Init):
 
 	def getTrailingIntegers(self, string, increment=0):
 		'''
-		args: increment(int) = optional step amount
+		:Parameters: increment(int) = optional step amount
 
 		Returns 'string' - any integers from the end of the given string.
 		'''

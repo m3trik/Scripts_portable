@@ -38,7 +38,7 @@ class Polygons(Init):
 		pin = self.polygons.pin
 
 		if state is 'setMenu':
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='')
 			return
 
 
@@ -212,8 +212,13 @@ class Polygons(Init):
 		'''
 		tb = self.ui.tb005
 		if state is 'setMenu':
+			tb.menu_.add('QCheckBox', setText='Duplicate', setObjectName='chk014', setChecked=True, setToolTip='Duplicate any selected faces, leaving the originals.')
+			tb.menu_.add('QCheckBox', setText='Separate', setObjectName='chk015', setChecked=True, setToolTip='Separate mesh objects after detaching faces.')
 			# tb.menu_.add('QCheckBox', setText='Delete Original', setObjectName='chk007', setChecked=True, setToolTip='Delete original selected faces.')
 			return
+
+		duplicate = tb.menu_.chk014.isChecked()
+		separate = tb.menu_.chk015.isChecked()
 
 		vertexMask = pm.selectType (query=True, vertex=True)
 		edgeMask = pm.selectType (query=True, edge=True)
@@ -227,7 +232,13 @@ class Polygons(Init):
 			pm.mel.polySplitVertex()
 
 		elif facetMask:
-			extract = pm.polyChipOff(component_sel, ch=1, kft=1, dup=0, off=0)
+			extract = pm.polyChipOff(component_sel, ch=1, keepFacesTogether=1, dup=duplicate, off=0)
+			if separate:
+				try:
+					splitObjects = pm.polySeparate(component_sel)
+				except:
+					splitObjects = pm.polySeparate(pm.ls(component_sel, objectsOnly=1))
+			pm.select(splitObjects[-1])
 			return extract
 
 		else:

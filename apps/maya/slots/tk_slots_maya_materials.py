@@ -31,8 +31,8 @@ class Materials(Init):
 		pin = self.materials.pin
 
 		if state is 'setMenu':
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb001', setToolTip='Maya Material Editors')
-			pin.contextMenu.add(QLabel_, setText='Material Attributes', setObjectName='lbl004', setToolTip='Show the material attributes in the attribute editor.')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb001', setToolTip='Maya Material Editors')
+			pin.contextMenu.add(widgets.TkLabel, setText='Material Attributes', setObjectName='lbl004', setToolTip='Show the material attributes in the attribute editor.')
 			return
 
 
@@ -78,7 +78,7 @@ class Materials(Init):
 		'''
 		Material list
 
-		args:
+		:Parameters:
 			index (int) = parameter on activated, currentIndexChanged, and highlighted signals.
 		'''
 		cmb = self.materials.cmb002
@@ -86,10 +86,10 @@ class Materials(Init):
 		b = self.materials_submenu.b003
 
 		if index is 'setMenu':
-			cmb.contextMenu.add(QLabel_, setText='Open in Editor', setObjectName='lbl000', setToolTip='Open material in editor.')
-			cmb.contextMenu.add(QLabel_, setText='Rename', setObjectName='lbl001', setToolTip='Rename the current material.')
-			cmb.contextMenu.add(QLabel_, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current material.')
-			cmb.contextMenu.add(QLabel_, setText='Delete All Unused Materials', setObjectName='lbl003', setToolTip='Delete All unused materials.')
+			cmb.contextMenu.add(widgets.TkLabel, setText='Open in Editor', setObjectName='lbl000', setToolTip='Open material in editor.')
+			cmb.contextMenu.add(widgets.TkLabel, setText='Rename', setObjectName='lbl001', setToolTip='Rename the current material.')
+			cmb.contextMenu.add(widgets.TkLabel, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current material.')
+			cmb.contextMenu.add(widgets.TkLabel, setText='Delete All Unused Materials', setObjectName='lbl003', setToolTip='Delete All unused materials.')
 			cmb.beforePopupShown.connect(self.cmb002) #refresh comboBox contents before showing it's popup.
 			cmb.returnPressed.connect(lambda: self.lbl001(setEditable=False))
 			return
@@ -352,11 +352,11 @@ class Materials(Init):
 		'''
 		Get an icon with a color fill matching the given materials RBG value.
 
-		args:
+		:Parameters:
 			mat (obj)(str) = The material or the material's name.
 			size (list) = Desired icon size.
 
-		returns:
+		:Return:
 			(obj) pixmap icon.
 		'''
 		try:
@@ -437,11 +437,11 @@ class Materials(Init):
 		'''
 		Get All Materials from the current scene.
 
-		args:
+		:Parameters:
 			startingWith (list) = Filters material names starting with any of the strings in the given list. ie. ['ID_']
 			exclude (list) = Node types to exclude.
 
-		returns:
+		:Return:
 			(list) materials.
 		'''
 		materials = [m for m in pm.ls(mat=1, flatten=1) if filter(str(m.name()).startswith, startingWith) and not pm.nodeType(m) in exclude]
@@ -454,7 +454,7 @@ class Materials(Init):
 		'''
 		Get Maya Favorite Materials List.
 
-		returns:
+		:Return:
 			(list) materials.
 		'''
 		import maya.app.general.tlfavorites as _fav
@@ -472,10 +472,10 @@ class Materials(Init):
 		'''
 		Get the material from the selected face.
 
-		args:
+		:Parameters:
 			(str)(obj) = The obj with the material.
 
-		returns:
+		:Return:
 			(list) material
 		'''
 		pm.hyperShade(obj, shaderNetworksSelectMaterialNodes=1) #selects the material node 
@@ -489,11 +489,11 @@ class Materials(Init):
 		'''
 		Creates a random material.
 
-		args:
+		:Parameters:
 			name (str) = material name.
 			prefix (str) = Optional string to be appended to the beginning of the name.
 
-		returns:
+		:Return:
 			(obj) material
 		'''
 		import random

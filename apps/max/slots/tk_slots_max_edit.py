@@ -17,7 +17,7 @@ class Edit(Init):
 		pin = self.edit.pin
 
 		if state is 'setMenu':
-			pin.contextMenu.add(QComboBox_, setObjectName='cmb000', setToolTip='')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='')
 			return
 
 
@@ -171,10 +171,10 @@ class Edit(Init):
 		'''
 		Get a list of faces of a given object having more than four sides.
 
-		args:
+		:Parameters:
 			obj (obj) = polygonal object.
 
-		returns:
+		:Return:
 			(list) list containing any found N-Gons		
 		'''
 		faces = Init.getFaces(obj)
@@ -230,10 +230,10 @@ class Edit(Init):
 		'''
 		Get a list of isolated vertices of a given object.
 
-		args:
+		:Parameters:
 			obj (obj) = polygonal object.
 
-		returns:
+		:Return:
 			(list) list containing any found isolated verts.		
 		'''
 		vertices = Init.getVertices(obj) #get all vertices for the given object
@@ -252,7 +252,7 @@ class Edit(Init):
 		'''
 		Find mesh artifacts.
 
-		args:
+		:Parameters:
 			isolatedVerts (bool) = find vertices with two edges which fall below a specified angle.
 			edgeAngle (int) = used with isolatedVerts argument to specify the angle tolerance
 			nGons (bool) = search for n sided polygon faces.

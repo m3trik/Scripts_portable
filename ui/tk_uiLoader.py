@@ -9,6 +9,12 @@ from pydoc import locate
 import sys, os.path
 
 
+#globals
+UI_DIR = 'ui'
+WIDGET_DIR = 'widgets'
+MENU_DIR_PREFIX = 'level_'
+WIDGET_MODULE_PREFIX = 'tk'
+
 
 # ------------------------------------------------
 #	Load Dynamic Ui files
@@ -18,7 +24,7 @@ class UiLoader(QUiLoader):
 	Load and maintain a dict of loaded dynamic ui files and related info.
 
 	Ui files are searched for in the directory of this module.
-	Custom widget modules are searched for in a sub directory named 'widgets'. naming convention: <name capital first char> widget class inside <name lowercase first char>.py module. ie. QLabel_ class inside qLabel_.py module.
+	Custom widget modules are searched for in a sub directory named 'widgets'. naming convention: <name capital first char> widget class inside <name lowercase first char>.py module. ie. TkLabel class inside tkLabel.py module.
 
 	structure:
 		uiDict = {
@@ -37,8 +43,8 @@ class UiLoader(QUiLoader):
 		uiPath = os.path.dirname(os.path.abspath(__file__)) #get absolute path from dir of this module
 
 		# register any custom widgets.
-		widgetPath = os.path.join(os.path.dirname(uiPath), 'ui\\widgets') #get the path to the widget directory.
-		moduleNames = [file_.replace('.py','',-1) for file_ in os.listdir(widgetPath) if file_.startswith('q') and file_.endswith('.py')] #format names using the files in path.
+		widgetPath = os.path.join(os.path.dirname(uiPath), UI_DIR+'\\'+WIDGET_DIR) #get the path to the widget directory.
+		moduleNames = [file_.replace('.py','',-1) for file_ in os.listdir(widgetPath) if file_.startswith(WIDGET_MODULE_PREFIX) and file_.endswith('.py')] #format names using the files in path.
 		self.registerWidgets(moduleNames)
 
 		# initialize _sbDict by setting keys for the ui files.
@@ -64,7 +70,7 @@ class UiLoader(QUiLoader):
 		'''
 		for m in moduleNames:
 			className = m[:1].capitalize()+m[1:] #capitalize first letter of module name to convert to class name
-			path = 'widgets.{0}.{1}'.format(m, className)
+			path = '{}.{}.{}'.format(WIDGET_DIR, m, className)
 			class_ = locate(path)
 
 			if class_:
@@ -77,7 +83,7 @@ class UiLoader(QUiLoader):
 		'''
 		Load ui files and add them to the uiDict.
 
-		args:
+		:Parameters:
 			dirPath (str) = The absolute directory path to the uiFiles.
 			uiFiles (list) = A list of dynamic ui files.
 
@@ -91,10 +97,13 @@ class UiLoader(QUiLoader):
 			ui = self.load(path)
 
 			#get the ui level from it's directory location.
-			d = dirPath[dirPath.rfind('ui\\'):] #slice the absolute path from 'ui\' ie. ui\base_menus_1\sub_menus_2\main_menus_3 from fullpath\ui\base_menus_1\sub_menus_2\main_menus_3
-			uiLevel = len(d.split('\\'))-1
+			d = dirPath.split('\\'+UI_DIR+'\\')[-1] #ie. base_menus from fullpath\ui\base_menus
+			try:
+				uiLevel = int(d.strip(MENU_DIR_PREFIX))
+				self.uiDict[uiName] = {'ui':ui, 'level':uiLevel}
 
-			self.uiDict[uiName] = {'ui':ui, 'level':uiLevel}
+			except KeyError: #not a valid ui dir.
+				pass
 
 
 
