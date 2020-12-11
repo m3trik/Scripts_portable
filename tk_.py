@@ -32,7 +32,9 @@ class Tk(QtWidgets.QStackedWidget):
 
 		self.preventHide = preventHide
 		self.key_show = key_show
-		self.key_repeatLastCommand = QtCore.Qt.Key_R
+		self.key_undo = QtCore.Qt.Key_Z
+		QtWidgets.QApplication.setDoubleClickInterval(400)
+		QtWidgets.QApplication.setKeyboardInputInterval(400)
 
 		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint)
 		self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
@@ -182,8 +184,9 @@ class Tk(QtWidgets.QStackedWidget):
 		:Parameters:
 			event = <QEvent>
 		'''
-		if event.key()==self.key_repeatLastCommand and not event.isAutoRepeat():
-			self.repeatLastCommand()
+		if not event.isAutoRepeat():
+			modifiers = QtWidgets.QApplication.keyboardModifiers()	
+
 
 		return QtWidgets.QStackedWidget.keyPressEvent(self, event)
 
@@ -193,8 +196,11 @@ class Tk(QtWidgets.QStackedWidget):
 		:Parameters:
 			event = <QEvent>
 		'''
-		if event.key()==self.key_show and not event.isAutoRepeat():
-			self.hide()
+		if not event.isAutoRepeat():
+			modifiers = QtWidgets.QApplication.keyboardModifiers()
+
+			if event.key()==self.key_show:
+				self.hide()
 
 		return QtWidgets.QStackedWidget.keyReleaseEvent(self, event)
 
@@ -219,6 +225,9 @@ class Tk(QtWidgets.QStackedWidget):
 
 			elif event.button()==QtCore.Qt.RightButton:
 				self.setUi('main')
+
+
+			
 
 		return QtWidgets.QStackedWidget.mousePressEvent(self, event)
 
@@ -250,14 +259,21 @@ class Tk(QtWidgets.QStackedWidget):
 		:Parameters:
 			event = <QEvent>
 		'''
-		if event.button()==QtCore.Qt.RightButton:
-			self.repeatLastCameraView()
+		modifiers = QtWidgets.QApplication.keyboardModifiers()
 
-		elif event.button()==QtCore.Qt.LeftButton:
-			self.repeatLastUi()
+		if event.button()==QtCore.Qt.LeftButton:
+
+			if modifiers==QtCore.Qt.ControlModifier:
+				self.repeatLastCommand()
+				return
+			else:
+				self.repeatLastUi()
 
 		elif event.button()==QtCore.Qt.MiddleButton:
 			pass
+
+		elif event.button()==QtCore.Qt.RightButton:
+			self.repeatLastCameraView()
 
 		return QtWidgets.QStackedWidget.mouseDoubleClickEvent(self, event)
 

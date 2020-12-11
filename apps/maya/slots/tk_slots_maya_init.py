@@ -414,6 +414,31 @@ class Init(Slots):
 
 
 	@staticmethod
+	def getBorderEdges(edges):
+		'''
+		Get any object border edges from the given list of edges.
+
+		:Parameters:
+			edges (list) = The edges to find border edges from.
+
+		:Return:
+			(list)
+
+		ex. selection = pm.ls(sl=1)
+			edges = Init.getComponents('e', selection)
+			borderEdges = getBorderEdges(edges)
+		'''
+		result=[]
+		for edge in pm.ls(edges, flatten=1):
+			attachedFaces = pm.ls(pm.polyListComponentConversion(edge, fromEdge=1, toFace=1), flatten=1)
+
+			if len(attachedFaces) is 1:
+				result.append(edge)
+
+		return result
+
+
+	@staticmethod
 	def getBorderEdgeFromFace(faces=None):
 		'''
 		Get border edges from faces. (edges not shared by any other face)
@@ -691,7 +716,7 @@ class Init(Slots):
 		pm.connectAttr(obj2Shape.outMesh, cpmNode.inMesh, force=1) #object's shape mesh output to the cpm node.
 
 		closestVerts={}
-		for v1 in vertices:
+		for v1 in pm.ls(vertices, flatten=1):
 			v1Pos = pm.pointPosition(v1, world=True)
 			pm.setAttr(cpmNode.inPosition, v1Pos[0], v1Pos[1], v1Pos[2], type="double3") #set a compound attribute
 

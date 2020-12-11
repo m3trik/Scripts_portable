@@ -136,7 +136,7 @@ class Edit(Init):
 		'''
 		Delete History
 		'''
-		tb = self.ui.tb001
+		tb = self.edit.tb001
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='For All Objects', setObjectName='chk018', setChecked=True, setToolTip='Delete history on All objects or just those selected.')
 			tb.menu_.add('QCheckBox', setText='Delete Unused Nodes', setObjectName='chk019', setChecked=True, setToolTip='Delete unused nodes.')

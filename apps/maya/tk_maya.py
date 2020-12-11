@@ -55,6 +55,21 @@ class Tk_maya(Tk):
 		return main_window
 
 
+	def keyPressEvent(self, event):
+		'''
+		:Parameters:
+			event = <QEvent>
+		'''
+		if not event.isAutoRepeat():
+			modifiers = QtWidgets.QApplication.keyboardModifiers()
+
+			if event.key()==self.key_undo and modifiers==QtCore.Qt.ControlModifier:
+				import Pymel.Core as pm
+				pm.undo()
+
+		return QtWidgets.QStackedWidget.keyPressEvent(self, event)
+
+
 	def showEvent(self, event):
 		'''
 		:Parameters:
@@ -74,6 +89,7 @@ class Tk_maya(Tk):
 			sys.exit() #assure that the sys processes are terminated.
 
 		return Tk.hideEvent(self, event) #super(Tk_maya, self).hideEvent(event)
+
 
 
 class Instance():

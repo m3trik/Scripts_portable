@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>180</width>
+    <width>225</width>
     <height>154</height>
    </rect>
   </property>
@@ -43,7 +43,7 @@
      <rect>
       <x>5</x>
       <y>10</y>
-      <width>151</width>
+      <width>209</width>
       <height>116</height>
      </rect>
     </property>
@@ -253,8 +253,15 @@
          <height>17</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+         <underline>true</underline>
+        </font>
+       </property>
        <property name="text">
-        <string/>
+        <string>SCENE</string>
        </property>
        <property name="checkable">
         <bool>true</bool>

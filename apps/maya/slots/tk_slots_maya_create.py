@@ -90,8 +90,8 @@ class Create(Init):
 		Set Translate X
 		'''
 		if self.node:
-			self.point[0] = float(self.create.s000.value())
-			pm.xform (self.node, translation=self.point, worldSpace=1, absolute=1)
+			self.point[0] = self.create.s000.value()
+			pm.xform(self.node, translation=self.point, worldSpace=1, absolute=1)
 
 
 	def s001(self, value=None):
@@ -99,8 +99,8 @@ class Create(Init):
 		Set Translate Y
 		'''
 		if self.node:
-			self.point[1] = float(self.create.s001.value())
-			pm.xform (self.node, translation=self.point, worldSpace=1, absolute=1)
+			self.point[1] = self.create.s001.value()
+			pm.xform(self.node, translation=self.point, worldSpace=1, absolute=1)
 
 
 	def s002(self, value=None):
@@ -108,7 +108,7 @@ class Create(Init):
 		Set Translate Z
 		'''
 		if self.node:
-			self.point[2] = float(self.create.s002.value())
+			self.point[2] = self.create.s002.value()
 			pm.xform (self.node, translation=self.point, worldSpace=1, absolute=1)
 
 

@@ -440,7 +440,7 @@ class Transform(Init):
 			return
 
 		tolerance = tb.menu_.s001.value()
-		freezetransforms = tb.menu_.chk012
+		freezetransforms = tb.menu_.chk012.isChecked()
 
 		selection = pm.ls(sl=1, objectsOnly=1)
 		if len(selection)>1:

@@ -307,8 +307,15 @@
          <height>17</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+         <underline>true</underline>
+        </font>
+       </property>
        <property name="text">
-        <string/>
+        <string>UTILITIES</string>
        </property>
        <property name="checkable">
         <bool>true</bool>

@@ -1963,8 +1963,21 @@
          <height>17</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <italic>false</italic>
+         <bold>true</bold>
+         <underline>true</underline>
+         <strikeout>false</strikeout>
+         <kerning>true</kerning>
+        </font>
+       </property>
+       <property name="acceptDrops">
+        <bool>false</bool>
+       </property>
        <property name="text">
-        <string/>
+        <string>POLYGONS</string>
        </property>
        <property name="checkable">
         <bool>true</bool>

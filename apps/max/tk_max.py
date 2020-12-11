@@ -1,6 +1,6 @@
 from __future__ import print_function
 
-from PySide2 import QtCore
+from PySide2 import QtCore, QtWidgets
 
 try:
 	import MaxPlus
@@ -44,6 +44,21 @@ class Tk_max(Tk):
 		return main_window
 
 
+	def keyPressEvent(self, event):
+		'''
+		:Parameters:
+			event = <QEvent>
+		'''
+		if not event.isAutoRepeat():
+			modifiers = QtWidgets.QApplication.keyboardModifiers()
+
+			if event.key()==self.key_undo and modifiers==QtCore.Qt.ControlModifier:
+				import pymxs
+				pymxs.undo(True)
+
+		return QtWidgets.QStackedWidget.keyPressEvent(self, event)
+
+
 	def showEvent(self, event):
 		'''
 		:Parameters:
@@ -74,6 +89,31 @@ class Tk_max(Tk):
 			sys.exit() #assure that the sys processes are terminated.
 
 		return Tk.hideEvent(self, event) #super(Tk_max, self).hideEvent(event)
+
+
+	# import contextlib
+	# @contextlib.contextmanager
+	# def performAppUndo(self, enabled=True, message=''):
+	# 	'''
+	# 	Uses pymxs's undo mechanism, but doesn't silence exceptions raised
+	# 	in it.
+
+	# 	:Parameter:
+	# 		enabled (bool) = Turns undo functionality on.
+	# 		message (str) = Label for the undo item in the undo menu.
+	# 	'''
+	# 	print('undo')
+	# 	import pymxs
+	# 	import traceback
+	# 	e = None
+	# 	with pymxs.undo(enabled, message):
+	# 		try:
+	# 			yield
+	# 		except Exception as e:
+	# 			# print error, raise error then run undo 
+	# 			print(traceback.print_exc())
+	# 			raise(e)
+	# 			pymxs.run_undo()
 
 
 class Instance():

@@ -1006,8 +1006,15 @@
          <height>17</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+         <underline>true</underline>
+        </font>
+       </property>
        <property name="text">
-        <string/>
+        <string>UV</string>
        </property>
        <property name="checkable">
         <bool>true</bool>
@@ -1020,6 +1027,11 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>TkToolButton</class>
+   <extends>QToolButton</extends>
+   <header>widgets.tktoolbutton.h</header>
+  </customwidget>
+  <customwidget>
    <class>TkPushButton_Draggable</class>
    <extends>QPushButton</extends>
    <header>widgets.tkpushbuttondraggable.h</header>
@@ -1028,11 +1040,6 @@
    <class>TkProgressBar</class>
    <extends>QProgressBar</extends>
    <header>widgets.tkprogressbar.h</header>
-  </customwidget>
-  <customwidget>
-   <class>TkToolButton</class>
-   <extends>QToolButton</extends>
-   <header>widgets.tktoolbutton.h</header>
   </customwidget>
   <customwidget>
    <class>TkComboBox</class>
