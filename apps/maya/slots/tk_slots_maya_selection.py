@@ -38,6 +38,7 @@ class Selection(Init):
 		if state is 'setMenu':
 			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb001', setToolTip='')
 			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb004', setToolTip='Set the select tool type.')
+			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb006', setToolTip='A list of currently selected objects.')
 			pin.contextMenu.add('QCheckBox', setText='Ignore Backfacing', setObjectName='chk004', setToolTip='Ignore backfacing components during selection.')
 			pin.contextMenu.add('QCheckBox', setText='Soft Selection', setObjectName='chk008', setToolTip='Toggle soft selection mode.')
 			pin.contextMenu.add(widgets.TkLabel, setText='Grow Selection', setObjectName='lbl003', setToolTip='Grow the current selection.')
@@ -466,13 +467,14 @@ class Selection(Init):
 
 	def cmb006(self, index=None):
 		'''
-		Selected Objects
+		Currently Selected Objects
 		'''
 		cmb = self.selection.cmb006
 
 		if index is 'setMenu':
+			cmb.setCurrentText('Current Selection') # cmb.insertItem(cmb.currentIndex(), 'Current Selection') #insert item at current index.
 			cmb.popupStyle = 'qmenu'
-			cmb.beforePopupShown.connect(self.cmb006) #refresh comboBox contents before showing it's popup.
+			cmb.beforePopupShown.connect(self.cmb006) #refresh the comboBox contents before showing it's popup.
 			return
 
 		cmb.clear()
@@ -507,6 +509,7 @@ class Selection(Init):
 			tb.menu_.add('QRadioButton', setText='Component Loop', setObjectName='chk001', setChecked=True, setToolTip='Select all contiguous components that form a loop with the current selection.')
 			tb.menu_.add('QRadioButton', setText='Path Along Loop', setObjectName='chk009', setToolTip='The path along loop between two selected edges, vertices or UV\'s.')
 			tb.menu_.add('QRadioButton', setText='Shortest Path', setObjectName='chk002', setToolTip='The shortest component path between two selected edges, vertices or UV\'s.')
+			tb.menu_.add('QRadioButton', setText='Border Edges', setObjectName='chk010', setToolTip='Select the object(s) border edges.')
 			tb.menu_.add('QSpinBox', setPrefix='Step: ', setObjectName='s003', setMinMax_='1-100 step1', setValue=1, setToolTip='Step Amount.')
 			return
 
@@ -514,21 +517,28 @@ class Selection(Init):
 		edgeLoop = tb.menu_.chk001.isChecked()
 		pathAlongLoop = tb.menu_.chk009.isChecked()
 		shortestPath = tb.menu_.chk002.isChecked()
+		borderEdges = tb.menu_.chk010.isChecked()
 		step = tb.menu_.s003.value()
 
 		selection = pm.ls(sl=1)
 
+		result=[]
 		if edgeRing:
-			pm.select(self.getEdgeRing(selection, step=step))
+			result = self.getEdgeRing(selection, step=step)
 
 		elif edgeLoop:
-			pm.select(self.getEdgeLoop(selection, step=step))
+			result = self.getEdgeLoop(selection, step=step)
 
 		elif pathAlongLoop:
-			pm.select(self.getPathAlongLoop(selection, step=step))
+			result = self.getPathAlongLoop(selection, step=step)
 
 		elif shortestPath:
-			pm.select(self.getShortestPath(selection, step=step))
+			result = self.getShortestPath(selection, step=step)
+
+		elif borderEdges:
+			result = self.getBorderComponents(selection, returnType='edges')
+
+		pm.select(result)
 
 
 	def tb001(self, state=None):
@@ -553,29 +563,23 @@ class Selection(Init):
 		tb = self.currentUi.tb002
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='Lock Values', setObjectName='chk003', setChecked=True, setToolTip='Keep values in sync.')
-			tb.menu_.add('QDoubleSpinBox', setPrefix='x: ', setObjectName='s002', setMinMax_='0.00-1 step.01', setValue=0.01, setToolTip='Normal X range.')
-			tb.menu_.add('QDoubleSpinBox', setPrefix='y: ', setObjectName='s004', setMinMax_='0.00-1 step.01', setValue=0.01, setToolTip='Normal Y range.')
-			tb.menu_.add('QDoubleSpinBox', setPrefix='z: ', setObjectName='s005', setMinMax_='0.00-1 step.01', setValue=0.01, setToolTip='Normal Z range.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='x: ', setObjectName='s002', setMinMax_='0.00-1 step.01', setValue=0.05, setToolTip='Normal X range.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='y: ', setObjectName='s004', setMinMax_='0.00-1 step.01', setValue=0.05, setToolTip='Normal Y range.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='z: ', setObjectName='s005', setMinMax_='0.00-1 step.01', setValue=0.05, setToolTip='Normal Z range.')
 			return
 
 		rangeX = float(tb.menu_.s002.value())
 		rangeY = float(tb.menu_.s004.value())
 		rangeZ = float(tb.menu_.s005.value())
-		selectedFaces = pm.filterExpand(sm=34)
 
+		selectedFaces = pm.filterExpand(sm=34)
 		if selectedFaces:
-			pm.undoInfo(openChunk=1)
 			similarFaces = self.getFacesWithSimilarNormals(selectedFaces, rangeX=rangeX, rangeY=rangeY, rangeZ=rangeZ)
 			islands = self.getContigiousIslands(similarFaces)
+			pm.select((islands))
 
-			for island in islands: #select the islands that contain faces from the original selection.
-				for face in selectedFaces:
-					if face in island:
-						pm.select(island, add=1)
-						break
-			pm.undoInfo(closeChunk=1)
 		else:
-			return 'Warning: No faces selected.'
+			return 'Warning: No faces were selected.'
 
 
 	def b016(self):

@@ -137,7 +137,7 @@ class Init(Slots):
 	# ------------------------------------------------
 
 	@staticmethod
-	def getComponents(componentType=None, objects=None, selection=False, returnType=unicode, flatten=False):
+	def getComponents(componentType=None, objects=None, selection=False, returnType=unicode, returnNodeType='shape', flatten=False):
 		'''
 		Get the components of the given type.
 
@@ -145,11 +145,14 @@ class Init(Slots):
 			componentType (str) = The desired component mask. valid values are: 'vtx'(vertices), 'e'(edges), 'f'(faces), 'cv'(control vertices).
 			objects (obj)(list) = The object(s) to get the components of.
 			selection (bool) = Filter to currently selected objects.
-			returnType (type) = The desired returned object type. (valid: unicode, str, int, object)(default: unicode)
+			returnType (type) = The desired returned object type. (valid: unicode(default, str, int, object)
+			returnNodeType (str) = Specify whether the components are returned with the transform or shape nodes (valid only with str and unicode returnTypes). (valid: 'transform', 'shape'(default)) ex. 'pCylinder1.f[0]' or 'pCylinderShape1.f[0]'
 			flatten (bool) = Flattens the returned list of objects so that each component is identified individually.
 
 		:Return:
 			(list)(dict) Dependant on flags.
+
+		ex. getComponents('f', obj, returnType=object)
 		'''
 		if not componentType: #get component type from the current selection.
 			if selection:
@@ -191,10 +194,16 @@ class Init(Slots):
 			components=[]
 
 		if returnType is unicode:
-			result = [unicode(c) for c in components]
+			if returnNodeType=='transform':
+				result = [unicode(''.join(c.rsplit('Shape', 1))) for c in components]
+			else:
+				result = [unicode(c) for c in components]
 
 		elif returnType is str:
-			result = [str(c) for c in components]
+			if returnNodeType=='transform':
+				result = [str(''.join(c.rsplit('Shape', 1))) for c in components]
+			else:
+				result = [str(c) for c in components]
 
 		elif returnType is int:
 			result={}
@@ -337,16 +346,19 @@ class Init(Slots):
 	def getContigiousIslands(faces, faceIslands=[]):
 		'''
 		Get a list containing sets of adjacent polygon faces grouped by islands.
+
 		:Parameters:
-			faces (list) = polygon faces to be filtered for adjacent.
+			faces (list) = Polygon faces to be filtered for adjacent.
 			faceIslands (list) = optional. list of sets. ability to add faces from previous calls to the return value.
+
 		:Return:
-			list of sets of adjacent faces.
+			(list) of sets of adjacent faces.
 		'''
 		l=[]
+		faces = pm.ls(faces, flatten=1)
 		for face in faces:
-			borderFaces = Init.getBorderFaces(face, includeBordered=1)
-			l.append(set(f for f in borderFaces if f in faces))
+			borderFaces = Init.getBorderComponents(face, returnType='faces', borderType='component', flatten=True)
+			l.append(set([f for f in borderFaces if f in faces]))
 
 		while len(l)>0: #combine sets in 'l' that share common elements.
 			first, rest = l[0], l[1:] #python 3: first, *rest = l
@@ -394,79 +406,60 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getBorderFaces(faces, includeBordered=False):
+	def getBorderComponents(x, returnType='unchanged', borderType='object', flatten=False):
 		'''
-		Get any faces attached to the given faces.
-		:Parameters:
-			faces (unicode, str, list) = faces to get bordering faces for.
-			includeBordered (bool) = optional. return the bordered face with the results.
-		:Return:
-			list - the border faces of the given faces.
-		'''
-		adjEdges = pm.polyListComponentConversion(faces, fromFace=1, toEdge=1)
-		adjFaces = pm.polyListComponentConversion(adjEdges, toFace=1, fromEdge=1)
-		expanded = pm.filterExpand(adjFaces, expand=True, selectionMask=34) #keep faces as individual elements.
-
-		if includeBordered:
-			return list(str(f) for f in expanded) #convert unicode to str.
-		else:
-			return list(str(f) for f in expanded if f not in faces) #convert unicode to str and exclude the original faces.
-
-
-	@staticmethod
-	def getBorderEdges(edges):
-		'''
-		Get any object border edges from the given list of edges.
+		Get any object border components from a given component(s) or a polygon object.
 
 		:Parameters:
-			edges (list) = The edges to find border edges from.
+			x (obj)(list) = Component(s) (or a polygon object) to find any border components for.
+			returnType (str) = The desired returned component type. (valid: 'vertices', 'edges', 'faces', 'unchanged'(default, the returnType will be the same as the given object type))
+			borderType (str) = The desired border type. (valid: 'component', 'object'(default))
+			flatten (bool) = Flattens the returned list of objects so that each component is identified individually.
 
 		:Return:
 			(list)
 
-		ex. selection = pm.ls(sl=1)
-			edges = Init.getComponents('e', selection)
-			borderEdges = getBorderEdges(edges)
+		ex. borderVertices = getBorderComponents(selection, returnType='vertices', borderType='component', flatten=True)
 		'''
+		if not isinstance(x,(list,tuple,set)): #assure that x is iterable.
+			x = [x]
+
+		object_type = Init.getObjectType(x[0])
+		if object_type=='Polygon':
+			x = Init.getComponents('e', x)
+		elif object_type=='Polygon Vertex':
+			x = pm.polyListComponentConversion(x, fromVertex=1, toEdge=1)
+		elif object_type=='Polygon Face':
+			x = pm.polyListComponentConversion(x, fromFace=1, toEdge=1)
+
 		result=[]
-		for edge in pm.ls(edges, flatten=1):
-			attachedFaces = pm.ls(pm.polyListComponentConversion(edge, fromEdge=1, toFace=1), flatten=1)
-
-			if len(attachedFaces) is 1:
-				result.append(edge)
-
-		return result
-
-
-	@staticmethod
-	def getBorderEdgeFromFace(faces=None):
-		'''
-		Get border edges from faces. (edges not shared by any other face)
-
-		:Parameters:
-			faces (str, unicode, list) = ie. 'poly.f[696]' or ['polyShape.f[696]']. If no arguement is given, the current selection will be used.
-		:Return:
-			list of border edges.
-		ex. getBorderEdgeFromFace(['poly.f[696]', 'poly.f[705:708]'])
-		'''
-		if not faces: #if no faces passed in as arg, get current face selection
-			faces = list(str(f) for f in pm.filterExpand(selectionMask=34))
-
-		edges = list(str(i).replace('Shape.', '.', -1).split('|')[-1] for i in pm.ls(pm.polyListComponentConversion(faces, ff=1, te=1), flatten=1)) #get edges from the faces
-
-		borderEdges=[]
+		edges = pm.ls(x, flatten=1)
 		for edge in edges:
-			edgeFaces = list(str(i).replace('Shape.', '.', -1).split('|')[-1] for i in pm.ls(pm.polyListComponentConversion(edge, fe=1, tf=1), flatten=1)) #get faces that share the edge.
 
-			if len(edgeFaces)<2: #if the edge has only one shared face, it is a border edge.
-				borderEdges.append(edge)
-			else:
-				for f in edgeFaces:
-					if f not in faces: #else if the edge's shared face is not part of the selected faces, it is a border edge.
-						borderEdges.append(edge)
+			if borderType is 'object': #get edges that form the border of the object.
+				attachedFaces = pm.ls(pm.polyListComponentConversion(edge, fromEdge=1, toFace=1), flatten=1)
+				if len(attachedFaces) is 1:
+					result.append(edge)
+
+			elif borderType is 'component' and not object_type=='Polygon': #get edges that form the border of the given components.
+				attachedFaces = pm.ls(pm.polyListComponentConversion(edge, fromEdge=1, toFace=1), flatten=0)
+				attachedEdges = pm.ls(pm.polyListComponentConversion(attachedFaces, fromFace=1, toEdge=1), flatten=1)
+				for e in attachedEdges:
+					if e not in edges:
+						result.append(edge)
 						break
 
-		return borderEdges
+		if returnType is 'unchanged': #if no returnType is specified, return the same type of component as given. in the case of 'Polygon' object, edges will be returned.
+			returnType = object_type if not object_type=='Polygon' else 'Polygon Edge'
+		#convert back to the original component type and flatten /un-flatten list.
+		if returnType in ('Polygon Vertex', 'vertices', 'vertex', 'vtx'):
+			result = pm.ls(pm.polyListComponentConversion(result, fromEdge=1, toVertex=1), flatten=flatten) #vertices.
+		elif returnType in ('Polygon Edge', 'edges', 'edge', 'e'):
+			result = pm.ls(pm.polyListComponentConversion(result, fromEdge=1, toEdge=1), flatten=flatten) #edges.
+		elif returnType in ('Polygon Face', 'faces', 'face', 'f'):
+			result = pm.ls(pm.polyListComponentConversion(result, fromEdge=1, toFace=1), flatten=flatten) #faces.
+
+		return result
 
 
 	@staticmethod
@@ -480,6 +473,7 @@ class Init(Slots):
 
 		:Return:
 			(float)
+
 		# xmin, ymin, zmin, xmax, ymax, zmax = pm.exactWorldBoundingBox(startAndEndCurves)
 		'''
 		x1, y1, z1 = pm.objectCenter(obj1)
@@ -952,34 +946,35 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getEdgePath(obj, components, type_=''):
+	def getEdgePath(components, returnType=''):
 		'''
 		Query the polySelect command for the components along different edge paths.
 
 		:Parameters:
-			obj (obj) = The mesh object containing the components.
-			components (obj) = The components used for the query (dependant on the operation type).
-			type_ (str) = The desired return type. 'shortestEdgePath', 'edgeRing', 'edgeRingPath', 'edgeLoop', 'edgeLoopPath'.
+			components (str)(obj)(list) = The components used for the query (dependant on the operation type).
+			returnType (str) = The desired return type. 'shortestEdgePath', 'edgeRing', 'edgeRingPath', 'edgeLoop', 'edgeLoopPath'.
 
 		:Return:
 			(list) The components comprising the path.
 		'''
-		componentNumbers = [int(str(i).split('[')[-1].split(']')[0]) for i in components] #get the vertex numbers as integer values. ie. [818, 1380]
+		components = pm.ls(components, flatten=1)
+		obj = Init.getObjectFromComponent(components[0])
+		componentNumbers = Init.getComponents(components, returnType=int, flatten=1).values()[0] #get the vertex numbers as integer values. ie. [818, 1380]
 
 		edgesLong=None
-		if type_=='shortestEdgePath':
+		if returnType=='shortestEdgePath':
 			edgesLong = pm.polySelect(obj, query=1, shortestEdgePath=(componentNumbers[0], componentNumbers[1])) #(vtx, vtx)
 
-		elif type_=='edgeRing':
+		elif returnType=='edgeRing':
 			edgesLong = pm.polySelect(obj, query=1, edgeRing=componentNumbers) #(e..)
 
-		elif type_=='edgeRingPath':
+		elif returnType=='edgeRingPath':
 			edgesLong = pm.polySelect(obj, query=1, edgeRingPath=(componentNumbers[0], componentNumbers[1])) #(e, e)
 
-		elif type_=='edgeLoop':
+		elif returnType=='edgeLoop':
 			edgesLong = pm.polySelect(obj, query=1, edgeLoop=componentNumbers) #(e..)
 
-		elif type_=='edgeLoopPath':
+		elif returnType=='edgeLoopPath':
 			edgesLong = pm.polySelect(obj, query=1, edgeLoopPath=(componentNumbers[0], componentNumbers[1])) #(e, e)
 
 		if not edgesLong:
@@ -1011,12 +1006,12 @@ class Init(Slots):
 			if type_=='Polygon Edge':
 				components = [pm.ls(pm.polyListComponentConversion(e, fromEdge=1, toVertex=1), flatten=1) for e in components]
 				closestVerts = Init.getClosestVerts(components[0], components[1])[0]
-				edges = Init.getEdgePath(obj, closestVerts, 'shortestEdgePath')
+				edges = Init.getEdgePath(closestVerts, 'shortestEdgePath')
 				[result.append(e) for e in edges]
 
 			elif type_=='Polygon Vertex':
 				closestVerts = Init.getClosestVerts(components[0], components[1])[0]
-				edges = Init.getEdgePath(obj, closestVerts, 'shortestEdgePath')
+				edges = Init.getEdgePath(closestVerts, 'shortestEdgePath')
 				vertices = pm.ls(pm.polyListComponentConversion(edges, fromEdge=1, toVertex=1), flatten=1)
 				[result.append(v) for v in vertices]
 
@@ -1057,14 +1052,14 @@ class Init(Slots):
 					if closestVerts[0] in verts and components[0] in verts or closestVerts[1] in verts and components[1] in verts:
 						edges.append(edge)
 
-				edges = Init.getEdgePath(obj, edges, 'edgeLoopPath')
+				edges = Init.getEdgePath(edges, 'edgeLoopPath')
 
 				vertices = [pm.ls(pm.polyListComponentConversion(edges, fromEdge=1, toVertex=1), flatten=1)]
 				[result.append(v) for v in vertices]
 
 
 			elif type_=='Polygon Edge':
-				edges = Init.getEdgePath(obj, components, 'edgeLoopPath')
+				edges = Init.getEdgePath(components, 'edgeLoopPath')
 				[result.append(e) for e in edges]
 
 
@@ -1085,7 +1080,7 @@ class Init(Slots):
 					if closestVerts1[0] in verts and closestVerts2[0] in verts or closestVerts1[1] in verts and closestVerts2[1] in verts:
 						edges.append(edge)
 
-				edges = Init.getEdgePath(obj, edges, 'edgeRingPath')
+				edges = Init.getEdgePath(edges, 'edgeRingPath')
 
 				faces = pm.ls(pm.polyListComponentConversion(edges, fromEdge=1, toFace=1), flatten=1)
 				[result.append(f) for f in faces]
@@ -1108,7 +1103,7 @@ class Init(Slots):
 		result=[]
 		objects = set(pm.ls(edges, objectsOnly=1))
 		for obj in objects:
-			edges = Init.getEdgePath(obj, pm.ls(edges, flatten=1), 'edgeLoop')
+			edges = Init.getEdgePath(pm.ls(edges, flatten=1), 'edgeLoop')
 			[result.append(i) for i in edges]
 
 		return result
@@ -1130,7 +1125,7 @@ class Init(Slots):
 		objects = set(pm.ls(edges, objectsOnly=1))
 		for obj in objects:
 
-			edges = Init.getEdgePath(obj, pm.ls(edges, flatten=1), 'edgeRing')
+			edges = Init.getEdgePath(pm.ls(edges, flatten=1), 'edgeRing')
 			[result.append(i) for i in edges]
 
 		return result
@@ -1298,9 +1293,10 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getFacesWithSimilarNormals(faces, transforms=[], similarFaces=[], rangeX=0.1, rangeY=0.1, rangeZ=0.1):
+	def getFacesWithSimilarNormals(faces, transforms=[], similarFaces=[], rangeX=0.1, rangeY=0.1, rangeZ=0.1, returnType=unicode, returnNodeType='transform'):
 		'''
-		Get normals that fall within an X,Y,Z tolerance.
+		Filter for faces with normals that fall within an X,Y,Z tolerance.
+
 		:Parameters:
 			faces (list) = ['polygon faces'] - faces to find similar normals for.
 			similarFaces (list) = optional ability to add faces from previous calls to the return value.
@@ -1308,10 +1304,15 @@ class Init(Slots):
 			rangeX = float - x axis tolerance
 			rangeY = float - y axis tolerance
 			rangeZ = float - z axis tolerance
+			returnType (type) = The desired returned object type. (valid: unicode(default, str, int, object)
+			returnNodeType (str) = Specify whether the components are returned with the transform or shape nodes (valid only with str and unicode returnTypes). (valid: 'transform', 'shape'(default)) ex. 'pCylinder1.f[0]' or 'pCylinderShape1.f[0]'
+
 		:Return:
-			list - list of faces that fall within the normal range.
+			(list) faces that fall within the given normal range.
+
+		ex. getFacesWithSimilarNormals(selectedFaces, rangeX=0.5, rangeY=0.5, rangeZ=0.5)
 		'''
-		faces = list(str(f) for f in faces) #work on a copy of the argument so that removal of elements doesn't effect the passed in list.
+		faces = pm.ls(faces, flatten=1) #work on a copy of the argument so that removal of elements doesn't effect the passed in list.
 		for face in faces:
 			normals = Init.getNormalVector(face)
 
@@ -1320,23 +1321,22 @@ class Init(Slots):
 				sY = v[1]
 				sZ = v[2]
 
-				transforms = Init.getObjectFromComponent(face)
+				if not transforms:
+					transforms = Init.getObjectFromComponent(face)
 
 				for node in transforms:
-					numFaces = pm.polyEvaluate(node, face=1)
-					for faceNum in range(0, numFaces):
-						face = '{0}.f[{1}]'.format(node, str(faceNum)) #assemble component name
+					for f in Init.getComponents('f', node, returnType=returnType, returnNodeType=returnNodeType, flatten=1):
 
-						n = Init.getNormalVector(face)
+						n = Init.getNormalVector(f)
 						for k, v in n.items():
 							nX = v[0]
 							nY = v[1]
 							nZ = v[2]
 
 							if sX<=nX + rangeX and sX>=nX - rangeX and sY<=nY + rangeY and sY>=nY - rangeY and sZ<=nZ + rangeZ and sZ>=nZ - rangeZ:
-								similarFaces.append(face)
-								if face in faces: #If the face is in the loop que, remove it, as has already been evaluated.
-									faces.remove(face)
+								similarFaces.append(f)
+								if f in faces: #If the face is in the loop que, remove it, as has already been evaluated.
+									faces.remove(f)
 
 		return similarFaces
 
@@ -1471,11 +1471,11 @@ class Init(Slots):
 		Get the type of a given object.
 
 		:Parameters:
-			obj (obj) = maya component.
-			returnType (str) = Specify the returned value type. 'mask' returns an integer. (valid: 'objectType', 'mask')(default: 'objectType')
+			obj (obj) = A single maya component.
+			returnType (str) = Specify the desired return value type. 'mask' will return the maya mask value as an integer. (valid: 'objectType', 'mask')(default: 'objectType')
 
 		:Return:
-			(str)(int) type
+			(str)(int) matching type from the types dict.
 		'''
 		types = {0:'Handle', 9:'Nurbs Curve', 10:'Nurbs Surfaces', 11:'Nurbs Curves On Surface', 12:'Polygon', 22:'Locator XYZ', 23:'Orientation Locator', 
 			24:'Locator UV', 28:'Control Vertex', 30:'Edit Point', 31:'Polygon Vertex', 32:'Polygon Edge', 34:'Polygon Face', 35:'Polygon UV', 36:'Subdivision Mesh Point', 
@@ -2110,6 +2110,28 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 #deprecated -------------------------------------
 
 
+# def getBorderFacesOfFaces(faces, includeBordered=False):
+# 	'''
+# 	Get any faces attached to the given faces.
+
+# 	:Parameters:
+# 		faces (unicode, str, list) = faces to get bordering faces for.
+# 		includeBordered (bool) = optional. return the bordered face along with the results.
+
+# 	:Return:
+# 		list - the border faces of the given faces.
+# 	'''
+# 	adjEdges = pm.polyListComponentConversion(faces, fromFace=1, toEdge=1)
+# 	adjFaces = pm.polyListComponentConversion(adjEdges, toFace=1, fromEdge=1)
+# 	expanded = pm.filterExpand(adjFaces, expand=True, selectionMask=34) #keep faces as individual elements.
+
+# 	if includeBordered:
+# 		return list(str(f) for f in expanded) #convert unicode to str.
+# 	else:
+# 		return list(str(f) for f in expanded if f not in faces) #convert unicode to str and exclude the original faces.
+
+
+
 	# def getComponents(objects, type_, flatten=True):
 	# 	'''
 	# 	Get the components of the given type from the given object.
@@ -2373,7 +2395,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # 			except:
 # 				break
 
-# 		adjFaces = [f for f in Init.getBorderFaces(face) if not f in prevFaces and f in faces]
+# 		adjFaces = [f for f in Init.getBorderComponents(face) if not f in prevFaces and f in faces]
 # 		prevFaces.append(face)
 # 		# print '-face     ','   *',face
 # 		# print '-adjFaces ','  **',adjFaces

@@ -40,7 +40,7 @@ class Transform(Init):
 
 	def cmb001(self, index=None):
 		'''
-		Transform Contraints
+		Transform Constraints
 
 		constrain along normals #checkbox option for edge amd surface constaints
 		setXformConstraintAlongNormal false;

@@ -189,7 +189,7 @@
      </size>
     </property>
    </widget>
-   <widget class="TkToolButton" name="tb002">
+   <widget class="TkToolButton" name="tb001">
     <property name="enabled">
      <bool>true</bool>
     </property>
@@ -220,7 +220,7 @@
      </size>
     </property>
    </widget>
-   <widget class="TkToolButton" name="tb001">
+   <widget class="TkToolButton" name="tb002">
     <property name="enabled">
      <bool>true</bool>
     </property>

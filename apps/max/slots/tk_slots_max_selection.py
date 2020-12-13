@@ -399,13 +399,14 @@ class Selection(Init):
 
 	def cmb006(self, index=None):
 		'''
-		Selected Objects
+		Currently Selected Objects
 		'''
 		cmb = self.selection.cmb006
 
 		if index is 'setMenu':
 			cmb.popupStyle = 'qmenu'
-			cmb.beforePopupShown.connect(self.cmb006) #refresh comboBox contents before showing it's popup.
+			cmb.beforePopupShown.connect(self.cmb006) #refresh the comboBox contents before showing it's popup.
+			cmb.setCurrentText('Current Selection')
 			return
 
 		cmb.clear()
@@ -443,6 +444,7 @@ class Selection(Init):
 			tb.menu_.add('QRadioButton', setText='Component Loop', setObjectName='chk001', setChecked=True, setToolTip='Select all contiguous components that form a loop with the current selection.')
 			tb.menu_.add('QRadioButton', setText='Path Along Loop', setObjectName='chk009', setToolTip='The path along loop between two selected edges, vertices or UV\'s.')
 			tb.menu_.add('QRadioButton', setText='Shortest Path', setObjectName='chk002', setToolTip='The shortest component path between two selected edges, vertices or UV\'s.')
+			tb.menu_.add('QRadioButton', setText='Border Edges', setObjectName='chk010', setToolTip='Select the object(s) border edges.')
 			tb.menu_.add('QSpinBox', setPrefix='Step: ', setObjectName='s003', setMinMax_='1-100 step1', setValue=1, setToolTip='Step Amount.')
 			return
 
@@ -450,6 +452,7 @@ class Selection(Init):
 		edgeLoop = tb.menu_.chk001.isChecked()
 		pathAlongLoop = tb.menu_.chk009.isChecked()
 		shortestPath = tb.menu_.chk002.isChecked()
+		borderEdges = tb.menu_.chk010.isChecked()
 		step = tb.menu_.s003.value()
 
 
@@ -464,6 +467,9 @@ class Selection(Init):
 
 		elif shortestPath:
 			pm.select(self.getShortestPath(selection, step=step))
+
+		elif borderEdges:
+			pm.select(self.getBorderComponents(selection, returnType='edges'))
 
 
 	def tb001(self, state=None):
