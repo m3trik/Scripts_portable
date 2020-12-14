@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>155</width>
-    <height>209</height>
+    <height>244</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -148,7 +148,7 @@
       <x>10</x>
       <y>10</y>
       <width>131</width>
-      <height>176</height>
+      <height>196</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
@@ -298,6 +298,12 @@
             </property>
             <item>
              <widget class="QPushButton" name="b000">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -335,6 +341,12 @@
             </item>
             <item>
              <widget class="QPushButton" name="b001">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -428,7 +440,7 @@
       </layout>
      </item>
      <item row="1" column="1" colspan="2">
-      <widget class="TkPushButton_Draggable" name="pin">
+      <widget class="TkPushButton_Draggable" name="d000">
        <property name="minimumSize">
         <size>
          <width>19</width>

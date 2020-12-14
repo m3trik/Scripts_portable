@@ -116,7 +116,7 @@ class Switchboard(QtCore.QObject):
 		#add the widget as an attribute of the ui if it is not already.
 		ui = self.getUi(name)
 		if not hasattr(ui, objectName):
-			setattr(ui, objectName, widget)
+			setattr(ui, objectName, widget) #this will add child items as attributes to the main menu so they can be accessed directly.
 
 		class_ = self.getClassFromUiName(name) #get the corresponding slot class from the ui name.
 		derivedType = self._getDerivedType(widget) #the base class of any custom widgets.  ie. 'QPushButton' from 'TkPushButton'
@@ -171,6 +171,7 @@ class Switchboard(QtCore.QObject):
 
 		:Return:
 			connection dict of given name with widget/method name string as key.
+
 		ex. {'widgets' : {
 						'<widget>':{
 									'widgetName':'objectName',
@@ -194,11 +195,11 @@ class Switchboard(QtCore.QObject):
 		'''
 		Works with attributes passed in as a dict or kwargs.
 		If attributes are passed in as a dict, kwargs are ignored.
+
 		:Parameters:
-			attributes (dict) = keyword attributes and their corresponding values.
-			#order (list) = list of string keywords. ie. ['move', 'setVisible']. attributes in this list will be set last, in order of the list. an example would be setting move positions after setting resize arguments.
-		kw:Parameters:
-			set any keyword arguments.
+			attributes (dict) = Keyword attributes and their corresponding values.
+			order (list) = List of string keywords. ie. ['move', 'setVisible']. attributes in this list will be set last, in order of the list. an example would be setting move positions after setting resize arguments.
+			**kwargs = Set any keyword arguments.
 		'''
 		if not attributes:
 			attributes = kwargs
@@ -1605,7 +1606,7 @@ sbDict = {
 		'<PySide2.QtWidgets.QWidget object at 0x0000000003D070C8>': {'widgetType': 'QWidget', 'widgetName': 'mainWindow', 'derivedType': 'QWidget', 'signalInstance': None, 'docString': None, 'prefix': 'mainWindow', 'method': None}, 
 		'<widgets.tkProgressBar.TkProgressBar object at 0x0000000003D07088>': {'widgetType': 'TkProgressBar', 'widgetName': 'progressBar', 'derivedType': 'QProgressBar', 'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000000002A463F0>', 'docString': None, 'prefix': 'progressBar', 'method': None}, 
 		'<widgets.tkComboBox.TkComboBox object at 0x0000000003D04F08>': {'widgetType': 'TkComboBox', 'widgetName': 'cmb002', 'derivedType': 'QComboBox', 'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000000002A46378>', 'docString': '\n\t\tMaterial list\n\n\t\t:Parameters:\n\t\t\tindex (int) = parameter on activated, currentIndexChanged, and highlighted signals.\n\t\t', 'prefix': 'cmb', 'method': '<bound method Materials.cmb002 of <tk_slots_max_materials.Materials object at 0x0000000003D547C8>>'}, 
-		'<widgets.tkPushButton_Draggable.TkPushButton_Draggable object at 0x0000000003D04D88>': {'widgetType': 'TkPushButton_Draggable', 'widgetName': 'pin', 'derivedType': 'QPushButton', 'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000000002A463A8>', 'docString': '\n\t\tContext menu\n\t\t', 'prefix': 'pin', 'method': '<bound method Materials.pin of <tk_slots_max_materials.Materials object at 0x0000000003D547C8>>'}, 
+		'<widgets.tkPushButton_Draggable.TkPushButton_Draggable object at 0x0000000003D04D88>': {'widgetType': 'TkPushButton_Draggable', 'widgetName': 'd000', 'derivedType': 'QPushButton', 'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000000002A463A8>', 'docString': '\n\t\tContext menu\n\t\t', 'prefix': 'd000', 'method': '<bound method Materials.d000 of <tk_slots_max_materials.Materials object at 0x0000000003D547C8>>'}, 
 		'<PySide2.QtWidgets.QGridLayout object at 0x0000000003D07148>': {'widgetType': 'QGridLayout', 'widgetName': 'gridLayout_2', 'derivedType': 'QGridLayout', 'signalInstance': None, 'docString': None, 'prefix': None, 'method': None}, 
 		'<PySide2.QtWidgets.QHBoxLayout object at 0x0000000003D07188>': {'widgetType': 'QHBoxLayout', 'widgetName': 'horizontalLayout', 'derivedType': 'QHBoxLayout', 'signalInstance': None, 'docString': None, 'prefix': 'horizontalLayout', 'method': None}, 
 		'<PySide2.QtWidgets.QVBoxLayout object at 0x0000000003D071C8>': {'widgetType': 'QVBoxLayout', 'widgetName': 'verticalLayout', 'derivedType': 'QVBoxLayout', 'signalInstance': None, 'docString': None, 'prefix': 'verticalLayout', 'method': None}, 

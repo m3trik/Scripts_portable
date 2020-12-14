@@ -20,14 +20,14 @@ class Rendering(Init):
 		# comboBox.checkIndex(2)
 
 
-	def pin(self, state=None):
+	def d000(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.parentUi.pin
+		d000 = self.parentUi.d000
 
 		if state is 'setMenu':
-			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb001', setToolTip='')
+			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb001', setToolTip='')
 			return
 
 

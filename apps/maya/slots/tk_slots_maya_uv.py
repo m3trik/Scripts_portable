@@ -10,15 +10,15 @@ class Uv(Init):
 		super(Uv, self).__init__(*args, **kwargs)
 
 
-	def pin(self, state=None):
+	def d000(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.uv.pin
+		d000 = self.uv.d000
 
 		if state is 'setMenu':
-			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='Maya UV Editors')
-			pin.contextMenu.add('QPushButton', setText='Create UV Snapshot', setObjectName='b001', setToolTip='Save an image file of the current UV layout.')
+			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='Maya UV Editors')
+			d000.contextMenu.add('QPushButton', setText='Create UV Snapshot', setObjectName='b001', setToolTip='Save an image file of the current UV layout.')
 			return
 
 

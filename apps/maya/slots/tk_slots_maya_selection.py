@@ -29,20 +29,20 @@ class Selection(Init):
 		# 	pass
 
 
-	def pin(self, state=None):
+	def d000(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.selection.pin
+		d000 = self.selection.d000
 
 		if state is 'setMenu':
-			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb001', setToolTip='')
-			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb004', setToolTip='Set the select tool type.')
-			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb006', setToolTip='A list of currently selected objects.')
-			pin.contextMenu.add('QCheckBox', setText='Ignore Backfacing', setObjectName='chk004', setToolTip='Ignore backfacing components during selection.')
-			pin.contextMenu.add('QCheckBox', setText='Soft Selection', setObjectName='chk008', setToolTip='Toggle soft selection mode.')
-			pin.contextMenu.add(widgets.TkLabel, setText='Grow Selection', setObjectName='lbl003', setToolTip='Grow the current selection.')
-			pin.contextMenu.add(widgets.TkLabel, setText='Shrink Selection', setObjectName='lbl004', setToolTip='Shrink the current selection.')
+			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb001', setToolTip='')
+			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb004', setToolTip='Set the select tool type.')
+			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb006', setToolTip='A list of currently selected objects.')
+			d000.contextMenu.add('QCheckBox', setText='Ignore Backfacing', setObjectName='chk004', setToolTip='Ignore backfacing components during selection.')
+			d000.contextMenu.add('QCheckBox', setText='Soft Selection', setObjectName='chk008', setToolTip='Toggle soft selection mode.')
+			d000.contextMenu.add(widgets.TkLabel, setText='Grow Selection', setObjectName='lbl003', setToolTip='Grow the current selection.')
+			d000.contextMenu.add(widgets.TkLabel, setText='Shrink Selection', setObjectName='lbl004', setToolTip='Shrink the current selection.')
 			return
 
 

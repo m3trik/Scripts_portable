@@ -12,14 +12,14 @@ class Preferences(Init):
 		self.preferences.b010.setText('3dsMax Preferences')
 
 
-	def pin(self, state=None):
+	def d000(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.preferences.pin
+		d000 = self.preferences.d000
 
 		if state is 'setMenu':
-			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb003', setToolTip='')
+			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb003', setToolTip='')
 			return
 
 

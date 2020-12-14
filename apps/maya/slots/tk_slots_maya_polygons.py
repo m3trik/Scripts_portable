@@ -12,33 +12,33 @@ class Polygons(Init):
 
 	def chk008(self, state=None):
 		'''
-		Split U
+		Divide Facet: Split U
 		'''
 		self.toggleWidgets(setUnChecked='chk010')
 
 
 	def chk009(self, state=None):
 		'''
-		Split V
+		Divide Facet: Split V
 		'''
 		self.toggleWidgets(setUnChecked='chk010')
 
 
 	def chk010(self, state=None):
 		'''
-		Tris
+		Divide Facet: Tris
 		'''
 		self.toggleWidgets(setUnChecked='chk008-9')
 
 
-	def pin(self, state=None):
+	def d000(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.polygons.pin
+		d000 = self.polygons.d000
 
 		if state is 'setMenu':
-			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='')
+			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='')
 			return
 
 
@@ -46,7 +46,7 @@ class Polygons(Init):
 		'''
 		Maya Polygon Operations
 		'''
-		cmb = self.polygons.cmb000
+		cmb = self.polygons.d000.contextMenu.cmb000
 
 		if index is 'setMenu':
 			list_ = ['Extrude','Bevel','Bridge','Combine','Merge Vertex','Offset Edgeloop','Edit Edgeflow','Extract Curve','Poke','Wedge','Assign Invisible']
@@ -314,6 +314,28 @@ class Polygons(Init):
 
 		if tb.menu_.chk013.isChecked(): #intersection
 			pm.mel.PolygonBooleanIntersection()
+
+
+	@Slots.message
+	def tb009(self, state=None):
+		'''
+		Snap Closest Verts
+		'''
+		tb = self.ui.tb009
+		if state is 'setMenu':
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Tolerance: ', setObjectName='s005', setMinMax_='.000-100 step.05', setValue=10, setToolTip='Set the max Snap Distance. Vertices with a distance exceeding this value will be ignored.')
+			tb.menu_.add('QCheckBox', setText='Freeze Transforms', setObjectName='chk016', setChecked=True, setToolTip='Freeze Transformations on the object that is being snapped to.')
+			return
+
+		tolerance = tb.menu_.s005.value()
+		freezetransforms = tb.menu_.chk016.isChecked()
+
+		selection = pm.ls(sl=1, objectsOnly=1)
+		if len(selection)>1:
+			obj1, obj2 = selection
+			Init.snapClosestVerts(obj1, obj2, tolerance, freezetransforms)
+		else:
+			return 'Error: Operation requires at least two selected objects.'
 
 
 	@Init.attr

@@ -10,18 +10,18 @@ class File(Init):
 		super(File, self).__init__(*args, **kwargs)
 
 
-	def pin(self, state=None):
+	def d000(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.file.pin
+		d000 = self.file.d000
 
 		if state is 'setMenu':
-			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb005', setToolTip='')
-			pin.contextMenu.add(widgets.TkToolButton, setObjectName='tb000', setText='Save', setToolTip='')
-			pin.contextMenu.add(widgets.TkLabel, setObjectName='lbl001', setText='Minimize App', setToolTip='Minimize the main application.')
-			pin.contextMenu.add(widgets.TkLabel, setObjectName='lbl002', setText='Maximize App', setToolTip='Restore the main application.')
-			pin.contextMenu.add(widgets.TkLabel, setObjectName='lbl003', setText='Close App', setToolTip='Close the main application.')
+			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb005', setToolTip='')
+			d000.contextMenu.add(widgets.TkToolButton, setObjectName='tb000', setText='Save', setToolTip='')
+			d000.contextMenu.add(widgets.TkLabel, setObjectName='lbl001', setText='Minimize App', setToolTip='Minimize the main application.')
+			d000.contextMenu.add(widgets.TkLabel, setObjectName='lbl002', setText='Maximize App', setToolTip='Restore the main application.')
+			d000.contextMenu.add(widgets.TkLabel, setObjectName='lbl003', setText='Close App', setToolTip='Close the main application.')
 			return
 
 

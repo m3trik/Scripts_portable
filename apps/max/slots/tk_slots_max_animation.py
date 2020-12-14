@@ -13,14 +13,14 @@ class Animation(Init):
 		self.childUi = self.sb.getUi('animation_submenu')
 
 
-	def pin(self, state=None):
+	def d000(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.parentUi.pin
+		d000 = self.parentUi.d000
 
 		if state is 'setMenu':
-			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='')
+			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='')
 			return
 
 
@@ -28,7 +28,7 @@ class Animation(Init):
 		'''
 		Editors
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.parentUi.d000.contextMenu.cmb000
 
 		if index is 'setMenu':
 			list_ = ['']

@@ -142,7 +142,7 @@ class Init(Slots):
 		Get the components of the given type.
 
 		:Parameters:
-			componentType (str) = The desired component mask. valid values are: 'vtx'(vertices), 'e'(edges), 'f'(faces), 'cv'(control vertices).
+			componentType (str)(int) = The desired component mask. valid values are: 'vtx','vertex','vertices','Polygon Vertex',31(vertices), 'e','edge','edges','Polygon Edge',32(edges), 'f','face','faces','Polygon Face',34(faces), 'cv','control vertex','control vertices','Control Vertex',28(control vertices).
 			objects (obj)(list) = The object(s) to get the components of.
 			selection (bool) = Filter to currently selected objects.
 			returnType (type) = The desired returned object type. (valid: unicode(default, str, int, object)
@@ -158,12 +158,21 @@ class Init(Slots):
 			if selection:
 				o = pm.ls(sl=1)
 				t = Init.getObjectType(o)
-				types = {'Polygon Vertex':'vtx', 'Polygon Edge':'e', 'Polygon Face':'f'}
+				types = {'Polygon Vertex':'vtx', 'Polygon Edge':'e', 'Polygon Face':'f', 'Control Vertex':'cv'}
 				componentType = types[t] if t in types else None
 				if not componentType:
 					return
 			else:
 				return
+		else: #get the correct componentType variable from possible args.
+			if componentType in ('vtx', 'vertex', 'vertices', 'Polygon Vertex', 31):
+				componentType = 'vtx'
+			elif componentType in ('e', 'edge', 'edges', 'Polygon Edge', 32):
+				componentType = 'e'
+			elif componentType in ('f', 'face', 'faces', 'Polygon Face', 34):
+				componentType = 'f'
+			elif componentType in ('cv', 'control vertex', 'control vertices', 'Control Vertex', 28):
+				componentType = 'f'
 
 		mask = {'vtx':31, 'e':32, 'f':34, 'cv':28}
 		components=[]
@@ -946,7 +955,7 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getEdgePath(components, returnType=''):
+	def getEdgePath(components, returnType='edgeLoop'):
 		'''
 		Query the polySelect command for the components along different edge paths.
 
@@ -958,8 +967,8 @@ class Init(Slots):
 			(list) The components comprising the path.
 		'''
 		components = pm.ls(components, flatten=1)
-		obj = Init.getObjectFromComponent(components[0])
-		componentNumbers = Init.getComponents(components, returnType=int, flatten=1).values()[0] #get the vertex numbers as integer values. ie. [818, 1380]
+		obj = set(pm.ls(components, objectsOnly=1))
+		componentNumbers = Init.getComponents('e', obj, returnType=int, flatten=1).values()[0] #get the vertex numbers as integer values. ie. [818, 1380]
 
 		edgesLong=None
 		if returnType=='shortestEdgePath':
@@ -1506,8 +1515,8 @@ class Init(Slots):
 
 		result={}
 		for component in components:
-			shapeNode = pm.listRelatives(component, parent=1)[0]
-			transform = pm.listRelatives(shapeNode, parent=1)[0]
+			shapeNode = pm.listRelatives(component, parent=1)[0] #set(pm.ls(components, transform=1))
+			transform = pm.listRelatives(shapeNode, parent=1)[0] #set(pm.ls(components, shape=1))
 
 			if returnType is 'transform':
 				node = transform
@@ -1656,7 +1665,7 @@ class Init(Slots):
 			exclude = ['message', 'caching', 'frozen', 'isHistoricallyInteresting', 'nodeState', 'binMembership', 'output', 'edgeIdMap', 'miterAlong', 'message',
 					'axis', 'axisX', 'axisY', 'axisZ', 'paramWarn', 'uvSetName', 'createUVs', 'texture', 'maya70', 'inputPolymesh', 'maya2017Update1', 
 					'manipMatrix', 'inMeshCache', 'faceIdMap', 'subdivideNgons', 'useOldPolyArchitecture', 'inputComponents', 
-					'binMembership', 'maya2015', 'cacheInput', 'inputMatrix', 'forceParallel', 'autoFit', 'maya2016SP3', 'caching', 'output', 'vertexIdMap', 
+					'binMembership', 'maya2015', 'cacheInput', 'inputMatrix', 'forceParallel', 'autoFit', 'maya2016SP3', 'maya2017', 'caching', 'output', 'vertexIdMap', 
 					'useInputComp', 'worldSpace', 'taperCurve_Position', 'taperCurve_FloatValue', 'taperCurve_Interp',
 					]
 

@@ -10,16 +10,16 @@ class Subdivision(Init):
 		super(Subdivision, self).__init__(*args, **kwargs)
 
 
-	def pin(self, state=None):
+	def d000(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.subdivision.pin
+		d000 = self.subdivision.d000
 
 		if state is 'setMenu':
-			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='Maya Subdivision Editiors.')
-			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb002', setToolTip='Maya Subdivision Operations.')
-			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb001', setToolTip='Smooth Proxy.')
+			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='Maya Subdivision Editiors.')
+			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb002', setToolTip='Maya Subdivision Operations.')
+			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb001', setToolTip='Smooth Proxy.')
 			return
 
 

@@ -24,15 +24,15 @@ class Materials(Init):
 		return self.currentMats[text] if text else None
 
 
-	def pin(self, state=None):
+	def d000(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.materials.pin
+		d000 = self.materials.d000
 
 		if state is 'setMenu':
-			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb001', setToolTip='Maya Material Editors')
-			pin.contextMenu.add(widgets.TkLabel, setText='Material Attributes', setObjectName='lbl004', setToolTip='Show the material attributes in the attribute editor.')
+			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb001', setToolTip='Maya Material Editors')
+			d000.contextMenu.add(widgets.TkLabel, setText='Material Attributes', setObjectName='lbl004', setToolTip='Show the material attributes in the attribute editor.')
 			return
 
 

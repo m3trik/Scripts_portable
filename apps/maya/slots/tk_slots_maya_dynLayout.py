@@ -10,15 +10,15 @@ class DynLayout(Init):
 		super(DynLayout, self).__init__(*args, **kwargs)
 
 
-	def pin(self, state=None):
+	def d000(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.dynLayout.pin
+		d000 = self.dynLayout.d000
 
 		if state is 'setMenu':
-			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='')
-			pin.contextMenu.add('QPushButton', setText='Delete History', setObjectName='b000', setToolTip='')
+			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='')
+			d000.contextMenu.add('QPushButton', setText='Delete History', setObjectName='b000', setToolTip='')
 			return
 
 

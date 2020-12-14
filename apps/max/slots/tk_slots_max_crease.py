@@ -25,14 +25,14 @@ class Crease(Init):
 				self.ui.tb000.setText('{} {}'.format(text, self.creaseValue))
 
 
-	def pin(self, state=None):
+	def d000(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.crease.pin
+		d000 = self.crease.d000
 
 		if state is 'setMenu':
-			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='3ds Max Crease Modifiers')
+			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='3ds Max Crease Modifiers')
 			return
 
 

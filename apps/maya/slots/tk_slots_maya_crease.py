@@ -25,14 +25,14 @@ class Crease(Init):
 				self.ui.tb000.setText('{} {}'.format(text, self.creaseValue))
 
 
-	def pin(self, state=None):
+	def d000(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.crease.pin
+		d000 = self.crease.d000
 
 		if state is 'setMenu':
-			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='Maya Crease Editors')
+			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='Maya Crease Editors')
 			return
 
 
@@ -40,7 +40,7 @@ class Crease(Init):
 		'''
 		Editors
 		'''
-		cmb = self.crease.cmb000
+		cmb = self.crease.d000.contextMenu.cmb000
 
 		if index is 'setMenu':
 			list_ = ['Crease Set Editor']
@@ -63,7 +63,7 @@ class Crease(Init):
 		if self.ui.chk002.isChecked():
 			self.crease.s003.setValue(0) #crease value
 			self.crease.s004.setValue(180) #normal angle
-			self.toggleWidgets(setChecked='chk002', setUnChecked='chk003')
+			self.toggleWidgets(self.crease.tb000, self.crease_submenu.tb000, setChecked='chk002', setUnChecked='chk003')
 			self.crease.s003.setDisabled(True)
 			self.ui.tb000.setText('Un-Crease 0')
 		else:
@@ -81,7 +81,7 @@ class Crease(Init):
 		if self.ui.chk003.isChecked():
 			self.crease.s003.setValue(10) #crease value
 			self.crease.s004.setValue(30) #normal angle
-			self.toggleWidgets(setChecked='chk003', setUnChecked='chk002')
+			self.toggleWidgets(self.crease.tb000, self.crease_submenu.tb000, setChecked='chk003', setUnChecked='chk002')
 			self.crease.s003.setDisabled(True)
 			self.ui.tb000.setText('Crease 10')
 		else:

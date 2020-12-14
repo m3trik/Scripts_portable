@@ -10,14 +10,14 @@ class Transform(Init):
 		super(Transform, self).__init__(*args, **kwargs)
 
 
-	def pin(self, state=None):
+	def d000(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.transform.pin
+		d000 = self.transform.d000
 
 		if state is 'setMenu':
-			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='')
+			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='')
 			return
 
 
@@ -426,28 +426,6 @@ class Transform(Init):
 
 		if all ([x, y, z]): #align xyz
 			self.alignVertices(mode=6,average=avg,edgeloop=loop)
-
-
-	@Slots.message
-	def tb002(self, state=None):
-		'''
-		Snap Closest Verts
-		'''
-		tb = self.ui.tb002
-		if state is 'setMenu':
-			tb.menu_.add('QDoubleSpinBox', setPrefix='Tolerance: ', setObjectName='s001', setMinMax_='.000-100 step.05', setValue=10, setToolTip='Set the max Snap Distance. Vertices with a distance exceeding this value will be ignored.')
-			tb.menu_.add('QCheckBox', setText='Freeze Transforms', setObjectName='chk012', setChecked=True, setToolTip='Freeze Transformations on the object that is being snapped to.')
-			return
-
-		tolerance = tb.menu_.s001.value()
-		freezetransforms = tb.menu_.chk012.isChecked()
-
-		selection = pm.ls(sl=1, objectsOnly=1)
-		if len(selection)>1:
-			obj1, obj2 = selection
-			Init.snapClosestVerts(obj1, obj2, tolerance, freezetransforms)
-		else:
-			return 'Error: Operation requires at least two selected objects.'
 
 
 	def lbl000(self):

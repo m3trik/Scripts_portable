@@ -646,7 +646,7 @@
       </layout>
      </item>
      <item row="1" column="1" colspan="2">
-      <widget class="TkPushButton_Draggable" name="pin">
+      <widget class="TkPushButton_Draggable" name="d000">
        <property name="minimumSize">
         <size>
          <width>19</width>

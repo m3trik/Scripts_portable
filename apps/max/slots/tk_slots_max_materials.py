@@ -24,14 +24,14 @@ class Materials(Init):
 		return self.currentMats[text] if text else None
 
 
-	def pin(self, state=None):
+	def d000(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.materials.pin
+		d000 = self.materials.d000
 
 		if state is 'setMenu':
-			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb001', setToolTip='3dsMax Material Editors')
+			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb001', setToolTip='3dsMax Material Editors')
 			return
 
 

@@ -15,14 +15,14 @@ class Scene(Init):
 		self.parentUi.t000.returnPressed.connect(self.t001) #preform rename on returnPressed
 
 
-	def pin(self, state=None):
+	def d000(self, state=None):
 		'''
 		Context menu
 		'''
-		pin = self.parentUi.pin
+		d000 = self.parentUi.d000
 
 		if state is 'setMenu':
-			pin.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='Maya Scene Editors')
+			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='Maya Scene Editors')
 			return
 
 

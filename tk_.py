@@ -199,7 +199,7 @@ class Tk(QtWidgets.QStackedWidget):
 		if not event.isAutoRepeat():
 			modifiers = QtWidgets.QApplication.keyboardModifiers()
 
-			if event.key()==self.key_show:
+			if event.key()==self.key_show and not modifiers==QtCore.Qt.ControlModifier:
 				self.hide()
 
 		return QtWidgets.QStackedWidget.keyReleaseEvent(self, event)
@@ -225,9 +225,6 @@ class Tk(QtWidgets.QStackedWidget):
 
 			elif event.button()==QtCore.Qt.RightButton:
 				self.setUi('main')
-
-
-			
 
 		return QtWidgets.QStackedWidget.mousePressEvent(self, event)
 
