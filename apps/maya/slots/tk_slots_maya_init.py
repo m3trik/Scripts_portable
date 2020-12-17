@@ -137,13 +137,13 @@ class Init(Slots):
 	# ------------------------------------------------
 
 	@staticmethod
-	def getComponents(componentType=None, objects=None, selection=False, returnType=unicode, returnNodeType='shape', flatten=False):
+	def getComponents(objects=None, componentType=None, selection=False, returnType=unicode, returnNodeType='shape', flatten=False):
 		'''
 		Get the components of the given type.
 
 		:Parameters:
-			componentType (str)(int) = The desired component mask. valid values are: 'vtx','vertex','vertices','Polygon Vertex',31(vertices), 'e','edge','edges','Polygon Edge',32(edges), 'f','face','faces','Polygon Face',34(faces), 'cv','control vertex','control vertices','Control Vertex',28(control vertices).
-			objects (obj)(list) = The object(s) to get the components of.
+			objects (str)(obj)(list) = The object(s) to get the components of.
+			componentType (str)(int) = The desired component mask. (valid: 'vtx','vertex','vertices','Polygon Vertex',31(vertices), 'e','edge','edges','Polygon Edge',32(edges), 'f','face','faces','Polygon Face',34(faces), 'cv','control vertex','control vertices','Control Vertex',28(control vertices) (default:None).
 			selection (bool) = Filter to currently selected objects.
 			returnType (type) = The desired returned object type. (valid: unicode(default, str, int, object)
 			returnNodeType (str) = Specify whether the components are returned with the transform or shape nodes (valid only with str and unicode returnTypes). (valid: 'transform', 'shape'(default)) ex. 'pCylinder1.f[0]' or 'pCylinderShape1.f[0]'
@@ -152,7 +152,7 @@ class Init(Slots):
 		:Return:
 			(list)(dict) Dependant on flags.
 
-		ex. getComponents('f', obj, returnType=object)
+		ex. getComponents(objects, 'faces' returnType=object)
 		'''
 		if not componentType: #get component type from the current selection.
 			if selection:
@@ -160,19 +160,20 @@ class Init(Slots):
 				t = Init.getObjectType(o)
 				types = {'Polygon Vertex':'vtx', 'Polygon Edge':'e', 'Polygon Face':'f', 'Control Vertex':'cv'}
 				componentType = types[t] if t in types else None
-				if not componentType:
-					return
+				if not componentType: #get all components of the given objects.
+					all_components = [Init.getComponents(objects, typ) for typ in types]
+					return all_components
 			else:
 				return
 		else: #get the correct componentType variable from possible args.
-			if componentType in ('vtx', 'vertex', 'vertices', 'Polygon Vertex', 31):
+			if componentType in ('vtx', 'vertex', 'vertices', 'Polygon Vertex', 31, 0x0001):
 				componentType = 'vtx'
-			elif componentType in ('e', 'edge', 'edges', 'Polygon Edge', 32):
+			elif componentType in ('e', 'edge', 'edges', 'Polygon Edge', 32, 0x8000):
 				componentType = 'e'
-			elif componentType in ('f', 'face', 'faces', 'Polygon Face', 34):
+			elif componentType in ('f', 'face', 'faces', 'Polygon Face', 34, 0x0008):
 				componentType = 'f'
-			elif componentType in ('cv', 'control vertex', 'control vertices', 'Control Vertex', 28):
-				componentType = 'f'
+			elif componentType in ('cv', 'control vertex', 'control vertices', 'Control Vertex', 28, 0x0010):
+				componentType = 'cv'
 
 		mask = {'vtx':31, 'e':32, 'f':34, 'cv':28}
 		components=[]
@@ -238,6 +239,51 @@ class Init(Slots):
 
 
 	@staticmethod
+	def getRandomComponents(objects, componentType='vertex', randomRatio=0.5, returnType=unicode, flatten=False):
+		'''
+		Get a list of random components from the given object(s) using maya's polySelectConstraint.
+
+		:Parameters:
+			objects (str)(list)(obj) = The object(s) to get random components of.
+			componentType (str)(int) = The desired component mask. (valid: 'vtx','vertex','vertices','Polygon Vertex',31,0x0001(vertices), 'e','edge','edges','Polygon Edge',32,0x8000(edges), 'f','face','faces','Polygon Face',34,0x0008(faces), 'uv','texture','texture coordinates','Polygon UV',35,0x0010(texture coordiantes).
+			randomRatio (float) = Randomize amount in range 0-1.
+			returnNodeType (str) = Specify whether the components are returned with the transform or shape nodes (valid only with str and unicode returnTypes). (valid: 'transform', 'shape'(default)) ex. 'pCylinder1.f[0]' or 'pCylinderShape1.f[0]'
+			flatten (bool) = Flattens the returned list of objects so that each component is identified individually.
+
+		:Return:
+			(list) Polygon components.
+		'''
+		if componentType in ('vtx', 'vertex', 'vertices', 'Polygon Vertex', 31, 0x0001):
+			componentType = 0x0001
+		elif componentType in ('e', 'edge', 'edges', 'Polygon Edge', 32, 0x8000):
+			componentType = 0x8000
+		elif componentType in ('f', 'face', 'faces', 'Polygon Face', 34, 0x0008):
+			componentType = 0x0008
+		elif componentType in ('uv', 'texture', 'texture coordinates', 'Polygon UV', 35, 0x0010):
+			componentType = 0x0010
+
+		orig_selection = pm.ls(sl=1) #get currently selected objects in order to re-select them after the contraint operation.
+
+		pm.polySelectConstraint(mode=3, type=componentType, random=True, randomratio=randomRatio)
+
+		if componentType is 'vertex':
+			pm.selectType(polymeshVertex=True)
+		elif componentType is 'edge':
+			pm.selectType(polymeshEdge=True)
+		elif componentType is 'face':
+			pm.selectType(polymeshFace=True)
+		else:
+			pm.selectType(polymeshUV=True) #pm.selectType(texture=True)
+
+		result = Init.getComponents(objects, selection=1, returnType=returnType, flatten=flatten)
+
+		pm.polySelectConstraint(random=False) # turn off the random constraint
+		pm.select(orig_selection) #re-select any originally selected objects.
+
+		return result
+
+
+	@staticmethod
 	def getUvShellSets(objects=None, returnType='shells'):
 		'''
 		Get All UV shells and their corresponding sets of faces.
@@ -259,7 +305,7 @@ class Init(Slots):
 		if objectType=='Polygon Face':
 			faces = objects
 		else:
-			faces = Init.getComponents('f', objects)
+			faces = Init.getComponents(objects, 'faces')
 
 		shells={}
 		for face in faces:
@@ -435,7 +481,7 @@ class Init(Slots):
 
 		object_type = Init.getObjectType(x[0])
 		if object_type=='Polygon':
-			x = Init.getComponents('e', x)
+			x = Init.getComponents(x, 'edges')
 		elif object_type=='Polygon Vertex':
 			x = pm.polyListComponentConversion(x, fromVertex=1, toEdge=1)
 		elif object_type=='Polygon Face':
@@ -508,7 +554,7 @@ class Init(Slots):
 			(dict) closest vertex/cv pairs (one pair for each given curve) ex. {<vertex from set1>:<vertex from set2>}.
 
 		ex. 
-			vertices = Init.getComponents('vtx', objects)
+			vertices = Init.getComponents(objects, 'vertices')
 			closestVerts = getClosestCV(curve0, curves)
 		'''
 		pm.undoInfo(openChunk=True)
@@ -643,7 +689,7 @@ class Init(Slots):
 		for curve in pm.ls(curves):
 			p0 = pm.objectCenter(curve)
 
-			cvs = Init.getComponents('cv', curve, returnType=object, flatten=1)
+			cvs = Init.getComponents(curve, 'cv', returnType=object, flatten=1)
 			cvPos = Init.getCvInfo(curve, 'position')
 			p1 = cvPos[cvs[0]]
 			p2 = cvPos[cvs[(len(cvs)/2)]]
@@ -670,8 +716,8 @@ class Init(Slots):
 		:Return:
 			(list) closest vertex pairs by order of distance (excluding those not meeting the tolerance). (<vertex from set1>, <vertex from set2>).
 
-		ex. verts1 = Init.getComponents('vtx', 'pCube1')
-			verts2 = Init.getComponents('vtx', 'pCube2')
+		ex. verts1 = Init.getComponents('pCube1', 'vertices')
+			verts2 = Init.getComponents(pCube2', 'vertices')
 			closestVerts = getClosestVerts(verts1, verts2)
 		'''
 		vertPairsAndDistance={}
@@ -706,7 +752,7 @@ class Init(Slots):
 			(dict) closest vertex pairs {<vertex from set1>:<vertex from set2>}.
 
 		ex. obj1, obj2 = selection
-			vertices = Init.getComponents('vtx', obj1)
+			vertices = Init.getComponents(obj1, 'vertices')
 			closestVerts = getClosestVertex(vertices, obj2, tolerance=10)
 		'''
 		pm.undoInfo(openChunk=True)
@@ -751,7 +797,7 @@ class Init(Slots):
 			tolerance (float) = Maximum search distance.
 			freezeTransforms (bool) = Reset the selected transform and all of its children down to the shape level.
 		'''
-		vertices = Init.getComponents('vtx', obj1)
+		vertices = Init.getComponents(obj1, 'vertices')
 		closestVerts = Init.getClosestVertex(vertices, obj2, tolerance=tolerance, freezeTransforms=freezeTransforms)
 
 		progressBar = mel.eval("$container=$gMainProgressBar");
@@ -851,7 +897,7 @@ class Init(Slots):
 
 		nonManifoldVerts=set()
 
-		vertices = Init.getComponents('vtx', objects)
+		vertices = Init.getComponents(objects, 'vertices')
 		for vertex in vertices:
 
 			connected_faces = pm.polyListComponentConversion(vertex, fromVertex=1, toFace=1) #pm.mel.PolySelectConvert(1) #convert to faces
@@ -968,7 +1014,7 @@ class Init(Slots):
 		'''
 		components = pm.ls(components, flatten=1)
 		obj = set(pm.ls(components, objectsOnly=1))
-		componentNumbers = Init.getComponents('e', obj, returnType=int, flatten=1).values()[0] #get the vertex numbers as integer values. ie. [818, 1380]
+		componentNumbers = Init.getComponents(obj, 'edges', returnType=int, flatten=1).values()[0] #get the vertex numbers as integer values. ie. [818, 1380]
 
 		edgesLong=None
 		if returnType=='shortestEdgePath':
@@ -1136,6 +1182,86 @@ class Init(Slots):
 
 			edges = Init.getEdgePath(pm.ls(edges, flatten=1), 'edgeRing')
 			[result.append(i) for i in edges]
+
+		return result
+
+
+	@staticmethod
+	def getEdgesByNormalAngle(objects, lowAngle=50, highAngle=130, returnType=unicode, flatten=False):
+		'''
+		Get a list of edges having normals between the given high and low angles using maya's polySelectConstraint.
+
+		:Parameters:
+			objects (str)(list)(obj) = The object(s) to get edges of.
+			lowAngle (int) = Normal angle low range.
+			highAngle (int) = Normal angle high range.
+			returnNodeType (str) = Specify whether the components are returned with the transform or shape nodes (valid only with str and unicode returnTypes). (valid: 'transform', 'shape'(default)) ex. 'pCylinder1.f[0]' or 'pCylinderShape1.f[0]'
+			flatten (bool) = Flattens the returned list of objects so that each component is identified individually.
+
+		:Return:
+			(list) Polygon edges.
+		'''
+		orig_selection = pm.ls(sl=1) #get currently selected objects in order to re-select them after the contraint operation.
+
+		pm.polySelectConstraint(angle=True, anglebound=(lowAngle, highAngle), mode=3, type=0x8000) #Constrain that selection to only edges of a certain Angle
+		pm.selectType(polymeshEdge=True)
+		edges = Init.getComponents(objects, 'edges', selection=1, returnType=returnType, flatten=flatten)
+
+		pm.polySelectConstraint(mode=0) #Remove the selection constraint.
+		pm.select(orig_selection) #re-select any originally selected objects.
+
+		return edges
+
+
+	@staticmethod
+	def getComponentsByNumberOfConnected(components, num_of_connected=(0,2), connectedType=None, returnType=unicode, flatten=False):
+		'''
+		Get a list of components filtered by the number of their connected components.
+
+		:Parameters:
+			components (str)(list)(obj) = The components to filter.
+			num_of_connected (int)(tuple) = The number of connected components. Can be given as a range. (Default: (0,2))
+			connectedType (str)(int) = The desired component mask. (valid: 'vtx','vertex','vertices','Polygon Vertex',31,0x0001(vertices), 'e','edge','edges','Polygon Edge',32,0x8000(edges), 'f','face','faces','Polygon Face',34,0x0008(faces), 'uv','texture','texture coordinates','Polygon UV',35,0x0010(texture coordiantes).
+			returnNodeType (str) = Specify whether the components are returned with the transform or shape nodes (valid only with str and unicode returnTypes). (valid: 'transform', 'shape'(default)) ex. 'pCylinder1.f[0]' or 'pCylinderShape1.f[0]'
+			flatten (bool) = Flattens the returned list of objects so that each component is identified individually.
+
+		:Return:
+			(list) Polygon vertices.
+
+		ex. components = Init.getComponents(objects, 'faces', selection=1)
+			faces = getComponentsByNumberOfConnected(components, 4, 'Polygon Edge') #returns faces with four connected edges (four sided faces).
+
+		ex. components = Init.getComponents(objects, 'vertices', selection=1)
+			verts = getComponentsByNumberOfConnected(components, (0,2), 'Polygon Edge') #returns vertices with up to two connected edges.
+		'''
+		if connectedType in ('vtx', 'vertex', 'vertices', 'Polygon Vertex', 31, 0x0001):
+			connectedType = 'Polygon Vertex'
+		elif connectedType in ('e', 'edge', 'edges', 'Polygon Edge', 32, 0x8000):
+			connectedType = 'Polygon Edge'
+		elif connectedType in ('f', 'face', 'faces', 'Polygon Face', 34, 0x0008):
+			connectedType = 'Polygon Face'
+
+		if isinstance(num_of_connected, (tuple, list, set)):
+			lowRange, highRange = num_of_connected
+		else:
+			lowRange = highRange = num_of_connected
+
+		component_type = Init.getObjectType(components)
+		if not connectedType:
+			connectedType = component_type
+
+		result=[]
+		for c in pm.ls(components, flatten=1):
+			fm = {'Polygon Vertex':'fromVertex', 'Polygon Edge':'fromEdge', 'Polygon Face':'fromFace'}
+			to = {'Polygon Vertex':'toVertex', 'Polygon Edge':'toEdge', 'Polygon Face':'toFace'}
+			kwargs = {'fromVertex':False, 'fromEdge':False, 'fromFace':False, 'toVertex':False, 'toEdge':False, 'toFace':False}
+
+			kwargs[fm[component_type]] = True #ex. kwargs['fromVertex'] = True
+			kwargs[to[connectedType]] = True #ex. kwargs['toEdge'] = True
+
+			num = len(pm.ls(pm.polyListComponentConversion(c, **kwargs), flatten=1))
+			if num>=lowRange and num<=highRange:
+				result.append(c)
 
 		return result
 
@@ -1334,7 +1460,7 @@ class Init(Slots):
 					transforms = Init.getObjectFromComponent(face)
 
 				for node in transforms:
-					for f in Init.getComponents('f', node, returnType=returnType, returnNodeType=returnNodeType, flatten=1):
+					for f in Init.getComponents(node, 'faces', returnType=returnType, returnNodeType=returnNodeType, flatten=1):
 
 						n = Init.getNormalVector(f)
 						for k, v in n.items():
@@ -1546,18 +1672,17 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getTransformNode(node=None, index=0, attributes=False, regEx=''):
+	def getTransformNode(node=None, attributes=False, regEx=''):
 		'''
-		Get the transform node. 
+		Get the transform node(s). 
 
 		:Parameters:
 			node (obj) = Node. If nothing is given, the current selection will be used.
-			index (int) = Return the transform node at the given index. if Nothing is given, the full list will be returned. ie. index=[:-1] or index=0
 			attributes (bool) = Return the attributes of the node, rather then the node itself.
 			regEx (str) = 	List only the attributes that match the string(s) passed from this flag. String can be a regular expression.
 
 		:Return:
-			(str) node
+			(list) node(s)
 		'''
 		if not node:
 			node = pm.ls(sl=1)
@@ -1566,9 +1691,6 @@ class Init(Slots):
 		if not transforms:
 			shapeNodes = pm.ls(sl=1, objectsOnly=1)
 			transforms = pm.listRelatives(shapeNodes, parent=1)
-
-		if transforms and index is not None:
-			transforms = transforms[index]
 		
 		if attributes:
 			transforms = pm.listAttr(transforms, read=1, hasData=1, string=regEx)
@@ -1577,18 +1699,17 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getShapeNode(node=None, index=0, attributes=False, regEx=''):
+	def getShapeNode(node=None, attributes=False, regEx=''):
 		'''
-		Get the shape node. 
+		Get the shape node(s).
 
 		:Parameters:
 			node (obj) = Node. If nothing is given, the current selection will be used.
-			index (int) = Return the shape node at the given index. if Nothing is given, the full list will be returned. ie. index=[:-1] or index=0
 			attributes (bool) = Return the attributes of the node, rather then the node itself.
 			regEx (str) = 	List only the attributes that match the string(s) passed from this flag. String can be a regular expression.
 
 		:Return:
-			(str) node
+			(list) node(s)
 		'''
 		if not node:
 			pm.ls(sl=1, type='transform')
@@ -1596,9 +1717,6 @@ class Init(Slots):
 		shapes = pm.listRelatives(node, children=1, shapes=1) #get shape node from transform: returns list ie. [nt.Mesh('pConeShape1')]
 		if not shapes:
 			shapes = pm.ls(node, type='shape')
-
-		if shapes and index is not None:
-			shapes = shapes[index]
 		
 		if attributes:
 			shapes = pm.listAttr(shapes, read=1, hasData=1, string=regEx)
@@ -1607,29 +1725,25 @@ class Init(Slots):
 
 
 	@staticmethod
-	def getHistoryNode(node=None, index=0, attributes=False, regEx=''):
+	def getHistoryNode(node=None, attributes=False, regEx=''):
 		'''
-		Get the history node. 
+		Get the history node(s). 
 
 		:Parameters:
 			node (obj) = Node. If nothing is given, the current selection will be used.
-			index (int) = Return the transform node at the given index. if Nothing is given, the full list will be returned. ie. index=[:-1] or index=0
 			attributes (bool) = Return the attributes of the node, rather then the node itself.
 			regEx (str) = 	List only the attributes that match the string(s) passed from this flag. String can be a regular expression.
 
 		:Return:
-			(str) node
-
-		alt method: node.history()[-1]
+			(list) node(s)
 		'''
 		if not node:
 			pm.ls(sl=1, type='transform')
 
 		shapes = pm.listRelatives(node, children=1, shapes=1) #get shape node from transform: returns list ie. [nt.Mesh('pConeShape1')]
 		connections = pm.listConnections(shapes, source=1, destination=0) #get incoming connections: returns list ie. [nt.PolyCone('polyCone1')]
-
-		if connections and index is not None:
-			connections = connections[index]
+		if not connections:
+			connections = node.history()[-1]
 
 		if attributes:
 			connections = pm.listAttr(connections, read=1, hasData=1, string=regEx)

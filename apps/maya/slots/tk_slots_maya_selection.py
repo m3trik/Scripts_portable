@@ -582,6 +582,24 @@ class Selection(Init):
 			return 'Warning: No faces were selected.'
 
 
+	def tb003(self, state=None):
+		'''
+		Select Edges By Angle
+		'''
+		tb = self.currentUi.tb003
+		if state is 'setMenu':
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Angle Low:  ', setObjectName='s006', setMinMax_='0.0-180 step1', setValue=50, setToolTip='Normal angle low range.')
+			tb.menu_.add('QDoubleSpinBox', setPrefix='Angle High: ', setObjectName='s007', setMinMax_='0.0-180 step1', setValue=130, setToolTip='Normal angle high range.')
+			return
+
+		angleLow = tb.menu_.s006.value()
+		angleHigh = tb.menu_.s007.value()
+
+		objects = pm.ls(sl=1, objectsOnly=1)
+		edges = Init.getEdgesByNormalAngle(objects, lowAngle=angleLow, highAngle=angleHigh)
+		pm.select(edges)
+
+
 	def b016(self):
 		'''
 		Convert Selection To Vertices
