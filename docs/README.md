@@ -3,7 +3,7 @@
 
 ## Design:
 ######
-*This is a cross-platform, modular, marking menu style ui based on a QStackedWidget. Constructed dynamically for minimal overhead, naming convention and directory structure allows for a stacked ui to be constructed, signals added/removed as needed, and a master dictionary (switchboard module) to be created, which provides convenience methods that allow getting/setting of relevant data across modules.*
+*This is a cross-platform, modular, marking menu style ui based on a QStackedWidget. Constructed dynamically for minimal overhead, naming convention and directory structure allows for a stacked ui to be constructed, signals added/removed as needed, and a master dictionary (switchboard module) to be created, which provides convenience methods that allow for getting/setting of relevant data across modules.*
 
 ![alt text](https://raw.githubusercontent.com/m3trik/tk/master/docs/toolkit_demo.gif)
 *Example re-opening the last scene, renaming a material, and selecting geometry by that material.
