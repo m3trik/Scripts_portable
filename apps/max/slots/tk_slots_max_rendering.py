@@ -21,8 +21,7 @@ class Rendering(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.parentUi.d000
 
@@ -32,8 +31,7 @@ class Rendering(Init):
 
 
 	def cmb001(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.parentUi.cmb001
 
@@ -49,8 +47,7 @@ class Rendering(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Render: camera
+		'''Render: camera
 		'''
 		cmb = self.parentUi.cmb000
 
@@ -64,8 +61,7 @@ class Rendering(Init):
 
 
 	def b000(self):
-		'''
-		Render Current Frame
+		'''Render Current Frame
 		'''
 		cmb = self.parentUi.cmb000
 		index = cmb.currentIndex()
@@ -77,36 +73,31 @@ class Rendering(Init):
 
 
 	def b001(self):
-		'''
-		Open Render Settings Window
+		'''Open Render Settings Window
 		'''
 		maxEval('unifiedRenderGlobalsWindow;')
 
 
 	def b002(self):
-		'''
-		Redo Previous Render
+		'''Redo Previous Render
 		'''
 		pass
 
 
 	def b003(self):
-		'''
-		Editor: Render Setup
+		'''Editor: Render Setup
 		'''
 		maxEval('max render scene')
 
 
 	def b004(self):
-		'''
-		Editor: Rendering Flags
+		'''Editor: Rendering Flags
 		'''
 		maxEval('renderFlagsWindow;')
 
 
 	def b005(self):
-		'''
-		Apply Vray Attributes To Selected Objects
+		'''Apply Vray Attributes To Selected Objects
 		'''
 		selection = pm.ls(selection=1)
 		currentID=1
@@ -125,8 +116,7 @@ class Rendering(Init):
 
 	@Slots.message
 	def b006(self):
-		'''
-		Load Vray Plugin
+		'''Load Vray Plugin
 		'''
 		vray = ['vrayformaya.mll','vrayformayapatch.mll']
 		if pm.pluginInfo ('vrayformaya.mll', query=1, loaded=1):

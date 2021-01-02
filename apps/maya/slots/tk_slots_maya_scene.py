@@ -16,8 +16,7 @@ class Scene(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.parentUi.d000
 
@@ -27,8 +26,7 @@ class Scene(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.parentUi.cmb000
 
@@ -71,8 +69,7 @@ class Scene(Init):
 
 
 	def t001(self):
-		'''
-		Rename
+		'''Rename
 
 		*find* - search contains chars
 		*find - search endswith chars

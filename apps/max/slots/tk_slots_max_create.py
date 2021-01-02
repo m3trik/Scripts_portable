@@ -15,8 +15,7 @@ class Create(Init):
 
 	@property
 	def node(self):
-		'''
-		Get the Transform Node
+		'''Get the Transform Node
 		'''
 		selection = [i for i in rt.selection]
 		if not selection:
@@ -31,8 +30,7 @@ class Create(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.create.d000
 
@@ -42,8 +40,7 @@ class Create(Init):
 
 
 	def cmb003(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.create.cmb000
 
@@ -59,9 +56,7 @@ class Create(Init):
 
 
 	def getAxis(self):
-		'''
-
-		'''
+		''''''
 		if self.create.chk000.isChecked():
 			axis = 'x'
 		elif self.create.chk001.isChecked():
@@ -74,8 +69,7 @@ class Create(Init):
 
 
 	def rotateAbsolute(self, axis, node):
-		'''
-		Undo previous rotation and rotate on the specified axis.
+		'''Undo previous rotation and rotate on the specified axis.
 		uses an external rotation dictionary.
 		:Parameters:
 			axis (str) = axis to rotate on. ie. '-x'
@@ -94,8 +88,7 @@ class Create(Init):
 
 
 	def s000(self, value=None):
-		'''
-		Set Translate X
+		'''Set Translate X
 		'''
 		if self.node:
 			self.point[0] = float(self.create.s000.value())
@@ -104,8 +97,7 @@ class Create(Init):
 
 
 	def s001(self, value=None):
-		'''
-		Set Translate Y
+		'''Set Translate Y
 		'''
 		if self.node:
 			self.point[1] = float(self.create.s001.value())
@@ -114,8 +106,7 @@ class Create(Init):
 
 
 	def s002(self, value=None):
-		'''
-		Set Translate Z
+		'''Set Translate Z
 		'''
 		if self.node:
 			self.point[2] = float(self.create.s002.value())
@@ -124,16 +115,14 @@ class Create(Init):
 
 
 	def txt003(self):
-		'''
-		Set Name
+		'''Set Name
 		'''
 		if self.node:
 			self.node.name = self.create.txt003.text()
 
 
 	def chk000(self, state=None):
-		'''
-		Rotate X Axis
+		'''Rotate X Axis
 		'''
 		self.toggleWidgets(setChecked='chk000', setUnChecked='chk001,chk002')
 		if self.node:
@@ -141,8 +130,7 @@ class Create(Init):
 
 
 	def chk001(self, state=None):
-		'''
-		Rotate Y Axis
+		'''Rotate Y Axis
 		'''
 		self.toggleWidgets(setChecked='chk001', setUnChecked='chk000,chk002')
 		if self.node:
@@ -150,8 +138,7 @@ class Create(Init):
 
 
 	def chk002(self, state=None):
-		'''
-		Rotate Z Axis
+		'''Rotate Z Axis
 		'''
 		self.toggleWidgets(setChecked='chk002', setUnChecked='chk001,chk000')
 		if self.node:
@@ -159,8 +146,7 @@ class Create(Init):
 
 
 	def chk003(self, state=None):
-		'''
-		Rotate Negative Axis
+		'''Rotate Negative Axis
 		'''
 		if self.node:
 			self.rotateAbsolute(self.getAxis(), self.node)
@@ -168,8 +154,7 @@ class Create(Init):
 
 	@Slots.message
 	def chk005(self, state=None):
-		'''
-		Set Point
+		'''Set Point
 		'''
 		error=0
 		#add support for averaging multiple components and multiple component types.
@@ -194,8 +179,7 @@ class Create(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Create: Select Base Type
+		'''Create: Select Base Type
 		'''
 		cmb = self.create.cmb000
 
@@ -215,9 +199,7 @@ class Create(Init):
 
 
 	def cmb001(self, index=None):
-		'''
-
-		'''
+		''''''
 		cmb = self.create.cmb001
 
 		if index is 'setMenu':
@@ -242,8 +224,7 @@ class Create(Init):
 
 	@Init.attr
 	def b000(self):
-		'''
-		Create Object
+		'''Create Object
 		'''
 		axis = self.getAxis() #get axis as 'string'
 		type_ = self.create.cmb000.currentText()
@@ -353,8 +334,7 @@ class Create(Init):
 
 
 	def createPrimitive(self, catagory1, catagory2):
-		'''
-		ie. createPrimitive('Polygons', 'Cube')
+		'''ie. createPrimitive('Polygons', 'Cube')
 		:Parameters:
 			catagory1 (str) = type
 			catagory2 (str) = type
@@ -369,29 +349,25 @@ class Create(Init):
 
 
 	def b001(self):
-		'''
-		Create poly cube
+		'''Create poly cube
 		'''
 		self.createPrimitive('Polygon', 'Cube')
 
 
 	def b002(self):
-		'''
-		Create poly sphere
+		'''Create poly sphere
 		'''
 		self.createPrimitive('Polygon', 'Sphere')
 
 
 	def b003(self):
-		'''
-		Create poly cylinder
+		'''Create poly cylinder
 		'''
 		self.createPrimitive('Polygon', 'Cylinder')
 
 
 	def b004(self):
-		'''
-		Create poly plane
+		'''Create poly plane
 		'''
 		self.createPrimitive('Polygon', 'Plane')
 

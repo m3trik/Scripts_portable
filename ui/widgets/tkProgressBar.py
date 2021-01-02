@@ -21,8 +21,7 @@ Promoting a widget in designer to use a custom class:
 
 
 class TkProgressBar(QtWidgets.QProgressBar, Attributes):
-	'''
-	ex. for n, i in enumerate(list_):
+	'''ex. for n, i in enumerate(list_):
 			if not self.ui.progressBar.step(n, len(list_)): #register progress while checking for cancellation:
 				break
 	'''
@@ -38,8 +37,7 @@ class TkProgressBar(QtWidgets.QProgressBar, Attributes):
 
 
 	def cancel(self):
-		'''
-		cancel the procedure.
+		'''cancel the procedure.
 		'''
 		self.isCanceled = True
 

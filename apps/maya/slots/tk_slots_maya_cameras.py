@@ -12,8 +12,7 @@ class Cameras(Init):
 
 	@property
 	def clippingMenu(self):
-		'''
-		Menu: Camera clip plane settings.
+		'''Menu: Camera clip plane settings.
 
 		:Return:
 			(obj) menu as a property.
@@ -45,8 +44,7 @@ class Cameras(Init):
 
 	@Slots.message
 	def chk000(self, state=None):
-		'''
-		Camera Clipping: Auto Clip
+		'''Camera Clipping: Auto Clip
 		'''
 		if self.clippingMenu.chk000.isChecked():
 			self.toggleWidgets(self.clippingMenu, setDisabled='s000-1')
@@ -61,8 +59,7 @@ class Cameras(Init):
 
 
 	def s000(self, value=None):
-		'''
-		Camera Clipping: Near Clip
+		'''Camera Clipping: Near Clip
 		'''
 		value = self.clippingMenu.s000.value()
 
@@ -74,8 +71,7 @@ class Cameras(Init):
 
 
 	def s001(self, value=None):
-		'''
-		Camera Clipping: Far Clip
+		'''Camera Clipping: Far Clip
 		'''
 		value = self.clippingMenu.s001.value()
 
@@ -87,9 +83,7 @@ class Cameras(Init):
 
 
 	def tree000(self, wItem=None, column=None):
-		'''
-
-		'''
+		''''''
 		tree = self.cameras.tree000
 
 		if wItem is 'setMenu':
@@ -163,8 +157,7 @@ class Cameras(Init):
 
 
 	def v000(self):
-		'''
-		Cameras: Back View
+		'''Cameras: Back View
 		'''
 		if pm.objExists('back'):
 			pm.lookThru('back')
@@ -187,22 +180,19 @@ class Cameras(Init):
 
 
 	def v001(self):
-		'''
-		Cameras: Top View
+		'''Cameras: Top View
 		'''
 		pm.lookThru("topShape")
 
 
 	def v002(self):
-		'''
-		Cameras: Right View
+		'''Cameras: Right View
 		'''
 		pm.lookThru("sideShape")
 
 
 	def v003(self):
-		'''
-		Cameras: Left View
+		'''Cameras: Left View
 		'''
 		if pm.objExists('left'):
 			pm.lookThru('left')
@@ -223,22 +213,19 @@ class Cameras(Init):
 
 
 	def v004(self):
-		'''
-		Cameras: Perspective View
+		'''Cameras: Perspective View
 		'''
 		pm.lookThru("perspShape")
 
 
 	def v005(self):
-		'''
-		Cameras: Front View
+		'''Cameras: Front View
 		'''
 		pm.lookThru("frontShape")
 
 
 	def v006(self):
-		'''
-		Cameras: Bottom View
+		'''Cameras: Bottom View
 		'''
 		if pm.objExists('bottom'):
 			pm.lookThru('bottom')
@@ -259,8 +246,7 @@ class Cameras(Init):
 
 
 	def v007(self):
-		'''
-		Cameras: Align View
+		'''Cameras: Align View
 		'''
 		cameraExists = pm.objExists('alignToPoly')
 
@@ -287,8 +273,7 @@ class Cameras(Init):
 
 	@staticmethod
 	def groupCameras():
-		'''
-		Group Cameras
+		'''Group Cameras
 		'''
 		if pm.objExists('cameras'):
 			print("Group 'cameras' already exists")
@@ -312,8 +297,7 @@ class Cameras(Init):
 
 	@staticmethod
 	def toggleSafeFrames():
-		'''
-		Toggle display of the film gate for the current camera.
+		'''Toggle display of the film gate for the current camera.
 		'''
 		camera = Cameras.getCurrentCam()
 
@@ -326,8 +310,7 @@ class Cameras(Init):
 
 	@staticmethod
 	def getCurrentCam():
-		'''
-		Get the currently active camera.
+		'''Get the currently active camera.
 		'''
 		import maya.OpenMaya as OpenMaya
 		import maya.OpenMayaUI as OpenMayaUI
@@ -341,8 +324,7 @@ class Cameras(Init):
 
 	@staticmethod
 	def createCameraFromView():
-		'''
-		Create a new camera base on the current view.
+		'''Create a new camera base on the current view.
 		'''
 		curPanel = str(pm.getPanel(wf=1))
 		if pm.getPanel(typeOf=curPanel) == "modelPanel":

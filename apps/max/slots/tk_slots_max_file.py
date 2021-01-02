@@ -38,8 +38,7 @@ class File(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.file.d000
 
@@ -53,8 +52,7 @@ class File(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Recent Files
+		'''Recent Files
 		'''
 		cmb = self.file.cmb000
 
@@ -75,8 +73,7 @@ class File(Init):
 
 
 	def cmb001(self, index=None):
-		'''
-		Recent Projects
+		'''Recent Projects
 		'''
 		cmb = self.file.cmb001
 
@@ -94,8 +91,7 @@ class File(Init):
 
 
 	def cmb002(self, index=None):
-		'''
-		Recent Autosave
+		'''Recent Autosave
 		'''
 		cmb = self.file.cmb002
 
@@ -114,8 +110,7 @@ class File(Init):
 
 
 	def cmb003(self, index=None):
-		'''
-		Import
+		'''Import
 		'''
 		cmb = self.file.cmb003
 
@@ -143,8 +138,7 @@ class File(Init):
 
 
 	def cmb004(self, index=None):
-		'''
-		Export
+		'''Export
 		'''
 		cmb = self.file.cmb004
 
@@ -182,8 +176,7 @@ class File(Init):
 
 
 	def cmb005(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.file.cmb005
 
@@ -199,8 +192,7 @@ class File(Init):
 
 
 	def cmb006(self, index=None):
-		'''
-		Project Folder
+		'''Project Folder
 		'''
 		cmb = self.file.cmb006
 
@@ -224,8 +216,7 @@ class File(Init):
 
 
 	def tb000(self, state=None):
-		'''
-		Save
+		'''Save
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
@@ -276,8 +267,7 @@ class File(Init):
 
 	@staticmethod
 	def incrementFileName(fileName):
-		'''
-		Increment the given file name.
+		'''Increment the given file name.
 
 		:Parameters:
 			fileName (str) = file name with extension. ie. elise_mid.ma
@@ -305,8 +295,7 @@ class File(Init):
 
 	@staticmethod
 	def deletePreviousFiles(fileName, path, numberOfPreviousFiles=5):
-		'''
-		Delete older files.
+		'''Delete older files.
 
 		:Parameters:
 			fileName (str) = file name with extension. ie. elise_mid.ma
@@ -341,8 +330,7 @@ class File(Init):
 
 
 	def lbl000(self):
-		'''
-		Set Project
+		'''Set Project
 		'''
 		try:
 			MaxPlus.PathManager.SetProjectFolderDir()
@@ -353,8 +341,7 @@ class File(Init):
 
 
 	def lbl001(self):
-		'''
-		Minimize Main Application
+		'''Minimize Main Application
 		'''
 		app = rt.createOLEObject('Shell.Application')
 		maxEval('minimizeAll app')
@@ -364,15 +351,13 @@ class File(Init):
 
 
 	def lbl002(self):
-		'''
-		Restore Main Application
+		'''Restore Main Application
 		'''
 		pass
 
 
 	def lbl003(self):
-		'''
-		Close Main Application
+		'''Close Main Application
 		'''
 		# force=false #pymel has no attribute quit error.
 		# exitcode=""
@@ -382,8 +367,7 @@ class File(Init):
 
 
 	def lbl004(self):
-		'''
-		Open current project root
+		'''Open current project root
 		'''
 		dir_ = rt.getRecentfiles() #current project path.
 		dir_ = File.formatPath(dir_) #reformat for network address
@@ -391,8 +375,7 @@ class File(Init):
 
 
 	def b001(self):
-		'''
-		Recent Files: Open Last
+		'''Recent Files: Open Last
 		'''
 		# files = rt.getRecentfiles()
 		# rt.loadMaxFile(str(files[0]))
@@ -402,22 +385,19 @@ class File(Init):
 
 
 	def b007(self):
-		'''
-		Import file
+		'''Import file
 		'''
 		self.cmb003(index=1)
 
 
 	def b008(self):
-		'''
-		Export Selection
+		'''Export Selection
 		'''
 		self.cmb004(index=1)
 
 
 	def b015(self):
-		'''
-		Remove String From Object Names.
+		'''Remove String From Object Names.
 		'''
 		from_ = str(self.file.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
 		to = str(self.file.t001.text())
@@ -442,8 +422,7 @@ class File(Init):
 
 	@staticmethod
 	def formatPath(dir_):
-		'''
-		Assure a given directory path string is formatted correctly.
+		'''Assure a given directory path string is formatted correctly.
 		Replace any backslashes with forward slashes.
 		'''
 		formatted_dir = dir_.replace('/', '\\') #assure any single slash is forward.
@@ -453,8 +432,7 @@ class File(Init):
 
 	@staticmethod
 	def getNameFromFullPath(fullPath):
-		'''
-		Extract the file or dir name from a path string.
+		'''Extract the file or dir name from a path string.
 
 		:Parameters:
 			fullPath (str) = A full path including file name.

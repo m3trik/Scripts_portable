@@ -15,8 +15,7 @@ from tk_childEvents import EventFactoryFilter
 # PaintEvent Overlay
 # ------------------------------------------------
 class Overlay(QtWidgets.QWidget):
-	'''
-	Handles paint events as an overlay on top of an existing widget.
+	'''Handles paint events as an overlay on top of an existing widget.
 	'''
 	greyPen = QtGui.QPen(QtGui.QColor(115, 115, 115), 3, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
 	blackPen = QtGui.QPen(QtGui.QColor(0, 0, 0), 1, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
@@ -58,8 +57,7 @@ class Overlay(QtWidgets.QWidget):
 
 
 	def drawTangent(self, start_point, end_point):
-		'''
-		draw a segment between two points with the given self.painter.
+		'''draw a segment between two points with the given self.painter.
 		'''
 		path = QtGui.QPainterPath()
 		path.addEllipse(QtCore.QPointF(start_point), 7, 7)
@@ -102,8 +100,7 @@ class Overlay(QtWidgets.QWidget):
 
 
 class OverlayFactoryFilter(QtCore.QObject):
-	'''
-	Relay events from the parent widget to the overlay.
+	'''Relay events from the parent widget to the overlay.
 	'''
 	def __init__(self, parent=None):
 		super(OverlayFactoryFilter, self).__init__(parent)

@@ -11,9 +11,7 @@ class Main(Init):
 
 
 	def tree000(self, wItem=None, column=None):
-		'''
-
-		'''
+		''''''
 		tree = self.main.tree000
 
 		if wItem is 'setMenu':
@@ -61,51 +59,44 @@ class Main(Init):
 
 
 	def v013(self):
-		'''
-		Minimize Main Application
+		'''Minimize Main Application
 
 		'''
 		self.sb.getMethod('file', 'b005')()
 
 
 	def v024(self):
-		'''
-		Recent Command: 1
+		'''Recent Command: 1
 		'''
 		self.sb.prevCommand(method=1, as_list=1)[-1]() #execute command at index
 
 
 	def v025(self):
-		'''
-		Recent Command: 2
+		'''Recent Command: 2
 		'''
 		self.sb.prevCommand(method=1, as_list=1)[-2]() #execute command at index
 			
 
 	def v026(self):
-		'''
-		Recent Command: 3
+		'''Recent Command: 3
 		'''
 		self.sb.prevCommand(method=1, as_list=1)[-3]() #execute command at index
 
 
 	def v027(self):
-		'''
-		Recent Command: 4
+		'''Recent Command: 4
 		'''
 		self.sb.prevCommand(method=1, as_list=1)[-4]() #execute command at index
 
 
 	def v028(self):
-		'''
-		Recent Command: 5
+		'''Recent Command: 5
 		'''
 		self.sb.prevCommand(method=1, as_list=1)[-5]() #execute command at index
 
 
 	def v029(self):
-		'''
-		Recent Command: 6
+		'''Recent Command: 6
 		'''
 		self.sb.prevCommand(method=1, as_list=1)[-6]() #execute command at index
 

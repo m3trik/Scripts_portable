@@ -14,8 +14,7 @@ class Nurbs(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.parentUi.d000
 
@@ -26,8 +25,7 @@ class Nurbs(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Maya Curve Operations
+		'''Maya Curve Operations
 		'''
 		cmb = self.parentUi.cmb000
 
@@ -75,8 +73,7 @@ class Nurbs(Init):
 
 
 	def cmb001(self, index=None):
-		'''
-		Create: Curve
+		'''Create: Curve
 		'''
 		cmb = self.parentUi.cmb001
 
@@ -102,312 +99,250 @@ class Nurbs(Init):
 
 
 	def b012(self):
-		'''
-		Project Curve
+		'''Project Curve
 		'''
 		mel.eval("projectCurve;") #ProjectCurveOnMesh;
 
 
 	def b013(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b014(self):
-		'''
-		Duplicate Curve
+		'''Duplicate Curve
 		'''
 		mel.eval("DuplicateCurve;")
 
 
 	def b015(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b016(self):
-		'''
-		Extract Curve
+		'''Extract Curve
 		'''
 		mel.eval("CreateCurveFromPoly")
 
 
 	def b017(self):
-		'''
-
-		'''
+		''''''
 		pass
 
 
 	def b018(self):
-		'''
-		Lock Curve
+		'''Lock Curve
 		'''
 		mel.eval("LockCurveLength;")
 
 
 	def b019(self):
-		'''
-		Unlock Curve
+		'''Unlock Curve
 		'''
 		mel.eval("UnlockCurveLength;")
 
 
 	def b020(self):
-		'''
-		Bend Curve
+		'''Bend Curve
 		'''
 		mel.eval("BendCurves;")
 
 
 	def b021(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b022(self):
-		'''
-		Curl Curve
+		'''Curl Curve
 		'''
 		mel.eval("CurlCurves;")
 
 
 	def b023(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b024(self):
-		'''
-		Modify Curve Curvature
+		'''Modify Curve Curvature
 		'''
 		mel.eval("ScaleCurvature;")
 
 	def b025(self):
-		'''
-
-		'''
+		''''''
 		pass
 
 
 	def b026(self):
-		'''
-		Smooth Curve
+		'''Smooth Curve
 		'''
 		mel.eval("SmoothHairCurves;")
 
 
 	def b027(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b028(self):
-		'''
-		Straighten Curve
+		'''Straighten Curve
 
 		'''
 		mel.eval("StraightenCurves;")
 
 
 	def b029(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b030(self):
-		'''
-		Extrude
+		'''Extrude
 
 		'''
 		mel.eval("Extrude;")
 
 
 	def b031(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b032(self):
-		'''
-		Revolve
+		'''Revolve
 		'''
 		mel.eval("Revolve;")
 
 
 	def b033(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b034(self):
-		'''
-		Loft
+		'''Loft
 		'''
 		mel.eval("loft")
 
 
 	def b035(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b036(self):
-		'''
-		Planar
+		'''Planar
 		'''
 		mel.eval("Planar;")
 
 
 	def b037(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b038(self):
-		'''
-		Insert Isoparm
+		'''Insert Isoparm
 		'''
 		mel.eval("InsertIsoparms;")
 
 
 	def b039(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b040(self):
-		'''
-		Edit Curve Tool
+		'''Edit Curve Tool
 		'''
 		mel.eval("CurveEditTool;")
 
 
 	def b041(self):
-		'''
-		Attach Curve
+		'''Attach Curve
 		'''
 		mel.eval("AttachCurveOptions;")
 
 
 	def b042(self):
-		'''
-		Detach Curve
+		'''Detach Curve
 		'''
 		mel.eval("DetachCurve;")
 
 
 	def b043(self):
-		'''
-		Extend Curve
+		'''Extend Curve
 		'''
 		mel.eval("ExtendCurveOptions;")
 
 
 	def b044(self):
-		'''
-		
-		'''
+		''''''
 		mel.eval("")
 
 
 	def b045(self):
-		'''
-		Cut Curve
+		'''Cut Curve
 		'''
 		mel.eval("CutCurve;")
 
 
 	def b046(self):
-		'''
-		Open/Close Curve
+		'''Open/Close Curve
 		'''
 		mel.eval("OpenCloseCurve;")
 
 
 	def b047(self):
-		'''
-		Insert Knot
+		'''Insert Knot
 		'''
 		mel.eval("InsertKnot;")
 
 
 	def b048(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b049(self):
-		'''
-		Add Points Tool
+		'''Add Points Tool
 		'''
 		mel.eval("AddPointsTool;")
 
 
 	def b050(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b051(self):
-		'''
-		Reverse Curve
+		'''Reverse Curve
 
 		'''
 		mel.eval("reverse;")
 
 
 	def b052(self):
-		'''
-		Extend Curve
+		'''Extend Curve
 		'''
 		mel.eval("ExtendCurve;")
 
 
 	def b053(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b054(self):
-		'''
-		Extend On Surface
+		'''Extend On Surface
 		'''
 		mel.eval("ExtendCurveOnSurface;")
 
 
 	def b055(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 

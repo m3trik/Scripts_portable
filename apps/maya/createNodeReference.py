@@ -9,9 +9,7 @@ import maya.OpenMaya as om
 
  
 class MayaNode():
-	'''
-	
-	'''
+	''''''
 	def __init__(self, node_name):
 		self._mobject = om.MObject()
 		self._mdagpath = om.MDagPath()

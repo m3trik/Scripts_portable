@@ -5,9 +5,7 @@ from shared import Menu, Attributes
 
 
 class TkComboBox(QtWidgets.QComboBox, Menu, Attributes):
-	'''
-	
-	'''
+	''''''
 	returnPressed = QtCore.Signal()
 	beforePopupShown = QtCore.Signal()
 	beforePopupHidden = QtCore.Signal()
@@ -28,8 +26,7 @@ class TkComboBox(QtWidgets.QComboBox, Menu, Attributes):
 
 	@property
 	def items(self):
-		'''
-		Get a list of each items's text from the standard model/view.
+		'''Get a list of each items's text from the standard model/view.
 		:Return:
 			(list)
 		'''
@@ -37,8 +34,7 @@ class TkComboBox(QtWidgets.QComboBox, Menu, Attributes):
 
 
 	def addItems_(self, items, header=None, clear=True, ascending=False):
-		'''
-		Add items to the combobox's standard modelView without triggering any signals.
+		'''Add items to the combobox's standard modelView without triggering any signals.
 
 		:Parameters:
 			items (str)(list) = A string or list of strings to fill the comboBox with.
@@ -75,8 +71,7 @@ class TkComboBox(QtWidgets.QComboBox, Menu, Attributes):
 
 
 	def setCurrentItem(self, i):
-		'''
-		Sets the current item from the given item text or index without triggering any signals.
+		'''Sets the current item from the given item text or index without triggering any signals.
 
 		:Parameters:
 			item (str)(int) = item text or item index
@@ -92,8 +87,7 @@ class TkComboBox(QtWidgets.QComboBox, Menu, Attributes):
 
 
 	def setCurrentText(self, text):
-		'''
-		Sets the text for the current index.
+		'''Sets the text for the current index.
 
 		:Parameters:
 			item (str)(int) = item text or item index
@@ -107,8 +101,7 @@ class TkComboBox(QtWidgets.QComboBox, Menu, Attributes):
 
 
 	def showPopup(self):
-		'''
-		Show the popup menu.
+		'''Show the popup menu.
 		'''
 		self.beforePopupShown.emit()
 
@@ -129,9 +122,7 @@ class TkComboBox(QtWidgets.QComboBox, Menu, Attributes):
 
 
 	def hidePopup(self):
-		'''
-		
-		'''
+		''''''
 		self.beforePopupHidden.emit()
 
 		if not self.popupStyle=='modelView':
@@ -142,9 +133,7 @@ class TkComboBox(QtWidgets.QComboBox, Menu, Attributes):
 
 
 	def clear(self):
-		'''
-		
-		'''
+		''''''
 		if not self.popupStyle=='modelView':
 			self.menu_.clear()
 		else:
@@ -203,8 +192,7 @@ class TkComboBox(QtWidgets.QComboBox, Menu, Attributes):
 
 
 	def eventFilter(self, widget, event):
-		'''
-		Event filter for the standard view.
+		'''Event filter for the standard view.
 
 		QtCore.QEvent.Show, Hide, FocusIn, FocusOut, FocusAboutToChange
 		'''

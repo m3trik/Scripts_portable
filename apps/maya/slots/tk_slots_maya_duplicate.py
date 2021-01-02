@@ -22,8 +22,7 @@ class Duplicate(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.duplicate.d000
 
@@ -34,8 +33,7 @@ class Duplicate(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.duplicate.cmb000
 
@@ -51,22 +49,19 @@ class Duplicate(Init):
 	
 
 	def radialArray(self):
-		'''
-		Radial Array: Reset
+		'''Radial Array: Reset
 		'''
 		self.chk015() #calling chk015 directly from valueChanged would pass the returned spinbox value to the create arg
 
 
 	def duplicateArray(self):
-		'''
-		Duplicate: Reset
+		'''Duplicate: Reset
 		'''
 		self.chk016() #calling chk015 directly from valueChanged would pass the returned spinbox value to the create arg
 
 
 	def chk007(self, state=None):
-		'''
-		Duplicate: Translate To Components
+		'''Duplicate: Translate To Components
 		'''
 		if self.duplicate.chk007.isChecked():
 			self.toggleWidgets(setEnabled='chk008,b034,cmb000', setDisabled='chk000,chk009,s005')
@@ -77,8 +72,7 @@ class Duplicate(Init):
 
 	@Slots.message
 	def chk010(self, state=None):
-		'''
-		Radial Array: Set Pivot
+		'''Radial Array: Set Pivot
 		'''
 		global radialPivot
 		radialPivot=[]
@@ -106,24 +100,21 @@ class Duplicate(Init):
 
 
 	def chk012(self, state=None):
-		'''
-		Radial Array: X Axis
+		'''Radial Array: X Axis
 		'''
 		self.toggleWidgets(setChecked='chk012', setUnChecked='chk013,chk014')
 		self.chk015()
 
 
 	def chk013(self, state=None):
-		'''
-		Radial Array: Y Axis
+		'''Radial Array: Y Axis
 		'''
 		self.toggleWidgets(setChecked='chk013', setUnChecked='chk012,chk014')
 		self.chk015()
 
 
 	def chk014(self, state=None):
-		'''
-		Radial Array: Z Axis
+		'''Radial Array: Z Axis
 		'''
 		self.toggleWidgets(setChecked='chk014', setUnChecked='chk012,chk013')
 		self.chk015()
@@ -133,8 +124,7 @@ class Duplicate(Init):
 	radialArrayObjList=[]
 	@Slots.message
 	def chk015(self, create=False):
-		'''
-		Radial Array: Preview
+		'''Radial Array: Preview
 		'''
 		setPivot = self.duplicate.chk010.isChecked() #set pivot point
 		instance = self.duplicate.chk011.isChecked() #instance object
@@ -211,8 +201,7 @@ class Duplicate(Init):
 	duplicateObjList=[]
 	@Slots.message
 	def chk016(self, create=False):
-		'''
-		Duplicate: Preview
+		'''Duplicate: Preview
 		'''
 		if self.duplicate.chk016.isChecked():
 			self.toggleWidgets(setEnabled='b002')
@@ -304,23 +293,19 @@ class Duplicate(Init):
 
 
 	def b001(self):
-		'''
-
-		'''
+		''''''
 		pass
 
 
 	def b002(self):
-		'''
-		Duplicate: Create
+		'''Duplicate: Create
 		'''
 		self.duplicate.chk016.setChecked(False) #must be in the false unchecked state to catch the create flag in chk015
 		self.chk016(create=True)
 
 
 	def b003(self):
-		'''
-		Radial Array: Create
+		'''Radial Array: Create
 		'''
 		self.duplicate.chk015.setChecked(False) #must be in the false unchecked state to catch the create flag in chk015
 		self.chk015(create=True)
@@ -328,8 +313,7 @@ class Duplicate(Init):
 
 	@staticmethod
 	def getInstances(object_=None):
-		'''
-		get any intances of given object, or if no object given, get all instanced objects in the scene.
+		'''get any intances of given object, or if no object given, get all instanced objects in the scene.
 		:Parameters:
 			object=<scene object>
 		:Return:
@@ -355,8 +339,7 @@ class Duplicate(Init):
 
 
 	def b004(self):
-		'''
-		Select Instanced Objects
+		'''Select Instanced Objects
 		'''
 		selection = pm.ls(sl=1)
 
@@ -371,8 +354,7 @@ class Duplicate(Init):
 
 
 	def b005(self):
-		'''
-		Uninstance Selected Objects
+		'''Uninstance Selected Objects
 		'''
 		selection = pm.ls(sl=1)
 		#uninstance:
@@ -384,8 +366,7 @@ class Duplicate(Init):
 
 
 	def b008(self):
-		'''
-		Add Selected Components To cmb000
+		'''Add Selected Components To cmb000
 		'''
 		self.comboBox (self.duplicate.cmb000, pm.ls (selection=1, flatten=1))
 

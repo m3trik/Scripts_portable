@@ -17,14 +17,15 @@ from ui import UiLoader
 #	Manage Ui element information.
 # ------------------------------------------------
 class Switchboard(QtCore.QObject):
-	'''
-	Get/set elements across modules using convenience methods.
+	'''Get/set elements across modules using convenience methods.
 	
 	Ui name/and it's corresponding slot class name should always be the same. (case insensitive) ie. 'polygons' (ui name) will look to build connections to 'Polygons' (class name). 
 	Widget objectName/corresponding class method name need to be the same. ie. 'b000' (widget objectName) will try to connect to <b000> class method.
 
 	Ui files are looked for in a sub dir named 'ui'. naming convention is: <ui name>.ui ie. polygons.ui
 	Custom widget modules are looked for in a sub directory named 'widgets'. naming convention: <name capital first char> widget class inside <name lowercase first char>.py module. ie. TkLabel class inside tkLabel.py module.
+
+	A widgets dict is built as needed for each class when connectSlots (or any other dependant) is called.
 
 	nested dictionary structure:
 	_sbDict = {	
@@ -51,14 +52,11 @@ class Switchboard(QtCore.QObject):
 		'mainAppWindow' : parent application. ie. <maya Window object>
 		'gcProtect' : [items protected from garbage collection]
 	}
-
-	A widgets dict is built as needed for each class when connectSlots (or any other dependant) is called.
 	'''
 
 	def __init__(self, parent=None):
 		super().__init__(parent)
-		'''
-		Initialize the main dict (sbDict).
+		'''Initialize the main dict (sbDict).
 		'''
 		for uiName, v in UiLoader().uiDict.items():
 			self.sbDict[uiName] = {
@@ -69,8 +67,7 @@ class Switchboard(QtCore.QObject):
 
 	@property
 	def sbDict(self):
-		'''
-		Get the full switchboard dict.
+		'''Get the full switchboard dict.
 		'''
 		if not hasattr(self, '_sbDict'):
 			self._sbDict={}
@@ -79,8 +76,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def addWidgets(self, name, widgets=None, **kwargs):
-		'''
-		Extends the fuctionality of the 'addWidget' method to support adding multiple widgets.
+		'''Extends the fuctionality of the 'addWidget' method to support adding multiple widgets.
 		If widgets is None; the method will attempt to add all widgets from the ui of the given name.
 
 		:Parameters:
@@ -96,8 +92,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def addWidget(self, name, widget, **kwargs):
-		'''
-		Adds a widget to the widgets dict under the given (ui) name.
+		'''Adds a widget to the widgets dict under the given (ui) name.
 
 		:Parameters:
 			name (str) = name of the parent ui to construct connections for.
@@ -142,8 +137,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def removeWidgets(self, widgets, name=None):
-		'''
-		Remove widget keys from the widgets dict.
+		'''Remove widget keys from the widgets dict.
 
 		:Parameters:
 			widgets (obj)(list) = single or list of QWidgets.
@@ -163,8 +157,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def widgets(self, name):
-		'''
-		Dictionary holding widget information.
+		'''Dictionary holding widget information.
 
 		:Parameters:
 			name (str) = name of ui/class. ie. 'polygons'
@@ -192,8 +185,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def setAttributes(self, attributes=None, order=['setVisible'], **kwargs):
-		'''
-		Works with attributes passed in as a dict or kwargs.
+		'''Works with attributes passed in as a dict or kwargs.
 		If attributes are passed in as a dict, kwargs are ignored.
 
 		:Parameters:
@@ -220,8 +212,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def setUniqueObjectName(self, widget, name=None):
-		'''
-		Set a unique object name for the given widget based on the pattern name000.
+		'''Set a unique object name for the given widget based on the pattern name000.
 
 		:Parameters:
 			widget (obj) = The child widget to set an object name for.
@@ -258,8 +249,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def getClassKwargs(self, name):
-		'''
-		Get keyword arguments for the given ui name.
+		'''Get keyword arguments for the given ui name.
 
 		:Parameters:
 			name (str) = ui name. ie. 'polygons'
@@ -290,8 +280,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def getClassFromUiName(self, name):
-		'''
-		Get the slot class corresponding to the given ui name.  ie. <Polygons> from 'polygons'
+		'''Get the slot class corresponding to the given ui name.  ie. <Polygons> from 'polygons'
 		If the name is a submenu, the parent class will be returned. ie. <Polygons> from 'polygons_submenu'		
 
 		:Parameters:
@@ -313,8 +302,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def getDefaultSignalType(self, widgetType):
-		'''
-		Get the default signal type for a given widget type.
+		'''Get the default signal type for a given widget type.
 
 		:Parameters:
 			widgetType (str) = Widget class name. ie. 'QPushButton'
@@ -348,8 +336,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def getSignal(self, name, widget=None):
-		'''
-		Get the widget object with attached signal (ie. b001.onPressed) from the given widget name.
+		'''Get the widget object with attached signal (ie. b001.onPressed) from the given widget name.
 
 		:Parameters:
 			name (str) = name of ui. ie. 'polygons'
@@ -371,8 +358,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def setConnections(self, name):
-		'''
-		Replace any signal connections of a previous ui with the set for the ui of the given name.
+		'''Replace any signal connections of a previous ui with the set for the ui of the given name.
 		'''
 		previousName = self.previousName(allowDuplicates=True)
 		if previousName:
@@ -381,8 +367,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def connectSlots(self, name, widgets=None):
-		'''
-		Connects signals/slots from the widgets for the given ui.
+		'''Connects signals/slots from the widgets for the given ui.
 		Works with both single slots or multiple slots given as a list.
 
 		:Parameters:
@@ -410,8 +395,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def disconnectSlots(self, name, widgets=None):
-		'''
-		Disconnects signals/slots from the widgets for the given ui.
+		'''Disconnects signals/slots from the widgets for the given ui.
 		Works with both single slots or multiple slots given as a list.
 
 		:Parameters:
@@ -439,8 +423,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def uiList(self, names=False, ui=False):
-		'''
-		Get a list of either all ui names, all ui object's, or both as key/value pairs in a dict.
+		'''Get a list of either all ui names, all ui object's, or both as key/value pairs in a dict.
 
 		:Parameters:
 			names (bool) = return string ui list
@@ -460,8 +443,7 @@ class Switchboard(QtCore.QObject):
 
 	#Property
 	def getUi(self, name=None, setAsCurrent=False, level=None):
-		'''
-		Get the dynamic ui using its string name, or if no argument is given, return the current ui.
+		'''Get the dynamic ui using its string name, or if no argument is given, return the current ui.
 
 		:Parameters:
 			name (str)(obj) = Name of class. ie. 'polygons' (by default getUi returns the current ui)
@@ -502,8 +484,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def getUiFromWidget(self, widget):
-		'''
-		Get the ui for the given widget.
+		'''Get the ui for the given widget.
 
 		:Parameters:
 			widget (obj) = QWidget
@@ -515,8 +496,7 @@ class Switchboard(QtCore.QObject):
 
 	#Property
 	def setUiName(self, index):
-		'''
-		The 'name' list is used for various things such as; maintaining a history of ui's that have been called.
+		'''The 'name' list is used for various things such as; maintaining a history of ui's that have been called.
 
 		:Parameters:
 			index (int)(str) = index or name of the ui.
@@ -536,8 +516,7 @@ class Switchboard(QtCore.QObject):
 
 	#Property
 	def getUiName(self, ui=None, camelCase=False, pascalCase=False, level=None):
-		'''
-		Get the ui name as a string.
+		'''Get the ui name as a string.
 		If no argument is given, the name for the current ui will be returned.
 
 		:Parameters:
@@ -579,8 +558,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def getUiNameFromWidget(self, widget):
-		'''
-		Get the ui name from the given widget.
+		'''Get the ui name from the given widget.
 
 		:Parameters:
 			widget (obj) = QWidget
@@ -592,8 +570,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def getUiNameFromMethod(self, method):
-		'''
-		Get the ui name from the given method.
+		'''Get the ui name from the given method.
 
 		:Parameters:
 			widget (obj) = QWidget
@@ -611,8 +588,7 @@ class Switchboard(QtCore.QObject):
 
 	#Generator
 	def getUiNameFromKey(self, nestedKey, _uiName=None, _nested_dict=None):
-		'''
-		Get the ui name from a given nested key.
+		'''Get the ui name from a given nested key.
 
 		:Parameters:
 			nestedKey (key) = The key of a nested dict to get the ui of.
@@ -637,8 +613,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def getUiNamesFromValue(self, nestedValue):
-		'''
-		Get the ui name from a given nested Value.
+		'''Get the ui name from a given nested Value.
 
 			:Parameters:
 				nestedValue (value) = The value of a nested dict to get the ui of.
@@ -657,8 +632,7 @@ class Switchboard(QtCore.QObject):
 
 	#Property
 	def getUiIndex(self, name=False):
-		'''
-		Get the index of the given ui name in the uiList.
+		'''Get the index of the given ui name in the uiList.
 
 		:Parameters:
 			name (str) = name of class. ie. 'polygons'
@@ -675,8 +649,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def setUiSize(self, name=None, size=None): #store ui size.
-		'''
-		Set UI size.
+		'''Set UI size.
 		If no size is given, the minimum ui size needed to frame its
 		contents will be used. If no name is given, the current ui will be used.
 
@@ -699,8 +672,7 @@ class Switchboard(QtCore.QObject):
 
 	#Property
 	def setUiSizeX(self, width, name=None):
-		'''
-		Set the X (width) value for the current ui.
+		'''Set the X (width) value for the current ui.
 
 		:Parameters:
 			name (str) = the name of the ui to set the width for.
@@ -711,8 +683,7 @@ class Switchboard(QtCore.QObject):
 
 	#Property
 	def setUiSizeY(self, height, name=None):
-		'''
-		Set the Y (height) value for the current ui.
+		'''Set the Y (height) value for the current ui.
 
 		:Parameters:
 			name (str) = the name of the ui to set the height for.
@@ -723,8 +694,7 @@ class Switchboard(QtCore.QObject):
 
 	#Property
 	def getUiSize(self, name=None, width=None, percentWidth=None, height=None, percentHeight=None): #get current ui size info.
-		'''
-		Get the size info for each ui (allows for resizing a stacked widget where ordinarily resizing is constrained by the largest widget in the stack)
+		'''Get the size info for each ui (allows for resizing a stacked widget where ordinarily resizing is constrained by the largest widget in the stack)
 
 		:Parameters:
 			name (str) = ui name to get size from.
@@ -734,10 +704,11 @@ class Switchboard(QtCore.QObject):
 			percentHeight = int returns a percentage of the height
 
 		:Return:
+			(int)(list)
 			if width: returns width as int
-			if height: returns height as int
-			if percentWidth: returns the percentage of the width as an int
-			if percentHeight: returns the percentage of the height as an int
+			elif height: returns height as int
+			elif percentWidth: returns the percentage of the width as an int
+			elif percentHeight: returns the percentage of the height as an int
 			else: ui size info as integer values in a list. [width, hight]
 		'''
 		if not name:
@@ -759,8 +730,7 @@ class Switchboard(QtCore.QObject):
 
 	#Property
 	def getUiSizeX(self, name=None):
-		'''
-		Get the X (width) value for the current ui.
+		'''Get the X (width) value for the current ui.
 
 		:Parameters:
 			name (str) = ui name to get size from.
@@ -772,8 +742,7 @@ class Switchboard(QtCore.QObject):
 
 	#Property
 	def getUiSizeY(self, name=None):
-		'''
-		Get the Y (height) value for the current ui.
+		'''Get the Y (height) value for the current ui.
 
 		:Parameters:
 			name (str) = ui name to get size from.
@@ -785,8 +754,7 @@ class Switchboard(QtCore.QObject):
 
 	#Property
 	def setMainAppWindow(self, app):
-		'''
-		Set parent application.
+		'''Set parent application.
 
 		:Parameters:
 			app = app object.
@@ -800,8 +768,7 @@ class Switchboard(QtCore.QObject):
 
 	#Property
 	def getMainAppWindow(self, objectName=False):
-		'''
-		Get parent application if any.
+		'''Get parent application if any.
 
 		:Parameters:
 			objectName (bool) = get string name of app. (by default getMainAppWindow returns app object)
@@ -825,8 +792,7 @@ class Switchboard(QtCore.QObject):
 
 	#Property
 	def setClassInstance(self, class_, name=None, **kwargs):
-		'''
-		Case insensitive. Class string keys are stored lowercase regardless of how they are recieved.
+		'''Case insensitive. Class string keys are stored lowercase regardless of how they are recieved.
 
 		:Parameters:
 			class_ (str)(obj) = module name.class to import and store class. 
@@ -857,8 +823,7 @@ class Switchboard(QtCore.QObject):
 
 	#Property
 	def getClassInstance(self, class_, **kwargs):
-		'''
-		Case insensitive. (Class string keys are lowercase and any given string will be converted automatically)
+		'''Case insensitive. (Class string keys are lowercase and any given string will be converted automatically)
 		If class is not in self.sbDict, getClassInstance will attempt to use setClassInstance() to first store the class.
 
 		:Parameters:
@@ -889,8 +854,7 @@ class Switchboard(QtCore.QObject):
 
 	#Property
 	def getWidget(self, objectName=None, name=None):
-		'''
-		Case insensitive. Get the widget object/s from the given ui and objectName.
+		'''Case insensitive. Get the widget object/s from the given ui and objectName.
 
 		:Parameters:
 			objectName (str) = optional name of widget. ie. 'b000'
@@ -917,8 +881,7 @@ class Switchboard(QtCore.QObject):
 
 	#Property
 	def getWidgetName(self, widget=None, name=None):
-		'''
-		Get the widget's stored string objectName.
+		'''Get the widget's stored string objectName.
 
 		:Parameters:
 			widget (obj) = QWidget
@@ -949,8 +912,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def getWidgetType(self, widget, name=None):
-		'''
-		Get widget type class name as a string.
+		'''Get widget type class name as a string.
 		ie. 'QPushButton' from pushbutton type widget.
 
 		:Parameters:
@@ -981,8 +943,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def _getDerivedType(self, widget):
-		'''
-		Internal use. Get the base class of a custom widget.
+		'''Internal use. Get the base class of a custom widget.
 		If the type is a standard widget, the derived type will be that widget's type.
 
 		:Parameters:
@@ -999,8 +960,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def getDerivedType(self, widget, name=None):
-		'''
-		Get the base class of a custom widget.
+		'''Get the base class of a custom widget.
 		If the type is a standard widget, the derived type will be that widget's type.
 
 		:Parameters:
@@ -1030,8 +990,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def getMethod(self, name, widget=None):
-		'''
-		Get the method(s) associated with the given ui / widget.
+		'''Get the method(s) associated with the given ui / widget.
 
 		:Parameters:
 			name (str) = name of class. ie. 'polygons'
@@ -1102,8 +1061,7 @@ class Switchboard(QtCore.QObject):
 
 	#Property
 	def previousName(self, previousIndex=False, allowDuplicates=False, allowCurrent=False, omitLevel=[], as_list=False):
-		'''
-		Get the previously called ui name string, or a list of ui name strings ordered by use.
+		'''Get the previously called ui name string, or a list of ui name strings ordered by use.
 		It does so by pulling from the 'name' list which keeps a list of the ui names as they are called. ie. ['previousName2', 'previousName1', 'currentName']
 
 		:Parameters:
@@ -1149,8 +1107,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def prevCommand(self, docString=False, method=False, toolTip=False, as_list=False):
-		'''
-		Get previous commands and relevant information.
+		'''Get previous commands and relevant information.
 
 		:Parameters:
 			docString (bool) = return the docString of last command. Default is off.
@@ -1265,8 +1222,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def gcProtect(self, obj=None, clear=False):
-		'''
-		Protect given object from garbage collection.
+		'''Protect given object from garbage collection.
 
 		:Parameters:
 			obj (obj) = obj to add to the protected list.
@@ -1287,8 +1243,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def get(self, obj, type_='value', _nested_dict=None, _nested_list=[]):
-		'''
-		Get objects from any nested object in _nested_dict using a given key or value.
+		'''Get objects from any nested object in _nested_dict using a given key or value.
 
 		:Parameters:
 			obj (key)(value) = Key or Value. The object to get the 'type_' of return value from.
@@ -1326,8 +1281,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def getParentKeys(self, value, _nested_dict=None):
-		'''
-		Get all parent keys from a nested value.
+		'''Get all parent keys from a nested value.
 
 		:Parameters:
 			value (value) = The nested value to get keys for.
@@ -1352,8 +1306,7 @@ class Switchboard(QtCore.QObject):
 
 	#Property
 	def getUiLevel(self, name=False):
-		'''
-		Get the hierarcical level of a ui.
+		'''Get the hierarcical level of a ui.
 		If no argument is given, the level of current ui will be returned.
 
 		level 0: init (root) (parent class)
@@ -1380,8 +1333,7 @@ class Switchboard(QtCore.QObject):
 
 
 	def prefix(self, widget, prefix=None):
-		'''
-		Get or Query the widgets prefix.
+		'''Get or Query the widgets prefix.
 		A valid prefix is returned when the given widget's objectName startswith an alphanumeric char, followed by at least three integers. ex. i000 (alphanum,int,int,int)
 
 		ex. prefix('b023') returns 'b'
@@ -1440,8 +1392,7 @@ class Switchboard(QtCore.QObject):
 
 	@staticmethod
 	def list(x):
-		'''
-		Convert a given obj to a list if it isn't a list, set, or tuple already.
+		'''Convert a given obj to a list if it isn't a list, set, or tuple already.
 
 		:Parameters:
 			x () = unknown object type.
@@ -1456,8 +1407,7 @@ class Switchboard(QtCore.QObject):
 
 	@staticmethod
 	def getParentWidgets(widget, objectNames=False):
-		'''
-		Get the parent widget at the top of the hierarchy for the given widget.
+		'''Get the parent widget at the top of the hierarchy for the given widget.
 
 		:Parameters:
 			widget (obj) = QWidget
@@ -1478,8 +1428,7 @@ class Switchboard(QtCore.QObject):
 
 	@staticmethod
 	def getTopLevelParent(widget, index=-1):
-		'''
-		Get the parent widget at the top of the hierarchy for the given widget.
+		'''Get the parent widget at the top of the hierarchy for the given widget.
 
 		:Parameters:
 			widget (obj) = QWidget
@@ -1493,8 +1442,7 @@ class Switchboard(QtCore.QObject):
 
 	@staticmethod
 	def qApp_getWindow(name=None):
-		'''
-		Get Qt window/s
+		'''Get Qt window/s
 
 		:Parameters:
 			name (str) = optional name of window (widget.objectName)
@@ -1512,8 +1460,7 @@ class Switchboard(QtCore.QObject):
 
 	@staticmethod
 	def qApp_getWidget(name=None):
-		'''
-		Get Qt widget/s
+		'''Get Qt widget/s
 
 		:Parameters:
 			name (str) = optional name of widget (widget.objectName)

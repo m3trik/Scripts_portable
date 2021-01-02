@@ -11,8 +11,7 @@ from shared import Attributes
 
 
 class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
-	'''
-	Additional column lists are shown as they are triggered by their parent widgets.
+	'''Additional column lists are shown as they are triggered by their parent widgets.
 
 	:Parameters:
 		parent (obj) = Parent Object.
@@ -80,8 +79,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def add(self, widget, header='root', childHeader=None, refresh=False, **kwargs):
-		'''
-		Add items to the treeWidget.
+		'''Add items to the treeWidget.
 		Using custom kwarg refresh=True will flag the header's column contents to be refreshed each time the widget is shown.
 
 		:Parameters:
@@ -186,8 +184,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def resizeAndShowColumns(self, widget=None, reset=False):
-		'''
-		Set size, widget states, and visible columns for a given widget.
+		'''Set size, widget states, and visible columns for a given widget.
 
 		:Parameters:
 			widget (obj) = QWidget. Required when not doing a reset.
@@ -213,8 +210,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def _resize(self, columns, resizeFirstColumn=False, collapseOtherColumns=False):
-		'''
-		Resize the treeWidget to fit it's current visible wItems.
+		'''Resize the treeWidget to fit it's current visible wItems.
 
 		:Parameters:
 			columns (int)(list) = column index or list of column indices.
@@ -242,8 +238,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def _setEnabledState(self, columns, widget=None):
-		'''
-		Disables/Enables widgets along the tree hierarchy.
+		'''Disables/Enables widgets along the tree hierarchy.
 
 		:Parameters:
 			widget (obj) = QWidget. current widget
@@ -272,8 +267,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def _createObjectName(self, wItem, column):
-		'''
-		Create an objectName for an itemWidget consisting of the parent treeWidget's object name, header, column, and childHeader.
+		'''Create an objectName for an itemWidget consisting of the parent treeWidget's object name, header, column, and childHeader.
 
 		:Parameters:
 			wItem (obj) = QWidgetItem.
@@ -287,8 +281,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def getWItemFromRow(self, row):
-		'''
-		Get the widgetItem contained in a given row.
+		'''Get the widgetItem contained in a given row.
 
 		:Parameters:
 			row (int) = Row index.
@@ -300,8 +293,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def getIndexFromWItem(self, wItem, column=None, topLevel=False):
-		'''
-		Get an item's index.
+		'''Get an item's index.
 
 		:Parameters:
 			wItem (obj) = The widget item to get the index for.
@@ -322,8 +314,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def _setHeader(self, header, column=None):
-		'''
-		Set new header and column or modify an existing.
+		'''Set new header and column or modify an existing.
 
 		:Parameters:
 			header (str) = header text.
@@ -339,8 +330,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def getHeaderFromWidget(self, widget, __header=None):
-		'''
-		Get the header that the widget belongs to.
+		'''Get the header that the widget belongs to.
 
 		:Parameters:
 			widget (obj) = A widget contained in one of the tree's wItems.
@@ -357,8 +347,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def getChildHeaderFromWidget(self, widget, __childHeader=None):
-		'''
-		Get the header that the widget belongs to.
+		'''Get the header that the widget belongs to.
 
 		:Parameters:
 			widget (obj) = A widget contained in one of the tree's wItems.
@@ -375,8 +364,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def getChildHeaderFromHeader(self, header):
-		'''
-		Get the childHeader from the header name.
+		'''Get the childHeader from the header name.
 
 		:Parameters:
 			header (str) = header name. ie. 'Options'
@@ -399,8 +387,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def getRow(self, wItem):
-		'''
-		Get the stored row index.
+		'''Get the stored row index.
 		
 		:Parameters:
 			wItem (obj) = QWidgetItem.
@@ -424,8 +411,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def getChildColumnFromWidget(self, widget):
-		'''
-		Get the child column of the given widget.
+		'''Get the child column of the given widget.
 
 		:Parameters:
 			widget (obj) = QWidget
@@ -468,8 +454,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def getChildColumnsFromWidget(self, widget):
-		'''
-		Get the child column of the given widget.
+		'''Get the child column of the given widget.
 
 		:Parameters:
 			widget (obj) = QWidget
@@ -484,8 +469,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def getColumnFromHeader(self, header, refreshedColumn=False):
-		'''
-		Get the stored column index.
+		'''Get the stored column index.
 
 		:Parameters:
 			header (str) = header name.
@@ -506,8 +490,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def getStartingRowFromHeader(self, header):
-		'''
-		Get the starting row index for a given header's column.
+		'''Get the starting row index for a given header's column.
 		When the 'stepColumns' flag is True, the starting row corresponds to the parents row index. Else, the starting row is always 0.
 
 		:Parameters:
@@ -527,8 +510,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def getColumnFromChildHeader(self, childHeader):
-		'''
-		Get the stored column index.
+		'''Get the stored column index.
 
 		:Parameters:
 			childHeader (str) = childHeader text.
@@ -540,8 +522,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def getColumns(self, refreshedColumns=False):
-		'''
-		Get all of the columns currently used.
+		'''Get all of the columns currently used.
 
 		:Parameters:
 			refreshedColumns (bool) = get only columns flagged as refreshed. Default is False.
@@ -562,8 +543,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def _showColumns(self, columns):
-		'''
-		Unhide the given column, while hiding all others.
+		'''Unhide the given column, while hiding all others.
 
 		:Parameters:
 			columns (list) = list of indices of the columns to show.
@@ -578,8 +558,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def getTopLevelItems(self):
-		'''
-		Get all top level QTreeWidgetItems in the given QTreeWidget.
+		'''Get all top level QTreeWidgetItems in the given QTreeWidget.
 		
 		:Return:
 			(list) All Top level QTreeWidgetItems
@@ -597,8 +576,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def getWidgets(self, wItem=None, columns=None, removeNoneValues=False, refreshedWidgets=False, inverse=False):
-		'''
-		Get the widgets from the given widgetItem, or all widgets if no specific widgetItem is given.
+		'''Get the widgets from the given widgetItem, or all widgets if no specific widgetItem is given.
 
 		:Parameters:
 			wItem (obj) = QWidgetItem.
@@ -641,8 +619,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 	@property
 	def newWidgets(self):
-		'''
-		Get any newly created widgets from the treeWidget.
+		'''Get any newly created widgets from the treeWidget.
 		'''
 		if self.refresh: #after first build; on each refresh:
 			widgets = self.getWidgets(refreshedWidgets=1) #get only any newly created widgets.
@@ -653,8 +630,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def getWidget(self, wItem, column):
-		'''
-		Get the widget from the widgetItem at the given column (if it exists).
+		'''Get the widget from the widgetItem at the given column (if it exists).
 
 		:Parameters:
 			wItem (obj) = The widgetItem containing the widget.
@@ -669,8 +645,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def getWidgetText(self, wItem, column):
-		'''
-		Get the widget text from the widgetItem at the given column (if it exists).
+		'''Get the widget text from the widgetItem at the given column (if it exists).
 
 		:Parameters:
 			wItem (obj) = The widgetItem containing the widget.
@@ -685,8 +660,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def getWidgetsFromText(self, textList):
-		'''
-		Get any widget(s) with text matching those in the given list.
+		'''Get any widget(s) with text matching those in the given list.
 
 		:Parameters:
 			textList (list) = String list of possible widget text matches.
@@ -716,8 +690,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def convert(self, items, w, columns=None):
-		'''
-		Convert itemWidgets to a given type.
+		'''Convert itemWidgets to a given type.
 		Can be used with Qt Designer to convert columns and their headers to widgets.
 
 		:Parameters:

@@ -12,12 +12,9 @@ from multiprocessing import Pool
 # 		self.browser = QtWidgets.QTextBrowser()
 
 class TkSplashScreen(QtWidgets.QSplashScreen):
-	'''
-
-	'''
+	''''''
 	def __init__(self, animation='loading_indicator', flags=QtCore.Qt.WindowStaysOnTopHint):
-		'''
-		Run event dispatching in another thread.
+		'''Run event dispatching in another thread.
 		'''
 		QtWidgets.QSplashScreen.__init__(self, QtGui.QPixmap(), flags)
 
@@ -27,9 +24,7 @@ class TkSplashScreen(QtWidgets.QSplashScreen):
 
 
 	def onNextFrame(self):
-		'''
-
-		'''
+		''''''
 		pixmap = self.movie.currentPixmap()
 		self.setPixmap(pixmap)
 		self.setMask(pixmap.mask())
@@ -38,8 +33,7 @@ class TkSplashScreen(QtWidgets.QSplashScreen):
 
 
 def longInitialization(arg):
-	'''
-	Put your initialization code here.
+	'''Put your initialization code here.
 	'''
 	time.sleep(arg)
 	return 0

@@ -11,8 +11,7 @@ class Normals(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.normals.d000
 
@@ -22,8 +21,7 @@ class Normals(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.normals.cmb000
 
@@ -39,8 +37,7 @@ class Normals(Init):
 
 
 	def tb000(self, state=None):
-		'''
-		Display Face Normals
+		'''Display Face Normals
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
@@ -72,8 +69,7 @@ class Normals(Init):
 
 
 	def tb001(self, state=None):
-		'''
-		Harden Creased Edges
+		'''Harden Creased Edges
 		'''
 		tb = self.currentUi.tb001
 		if state is 'setMenu':
@@ -107,8 +103,7 @@ class Normals(Init):
 
 	@Init.attr
 	def tb002(self, state=None):
-		'''
-		Set Normals By Angle
+		'''Set Normals By Angle
 		'''
 		tb = self.currentUi.tb002
 		if state is 'setMenu':
@@ -127,8 +122,7 @@ class Normals(Init):
 
 	@Slots.message
 	def tb003(self, state=None):
-		'''
-		Lock/Unlock Vertex Normals
+		'''Lock/Unlock Vertex Normals
 		'''
 		tb = self.currentUi.tb003
 		if state is 'setMenu':
@@ -169,8 +163,7 @@ class Normals(Init):
 
 
 	def tb004(self, state=None):
-		'''
-		Average Normals
+		'''Average Normals
 		'''
 		tb = self.currentUi.tb004
 		if state is 'setMenu':
@@ -201,22 +194,19 @@ class Normals(Init):
 
 
 	def b001(self):
-		'''
-		Soften Edge Normal
+		'''Soften Edge Normal
 		'''
 		pm.polySoftEdge(angle=180, constructionHistory=0)
 
 
 	def b002(self):
-		'''
-		Harden Edge Normal
+		'''Harden Edge Normal
 		'''
 		pm.polySoftEdge(angle=0, constructionHistory=0)
 
 
 	def b003(self):
-		'''
-		Soft Edge Display
+		'''Soft Edge Display
 		'''
 		g_cond = pm.polyOptions(q=1, ae=1)
 		if g_cond[0]:
@@ -226,22 +216,19 @@ class Normals(Init):
 
 
 	def b005(self):
-		'''
-		Maya Bonus Tools: Adjust Vertex Normals
+		'''Maya Bonus Tools: Adjust Vertex Normals
 		'''
 		pm.mel.bgAdjustVertexNormalsWin()
 
 
 	def b006(self):
-		'''
-		Set To Face
+		'''Set To Face
 		'''
 		pm.polySetToFaceNormal()
 
 
 	def b009(self):
-		'''
-		Harden Uv Edges
+		'''Harden Uv Edges
 		'''
 		selection = pm.ls(sl=True, l=True)
 
@@ -252,8 +239,7 @@ class Normals(Init):
 
 
 	def b010(self):
-		'''
-		Reverse Normals
+		'''Reverse Normals
 		'''
 		pm.mel.ReversePolygonNormals()
 

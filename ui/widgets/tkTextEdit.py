@@ -21,9 +21,7 @@ Promoting a widget in designer to use a custom class:
 
 
 class TkTextEdit(QtWidgets.QTextEdit, Attributes):
-	'''
-	
-	'''
+	''''''
 	shown = QtCore.Signal()
 	hidden = QtCore.Signal()
 
@@ -39,8 +37,7 @@ class TkTextEdit(QtWidgets.QTextEdit, Attributes):
 
 
 	def insertText(self, text):
-		'''
-		Append a new paragraph to the textEdit.
+		'''Append a new paragraph to the textEdit.
 
 		:Parameters:
 			text (str) = A value to append to the lineEdit as a new paragraph. The value is converted to a string if it isn't already.

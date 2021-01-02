@@ -14,8 +14,7 @@ class Fx(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.parentUi.d000
 
@@ -25,8 +24,7 @@ class Fx(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.parentUi.cmb000
 
@@ -42,72 +40,52 @@ class Fx(Init):
 
 
 	def b000(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b001(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b002(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b003(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b004(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b005(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b006(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b007(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b008(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b009(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 

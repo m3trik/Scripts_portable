@@ -19,8 +19,7 @@ class SyntaxHighlighter(QtGui.QSyntaxHighlighter):
 
 
 	def highlightBlock(self, text):
-		'''
-		apply color-syntaxing to text
+		'''apply color-syntaxing to text
 		:Parameters:
 			text=text input
 		'''

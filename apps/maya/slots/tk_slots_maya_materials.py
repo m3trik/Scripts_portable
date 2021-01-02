@@ -17,16 +17,14 @@ class Materials(Init):
 
 	@property
 	def currentMat(self):
-		'''
-		Get the current material using the current index of the materials combobox.
+		'''Get the current material using the current index of the materials combobox.
 		'''
 		text = self.materials.cmb002.currentText()
 		return self.currentMats[text] if text else None
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.materials.d000
 
@@ -37,29 +35,25 @@ class Materials(Init):
 
 
 	def chk007(self, state=None):
-		'''
-		Assign Material: Current
+		'''Assign Material: Current
 		'''
 		self.materials.tb002.setText('Assign Current')
 
 
 	def chk008(self, state=None):
-		'''
-		Assign Material: Random
+		'''Assign Material: Random
 		'''
 		self.materials.tb002.setText('Assign Random')
 
 
 	def chk009(self, state=None):
-		'''
-		Assign Material: New
+		'''Assign Material: New
 		'''
 		self.materials.tb002.setText('Assign New')
 
 
 	def cmb001(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.materials.cmb001
 
@@ -75,8 +69,7 @@ class Materials(Init):
 
 
 	def cmb002(self, index=None):
-		'''
-		Material list
+		'''Material list
 
 		:Parameters:
 			index (int) = parameter on activated, currentIndexChanged, and highlighted signals.
@@ -130,8 +123,7 @@ class Materials(Init):
 
 	@Slots.message
 	def tb000(self, state=None):
-		'''
-		Select By Material Id
+		'''Select By Material Id
 		'''
 		tb = self.ui.tb000
 		if state is 'setMenu':
@@ -157,8 +149,7 @@ class Materials(Init):
 
 
 	def tb001(self, state=None):
-		'''
-		Stored Material Options
+		'''Stored Material Options
 		'''
 		tb = self.materials.tb001
 		if state is 'setMenu':
@@ -180,8 +171,7 @@ class Materials(Init):
 
 	@Slots.message
 	def tb002(self, state=None):
-		'''
-		Assign Material
+		'''Assign Material
 		'''
 		tb = self.materials.tb002
 		if state is 'setMenu':
@@ -224,8 +214,7 @@ class Materials(Init):
 
 	@Slots.message
 	def lbl000(self):
-		'''
-		Open material in editor
+		'''Open material in editor
 		'''
 		if self.materials.tb001.menu_.chk001.isChecked(): #ID map mode
 			try:
@@ -245,8 +234,7 @@ class Materials(Init):
 
 
 	def lbl001(self, setEditable=True):
-		'''
-		Rename Material: Set cmb002 as editable and disable widgets.
+		'''Rename Material: Set cmb002 as editable and disable widgets.
 		'''
 		cmb = self.materials.cmb002
 
@@ -263,8 +251,7 @@ class Materials(Init):
 
 
 	def lbl002(self):
-		'''
-		Delete Material
+		'''Delete Material
 		'''
 		mat = self.currentMat
 		mat = pm.delete(mat)
@@ -274,39 +261,34 @@ class Materials(Init):
 
 
 	def lbl003(self):
-		'''
-		Delete Unused Materials
+		'''Delete Unused Materials
 		'''
 		mel.eval('hyperShadePanelMenuCommand("hyperShadePanel1", "deleteUnusedNodes");')
 		self.cmb002() #refresh the combobox
 
 
 	def lbl004(self):
-		'''
-		Material Attributes: Show Material Attributes in the Attribute Editor.
+		'''Material Attributes: Show Material Attributes in the Attribute Editor.
 		'''
 		if self.currentMat and hasattr(self.currentMat, 'name'):
 			mel.eval('showSG '+self.currentMat.name())
 
 
 	def b000(self):
-		'''
-		Material List: Delete
+		'''Material List: Delete
 		'''
 		self.lbl002()
 
 
 	def b001(self):
-		'''
-		Material List: Edit
+		'''Material List: Edit
 		'''
 		self.lbl000()
 
 
 	@Slots.message
 	def b002(self):
-		'''
-		Store Material
+		'''Store Material
 		'''
 		selection = pm.ls(selection=1)
 		if not selection:
@@ -321,8 +303,7 @@ class Materials(Init):
 
 
 	def b003(self):
-		'''
-		Assign: Assign Current
+		'''Assign: Assign Current
 		'''
 		self.materials.tb002.menu_.chk007.setChecked(True)
 		self.materials.tb002.setText('Assign Current')
@@ -330,8 +311,7 @@ class Materials(Init):
 
 
 	def b004(self):
-		'''
-		Assign: Assign Random
+		'''Assign: Assign Random
 		'''
 		self.materials.tb002.menu_.chk008.setChecked(True)
 		self.materials.tb002.setText('Assign Random')
@@ -339,8 +319,7 @@ class Materials(Init):
 
 
 	def b005(self):
-		'''
-		Assign: Assign New
+		'''Assign: Assign New
 		'''
 		self.materials.tb002.menu_.chk009.setChecked(True)
 		self.materials.tb002.setText('Assign New')
@@ -349,8 +328,7 @@ class Materials(Init):
 
 	@staticmethod
 	def getColorSwatchIcon(mat, size=[20, 20]):
-		'''
-		Get an icon with a color fill matching the given materials RBG value.
+		'''Get an icon with a color fill matching the given materials RBG value.
 
 		:Parameters:
 			mat (obj)(str) = The material or the material's name.
@@ -374,8 +352,7 @@ class Materials(Init):
 
 
 	def renameMaterial(self, mat, newMatName):
-		'''
-		Rename Material
+		'''Rename Material
 		'''
 		cmb = self.materials.cmb002 #scene materials
 
@@ -391,8 +368,7 @@ class Materials(Init):
 
 	@Slots.message
 	def selectByMaterialID(self, material=None, objects=None, shell=False, invert=False):
-		'''
-		Select By Material Id
+		'''Select By Material Id
 	
 		material (obj) = The material to search and select for.
 		objects (list) = Faces or mesh objects as a list. If no objects are given, all geometry in the scene will be searched.
@@ -434,8 +410,7 @@ class Materials(Init):
 
 	@staticmethod
 	def getSceneMaterials(startingWith=[''], exclude=['standardSurface']):
-		'''
-		Get All Materials from the current scene.
+		'''Get All Materials from the current scene.
 
 		:Parameters:
 			startingWith (list) = Filters material names starting with any of the strings in the given list. ie. ['ID_']
@@ -451,8 +426,7 @@ class Materials(Init):
 
 	@staticmethod
 	def getFavoriteMaterials():
-		'''
-		Get Maya Favorite Materials List.
+		'''Get Maya Favorite Materials List.
 
 		:Return:
 			(list) materials.
@@ -469,8 +443,7 @@ class Materials(Init):
 
 	@staticmethod
 	def getMaterial(obj=''):
-		'''
-		Get the material from the selected face.
+		'''Get the material from the selected face.
 
 		:Parameters:
 			(str)(obj) = The obj with the material.
@@ -486,8 +459,7 @@ class Materials(Init):
 
 	@staticmethod
 	def createRandomMaterial(name=None, prefix=''):
-		'''
-		Creates a random material.
+		'''Creates a random material.
 
 		:Parameters:
 			name (str) = material name.
@@ -516,8 +488,7 @@ class Materials(Init):
 
 	@Slots.message
 	def assignMaterial(self, objects, mat):
-		'''
-		Assign Material
+		'''Assign Material
 
 		objects (list) = Faces or mesh objects as a list.
 		material (obj) = The material to search and select for.

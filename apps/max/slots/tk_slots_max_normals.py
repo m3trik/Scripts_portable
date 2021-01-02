@@ -13,8 +13,7 @@ class Normals(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.normals.d000
 
@@ -24,8 +23,7 @@ class Normals(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.normals.cmb000
 
@@ -42,8 +40,7 @@ class Normals(Init):
 
 	@Slots.message
 	def tb000(self, state=None):
-		'''
-		Display Face Normals
+		'''Display Face Normals
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
@@ -75,8 +72,7 @@ class Normals(Init):
 
 
 	def tb001(self, state=None):
-		'''
-		Harden Creased Edges
+		'''Harden Creased Edges
 		'''
 		tb = self.currentUi.tb001
 		if state is 'setMenu':
@@ -107,8 +103,7 @@ class Normals(Init):
 
 
 	def tb002(self, state=None):
-		'''
-		Set Normal By Angle
+		'''Set Normal By Angle
 		'''
 		tb = self.currentUi.tb002
 		if state is 'setMenu':
@@ -141,8 +136,7 @@ class Normals(Init):
 
 
 	def tb003(self, state=None):
-		'''
-		Lock/Unlock Vertex Normals
+		'''Lock/Unlock Vertex Normals
 		'''
 		tb = self.currentUi.tb003
 		if state is 'setMenu':
@@ -185,8 +179,7 @@ class Normals(Init):
 
 
 	def tb004(self, state=None):
-		'''
-		Average Normals
+		'''Average Normals
 		'''
 		tb = self.currentUi.tb004
 		if state is 'setMenu':
@@ -205,24 +198,21 @@ class Normals(Init):
 
 
 	def b001(self):
-		'''
-		Soften Edge Normal
+		'''Soften Edge Normal
 		'''
 		self.tk.hide()
 		maxEval('$.EditablePoly.makeSmoothEdges 1')
 
 
 	def b002(self):
-		'''
-		Harden Edge Normal
+		'''Harden Edge Normal
 		'''
 		self.tk.hide()
 		maxEval('$.EditablePoly.makeHardEdges 1')
 
 
 	def b003(self):
-		'''
-		Soft Edge Display
+		'''Soft Edge Display
 		'''
 		for obj in rt.selection:
 			state = obj.hardedgedisplay
@@ -230,22 +220,19 @@ class Normals(Init):
 
 
 	def b005(self):
-		'''
-		Adjust Vertex Normals
+		'''Adjust Vertex Normals
 		'''
 		maxEval('bgAdjustVertexNormalsWin;')
 
 
 	def b006(self):
-		'''
-		Set To Face
+		'''Set To Face
 		'''
 		maxEval('macros.run "PolyTools" "HardSelection"')
 
 
 	def b009(self):
-		'''
-		Harden Uv Edges
+		'''Harden Uv Edges
 		'''
 		def createArrayFromSelection (): #(string sel[])	/* returns a string array of the selected transform nodes
 			pm.select (hierarchy=1)
@@ -286,8 +273,7 @@ class Normals(Init):
 
 
 	def b010(self):
-		'''
-		Reverse Normals
+		'''Reverse Normals
 		'''
 		for obj in rt.selection:		
 			rt.modPanel.setCurrentObject(obj.baseObject)

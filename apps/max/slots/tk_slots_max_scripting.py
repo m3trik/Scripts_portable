@@ -20,8 +20,7 @@ class Scripting(Init):
 		
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.scripting.d000
 
@@ -31,8 +30,7 @@ class Scripting(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.scripting.cmb000
 
@@ -48,8 +46,7 @@ class Scripting(Init):
 
 
 	def chk000(self, state=None):
-		'''
-		Toggle Mel/Python
+		'''Toggle Mel/Python
 		'''
 		if self.scripting.chk000.isChecked():
 			self.scripting.chk000.setText("python")
@@ -58,30 +55,26 @@ class Scripting(Init):
 
 
 	def b000(self):
-		'''
-		Toggle Script Output Window
+		'''Toggle Script Output Window
 		'''
 		state = pm.workspaceControl ("scriptEditorOutputWorkspace", query=1, visible=1)
 		pm.workspaceControl ("scriptEditorOutputWorkspace", edit=1, visible=not state)
 
 
 	def b001(self):
-		'''
-		Command Line Window
+		'''Command Line Window
 		'''
 		maxEval('tk_commandLineWindow;')
 
 
 	def b002(self):
-		'''
-		Script Editor
+		'''Script Editor
 		'''
 		maxEval('ScriptEditor;')
 
 
 	def b003(self):
-		'''
-		New Tab
+		'''New Tab
 		'''
 		label = "MEL"
 		if self.scripting.chk000.isChecked():
@@ -91,43 +84,32 @@ class Scripting(Init):
 
 
 	def b004(self):
-		'''
-		Delete Tab
+		'''Delete Tab
 		'''
 		index = self.scripting.tabWidget.currentIndex()
 		self.scripting.tabWidget.removeTab(index)
 
 
 	def b005(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b006(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b007(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 	def b008(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 	def b009(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 

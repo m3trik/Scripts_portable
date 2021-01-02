@@ -8,8 +8,7 @@ from tk_slots_maya_init import Init
 
 
 class Macros(Init):
-	'''
-	Custom scripts with assigned hotkeys.
+	'''Custom scripts with assigned hotkeys.
 	'''
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
@@ -18,8 +17,7 @@ class Macros(Init):
 
 
 	def setMacros(self, macros=[]):
-		'''
-		Extends setMacro to accept a list of tuples.
+		'''Extends setMacro to accept a list of tuples.
 		'''
 		if not macros:
 			macros = [
@@ -48,8 +46,7 @@ class Macros(Init):
 
 
 	def setMacro(self, name=None, k=None, cat=None, ann=None):
-		'''
-		Sets a default runtime command with a keyboard shotcut.
+		'''Sets a default runtime command with a keyboard shotcut.
 
 		:Parameters:
 			name (str) = The command name you provide must be unique. The name itself must begin with an alphabetic character or underscore followed by alphanumeric characters or underscores.
@@ -103,8 +100,7 @@ class Macros(Init):
 
 
 	def formatSource(self, cmd, removeTabs=0):
-		'''
-		Return the text of the source code for an object.
+		'''Return the text of the source code for an object.
 		The source code is returned as a single string.
 		Removes lines containing '@' or 'def ' ie. @staticmethod.
 
@@ -127,8 +123,7 @@ class Macros(Init):
 
 	@staticmethod
 	def setWireframeOnShadedOption(editor, state, smoothWireframe=True, activeOnly=False):
-		'''
-		Set Wireframe On Shaded.
+		'''Set Wireframe On Shaded.
 
 		:Parameters:
 			editor (str) = The panel name.
@@ -144,8 +139,7 @@ class Macros(Init):
 
 	@staticmethod
 	def hk_back_face_culling():
-		'''
-		hk_back_face_culling
+		'''hk_back_face_culling
 		Toggle Back-Face Culling.
 		'''
 		sel = pm.ls(selection=True)
@@ -167,8 +161,7 @@ class Macros(Init):
 
 	@staticmethod
 	def hk_smooth_preview():
-		'''
-		hk_smooth_preview
+		'''hk_smooth_preview
 		Toggle smooth mesh preview.
 
 		#smooth mesh attributes:
@@ -238,8 +231,7 @@ class Macros(Init):
 
 	@staticmethod
 	def hk_isolate_selected():
-		'''
-		hk_isolate_selected
+		'''hk_isolate_selected
 		Isolate the current selection.
 		'''
 		currentPanel = pm.getPanel(withFocus=1)
@@ -254,8 +246,7 @@ class Macros(Init):
 
 	@staticmethod
 	def hk_grid_and_image_planes():
-		'''
-		hk_grid_and_image_planes
+		'''hk_grid_and_image_planes
 		Toggle grid and image plane visibility.
 		'''
 		image_plane = pm.ls(exactType='imagePlane')
@@ -274,8 +265,7 @@ class Macros(Init):
 
 	@staticmethod
 	def hk_frame_selected():
-		'''
-		hk_frame_selected
+		'''hk_frame_selected
 		Frame selected by a set amount.
 		'''
 		pm.melGlobals.initVar('int', 'tk_toggleFrame')
@@ -350,8 +340,7 @@ class Macros(Init):
 
 	@staticmethod
 	def hk_wireframe_on_shaded():
-		'''
-		hk_wireframe_on_shaded
+		'''hk_wireframe_on_shaded
 		Toggle wireframe on shaded.
 		'''
 		currentPanel = pm.getPanel(withFocus=True)
@@ -375,8 +364,7 @@ class Macros(Init):
 
 	@staticmethod
 	def hk_xray():
-		'''
-		hk_xray
+		'''hk_xray
 		Toggle xRay all except selected.
 		'''
 		#xray all except selected
@@ -390,8 +378,7 @@ class Macros(Init):
 
 	@staticmethod
 	def hk_wireframe():
-		'''
-		hk_wireframe
+		'''hk_wireframe
 		Toggle wireframe/shaded/shaded w/texture display.
 		'''
 		currentPanel = pm.getPanel(withFocus=1)
@@ -414,8 +401,7 @@ class Macros(Init):
 
 	@staticmethod
 	def hk_shading():
-		'''
-		hk_shading
+		'''hk_shading
 		Toggle viewport shading.
 		'''
 		currentPanel = pm.getPanel (withFocus=1)
@@ -444,8 +430,7 @@ class Macros(Init):
 
 	@staticmethod
 	def hk_selection_mode():
-		'''
-		hk_selection_mode
+		'''hk_selection_mode
 		Toggle between object selection & last component selection.
 		'''
 		objectMode = pm.selectMode(query=True, object=True)
@@ -457,8 +442,7 @@ class Macros(Init):
 
 	@staticmethod
 	def hk_toggle_UV_select_type():
-		'''
-		hk_toggle_UV_select_type
+		'''hk_toggle_UV_select_type
 		Toggle between UV & UV shell component selection.
 		'''
 		meshUVShell = pm.selectType(q=1, meshUVShell=1)
@@ -485,8 +469,7 @@ class Macros(Init):
 
 	@staticmethod
 	def hk_paste_and_rename():
-		'''
-		hk_paste_and_rename
+		'''hk_paste_and_rename
 		Paste and rename removing keyword 'paste'.
 		'''
 		pm.mel.cutCopyPaste("paste")
@@ -513,8 +496,7 @@ class Macros(Init):
 
 	@staticmethod
 	def hk_multi_component():
-		'''
-		hk_multi_component
+		'''hk_multi_component
 		Multi-Component Selection.
 		'''
 		pm.SelectMultiComponentMask()
@@ -523,8 +505,7 @@ class Macros(Init):
 
 	@staticmethod
 	def hk_toggle_component_mask():
-		'''
-		hk_toggle_component_mask
+		'''hk_toggle_component_mask
 		Toggle Component Selection Mask.
 		'''
 		mode=pm.selectMode(query=1, component=1)
@@ -549,8 +530,7 @@ class Macros(Init):
 
 	@staticmethod
 	def hk_merge_vertices():
-		'''
-		hk_merge_vertices
+		'''hk_merge_vertices
 		Merge Vertices.
 		'''
 		tolerance = 0.001
@@ -589,8 +569,7 @@ class Macros(Init):
 
 	@staticmethod
 	def hk_invert_component_selection():
-		'''
-		hk_invert_component_selection
+		'''hk_invert_component_selection
 		Invert the component selection on the currently selected objects.
 		'''
 		if not pm.selectMode(query=1, component=1): #component select mode
@@ -624,8 +603,7 @@ class Macros(Init):
 
 	@staticmethod
 	def hk_tk_show():
-		'''
-		hk_tk_show
+		'''hk_tk_show
 		Display tk marking menu.
 
 		profile: Prints the total running time, times each function separately, and tells you how many times each function was called.
@@ -641,8 +619,7 @@ class Macros(Init):
 
 	@staticmethod
 	def hk_hotbox_full():
-		'''
-		hk_hotbox_full
+		'''hk_hotbox_full
 		Display the full version of the hotbox.
 		'''
 		pm.hotBox(polygonsOnlyMenus=1, displayHotbox=1)
@@ -651,8 +628,7 @@ class Macros(Init):
 
 	@staticmethod
 	def hk_toggle_panels():
-		'''
-		hk_toggle_panels
+		'''hk_toggle_panels
 		Toggle UI toolbars.
 		'''
 		if pm.menu('MayaWindow|HotBoxControlsMenu', q=1, ni=1) == 0:

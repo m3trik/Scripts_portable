@@ -11,29 +11,25 @@ class Polygons(Init):
 
 
 	def chk008(self, state=None):
-		'''
-		Divide Facet: Split U
+		'''Divide Facet: Split U
 		'''
 		self.toggleWidgets(setUnChecked='chk010')
 
 
 	def chk009(self, state=None):
-		'''
-		Divide Facet: Split V
+		'''Divide Facet: Split V
 		'''
 		self.toggleWidgets(setUnChecked='chk010')
 
 
 	def chk010(self, state=None):
-		'''
-		Divide Facet: Tris
+		'''Divide Facet: Tris
 		'''
 		self.toggleWidgets(setUnChecked='chk008-9')
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.polygons.d000
 
@@ -43,8 +39,7 @@ class Polygons(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Maya Polygon Operations
+		'''Maya Polygon Operations
 		'''
 		cmb = self.polygons.d000.contextMenu.cmb000
 
@@ -81,8 +76,7 @@ class Polygons(Init):
 
 	@Slots.message
 	def tb000(self, state=None):
-		'''
-		Merge Vertices
+		'''Merge Vertices
 		'''
 		tb = self.ui.tb000
 		if state is 'setMenu':
@@ -121,8 +115,7 @@ class Polygons(Init):
 
 	@Init.attr
 	def tb001(self, state=None):
-		'''
-		Bridge
+		'''Bridge
 		'''
 		tb = self.ui.tb001
 		if state is 'setMenu':
@@ -140,8 +133,7 @@ class Polygons(Init):
 
 
 	def tb002(self, state=None):
-		'''
-		Combine
+		'''Combine
 		'''
 		tb = self.ui.tb002
 		if state is 'setMenu':
@@ -157,8 +149,7 @@ class Polygons(Init):
 
 	@Init.attr
 	def tb003(self, state=None):
-		'''
-		Extrude
+		'''Extrude
 		'''
 		tb = self.ui.tb003
 		if state is 'setMenu':
@@ -188,8 +179,7 @@ class Polygons(Init):
 
 	@Init.attr
 	def tb004(self, state=None):
-		'''
-		Bevel (Chamfer)
+		'''Bevel (Chamfer)
 		'''
 		tb = self.ui.tb004
 		if state is 'setMenu':
@@ -207,8 +197,7 @@ class Polygons(Init):
 
 	@Slots.message
 	def tb005(self, state=None):
-		'''
-		Detach
+		'''Detach
 		'''
 		tb = self.ui.tb005
 		if state is 'setMenu':
@@ -247,8 +236,7 @@ class Polygons(Init):
 
 	@Init.attr
 	def tb006(self, state=None):
-		'''
-		Inset Face Region
+		'''Inset Face Region
 		'''
 		tb = self.ui.tb006
 		if state is 'setMenu':
@@ -261,8 +249,7 @@ class Polygons(Init):
 
 	@Slots.message
 	def tb007(self, state=None):
-		'''
-		Divide Facet
+		'''Divide Facet
 		'''
 		tb = self.ui.tb007
 		if state is 'setMenu':
@@ -296,8 +283,7 @@ class Polygons(Init):
 
 
 	def tb008(self, state=None):
-		'''
-		Boolean Operation
+		'''Boolean Operation
 		'''
 		tb = self.ui.tb008
 		if state is 'setMenu':
@@ -318,8 +304,7 @@ class Polygons(Init):
 
 	@Slots.message
 	def tb009(self, state=None):
-		'''
-		Snap Closest Verts
+		'''Snap Closest Verts
 		'''
 		tb = self.ui.tb009
 		if state is 'setMenu':
@@ -340,8 +325,7 @@ class Polygons(Init):
 
 	@Init.attr
 	def b000(self):
-		'''
-		Circularize
+		'''Circularize
 		'''
 		circularize = pm.polyCircularize(
 			constructionHistory=1, 
@@ -360,30 +344,26 @@ class Polygons(Init):
 
 
 	def b001(self):
-		'''
-		Fill Holes
+		'''Fill Holes
 		'''
 		pm.mel.FillHole()
 
 
 	def b002(self):
-		'''
-		Separate
+		'''Separate
 		'''
 		pm.mel.SeparatePolygon()
 
 
 	def b003(self):
-		'''
-		Symmetrize
+		'''Symmetrize
 		'''
 		pm.mel.Symmetrize()
 
 
 	@Init.attr
 	def b004(self):
-		'''
-		Slice
+		'''Slice
 		'''
 		cuttingDirection = 'Y' #valid values: 'x','y','z' A value of 'x' will cut the object along the YZ plane cutting through the center of the bounding box. 'y':ZX. 'z':XY.
 
@@ -392,8 +372,7 @@ class Polygons(Init):
 
 
 	def b009(self):
-		'''
-		Collapse Component
+		'''Collapse Component
 		'''
 		# pm.mel.MergeToCenter() #collapse vertices
 		pm.mel.PolygonCollapse()
@@ -401,72 +380,62 @@ class Polygons(Init):
 
 	@Init.attr
 	def b010(self):
-		'''
-		Extract Curve
+		'''Extract Curve
 		'''
 		# mel.eval('CreateCurveFromPoly;')
 		return pm.polyToCurve (form=2, degree=3, conformToSmoothMeshPreview=True) #degree: 1=linear,2= ,3=cubic,5= ,7=
 
 
 	def b012(self):
-		'''
-		Multi-Cut Tool
+		'''Multi-Cut Tool
 		'''
 		pm.mel.dR_multiCutTool()
 
 
 	def b021(self):
-		'''
-		Connect Border Edges
+		'''Connect Border Edges
 		'''
 		pm.mel.performPolyConnectBorders(0)
 
 
 	def b022(self):
-		'''
-		Attach
+		'''Attach
 		'''
 		pm.mel.dR_connectTool()
 
 
 	def b028(self):
-		'''
-		Quad Draw
+		'''Quad Draw
 		'''
 		pm.mel.dR_quadDrawTool()
 
 
 	def b032(self):
-		'''
-		Poke
+		'''Poke
 		'''
 		pm.mel.PokePolygon()
 
 
 	def b034(self):
-		'''
-		Wedge
+		'''Wedge
 		'''
 		pm.mel.WedgePolygon()
 
 
 	def b038(self):
-		'''
-		Assign Invisible
+		'''Assign Invisible
 		'''
 		pm.polyHole(assignHole=1)
 
 
 	def b043(self):
-		'''
-		Target Weld
+		'''Target Weld
 		'''
 		pm.mel.dR_targetWeldTool()
 
 
 	def b045(self):
-		'''
-		Re-Order Vertices
+		'''Re-Order Vertices
 		'''
 		symmetryOn = pm.symmetricModelling(query=True, symmetry=True) #query symmetry state
 		if symmetryOn:
@@ -477,8 +446,7 @@ class Polygons(Init):
 
 
 	def b046(self):
-		'''
-		Split
+		'''Split
 		'''
 		vertexMask = pm.selectType (query=True, vertex=True)
 		edgeMask = pm.selectType (query=True, edge=True)
@@ -495,43 +463,37 @@ class Polygons(Init):
 
 
 	def b047(self):
-		'''
-		Insert Edgeloop
+		'''Insert Edgeloop
 		'''
 		pm.mel.SplitEdgeRingTool()
 
 
 	def b048(self):
-		'''
-		Collapse Edgering
+		'''Collapse Edgering
 		'''
 		pm.mel.bt_polyCollapseEdgeRingTool()
 
 
 	def b049(self):
-		'''
-		Slide Edge Tool
+		'''Slide Edge Tool
 		'''
 		pm.mel.SlideEdgeTool()
 
 
 	def b050(self):
-		'''
-		Spin Edge
+		'''Spin Edge
 		'''
 		pm.mel.bt_polySpinEdgeTool()
 
 
 	def b051(self):
-		'''
-		Offset Edgeloop
+		'''Offset Edgeloop
 		'''
 		pm.mel.performPolyDuplicateEdge(0)
 
 
 	def b053(self):
-		'''
-		Edit Edge Flow
+		'''Edit Edge Flow
 		'''
 		pm.mel.PolyEditEdgeFlow()
 

@@ -5,8 +5,7 @@ from shared import Menu, Attributes, RichText
 
 
 class TkPushButton_Draggable(QtWidgets.QPushButton, Menu, Attributes, RichText):
-	'''
-	Draggable/Checkable pushbutton.
+	'''Draggable/Checkable pushbutton.
 	'''
 
 	__mousePressPos = QtCore.QPoint()
@@ -36,8 +35,7 @@ class TkPushButton_Draggable(QtWidgets.QPushButton, Menu, Attributes, RichText):
 
 
 	def setText(self, text):
-		'''
-		Override setText to support rich text formatting.
+		'''Override setText to support rich text formatting.
 
 		:Parameters:
 			text (str) = The desired widget text.
@@ -46,8 +44,7 @@ class TkPushButton_Draggable(QtWidgets.QPushButton, Menu, Attributes, RichText):
 
 
 	def text(self):
-		'''
-		Override text to support rich text formatting.
+		'''Override text to support rich text formatting.
 
 		:Return:
 			(str)
@@ -56,8 +53,7 @@ class TkPushButton_Draggable(QtWidgets.QPushButton, Menu, Attributes, RichText):
 
 
 	def sizeHint(self):
-		'''
-		Override sizeHint to support rich text formatting.
+		'''Override sizeHint to support rich text formatting.
 
 		:Return:
 			(QSize)

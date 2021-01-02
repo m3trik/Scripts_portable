@@ -15,8 +15,7 @@ class DynLayout(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.parentUi.d000
 
@@ -26,8 +25,7 @@ class DynLayout(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.parentUi.cmb000
 
@@ -43,10 +41,7 @@ class DynLayout(Init):
 
 
 	def b000(self):
-		'''
-		
-
-		'''
+		'''pass
 		pass
 
 

@@ -41,8 +41,7 @@ class TkMenu(QtWidgets.QMenu, Attributes):
 
 	@property
 	def containsMenuItems(self):
-		'''
-		Query whether any child objects have been added to the menu.
+		'''Query whether any child objects have been added to the menu.
 		'''
 		state = True if self.children_() else False
 
@@ -50,8 +49,7 @@ class TkMenu(QtWidgets.QMenu, Attributes):
 
 
 	def add(self, w, **kwargs):
-		'''
-		Add items to the QMenu.
+		'''Add items to the QMenu.
 
 		:Parameters:
 			widget (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
@@ -104,8 +102,7 @@ class TkMenu(QtWidgets.QMenu, Attributes):
 
 
 	def children_(self, index=None, include=[], exclude=['QAction', 'QWidgetAction', 'QHBoxLayout', 'QVBoxLayout']):
-		'''
-		Get a list of the menu's child objects, excluding those types listed in 'exclude'.
+		'''Get a list of the menu's child objects, excluding those types listed in 'exclude'.
 
 		:Parameters:
 			index (int) = return the child widget at the given index.
@@ -129,8 +126,7 @@ class TkMenu(QtWidgets.QMenu, Attributes):
 
 
 	def setLastActiveChild(self, widget, *args, **kwargs):
-		'''
-		Set the given widget as the last active.
+		'''Set the given widget as the last active.
 		Maintains a list of the last 10 active child widgets.
 
 		:Parameters:
@@ -153,8 +149,7 @@ class TkMenu(QtWidgets.QMenu, Attributes):
 
 
 	def lastActiveChild(self, name=False, as_list=False):
-		'''
-		Get the given widget set as last active.
+		'''Get the given widget set as last active.
 		Contains a list of the last 10 active child widgets.
 
 		:Parameters:
@@ -182,8 +177,7 @@ class TkMenu(QtWidgets.QMenu, Attributes):
 
 
 	def addToContextMenuToolTip(self, menuItem):
-		'''
-		Add an item to the context menu toolTip.
+		'''Add an item to the context menu toolTip.
 
 		:Parameters:
 			menuItem (obj) = The item to add.
@@ -215,8 +209,7 @@ class TkMenu(QtWidgets.QMenu, Attributes):
 
 
 	def hide(self, force=False):
-		'''
-		Hide the menu.
+		'''Hide the menu.
 		'''
 		if not force:
 
@@ -231,8 +224,7 @@ class TkMenu(QtWidgets.QMenu, Attributes):
 
 
 	def show(self):
-		'''
-		Show the menu.
+		'''Show the menu.
 		'''
 		if self.containsMenuItems: #prevent show if the menu is empty.
 			return super(TkMenu, self).show()

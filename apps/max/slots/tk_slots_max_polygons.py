@@ -14,29 +14,25 @@ class Polygons(Init):
 
 
 	def chk008(self, state=None):
-		'''
-		Divide Facet: Split U
+		'''Divide Facet: Split U
 		'''
 		self.toggleWidgets(setUnChecked='chk010')
 
 
 	def chk009(self, state=None):
-		'''
-		Divide Facet: Split V
+		'''Divide Facet: Split V
 		'''
 		self.toggleWidgets(setUnChecked='chk010')
 
 
 	def chk010(self, state=None):
-		'''
-		Divide Facet: Tris
+		'''Divide Facet: Tris
 		'''
 		self.toggleWidgets(setUnChecked='chk008,chk009')
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.parentUi.d000
 
@@ -47,8 +43,7 @@ class Polygons(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		3dsMax Polygon Operations
+		'''3dsMax Polygon Operations
 		'''
 		cmb = self.polygons.d000.contextMenu.cmb000
 
@@ -93,8 +88,7 @@ class Polygons(Init):
 
 	@Slots.message
 	def tb000(self, state=None):
-		'''
-		Merge Vertices
+		'''Merge Vertices
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
@@ -121,8 +115,7 @@ class Polygons(Init):
 
 
 	def tb001(self, state=None):
-		'''
-		Bridge
+		'''Bridge
 		'''
 		tb = self.currentUi.tb001
 		if state is 'setMenu':
@@ -137,8 +130,7 @@ class Polygons(Init):
 
 
 	def tb002(self, state=None):
-		'''
-		Combine
+		'''Combine
 		'''
 		tb = self.currentUi.tb002
 		if state is 'setMenu':
@@ -174,8 +166,7 @@ class Polygons(Init):
 
 
 	def tb003(self, state=None):
-		'''
-		Extrude
+		'''Extrude
 		'''
 		tb = self.currentUi.tb003
 		if state is 'setMenu':
@@ -190,8 +181,7 @@ class Polygons(Init):
 
 
 	def tb004(self, state=None):
-		'''
-		Bevel (Chamfer)
+		'''Bevel (Chamfer)
 		'''
 		tb = self.currentUi.tb004
 		if state is 'setMenu':
@@ -211,8 +201,7 @@ class Polygons(Init):
 
 
 	def tb005(self, state=None):
-		'''
-		Detach
+		'''Detach
 		'''
 		tb = self.currentUi.tb005
 		if state is 'setMenu':
@@ -241,8 +230,7 @@ class Polygons(Init):
 	
 
 	def tb006(self, state=None):
-		'''
-		Inset Face Region
+		'''Inset Face Region
 		'''
 		tb = self.currentUi.tb006
 		if state is 'setMenu':
@@ -263,8 +251,7 @@ class Polygons(Init):
 
 
 	def tb007(self, state=None):
-		'''
-		Divide Facet
+		'''Divide Facet
 		'''
 		tb = self.currentUi.tb007
 		if state is 'setMenu':
@@ -295,8 +282,7 @@ class Polygons(Init):
 
 
 	def tb008(self, state=None):
-		'''
-		Boolean Operation
+		'''Boolean Operation
 		'''
 		tb = self.currentUi.tb008
 		if state is 'setMenu':
@@ -317,8 +303,7 @@ class Polygons(Init):
 
 	@Slots.message
 	def tb009(self, state=None):
-		'''
-		Snap Closest Verts
+		'''Snap Closest Verts
 		'''
 		tb = self.ui.tb009
 		if state is 'setMenu':
@@ -338,8 +323,7 @@ class Polygons(Init):
 
 
 	def b000(self):
-		'''
-		Circularize
+		'''Circularize
 		'''
 		obj = rt.selection[0]
 		vertices = rt.polyop.getVertSelection(obj)
@@ -348,37 +332,32 @@ class Polygons(Init):
 
 
 	def b001(self):
-		'''
-		Fill Holes
+		'''Fill Holes
 		'''
 		rt.macros.run('Modifiers', 'Cap_Holes')
 
 
 	def b002(self):
-		'''
-		Separate
+		'''Separate
 		'''
 		pass
 		# rt.detachElement(obj)
 
 
 	def b003(self):
-		'''
-		Symmetrize
+		'''Symmetrize
 		'''
 		pm.mel.Symmetrize()
 
 
 	def b004(self):
-		'''
-		Slice
+		'''Slice
 		'''
 		rt.macros.run('Ribbon - Modeling', 'CutsQuickSlice')
 
 
 	def b009(self):
-		'''
-		Collapse Component
+		'''Collapse Component
 		'''
 		#--[mesh] 0=object level,1=vertex level,2=edge level,3=face,4=polygon,5=element,
 		#--[poly] 0=object level,1=vertex level,2=edge level,3=border,4=polygon,5=element
@@ -399,15 +378,13 @@ class Polygons(Init):
 
 
 	def b010(self):
-		'''
-		Extract Curve
+		'''Extract Curve
 		'''
 		maxEval('')
 
 
 	def b012(self):
-		'''
-		Multi-Cut Tool
+		'''Multi-Cut Tool
 		'''
 		self.setSubObjectLevel(4)
 		rt.macros.run('Ribbon - Modeling', 'CutsCut')
@@ -417,58 +394,50 @@ class Polygons(Init):
 
 
 	def b021(self):
-		'''
-		Connect Border Edges
+		'''Connect Border Edges
 		'''
 		mel.eval("performPolyConnectBorders 0;")
 
 
 	def b022(self):
-		'''
-		Attach
+		'''Attach
 		'''
 		rt.macros.run('Ribbon - Modeling', 'AttachMode')
 
 
 	def b028(self):
-		'''
-		Quad Draw
+		'''Quad Draw
 		'''
 		mel.eval("dR_quadDrawTool;")
 
 
 	def b032(self):
-		'''
-		Poke
+		'''Poke
 		'''
 		mel.eval("PokePolygon;")
 
 
 	def b034(self):
-		'''
-		Wedge
+		'''Wedge
 		'''
 		mel.eval("WedgePolygon;")
 
 
 	def b038(self):
-		'''
-		Assign Invisible
+		'''Assign Invisible
 		'''
 		mel.eval("polyHole -assignHole 1;")
 
 
 	def b043(self):
-		'''
-		Target Weld
+		'''Target Weld
 		'''
 		self.setSubObjectLevel(1) #set component mode to vertex
 		rt.macros.run('Editable Polygon Object', 'EPoly_TargetWeld')
 		
 
 	def b045(self):
-		'''
-		Re-Order Vertices
+		'''Re-Order Vertices
 		'''
 		# symmetryOn = pm.symmetricModelling(query=True, symmetry=True) #query symmetry state
 		
@@ -480,8 +449,7 @@ class Polygons(Init):
 
 
 	def b046(self):
-		'''
-		Split
+		'''Split
 		'''
 		level = rt.subObjectLevel
 
@@ -504,44 +472,38 @@ class Polygons(Init):
 
 
 	def b047(self):
-		'''
-		Insert Edgeloop
+		'''Insert Edgeloop
 		'''
 		self.setSubObjectLevel(0)
 		rt.macros.run('PolyTools', 'SwiftLoop')
 
 
 	def b048(self):
-		'''
-		Collapse Edgering
+		'''Collapse Edgering
 		'''
 		mel.eval("bt_polyCollapseEdgeRingTool;")
 
 
 	def b049(self):
-		'''
-		Slide Edge Tool
+		'''Slide Edge Tool
 		'''
 		mel.eval("SlideEdgeTool;")
 
 
 	def b050(self):
-		'''
-		Spin Edge
+		'''Spin Edge
 		'''
 		mel.eval("bt_polySpinEdgeTool;")
 
 
 	def b051(self):
-		'''
-		Offset Edgeloop
+		'''Offset Edgeloop
 		'''
 		mel.eval("performPolyDuplicateEdge 0;")
 
 
 	def b053(self):
-		'''
-		Edit Edge Flow
+		'''Edit Edge Flow
 		'''
 		mel.eval("PolyEditEdgeFlow;")
 

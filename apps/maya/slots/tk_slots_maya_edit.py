@@ -11,8 +11,7 @@ class Edit(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.edit.d000
 
@@ -22,8 +21,7 @@ class Edit(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.edit.cmb000
 
@@ -44,8 +42,7 @@ class Edit(Init):
 
 
 	def chk006_9(self):
-		'''
-		Set the toolbutton's text according to the checkstates.
+		'''Set the toolbutton's text according to the checkstates.
 		'''
 		tb = self.ui.tb003
 		axis = self.getAxisFromCheckBoxes('chk006-9', tb.menu_)
@@ -53,8 +50,7 @@ class Edit(Init):
 
 
 	def tb000(self, state=None):
-		'''
-		Mesh Cleanup
+		'''Mesh Cleanup
 		'''
 		tb = self.ui.tb000
 		if state is 'setMenu':
@@ -133,8 +129,7 @@ class Edit(Init):
 
 
 	def tb001(self, state=None):
-		'''
-		Delete History
+		'''Delete History
 		'''
 		tb = self.edit.tb001
 		if state is 'setMenu':
@@ -175,8 +170,7 @@ class Edit(Init):
 
 
 	def tb002(self, state=None):
-		'''
-		Delete 
+		'''Delete
 		'''
 		tb = self.ui.tb002
 		if state is 'setMenu':
@@ -217,8 +211,7 @@ class Edit(Init):
 
 
 	def tb003(self, state=None):
-		'''
-		Delete Along Axis
+		'''Delete Along Axis
 		'''
 		tb = self.ui.tb003
 		if state is 'setMenu':
@@ -241,29 +234,25 @@ class Edit(Init):
 
 
 	def b021(self):
-		'''
-		Tranfer Maps
+		'''Tranfer Maps
 		'''
 		pm.mel.performSurfaceSampling(1)
 
 
 	def b022(self):
-		'''
-		Transfer Vertex Order
+		'''Transfer Vertex Order
 		'''
 		pm.mel.TransferVertexOrder()
 
 
 	def b023(self):
-		'''
-		Transfer Attribute Values
+		'''Transfer Attribute Values
 		'''
 		pm.mel.TransferAttributeValues()
 
 
 	def b027(self):
-		'''
-		Shading Sets
+		'''Shading Sets
 		'''
 		pm.mel.performTransferShadingSets(0)
 

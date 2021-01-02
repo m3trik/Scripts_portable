@@ -30,8 +30,7 @@ class Selection(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.selection.d000
 
@@ -46,8 +45,7 @@ class Selection(Init):
 
 
 	def txt001(self):
-		'''
-		Select By Name
+		'''Select By Name
 		'''
 		searchStr = str(self.selection.txt001.text()) #asterisk denotes startswith*, *endswith, *contains* 
 		if searchStr:
@@ -55,8 +53,7 @@ class Selection(Init):
 
 
 	def lbl000(self):
-		'''
-		Selection Sets: Create New
+		'''Selection Sets: Create New
 		'''
 		cmb = self.selection.cmb000
 		if not cmb.isEditable():
@@ -71,8 +68,7 @@ class Selection(Init):
 
 
 	def lbl001(self):
-		'''
-		Selection Sets: Modify Current
+		'''Selection Sets: Modify Current
 		'''
 		cmb = self.selection.cmb000
 		if not cmb.isEditable():
@@ -88,8 +84,7 @@ class Selection(Init):
 
 
 	def lbl002(self):
-		'''
-		Selection Sets: Delete Current
+		'''Selection Sets: Delete Current
 		'''
 		cmb = self.selection.cmb000
 		name = cmb.currentText()
@@ -104,8 +99,7 @@ class Selection(Init):
 
 
 	def lbl003(self):
-		'''
-		Grow Selection
+		'''Grow Selection
 		'''
 		# expand functionalitly to grow according to selection type
 		#grow line #PolytoolsSelect.Pattern7 1
@@ -116,16 +110,14 @@ class Selection(Init):
 
 
 	def lbl004(self):
-		'''
-		Shrink Selection
+		'''Shrink Selection
 		'''
 		for obj in rt.selection:
 			obj.EditablePoly.ShrinkSelection()
 
 
 	def lbl005(self):
-		'''
-		Selection Sets: Select Current
+		'''Selection Sets: Select Current
 		'''
 		cmb = self.selection.cmb000
 		name = cmb.currentText()
@@ -144,8 +136,7 @@ class Selection(Init):
 
 
 	def s002(self, value=None):
-		'''
-		Select Island: tolerance x
+		'''Select Island: tolerance x
 		'''
 		tb = self.currentUi.tb002
 		if tb.menu_.chk003.isChecked():
@@ -155,8 +146,7 @@ class Selection(Init):
 
 
 	def s004(self, value=None):
-		'''
-		Select Island: tolerance y
+		'''Select Island: tolerance y
 		'''
 		tb = self.currentUi.tb002
 		if tb.menu_.chk003.isChecked():
@@ -166,8 +156,7 @@ class Selection(Init):
 
 
 	def s005(self, value=None):
-		'''
-		Select Island: tolerance z
+		'''Select Island: tolerance z
 		'''
 		tb = self.currentUi.tb002
 		if tb.menu_.chk003.isChecked():
@@ -177,30 +166,26 @@ class Selection(Init):
 
 
 	def chk000(self, state=None):
-		'''
-		Select Nth: uncheck other checkboxes
+		'''Select Nth: uncheck other checkboxes
 		'''
 		self.toggleWidgets(setUnChecked='chk001-2')
 
 
 	def chk001(self, state=None):
-		'''
-		Select Nth: uncheck other checkboxes
+		'''Select Nth: uncheck other checkboxes
 		'''
 		self.toggleWidgets(setUnChecked='chk000,chk002')
 
 
 	def chk002(self, state=None):
-		'''
-		Select Nth: uncheck other checkboxes
+		'''Select Nth: uncheck other checkboxes
 		'''
 		self.toggleWidgets(setUnChecked='chk000-1')
 
 
 	@Slots.message
 	def chk004(self, state=None):
-		'''
-		Ignore Backfacing (Camera Based Selection)
+		'''Ignore Backfacing (Camera Based Selection)
 		'''
 		for obj in rt.selection:
 			if self.selection_submenu.chk004.isChecked():
@@ -213,8 +198,7 @@ class Selection(Init):
 
 	@Slots.message
 	def chk005(self, state=None):
-		'''
-		Select Style: Marquee
+		'''Select Style: Marquee
 		'''
 		self.toggleWidgets(setChecked='chk005', setUnChecked='chk006-7')
 		self.selection.cmb004.setCurrentIndex(0)
@@ -223,8 +207,7 @@ class Selection(Init):
 
 	@Slots.message
 	def chk006(self, state=None):
-		'''
-		Select Style: Lasso
+		'''Select Style: Lasso
 		'''
 		self.toggleWidgets(setChecked='chk006', setUnChecked='chk005,chk007')
 		self.selection.cmb004.setCurrentIndex(3)
@@ -233,8 +216,7 @@ class Selection(Init):
 
 	@Slots.message
 	def chk007(self, state=None):
-		'''
-		Select Style: Paint
+		'''Select Style: Paint
 		'''
 		self.toggleWidgets(setChecked='chk007', setUnChecked='chk005-6')
 		self.selection.cmb004.setCurrentIndex(4)
@@ -243,8 +225,7 @@ class Selection(Init):
 
 	@Slots.message
 	def chk008(self, state=None):
-		'''
-		Toggle Soft Selection
+		'''Toggle Soft Selection
 		'''
 		if self.selection_submenu.chk008.isChecked():
 			pm.softSelect(edit=1, softSelectEnabled=True)
@@ -255,8 +236,7 @@ class Selection(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Selection Sets
+		'''Selection Sets
 		'''
 		cmb = self.selection.cmb000
 
@@ -275,8 +255,7 @@ class Selection(Init):
 
 
 	def cmb001(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.selection.cmb001
 		
@@ -292,8 +271,7 @@ class Selection(Init):
 
 
 	def cmb002(self, index=None):
-		'''
-		Select All Of Type
+		'''Select All Of Type
 		'''
 		cmb = self.selection.cmb002
 	
@@ -324,8 +302,7 @@ class Selection(Init):
 
 
 	def cmb003(self, index=None):
-		'''
-		Convert To
+		'''Convert To
 		'''
 		cmb = self.selection.cmb003
 
@@ -345,8 +322,7 @@ class Selection(Init):
 
 
 	def cmb004(self, index=None):
-		'''
-		Select Style: Set Context
+		'''Select Style: Set Context
 		'''
 		cmb = self.selection.cmb004
 
@@ -370,8 +346,7 @@ class Selection(Init):
 
 
 	def cmb005(self, index=None):
-		'''
-		Selection Contraints
+		'''Selection Contraints
 		'''
 		cmb = self.selection.cmb005
 
@@ -398,8 +373,7 @@ class Selection(Init):
 
 
 	def cmb006(self, index=None):
-		'''
-		Currently Selected Objects
+		'''Currently Selected Objects
 		'''
 		cmb = self.selection.cmb006
 
@@ -422,8 +396,7 @@ class Selection(Init):
 
 
 	def chkxxx(self, **kwargs):
-		'''
-		Transform Constraints: Constraint CheckBoxes
+		'''Transform Constraints: Constraint CheckBoxes
 		'''
 		try:
 			if kwargs['state']==True:
@@ -435,8 +408,7 @@ class Selection(Init):
 
 
 	def tb000(self, state=None):
-		'''
-		Select Nth
+		'''Select Nth
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
@@ -473,8 +445,7 @@ class Selection(Init):
 
 
 	def tb001(self, state=None):
-		'''
-		Select Similar
+		'''Select Similar
 		'''
 		tb = self.currentUi.tb001
 		if state is 'setMenu':
@@ -486,8 +457,7 @@ class Selection(Init):
 
 
 	def tb002(self, state=None):
-		'''
-		Select Island: Select Polygon Face Island
+		'''Select Island: Select Polygon Face Island
 		'''
 		tb = self.currentUi.tb002
 		if state is 'setMenu':
@@ -514,8 +484,7 @@ class Selection(Init):
 
 
 	def tb003(self, state=None):
-		'''
-		Select Edges By Angle
+		'''Select Edges By Angle
 		'''
 		tb = self.currentUi.tb003
 		if state is 'setMenu':
@@ -532,8 +501,7 @@ class Selection(Init):
 
 
 	def generateUniqueSetName(self):
-		'''
-		Generate a generic name based on the object's name.
+		'''Generate a generic name based on the object's name.
 
 		<objectName>_Set<int>
 		'''
@@ -544,8 +512,7 @@ class Selection(Init):
 
 	@Slots.message
 	def creatNewSelectionSet(self, name=None):
-		'''
-		Selection Sets: Create a new selection set.
+		'''Selection Sets: Create a new selection set.
 
 		:Parameters:
 			name (str) = The desired name of the new set.
@@ -570,8 +537,7 @@ class Selection(Init):
 
 	@Slots.message
 	def modifySet(self, name):
-		'''
-		Selection Sets: Modify Current by renaming or changing the set members.
+		'''Selection Sets: Modify Current by renaming or changing the set members.
 
 		:Parameters:
 			name (str) = Name of an existing selection set.
@@ -597,8 +563,7 @@ class Selection(Init):
 
 
 	def getSet(self, name, index=0, objects=[]):
-		'''
-		Get a set or set info by name.
+		'''Get a set or set info by name.
 
 		:Parameters:
 			name (str) = Set name.
@@ -634,8 +599,7 @@ class Selection(Init):
 
 	@staticmethod
 	def getSelectionSets(objects=[], includeEmptySets=True):
-		'''
-		Get selection sets for a group of objects in the given list.
+		'''Get selection sets for a group of objects in the given list.
 		Returns Object and Sub-Object Level sets.
 
 		:Parameters:
@@ -660,8 +624,7 @@ class Selection(Init):
 
 	@staticmethod
 	def getSetArray(obj=None, index=0):
-		'''
-		Get the array containing a set by array type.
+		'''Get the array containing a set by array type.
 
 		:Parameters:
 			obj (obj) = Parent obj of the array.
@@ -682,8 +645,7 @@ class Selection(Init):
 
 	@staticmethod
 	def selectionSets(obj=None, level=None):
-		'''
-		Gets any existing selection sets for the given object.
+		'''Gets any existing selection sets for the given object.
 
 		:Parameters:
 			obj (obj) = The object to get sets for. If no object is given, any empty sets will be returned.

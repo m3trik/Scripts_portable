@@ -11,8 +11,7 @@ class Transform(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.transform.d000
 
@@ -22,8 +21,7 @@ class Transform(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.transform.cmb000
 
@@ -39,8 +37,7 @@ class Transform(Init):
 
 
 	def cmb001(self, index=None):
-		'''
-		Transform Contraints
+		'''Transform Contraints
 
 		constrain along normals #checkbox option for edge amd surface constaints
 		setXformConstraintAlongNormal false;
@@ -71,9 +68,9 @@ class Transform(Init):
 			cmb.setItemText(0,'Point Cloud Shapes') #set category title in standard model/view
 			list_ = ['Point Cloud Vertex']
 
-		widgets = [cmb.menu_.add('QCheckBox', setText=t) for t in list_]
+		widgets_ = [cmb.menu_.add('QCheckBox', setText=t) for t in list_]
 
-		for w in widgets:
+		for w in widgets_:
 			try:
 				w.disconnect() #disconnect all previous connections.
 			except TypeError:
@@ -82,8 +79,7 @@ class Transform(Init):
 
 
 	def cmb002(self, index=None):
-		'''
-		Align To
+		'''Align To
 		'''
 		cmb = self.transform.cmb002
 
@@ -112,8 +108,7 @@ class Transform(Init):
 
 
 	def cmb003(self, index=None):
-		'''
-		Transform Tool Snapping
+		'''Transform Tool Snapping
 		'''
 		cmb = self.transform.cmb003
 
@@ -130,7 +125,7 @@ class Transform(Init):
 						('chk022', 'Scale <b>Off</b>'), ('s022', 'increment:', scaleValue, '1-1000 step1'), 
 						('chk023', 'Rotate <b>Off</b>'), ('s023', 'degrees:', rotateValue, '1-360 step1')]
 
-				widgets = [cmb.menu_.add(widgets.TkCheckBox, setObjectName=i[0], setText=i[1], setTristate=1) if len(i) is 2 
+				widgets_ = [cmb.menu_.add(widgets.TkCheckBox, setObjectName=i[0], setText=i[1], setTristate=1) if len(i) is 2 
 						else cmb.menu_.add('QDoubleSpinBox', setObjectName=i[0], setPrefix=i[1], setValue=i[2], setMinMax_=i[3], setDisabled=1) for i in list_]
 
 			except NameError as error:
@@ -139,8 +134,7 @@ class Transform(Init):
 
 
 	def chk014(self, state=None):
-		'''
-		Snap: Toggle Rotation 15
+		'''Snap: Toggle Rotation 15
 		'''
 		cmb = self.transform.cmb003
 		cmb.menu_.chk023.setChecked(True)
@@ -150,8 +144,7 @@ class Transform(Init):
 
 
 	def chk021(self, state=None):
-		'''
-		Transform Tool Snap Settings: Move
+		'''Transform Tool Snap Settings: Move
 		'''
 		text = {0:'Move <b>Off</b>', 1:'Move <b>Relative</b>', 2:'Move <b>Absolute</b>'}
 		self.transform.chk021.setText(text[state])
@@ -164,8 +157,7 @@ class Transform(Init):
 
 
 	def chk022(self, state=None):
-		'''
-		Transform Tool Snap Settings: Scale
+		'''Transform Tool Snap Settings: Scale
 		'''
 		text = {0:'Scale <b>Off</b>', 1:'Scale <b>Relative</b>', 2:'Scale <b>Absolute</b>'}
 		self.transform.chk022.setText(text[state])
@@ -178,8 +170,7 @@ class Transform(Init):
 
 
 	def chk023(self, state=None):
-		'''
-		Transform Tool Snap Settings: Rotate
+		'''Transform Tool Snap Settings: Rotate
 		'''
 		text = {0:'Rotate <b>Off</b>', 1:'Rotate <b>Relative</b>', 2:'Rotate <b>Absolute</b>'}
 		self.transform.chk023.setText(text[state])
@@ -192,32 +183,28 @@ class Transform(Init):
 
 
 	def s021(self, value=None):
-		'''
-		Transform Tool Snap Settings: Spinboxes
+		'''Transform Tool Snap Settings: Spinboxes
 		'''
 		pm.manipMoveContext('Move', edit=1, snapValue=value)
 		pm.texMoveContext('texMoveContext', edit=1, snapValue=value) #uv move context
 
 
 	def s022(self, value=None):
-		'''
-		Transform Tool Snap Settings: Spinboxes
+		'''Transform Tool Snap Settings: Spinboxes
 		'''
 		pm.manipScaleContext('Scale', edit=1, snapValue=value)
 		pm.texScaleContext('texScaleContext', edit=1, snapValue=value) #uv scale context
 
 
 	def s023(self, value=None):
-		'''
-		Transform Tool Snap Settings: Spinboxes
+		'''Transform Tool Snap Settings: Spinboxes
 		'''
 		pm.manipRotateContext('Rotate', edit=1, snapValue=value)
 		pm.texRotateContext('texRotateContext', edit=1, snapValue=value) #uv rotate context
 
 
 	def chkxxx(self, **kwargs):
-		'''
-		Transform Constraints: Constraint CheckBoxes
+		'''Transform Constraints: Constraint CheckBoxes
 		'''
 		try:
 			Transform.setSnapState(kwargs['widget'].text(), kwargs['state'])
@@ -227,8 +214,7 @@ class Transform(Init):
 
 	@staticmethod
 	def setSnapState(fn, state):
-		'''
-		Grid and Snap Settings: Modify grid and snap states.
+		'''Grid and Snap Settings: Modify grid and snap states.
 
 		:Parameters:
 			fn (str) = Snap string name.
@@ -260,8 +246,7 @@ class Transform(Init):
 
 
 	def chk010(self, state=None):
-		'''
-		Align Vertices: Auto Align
+		'''Align Vertices: Auto Align
 		'''
 		if self.transform.chk010.isChecked():
 			self.toggleWidgets(setDisabled='chk029-31')
@@ -270,8 +255,7 @@ class Transform(Init):
 
 
 	def tb000(self, state=None):
-		'''
-		Drop To Grid
+		'''Drop To Grid
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
@@ -326,8 +310,7 @@ class Transform(Init):
 
 	@Slots.message
 	def tb001(self, state=None):
-		'''
-		Align Vertices
+		'''Align Vertices
 
 		Auto Align finds the axis with the largest variance, and set the axis checkboxes accordingly before performing a regular align.
 		'''
@@ -436,16 +419,14 @@ class Transform(Init):
 
 
 	def lbl000(self):
+		'''Transform Constraints: Disable All
 		'''
-		Transform Constraints: Disable All
-		'''
-		widgets = self.transform.cmb001.contextMenu.children_(of_type=['QCheckBox'])
-		[w.setChecked(False) for w in widgets if w.isChecked()]
+		widgets_ = self.transform.cmb001.contextMenu.children_(of_type=['QCheckBox'])
+		[w.setChecked(False) for w in widgets_ if w.isChecked()]
 
 
 	def lbl001(self):
-		'''
-		Transform Tool Snapping: Disable All
+		'''Transform Tool Snapping: Disable All
 		'''
 		cmb = self.transform.cmb003
 		self.toggleWidgets(setDisabled='chk021-23')
@@ -453,15 +434,13 @@ class Transform(Init):
 
 
 	def b002(self):
-		'''
-		Freeze Transformations
+		'''Freeze Transformations
 		'''
 		maxEval('macros.run \"Animation Tools\" \"FreezeTransform\"')
 
 
 	def b003(self):
-		'''
-		Center Pivot Object
+		'''Center Pivot Object
 		'''
 		for obj in rt.selection:
 			rt.toolMode.coordsys(obj)
@@ -469,8 +448,7 @@ class Transform(Init):
 
 	
 	def b005(self):
-		'''
-		Move To
+		'''Move To
 		'''
 		sel = [s for s in rt.getCurrentSelection()] #rebuild selection array in python.
 
@@ -482,37 +460,32 @@ class Transform(Init):
 
 
 	def b014(self):
-		'''
-		Center Pivot Component
+		'''Center Pivot Component
 		'''
 		[pm.xform (s, centerPivot=1) for s in pm.ls (sl=1, objectsOnly=1, flatten=1)]
 		# mel.eval("moveObjectPivotToComponentCentre;")
 
 
 	def b015(self):
-		'''
-		Center Pivot World
+		'''Center Pivot World
 		'''
 		mel.eval("xform -worldSpace -pivots 0 0 0;")
 
 
 	def b016(self):
-		'''
-		Set To Bounding Box
+		'''Set To Bounding Box
 		'''
 		mel.eval("bt_alignPivotToBoundingBoxWin;")
 
 
 	def b017(self):
-		'''
-		Bake Pivot
+		'''Bake Pivot
 		'''
 		mel.eval("BakeCustomPivot;")
 
 
 	def b032(self):
-		'''
-		Reset Pivot Transforms
+		'''Reset Pivot Transforms
 		'''
 		maxEval('''
 			{ string $objs[] = `ls -sl -type transform -type geometryShape`;

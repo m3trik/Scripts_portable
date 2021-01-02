@@ -14,8 +14,7 @@ class Convert(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.parentUi.d000
 
@@ -25,8 +24,7 @@ class Convert(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.parentUi.cmb000
 
@@ -42,8 +40,7 @@ class Convert(Init):
 
 
 	def cmb001(self, index=None):
-		'''
-		Convert To
+		'''Convert To
 		'''
 		cmb = self.parentUi.cmb001
 
@@ -99,72 +96,56 @@ class Convert(Init):
 
 
 	def b000(self):
-		'''
-		Polygon Edges to Curve
+		'''Polygon Edges to Curve
 		'''
 		self.cmb001(index=5)
 
 
 	def b001(self):
-		'''
-		Instance to Object
+		'''Instance to Object
 		'''
 		self.cmb001(index=18)
 
 
 	def b002(self):
-		'''
-		NURBS to Polygons
+		'''NURBS to Polygons
 		'''
 		self.cmb001(index=1)
 
 
 	def b003(self):
-		'''
-		Smooth Mesh Preview to Polygons
+		'''Smooth Mesh Preview to Polygons
 		'''
 		self.cmb001(index=4)
 
 
 	def b004(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b005(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b006(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b007(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b008(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b009(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 

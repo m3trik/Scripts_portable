@@ -6,9 +6,7 @@ from shared import Attributes
 
 
 class TkWidget_ProgressIndicator(QtWidgets.QWidget, Attributes):
-	'''
-	
-	'''
+	''''''
 	def __init__(self, parent=None, angle=0, timerId=-1, delay=50, displayedWhenStopped=False, color='black', **kwargs):
 		'''
 		'''

@@ -13,8 +13,7 @@ class Preferences(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.preferences.d000
 
@@ -24,8 +23,7 @@ class Preferences(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Ui Style: Set main ui style using QStyleFactory
+		'''Ui Style: Set main ui style using QStyleFactory
 		'''
 		cmb = self.preferences.cmb000
 
@@ -45,8 +43,7 @@ class Preferences(Init):
 
 
 	def cmb001(self, index=None):
-		'''
-		Set Working Units: Linear
+		'''Set Working Units: Linear
 		'''
 		cmb = self.preferences.cmb001
 
@@ -65,8 +62,7 @@ class Preferences(Init):
 
 
 	def cmb002(self, index=None):
-		'''
-		Set Working Units: Time
+		'''Set Working Units: Time
 		'''
 		cmb = self.preferences.cmb002
 
@@ -88,8 +84,7 @@ class Preferences(Init):
 
 
 	def cmb003(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.preferences.cmb003
 
@@ -105,32 +100,28 @@ class Preferences(Init):
 
 
 	def b001(self):
-		'''
-		Color Settings
+		'''Color Settings
 
 		'''
 		mel.eval('colorPrefWnd;')
 
 
 	def b008(self):
-		'''
-		Hotkeys
+		'''Hotkeys
 
 		'''
 		mel.eval("HotkeyPreferencesWindow;")
 
 
 	def b009(self):
-		'''
-		Plug-In Manager
+		'''Plug-In Manager
 
 		'''
 		mel.eval('PluginManager;')
 
 
 	def b010(self):
-		'''
-		Settings/Preferences
+		'''Settings/Preferences
 
 		'''
 		mel.eval("PreferencesWindow;")

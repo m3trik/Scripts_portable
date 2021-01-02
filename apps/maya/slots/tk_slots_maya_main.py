@@ -11,9 +11,7 @@ class Main(Init):
 
 
 	def tree000(self, wItem=None, column=None):
-		'''
-
-		'''
+		''''''
 		tree = self.main.tree000
 
 		if wItem is 'setMenu':
@@ -77,8 +75,7 @@ class Main(Init):
 
 
 	def v013(self):
-		'''
-		Minimize Main Application
+		'''Minimize Main Application
 
 		'''
 		self.sb.getMethod('file', 'b005')()

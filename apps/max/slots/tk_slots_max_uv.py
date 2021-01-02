@@ -12,8 +12,7 @@ class Uv(Init):
 
 	@property
 	def uvModifier():
-		'''
-		Get the UV modifier for the current object.
+		'''Get the UV modifier for the current object.
 		If one doesn't exist, a UV modifier will be added to the selected object.
 
 		:Return:
@@ -28,8 +27,7 @@ class Uv(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.uv.d000
 
@@ -40,8 +38,7 @@ class Uv(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.uv.cmb000
 
@@ -70,8 +67,7 @@ class Uv(Init):
 
 
 	def cmb001(self, index=None):
-		'''
-		Display
+		'''Display
 		'''
 		cmb = self.uv.cmb001
 
@@ -93,8 +89,7 @@ class Uv(Init):
 
 
 	def cmb002(self, index=None):
-		'''
-		Transform
+		'''Transform
 		'''
 		cmb = self.uv.cmb002
 
@@ -127,15 +122,13 @@ class Uv(Init):
 
 
 	def chk001(self, state):
-		'''
-		Auto Unwrap: Scale Mode CheckBox
+		'''Auto Unwrap: Scale Mode CheckBox
 		'''
 		pass
 
 
 	def chk014(self):
-		'''
-		Display: Checkered Pattern
+		'''Display: Checkered Pattern
 		'''
 		cmb = self.uv.cmb001
 		state = cmb.menu_.chk014.isChecked()
@@ -144,8 +137,7 @@ class Uv(Init):
 
 
 	def chk015(self):
-		'''
-		Display: Borders
+		'''Display: Borders
 		'''
 		cmb = self.uv.cmb001
 		state = cmb.menu_.chk015.isChecked()
@@ -156,8 +148,7 @@ class Uv(Init):
 
 	@Slots.message
 	def chk016(self):
-		'''
-		Display: Distortion
+		'''Display: Distortion
 		'''
 		cmb = self.uv.cmb001
 		state = cmb.menu_.chk016.isChecked()
@@ -170,8 +161,7 @@ class Uv(Init):
 
 
 	def tb000(self, state=None):
-		'''
-		Pack UV's
+		'''Pack UV's
 
 		#pack command: Lets you pack the texture vertex elements so that they fit within a square space.
 		# --method - 0 is a linear packing algorithm fast but not that efficient, 1 is a recursive algorithm slower but more efficient.
@@ -196,8 +186,7 @@ class Uv(Init):
 
 	@Init.attr
 	def tb001(self, state=None):
-		'''
-		Auto Unwrap
+		'''Auto Unwrap
 		'''
 		tb = self.currentUi.tb001
 		if state is 'setMenu':
@@ -232,8 +221,7 @@ class Uv(Init):
 
 
 	def tb002(self, state=None):
-		'''
-		Stack
+		'''Stack
 		'''
 		tb = self.currentUi.tb002
 		if state is 'setMenu':
@@ -256,8 +244,7 @@ class Uv(Init):
 
 
 	def tb003(self, state=None):
-		'''
-		Select By Type
+		'''Select By Type
 		'''
 		tb = self.currentUi.tb003
 		if state is 'setMenu':
@@ -291,8 +278,7 @@ class Uv(Init):
 
 
 	def tb004(self, state=None):
-		'''
-		Unfold
+		'''Unfold
 		'''
 		tb = self.currentUi.tb004
 		if state is 'setMenu':
@@ -308,8 +294,7 @@ class Uv(Init):
 
 
 	def tb005(self, state=None):
-		'''
-		Straighten Uv
+		'''Straighten Uv
 		'''
 		tb = self.currentUi.tb005
 		if state is 'setMenu':
@@ -336,8 +321,7 @@ class Uv(Init):
 
 
 	def tb006(self, state=None):
-		'''
-		Distribute
+		'''Distribute
 		'''
 		tb = self.currentUi.tb006
 		if state is 'setMenu':
@@ -355,8 +339,7 @@ class Uv(Init):
 
 
 	def tb007(self, state=None):
-		'''
-		Set Texel Density
+		'''Set Texel Density
 		'''
 		tb = self.currentUi.tb007
 		if state is 'setMenu':
@@ -374,22 +357,19 @@ class Uv(Init):
 
 
 	def b000(self):
-		'''
-		Cut Uv Hard Edges
+		'''Cut Uv Hard Edges
 		'''
 		pass
 
 
 	def b001(self):
-		'''
-		Create UV Snapshot
+		'''Create UV Snapshot
 		'''
 		pass
 
 
 	def b002(self):
-		'''
-		Transfer Uv's
+		'''Transfer Uv's
 		'''
 		sel = pm.ls(orderedSelection=1, flatten=1)
 		if len(sel)<2:
@@ -402,51 +382,44 @@ class Uv(Init):
 
 
 	def b005(self):
-		'''
-		Cut Uv'S
+		'''Cut Uv'S
 		'''
 		self.uvModifier.breakSelected()
 
 
 	def b011(self):
-		'''
-		Sew Uv'S
+		'''Sew Uv'S
 		'''
 		self.uvModifier.stitchVerts(True, 1.0) #(align, bias) --Bias of 0.0 the vertices will move to the source and 1.0 they will move to the target. 
 
 
 	def b023(self):
-		'''
-		Move To Uv Space: Left
+		'''Move To Uv Space: Left
 		'''
 		Uv.moveSelectedToUvSpace(-1, 0) #move left
 
 
 	def b024(self):
-		'''
-		Move To Uv Space: Down
+		'''Move To Uv Space: Down
 		'''
 		Uv.moveSelectedToUvSpace(0, -1) #move down
 
 
 	def b025(self):
-		'''
-		Move To Uv Space: Up
+		'''Move To Uv Space: Up
 		'''
 		Uv.moveSelectedToUvSpace(0, 1) #move up
 
 
 	def b026(self):
-		'''
-		Move To Uv Space: Right
+		'''Move To Uv Space: Right
 		'''
 		Uv.moveSelectedToUvSpace(1, 0) #move right
 
 
 	@staticmethod
 	def moveSelectedToUvSpace(u, v, relative=True):
-		'''
-		Move sny selected objects to the given u and v coordinates.
+		'''Move sny selected objects to the given u and v coordinates.
 
 		:Parameters:
 			u (int) = u coordinate.
@@ -460,9 +433,7 @@ class Uv(Init):
 
 	@staticmethod
 	def flipUV(objects=None):
-		'''
-		
-		'''
+		''''''
 		u = 1
 		v = 0
 		w = 0

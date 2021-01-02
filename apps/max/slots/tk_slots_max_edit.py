@@ -11,8 +11,7 @@ class Edit(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.edit.d000
 
@@ -22,8 +21,7 @@ class Edit(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.edit.cmb000
 
@@ -39,16 +37,14 @@ class Edit(Init):
 	
 
 	def chk006_9(self):
-		'''
-		Set the toolbutton's text according to the checkstates.
+		'''Set the toolbutton's text according to the checkstates.
 		'''
 		axis = self.getAxisFromCheckBoxes('chk006-9')
 		self.edit.tb003.setText('Delete '+axis)
 
 
 	def tb000(self, state=None):
-		'''
-		Mesh Cleanup
+		'''Mesh Cleanup
 		'''
 		tb = self.ui.tb000
 		if state is 'setMenu':
@@ -68,8 +64,7 @@ class Edit(Init):
 
 	@Slots.message
 	def tb001(self, state=None):
-		'''
-		Delete History
+		'''Delete History
 		'''
 		tb = self.ui.tb001
 		if state is 'setMenu':
@@ -111,8 +106,7 @@ class Edit(Init):
 
 
 	def tb002(self, state=None):
-		'''
-		Delete 
+		'''Delete
 		'''
 		tb = self.ui.tb002
 		if state is 'setMenu':
@@ -139,37 +133,32 @@ class Edit(Init):
 
 
 	def b021(self):
-		'''
-		Tranfer Maps
+		'''Tranfer Maps
 		'''
 		maxEval('performSurfaceSampling 1;')
 
 
 	def b022(self):
-		'''
-		Transfer Vertex Order
+		'''Transfer Vertex Order
 		'''
 		maxEval('TransferVertexOrder;')
 
 
 	def b023(self):
-		'''
-		Transfer Attribute Values
+		'''Transfer Attribute Values
 		'''
 		maxEval('TransferAttributeValues;')
 
 
 	def b027(self):
-		'''
-		Shading Sets
+		'''Shading Sets
 		'''
 		print('no function')
 
 
 	@staticmethod
 	def findNGons(obj):
-		'''
-		Get a list of faces of a given object having more than four sides.
+		'''Get a list of faces of a given object having more than four sides.
 
 		:Parameters:
 			obj (obj) = polygonal object.
@@ -187,8 +176,7 @@ class Edit(Init):
 
 	@staticmethod
 	def getVertexVectors(obj, vertices):
-		'''
-		Generator to query vertex vector angles.
+		'''Generator to query vertex vector angles.
 
 		ex.
 		vectors = Edit.getVertexVectors(obj, vertices)
@@ -227,8 +215,7 @@ class Edit(Init):
 
 	@staticmethod
 	def findIsolatedVertices(obj):
-		'''
-		Get a list of isolated vertices of a given object.
+		'''Get a list of isolated vertices of a given object.
 
 		:Parameters:
 			obj (obj) = polygonal object.
@@ -249,8 +236,7 @@ class Edit(Init):
 
 
 	def meshCleanup(self, isolatedVerts=False, edgeAngle=10, nGons=False, repair=False):
-		'''
-		Find mesh artifacts.
+		'''Find mesh artifacts.
 
 		:Parameters:
 			isolatedVerts (bool) = find vertices with two edges which fall below a specified angle.
@@ -294,8 +280,7 @@ class Edit(Init):
 
 
 	def tb003(self, state=None):
-		'''
-		Delete Along Axis
+		'''Delete Along Axis
 		'''
 		tb = self.ui.tb003
 		if state is 'setMenu':

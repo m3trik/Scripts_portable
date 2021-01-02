@@ -14,8 +14,7 @@ class Crease(Init):
 
 	@Slots.sync
 	def s003(self, value=None):
-		'''
-		Crease Amount
+		'''Crease Amount
 		Tracks the standard crease amount while toggles such as un-crease, and crease max temporarily change the spinbox value. 
 		'''
 		if not self.crease.chk002.isChecked(): #un-crease
@@ -26,8 +25,7 @@ class Crease(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.crease.d000
 
@@ -37,8 +35,7 @@ class Crease(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.crease.cmb000
 
@@ -64,8 +61,7 @@ class Crease(Init):
 
 	@Slots.sync
 	def chk002(self, state=None):
-		'''
-		Un-Crease
+		'''Un-Crease
 		'''
 		if self.ui.chk002.isChecked():
 			self.crease.s003.setValue(0) #crease value
@@ -82,8 +78,7 @@ class Crease(Init):
 
 	@Slots.sync
 	def chk003(self, state=None):
-		'''
-		Crease: Max
+		'''Crease: Max
 		'''
 		if self.ui.chk003.isChecked():
 			self.crease.s003.setValue(10) #crease value
@@ -100,8 +95,7 @@ class Crease(Init):
 
 	@Slots.sync
 	def chk011(self, state=None):
-		'''
-		Crease: Auto
+		'''Crease: Auto
 		'''
 		if self.ui.chk011.isChecked():
 			self.toggleWidgets(setEnabled='s005,s006')
@@ -110,8 +104,7 @@ class Crease(Init):
 
 
 	def tb000(self, state=None):
-		'''
-		Crease
+		'''Crease
 		'''
 		tb = self.ui.tb000
 
@@ -168,8 +161,7 @@ class Crease(Init):
 
 
 	def b000(self):
-		'''
-		Crease Set Transfer: Transform Node
+		'''Crease Set Transfer: Transform Node
 		'''
 		if self.crease.b001.isChecked():
 			newObject = str(pm.ls(selection=1)) #ex. [nt.Transform(u'pSphere1')]
@@ -190,8 +182,7 @@ class Crease(Init):
 
 
 	def b001(self):
-		'''
-		Crease Set Transfer: Crease Set
+		'''Crease Set Transfer: Crease Set
 		'''
 		if self.crease.b000.isChecked():
 			creaseSet = str(pm.ls(selection=1)) #ex. [nt.CreaseSet(u'creaseSet1')]
@@ -212,8 +203,7 @@ class Crease(Init):
 
 
 	def b002(self):
-		'''
-		Transfer Crease Edges
+		'''Transfer Crease Edges
 		'''
 		# an updated version of this is in the maya python projects folder
 		# the use of separate buttons for donor and target mesh are obsolete

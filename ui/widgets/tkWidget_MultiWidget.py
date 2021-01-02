@@ -31,8 +31,7 @@ class TkWidget_MultiWidget(QtWidgets.QWidget, Attributes):
 
 	@property
 	def row(self):
-		'''
-		Get the row from the layout.
+		'''Get the row from the layout.
 		'''
 		if not hasattr(self, '_row'):
 			self._row = getattr(QtWidgets, self.layoutType)(self)
@@ -44,8 +43,7 @@ class TkWidget_MultiWidget(QtWidgets.QWidget, Attributes):
 
 
 	def add(self, w, **kwargs):
-		'''
-		Add items to the Layout.
+		'''Add items to the Layout.
 
 		:Parameters:
 			widget (str)(obj) = widget. ie. 'QLabel' or QtWidgets.QLabel
@@ -159,8 +157,7 @@ class TkWidget_MultiWidget(QtWidgets.QWidget, Attributes):
 
 
 	def children_(self, index=None, include=[], exclude=['QBoxLayout', 'QHBoxLayout', 'QVBoxLayout']):
-		'''
-		Get a list of the menu's child objects, excluding those types listed in 'exclude'.
+		'''Get a list of the menu's child objects, excluding those types listed in 'exclude'.
 
 		:Parameters:
 			index (int) = return the child widget at the given index.
@@ -183,8 +180,7 @@ class TkWidget_MultiWidget(QtWidgets.QWidget, Attributes):
 
 
 	def setAsOptionBox(self, w):
-		'''
-		Set a pushbutton type widget to an option box style.
+		'''Set a pushbutton type widget to an option box style.
 
 		:Parameters:
 			w (obj) = QWidget
@@ -208,9 +204,7 @@ class TkWidget_MultiWidget(QtWidgets.QWidget, Attributes):
 
 
 	def set_by_value(self, values):
-		'''
-
-		'''
+		''''''
 		for v in values:
 			if isinstance(v, (str, unicode)):
 				self.add(QtWidgets.QLabel(v))

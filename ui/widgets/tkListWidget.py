@@ -19,8 +19,7 @@ class TkListWidget(QtWidgets.QListWidget, Attributes):
 
 
 	def add(self, w, **kwargs):
-		'''
-		Add items to the menu.
+		'''Add items to the menu.
 
 		kw:Parameters:
 			show (bool) = show the menu.

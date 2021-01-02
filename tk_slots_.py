@@ -6,8 +6,7 @@ import os.path, sys
 
 
 class Slots(QtCore.QObject):
-	'''
-	Parent class for all slot type classes.
+	'''Parent class for all slot type classes.
 
 	If you need to create a invokable method that returns some value, declare it as a slot, e.g.:
 	@Slot(result=int, float)
@@ -16,8 +15,7 @@ class Slots(QtCore.QObject):
 	'''
 	def __init__(self, parent=None, *args, **kwargs):
 		super(Slots, self).__init__(parent)
-		'''
-		kw:Parameters: (passed in via the switchboard module's 'getClassFromUiName' method.)
+		'''kw:Parameters: (passed in via the switchboard module's 'getClassFromUiName' method.)
 			_ui (method) = returns the current ui for the current class; else the parent ui.
 			_currentUi (method) = returns the current ui.
 			name (ui) = ui of <name> ie. self.polygons for the ui of filename polygons
@@ -31,8 +29,7 @@ class Slots(QtCore.QObject):
 
 	@property
 	def ui(self):
-		'''
-		Get the current Ui if it is either the parent or
+		'''Get the current Ui if it is either the parent or
 		a child ui for the current class, else return the parent ui.
 		'''
 		# print (self.sb.getUiName(self._ui()))
@@ -41,16 +38,14 @@ class Slots(QtCore.QObject):
 
 	@property
 	def currentUi(self):
-		'''
-		Get the current Ui.
+		'''Get the current Ui.
 		'''
 		return self._currentUi()
 
 
 	@staticmethod
 	def getObjects(class_, objectNames, showError_=False):
-		'''
-		Get a list of corresponding objects from a shorthand string.
+		'''Get a list of corresponding objects from a shorthand string.
 		ie. 's000,b002,cmb011-15' would return object list: [<s000>, <b002>, <cmb011>, <cmb012>, <cmb013>, <cmb014>, <cmb015>]
 
 		:Parameters:
@@ -78,8 +73,7 @@ class Slots(QtCore.QObject):
 
 	@staticmethod
 	def getAttributes(obj, include=[], exclude=[]):
-		'''
-		Get attributes for a given object.
+		'''Get attributes for a given object.
 
 		:Parameters:
 			obj (obj) = The object to get the attributes of.
@@ -97,8 +91,7 @@ class Slots(QtCore.QObject):
 
 	@staticmethod
 	def setAttributes(obj, attributes):
-		'''
-		Set attributes for a given object.
+		'''Set attributes for a given object.
 
 		:Parameters:
 			obj (obj) = The object to set attributes for.
@@ -110,8 +103,7 @@ class Slots(QtCore.QObject):
 
 
 	def connect_(self, widgets, signals, slots, class_=None):
-		'''
-		Connect multiple signals to multiple slots at once.
+		'''Connect multiple signals to multiple slots at once.
 
 		:Parameters:
 			widgets (str)(obj)(list) = ie. 'chk000-2' or [tb.menu_.chk000, tb.menu_.chk001]
@@ -141,8 +133,7 @@ class Slots(QtCore.QObject):
 
 	# @classmethod
 	def hideTk(fn):
-		'''
-		Decorator that hides the stacked widget main window.
+		'''Decorator that hides the stacked widget main window.
 		'''
 		def wrapper(self, *args, **kwargs):
 			fn(self, *args, **kwargs) #execute the method normally.
@@ -151,8 +142,7 @@ class Slots(QtCore.QObject):
 
 	# @hideTk
 	def objAttrWindow(self, obj, attributes, fn=None):
-		'''
-		Launch a popup window containing the given objects attributes.
+		'''Launch a popup window containing the given objects attributes.
 
 		:Parameters:
 			obj (obj) = The object to get the attributes of.
@@ -177,8 +167,7 @@ class Slots(QtCore.QObject):
 
 	@classmethod
 	def sync(cls, fn):
-		'''
-		Decorator for syncWidgets.
+		'''Decorator for syncWidgets.
 		'''
 		def wrapper(self, *args, **kwargs):
 			fn(self, *args, **kwargs) #execute the method normally.
@@ -243,8 +232,7 @@ class Slots(QtCore.QObject):
 
 
 	def toggleWidgets(self, *args, **kwargs):
-		'''
-		Set multiple boolean properties, for multiple widgets, on multiple ui's at once.
+		'''Set multiple boolean properties, for multiple widgets, on multiple ui's at once.
 
 		:Parameters:
 			*args = dynamic ui object/s. If no ui's are given, then the parent and child uis will be used.
@@ -271,8 +259,7 @@ class Slots(QtCore.QObject):
 
 
 	def setWidgetKwargs(self, *args, **kwargs):
-		'''
-		Set multiple properties, for multiple widgets, on multiple ui's at once.
+		'''Set multiple properties, for multiple widgets, on multiple ui's at once.
 
 		:Parameters:
 			*args = arg [0] (str) String of objectNames. - objectNames separated by ',' ie. 'b000-12,b022'
@@ -292,8 +279,7 @@ class Slots(QtCore.QObject):
 
 
 	def setAxisForCheckBoxes(self, checkboxes, axis, ui=None):
-		'''
-		Set the given checkbox's check states to reflect the specified axis.
+		'''Set the given checkbox's check states to reflect the specified axis.
 
 		:Parameters:
 			checkboxes (str)(list) = 3 or 4 (or six with explicit negative values) checkboxes.
@@ -315,8 +301,7 @@ class Slots(QtCore.QObject):
 
 
 	def getAxisFromCheckBoxes(self, checkboxes, ui=None):
-		'''
-		Get the intended axis value as a string from the given checkbox's check states.
+		'''Get the intended axis value as a string from the given checkbox's check states.
 
 		:Parameters:
 			checkboxes (str)(list) = 3 or 4 (or six with explicit negative values) checkboxes. Valid text: '-','X','Y','Z','-X','-Y','-Z' ('-' indicates a negative axis in a four checkbox setup)
@@ -343,8 +328,7 @@ class Slots(QtCore.QObject):
 	cycleDict={}
 	@staticmethod
 	def cycle(sequence, name=None, query=False):
-		'''
-		Toggle between numbers in a given sequence.
+		'''Toggle between numbers in a given sequence.
 		Used for maintaining toggling sequences for multiple objects simultaniously.
 		Each time this function is called, it returns the next number in the sequence
 		using the name string as an identifier key.
@@ -371,8 +355,7 @@ class Slots(QtCore.QObject):
 
 	@staticmethod
 	def unpackNames(nameString):
-		'''
-		Get a list of individual names from a single name string.
+		'''Get a list of individual names from a single name string.
 		If you are looking to get multiple objects from a name string, call 'getObjects' directly instead.
 
 		:Parameters:
@@ -397,8 +380,7 @@ class Slots(QtCore.QObject):
 
 	@staticmethod
 	def collapseList(list_, limit=None, compress=True, returnAsString=True):
-		'''
-		Convert a list of integers to a collapsed sequential string format.
+		'''Convert a list of integers to a collapsed sequential string format.
 		ie. [19,22,23,24,25,26] to ['19', '22..26']
 
 		:Parameters:
@@ -470,16 +452,14 @@ class Slots(QtCore.QObject):
 
 	@classmethod
 	def message(cls, fn):
-		'''
-		Decorator for messageBox.
+		'''Decorator for messageBox.
 		'''
 		def wrapper(self, *args, **kwargs):
 			self.messageBox(fn(self, *args, **kwargs))
 		return wrapper
 
 	def messageBox(self, string, location='topMiddle', timeout=1):
-		'''
-		Spawns a message box with the given text.
+		'''Spawns a message box with the given text.
 		Prints a formatted version of the given string, stripped of html tags, to the console.
 		Supports HTML formatting.
 
@@ -509,8 +489,7 @@ class Slots(QtCore.QObject):
 
 	@staticmethod
 	def getVectorFromTwoPoints(startPoint, endPoint):
-		'''
-		Get a directional vector from a given start and end point.
+		'''Get a directional vector from a given start and end point.
 
 		:Parameters:
 			startPoint (tuple) = The vectors start point as x, y, z values.
@@ -533,8 +512,7 @@ class Slots(QtCore.QObject):
 
 	@staticmethod
 	def normalize(vector, amount=1):
-		'''
-		Normalize a vector
+		'''Normalize a vector
 
 		:Parameters:
 			vector (vector) = The vector to normalize.
@@ -557,8 +535,7 @@ class Slots(QtCore.QObject):
 
 	@staticmethod
 	def getMagnitude(vector):
-		'''
-		Get the magnatude (length) of a given vector.
+		'''Get the magnatude (length) of a given vector.
 
 		:Parameters:
 			vector (tuple) = Vector xyz values.
@@ -576,8 +553,7 @@ class Slots(QtCore.QObject):
 
 	@staticmethod
 	def getCrossProduct(p1, p2, p3=None, normalize=0):
-		'''
-		Get the cross product of two vectors, using 2 vectors, or 3 points.
+		'''Get the cross product of two vectors, using 2 vectors, or 3 points.
 
 		:Parameters:
 			p1 (vector)(point) = xyz point value as a tuple.
@@ -618,8 +594,7 @@ class Slots(QtCore.QObject):
 
 	@staticmethod
 	def movePointRelative(p, d, v=None):
-		'''
-		Move a point relative to it's current position.
+		'''Move a point relative to it's current position.
 
 		:Parameters:
 			p (tuple) = A points x, y, z values.
@@ -646,8 +621,7 @@ class Slots(QtCore.QObject):
 
 	@staticmethod
 	def movePointAlongVectorTowardPoint(point, toward, vect, dist):
-		'''
-		Move a point along a given vector in the direction of another point.
+		'''Move a point along a given vector in the direction of another point.
 
 		:Parameters:
 			point (tuple) = The point to move given as (x,y,z).
@@ -669,8 +643,7 @@ class Slots(QtCore.QObject):
 
 	@staticmethod
 	def getDistanceBetweenTwoPoints(p1, p2):
-		'''
-		Get the vector between two points, and return it's magnitude.
+		'''Get the vector between two points, and return it's magnitude.
 
 		:Parameters:
 			p1 (tuple) = Point 1.
@@ -696,8 +669,7 @@ class Slots(QtCore.QObject):
 
 	@staticmethod
 	def getCenterPointBetweenTwoPoints(p1, p2):
-		'''
-		Get the point in the middle of two given points.
+		'''Get the point in the middle of two given points.
 
 		:Parameters:
 			p1 (tuple) = Point as x,y,z values.
@@ -720,8 +692,7 @@ class Slots(QtCore.QObject):
 
 	@staticmethod
 	def getAngleFrom2Vectors(v1, v2, degree=False):
-		'''
-		Get an angle from two given vectors.
+		'''Get an angle from two given vectors.
 
 		:Parameters:
 			v1 (point) = A vectors xyz values as a tuple.
@@ -748,8 +719,7 @@ class Slots(QtCore.QObject):
 
 	@staticmethod
 	def getAngleFrom3Points(a, b, c, degree=False):
-		'''
-		Get the opposing angle from 3 given points.
+		'''Get the opposing angle from 3 given points.
 
 		:Parameters:
 			a (point) = A points xyz values as a tuple.
@@ -782,8 +752,7 @@ class Slots(QtCore.QObject):
 
 	@staticmethod
 	def getTwoSidesOfASATriangle(a1, a2, s, unit='degrees'):
-		'''
-		Get the length of two sides of a triangle, given two angles, and the length of the side in-between.
+		'''Get the length of two sides of a triangle, given two angles, and the length of the side in-between.
 
 		:Parameters:
 			a1 (float) = Angle in radians or degrees. (unit flag must be set if value given in radians)

@@ -11,8 +11,7 @@ class Transform(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.transform.d000
 
@@ -22,8 +21,7 @@ class Transform(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.transform.cmb000
 
@@ -39,8 +37,7 @@ class Transform(Init):
 
 
 	def cmb001(self, index=None):
-		'''
-		Transform Constraints
+		'''Transform Constraints
 
 		constrain along normals #checkbox option for edge amd surface constaints
 		setXformConstraintAlongNormal false;
@@ -68,8 +65,7 @@ class Transform(Init):
 
 
 	def cmb002(self, index=None):
-		'''
-		Align To
+		'''Align To
 		'''
 		cmb = self.transform.cmb002
 
@@ -100,8 +96,7 @@ class Transform(Init):
 
 
 	def cmb003(self, index=None):
-		'''
-		Transform Tool Snapping
+		'''Transform Tool Snapping
 		'''
 		cmb = self.transform.cmb003
 
@@ -127,8 +122,7 @@ class Transform(Init):
 
 
 	def chk014(self, state=None):
-		'''
-		Snap: Toggle Rotation 22.5
+		'''Snap: Toggle Rotation 22.5
 		'''
 		cmb = self.transform.cmb003
 		cmb.menu_.chk023.setChecked(True)
@@ -138,8 +132,7 @@ class Transform(Init):
 
 
 	def chk021(self, state=None):
-		'''
-		Transform Tool Snap Settings: Move
+		'''Transform Tool Snap Settings: Move
 		'''
 		text = {0:'Move <b>Off</b>', 1:'Move <b>Relative</b>', 2:'Move <b>Absolute</b>'}
 		self.transform.chk021.setText(text[state])
@@ -152,8 +145,7 @@ class Transform(Init):
 
 
 	def chk022(self, state=None):
-		'''
-		Transform Tool Snap Settings: Scale
+		'''Transform Tool Snap Settings: Scale
 		'''
 		text = {0:'Scale <b>Off</b>', 1:'Scale <b>Relative</b>', 2:'Scale <b>Absolute</b>'}
 		self.transform.chk022.setText(text[state])
@@ -166,8 +158,7 @@ class Transform(Init):
 
 
 	def chk023(self, state=None):
-		'''
-		Transform Tool Snap Settings: Rotate
+		'''Transform Tool Snap Settings: Rotate
 		'''
 		text = {0:'Rotate <b>Off</b>', 1:'Rotate <b>Relative</b>', 2:'Rotate <b>Absolute</b>'}
 		self.transform.chk023.setText(text[state])
@@ -180,8 +171,7 @@ class Transform(Init):
 
 
 	def chk024(self, state=None):
-		'''
-		Transform Contraints: Edge
+		'''Transform Contraints: Edge
 		'''
 		if state:
 			pm.xformConstraint(type='edge') #pm.manipMoveSetXformConstraint(edge=True);
@@ -193,8 +183,7 @@ class Transform(Init):
 
 
 	def chk025(self, state=None):
-		'''
-		Transform Contraints: Surface
+		'''Transform Contraints: Surface
 		'''
 		if state:
 			pm.xformConstraint(type='surface') #pm.manipMoveSetXformConstraint(surface=True);
@@ -206,8 +195,7 @@ class Transform(Init):
 
 
 	def chk026(self, state=None):
-		'''
-		Transform Contraints: Make Live
+		'''Transform Contraints: Make Live
 		'''
 		cmb = self.transform.cmb001
 		chk = cmb.menu_.chk026
@@ -227,32 +215,28 @@ class Transform(Init):
 
 
 	def s021(self, value=None):
-		'''
-		Transform Tool Snap Settings: Spinboxes
+		'''Transform Tool Snap Settings: Spinboxes
 		'''
 		pm.manipMoveContext('Move', edit=1, snapValue=value)
 		pm.texMoveContext('texMoveContext', edit=1, snapValue=value) #uv move context
 
 
 	def s022(self, value=None):
-		'''
-		Transform Tool Snap Settings: Spinboxes
+		'''Transform Tool Snap Settings: Spinboxes
 		'''
 		pm.manipScaleContext('Scale', edit=1, snapValue=value)
 		pm.texScaleContext('texScaleContext', edit=1, snapValue=value) #uv scale context
 
 
 	def s023(self, value=None):
-		'''
-		Transform Tool Snap Settings: Spinboxes
+		'''Transform Tool Snap Settings: Spinboxes
 		'''
 		pm.manipRotateContext('Rotate', edit=1, snapValue=value)
 		pm.texRotateContext('texRotateContext', edit=1, snapValue=value) #uv rotate context
 
 
 	def chk010(self, state=None):
-		'''
-		Align Vertices: Auto Align
+		'''Align Vertices: Auto Align
 		'''
 		if self.transform.chk010.isChecked():
 			self.toggleWidgets(setDisabled='chk029-31')
@@ -261,8 +245,7 @@ class Transform(Init):
 
 
 	def tb000(self, state=None):
-		'''
-		Drop To Grid
+		'''Drop To Grid
 		'''
 		tb = self.ui.tb000
 		if state is 'setMenu':
@@ -319,8 +302,7 @@ class Transform(Init):
 
 	@Slots.message
 	def tb001(self, state=None):
-		'''
-		Align Components
+		'''Align Components
 
 		Auto Align finds the axis with the largest variance, and sets the axis checkboxes accordingly before performing a regular align.
 		'''
@@ -429,16 +411,14 @@ class Transform(Init):
 
 
 	def lbl000(self):
-		'''
-		Transform Constraints: Disable All
+		'''Transform Constraints: Disable All
 		'''
 		cmb = self.transform.cmb001
 		cmb.setCurrentIndex(0)
 
 
 	def lbl001(self):
-		'''
-		Transform Tool Snapping: Disable All
+		'''Transform Tool Snapping: Disable All
 		'''
 		cmb = self.transform.cmb003
 		self.toggleWidgets(setUnChecked='chk021-23')
@@ -446,8 +426,7 @@ class Transform(Init):
 
 
 	def lbl002(self):
-		'''
-		Transform Tool Snapping: Disable All
+		'''Transform Tool Snapping: Disable All
 		'''
 		cmb = self.transform.cmb001
 		self.toggleWidgets(setUnChecked='chk024-26')
@@ -455,22 +434,19 @@ class Transform(Init):
 
 
 	def b002(self):
-		'''
-		Freeze Transformations
+		'''Freeze Transformations
 		'''
 		pm.makeIdentity(apply=True, translate=True, rotate=True, scale=True) #this is the same as pm.makeIdentity(apply=True)
 
 
 	def b003(self):
-		'''
-		Center Pivot Object
+		'''Center Pivot Object
 		'''
 		pm.mel.CenterPivot()
 
 
 	def b005(self):
-		'''
-		Move To
+		'''Move To
 		'''
 		sel = rt.getCurrentSelection()
 
@@ -481,8 +457,7 @@ class Transform(Init):
 
 
 	def b012(self):
-		'''
-		Make Live (Toggle)
+		'''Make Live (Toggle)
 		'''
 		cmb = self.transform.cmb001
 		selection = pm.ls(sl=1, objectsOnly=1)
@@ -499,37 +474,32 @@ class Transform(Init):
 
 
 	def b014(self):
-		'''
-		Center Pivot Component
+		'''Center Pivot Component
 		'''
 		[pm.xform (s, centerPivot=1) for s in pm.ls (sl=1, objectsOnly=1, flatten=1)]
 		# mel.eval("moveObjectPivotToComponentCentre;")
 
 
 	def b015(self):
-		'''
-		Center Pivot World
+		'''Center Pivot World
 		'''
 		pm.xform(pivots=(0, 0, 0), worldSpace=1)
 
 
 	def b016(self):
-		'''
-		Set To Bounding Box
+		'''Set To Bounding Box
 		'''
 		mel.eval("bt_alignPivotToBoundingBoxWin;")
 
 
 	def b017(self):
-		'''
-		Bake Pivot
+		'''Bake Pivot
 		'''
 		pm.mel.BakeCustomPivot()
 
 
 	def b032(self):
-		'''
-		Reset Pivot Transforms
+		'''Reset Pivot Transforms
 		'''
 		objs = pm.ls(type=['transform', 'geometryShape'], sl=1)
 		if len(objs)>0:

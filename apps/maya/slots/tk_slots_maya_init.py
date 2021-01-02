@@ -21,8 +21,7 @@ except ImportError as error:
 
 
 class Init(Slots):
-	'''
-	App specific methods inherited by all other slot classes.
+	'''App specific methods inherited by all other slot classes.
 	'''
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
@@ -34,8 +33,7 @@ class Init(Slots):
 
 
 	def construct_hud(self):
-		'''
-		Add current scene attributes to the hud lineEdit.
+		'''Add current scene attributes to the hud lineEdit.
 		Only those with relevant values will be displayed.
 		'''
 		hud = self.init.hud
@@ -117,8 +115,7 @@ class Init(Slots):
 
 	@staticmethod
 	def loadPlugin(plugin):
-		'''
-		Loads A Plugin.
+		'''Loads A Plugin.
 		
 		:Parameters:
 			plugin (str) = The desired plugin to load.
@@ -138,8 +135,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getComponents(objects=None, componentType=None, selection=False, returnType=unicode, returnNodeType='shape', flatten=False):
-		'''
-		Get the components of the given type.
+		'''Get the components of the given type.
 
 		:Parameters:
 			objects (str)(obj)(list) = The object(s) to get the components of.
@@ -240,8 +236,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getRandomComponents(objects, componentType='vertex', randomRatio=0.5, returnType=unicode, flatten=False):
-		'''
-		Get a list of random components from the given object(s) using maya's polySelectConstraint.
+		'''Get a list of random components from the given object(s) using maya's polySelectConstraint.
 
 		:Parameters:
 			objects (str)(list)(obj) = The object(s) to get random components of.
@@ -285,8 +280,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getUvShellSets(objects=None, returnType='shells'):
-		'''
-		Get All UV shells and their corresponding sets of faces.
+		'''Get All UV shells and their corresponding sets of faces.
 
 		:Parameters:
 			objects (obj)(list) = Polygon object(s) or Polygon face(s).
@@ -329,8 +323,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getUvShellBorderEdges(objects):
-		'''
-		Get the edges that make up any UV islands of the given objects.
+		'''Get the edges that make up any UV islands of the given objects.
 
 		:Parameters:
 			objects (str)(obj)(list) = Polygon mesh objects.
@@ -373,8 +366,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getNGons(obj, repair=False):
-		'''
-		Get any N-Gons from the given object.
+		'''Get any N-Gons from the given object.
 		'''
 		if nGons: #N-Sided Faces
 			if repair: #Maya Bonus Tools: Convert N-Sided Faces To Quads
@@ -399,8 +391,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getContigiousIslands(faces, faceIslands=[]):
-		'''
-		Get a list containing sets of adjacent polygon faces grouped by islands.
+		'''Get a list containing sets of adjacent polygon faces grouped by islands.
 
 		:Parameters:
 			faces (list) = Polygon faces to be filtered for adjacent.
@@ -439,8 +430,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getAllFacesOnAxis(obj, axis="-x", localspace=False):
-		'''
-		Get all faces on a specified axis
+		'''Get all faces on a specified axis
 
 		:Parameters:
 			obj=<geometry> - object to perform the operation on. 
@@ -462,8 +452,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getBorderComponents(x, returnType='unchanged', borderType='object', flatten=False):
-		'''
-		Get any object border components from a given component(s) or a polygon object.
+		'''Get any object border components from a given component(s) or a polygon object.
 
 		:Parameters:
 			x (obj)(list) = Component(s) (or a polygon object) to find any border components for.
@@ -519,8 +508,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getDistanceBetweenTwoObjects(obj1, obj2):
-		'''
-		Get the magnatude of a vector using the center points of two given objects.
+		'''Get the magnatude of a vector using the center points of two given objects.
 
 		:Parameters:
 			obj1 (obj)(str) = Object, object name, or point (x,y,z).
@@ -542,8 +530,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getClosestCV(x, curves, tolerance=0.0):
-		'''
-		Find the closest control vertex between the given vertices, CVs, or objects and each of the given curves.
+		'''Find the closest control vertex between the given vertices, CVs, or objects and each of the given curves.
 
 		:Parameters:
 			x (str)(obj)(list) = Polygon vertices, control vertices, objects, or points given as (x,y,z) tuples.
@@ -553,8 +540,7 @@ class Init(Slots):
 		:Return:
 			(dict) closest vertex/cv pairs (one pair for each given curve) ex. {<vertex from set1>:<vertex from set2>}.
 
-		ex. 
-			vertices = Init.getComponents(objects, 'vertices')
+		ex. vertices = Init.getComponents(objects, 'vertices')
 			closestVerts = getClosestCV(curve0, curves)
 		'''
 		pm.undoInfo(openChunk=True)
@@ -590,22 +576,21 @@ class Init(Slots):
 
 	@staticmethod
 	def getCvInfo(c, returnType='cv', filter_=[]):
-		'''
-		Get a dict containing CV's of the given curve(s) and their corresponding point positions.
+		'''Get a dict containing CV's of the given curve(s) and their corresponding point positions (based on Maya's pointOnCurve command).
 
 		:Parameters:
-			c (str)(obj)(list) = Curves or CVs to get CV info from.
-			returnType (str) = The desired returned values. Default is 'cv'.
+			- c (str)(obj)(list) = Curves or CVs to get CV info from.
+			- returnType (str) = The desired returned values. Default is 'cv'.
 				valid values are: 
-				'cv' - Return a list of all CV's for the given curves.
-				'count' - Return an integer representing the total number of cvs for each of the curves given.
-				'parameter', 'position', 'index', 'localPosition', 'tangent', 'normalizedTangent', 'normal', 'normalizedNormal', 'curvatureRadius', 'curvatureCenter'
-				- Return a dict with CV's as keys and the returnType as their corresponding values.
+					'cv' = Return a list of all CV's for the given curves.
+					'count' = Return an integer representing the total number of cvs for each of the curves given.
+					'parameter', 'position', 'index', 'localPosition', 'tangent', 'normalizedTangent', 'normal', 'normalizedNormal', 'curvatureRadius', 'curvatureCenter'
+					= Return a dict with CV's as keys and the returnType as their corresponding values.
 				ex. {NurbsCurveCV(u'polyToCurveShape7.cv[5]'): [-12.186520865542082, 15.260936896515751, -369.6159740743584]}
-			filter_ (str)(obj)(list) = Value(s) to filter for in the returned results.
+			- filter_ (str)(obj)(list) = Value(s) to filter for in the returned results.
 
 		:Return:
-			(dict)(list)(int) returns a list if more than one object is returned, else just a single value.
+			(dict)(list)(int) dependant on returnType.
 
 		ex. cv_tan = getCvInfo(curve.cv[0:2],'tangent') #get CV tangents for cvs 0-2.
 		ex. cvParam = getCvInfo(curve, 'parameters') #get the curves CVs and their corresponding U parameter values.
@@ -674,8 +659,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getCrossProductOfCurves(curves, normalize=1, values=False):
-		'''
-		Get the cross product of two vectors using points derived from the given curves.
+		'''Get the cross product of two vectors using points derived from the given curves.
 
 		:Parameters:
 			curves (str)(obj)(list) = Nurbs curve(s).
@@ -705,8 +689,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getClosestVerts(set1, set2, tolerance=100):
-		'''
-		Find the two closest vertices between the two sets of vertices.
+		'''Find the two closest vertices between the two sets of vertices.
 
 		:Parameters:
 			set1 (list) = The first set of vertices.
@@ -739,8 +722,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getClosestVertex(vertices, obj, tolerance=0.0, freezeTransforms=False):
-		'''
-		Find the closest vertex of the given object for each vertex in the list of given vertices.
+		'''Find the closest vertex of the given object for each vertex in the list of given vertices.
 
 		:Parameters:
 			vertices (list) = A set of vertices.
@@ -788,8 +770,7 @@ class Init(Slots):
 
 	@staticmethod
 	def snapClosestVerts(obj1, obj2, tolerance=10.0, freezeTransforms=False):
-		'''
-		Snap the vertices from object one to the closest verts on object two.
+		'''Snap the vertices from object one to the closest verts on object two.
 
 		:Parameters:
 			obj1 (obj) = The object in which the vertices are moved from.
@@ -819,8 +800,7 @@ class Init(Slots):
 
 	@staticmethod
 	def alignVertices (mode, average=False, edgeloop=False):
-		'''
-		Align vertices.
+		'''Align vertices.
 
 		:Parameters:
 			mode (int) = possible values are align: 0-YZ, 1-XZ, 2-XY, 3-X, 4-Y, 5-Z, 6-XYZ 
@@ -883,8 +863,7 @@ class Init(Slots):
 
 	@staticmethod
 	def findNonManifoldVertex(objects, select=True):
-		'''
-		Locate a connected vertex of non-manifold geometry where the faces share a single vertex.
+		'''Locate a connected vertex of non-manifold geometry where the faces share a single vertex.
 
 		:Parameters:
 			objects (str)(obj) = A polygon mesh or a list of meshes.
@@ -945,8 +924,7 @@ class Init(Slots):
 
 	@staticmethod
 	def splitNonManifoldVertex(vertex, select=True):
-		'''
-		Separate a connected vertex of non-manifold geometry where the faces share a single vertex.
+		'''Separate a connected vertex of non-manifold geometry where the faces share a single vertex.
 
 		:Parameters:
 			vertex (str)(obj) = A single polygon vertex.
@@ -1002,8 +980,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getEdgePath(components, returnType='edgeLoop'):
-		'''
-		Query the polySelect command for the components along different edge paths.
+		'''Query the polySelect command for the components along different edge paths.
 
 		:Parameters:
 			components (str)(obj)(list) = The components used for the query (dependant on the operation type).
@@ -1042,8 +1019,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getShortestPath(components=None, step=1):
-		'''
-		Get the shortest path between to vertices or edges.
+		'''Get the shortest path between to vertices or edges.
 
 		:Parameters:
 			components (obj) = A Pair of vertices or edges.
@@ -1075,8 +1051,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getPathAlongLoop(components=None, step=1):
-		'''
-		Get the shortest path between to vertices or edges along an edgeloop.
+		'''Get the shortest path between to vertices or edges along an edgeloop.
 
 		:Parameters:
 			components (obj) = A Pair of vertices, edges, or faces.
@@ -1145,8 +1120,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getEdgeLoop(edges=None, step=1):
-		'''
-		Get the corresponding edgeloop(s) from the given edges.
+		'''Get the corresponding edgeloop(s) from the given edges.
 
 		:Parameters:
 			edges (list) = Polygon Edges.
@@ -1166,8 +1140,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getEdgeRing(edges=None, step=1):
-		'''
-		Get the corresponding edgering(s) from the given edges.
+		'''Get the corresponding edgering(s) from the given edges.
 
 		:Parameters:
 			edges (list) = Polygon Edges.
@@ -1188,8 +1161,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getEdgesByNormalAngle(objects, lowAngle=50, highAngle=130, returnType=unicode, flatten=False):
-		'''
-		Get a list of edges having normals between the given high and low angles using maya's polySelectConstraint.
+		'''Get a list of edges having normals between the given high and low angles using maya's polySelectConstraint.
 
 		:Parameters:
 			objects (str)(list)(obj) = The object(s) to get edges of.
@@ -1215,8 +1187,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getComponentsByNumberOfConnected(components, num_of_connected=(0,2), connectedType=None, returnType=unicode, flatten=False):
-		'''
-		Get a list of components filtered by the number of their connected components.
+		'''Get a list of components filtered by the number of their connected components.
 
 		:Parameters:
 			components (str)(list)(obj) = The components to filter.
@@ -1268,8 +1239,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getComponentPoint(component, alignToNormal=False):
-		'''
-		Get the center point from the given component.
+		'''Get the center point from the given component.
 
 		:Parameters: alignToNormal=bool - 
 
@@ -1316,8 +1286,7 @@ class Init(Slots):
 
 	@staticmethod
 	def createCircle(axis='y', numPoints=5, radius=5, center=[0,0,0], mode=0):
-		'''
-		Create a circular polygon plane.
+		'''Create a circular polygon plane.
 
 		:Parameters:
 			axis (str) = 'x','y','z' 
@@ -1365,8 +1334,7 @@ class Init(Slots):
 
 	@staticmethod
 	def deleteAlongAxis(obj, axis):
-		'''
-		Delete components of the given mesh object along the specified axis.
+		'''Delete components of the given mesh object along the specified axis.
 
 		:Parameters:
 			obj (obj) = Mesh object.
@@ -1390,8 +1358,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getNormalVector(name=None):
-		'''
-		Get the normal vectors from the given poly object.
+		'''Get the normal vectors from the given poly object.
 		If no argument is given the normals for the current selection will be returned.
 		:Parameters:
 			name (str) = polygon mesh or component.
@@ -1429,8 +1396,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getFacesWithSimilarNormals(faces, transforms=[], similarFaces=[], rangeX=0.1, rangeY=0.1, rangeZ=0.1, returnType=unicode, returnNodeType='transform'):
-		'''
-		Filter for faces with normals that fall within an X,Y,Z tolerance.
+		'''Filter for faces with normals that fall within an X,Y,Z tolerance.
 
 		:Parameters:
 			faces (list) = ['polygon faces'] - faces to find similar normals for.
@@ -1489,8 +1455,7 @@ class Init(Slots):
 
 	@staticmethod
 	def aimObjectAt(obj, target_pos, aim_vect=(1,0,0), up_vect=(0,1,0)):
-		'''
-		Aim supplied object at supplied world space position.
+		'''Aim supplied object at supplied world space position.
 
 		Args:
 			obj (str)(obj) = Transform node.
@@ -1508,8 +1473,7 @@ class Init(Slots):
 
 	@staticmethod
 	def rotateAxis(obj, target_pos):
-		''' 
-		Aim transform <obj> at world space point <target>.
+		''' Aim transform <obj> at world space point <target>.
 		All rotations in rotated channel, geometry is transformed so it does not appear to move during this transformation
 
 		Args:
@@ -1533,8 +1497,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getOrientation(obj, returnType='point'):
-		'''
-		Get an objects orientation.
+		'''Get an objects orientation.
 
 		:Parameters:
 			obj (str)(obj) = The object to get the orientation of.
@@ -1582,8 +1545,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getMelGlobals(keyword=None, caseSensitive=False):
-		'''
-		Get global MEL variables.
+		'''Get global MEL variables.
 
 		:Parameters:
 			keyword (str) = search string.
@@ -1602,8 +1564,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getObjectType(obj, returnType='objectType'):
-		'''
-		Get the type of a given object.
+		'''Get the type of a given object.
 
 		:Parameters:
 			obj (obj) = A single maya component.
@@ -1625,8 +1586,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getObjectFromComponent(components, returnType='transform'):
-		'''
-		Get the object's transform, shape, or history node from the given components.
+		'''Get the object's transform, shape, or history node from the given components.
 
 		:Parameters:
 			components (str)(obj(list) = Component(s).
@@ -1662,8 +1622,7 @@ class Init(Slots):
 
 	@staticmethod
 	def isGroup(node):
-		'''
-		Check if the given node is a group (has a transform AND has no shape children).
+		'''Check if the given node is a group (has a transform AND has no shape children).
 		'''
 		if (pm.objectType(node, isType='transform')) and (not len(pm.listRelatives(node, shapes=1))):
 			return True
@@ -1673,8 +1632,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getTransformNode(node=None, attributes=False, regEx=''):
-		'''
-		Get the transform node(s). 
+		'''Get the transform node(s).
 
 		:Parameters:
 			node (obj) = Node. If nothing is given, the current selection will be used.
@@ -1700,8 +1658,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getShapeNode(node=None, attributes=False, regEx=''):
-		'''
-		Get the shape node(s).
+		'''Get the shape node(s).
 
 		:Parameters:
 			node (obj) = Node. If nothing is given, the current selection will be used.
@@ -1726,8 +1683,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getHistoryNode(node=None, attributes=False, regEx=''):
-		'''
-		Get the history node(s). 
+		'''Get the history node(s).
 
 		:Parameters:
 			node (obj) = Node. If nothing is given, the current selection will be used.
@@ -1753,8 +1709,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getAllParents(node):
-		'''
-		List ALL parents of an object
+		'''List ALL parents of an object
 		'''
 		objects = pm.ls(node, l=1)
 		tokens=[]
@@ -1764,8 +1719,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getAttributesMEL(node, include=[], exclude=[]):
-		'''
-		Get node attributes and their corresponding values as a dict.
+		'''Get node attributes and their corresponding values as a dict.
 
 		:Parameters:
 			node (obj) = Transform node.
@@ -1797,8 +1751,7 @@ class Init(Slots):
 
 	@staticmethod
 	def setAttributesMEL(node, attributes):
-		'''
-		Set node attribute values using a dict. 
+		'''Set node attribute values using a dict.
 
 		:Parameters:
 			node (obj) = Transform node.
@@ -1814,8 +1767,7 @@ class Init(Slots):
 
 	@staticmethod
 	def connectAttributes(attr, place, file):
-		'''
-		A convenience procedure for connecting common attributes between two nodes.
+		'''A convenience procedure for connecting common attributes between two nodes.
 
 		:Parameters:
 			attr () = 
@@ -1853,8 +1805,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getMayaMainWindow():
-		'''
-		Get the main Maya window as a QtWidgets.QMainWindow instance
+		'''Get the main Maya window as a QtWidgets.QMainWindow instance
 
 		:Return:
 			QtGui.QMainWindow instance of the top level Maya windows
@@ -1881,16 +1832,14 @@ class Init(Slots):
 
 	@classmethod
 	def attr(cls, fn):
-		'''
-		Decorator for objAttrWindow.
+		'''Decorator for objAttrWindow.
 		'''
 		def wrapper(self, *args, **kwargs):
 			self.setAttributeWindow(fn(self, *args, **kwargs))
 		return wrapper
 
 	def setAttributeWindow(self, obj, include=[], exclude=[]):
-		'''
-		Launch a popup window containing the given objects attributes.
+		'''Launch a popup window containing the given objects attributes.
 
 		:Parameters:
 			obj (obj) = The object to get the attributes of.
@@ -1909,8 +1858,7 @@ class Init(Slots):
 
 	@staticmethod
 	def mainProgressBar(size, name="tk_progressBar", stepAmount=1):
-		'''
-		#add esc key pressed return False
+		'''#add esc key pressed return False
 
 		:Parameters:
 			size (int) = total amount
@@ -1941,9 +1889,7 @@ class Init(Slots):
 
 	@staticmethod
 	def mainProgressBar(gMainProgressBar, numFaces, count):
-		'''
-
-		'''
+		''''''
 		num=str(numFaces)
 		status="iterating through " + num + " faces"
 		pm.progressBar(gMainProgressBar, 
@@ -1984,8 +1930,7 @@ class Init(Slots):
 
 	@staticmethod
 	def outputText (text, window_title):
-		'''
-		output text
+		'''output text
 		'''
 		#window_title = mel.eval(python("window_title"))
 		window = str(pm.window(	widthHeight=(300, 300), 
@@ -2028,8 +1973,7 @@ class Init(Slots):
 
 	@staticmethod
 	def outputscrollField (text, window_title, width, height):
-		'''
-		Create an output scroll layout.
+		'''Create an output scroll layout.
 		'''
 		window_width  = width  * 300
 		window_height = height * 600
@@ -2056,8 +2000,7 @@ class Init(Slots):
 
 	@staticmethod
 	def outputTextField (array, window_title):
-		'''
-		Create an output text field.
+		'''Create an output text field.
 		'''
 		window = str(pm.window(	widthHeight=(250, 650), 
 								topLeftCorner=(65,275),
@@ -2089,8 +2032,7 @@ class Init(Slots):
 
 	@staticmethod
 	def convertMelToPy(mel, excludeFromInput=[], excludeFromOutput=['from pymel.all import *','s pm']):
-		'''
-		Convert a string representing mel code into a string representing python code.
+		'''Convert a string representing mel code into a string representing python code.
 
 		:Parameters:
 			mel (str) = string containing mel code.

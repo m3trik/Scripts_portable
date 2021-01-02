@@ -13,8 +13,7 @@ from ui import widgets
 
 
 class Tk_max(Tk):
-	'''
-	Tk class overridden for use with Autodesk 3ds max.
+	'''Tk class overridden for use with Autodesk 3ds max.
 
 	:Parameters:
 		parent = main application top level window object.
@@ -33,8 +32,7 @@ class Tk_max(Tk):
 
 
 	def getMainWindow(self):
-		'''
-		Get maya's main window object.
+		'''Get maya's main window object.
 
 		:Return:
 			(QWidget)
@@ -117,8 +115,7 @@ class Tk_max(Tk):
 
 
 class Instance():
-	'''
-	Manage multiple instances of Tk_max.
+	'''Manage multiple instances of Tk_max.
 	'''
 	instances={}
 
@@ -132,8 +129,7 @@ class Instance():
 
 
 	def _getInstance(self):
-		'''
-		Internal use. Returns a new instance if one is running and currently visible.
+		'''Internal use. Returns a new instance if one is running and currently visible.
 		Removes any old non-visible instances outside of the current 'activeWindow_'.
 		'''
 		self.instances = {k:v for k,v in self.instances.items() if not any([v.isVisible(), v==self.activeWindow_])}

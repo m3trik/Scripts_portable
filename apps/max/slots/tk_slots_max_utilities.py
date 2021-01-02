@@ -14,8 +14,7 @@ class Utilities(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.parentUi.d000
 
@@ -25,8 +24,7 @@ class Utilities(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.parentUi.cmb000
 
@@ -42,72 +40,56 @@ class Utilities(Init):
 
 
 	def b000(self):
-		'''
-		Measure
+		'''Measure
 		'''
 		maxEval('macros.run \"Tools\" \"two_point_dist\"')
 
 
 	def b001(self):
-		'''
-		Annotation
+		'''Annotation
 		'''
 		mel.eval('CreateAnnotateNode;')
 
 
 	def b002(self):
-		'''
-		Calculator
+		'''Calculator
 		'''
 		mel.eval('calculator;')
 
 
 	def b003(self):
-		'''
-		Grease Pencil
+		'''Grease Pencil
 		'''
 		mel.eval('greasePencilCtx;')
 
 
 	def b004(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b005(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b006(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b007(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b008(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b009(self):
-		'''
-
-		'''
+		''''''
 		pass
 
 

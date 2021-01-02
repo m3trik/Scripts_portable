@@ -9,8 +9,7 @@ from PySide2 import QtCore
 #' MainWindow StyleSheet'
 # ------------------------------------------------
 class StyleSheet(QtCore.QObject):
-	'''
-	# css commenting:
+	'''# css commenting:
 		/* multi-line */
 
 	# setting a property:
@@ -1014,8 +1013,7 @@ class StyleSheet(QtCore.QObject):
 
 
 	def getStyleSheet(self, widgetType, style='standard'):
-		'''
-		Get the styleSheet for the given widgetType.
+		'''Get the styleSheet for the given widgetType.
 
 		:Parameters:
 			widgetType (str) = The class name of the widget. ie. 'QLabel'
@@ -1037,8 +1035,7 @@ class StyleSheet(QtCore.QObject):
 
 
 	def setStyleSheet(self, name, widgets, ratio=6):
-		'''
-		Set the styleSheet for the given widgets.
+		'''Set the styleSheet for the given widgets.
 		Set the style for a specific widget by using the '#' syntax and the widget's objectName. ie. QWidget#mainWindow
 
 		:Parameters:
@@ -1070,8 +1067,7 @@ class StyleSheet(QtCore.QObject):
 
 
 	def adjustPadding(self, derivedType):
-		'''
-		Remove padding when the text length / widget width ratio is below a given amount.
+		'''Remove padding when the text length / widget width ratio is below a given amount.
 		'''
 		return '''
 			{0} {{
@@ -1080,8 +1076,7 @@ class StyleSheet(QtCore.QObject):
 
 
 	def hideMenuButton(self, derivedType):
-		'''
-		Set the menu button as transparent.
+		'''Set the menu button as transparent.
 		'''
 		return '''
 			{0}::menu-button {{

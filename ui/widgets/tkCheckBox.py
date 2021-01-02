@@ -6,9 +6,7 @@ from shared import Menu, Attributes, RichText
 
 
 class TkCheckBox(QtWidgets.QCheckBox, Menu, Attributes, RichText):
-	'''
-	
-	'''
+	''''''
 	def __init__(self, parent=None, **kwargs):
 		'''
 		'''
@@ -22,16 +20,13 @@ class TkCheckBox(QtWidgets.QCheckBox, Menu, Attributes, RichText):
 
 
 	def setCheckBoxRichTextStyle(self, state):
-		'''
-		
-		'''
+		''''''
 		if self.hasRichText:
 			self.setRichTextStyle(textColor='black' if state>0 else 'white')
 
 
 	def checkState_(self):
-		'''
-		Get the state of a checkbox as an integer value.
+		'''Get the state of a checkbox as an integer value.
 		Simplifies working with tri-state checkboxes.
 		'''
 		if self.isTristate():		

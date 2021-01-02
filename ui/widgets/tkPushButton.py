@@ -6,9 +6,7 @@ from shared import Menu, Attributes, RichText
 
 
 class TkPushButton(QtWidgets.QPushButton, Menu, Attributes, RichText):
-	'''
-	
-	'''
+	''''''
 	def __init__(self, parent=None, **kwargs):
 		super().__init__(parent)
 		RichText.__init__(self, alignment='AlignCenter')

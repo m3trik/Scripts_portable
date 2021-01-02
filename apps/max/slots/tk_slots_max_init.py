@@ -22,8 +22,7 @@ except ImportError as error:
 
 
 class Init(Slots):
-	'''
-	App specific methods inherited by all other slot classes.
+	'''App specific methods inherited by all other slot classes.
 	'''
 	def __init__(self, *args, **kwargs):
 		super(Init, self).__init__(*args, **kwargs)
@@ -35,8 +34,7 @@ class Init(Slots):
 
 
 	def construct_hud(self):
-		'''
-		Add current scene attributes to a lineEdit.
+		'''Add current scene attributes to a lineEdit.
 		Only those with relevant values will be displayed.
 		'''
 		hud = self.init.hud
@@ -124,8 +122,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getAttributesMax(node, include=[], exclude=[]):
-		'''
-		Get node attributes and their corresponding values as a dict.
+		'''Get node attributes and their corresponding values as a dict.
 
 		:Parameters:
 			node (obj) = Transform node.
@@ -151,8 +148,7 @@ class Init(Slots):
 
 	@staticmethod
 	def setAttributesMax(node, attributes):
-		'''
-		Set history node attributes using the transform node.
+		'''Set history node attributes using the transform node.
 
 		:Parameters:
 			node (obj) = Transform node.
@@ -205,8 +201,7 @@ class Init(Slots):
 
 
 	def circularize(self):
-		'''
-		Circularize a set of vertices on a circle or an elipse.
+		'''Circularize a set of vertices on a circle or an elipse.
 
 		tm = (matrix3 [-0.99596,0.022911,-0.0868241] [-0.0229109,0.870065,0.492404] [0.086824,0.492404,-0.866025] [-18.3751,-66.1508,30.969])
 		c = [-18.3751,-66.1508,30.969]
@@ -237,8 +232,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getEdgesByAngle(minAngle, maxAngle):
-		'''
-		Get edges between min and max angle.
+		'''Get edges between min and max angle.
 
 		:Parameters:
 			minAngle (float) = minimum search angle tolerance.
@@ -266,8 +260,7 @@ class Init(Slots):
 
 	@Slots.message
 	def detachElement(self, obj):
-		'''
-		Detach editable_mesh elements into new objects.
+		'''Detach editable_mesh elements into new objects.
 
 		:Parameters:
 			obj (obj) = polygon object.
@@ -302,8 +295,7 @@ class Init(Slots):
 
 	@property
 	def currentSelection(self):
-		'''
-		Gets the currently selected objects or object components.
+		'''Gets the currently selected objects or object components.
 
 		:Return:
 			(array) current selection as a maxscript array.
@@ -329,8 +321,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getVertices(obj):
-		'''
-		Get a list of vertices of a given object whether it is an editable mesh or polygon.
+		'''Get a list of vertices of a given object whether it is an editable mesh or polygon.
 
 		:Parameters:
 			obj (obj) = polygon or mesh object.
@@ -348,8 +339,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getSelectedVertices(obj):
-		'''
-		Get a list of the selected vertices of a given object whether it is an editable mesh or polygon.
+		'''Get a list of the selected vertices of a given object whether it is an editable mesh or polygon.
 
 		:Parameters:
 			obj (obj) = polygon or mesh object.
@@ -367,8 +357,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getEdges(obj):
-		'''
-		Get a list of faces of a given object whether it is an editable mesh or polygon.
+		'''Get a list of faces of a given object whether it is an editable mesh or polygon.
 
 		:Parameters:
 			obj (obj) = polygon or mesh object.
@@ -386,8 +375,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getSelectedEdges(obj):
-		'''
-		Get a list of the selected edges of a given object whether it is an editable mesh or polygon.
+		'''Get a list of the selected edges of a given object whether it is an editable mesh or polygon.
 
 		:Parameters:
 			obj (obj) = polygon or mesh object.
@@ -405,8 +393,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getFaces(obj):
-		'''
-		Get a list of faces of a given object whether it is an editable mesh or polygon.
+		'''Get a list of faces of a given object whether it is an editable mesh or polygon.
 
 		:Parameters:
 			obj (obj) = polygon or mesh object.
@@ -424,8 +411,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getSelectedFaces(obj):
-		'''
-		Get a list of the selected faces of a given object whether it is an editable mesh or polygon.
+		'''Get a list of the selected faces of a given object whether it is an editable mesh or polygon.
 
 		:Parameters:
 			obj (obj) = polygon or mesh object.
@@ -443,8 +429,7 @@ class Init(Slots):
 
 	@Slots.message
 	def alignVertices(self, selection, mode):
-		'''
-		Align Vertices
+		'''Align Vertices
 
 		Align all vertices at once by putting each vert index and coordinates in a dict (or two arrays) then if when iterating through a vert falls within the tolerance specified in a textfield align that vert in coordinate. then repeat the process for the other coordinates x,y,z specified by checkboxes. using edges may be a better approach. or both with a subObjectLevel check
 		create edge alignment tool and then use subObjectLevel check to call either that function or this one from the same buttons.
@@ -702,8 +687,7 @@ class Init(Slots):
 
 	@Slots.message
 	def deleteAlongAxis(self, obj, axis):
-		'''
-		Delete components of the given mesh object along the specified axis.
+		'''Delete components of the given mesh object along the specified axis.
 
 		:Parameters:
 			obj (obj) = Mesh object.
@@ -778,9 +762,7 @@ class Init(Slots):
 
 	@staticmethod
 	def toggleXraySelected():
-		'''
-
-		'''
+		''''''
 		toggle = Slots.cycle([0,1], 'toggleXraySelected') #toggle 0/1
 
 		for obj in rt.selection:
@@ -789,9 +771,7 @@ class Init(Slots):
 
 	@staticmethod
 	def toggleBackfaceCull():
-		'''
-
-		'''
+		''''''
 		toggle = Slots.cycle([0,1], 'toggleBackfaceCull') #toggle 0/1
 
 		for obj in rt.Geometry:
@@ -800,8 +780,7 @@ class Init(Slots):
 
 	@staticmethod
 	def toggleMaterialOverride(checker=False):
-		'''
-		Toggle override all materials in the scene.
+		'''Toggle override all materials in the scene.
 
 		:Parameters:
 			checker (bool) = Override with UV checkered material.
@@ -839,9 +818,7 @@ class Init(Slots):
 	previousSmoothPreviewLevel=int
 	@staticmethod
 	def toggleSmoothPreview():
-		'''
-		
-		'''
+		''''''
 		global previousSmoothPreviewLevel
 		toggle = Slots.cycle([0,1], 'toggleSmoothPreview') #toggle 0/1
 
@@ -905,8 +882,7 @@ class Init(Slots):
 
 	@staticmethod
 	def getModifier(obj, modifier, index=0):
-		'''
-		Gets (and sets (if needed)) the given modifer for the given object at the given index.
+		'''Gets (and sets (if needed)) the given modifer for the given object at the given index.
 		
 		:Parameters:
 			obj = <object> - the object to add or retrieve the modifier from.
@@ -945,16 +921,14 @@ class Init(Slots):
 
 	@classmethod
 	def attr(cls, fn):
-		'''
-		Decorator for objAttrWindow.
+		'''Decorator for objAttrWindow.
 		'''
 		def wrapper(self, *args, **kwargs):
 			self.setAttributeWindow(fn(self, *args, **kwargs))
 		return wrapper
 
 	def setAttributeWindow(self, obj, include=[], exclude=[]):
-		'''
-		Launch a popup window containing the given objects attributes.
+		'''Launch a popup window containing the given objects attributes.
 
 		:Parameters:
 			obj (obj) = The object to get the attributes of.

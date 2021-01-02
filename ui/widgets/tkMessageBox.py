@@ -21,8 +21,7 @@ Promoting a widget in designer to use a custom class:
 
 
 class TkMessageBox(QtWidgets.QMessageBox, Attributes):
-	'''
-	Displays a message box with HTML formatting for a set time before closing.
+	'''Displays a message box with HTML formatting for a set time before closing.
 
 	:Parameters:
 		location (str)(point) = move the messagebox to the specified location. Can be given as a qpoint or string value. default is: 'topMiddle'
@@ -58,9 +57,7 @@ class TkMessageBox(QtWidgets.QMessageBox, Attributes):
 
 
 	def move_(self, location):
-		'''
-
-		'''
+		''''''
 		p = self.parent()
 
 		if p is None:
@@ -76,8 +73,7 @@ class TkMessageBox(QtWidgets.QMessageBox, Attributes):
 
 
 	def _setPrefixStyle(self, string):
-		'''
-		Set style for specific keywords in the given string.
+		'''Set style for specific keywords in the given string.
 
 		:Return:
 			(str)
@@ -96,8 +92,7 @@ class TkMessageBox(QtWidgets.QMessageBox, Attributes):
 
 
 	def _setHTML(self, string):
-		'''
-		<p style="font-size:160%;">text</p>
+		'''<p style="font-size:160%;">text</p>
 		<p style="text-align:center;">Centered paragraph.</p>
 		<p style="font-family:courier;">This is a paragraph.</p>
 
@@ -144,8 +139,7 @@ class TkMessageBox(QtWidgets.QMessageBox, Attributes):
 
 
 	def setText(self, string, fontColor='white', backgroundColor='rgb(50,50,50)', fontSize=5):
-		'''
-		Set the text to be displayed.
+		'''Set the text to be displayed.
 
 		:Parameters:
 			fontColor (str) = text color.
@@ -162,9 +156,7 @@ class TkMessageBox(QtWidgets.QMessageBox, Attributes):
 
 
 	def exec_(self):
-		'''
-
-		'''
+		''''''
 		if self.isVisible():
 			self.hide()
 

@@ -15,8 +15,7 @@ from widgets.tkPushButton import TkPushButton
 # 	Construct the Widget Stack
 # ------------------------------------------------
 class Tk(QtWidgets.QStackedWidget):
-	'''
-	A marking menu based on a QStackedWidget.
+	'''A marking menu based on a QStackedWidget.
 	Gets and sets signal connections (through the switchboard module).
 	Initializes events for child widgets using the childEvents module.
 	Plots points for paint events in the overlay module.
@@ -24,7 +23,7 @@ class Tk(QtWidgets.QStackedWidget):
 	The various ui's are set by calling 'setUi' with the intended ui name string. ex. Tk().setUi('polygons')
 
 	:Parameters:
-		parent (obj) = The main application's top level window.
+		parent (obj) = The parent application's top level window.
 	'''
 
 	def __init__(self, parent=None, preventHide=False, key_show=QtCore.Qt.Key_F12):
@@ -52,8 +51,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 
 	def setUi(self, name='init'):
-		'''
-		Set the stacked Widget's index.
+		'''Set the stacked Widget's index.
 
 		:Parameters:
 			name (str) = name of ui.
@@ -74,8 +72,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 
 	def setPrevUi(self):
-		'''
-		Return the stacked widget to it's starting index.
+		'''Return the stacked widget to it's starting index.
 		'''
 		previous = self.sb.previousName(omitLevel=[2,3])
 		self.setUi(previous) #return the stacked widget to it's previous ui.
@@ -88,13 +85,12 @@ class Tk(QtWidgets.QStackedWidget):
 
 
 	def setSubUi(self, widget, name):
-		'''
-		Set the stacked widgets index to the submenu associated with the given widget.
+		'''Set the stacked widget's index to the submenu associated with the given widget.
 		Positions the new ui to line up with the previous ui's button that called the new ui.
 
 		:Parameters:
-			widget (QWidget) = the widget that called this method.
-			name (str) = name of ui.
+			widget (QWidget) = The widget that called this method.
+			name (str) = The name of the ui to set.
 		'''
 		p1 = widget.mapToGlobal(widget.rect().center()) #widget position before submenu change.
 
@@ -123,28 +119,26 @@ class Tk(QtWidgets.QStackedWidget):
 
 
 	def initParentUi(self, name):
-		'''
-		Sets the parent ui of a submenu, if it has not been set before.
+		'''Sets the parent ui of a submenu, if it has not been set before.
 		Setting the parent ui first constructs dependancies needed for the submenu.
 
 		:Parameters:
-			name (str) = name of the child ui. ie. 'polygons_component_submenu'
+			name (str) = The name of the child ui. ie. 'polygons_component_submenu'
 
 		:Return:
 			(obj) the parent ui.
 		'''
-		parentUi = self.sb.getUi(name, level=3) #get the parent ui.
-		parentUiName = self.sb.getUiName(parentUi, level=3) #get the parent ui name.
+		parentUi = self.sb.getUi(name, level=3) #get the current ui's parent ui.
+		parentUiName = self.sb.getUiName(parentUi, level=3) #get the parent ui's name.
 		if not parentUiName in self.sb.previousName(as_list=1):
 			return self.setUi(parentUiName)
 
 
 	def removeFromPath(self, name):
-		'''
-		Remove the last entry from the widget and draw paths for the given ui name.
+		'''Remove the last entry from the widget and draw paths for the given ui name.
 
 		:Parameters:
-			name (str) = name of ui to remove entry for.
+			name (str) = The name of the ui to remove entry of.
 		'''
 		names = [i[2] for i in self.widgetPath] #get the ui names in widgetPath. ie. 'edit_submenu'
 		if name in names:
@@ -154,15 +148,14 @@ class Tk(QtWidgets.QStackedWidget):
 
 
 	def cloneWidgets(self, name):
-		'''
-		Re-constructs the relevant buttons from the previous ui for the new ui, and positions them.
+		'''Re-constructs the relevant buttons from the previous ui for the new ui, and positions them.
 		Initializes the new buttons by adding them to the switchboard dict, setting connections, event filters, and stylesheets.
 		The previous widget information is derived from the widget and draw paths.
 
 		:Parameters:
-			name (str) = name of ui to duplicate the widgets to.
+			name (str) = The name of ui to duplicate the widgets to.
 		'''
-		w0 = TkPushButton(parent=self.sb.getUi(name), setObjectName='return_', setSize_=(45, 45), setPosition_=self.drawPath[0]) #create an invisible return button at the start point.
+		w0 = TkPushButton(parent=self.sb.getUi(name), setObjectName='return_area', setSize_=(45, 45), setPosition_=self.drawPath[0]) #create an invisible return button at the start point.
 		self.childEvents.addWidgets(name, w0) #initialize the widget to set things like the event filter and styleSheet.
 
 		if self.sb.getUiLevel(self.sb.previousName(omitLevel=3))==2: #if submenu: recreate widget/s from the previous ui that are in the current path.
@@ -177,7 +170,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 
 	# ------------------------------------------------
-	# 	Main widget events
+	# 	QStackedWidget events
 	# ------------------------------------------------
 	def keyPressEvent(self, event):
 		'''
@@ -276,8 +269,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 
 	def focusChanged(self, old, new):
-		'''
-		Called on focus events.
+		'''Called on focus events.
 
 		:Parameters:
 			old (obj) = The previously focused widget.
@@ -289,8 +281,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 
 	def hide(self, force=False):
-		'''
-		Prevents hide event under certain circumstances.
+		'''Prevents hide event under certain circumstances.
 
 		:Parameters:
 			force (bool) = override preventHide.
@@ -329,8 +320,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 
 	def repeatLastCommand(self):
-		'''
-		Repeat the last stored command.
+		'''Repeat the last stored command.
 		'''
 		method = self.sb.prevCommand()
 		if callable(method):
@@ -343,8 +333,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 
 	def repeatLastCameraView(self):
-		'''
-		Show the previous camera view.
+		'''Show the previous camera view.
 		'''
 		camera = self.sb.prevCamera()
 		if callable(camera):
@@ -357,8 +346,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 
 	def repeatLastUi(self):
-		'''
-		Open the last used level 3 menu.
+		'''Open the last used level 3 menu.
 		'''
 		previousName = self.sb.previousName(omitLevel=[0,1,2])
 		if previousName:

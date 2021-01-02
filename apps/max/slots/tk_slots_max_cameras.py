@@ -15,8 +15,7 @@ class Cameras(Init):
 
 	@property
 	def clippingMenu(self):
-		'''
-		Menu: Camera clip plane settings.
+		'''Menu: Camera clip plane settings.
 
 		:Return:
 			(obj) menu as a property.
@@ -46,16 +45,14 @@ class Cameras(Init):
 
 
 	def lbl000(self):
-		'''
-		Camera Clipping: Viewport
+		'''Camera Clipping: Viewport
 		'''
 		maxEval('actionMan.executeAction 0 "374"') #Tools: Viewport Clipping
 
 
 	@Slots.message
 	def chk000(self, state=None):
-		'''
-		Camera Clipping: Auto Clip
+		'''Camera Clipping: Auto Clip
 		'''
 		if self.clippingMenu.chk000.isChecked():
 			self.toggleWidgets(self.clippingMenu, setDisabled='s000-1')
@@ -70,8 +67,7 @@ class Cameras(Init):
 
 
 	def s000(self, value=None):
-		'''
-		Camera Clipping: Near Clip
+		'''Camera Clipping: Near Clip
 		'''
 		value = self.clippingMenu.s000.value()
 
@@ -83,8 +79,7 @@ class Cameras(Init):
 
 
 	def s001(self, value=None):
-		'''
-		Camera Clipping: Far Clip
+		'''Camera Clipping: Far Clip
 		'''
 		value = self.clippingMenu.s001.value()
 
@@ -96,9 +91,7 @@ class Cameras(Init):
 
 
 	def tree000(self, wItem=None, column=None):
-		'''
-		
-		'''
+		''''''
 		tree = self.parentUi.tree000
 
 		if wItem is 'setMenu':
@@ -145,57 +138,49 @@ class Cameras(Init):
 
 
 	def v000(self):
-		'''
-		Cameras: Back View
+		'''Cameras: Back View
 		'''
 		maxEval("max vpt back")
 
 
 	def v001(self):
-		'''
-		Cameras: Top View
+		'''Cameras: Top View
 		'''
 		maxEval("max vpt top")
 
 
 	def v002(self):
-		'''
-		Cameras: Right View
+		'''Cameras: Right View
 		'''
 		maxEval("max vpt right")
 
 
 	def v003(self):
-		'''
-		Cameras: Left View
+		'''Cameras: Left View
 		'''
 		maxEval("max vpt left")
 
 
 	def v004(self):
-		'''
-		Cameras: Perspective View
+		'''Cameras: Perspective View
 		'''
 		maxEval("max vpt persp user")
 
 
 	def v005(self):
-		'''
-		Cameras: Front View
+		'''Cameras: Front View
 		'''
 		maxEval("max vpt front")
 
 
 	def v006(self):
-		'''
-		Cameras: Bottom View
+		'''Cameras: Bottom View
 		'''
 		maxEval("max vpt bottom")
 
 
 	def v007(self):
-		'''
-		Cameras: Align View
+		'''Cameras: Align View
 		'''
 		maxEval('''
 		max vpt iso user
@@ -204,65 +189,52 @@ class Cameras(Init):
 
 
 	def v008(self):
-		'''
-
-		'''
+		''''''
 		pass
 
 
 	def v009(self):
-		'''
-
-		'''
+		''''''
 		pass
 
 
 	def v010(self):
-		'''
-		Camera: Dolly
+		'''Camera: Dolly
 		'''
 		maxEval("max dolly mode")
 
 
 	def v011(self):
-		'''
-		Camera: Roll
+		'''Camera: Roll
 		'''
 		maxEval("max roll")
 
 
 	def v012(self):
-		'''
-		Camera: Truck
+		'''Camera: Truck
 		'''
 		maxEval("max truck")
 
 
 	def v013(self):
-		'''
-		Camera: Orbit
+		'''Camera: Orbit
 		'''
 		maxEval("max pancamera")
 
 
 	def v014(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def v015(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	@staticmethod
 	def groupCameras():
-		'''
-		Group Cameras
+		'''Group Cameras
 		'''
 		cameras = [cam for cam in rt.cameras] #List scene Cameras
 

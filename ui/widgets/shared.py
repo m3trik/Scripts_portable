@@ -6,8 +6,7 @@ from PySide2 import QtCore, QtGui, QtWidgets
 
 
 class Menu(object):
-	'''
-	Get a Menu instance.
+	'''Get a Menu instance.
 	'''
 	def __init__(self):
 		'''
@@ -15,8 +14,7 @@ class Menu(object):
 
 	@property
 	def menu_(self):
-		'''
-		Get the menu.
+		'''Get the menu.
 		'''
 		if not hasattr(self, '_menu'):
 			from tkMenu import TkMenu
@@ -27,8 +25,7 @@ class Menu(object):
 
 	@property
 	def contextMenu(self):
-		'''
-		Get the context menu.
+		'''Get the context menu.
 		'''
 		if not hasattr(self, '_contextMenu'):
 			from tkMenu import TkMenu
@@ -38,8 +35,7 @@ class Menu(object):
 
 
 class RichText(object):
-	'''
-	Rich text support for widgets.
+	'''Rich text support for widgets.
 	Text with rich text formatting will be set as rich text, otherwise it will be handled as usual.
 
 	:Parameters:
@@ -58,8 +54,7 @@ class RichText(object):
 
 	@property
 	def hasRichText(self):
-		'''
-		Query whether the widget contains rich text.
+		'''Query whether the widget contains rich text.
 
 		:Return:
 			(bool)
@@ -72,8 +67,7 @@ class RichText(object):
 
 	@property
 	def richTextLabel(self):
-		'''
-		Return a QLabel and inside a QHBoxLayout.
+		'''Return a QLabel and inside a QHBoxLayout.
 		'''
 		if not hasattr(self, '_richTextLabel'):
 
@@ -105,8 +99,7 @@ class RichText(object):
 
 
 	def setRichText(self, text):
-		'''
-		If the text string contains rich text formatting:
+		'''If the text string contains rich text formatting:
 			Set the rich text label text.
 			Add whitespace to the actual widget text until it matches the sizeHint of what it would containing the richTextLabel's text.
 
@@ -147,8 +140,7 @@ class RichText(object):
 
 
 	def richTextSizeHint(self):
-		'''
-		The richTextSizeHint is the sizeHint of the actual widget if it were containing the text.
+		'''The richTextSizeHint is the sizeHint of the actual widget if it were containing the text.
 
 		:Return:
 			(str) the widget's or the richTextLabel's sizeHint.
@@ -162,16 +154,14 @@ class RichText(object):
 
 
 class Attributes(object):
-	'''
-	Methods for managing object Attributes.
+	'''Methods for managing object Attributes.
 	'''
 	def __init__(self):
 		'''
 		'''
 
 	def setAttributes(self, attributes=None, obj=None, order=['setPosition_', 'setVisible'], **kwargs):
-		'''
-		Works with attributes passed in as a dict or kwargs.
+		'''Works with attributes passed in as a dict or kwargs.
 		If attributes are passed in as a dict, kwargs are ignored.
 
 		:Parameters:
@@ -204,8 +194,7 @@ class Attributes(object):
 
 
 	def setCustomAttribute(self, w, attr, value):
-		'''
-		Attributes that throw an AttributeError in 'setAttributes' are sent here, where they can be assigned a value.
+		'''Attributes that throw an AttributeError in 'setAttributes' are sent here, where they can be assigned a value.
 		Custom attributes can be set using a trailing underscore convention to aid readability, and differentiate them from standard attributes.
 
 		:Parameters:
@@ -282,8 +271,7 @@ class Attributes(object):
 
 
 	def setMinMax(self, spinbox, value):
-		'''
-		Set the minimum, maximum, and step values for a spinbox using a shorthand string value.
+		'''Set the minimum, maximum, and step values for a spinbox using a shorthand string value.
 
 		:Parameters:
 			spinbox (obj) = spinbox widget.
@@ -311,9 +299,7 @@ class Attributes(object):
 
 
 	def setSpinBoxByValue(self, spinbox, attribute, value):
-		'''
-		
-		:Parameters:
+		''':Parameters:
 			spinbox (obj) = spinbox widget.
 			attribute (str) = object attribute.
 			value (multi) = attribute value.
@@ -351,8 +337,7 @@ class Attributes(object):
 
 	@staticmethod
 	def moveDecimalPoint(num, decimal_places):
-		'''
-		Move the decimal place in a given number.
+		'''Move the decimal place in a given number.
 
 		:Parameters:
 			decimal_places (int) = decimal places to move. (works only with values 0 and below.)

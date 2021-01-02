@@ -2,8 +2,7 @@ import bpy
 
 
 class Macros(Init):
-    '''
-    Custom scripts with assigned hotkeys.
+    '''Custom scripts with assigned hotkeys.
     '''
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -12,8 +11,7 @@ class Macros(Init):
 
 
     def setMacros(self, macros=[]):
-        '''
-        Extends setMacro to accept a list of tuples.
+        '''Extends setMacro to accept a list of tuples.
         '''
         if not macros:
             macros = [
@@ -42,8 +40,7 @@ class Macros(Init):
 
 
     def setMacro(self, name=None, k=None, cat=None, ann=None):
-        '''
-        Sets a default runtime command with a keyboard shotcut.
+        '''Sets a default runtime command with a keyboard shotcut.
 
         :Parameters:
             name (str) = The command name you provide must be unique. The name itself must begin with an alphabetic character or underscore followed by alphanumeric characters or underscores.
@@ -97,8 +94,7 @@ class Macros(Init):
 
 
     def formatSource(self, cmd, removeTabs=0):
-        '''
-        Return the text of the source code for an object.
+        '''Return the text of the source code for an object.
         The source code is returned as a single string.
         Removes lines containing '@' or 'def ' ie. @staticmethod.
 

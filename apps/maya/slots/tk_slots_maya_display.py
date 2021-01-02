@@ -12,8 +12,7 @@ class Display(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.display.d000
 
@@ -23,8 +22,7 @@ class Display(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.display.cmb000
 		
@@ -40,43 +38,37 @@ class Display(Init):
 
 
 	def b000(self):
-		'''
-		Set Wireframe color
+		'''Set Wireframe color
 		'''
 		pm.mel.objectColorPalette()
 
 
 	def b001(self):
-		'''
-		Toggle Visibility
+		'''Toggle Visibility
 		'''
 		mel.eval('ToggleVisibilityAndKeepSelection();')
 
 
 	def b002(self):
-		'''
-		Hide Selected
+		'''Hide Selected
 		'''
 		mel.eval('HideSelectedObjects;')
 
 
 	def b003(self):
-		'''
-		Show Selected
+		'''Show Selected
 		'''
 		mel.eval('ShowSelectedObjects;')
 
 
 	def b004(self):
-		'''
-		Show Geometry
+		'''Show Geometry
 		'''
 		mel.eval('hideShow -geometry -show;')
 
 
 	def b005(self):
-		'''
-		Xray Selected
+		'''Xray Selected
 		'''
 		mel.eval('''
 		string $sel[] = `ls -sl -dag -s`;
@@ -89,8 +81,7 @@ class Display(Init):
 
 
 	def b006(self):
-		'''
-		Un-Xray All
+		'''Un-Xray All
 		'''
 		mel.eval('''
 		string $scene[] = `ls -visible -flatten -dag -noIntermediate -type surfaceShape`;
@@ -106,8 +97,7 @@ class Display(Init):
 
 
 	def b007(self):
-		'''
-		Xray Other
+		'''Xray Other
 		'''
 		mel.eval('''
 		//xray all except currently selected
@@ -127,15 +117,13 @@ class Display(Init):
 
 
 	def b008(self):
-		'''
-		Filter Objects
+		'''Filter Objects
 		'''
 		mel.eval("bt_filterActionWindow;")
 
 
 	def b009(self):
-		'''
-		Toggle Material Override
+		'''Toggle Material Override
 		'''
 		currentPanel = pm.getPanel(withFocus=True)
 		state = pm.modelEditor(currentPanel, query=1, useDefaultMaterial=1)
@@ -144,15 +132,12 @@ class Display(Init):
 
 
 	def b010(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b011(self):
-		'''
-		Toggle Component Id Display
+		'''Toggle Component Id Display
 		'''
 		index = self.cycle([0,1,2,3,4], 'componentID')
 
@@ -188,8 +173,7 @@ class Display(Init):
 
 
 	def b012(self):
-		'''
-		Wireframe Non Active (Wireframe All But The Selected Item)
+		'''Wireframe Non Active (Wireframe All But The Selected Item)
 		'''
 		current_panel = pm.getPanel (withFocus=1)
 		state = pm.modelEditor (current_panel, query=1, activeOnly=1)
@@ -197,86 +181,63 @@ class Display(Init):
 
 
 	def b013(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b014(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b015(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b016(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b017(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b018(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b019(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b020(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b021(self):
-		'''
-		Template Selected
+		'''Template Selected
 		'''
 		mel.eval("toggle -template;")
 
 
 	def b022(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b023(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b024(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 

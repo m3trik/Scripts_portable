@@ -11,8 +11,7 @@ class DynLayout(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.dynLayout.d000
 
@@ -23,8 +22,7 @@ class DynLayout(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.dynLayout.cmb000
 		

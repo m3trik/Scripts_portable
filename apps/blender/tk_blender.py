@@ -16,8 +16,7 @@ from widgets.tkWidget_ProgressIndicator import TkWidget_ProgressIndicator
 
 
 class Tk_blender(Tk):
-	'''
-	Tk class overridden for use with Blender.
+	'''Tk class overridden for use with Blender.
 
 	:Parameters:
 		parent = Application top level window instance.
@@ -40,8 +39,7 @@ class Tk_blender(Tk):
 
 
 	def getMainWindow(self):
-		'''
-		Get blender's main window object.
+		'''Get blender's main window object.
 
 		:Return:
 			(QWidget)
@@ -73,8 +71,7 @@ class Tk_blender(Tk):
 
 
 class Instance():
-	'''
-	Manage multiple instances of Tk_maya.
+	'''Manage multiple instances of Tk_maya.
 	'''
 	instances={}
 
@@ -88,8 +85,7 @@ class Instance():
 
 
 	def _getInstance(self):
-		'''
-		Internal use. Returns a new instance if one is running and currently visible.
+		'''Internal use. Returns a new instance if one is running and currently visible.
 		Removes any old non-visible instances outside of the current 'activeWindow_'.
 		'''
 		self.instances = {k:v for k,v in self.instances.items() if not any([v.isVisible(), v==self.activeWindow_])}

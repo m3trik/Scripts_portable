@@ -24,8 +24,7 @@ class Symmetry(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.parentUi.d000
 
@@ -35,8 +34,7 @@ class Symmetry(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.parentUi.cmb000
 
@@ -53,9 +51,7 @@ class Symmetry(Init):
 
 	@Slots.message
 	def setSymmetry(self, state, axis):
-		'''
-
-		'''
+		''''''
 		# space = "world" #workd space
 		# if self.parentUi.chk004.isChecked(): #object space
 		# 	space = "object"
@@ -88,8 +84,7 @@ class Symmetry(Init):
 
 	@Slots.sync
 	def chk000(self, state=None):
-		'''
-		Symmetry X
+		'''Symmetry X
 		'''
 		print('chk000')
 		self.toggleWidgets(self.childUi, setUnChecked='chk001,chk002')
@@ -99,8 +94,7 @@ class Symmetry(Init):
 
 	@Slots.sync
 	def chk001(self, state=None):
-		'''
-		Symmetry Y
+		'''Symmetry Y
 		'''
 		self.toggleWidgets(self.childUi, setUnChecked='chk000,chk002')
 		state = self.currentUi.chk001.isChecked() #symmetry button state
@@ -109,8 +103,7 @@ class Symmetry(Init):
 
 	@Slots.sync
 	def chk002(self, state=None):
-		'''
-		Symmetry Z
+		'''Symmetry Z
 		'''
 		self.toggleWidgets(self.childUi, setUnChecked='chk000,chk001')
 		state = self.currentUi.chk002.isChecked() #symmetry button state
@@ -118,16 +111,14 @@ class Symmetry(Init):
 
 
 	def chk004(self, state=None):
-		'''
-		Symmetry: Object
+		'''Symmetry: Object
 		'''
 		self.parentUi.chk005.setChecked(False) #uncheck symmetry:topological
 	
 
 	@Slots.message
 	def chk005(self, state=None):
-		'''
-		Symmetry: Topo
+		'''Symmetry: Topo
 		'''
 		self.parentUi.chk004.setChecked(False) #uncheck symmetry:object space
 		# if any ([self.parentUi.chk000.isChecked(), self.parentUi.chk001.isChecked(), self.parentUi.chk002.isChecked()]): #(symmetry)

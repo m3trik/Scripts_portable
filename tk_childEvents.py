@@ -6,8 +6,7 @@ import os.path
 
 
 class EventFactoryFilter(QtCore.QObject):
-	'''
-	Event filter for dynamic ui objects.
+	'''Event filter for dynamic ui objects.
 
 	:Parameters:
 		parent (obj) = parent widget.
@@ -30,8 +29,7 @@ class EventFactoryFilter(QtCore.QObject):
 
 
 	def initWidgets(self, name, widgets=None):
-		'''
-		Set Initial widget states.
+		'''Set Initial widget states.
 
 		:Parameters:
 			name (str) = ui name.
@@ -91,8 +89,7 @@ class EventFactoryFilter(QtCore.QObject):
 
 
 	def addWidgets(self, name, widgets):
-		'''
-		Convenience method for adding additional widgets to the switchboard dict,
+		'''Convenience method for adding additional widgets to the switchboard dict,
 		and initializing them by setting connections, event filters, and stylesheets.
 
 		:Parameters:
@@ -107,8 +104,7 @@ class EventFactoryFilter(QtCore.QObject):
 
 
 	def mouseTracking(self, name):
-		'''
-		Get the widget(s) currently under the mouse cursor, and manage mouse grab and event handling for those widgets.
+		'''Get the widget(s) currently under the mouse cursor, and manage mouse grab and event handling for those widgets.
 		Used to trigger widget evemts while in the mouse button down state.
 
 		:Parameters:
@@ -156,8 +152,7 @@ class EventFactoryFilter(QtCore.QObject):
 
 	@staticmethod
 	def resizeAndCenterWidget(widget, paddingX=30, paddingY=6):
-		'''
-		Adjust the given widget's size to fit contents and re-center.
+		'''Adjust the given widget's size to fit contents and re-center.
 
 		:Parameters:
 			widget = <widget object> - widget to resize.
@@ -173,8 +168,7 @@ class EventFactoryFilter(QtCore.QObject):
 
 	@staticmethod
 	def createEventName(event):
-		'''
-		Get an event method name string from a given event.
+		'''Get an event method name string from a given event.
 		ie. 'enterEvent' from QtCore.QEvent.Type.Enter,
 		ie. 'mousePressEvent' from QtCore.QEvent.Type.MouseButtonPress
 
@@ -190,8 +184,7 @@ class EventFactoryFilter(QtCore.QObject):
 
 
 	def eventFilter(self, widget, event):
-		'''
-		Forward widget events to event handlers.
+		'''Forward widget events to event handlers.
 		For any event type, the eventfilter will try to connect to a corresponding method derived
 		from the event type string.  ie. self.enterEvent(event) from 'QtCore.QEvent.Type.Enter'
 		This allows for forwarding of all events without each having to be explicity stated.
@@ -297,7 +290,7 @@ class EventFactoryFilter(QtCore.QObject):
 				if not self.name==submenu: #do not reopen the submenu if it is already open.
 					self.name = self.tk.setSubUi(self.widget, submenu)
 
-			elif self.widgetName=='return_':
+			elif self.widgetName=='return_area':
 				self.tk.setPrevUi()
 
 		if self.sb.prefix(self.widget, 'chk'):

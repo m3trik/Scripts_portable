@@ -11,8 +11,7 @@ class Mirror(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.mirror.d000
 
@@ -22,8 +21,7 @@ class Mirror(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.mirror.cmb000
 
@@ -39,8 +37,7 @@ class Mirror(Init):
 
 
 	def chk000_3(self):
-		'''
-		Set the tb000's text according to the checkstates.
+		'''Set the tb000's text according to the checkstates.
 		'''
 		axis = self.getAxisFromCheckBoxes('chk000-3')
 		self.mirror.tb000.setText('Mirror '+axis)
@@ -48,8 +45,7 @@ class Mirror(Init):
 
 	@Slots.sync
 	def chk005(self, state=None):
-		'''
-		Mirror: Cut
+		'''Mirror: Cut
 		'''
 		pass
 
@@ -57,8 +53,7 @@ class Mirror(Init):
 	@Slots.message
 	@Init.attr
 	def tb000(self, state=None):
-		'''
-		Mirror Geometry
+		'''Mirror Geometry
 
 		values for the direction (dict): ex. 'X': (0, 0, -1, 1, 1)
 			key = axis (as str): 'X', '-X', 'Y', '-Y', 'Z', '-Z'

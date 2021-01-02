@@ -20,8 +20,7 @@ WIDGET_MODULE_PREFIX = 'tk'
 #	Load Dynamic Ui files
 # ------------------------------------------------
 class UiLoader(QUiLoader):
-	'''
-	Load and maintain a dict of loaded dynamic ui files and related info.
+	'''Load and maintain a dict of loaded dynamic ui files and related info.
 
 	Ui files are searched for in the directory of this module.
 	Custom widget modules are searched for in a sub directory named 'widgets'. naming convention: <name capital first char> widget class inside <name lowercase first char>.py module. ie. TkLabel class inside tkLabel.py module.
@@ -37,8 +36,7 @@ class UiLoader(QUiLoader):
 
 	def __init__(self, parent=None):
 		super().__init__(parent)
-		'''
-		Load the ui files and any custom widgets.
+		'''Load the ui files and any custom widgets.
 		'''
 		uiPath = os.path.dirname(os.path.abspath(__file__)) #get absolute path from dir of this module
 
@@ -55,8 +53,7 @@ class UiLoader(QUiLoader):
 
 	@property
 	def uiDict(self):
-		'''
-		Get the full ui dict.
+		'''Get the full ui dict.
 		'''
 		if not hasattr(self, '_uiDict'):
 			self._uiDict={}
@@ -65,8 +62,7 @@ class UiLoader(QUiLoader):
 
 
 	def registerWidgets(self, moduleNames):
-		'''
-		Register any custom widgets using the module names.
+		'''Register any custom widgets using the module names.
 		'''
 		for m in moduleNames:
 			className = m[:1].capitalize()+m[1:] #capitalize first letter of module name to convert to class name
@@ -80,8 +76,7 @@ class UiLoader(QUiLoader):
 
 
 	def addUi(self, dirPath, uiFiles):
-		'''
-		Load ui files and add them to the uiDict.
+		'''Load ui files and add them to the uiDict.
 
 		:Parameters:
 			dirPath (str) = The absolute directory path to the uiFiles.

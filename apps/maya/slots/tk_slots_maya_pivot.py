@@ -14,8 +14,7 @@ class Pivot(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.parentUi.d000
 
@@ -25,8 +24,7 @@ class Pivot(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.parentUi.cmb000
 
@@ -42,8 +40,7 @@ class Pivot(Init):
 
 
 	def cmb001(self, index=None):
-		'''
-		Center Pivot
+		'''Center Pivot
 		'''
 		cmb = self.parentUi.cmb001
 
@@ -64,8 +61,7 @@ class Pivot(Init):
 
 	@Slots.message
 	def tb000(self, state=None):
-		'''
-		Reset Pivot
+		'''Reset Pivot
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
@@ -81,36 +77,31 @@ class Pivot(Init):
 
 
 	def b000(self):
-		'''
-		Center Pivot: Object
+		'''Center Pivot: Object
 		'''
 		self.cmb001(index=2)
 
 
 	def b001(self):
-		'''
-		Center Pivot: Component
+		'''Center Pivot: Component
 		'''
 		self.cmb001(index=1)
 
 
 	def b002(self):
-		'''
-		Center Pivot: World
+		'''Center Pivot: World
 		'''
 		self.cmb001(index=3)
 
 
 	def b003(self):
-		'''
-		Center Pivot: Bounding Box
+		'''Center Pivot: Bounding Box
 		'''
 		self.cmb001(index=4)
 
 
 	def b004(self):
-		'''
-		Bake Pivot
+		'''Bake Pivot
 
 		'''
 		mel.eval("BakeCustomPivot;")
@@ -118,8 +109,7 @@ class Pivot(Init):
 
 	@staticmethod
 	def resetPivotTransforms(objects):
-		'''
-		Reset Pivot Transforms
+		'''Reset Pivot Transforms
 
 		'''
 		mel.eval('''

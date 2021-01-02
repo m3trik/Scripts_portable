@@ -11,8 +11,7 @@ class Display(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.display.d000
 
@@ -22,8 +21,7 @@ class Display(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.display.cmb000
 
@@ -39,15 +37,13 @@ class Display(Init):
 
 
 	def b000(self):
-		'''
-		Set Wireframe color
+		'''Set Wireframe color
 		'''
 		pm.mel.objectColorPalette()
 
 
 	def b001(self):
-		'''
-		Toggle Visibility
+		'''Toggle Visibility
 		'''
 		sel = [s for s in rt.getCurrentSelection()]
 
@@ -59,8 +55,7 @@ class Display(Init):
 
 
 	def b002(self):
-		'''
-		Hide Selected
+		'''Hide Selected
 		'''
 		sel = [s for s in rt.getCurrentSelection()]
 	
@@ -70,8 +65,7 @@ class Display(Init):
 
 
 	def b003(self):
-		'''
-		Show Selected
+		'''Show Selected
 		'''
 		sel = [s for s in rt.getCurrentSelection()]
 	
@@ -81,8 +75,7 @@ class Display(Init):
 
 
 	def b004(self):
-		'''
-		Show Geometry
+		'''Show Geometry
 		'''
 		geometry = rt.geometry
 
@@ -92,8 +85,7 @@ class Display(Init):
 
 
 	def b005(self):
-		'''
-		Xray Selected
+		'''Xray Selected
 		'''
 		sel = [s for s in rt.getCurrentSelection()]
 
@@ -102,8 +94,7 @@ class Display(Init):
 
 
 	def b006(self):
-		'''
-		Un-Xray All
+		'''Un-Xray All
 		'''
 		geometry = [g for g in rt.geometry]
 
@@ -112,8 +103,7 @@ class Display(Init):
 
 
 	def b007(self):
-		'''
-		Xray Other
+		'''Xray Other
 		'''
 		sel = [s for s in rt.getCurrentSelection()]
 		geometry = [g for g in rt.geometry]
@@ -124,15 +114,13 @@ class Display(Init):
 
 
 	def b008(self):
-		'''
-		Filter Objects
+		'''Filter Objects
 		'''
 		mel.eval("bt_filterActionWindow;")
 
 
 	def b009(self):
-		'''
-		Override Material
+		'''Override Material
 		'''
 		if self.display.chk000.isChecked(): #override with UV checker material
 			self.toggleMaterialOverride(checker=1)
@@ -141,16 +129,13 @@ class Display(Init):
 
 
 	def b010(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	@Slots.message
 	def b011(self):
-		'''
-		Toggle Component ID Display
+		'''Toggle Component ID Display
 		'''
 		index = self.cycle([0,1,2,3,4], 'componentID')
 
@@ -186,8 +171,7 @@ class Display(Init):
 
 
 	def b012(self):
-		'''
-		Wireframe Non Active (Wireframe All But The Selected Item)
+		'''Wireframe Non Active (Wireframe All But The Selected Item)
 		'''
 		viewport = rt.viewport.activeViewport
 
@@ -202,64 +186,48 @@ class Display(Init):
 
 
 	def b013(self):
-		'''
-		Viewport Configuration
+		'''Viewport Configuration
 		'''
 		maxEval('actionMan.executeAction 0 "40023"')
 
 
 	def b014(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b015(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b016(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b017(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b018(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b019(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b020(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b021(self):
-		'''
-		Template Selected
+		'''Template Selected
 		'''
 		sel = [s for s in rt.getCurrentSelection()]
 
@@ -271,22 +239,17 @@ class Display(Init):
 
 
 	def b022(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b023(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b024(self):
-		'''
-		Polygon Display Options
+		'''Polygon Display Options
 		'''
 		mel.eval("CustomPolygonDisplayOptions")
 		# mel.eval("polysDisplaySetup 1;")

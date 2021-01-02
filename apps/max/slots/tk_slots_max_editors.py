@@ -14,8 +14,7 @@ class Editors(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.editors.d000
 
@@ -25,9 +24,7 @@ class Editors(Init):
 
 
 	def tree000(self, wItem=None, column=None):
-		'''
-
-		'''
+		''''''
 		tree = self.editors.tree000
 
 		if wItem is 'setMenu':
@@ -192,8 +189,7 @@ class Editors(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.editors.cmb000
 		
@@ -209,8 +205,7 @@ class Editors(Init):
 
 
 	def getEditorWidget(self, name):
-		'''
-		Get a maya widget from a given name.
+		'''Get a maya widget from a given name.
 
 		:Parameters:
 			name (str) = name of widget
@@ -225,8 +220,7 @@ class Editors(Init):
 
 
 	def showEditor(self, name, width=640, height=480):
-		'''
-		Show, resize, and center the given editor.
+		'''Show, resize, and center the given editor.
 
 		:Parameters:
 			name (str) = The name of the editor.
@@ -247,8 +241,7 @@ class Editors(Init):
 
 
 	def v000(self):
-		'''
-		Attributes
+		'''Attributes
 		'''
 		# e = mel.eval('$tmp=$gAttributeEditorForm')
 		# self.showEditor(e, 640, 480)
@@ -256,8 +249,7 @@ class Editors(Init):
 
 
 	def v001(self):
-		'''
-		Outliner
+		'''Outliner
 		'''
 		e = mel.eval('$tmp=$gOutlinerForm')
 
@@ -271,8 +263,7 @@ class Editors(Init):
 
 
 	def v002(self):
-		'''
-		Tool
+		'''Tool
 		'''
 		# e = mel.eval('$tmp=$gToolSettingsForm')
 		# self.showEditor(e, 461, 480)
@@ -280,8 +271,7 @@ class Editors(Init):
 
 
 	def v003(self):
-		'''
-		Layers
+		'''Layers
 		'''
 		# e = mel.eval('$tmp=$gLayerEditorForm')
 		# self.showEditor(e, 320, 480)
@@ -289,23 +279,20 @@ class Editors(Init):
 
 
 	def v004(self):
-		'''
-		Channels
+		'''Channels
 		'''
 		e = mel.eval('$tmp=$gChannelsForm')
 		self.showEditor(e, 320, 640)
 
 
 	def v005(self):
-		'''
-		Node Editor
+		'''Node Editor
 		'''
 		pm.mel.NodeEditorWindow()
 
 
 	def v006(self):
-		'''
-		Dependancy Graph
+		'''Dependancy Graph
 
 		$editorName = ($panelName+"HyperGraphEd");
 		hyperGraph -e 

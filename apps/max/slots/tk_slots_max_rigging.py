@@ -1,4 +1,4 @@
-from widgets.tkComboBox import widgets.TkComboBox
+from widgets.tkComboBox import TkComboBox
 from tk_slots_max_init import *
 
 import os.path
@@ -14,8 +14,7 @@ class Rigging(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.parentUi.d000
 
@@ -25,8 +24,7 @@ class Rigging(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.parentUi.cmb000
 
@@ -54,8 +52,7 @@ class Rigging(Init):
 
 
 	def cmb001(self, index=None):
-		'''
-		Create
+		'''Create
 		'''
 		cmb = self.parentUi.cmb001
 
@@ -81,32 +78,28 @@ class Rigging(Init):
 
 
 	def chk000(self, state=None):
-		'''
-		Scale Joint
+		'''Scale Joint
 		'''
 		self.toggleWidgets(setUnChecked='chk001-2')
 		# self.parentUi.tb000.menu_.s000.setValue(pm.jointDisplayScale(query=1)) #init global joint display size
 
 
 	def chk001(self, state=None):
-		'''
-		Scale IK
+		'''Scale IK
 		'''
 		self.toggleWidgets(setUnChecked='chk000, chk002')
 		# self.parentUi.s000.setValue(pm.ikHandleDisplayScale(query=1)) #init IK handle display size
 		
 
 	def chk002(self, state=None):
-		'''
-		Scale IK/FK
+		'''Scale IK/FK
 		'''
 		self.toggleWidgets(setUnChecked='chk000-1')
 		# self.parentUi.s000.setValue(pm.jointDisplayScale(query=1, ikfk=1)) #init IKFK display size
 
 
 	def s000(self, value=None):
-		'''
-		Scale Joint/IK/FK
+		'''Scale Joint/IK/FK
 		'''
 		value = self.parentUi.s000.value()
 
@@ -120,8 +113,7 @@ class Rigging(Init):
 
 	@Slots.message
 	def tb000(self, state=None):
-		'''
-		Toggle Display Local Rotation Axes
+		'''Toggle Display Local Rotation Axes
 		'''
 		tb = self.currentUi.tb000
 		if state is 'setMenu':
@@ -150,8 +142,7 @@ class Rigging(Init):
 
 
 	def tb001(self, state=None):
-		'''
-		Orient Joints
+		'''Orient Joints
 		'''
 		tb = self.currentUi.tb001
 		if state is 'setMenu':
@@ -166,66 +157,58 @@ class Rigging(Init):
 
 
 	def b001(self):
-		'''
-		Connect Joints
+		'''Connect Joints
 		'''
 		pm.connectJoint(cm=1)
 
 
 	def b002(self):
-		'''
-		Insert Joint Tool
+		'''Insert Joint Tool
 		'''
 		pm.setToolTo('insertJointContext') #insert joint tool
 
 
 	def b004(self):
-		'''
-		Reroot
+		'''Reroot
 		'''
 		pm.reroot() #re-root joints
 
 
 	def b005(self):
-		'''
-		Constraint: Parent
+		'''Constraint: Parent
 		'''
 		pm.parentConstraint(mo=1, weight=1)
 
 
 	def b006(self):
-		'''
-		Constraint: Point
+		'''Constraint: Point
 		'''
 		pm.pointConstraint(offset=[0,0,0], weight=1)
 
 
 	def b007(self):
-		'''
-		Constraint: Scale
+		'''Constraint: Scale
 		'''
 		pm.scaleConstraint(offset=[1,1,1], weight=1)
 
 
 	def b008(self):
-		'''
-		Constraint: Orient
+		'''Constraint: Orient
 		'''
 		pm.orientConstraint(offset=[0,0,0], weight=1)
 
 
 	def b009(self):
-		'''
-		Constraint: Aim
+		'''Constraint: Aim
 		'''
 		pm.aimConstraint(offset=[0,0,0], weight=1, aimVector=[1,0,0], upVector=[0,1,0], worldUpType="vector", worldUpVector=[0,1,0])
 
 
 	def b010(self):
-		'''
-		Constraint: Pole Vector
+		'''Constraint: Pole Vector
 		'''
 		pm.orientConstraint(offset=[0,0,0], weight=1)
+
 
 
 

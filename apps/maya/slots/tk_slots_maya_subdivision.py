@@ -11,8 +11,7 @@ class Subdivision(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.subdivision.d000
 
@@ -24,8 +23,7 @@ class Subdivision(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.subdivision.cmb000
 
@@ -41,8 +39,7 @@ class Subdivision(Init):
 
 
 	def cmb001(self, index=None):
-		'''
-		Smooth Proxy
+		'''Smooth Proxy
 		'''
 		cmb = self.subdivision.cmb001
 		
@@ -66,8 +63,7 @@ class Subdivision(Init):
 
 
 	def cmb002(self, index=None):
-		'''
-		Maya Subdivision Operations
+		'''Maya Subdivision Operations
 		'''
 		cmb = self.subdivision.cmb002
 
@@ -87,8 +83,7 @@ class Subdivision(Init):
 
 
 	def s000(self, value=None):
-		'''
-		Division Level
+		'''Division Level
 		'''
 		value = self.subdivision.s000.value()
 
@@ -102,8 +97,7 @@ class Subdivision(Init):
 
 
 	def s001(self, value=None):
-		'''
-		Tesselation Level
+		'''Tesselation Level
 		'''
 		value = self.subdivision.s001.value()
 
@@ -115,66 +109,46 @@ class Subdivision(Init):
 				print(obj+': Tesselation Level: <hl>'+str(value)+'</hl>')
 
 
-	def b004(self):
-		'''
-		Poly Reduce
+	def b005(self):
+		'''Reduce
 		'''
 		pm.mel.polyReduce(version=1, keepCreaseEdgeWeight=1)
-
-
-	def b005(self):
-		'''
-		Reduce
-		'''
-		pm.mel.ReducePolygon()
+		# pm.mel.ReducePolygon()
 
 
 	def b006(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b007(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b008(self):
-		'''
-		Add Divisions - Subdivide Mesh
-
+		'''Add Divisions - Subdivide Mesh
 		'''
 		pm.mel.SubdividePolygon()
 
 	def b009(self):
-		'''
-		Smooth
-
+		'''Smooth
 		'''
 		pm.mel.SmoothPolygon()
 
 	def b010(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 	def b011(self):
-		'''
-		Apply Smooth Preview
-
+		'''Apply Smooth Preview
 		'''
 		pm.mel.performSmoothMeshPreviewToPolygon() #convert smooth mesh preview to polygons
 
 
 	@staticmethod
 	def smoothProxy():
-		'''
-		Subdiv Proxy
+		'''Subdiv Proxy
 		'''
 		global polySmoothBaseMesh
 		polySmoothBaseMesh=[]
@@ -218,5 +192,3 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
-	#b012
-

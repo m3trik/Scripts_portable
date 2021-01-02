@@ -21,8 +21,7 @@ class Subdivision(Init):
 
 
 	def d000(self, state=None):
-		'''
-		Context menu
+		'''Context menu
 		'''
 		d000 = self.parentUi.d000
 
@@ -32,8 +31,7 @@ class Subdivision(Init):
 
 
 	def cmb000(self, index=None):
-		'''
-		Editors
+		'''Editors
 		'''
 		cmb = self.parentUi.cmb000
 
@@ -110,8 +108,7 @@ class Subdivision(Init):
 
 
 	def s000(self, value=None):
-		'''
-		Division Level
+		'''Division Level
 		'''
 		value = self.parentUi.s000.getValue()
 
@@ -124,8 +121,7 @@ class Subdivision(Init):
 
 
 	def s001(self, value=None):
-		'''
-		Tesselation Level
+		'''Tesselation Level
 		'''
 		value = self.parentUi.s001.getValue()
 
@@ -137,44 +133,31 @@ class Subdivision(Init):
 			except: pass
 
 
-	def b004(self):
-		'''
-		Poly Reduce
-		'''
-		mel.eval("polyReduce -version 1 -keepCreaseEdgeWeight 1;")
-
-
 	def b005(self):
-		'''
-		Reduce
+		'''Reduce
 		'''
 		mel.eval("ReducePolygon;")
 
 
 	def b008(self):
-		'''
-		Add Divisions - Subdivide Mesh
+		'''Add Divisions - Subdivide Mesh
 		'''
 		maxEval('macros.run \"Modifiers\" \"Tessellate\"')
 
 
 	def b009(self):
-		'''
-		Smooth
+		'''Smooth
 		'''
 		maxEval('macros.run \"Modifiers\" \"Smooth\"')
 
 
 	def b010(self):
-		'''
-		
-		'''
+		''''''
 		pass
 
 
 	def b011(self):
-		'''
-		Convert Smooth Preview
+		'''Convert Smooth Preview
 		'''
 		#convert smooth mesh preview to polygons
 		geometry = rt.selection
@@ -192,6 +175,8 @@ class Subdivision(Init):
 					index = modifiers.index('TurboSmooth') +1
 				rt.maxOps.CollapseNodeTo(obj, index, False)
 			except: pass
+
+
 
 
 
