@@ -30,7 +30,7 @@ class Crease(Init):
 		d000 = self.crease.d000
 
 		if state is 'setMenu':
-			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='3ds Max Crease Modifiers')
+			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='3ds Max Crease Modifiers')
 			return
 
 

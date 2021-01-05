@@ -16,9 +16,9 @@ class Subdivision(Init):
 		d000 = self.subdivision.d000
 
 		if state is 'setMenu':
-			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='Maya Subdivision Editiors.')
-			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb002', setToolTip='Maya Subdivision Operations.')
-			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb001', setToolTip='Smooth Proxy.')
+			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='Maya Subdivision Editiors.')
+			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb002', setToolTip='Maya Subdivision Operations.')
+			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb001', setToolTip='Smooth Proxy.')
 			return
 
 

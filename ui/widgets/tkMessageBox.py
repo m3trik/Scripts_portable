@@ -1,6 +1,6 @@
 from PySide2 import QtCore, QtGui, QtWidgets
 
-from shared import Attributes
+from widgets import Attributes
 
 
 

@@ -6,7 +6,8 @@ import os.path, sys
 
 
 class Slots(QtCore.QObject):
-	'''Parent class for all slot type classes.
+	'''Provides methods that can be triggered by widgets in the ui.
+	Parent to the 'Init' slot class, which is in turn, inherited by every other slot class.
 
 	If you need to create a invokable method that returns some value, declare it as a slot, e.g.:
 	@Slot(result=int, float)
@@ -480,6 +481,157 @@ class Slots(QtCore.QObject):
 
 			self._messageBox.setText(string)
 			self._messageBox.exec_()
+
+
+	@staticmethod
+	def findStr(what, where, ignoreCase=False):
+		'''Find any strings matching a string in a given list.
+
+		:Parameters:
+			what (str) = The search string. An asterisk denotes startswith*, *endswith, *contains*, and multiple search strings can be separated by pipe chars.
+				*what* - search contains chars.
+				*what - search endswith chars.
+				what* - search startswith chars.
+				what|what - search any of.  can be used in conjuction with other modifiers.
+			where (list) = The string list to search in.
+			ignoreCase (bool) = Search case insensitive.
+
+		:Return:
+			(list)
+
+		ex. list_ = ['invertVertexWeights', 'keepCreaseEdgeWeight', 'keepBorder', 'keepBorderWeight', 'keepColorBorder', 'keepColorBorderWeight']
+			findStr('*Weight*', list_) #find any element that contains the string 'Weight'.
+		'''
+		for w_mod in what.split('|'): #split at pipe chars.
+			w_strp = w_mod.strip('*').rstrip('*') #remove any modifiers from the left and right end chars.
+
+			#modifiers
+			if w_mod.startswith('*') and w_mod.endswith('*'): #contains
+				if ignoreCase:				
+					result = [i for i in where if w_strp.lower() in i.lower()] #case insensitive.
+				else:
+					result = [i for i in where if w_strp in i]
+
+			elif w_mod.startswith('*'): #prefix
+				if ignoreCase:
+					result = [i for i in where if i.lower().endswith(w_strp.lower())] #case insensitive.
+				else:
+					result = [i for i in where if i.endswith(w_strp)]
+
+			elif w_mod.endswith('*'): #suffix
+				if ignoreCase:
+					result = [i for i in where if i.lower().startswith(w_strp.lower())] #case insensitive.
+				else:
+					result = [i for i in where if i.startswith(w_strp)]
+
+			else: #exact match
+				if ignoreCase:
+					result = [i for i in where if i.lower()==w_strp.lower()] #case insensitive.
+				else:
+					result = [i for i in where if i==w_strp]
+
+		return result
+
+
+	@staticmethod
+	def findStrRegEx(what, where, ignoreCase=False):
+		'''Find any strings matching a regex statement in a given list.
+
+		:Parameters:
+			what (str) = The search string supporting regular expressions.
+				(.) match any char. ex. re.match('1..', '1111') #returns the regex object <111>
+				(^) match start. ex. re.match('^11', '011') #returns None
+				($) match end. ex. re.match('11$', '011') #returns the regex object <11>
+				(|) or. ex. re.match('1|0', '011') #returns the regex object <0>
+				(\A,\Z) beginning of a string and end of a string. ex. re.match(r'\A011\Z', '011') #
+				(\b) empty string. (\B matches the empty string anywhere else). ex. re.match(r'\b(011)\b', '011 011 011') #
+			where (list) = The string list to search in.
+			ignoreCase (bool) = Search case insensitive.
+
+		:Return:
+			(list)
+
+		ex. list_ = ['invertVertexWeights', 'keepCreaseEdgeWeight', 'keepBorder', 'keepBorderWeight', 'keepColorBorder', 'keepColorBorderWeight']
+			findStrRegEx('Weight$|Weights$', list_) #find any element that endswith 'Weight' or 'Weights'.
+		'''
+		import re
+
+		try:
+			if ignoreCase:
+				result = [i for i in where if re.search(what, i, re.IGNORECASE)]
+			else:
+				result = [i for i in where if re.search(what, i)]
+		except Exception as e:
+			print ('# Error findStrRegEx: in {} syntax: {}. #'.format(what, e))
+			result = []
+
+		return result
+
+
+	@staticmethod
+	def findStrAndFormat(frm, to, where, regEx=False, ignoreCase=False):
+		'''Search a given list for matching strings and re-format them.
+		Useful for things such as finding and renaming objects.
+
+		:Parameters:
+			frm (str) = Current name. An asterisk denotes startswith*, *endswith, *contains*, and multiple search strings can be separated by pipe ('|') chars.
+				*frm* - Search contains chars.
+				*frm - Search endswith chars.
+				frm* - Search startswith chars.
+				frm|frm - Search any of.  can be used in conjuction with other modifiers.
+			to (str) = Desired name: An optional asterisk modifier can be used for formatting. An empty to string will attempt to remove the part of the string designated in the from argument.
+				*to* or '' - replace only 'frm'.
+				*to - replace suffix.
+				**to - append suffix.
+				to* - replace prefix.
+				to** - append prefix.
+			where (list) = A list of string objects to search.
+			regEx (bool) = If True, regex syntax is used instead of '*' and '|'.
+			ignoreCase (bool) = Ignore case when searching. Applies only to the 'frm' parameter's search.
+
+		:Return:
+			(list) list of two element tuples containing the original and modified string pairs. [('frm','to')]
+
+		ex. findStrAndFormat(r'Cube', '*001', regEx=True) #replace chars after frm on any object with a name that contains 'Cube'. ie. 'polyCube001' from 'polyCube'
+		ex. findStrAndFormat(r'Cube', '*001', regEx=True) #append chars on any object with a name that contains 'Cube'. ie. 'polyCube1001' from 'polyCube1'
+		'''
+		import re
+
+		if regEx:
+			objects = Slots.findStrRegEx(frm, (obj.name() for obj in where), ignoreCase=ignoreCase)
+		else:
+			objects = Slots.findStr(frm, (obj.name() for obj in where), ignoreCase=ignoreCase)
+
+		frm_ = re.sub('[^A-Za-z0-9_]+', '', frm) #strip any special chars other than '_'.
+		to_ = to.strip('*').rstrip('*') #remove any modifiers from the left and right end chars.
+
+		result=[]
+		for obj in objects:
+			#modifiers
+			if to.startswith('*') and to.endswith('*'): #replace chars
+				n = obj.replace(frm_, to_)
+
+			elif to.startswith('**'): #append suffix
+				n = obj.split(frm_)[0]+frm_+to_
+
+			elif to.startswith('*'): #replace suffix
+				n = obj+to_
+
+			elif to.endswith('**'): #append suffix
+				n = to_+frm_+obj.split(frm_)[-1]
+
+			elif to.endswith('*'): #replace prefix
+				n = obj.replace(frm_, to_, 1) #1=replace only the first occurance
+
+			else:
+				if not to_: #if 'to_' is an empty string:
+					n = obj.replace(frm_, to_) #then remove frm_ from the string.
+				else: #else; replace whole name
+					n = to_
+
+			result.append((obj, n))
+
+		return result
 
 
 

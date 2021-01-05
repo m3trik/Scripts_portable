@@ -16,7 +16,7 @@ class Transform(Init):
 		d000 = self.transform.d000
 
 		if state is 'setMenu':
-			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='')
+			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
 			return
 
 
@@ -50,7 +50,7 @@ class Transform(Init):
 			cmb.contextMenu.add('QRadioButton', setObjectName='chk018', setText='Body Shapes', setToolTip='')
 			cmb.contextMenu.add('QRadioButton', setObjectName='chk019', setText='NURBS', setToolTip='')
 			cmb.contextMenu.add('QRadioButton', setObjectName='chk020', setText='Point Cloud Shapes', setToolTip='')
-			cmb.contextMenu.add(widgets.TkLabel, setObjectName='lbl000', setText='Disable All', setToolTip='Disable all constraints.')
+			cmb.contextMenu.add(wgts.TkLabel, setObjectName='lbl000', setText='Disable All', setToolTip='Disable all constraints.')
 			self.connect_('chk017-20', 'toggled', self.cmb001, cmb.contextMenu) #connect to this method on toggle
 			return
 
@@ -68,9 +68,9 @@ class Transform(Init):
 			cmb.setItemText(0,'Point Cloud Shapes') #set category title in standard model/view
 			list_ = ['Point Cloud Vertex']
 
-		widgets_ = [cmb.menu_.add('QCheckBox', setText=t) for t in list_]
+		widgets = [cmb.menu_.add('QCheckBox', setText=t) for t in list_]
 
-		for w in widgets_:
+		for w in widgets:
 			try:
 				w.disconnect() #disconnect all previous connections.
 			except TypeError:
@@ -114,7 +114,7 @@ class Transform(Init):
 
 		if index is 'setMenu':
 			cmb.popupStyle = 'qmenu'
-			cmb.contextMenu.add(widgets.TkLabel, setText='Disable All', setObjectName='lbl001', setToolTip='Disable all transform snapping.')
+			cmb.contextMenu.add(wgts.TkLabel, setText='Disable All', setObjectName='lbl001', setToolTip='Disable all transform snapping.')
 
 			try:
 				moveValue = pm.manipMoveContext('Move', q=True, snapValue=True)
@@ -125,7 +125,7 @@ class Transform(Init):
 						('chk022', 'Scale <b>Off</b>'), ('s022', 'increment:', scaleValue, '1-1000 step1'), 
 						('chk023', 'Rotate <b>Off</b>'), ('s023', 'degrees:', rotateValue, '1-360 step1')]
 
-				widgets_ = [cmb.menu_.add(widgets.TkCheckBox, setObjectName=i[0], setText=i[1], setTristate=1) if len(i) is 2 
+				widgets = [cmb.menu_.add(wgts.TkCheckBox, setObjectName=i[0], setText=i[1], setTristate=1) if len(i) is 2 
 						else cmb.menu_.add('QDoubleSpinBox', setObjectName=i[0], setPrefix=i[1], setValue=i[2], setMinMax_=i[3], setDisabled=1) for i in list_]
 
 			except NameError as error:
@@ -421,8 +421,8 @@ class Transform(Init):
 	def lbl000(self):
 		'''Transform Constraints: Disable All
 		'''
-		widgets_ = self.transform.cmb001.contextMenu.children_(of_type=['QCheckBox'])
-		[w.setChecked(False) for w in widgets_ if w.isChecked()]
+		widgets = self.transform.cmb001.contextMenu.children_(of_type=['QCheckBox'])
+		[w.setChecked(False) for w in widgets if w.isChecked()]
 
 
 	def lbl001(self):

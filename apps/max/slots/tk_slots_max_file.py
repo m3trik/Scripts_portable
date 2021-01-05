@@ -43,11 +43,11 @@ class File(Init):
 		d000 = self.file.d000
 
 		if state is 'setMenu':
-			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb005', setToolTip='')
-			d000.contextMenu.add(widgets.TkToolButton, setObjectName='tb000', setText='Save', setToolTip='')
-			d000.contextMenu.add(widgets.TkLabel, setObjectName='lbl001', setText='Minimize App', setToolTip='Minimize the main application.')
-			d000.contextMenu.add(widgets.TkLabel, setObjectName='lbl002', setText='Maximize App', setToolTip='Restore the main application.')
-			d000.contextMenu.add(widgets.TkLabel, setObjectName='lbl003', setText='Close App', setToolTip='Close the main application.')
+			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb005', setToolTip='')
+			d000.contextMenu.add(wgts.TkToolButton, setObjectName='tb000', setText='Save', setToolTip='')
+			d000.contextMenu.add(wgts.TkLabel, setObjectName='lbl001', setText='Minimize App', setToolTip='Minimize the main application.')
+			d000.contextMenu.add(wgts.TkLabel, setObjectName='lbl002', setText='Maximize App', setToolTip='Restore the main application.')
+			d000.contextMenu.add(wgts.TkLabel, setObjectName='lbl003', setText='Close App', setToolTip='Close the main application.')
 			return
 
 
@@ -197,9 +197,9 @@ class File(Init):
 		cmb = self.file.cmb006
 
 		if index is 'setMenu':
-			cmb.contextMenu.add(widgets.TkComboBox, setObjectName='cmb001', setToolTip='Current project directory root.')
-			cmb.contextMenu.add(widgets.TkLabel, setObjectName='lbl000', setText='Set', setToolTip='Set the project directory.')
-			cmb.contextMenu.add(widgets.TkLabel, setObjectName='lbl004', setText='Root', setToolTip='Open the project directory.')
+			cmb.contextMenu.add(wgts.TkComboBox, setObjectName='cmb001', setToolTip='Current project directory root.')
+			cmb.contextMenu.add(wgts.TkLabel, setObjectName='lbl000', setText='Set', setToolTip='Set the project directory.')
+			cmb.contextMenu.add(wgts.TkLabel, setObjectName='lbl004', setText='Root', setToolTip='Open the project directory.')
 			return
 
 		path = File.formatPath(MaxPlus.PathManager.GetProjectFolderDir()) #current project path.

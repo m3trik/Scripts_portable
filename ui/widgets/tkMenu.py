@@ -1,6 +1,6 @@
 from PySide2 import QtCore, QtGui, QtWidgets
 
-from shared import Attributes
+from widgets import Attributes
 
 
 
@@ -260,6 +260,35 @@ class TkMenu(QtWidgets.QMenu, Attributes):
 
 		return QtWidgets.QToolButton.showEvent(self, event)
 
+
+
+class Menu(object):
+	'''Get a Menu and contextMenu instance.
+	'''
+	def __init__(self):
+		'''
+		'''
+
+	@property
+	def menu_(self):
+		'''Get the menu.
+		'''
+		if not hasattr(self, '_menu'):
+			from tkMenu import TkMenu
+			self._menu = TkMenu(self)
+
+		return self._menu
+
+
+	@property
+	def contextMenu(self):
+		'''Get the context menu.
+		'''
+		if not hasattr(self, '_contextMenu'):
+			from tkMenu import TkMenu
+			self._contextMenu = TkMenu(self, position='cursorPos', menu_type='context')
+
+		return self._contextMenu
 
 
 

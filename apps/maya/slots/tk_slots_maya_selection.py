@@ -35,13 +35,13 @@ class Selection(Init):
 		d000 = self.selection.d000
 
 		if state is 'setMenu':
-			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb001', setToolTip='')
-			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb004', setToolTip='Set the select tool type.')
-			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb006', setToolTip='A list of currently selected objects.')
+			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb001', setToolTip='')
+			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb004', setToolTip='Set the select tool type.')
+			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb006', setToolTip='A list of currently selected objects.')
 			d000.contextMenu.add('QCheckBox', setText='Ignore Backfacing', setObjectName='chk004', setToolTip='Ignore backfacing components during selection.')
 			d000.contextMenu.add('QCheckBox', setText='Soft Selection', setObjectName='chk008', setToolTip='Toggle soft selection mode.')
-			d000.contextMenu.add(widgets.TkLabel, setText='Grow Selection', setObjectName='lbl003', setToolTip='Grow the current selection.')
-			d000.contextMenu.add(widgets.TkLabel, setText='Shrink Selection', setObjectName='lbl004', setToolTip='Shrink the current selection.')
+			d000.contextMenu.add(wgts.TkLabel, setText='Grow Selection', setObjectName='lbl003', setToolTip='Grow the current selection.')
+			d000.contextMenu.add(wgts.TkLabel, setText='Shrink Selection', setObjectName='lbl004', setToolTip='Shrink the current selection.')
 			return
 
 
@@ -240,17 +240,17 @@ class Selection(Init):
 		cmb = self.selection.cmb000
 
 		if index is 'setMenu':
-			cmb.contextMenu.add(widgets.TkLabel, setText='Select', setObjectName='lbl005', setToolTip='Select the current set elements.')
-			cmb.contextMenu.add(widgets.TkLabel, setText='New', setObjectName='lbl000', setToolTip='Create a new selection set.')
-			cmb.contextMenu.add(widgets.TkLabel, setText='Modify', setObjectName='lbl001', setToolTip='Modify the current set by renaming and/or changing the selection.')
-			cmb.contextMenu.add(widgets.TkLabel, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current set.')
+			cmb.contextMenu.add(wgts.TkLabel, setText='Select', setObjectName='lbl005', setToolTip='Select the current set elements.')
+			cmb.contextMenu.add(wgts.TkLabel, setText='New', setObjectName='lbl000', setToolTip='Create a new selection set.')
+			cmb.contextMenu.add(wgts.TkLabel, setText='Modify', setObjectName='lbl001', setToolTip='Modify the current set by renaming and/or changing the selection.')
+			cmb.contextMenu.add(wgts.TkLabel, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current set.')
 			cmb.returnPressed.connect(lambda m=cmb.contextMenu.lastActiveChild: getattr(self, m(name=1))()) #connect to the last pressed child widget's corresponding method after return pressed. ie. self.lbl000 if cmb.lbl000 was clicked last.
 			cmb.currentIndexChanged.connect(self.lbl005) #select current set on index change.
 			cmb.beforePopupShown.connect(self.cmb000) #refresh comboBox contents before showing it's popup.
 			return
 
-		list_ = [str(s) for s in pm.ls(et='objectSet', flatten=1)]
-		cmb.addItems_(list_, clear=True)
+		items = [str(s) for s in pm.ls(et='objectSet', flatten=1)]
+		cmb.addItems_(items, clear=True)
 
 
 	def cmb001(self, index=None):
@@ -259,8 +259,8 @@ class Selection(Init):
 		cmb = self.selection.cmb001
 		
 		if index is 'setMenu':
-			list_ = ['Polygon Selection Constraints']
-			cmb.addItems_(list_, 'Selection Editors:')
+			items = ['Polygon Selection Constraints']
+			cmb.addItems_(items, 'Selection Editors:')
 			return
 
 		if index>0:
@@ -275,8 +275,8 @@ class Selection(Init):
 		cmb = self.selection.cmb002	
 
 		if index is 'setMenu':
-			list_ = ['IK Handles','Joints','Clusters','Lattices','Sculpt Objects','Wires','Transforms','Geometry','NURBS Curves','NURBS Surfaces','Polygon Geometry','Cameras','Lights','Image Planes','Assets','Fluids','Particles','Rigid Bodies','Rigid Constraints','Brushes','Strokes','Dynamic Constraints','Follicles','nCloths','nParticles','nRigids']
-			cmb.addItems_(list_, 'By Type:')
+			items = ['IK Handles','Joints','Clusters','Lattices','Sculpt Objects','Wires','Transforms','Geometry','NURBS Curves','NURBS Surfaces','Polygon Geometry','Cameras','Lights','Image Planes','Assets','Fluids','Particles','Rigid Bodies','Rigid Constraints','Brushes','Strokes','Dynamic Constraints','Follicles','nCloths','nParticles','nRigids']
+			cmb.addItems_(items, 'By Type:')
 			return
 
 		if index>0:
@@ -344,8 +344,8 @@ class Selection(Init):
 		cmb = self.selection.cmb003
 
 		if index is 'setMenu':
-			list_ = ['Verts', 'Vertex Faces', 'Vertex Perimeter', 'Edges', 'Edge Loop', 'Edge Ring', 'Contained Edges', 'Edge Perimeter', 'Border Edges', 'Faces', 'Face Path', 'Contained Faces', 'Face Perimeter', 'UV\'s', 'UV Shell', 'UV Shell Border', 'UV Perimeter', 'UV Edge Loop', 'Shell', 'Shell Border'] 
-			cmb.addItems_(list_, 'Convert To:')
+			items = ['Verts', 'Vertex Faces', 'Vertex Perimeter', 'Edges', 'Edge Loop', 'Edge Ring', 'Contained Edges', 'Edge Perimeter', 'Border Edges', 'Faces', 'Face Path', 'Contained Faces', 'Face Perimeter', 'UV\'s', 'UV Shell', 'UV Shell Border', 'UV Perimeter', 'UV Edge Loop', 'Shell', 'Shell Border'] 
+			cmb.addItems_(items, 'Convert To:')
 			return
 
 		if index>0:
@@ -398,8 +398,8 @@ class Selection(Init):
 		cmb = self.selection.cmb004
 
 		if index is 'setMenu':
-			list_ = ['Marquee', 'Lasso', 'Paint'] 
-			cmb.addItems_(list_, 'Select Tool Style:')
+			items = ['Marquee', 'Lasso', 'Paint'] 
+			cmb.addItems_(items, 'Select Tool Style:')
 			return
 
 		if index>0:
@@ -418,8 +418,8 @@ class Selection(Init):
 		cmb = self.selection.cmb005
 
 		if index is 'setMenu':
-			list_ = ['Angle', 'Border', 'Edge Loop', 'Edge Ring', 'Shell', 'UV Edge Loop']
-			items = cmb.addItems_(list_, 'Off')
+			items = ['Angle', 'Border', 'Edge Loop', 'Edge Ring', 'Shell', 'UV Edge Loop']
+			items = cmb.addItems_(items, 'Off')
 			return
 
 		if index>0:
@@ -451,12 +451,13 @@ class Selection(Init):
 			return
 
 		cmb.clear()
-		list_ = [str(i) for i in pm.ls(sl=1, flatten=1)]
-		widgets = [cmb.menu_.add('QCheckBox', setText=t, setChecked=1) for t in list_[:50]] #selection list is capped with a slice at 50 elements.
+		items = [str(i) for i in pm.ls(sl=1, flatten=1)]
+		widgets = [cmb.menu_.add('QCheckBox', setText=t, setChecked=1) for t in items[:50]] #selection list is capped with a slice at 50 elements.
 
 		for w in widgets:
 			try:
 				w.disconnect() #disconnect all previous connections.
+
 			except TypeError:
 				pass #if no connections are present; pass
 			w.toggled.connect(lambda state, widget=w: self.chkxxx(state=state, widget=widget))

@@ -7,8 +7,8 @@ try:
 except ImportError as error:
 	print(error)
 
-from tk_ import Tk
-from ui import widgets
+from tk import Tk
+from ui import widgets as wgts
 
 
 

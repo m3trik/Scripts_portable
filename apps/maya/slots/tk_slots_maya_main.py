@@ -38,11 +38,11 @@ class Main(Init):
 			# 				if isinstance(v, (float, int, bool))]
 
 			# 		#set signal/slot connections:
-			# 		# widgets = [tree.add(widgets.MultiWidget, parent, refresh=1, set_by_value=[k, v])
+			# 		# wgts.= [tree.add(wgts.MultiWidget, parent, refresh=1, set_by_value=[k, v])
 			# 		# 	for k, v in attributes.items() 
 			# 		# 		if isinstance(v, (float, int, bool))]
 
-			# 		# for multiWidget in widgets:
+			# 		# for multiWidget in wgts.
 			# 		# 	attr = multiWidget.children_(index=0).text()
 			# 		# 	w = multiWidget.children_(index=1)
 			# 		# 	type_ = w.__class__.__name__

@@ -35,7 +35,7 @@ class Create(Init):
 		d000 = self.create.d000
 
 		if state is 'setMenu':
-			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb003', setToolTip='')
+			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb003', setToolTip='')
 			return
 
 

@@ -17,7 +17,7 @@
 ![alt text](https://raw.githubusercontent.com/m3trik/tk/master/docs/dependancy_graph.jpg)
 
 
-#### tk_:
+#### tk:
 ###### *handles main gui construction.*
 
 #### tk_childEvents:
@@ -29,7 +29,7 @@
 #### tk_switchboard:
 ###### *contains a master dictionary for widget related info as well as convienience classes for interacting with the dict.*
 
-#### tk_slots_:
+#### tk_slots:
 ###### *parent class holding methods that are inherited across all app specific slot class modules.*
 
 
@@ -52,7 +52,7 @@ In 3ds Max:
 
 Launching the menu:
 The default hotkey for launching the menu set is f12. (I remap f12 to the windows key) 
-This can be changed by passing the desired key value to the 'key_show" argument when calling an instance of the main module (tk_):
+This can be changed by passing the desired key value to the 'key_show" argument when calling an instance of the main module (tk):
 ex. call:
 ```
 	from PySide2 import QtCore

@@ -20,31 +20,29 @@ Promoting a widget in designer to use a custom class:
 
 
 
-class TkTextEdit(QtWidgets.QTextEdit, Attributes):
+class TkLineEdit(QtWidgets.QLineEdit, Menu, Attributes):
 	'''
 	'''
 	shown = QtCore.Signal()
 	hidden = QtCore.Signal()
 
 	def __init__(self, parent=None, **kwargs):
-		super(TkTextEdit, self).__init__(parent)
+		super(TkLineEdit, self).__init__(parent)
 
-		self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
-
-		self.viewport().setAutoFillBackground(False)
-		# self.setTextBackgroundColor(QtGui.QColor(50, 50, 50))
-
+		# self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
 		self.setAttributes(kwargs)
 
 
-	def insertText(self, text):
-		'''Append a new paragraph to the textEdit.
+	def contextMenuEvent(self, event):
+		'''Override the standard context menu if there is a custom one.
 
 		:Parameters:
-			text (str) = A value to append to the lineEdit as a new paragraph. The value is converted to a string if it isn't already.
+			event=<QEvent>
 		'''
-		baseStyle = '<font style="color: LightGray; background-color: rgb(50, 50, 50);">'
-		self.append(baseStyle+str(text)) #Appends a new paragraph with the given text to the end of the textEdit.
+		if self.contextMenu:
+			self.contextMenu.show()
+		else:
+			return QtWidgets.QLineEdit.contextMenuEvent(self, event)
 
 
 	def showEvent(self, event):
@@ -54,9 +52,7 @@ class TkTextEdit(QtWidgets.QTextEdit, Attributes):
 		'''
 		self.shown.emit()
 
-		# self.resize(self.sizeHint())
-
-		return QtWidgets.QTextEdit.showEvent(self, event)
+		return QtWidgets.QLineEdit.showEvent(self, event)
 
 
 	def hideEvent(self, event):
@@ -66,9 +62,7 @@ class TkTextEdit(QtWidgets.QTextEdit, Attributes):
 		'''
 		self.hidden.emit()
 
-		self.clear()
-
-		return QtWidgets.QTextEdit.hideEvent(self, event)
+		return QtWidgets.QLineEdit.hideEvent(self, event)
 
 
 
@@ -82,7 +76,7 @@ if __name__ == "__main__":
 	import sys
 	qApp = QtWidgets.QApplication(sys.argv)
 		
-	w = TkTextEdit()
+	w = TkLineEdit()
 
 	w.insertText('Selected: <font style="color: Yellow;">8 <font style="color: LightGray;">/1486 faces')
 	w.insertText('Previous Camera: <font style="color: Yellow;">Perspective')

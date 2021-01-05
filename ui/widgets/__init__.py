@@ -5,6 +5,9 @@
 # __all_ = list(module for _, module, _ in pkgutil.iter_modules([os.path.dirname(__file__)]))
 
 
+from widgets.attributes import Attributes
+from widgets.richText import RichText
+from widgets.tkMenu import Menu
 from widgets.tkMenu import TkMenu
 from widgets.tkLabel import TkLabel
 from widgets.tkComboBox import TkComboBox

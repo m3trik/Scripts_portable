@@ -1,7 +1,7 @@
 from builtins import super
 from PySide2 import QtWidgets, QtCore
 
-from shared import Menu, Attributes, RichText
+from widgets import Menu, Attributes, RichText
 
 
 

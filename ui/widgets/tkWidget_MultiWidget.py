@@ -2,7 +2,7 @@
 # coding=utf-8
 from PySide2 import QtWidgets, QtCore, QtGui
 
-from shared import Attributes
+from widgets import Attributes
 
 
 

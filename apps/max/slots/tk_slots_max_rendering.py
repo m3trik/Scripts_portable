@@ -26,7 +26,7 @@ class Rendering(Init):
 		d000 = self.parentUi.d000
 
 		if state is 'setMenu':
-			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb001', setToolTip='')
+			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb001', setToolTip='')
 			return
 
 

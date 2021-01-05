@@ -10,8 +10,8 @@ if not app:
 
 # import maya.OpenMayaUI as OpenMayaUI
 
-from tk_ import Tk
-from widgets.tkWidget_ProgressIndicator import TkWidget_ProgressIndicator
+from tk import Tk
+from ui import widgets as wgts
 
 
 
@@ -30,7 +30,7 @@ class Tk_blender(Tk):
 			except Exception as error:
 				print(self.__class__.__name__, error)
 
-		# progressIndicator = TkWidget_ProgressIndicator()
+		# progressIndicator = wgts.TkWidget_ProgressIndicator()
 		# progressIndicator.start()
 
 		super().__init__(parent)
@@ -131,7 +131,6 @@ if __name__ == "__main__":
 # -----------------------------------------------
 # Notes
 # -----------------------------------------------
-
 
 # if not pm.runTimeCommand('Hk_tk', exists=1):
 # 	pm.runTimeCommand(

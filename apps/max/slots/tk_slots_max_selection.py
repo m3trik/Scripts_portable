@@ -35,12 +35,12 @@ class Selection(Init):
 		d000 = self.selection.d000
 
 		if state is 'setMenu':
-			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb001', setToolTip='')
-			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb004', setToolTip='Set the select tool type.')
+			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb001', setToolTip='')
+			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb004', setToolTip='Set the select tool type.')
 			d000.contextMenu.add('QCheckBox', setText='Ignore Backfacing', setObjectName='chk004', setToolTip='Ignore backfacing components during selection.')
 			d000.contextMenu.add('QCheckBox', setText='Soft Selection', setObjectName='chk008', setToolTip='Toggle soft selection mode.')
-			d000.contextMenu.add(widgets.TkLabel, setText='Grow Selection', setObjectName='lbl003', setToolTip='Grow the current selection.')
-			d000.contextMenu.add(widgets.TkLabel, setText='Shrink Selection', setObjectName='lbl004', setToolTip='Shrink the current selection.')
+			d000.contextMenu.add(wgts.TkLabel, setText='Grow Selection', setObjectName='lbl003', setToolTip='Grow the current selection.')
+			d000.contextMenu.add(wgts.TkLabel, setText='Shrink Selection', setObjectName='lbl004', setToolTip='Shrink the current selection.')
 			return
 
 
@@ -241,10 +241,10 @@ class Selection(Init):
 		cmb = self.selection.cmb000
 
 		if index is 'setMenu':
-			cmb.contextMenu.add(widgets.TkLabel, setText='Select', setObjectName='lbl005', setToolTip='Select the current set elements.')
-			cmb.contextMenu.add(widgets.TkLabel, setText='New', setObjectName='lbl000', setToolTip='Create a new selection set.')
-			cmb.contextMenu.add(widgets.TkLabel, setText='Modify', setObjectName='lbl001', setToolTip='Modify the current set by renaming and/or changing the selection.')
-			cmb.contextMenu.add(widgets.TkLabel, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current set.')
+			cmb.contextMenu.add(wgts.TkLabel, setText='Select', setObjectName='lbl005', setToolTip='Select the current set elements.')
+			cmb.contextMenu.add(wgts.TkLabel, setText='New', setObjectName='lbl000', setToolTip='Create a new selection set.')
+			cmb.contextMenu.add(wgts.TkLabel, setText='Modify', setObjectName='lbl001', setToolTip='Modify the current set by renaming and/or changing the selection.')
+			cmb.contextMenu.add(wgts.TkLabel, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current set.')
 			cmb.returnPressed.connect(lambda m=cmb.contextMenu.lastActiveChild: getattr(self, m(name=1))()) #connect to the last pressed child widget's corresponding method after return pressed. ie. self.lbl000 if cmb.lbl000 was clicked last.
 			cmb.currentIndexChanged.connect(self.lbl005) #select current set on index change.
 			cmb.beforePopupShown.connect(self.cmb000) #refresh comboBox contents before showing it's popup.

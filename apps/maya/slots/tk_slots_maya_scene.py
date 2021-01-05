@@ -21,7 +21,7 @@ class Scene(Init):
 		d000 = self.parentUi.d000
 
 		if state is 'setMenu':
-			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='Maya Scene Editors')
+			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='Maya Scene Editors')
 			return
 
 
@@ -31,8 +31,8 @@ class Scene(Init):
 		cmb = self.parentUi.cmb000
 
 		if index is 'setMenu':
-			list_ = ['Node Editor', 'Outlinder', 'Content Browser', 'Optimize Scene Size', 'Prefix Hierarchy Names', 'Search and Replace Names']
-			cmb.addItems_(list_, 'Maya Scene Editors')
+			items = ['Node Editor', 'Outlinder', 'Content Browser', 'Optimize Scene Size', 'Prefix Hierarchy Names', 'Search and Replace Names']
+			cmb.addItems_(items, 'Maya Scene Editors')
 			return
 
 		if index>0:
@@ -51,87 +51,71 @@ class Scene(Init):
 			cmb.setCurrentIndex(0)
 
 
-	def getTrailingIntegers(self, string, increment=0):
+	def t000(self, state=None):
+		'''Find
 		'''
-		:Parameters: increment(int) = optional step amount
+		t000 = self.parentUi.t000
 
-		Returns 'string' - any integers from the end of the given string.
+		if state is 'setMenu':
+			t000.contextMenu.add('QCheckBox', setText='Ignore Case', setObjectName='chk000', setToolTip='Search case insensitive.')
+			t000.contextMenu.add('QCheckBox', setText='Regular Expression', setObjectName='chk001', setToolTip='When checked, regular expression syntax is used instead of the default \'*\' and \'|\' modifiers.')
+			return
+
+
+	def t001(self, state=None):
+		'''Replace
 		'''
-		num='' #get trailing integers
-		for char in reversed(str(string)): #work from the back of the string
-			if str.isdigit(char):
-				num = num+char
-			else: #when a non-integer char is found return any integers as a string.
-				if not num:
-					num='0'
-				num = int(num[::-1])+increment #re-reverse the string and increment.
-				return '000'[:-len(str(num))]+str(num) #prefix '000' removing zeros according to num length ie. 009 becomes 010
+		t001 = self.parentUi.t001
+
+		if state is 'setMenu':
+			return
+
+		find = self.parentUi.t000.text() #asterisk denotes startswith*, *endswith, *contains* 
+		to = self.parentUi.t001.text()
+		regEx = self.parentUi.t000.contextMenu.chk001
+		ignoreCase = self.parentUi.t000.contextMenu.chk000
+
+		Scene.rename(find, to, regEx=regEx, ignoreCase=ignoreCase)
 
 
-	def t001(self):
-		'''Rename
+	@staticmethod
+	def rename(frm, to, regEx=False, ignoreCase=False):
+		'''Rename scene objects.
 
-		*find* - search contains chars
-		*find - search endswith chars
-		find* - search startswith chars
-		find|find - search any of.  can be used in conjuction with other modifiers
+		:Parameters:
+			frm (str) = Current name. An asterisk denotes startswith*, *endswith, *contains*, and multiple search strings can be separated by pipe ('|') chars.
+				frm - Search exact.
+				*frm* - Search contains chars.
+				*frm - Search endswith chars.
+				frm* - Search startswith chars.
+				frm|frm - Search any of.  can be used in conjuction with other modifiers.
+			to (str) = Desired name: An optional asterisk modifier can be used for formatting
+				to - replace all.
+				*to* - replace only 'frm'.
+				*to - replace suffix.
+				**to - append suffix.
+				to* - replace prefix.
+				to** - append prefix.
+			regEx (bool) = If True, regular expression syntax is used instead of the default '*' and '|' modifiers.
+			ignoreCase (bool) = Ignore case when searching. Applies only to the 'frm' parameter's search.
 
-		*to* - replace only 'find'
-		*to - replace suffix
-		to* - replace prefix
-		**to - replace suffix', moves any integers in front of replacement chars
+		ex. rename(r'Cube', '*001', regEx=True) #replace chars after frm on any object with a name that contains 'Cube'. ie. 'polyCube001' from 'polyCube'
+		ex. rename(r'Cube', '**001', regEx=True) #append chars on any object with a name that contains 'Cube'. ie. 'polyCube1001' from 'polyCube1'
 		'''
-		find = str(self.parentUi.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
-		to = str(self.parentUi.t001.text())
-
-
-		if pm.ls(selection=1): #if selection; operate on only the selected objects.
-			if find:
-				lists = [pm.ls(f, sl=1) for f in find.split('|')] #objects in current selection that match criteria
-			else:
-				lists = [pm.ls(sl=1)] #if 'find' field is blank, use all currently selected objects
-		else:
-			if find:
-				lists = [pm.ls(f) for f in find.split('|')] # objects = pm.ls(find) #Stores a list of all objects containing 'find'
-			else:
-				lists = [pm.ls()] #if find field is blank, and nothing is selected, get all objects
-		objects = set([i for sublist in lists for i in sublist]) #flatten and remove any duplicates.
-
-
 		pm.undoInfo (openChunk=1)
-		for obj in objects:
-			f = [f for f in find.split('|') if f.strip('*') in obj.name()][0] #get the objects that contain the chars in find.split('|')
-			
-			relatives = pm.listRelatives(obj, parent=1) #Get a list of it's direct parent
-			if 'group*' in relatives: #If that parent starts with group, it came in root level and is pasted in a group, so ungroup it
-				relatives[0].ungroup()
+		names = Init.findStrAndFormat(frm, to, [obj.name() for obj in pm.ls()], regEx=regEx, ignoreCase=ignoreCase)
+		print ('# Rename: Found {} matches. #'.format(len(names)))
 
-			#find modifiers
-			if to.startswith('*') and to.endswith('*'): #replace chars
-				f = f.replace('*', '') #remove modifiers
-				newName = obj.name().replace(f, to)
+		for oldName, newName in names:
+			try:
+				n = pm.rename(oldName, newName) #Rename the object with the new name
+				if not n==newName:
+					print ('# Warning: Attempt to rename "{}" to "{}" failed. Renamed instead to "{}". #'.format(oldName, newName, n))
+				else:
+					print ('# Result: Successfully renamed "{}" to "{}". #'.format(oldName, newName))
 
-			elif to.startswith('*'): #replace suffix
-				newName = obj.name()+to
-
-			elif to.endswith('*'): #replace prefix
-				f = f.replace('*', '') #remove modifiers
-				newName = obj.name().replace(f, to, 1) #1=replace only the first occurance
-
-			elif to.startswith('**'): #replace suffix and move any trailing integers
-				num = self.getTrailingIntegers(obj.name())
-				stripped = obj.name().rstrip(f+'0123456789')
-				newName = stripped+num+to
-
-			else: #replace whole name
-				newName = to
-
-			newName = newName.replace('*', '') #remove modifiers
-			while pm.objExists(newName):
-				num = self.getTrailingIntegers(newName, increment=1)
-				newName = newName.rstrip('0123456789')+num
-
-			name = pm.rename(obj, newName) #Rename the object with the new name
+			except Exception as e:
+				print ('# Error: Attempt to rename "{}" to "{}" failed. {} #'.format(oldName, newName, str(e).rstrip()))
 		pm.undoInfo (closeChunk=1)
 
 

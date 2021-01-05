@@ -6,7 +6,7 @@ except: from PySide2 import shiboken2
 
 import sys
 
-from shared import Attributes
+from widgets import Attributes
 
 
 

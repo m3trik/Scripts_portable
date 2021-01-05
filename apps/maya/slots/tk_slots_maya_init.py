@@ -4,8 +4,8 @@ import os
 
 from PySide2 import QtGui, QtWidgets, QtCore
 
-from ui import widgets
-from tk_slots_ import Slots
+from ui import widgets as wgts
+from tk_slots import Slots
 
 # Maya dependancies
 try:

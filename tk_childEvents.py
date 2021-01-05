@@ -70,20 +70,23 @@ class EventFactoryFilter(QtCore.QObject):
 				widget.installEventFilter(self)
 				# print (widgetName if widgetName else widget)
 
-				if widgetType in ['TkToolButton', 'TkPushButton_Draggable', 'TkComboBox', 'TkTreeWidget_ExpandableList']:
+				#widget types to initialize menus\contextMenu's for.
+				if widgetType in ['TkToolButton', 'TkPushButton_Draggable', 'TkComboBox', 'TkTreeWidget_ExpandableList', 'TkLineEdit']:
 					if callable(classMethod):
 						classMethod('setMenu')
 
+				#widget types to resize and center.
 				if derivedType in ['QPushButton', 'QToolButton', 'QLabel']:
 					if uiLevel<3:
 						EventFactoryFilter.resizeAndCenterWidget(widget)
 
+				#widget types to set an initial state as hidden.
 				elif derivedType=='QWidget':
 					if self.sb.prefix(widget, 'w') and uiLevel==1: #prefix returns True if widgetName startswith the given prefix, and is followed by three integers.
 						widget.setVisible(False)
 
 			#finally, add any of the widget's children.
-			exclude = ['TkTreeWidget_ExpandableList'] #, 'QObject', 'QBoxLayout', 'QFrame', 'QAbstractItemView', 'QHeaderView', 'QItemSelectionModel', 'QItemDelegate', 'QScrollBar', 'QScrollArea', 'QValidator', 'QStyledItemDelegate', 'QPropertyAnimation'] #, 'QAction', 'QWidgetAction'
+			exclude = ['TkTreeWidget_ExpandableList'] #'QObject', 'QBoxLayout', 'QFrame', 'QAbstractItemView', 'QHeaderView', 'QItemSelectionModel', 'QItemDelegate', 'QScrollBar', 'QScrollArea', 'QValidator', 'QStyledItemDelegate', 'QPropertyAnimation'] #, 'QAction', 'QWidgetAction'
 			[self.addWidgets(name, w) for w in widget.children() if w not in widgets and not widgetType in exclude]
 			# print(name, [w.objectName() for w in widget.children() if w not in widgets and not widgetType in exclude])
 

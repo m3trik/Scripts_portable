@@ -29,8 +29,8 @@ class Materials(Init):
 		d000 = self.materials.d000
 
 		if state is 'setMenu':
-			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb001', setToolTip='Maya Material Editors')
-			d000.contextMenu.add(widgets.TkLabel, setText='Material Attributes', setObjectName='lbl004', setToolTip='Show the material attributes in the attribute editor.')
+			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb001', setToolTip='Maya Material Editors')
+			d000.contextMenu.add(wgts.TkLabel, setText='Material Attributes', setObjectName='lbl004', setToolTip='Show the material attributes in the attribute editor.')
 			return
 
 
@@ -79,10 +79,10 @@ class Materials(Init):
 		b = self.materials_submenu.b003
 
 		if index is 'setMenu':
-			cmb.contextMenu.add(widgets.TkLabel, setText='Open in Editor', setObjectName='lbl000', setToolTip='Open material in editor.')
-			cmb.contextMenu.add(widgets.TkLabel, setText='Rename', setObjectName='lbl001', setToolTip='Rename the current material.')
-			cmb.contextMenu.add(widgets.TkLabel, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current material.')
-			cmb.contextMenu.add(widgets.TkLabel, setText='Delete All Unused Materials', setObjectName='lbl003', setToolTip='Delete All unused materials.')
+			cmb.contextMenu.add(wgts.TkLabel, setText='Open in Editor', setObjectName='lbl000', setToolTip='Open material in editor.')
+			cmb.contextMenu.add(wgts.TkLabel, setText='Rename', setObjectName='lbl001', setToolTip='Rename the current material.')
+			cmb.contextMenu.add(wgts.TkLabel, setText='Delete', setObjectName='lbl002', setToolTip='Delete the current material.')
+			cmb.contextMenu.add(wgts.TkLabel, setText='Delete All Unused Materials', setObjectName='lbl003', setToolTip='Delete All unused materials.')
 			cmb.beforePopupShown.connect(self.cmb002) #refresh comboBox contents before showing it's popup.
 			cmb.returnPressed.connect(lambda: self.lbl001(setEditable=False))
 			return
@@ -234,7 +234,7 @@ class Materials(Init):
 
 
 	def lbl001(self, setEditable=True):
-		'''Rename Material: Set cmb002 as editable and disable widgets.
+		'''Rename Material: Set cmb002 as editable and disable wgts.
 		'''
 		cmb = self.materials.cmb002
 

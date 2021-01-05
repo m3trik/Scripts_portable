@@ -1,7 +1,7 @@
 from __future__ import print_function
 from PySide2 import QtCore, QtGui, QtWidgets
 
-from shared import Attributes
+from widgets import Attributes
 
 
 

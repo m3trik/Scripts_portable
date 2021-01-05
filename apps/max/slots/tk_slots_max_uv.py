@@ -32,7 +32,7 @@ class Uv(Init):
 		d000 = self.uv.d000
 
 		if state is 'setMenu':
-			d000.contextMenu.add(widgets.TkComboBox, setObjectName='cmb000', setToolTip='Maya UV Editors')
+			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='Maya UV Editors')
 			d000.contextMenu.add('QPushButton', setText='Create UV Snapshot', setObjectName='b001', setToolTip='Save an image file of the current UV layout.')
 			return
 
@@ -79,9 +79,9 @@ class Uv(Init):
 				borders = pm.polyOptions(query=1, displayMapBorder=1)
 				distortion = pm.textureWindow(pm.getPanel(scriptType='polyTexturePlacementPanel'), query=1, displayDistortion=1)
 
-				cmb.menu_.add(widgets.TkCheckBox, setObjectName='chk014', setText='Checkered', setChecked=checkered, setToolTip='')
-				cmb.menu_.add(widgets.TkCheckBox, setObjectName='chk015', setText='Borders', setChecked=borders, setToolTip='')
-				cmb.menu_.add(widgets.TkCheckBox, setObjectName='chk016', setText='Distortion', setChecked=distortion, setToolTip='')
+				cmb.menu_.add(wgts.TkCheckBox, setObjectName='chk014', setText='Checkered', setChecked=checkered, setToolTip='')
+				cmb.menu_.add(wgts.TkCheckBox, setObjectName='chk015', setText='Borders', setChecked=borders, setToolTip='')
+				cmb.menu_.add(wgts.TkCheckBox, setObjectName='chk016', setText='Distortion', setChecked=distortion, setToolTip='')
 
 			except NameError as error:
 				print(error)
