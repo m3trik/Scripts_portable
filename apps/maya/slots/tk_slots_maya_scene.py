@@ -58,7 +58,7 @@ class Scene(Init):
 
 		if state is 'setMenu':
 			t000.contextMenu.add('QCheckBox', setText='Ignore Case', setObjectName='chk000', setToolTip='Search case insensitive.')
-			t000.contextMenu.add('QCheckBox', setText='Regular Expression', setObjectName='chk001', setToolTip='When checked, regular expression syntax is used instead of the default \'*\' and \'|\' modifiers.')
+			t000.contextMenu.add('QCheckBox', setText='Regular Expression', setObjectName='chk001', setToolTip='When checked, regular expression syntax is used instead of the default \'*\' and \'|\' wildcards.')
 			return
 
 
@@ -70,10 +70,10 @@ class Scene(Init):
 		if state is 'setMenu':
 			return
 
-		find = self.parentUi.t000.text() #asterisk denotes startswith*, *endswith, *contains* 
+		find = self.parentUi.t000.text() #an asterisk denotes startswith*, *endswith, *contains* 
 		to = self.parentUi.t001.text()
-		regEx = self.parentUi.t000.contextMenu.chk001
-		ignoreCase = self.parentUi.t000.contextMenu.chk000
+		regEx = self.parentUi.t000.contextMenu.chk001.isChecked()
+		ignoreCase = self.parentUi.t000.contextMenu.chk000.isChecked()
 
 		Scene.rename(find, to, regEx=regEx, ignoreCase=ignoreCase)
 
@@ -91,7 +91,7 @@ class Scene(Init):
 				frm|frm - Search any of.  can be used in conjuction with other modifiers.
 			to (str) = Desired name: An optional asterisk modifier can be used for formatting
 				to - replace all.
-				*to* - replace only 'frm'.
+				*to* - replace only.
 				*to - replace suffix.
 				**to - append suffix.
 				to* - replace prefix.
@@ -108,11 +108,12 @@ class Scene(Init):
 
 		for oldName, newName in names:
 			try:
-				n = pm.rename(oldName, newName) #Rename the object with the new name
-				if not n==newName:
-					print ('# Warning: Attempt to rename "{}" to "{}" failed. Renamed instead to "{}". #'.format(oldName, newName, n))
-				else:
-					print ('# Result: Successfully renamed "{}" to "{}". #'.format(oldName, newName))
+				if pm.objExists(oldName):
+					n = pm.rename(oldName, newName) #Rename the object with the new name
+					if not n==newName:
+						print ('# Warning: Attempt to rename "{}" to "{}" failed. Renamed instead to "{}". #'.format(oldName, newName, n))
+					else:
+						print ('# Result: Successfully renamed "{}" to "{}". #'.format(oldName, newName))
 
 			except Exception as e:
 				print ('# Error: Attempt to rename "{}" to "{}" failed. {} #'.format(oldName, newName, str(e).rstrip()))

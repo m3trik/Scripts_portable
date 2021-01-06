@@ -48,7 +48,7 @@ class Scene(Init):
 
 		if state is 'setMenu':
 			t000.contextMenu.add('QCheckBox', setText='Ignore Case', setObjectName='chk000', setToolTip='Search case insensitive.')
-			t000.contextMenu.add('QCheckBox', setText='Regular Expression', setObjectName='chk001', setToolTip='When checked, regular expression syntax is used instead of the default \'*\' and \'|\' modifiers.')
+			t000.contextMenu.add('QCheckBox', setText='Regular Expression', setObjectName='chk001', setToolTip='When checked, regular expression syntax is used instead of the default \'*\' and \'|\' wildcards.')
 			return
 
 
@@ -62,8 +62,8 @@ class Scene(Init):
 
 		find = self.parentUi.t000.text() #asterisk denotes startswith*, *endswith, *contains* 
 		to = self.parentUi.t001.text()
-		regEx = self.parentUi.t000.contextMenu.chk001
-		ignoreCase = self.parentUi.t000.contextMenu.chk000
+		regEx = self.parentUi.t000.contextMenu.chk001.isChecked()
+		ignoreCase = self.parentUi.t000.contextMenu.chk000.isChecked()
 
 		Scene.rename(find, to, regEx=regEx, ignoreCase=ignoreCase)
 
