@@ -484,6 +484,26 @@ class Slots(QtCore.QObject):
 
 
 	@staticmethod
+	def getTrailingIntegers(string, inc=0):
+		'''Returns any integers from the end of the given string.
+
+		:Parameters:
+			inc (int) = Increment by a step amount. 0 does not increment and returns the original number. (default: 0)
+
+		"Return:
+			(int)
+
+		ex. n = getTrailingIntegers('p001Cube1', inc=1) #returns: 2
+		'''
+		import re
+
+		m = re.findall(r"\d+\s*$", string)
+		result = int(m[0])+inc if m else None
+
+		return result
+
+
+	@staticmethod
 	def findStr(what, where, regEx=False, ignoreCase=False):
 		'''Find matches of a string in a list.
 

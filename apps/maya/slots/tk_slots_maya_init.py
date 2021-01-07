@@ -190,7 +190,7 @@ class Init(Slots):
 				if transforms:
 					for obj in transforms: #get ALL selected components, for each selected transform object.
 						components+=pm.ls('{}.{}[*]'.format(obj, componentType), flatten=flatten)
-				else: ##get selected components.
+				else: #get selected components.
 					components = pm.filterExpand(selectionMask=mask[componentType], expand=flatten)
 		else:
 			for obj in pm.ls(objects):
@@ -390,6 +390,47 @@ class Init(Slots):
 
 
 	@staticmethod
+	def getContigiousEdges(edges):
+		'''Get a list containing sets of adjacent edges.
+
+		:Parameters:
+			edges (list) = Polygon edges to be filtered for adjacent.
+
+		:Return:
+			(list) adjacent edge sets.
+		'''
+		sets=[]
+		edges = pm.ls(edges, flatten=1)
+		for edge in edges:
+			vertices = pm.polyListComponentConversion(edge, fromEdge=1, toVertex=1)
+			connEdges = pm.polyListComponentConversion(vertices, fromVertex=1, toEdge=1)
+			edge_set = set([e for e in pm.ls(connEdges, flatten=1) if e in edges]) #restrict the connected edges to the original edge pool.
+			sets.append(edge_set)
+
+		result=[]
+		while len(sets)>0: #combine sets in 'sets' that share common elements.
+			first, rest = sets[0], sets[1:] #python 3: first, *rest = sets
+			first = set(first)
+
+			lf = -1
+			while len(first)>lf:
+				lf = len(first)
+
+				rest2 = []
+				for r in rest:
+					if len(first.intersection(set(r)))>0:
+						first |= set(r)
+					else:
+						rest2.append(r)     
+				rest = rest2
+
+			result.append(first)
+			sets = rest
+
+		return result
+
+
+	@staticmethod
 	def getContigiousIslands(faces, faceIslands=[]):
 		'''Get a list containing sets of adjacent polygon faces grouped by islands.
 
@@ -400,14 +441,14 @@ class Init(Slots):
 		:Return:
 			(list) of sets of adjacent faces.
 		'''
-		l=[]
+		sets=[]
 		faces = pm.ls(faces, flatten=1)
 		for face in faces:
 			borderFaces = Init.getBorderComponents(face, returnType='faces', borderType='component', flatten=True)
-			l.append(set([f for f in borderFaces if f in faces]))
+			sets.append(set([f for f in borderFaces if f in faces]))
 
-		while len(l)>0: #combine sets in 'l' that share common elements.
-			first, rest = l[0], l[1:] #python 3: first, *rest = l
+		while len(sets)>0: #combine sets in 'sets' that share common elements.
+			first, rest = sets[0], sets[1:] #python 3: first, *rest = sets
 			first = set(first)
 
 			lf = -1
@@ -423,7 +464,7 @@ class Init(Slots):
 				rest = rest2
 
 			faceIslands.append(first)
-			l = rest
+			sets = rest
 
 		return faceIslands
 
@@ -452,12 +493,12 @@ class Init(Slots):
 
 	@staticmethod
 	def getBorderComponents(x, returnType='unchanged', borderType='object', flatten=False):
-		'''Get any object border components from a given component(s) or a polygon object.
+		'''Get any object border components from given component(s) or a polygon object.
 
 		:Parameters:
 			x (obj)(list) = Component(s) (or a polygon object) to find any border components for.
-			returnType (str) = The desired returned component type. (valid: 'vertices', 'edges', 'faces', 'unchanged'(default, the returnType will be the same as the given object type))
-			borderType (str) = The desired border type. (valid: 'component', 'object'(default))
+			returnType (str) = The desired returned component type. (valid: 'vertices','edges','faces','unchanged'(default, the returnType will be the same as the given object type))
+			borderType (str) = Get the components that border given components, or components on the border of an object. (valid: 'component', 'object'(default))
 			flatten (bool) = Flattens the returned list of objects so that each component is identified individually.
 
 		:Return:
