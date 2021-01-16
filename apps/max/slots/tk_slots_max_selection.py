@@ -29,18 +29,18 @@ class Selection(Init):
 		# 	pass
 
 
-	def d000(self, state=None):
+	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		d000 = self.selection.d000
+		draggable_header = self.selection.draggable_header
 
 		if state is 'setMenu':
-			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb001', setToolTip='')
-			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb004', setToolTip='Set the select tool type.')
-			d000.contextMenu.add('QCheckBox', setText='Ignore Backfacing', setObjectName='chk004', setToolTip='Ignore backfacing components during selection.')
-			d000.contextMenu.add('QCheckBox', setText='Soft Selection', setObjectName='chk008', setToolTip='Toggle soft selection mode.')
-			d000.contextMenu.add(wgts.TkLabel, setText='Grow Selection', setObjectName='lbl003', setToolTip='Grow the current selection.')
-			d000.contextMenu.add(wgts.TkLabel, setText='Shrink Selection', setObjectName='lbl004', setToolTip='Shrink the current selection.')
+			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb001', setToolTip='')
+			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb004', setToolTip='Set the select tool type.')
+			draggable_header.contextMenu.add('QCheckBox', setText='Ignore Backfacing', setObjectName='chk004', setToolTip='Ignore backfacing components during selection.')
+			draggable_header.contextMenu.add('QCheckBox', setText='Soft Selection', setObjectName='chk008', setToolTip='Toggle soft selection mode.')
+			draggable_header.contextMenu.add(wgts.TkLabel, setText='Grow Selection', setObjectName='lbl003', setToolTip='Grow the current selection.')
+			draggable_header.contextMenu.add(wgts.TkLabel, setText='Shrink Selection', setObjectName='lbl004', setToolTip='Shrink the current selection.')
 			return
 
 
@@ -486,7 +486,7 @@ class Selection(Init):
 	def tb003(self, state=None):
 		'''Select Edges By Angle
 		'''
-		tb = self.currentUi.tb003
+		tb = tb = self.selection.tb003
 		if state is 'setMenu':
 			tb.menu_.add('QDoubleSpinBox', setPrefix='Angle Low:  ', setObjectName='s006', setMinMax_='0.0-180 step1', setValue=50, setToolTip='Normal angle low range.')
 			tb.menu_.add('QDoubleSpinBox', setPrefix='Angle High: ', setObjectName='s007', setMinMax_='0.0-180 step1', setValue=130, setToolTip='Normal angle high range.')

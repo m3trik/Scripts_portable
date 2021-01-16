@@ -10,14 +10,14 @@ class DynLayout(Init):
 		super(DynLayout, self).__init__(*args, **kwargs)
 
 
-	def d000(self, state=None):
+	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		d000 = self.dynLayout.d000
+		draggable_header = self.dynLayout.draggable_header
 
 		if state is 'setMenu':
-			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
-			d000.contextMenu.add('QPushButton', setText='Delete History', setObjectName='b000', setToolTip='')
+			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
+			draggable_header.contextMenu.add('QPushButton', setText='Delete History', setObjectName='b000', setToolTip='')
 			return
 
 

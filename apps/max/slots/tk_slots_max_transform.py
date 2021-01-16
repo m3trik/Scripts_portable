@@ -10,13 +10,13 @@ class Transform(Init):
 		super(Transform, self).__init__(*args, **kwargs)
 
 
-	def d000(self, state=None):
+	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		d000 = self.transform.d000
+		draggable_header = self.transform.draggable_header
 
 		if state is 'setMenu':
-			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
+			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
 			return
 
 
@@ -257,55 +257,20 @@ class Transform(Init):
 	def tb000(self, state=None):
 		'''Drop To Grid
 		'''
-		tb = self.currentUi.tb000
+		tb = self.ui.tb000
 		if state is 'setMenu':
+			tb.menu_.add('QComboBox', addItems=['Min','Mid','Max'], setObjectName='cmb004', setToolTip='Choose which point of the bounding box to align to.')
 			tb.menu_.add('QCheckBox', setText='Move to Origin', setObjectName='chk014', setChecked=True, setToolTip='Move to origin (xyz 0,0,0).')
-			tb.menu_.add('QCheckBox', setText='Use Lowest Point', setObjectName='chk015', setToolTip='Use Lowest bounding box point (else mid point).')
-			tb.menu_.add('QCheckBox', setText='Center Pivot', setObjectName='chk016', setChecked=True, setToolTip='Center pivot on objects bounding box.')
+			tb.menu_.add('QCheckBox', setText='Center Pivot', setObjectName='chk016', setChecked=False, setToolTip='Center pivot on objects bounding box.')
 			return
 
+		align = tb.menu_.cmb004.currentText()
 		origin = tb.menu_.chk014.isChecked()
-		bBoxLowestPoint = tb.menu_.chk015.isChecked()
 		centerPivot = tb.menu_.chk016.isChecked()
 
-		for obj in rt.selection:
-			osPivot = pm.xform (obj, query=1, rotatePivot=1, objectSpace=1) #save the object space obj pivot
-			wsPivot = pm.xform (obj, query=1, rotatePivot=1, worldSpace=1) #save the world space obj pivot
-			if origin:
-				self.undo(True)
-				#position the pivot
-				pm.xform(obj, centerPivots=1) #center pivot
-				plane = pm.polyPlane (name='alignTo_temp')
-				if not bBoxLowestPoint:
-					y = 'Mid' #possible values are: 'Max','Mid','Min'
-				else:
-					y = 'Min'
-				pm.align (obj, plane, atl=1, x='Mid', y=y, z='Mid')
-				if not centerPivot:
-					pm.xform (obj, rotatePivot=osPivot, objectSpace=1) #return pivot to orig position
-				pm.delete (plane)
-				pm.select(obj)
-				self.undo(False)
-			else:
-				pm.makeIdentity (obj, apply=1, t=1, r=1, s=1, n=0, pn=1) #freeze transforms to ensure the bounding box is not rotated
-				bBox = pm.exactWorldBoundingBox(obj) #get bounding box world space coords
-				if not bBoxLowestPoint:
-					y = float(bBox[4])-float(bBox[1]) #get mid point (ymax-ymin)
-				else:
-					y = float(bBox[1]) #get lowest point (ymin)
-				pm.undo() #undo freezetransforms
-				pm.xform (obj, rotatePivot=(wsPivot[0], y, wsPivot[2]), worldSpace=1) #reset the pivot to the lowest point in world space
-				destinationPoint = pm.xform (obj, query=1, pivots=1, worldSpace=1) #query the new pivot location
-				if not bBoxLowestPoint:
-					y = destinationPoint[1] #mid point
-				else:
-					y = destinationPoint[4] #lowest point
-				pm.xform (obj, translation=(0, -y, 0), relative=1) #move the object to the pivot location
-				if centerPivot:
-					pm.xform (obj, centerPivots=1) #center the pivot
-				else:
-					pm.xform (obj, rotatePivot=osPivot, objectSpace=1) #return pivot to orig position
-				pm.select(selection) #retore the original selection
+		objects = pm.ls(sl=1, objectsOnly=1)
+		Init.dropToGrid(objects, align, origin, centerPivot)
+		pm.select(objects) #reselect the original selection.
 
 
 	@Slots.message

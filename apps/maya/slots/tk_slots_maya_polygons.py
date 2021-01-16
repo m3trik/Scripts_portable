@@ -28,20 +28,20 @@ class Polygons(Init):
 		self.toggleWidgets(setUnChecked='chk008-9')
 
 
-	def d000(self, state=None):
+	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		d000 = self.polygons.d000
+		draggable_header = self.polygons.draggable_header
 
 		if state is 'setMenu':
-			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
+			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
 			return
 
 
 	def cmb000(self, index=None):
 		'''Maya Polygon Operations
 		'''
-		cmb = self.polygons.d000.contextMenu.cmb000
+		cmb = self.polygons.draggable_header.contextMenu.cmb000
 
 		if index is 'setMenu':
 			list_ = ['Extrude','Bevel','Bridge','Combine','Merge Vertex','Offset Edgeloop','Edit Edgeflow','Extract Curve','Poke','Wedge','Assign Invisible']
@@ -285,7 +285,7 @@ class Polygons(Init):
 	def tb008(self, state=None):
 		'''Boolean Operation
 		'''
-		tb = self.ui.tb008
+		tb = self.polygons.tb008
 		if state is 'setMenu':
 			tb.menu_.add('QRadioButton', setText='Union', setObjectName='chk011', setHeight_=20, setToolTip='Fuse two objects together.')
 			tb.menu_.add('QRadioButton', setText='Difference', setObjectName='chk012', setChecked=True, setHeight_=20, setToolTip='Indents one object with the shape of another at the point of their intersection.')
@@ -306,7 +306,7 @@ class Polygons(Init):
 	def tb009(self, state=None):
 		'''Snap Closest Verts
 		'''
-		tb = self.ui.tb009
+		tb = self.polygons.tb009
 		if state is 'setMenu':
 			tb.menu_.add('QDoubleSpinBox', setPrefix='Tolerance: ', setObjectName='s005', setMinMax_='.000-100 step.05', setValue=10, setToolTip='Set the max Snap Distance. Vertices with a distance exceeding this value will be ignored.')
 			tb.menu_.add('QCheckBox', setText='Freeze Transforms', setObjectName='chk016', setChecked=True, setToolTip='Freeze Transformations on the object that is being snapped to.')

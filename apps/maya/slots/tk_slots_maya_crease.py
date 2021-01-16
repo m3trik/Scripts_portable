@@ -24,20 +24,20 @@ class Crease(Init):
 				self.ui.tb000.setText('{} {}'.format(text, self.creaseValue))
 
 
-	def d000(self, state=None):
+	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		d000 = self.crease.d000
+		draggable_header = self.crease.draggable_header
 
 		if state is 'setMenu':
-			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='Maya Crease Editors')
+			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='Maya Crease Editors')
 			return
 
 
 	def cmb000(self, index=None):
 		'''Editors
 		'''
-		cmb = self.crease.d000.contextMenu.cmb000
+		cmb = self.crease.draggable_header.contextMenu.cmb000
 
 		if index is 'setMenu':
 			list_ = ['Crease Set Editor']

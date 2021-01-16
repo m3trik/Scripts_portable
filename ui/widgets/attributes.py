@@ -6,7 +6,7 @@ from PySide2 import QtCore, QtGui, QtWidgets
 
 
 class Attributes(object):
-	'''Methods for managing object Attributes.
+	'''Methods for setting widget Attributes.
 	'''
 	def __init__(self):
 		'''

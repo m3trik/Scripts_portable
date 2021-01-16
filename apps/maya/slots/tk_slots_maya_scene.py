@@ -15,13 +15,13 @@ class Scene(Init):
 		self.parentUi.t000.returnPressed.connect(self.t001) #preform rename on returnPressed
 
 
-	def d000(self, state=None):
+	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		d000 = self.parentUi.d000
+		draggable_header = self.parentUi.draggable_header
 
 		if state is 'setMenu':
-			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='Maya Scene Editors')
+			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='Maya Scene Editors')
 			return
 
 

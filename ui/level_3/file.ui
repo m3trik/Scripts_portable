@@ -316,7 +316,7 @@
       </widget>
      </item>
      <item row="1" column="1" colspan="2">
-      <widget class="TkPushButton_Draggable" name="d000">
+      <widget class="TkPushButton_Draggable" name="draggable_header">
        <property name="minimumSize">
         <size>
          <width>19</width>

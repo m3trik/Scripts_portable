@@ -1573,7 +1573,37 @@ class Init(Slots):
 		return result
 
 
+	@staticmethod
+	def dropToGrid(objects, align='Mid', origin=False, centerPivot=False):
+		'''Align objects to Y origin on the grid using a helper plane.
 
+		:Parameters:
+			objects (str)(obj)(list) = The objects to translate.
+			align (bool) = Specify which point of the object's bounding box to align with the grid. (valid: 'Max','Mid'(default),'Min')
+			origin (bool) = Move to world grid's center.
+			centerPivot (bool) = Center the object's pivot.
+
+		ex. dropToGrid(obj, align='Min') #set the object onto the grid.
+		'''
+		pm.undoInfo(openChunk=1)
+
+		for obj in pm.ls(objects, transforms=1):
+			osPivot = pm.xform(obj, query=1, rotatePivot=1, objectSpace=1) #save the object space obj pivot.
+			wsPivot = pm.xform(obj, query=1, rotatePivot=1, worldSpace=1) #save the world space obj pivot.
+
+			pm.xform(obj, centerPivots=1) #center pivot
+			plane = pm.polyPlane(name='temp#')
+
+			if not origin:
+				pm.xform(plane, translation=(wsPivot[0], 0, wsPivot[2]), absolute=1, ws=1) #move the object to the pivot location
+
+			pm.align(obj, plane, atl=1, x='Mid', y=align, z='Mid')
+			pm.delete(plane)
+
+			if not centerPivot:
+				pm.xform(obj, rotatePivot=osPivot, objectSpace=1) #return pivot to orig position.
+
+		pm.undoInfo (closeChunk=1)
 
 
 

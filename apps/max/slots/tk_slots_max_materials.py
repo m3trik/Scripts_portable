@@ -23,13 +23,13 @@ class Materials(Init):
 		return self.currentMats[text] if text else None
 
 
-	def d000(self, state=None):
+	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		d000 = self.materials.d000
+		draggable_header = self.materials.draggable_header
 
 		if state is 'setMenu':
-			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb001', setToolTip='3dsMax Material Editors')
+			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb001', setToolTip='3dsMax Material Editors')
 			return
 
 

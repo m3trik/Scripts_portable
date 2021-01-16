@@ -24,13 +24,13 @@ class Crease(Init):
 				self.ui.tb000.setText('{} {}'.format(text, self.creaseValue))
 
 
-	def d000(self, state=None):
+	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		d000 = self.crease.d000
+		draggable_header = self.crease.draggable_header
 
 		if state is 'setMenu':
-			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='3ds Max Crease Modifiers')
+			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='3ds Max Crease Modifiers')
 			return
 
 

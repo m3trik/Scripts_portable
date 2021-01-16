@@ -19,13 +19,13 @@ class Scripting(Init):
 		# self.scripting.plainTextEdit.appendPlainText(tk_cmdScrollFieldReporter)
 		
 
-	def d000(self, state=None):
+	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		d000 = self.scripting.d000
+		draggable_header = self.scripting.draggable_header
 
 		if state is 'setMenu':
-			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
+			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
 			return
 
 

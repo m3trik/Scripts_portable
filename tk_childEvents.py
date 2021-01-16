@@ -43,6 +43,7 @@ class EventFactoryFilter(QtCore.QObject):
 			widgetName = self.sb.getWidgetName(widget, name)
 			widgetType = self.sb.getWidgetType(widget, name) #get the class type as string.
 			derivedType = self.sb.getDerivedType(widget, name) #get the derived class type as string.
+			ui = self.sb.getUi(name)
 			uiLevel = self.sb.getUiLevel(name)
 			classMethod = self.sb.getMethod(name, widgetName)
 
@@ -70,19 +71,16 @@ class EventFactoryFilter(QtCore.QObject):
 				widget.installEventFilter(self)
 				# print (widgetName if widgetName else widget)
 
-				#widget types to initialize menus\contextMenu's for.
-				if widgetType in ['TkToolButton', 'TkPushButton_Draggable', 'TkComboBox', 'TkTreeWidget_ExpandableList', 'TkLineEdit']:
+				if widgetType in ('TkToolButton', 'TkPushButton_Draggable', 'TkComboBox', 'TkTreeWidget_ExpandableList', 'TkLineEdit'): #widget types to initialize menus|contextMenu's for.
 					if callable(classMethod):
 						classMethod('setMenu')
 
-				#widget types to resize and center.
-				if derivedType in ['QPushButton', 'QToolButton', 'QLabel']:
+				if derivedType in ('QPushButton', 'QToolButton', 'QLabel'): #widget types to resize and center.
 					if uiLevel<3:
 						EventFactoryFilter.resizeAndCenterWidget(widget)
 
-				#widget types to set an initial state as hidden.
-				elif derivedType=='QWidget':
-					if self.sb.prefix(widget, 'w') and uiLevel==1: #prefix returns True if widgetName startswith the given prefix, and is followed by three integers.
+				elif derivedType=='QWidget': #widget types to set an initial state as hidden.
+					if self.sb.prefix(widget, 'w') and uiLevel is 1: #prefix returns True if widgetName startswith the given prefix, and is followed by three integers.
 						widget.setVisible(False)
 
 			#finally, add any of the widget's children.
@@ -124,23 +122,26 @@ class EventFactoryFilter(QtCore.QObject):
 					self.addWidgets(name, widget) #initialize the widget to set things like the event filter and styleSheet.
 					widgetName = self.sb.getWidgetName(widget, name)
 
-				if widget.rect().contains(widget.mapFromGlobal(QtGui.QCursor.pos())): #if mouse over widget:
-					# print (widget.objectName(), 'mouseTracking')
-					if not widget in self._mouseOver: #if widget is already in the mouseOver list, no need to re-process the events.
-						QtWidgets.QApplication.sendEvent(widget, self.enterEvent_)
-						self._mouseOver.append(widget)
+				try:
+					if widget.rect().contains(widget.mapFromGlobal(QtGui.QCursor.pos())): #if mouse over widget:
+						# print (widget.objectName(), 'mouseTracking')
+						if not widget in self._mouseOver: #if widget is already in the mouseOver list, no need to re-process the events.
+							QtWidgets.QApplication.sendEvent(widget, self.enterEvent_)
+							self._mouseOver.append(widget)
 
-						if not widgetName=='mainWindow':
-							if widget.underMouse() and widget.isEnabled():
-								parentWidgets = self.sb.getParentWidgets(widget)
-								widgetsUnderMouse.append(parentWidgets)
-				else:
-					if widget in self._mouseOver: #if widget is in the mouseOver list, but the mouse is no longer over the widget:
-						QtWidgets.QApplication.sendEvent(widget, self.leaveEvent_)
-						self._mouseOver.remove(widget)
-						if ui.mainWindow.isVisible():
-							ui.mainWindow.grabMouse()
-							self._mouseGrabber = ui.mainWindow
+							if not widgetName=='mainWindow':
+								if widget.underMouse() and widget.isEnabled():
+									parentWidgets = self.sb.getParentWidgets(widget)
+									widgetsUnderMouse.append(parentWidgets)
+					else:
+						if widget in self._mouseOver: #if widget is in the mouseOver list, but the mouse is no longer over the widget:
+							QtWidgets.QApplication.sendEvent(widget, self.leaveEvent_)
+							self._mouseOver.remove(widget)
+							if ui.mainWindow.isVisible():
+								ui.mainWindow.grabMouse()
+								self._mouseGrabber = ui.mainWindow
+				except Exception as e:
+					pass # print('# Error: {}: mouseTracking: {} #'.format(os.path.splitext(os.path.basename(__file__)), e))
 
 
 		widgetsUnderMouse.sort(key=len) #sort 'widgetsUnderMouse' by ascending length so that lowest level child widgets get grabMouse last.
@@ -342,7 +343,6 @@ class EventFactoryFilter(QtCore.QObject):
 			if self.derivedType=='QPushButton' or self.derivedType=='QToolButton':
 				if self.sb.prefix(self.widget, 'i'): #ie. 'i012'
 					ui = self.tk.setUi(self.widget.whatsThis()) #switch the stacked layout to the given ui.
-					self.tk.move(QtGui.QCursor.pos() - ui.rect().center()) #self.tk.ui.rect().center()) #move window to cursor position and offset from left corner to center
 
 				elif self.sb.prefix(self.widget, 'v'):
 					if self.name=='cameras':

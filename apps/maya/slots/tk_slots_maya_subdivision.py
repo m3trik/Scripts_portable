@@ -10,15 +10,15 @@ class Subdivision(Init):
 		super(Subdivision, self).__init__(*args, **kwargs)
 
 
-	def d000(self, state=None):
+	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		d000 = self.subdivision.d000
+		draggable_header = self.subdivision.draggable_header
 
 		if state is 'setMenu':
-			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='Maya Subdivision Editiors.')
-			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb002', setToolTip='Maya Subdivision Operations.')
-			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb001', setToolTip='Smooth Proxy.')
+			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='Maya Subdivision Editiors.')
+			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb002', setToolTip='Maya Subdivision Operations.')
+			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb001', setToolTip='Smooth Proxy.')
 			return
 
 

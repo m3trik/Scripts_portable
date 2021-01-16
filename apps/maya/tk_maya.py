@@ -12,8 +12,6 @@ if not app:
 # import maya.OpenMayaUI as omui
 
 from tk import Tk
-from ui import widgets as wgts
-
 
 
 class Tk_maya(Tk):
@@ -32,12 +30,7 @@ class Tk_maya(Tk):
 			except Exception as error:
 				print(self.__class__.__name__, error)
 
-		# progressIndicator = wgts.TkWidget_ProgressIndicator()
-		# progressIndicator.start()
-
 		super(Tk_maya, self).__init__(parent)
-
-		# progressIndicator.stop()
 
 
 	def getMainWindow(self):

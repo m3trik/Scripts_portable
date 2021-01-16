@@ -13,13 +13,13 @@ class Editors(Init):
 		self.stackedWidget = self.dynLayout.stackedWidget
 
 
-	def d000(self, state=None):
+	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		d000 = self.editors.d000
+		draggable_header = self.editors.draggable_header
 
 		if state is 'setMenu':
-			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
+			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
 			return
 
 

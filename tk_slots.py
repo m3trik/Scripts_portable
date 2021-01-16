@@ -16,7 +16,8 @@ class Slots(QtCore.QObject):
 	'''
 	def __init__(self, parent=None, *args, **kwargs):
 		super(Slots, self).__init__(parent)
-		'''kw:Parameters: (passed in via the switchboard module's 'getClassFromUiName' method.)
+		'''
+		:Parameters: (passed in via the switchboard module's 'getClassFromUiName' method.)
 			_ui (method) = returns the current ui for the current class; else the parent ui.
 			_currentUi (method) = returns the current ui.
 			name (ui) = ui of <name> ie. self.polygons for the ui of filename polygons

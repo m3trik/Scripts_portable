@@ -12,9 +12,10 @@ from widgets.tkMenu import TkMenu
 from widgets.tkLabel import TkLabel
 from widgets.tkComboBox import TkComboBox
 from widgets.tkCheckBox import TkCheckBox
+from widgets.tkPushButton import TkPushButton
 from widgets.tkToolButton import TkToolButton
 from widgets.tkWidget_MultiWidget import TkWidget_MultiWidget as MultiWidget
-
+from widgets.tkWidget_ProgressIndicator import TkWidget_ProgressIndicator as ProgressIndicator
 
 
 

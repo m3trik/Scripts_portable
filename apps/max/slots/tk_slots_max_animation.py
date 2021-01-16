@@ -13,20 +13,20 @@ class Animation(Init):
 		self.childUi = self.sb.getUi('animation_submenu')
 
 
-	def d000(self, state=None):
+	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		d000 = self.parentUi.d000
+		draggable_header = self.parentUi.draggable_header
 
 		if state is 'setMenu':
-			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
+			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
 			return
 
 
 	def cmb000(self, index=None):
 		'''Editors
 		'''
-		cmb = self.parentUi.d000.contextMenu.cmb000
+		cmb = self.parentUi.draggable_header.contextMenu.cmb000
 
 		if index is 'setMenu':
 			list_ = ['']

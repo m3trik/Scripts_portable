@@ -23,14 +23,14 @@ class Materials(Init):
 		return self.currentMats[text] if text else None
 
 
-	def d000(self, state=None):
+	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		d000 = self.materials.d000
+		draggable_header = self.materials.draggable_header
 
 		if state is 'setMenu':
-			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb001', setToolTip='Maya Material Editors')
-			d000.contextMenu.add(wgts.TkLabel, setText='Material Attributes', setObjectName='lbl004', setToolTip='Show the material attributes in the attribute editor.')
+			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb001', setToolTip='Maya Material Editors')
+			draggable_header.contextMenu.add(wgts.TkLabel, setText='Material Attributes', setObjectName='lbl004', setToolTip='Show the material attributes in the attribute editor.')
 			return
 
 

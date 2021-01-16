@@ -22,8 +22,12 @@ class TkWidget_ProgressIndicator(QtWidgets.QWidget, Attributes):
 		self.setFocusPolicy(QtCore.Qt.NoFocus)
 
 		# self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint)
+		self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
 		# self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 		self.setAttribute(QtCore.Qt.WA_SetStyle) #Indicates that the widget has a style of its own.
+
+		value = QtGui.QCursor.pos()
+		self.move(10,0) #fix for widget not moving to correct pos with setPosition_='cursor' attribute. #self.move(value - self.rect().center()) #move and center
 
 		self.setAttributes(kwargs)
 

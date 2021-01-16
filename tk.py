@@ -7,8 +7,7 @@ from tk_switchboard import Switchboard
 from tk_overlay import OverlayFactoryFilter
 from tk_styleSheet import StyleSheet
 from tk_childEvents import EventFactoryFilter
-from widgets.tkPushButton import TkPushButton
-
+from ui import widgets as wgts
 
 
 # ------------------------------------------------
@@ -25,9 +24,10 @@ class Tk(QtWidgets.QStackedWidget):
 	:Parameters:
 		parent (obj) = The parent application's top level window.
 	'''
-
 	def __init__(self, parent=None, preventHide=False, key_show=QtCore.Qt.Key_F12):
 		super(Tk, self).__init__(parent)
+
+		self.progressIndicator = wgts.ProgressIndicator(color='white', setPosition_='cursor', start=True)
 
 		self.preventHide = preventHide
 		self.key_show = key_show
@@ -49,9 +49,13 @@ class Tk(QtWidgets.QStackedWidget):
 
 		QtWidgets.QApplication.instance().focusChanged.connect(self.focusChanged)
 
+		self.centerPos = lambda: QtGui.QCursor.pos() - self.rect().center() #the center point of the widget at any given time.
+
+		self.progressIndicator.stop()
+
 
 	def setUi(self, name='init'):
-		'''Set the stacked Widget's index.
+		'''Set the stacked Widget's index to the ui of the given name.
 
 		:Parameters:
 			name (str) = name of ui.
@@ -63,11 +67,14 @@ class Tk(QtWidgets.QStackedWidget):
 			self.childEvents.initWidgets(name)
 
 		self.resize(self.sb.sizeX, self.sb.sizeY) #Stored ui sizes allow for correct individual resizing where otherwise size would be constrained to the largest widget in the stack)
-		# if self.sb.uiLevel<3:
+
+		if self.sb.uiLevel>2:
+			self.move(self.centerPos().x(), self.centerPos().y()+(self.sb.sizeY/2.15)) #self.move(self.centerPos() - ui.draggable_header.mapToGlobal(ui.draggable_header.rect().center()))
+		# else:
 		# 	self.showFullScreen()
 		# print('keyboardGrabber:', self.keyboardGrabber())
 
-		self.setCurrentWidget(self.sb.ui) #set the stacked widget to the given ui.
+		self.setCurrentWidget(ui) #set the stacked widget to the given ui.
 		return ui
 
 
@@ -95,7 +102,6 @@ class Tk(QtWidgets.QStackedWidget):
 		p1 = widget.mapToGlobal(widget.rect().center()) #widget position before submenu change.
 
 		try: #set the ui to the submenu (if it exists).
-			self.initParentUi(name) #initialize the parent ui if not done so already.
 			self.setUi(name) #switch the stacked widget to the given submenu.
 		except ValueError: #if no submenu exists: ignore and return.
 			return None
@@ -121,10 +127,8 @@ class Tk(QtWidgets.QStackedWidget):
 	def initParentUi(self, name):
 		'''Sets the parent ui of a submenu, if it has not been set before.
 		Setting the parent ui first constructs dependancies needed for the submenu.
-
 		:Parameters:
 			name (str) = The name of the child ui. ie. 'polygons_component_submenu'
-
 		:Return:
 			(obj) the parent ui.
 		'''
@@ -141,6 +145,7 @@ class Tk(QtWidgets.QStackedWidget):
 			name (str) = The name of the ui to remove entry of.
 		'''
 		names = [i[2] for i in self.widgetPath] #get the ui names in widgetPath. ie. 'edit_submenu'
+
 		if name in names:
 			i = names[::-1].index(name) #reverse the list and get the index of the last occurrence of name.
 			del self.drawPath[-i-1:]
@@ -155,13 +160,13 @@ class Tk(QtWidgets.QStackedWidget):
 		:Parameters:
 			name (str) = The name of ui to duplicate the widgets to.
 		'''
-		w0 = TkPushButton(parent=self.sb.getUi(name), setObjectName='return_area', setSize_=(45, 45), setPosition_=self.drawPath[0]) #create an invisible return button at the start point.
+		w0 = wgts.TkPushButton(parent=self.sb.getUi(name), setObjectName='return_area', setSize_=(45, 45), setPosition_=self.drawPath[0]) #create an invisible return button at the start point.
 		self.childEvents.addWidgets(name, w0) #initialize the widget to set things like the event filter and styleSheet.
 
 		if self.sb.getUiLevel(self.sb.previousName(omitLevel=3))==2: #if submenu: recreate widget/s from the previous ui that are in the current path.
 			for i in range(2, len(self.widgetPath)+1): #for index in widgetPath starting at 2:
 				prevWidget = self.widgetPath[-i][0] #assign the index a neg value to count from the back of the list (starting at -2).
-				w1 = TkPushButton(parent=self.sb.getUi(name), copy_=prevWidget, setPosition_=self.widgetPath[-i][1], setVisible=True)
+				w1 = wgts.TkPushButton(parent=self.sb.getUi(name), copy_=prevWidget, setPosition_=self.widgetPath[-i][1], setVisible=True)
 				self.childEvents.addWidgets(name, w1) #initialize the widget to set things like the event filter and styleSheet.
 				self.childEvents._mouseOver.append(w1)
 				w1.grabMouse() #set widget to receive mouse events.
@@ -204,7 +209,7 @@ class Tk(QtWidgets.QStackedWidget):
 			event = <QEvent>
 		'''
 		if self.sb.uiLevel<3:
-			self.move(QtGui.QCursor.pos() - self.rect().center()) #move window to cursor position and offset from left corner to center
+			self.move(self.centerPos())
 
 			self.widgetPath=[] #maintain a list of widgets and their location, as a path is plotted along the ui hierarchy. ie. [[<QPushButton object1>, QPoint(665, 396)], [<QPushButton object2>, QPoint(585, 356)]]
 			self.drawPath=[] #initiate the drawPath list that will contain points as the user moves along a hierarchical path.
@@ -312,7 +317,7 @@ class Tk(QtWidgets.QStackedWidget):
 		# 	method = self.sb.getMethod(self.sb.name, 'hud') #run once on launch. update the hud textEdit in the init module.
 		# 	method()
 
-		self.move(QtGui.QCursor.pos() - self.rect().center()) #move window to cursor position and offset from left corner to center
+		self.move(self.centerPos())
 		# self.sb.ui.staticWindow.move(self.sb.ui.staticWindow.pos()+QtGui.QCursor.pos())
 		self.activateWindow()
 
@@ -329,7 +334,7 @@ class Tk(QtWidgets.QStackedWidget):
 			# print (self.sb.getUiName(), name, method)
 			method()
 		else:
-			print('Warning: No recent commands in history.')
+			print('# Warning: No recent commands in history. #')
 
 
 	def repeatLastCameraView(self):
@@ -342,7 +347,7 @@ class Tk(QtWidgets.QStackedWidget):
 			cam = self.sb.prevCamera(allowCurrent=True, as_list=1)[-2]
 			self.sb.prevCamera(allowCurrent=True, as_list=1).append(cam) #store the camera view
 		else:
-			print('Warning: No recent camera views in history.')
+			print('# Warning: No recent camera views in history. #')
 
 
 	def repeatLastUi(self):
@@ -353,7 +358,7 @@ class Tk(QtWidgets.QStackedWidget):
 			self.setUi(previousName)
 			self.move(self.drawPath[0] - self.rect().center())
 		else:
-			print('Warning: No recent menus in history.')
+			print('# Warning: No recent menus in history. #')
 
 
 
@@ -387,6 +392,32 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 
 
 # Deprecated ----------------------------------------------------------------
+
+		# if self.addUi(ui, query=True): #if the ui has not yet been added to the widget stack.
+		# 	self.addUi(ui) #initialize the parent ui if not done so already.
+
+	# def addUi(self, ui, query=False):
+	# 	'''Initializes the ui of the given name and it's dependancies.
+
+	# 	:Parameters:
+	# 		ui (obj) = The ui widget to be added to the layout stack.
+	# 		query (bool) = Check whether the ui widget has been added.
+
+	# 	:Return:
+	# 		(bool) When queried.
+	# 	'''
+	# 	if query:
+	# 		return self.indexOf(ui)<0
+
+	# 	for i in reversed(range(4)): #in order of uiLevel heirarchy (top-level parent down).
+	# 		ui_ = self.sb.getUi(ui, level=i)
+	# 		if ui_:
+	# 			name = self.sb.getUiName(ui_)
+
+	# 			if self.addUi(ui_, query=True): #if the ui has not yet been added to the widget stack.
+	# 				self.addWidget(ui_) #add the ui to the stackedLayout.
+	# 				self.childEvents.initWidgets(name)
+
 
 # self.sb.setUiSize(name) #Set the size info for each ui (allows for resizing a stacked widget where otherwise resizing is constrained by the largest widget in the stack)
 	# if self.sb.getUiLevel(name)==2: #initialize the parent ui

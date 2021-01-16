@@ -12,13 +12,13 @@ class Preferences(Init):
 		self.preferences.b010.setText('3dsMax Preferences')
 
 
-	def d000(self, state=None):
+	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		d000 = self.preferences.d000
+		draggable_header = self.preferences.draggable_header
 
 		if state is 'setMenu':
-			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb003', setToolTip='')
+			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb003', setToolTip='')
 			return
 
 

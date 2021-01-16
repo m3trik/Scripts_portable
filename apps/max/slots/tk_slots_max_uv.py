@@ -26,14 +26,14 @@ class Uv(Init):
 		return mod
 
 
-	def d000(self, state=None):
+	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		d000 = self.uv.d000
+		draggable_header = self.uv.draggable_header
 
 		if state is 'setMenu':
-			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='Maya UV Editors')
-			d000.contextMenu.add('QPushButton', setText='Create UV Snapshot', setObjectName='b001', setToolTip='Save an image file of the current UV layout.')
+			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='Maya UV Editors')
+			draggable_header.contextMenu.add('QPushButton', setText='Create UV Snapshot', setObjectName='b001', setToolTip='Save an image file of the current UV layout.')
 			return
 
 
@@ -223,7 +223,7 @@ class Uv(Init):
 	def tb002(self, state=None):
 		'''Stack
 		'''
-		tb = self.currentUi.tb002
+		tb = tb = self.uv.tb002
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='Orient', setObjectName='chk021', setChecked=True, setToolTip='Orient UV shells to run parallel with the most adjacent U or V axis.')
 			tb.menu_.add('QCheckBox', setText='Stack Similar', setObjectName='chk022', setChecked=True, setToolTip='Stack only shells that fall within the set tolerance.')
@@ -246,7 +246,7 @@ class Uv(Init):
 	def tb003(self, state=None):
 		'''Select By Type
 		'''
-		tb = self.currentUi.tb003
+		tb = tb = self.uv.tb003
 		if state is 'setMenu':
 			tb.menu_.add('QRadioButton', setText='Back-Facing', setObjectName='chk008', setToolTip='Select all back-facing (using counter-clockwise winding order) components for the current selection.')
 			tb.menu_.add('QRadioButton', setText='Front-Facing', setObjectName='chk009', setToolTip='Select all front-facing (using counter-clockwise winding order) components for the current selection.')
@@ -296,7 +296,7 @@ class Uv(Init):
 	def tb005(self, state=None):
 		'''Straighten Uv
 		'''
-		tb = self.currentUi.tb005
+		tb = tb = self.uv.tb005
 		if state is 'setMenu':
 			tb.menu_.add('QSpinBox', setPrefix='Angle: ', setObjectName='s001', setMinMax_='0-360 step1', setValue=30, setToolTip='Set the maximum angle used for straightening uv\'s.')
 			tb.menu_.add('QCheckBox', setText='Straighten U', setObjectName='chk018', setChecked=True, setToolTip='Unfold UV\'s along a horizonal contraint.')
@@ -323,7 +323,7 @@ class Uv(Init):
 	def tb006(self, state=None):
 		'''Distribute
 		'''
-		tb = self.currentUi.tb006
+		tb = tb = self.uv.tb006
 		if state is 'setMenu':
 			tb.menu_.add('QRadioButton', setText='Distribute U', setObjectName='chk023', setChecked=True, setToolTip='Distribute along U.')
 			tb.menu_.add('QRadioButton', setText='Distribute V', setObjectName='chk024', setToolTip='Distribute along V.')

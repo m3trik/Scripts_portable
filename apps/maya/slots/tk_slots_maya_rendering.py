@@ -13,13 +13,13 @@ class Rendering(Init):
 		self.childUi = self.sb.getUi('rendering_submenu')
 
 
-	def d000(self, state=None):
+	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		d000 = self.parentUi.d000
+		draggable_header = self.parentUi.draggable_header
 
 		if state is 'setMenu':
-			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb001', setToolTip='')
+			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb001', setToolTip='')
 			return
 
 
