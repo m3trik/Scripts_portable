@@ -9,14 +9,11 @@ class Rigging(Init):
 	def __init__(self, *args, **kwargs):
 		super(Rigging, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('rigging')
-		self.childUi = self.sb.getUi('rigging_submenu')
-
 
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.parentUi.draggable_header
+		draggable_header = self.rigging_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
@@ -26,7 +23,7 @@ class Rigging(Init):
 	def cmb000(self, index=None):
 		'''Editors
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.rigging_ui.cmb000
 
 		if index is 'setMenu':
 			list_ = ['Quick Rig','HumanIK','Expression Editor','Shape Editor','Connection Editor','Channel Control Editor','Set Driven Key']
@@ -54,7 +51,7 @@ class Rigging(Init):
 	def cmb001(self, index=None):
 		'''Create
 		'''
-		cmb = self.parentUi.cmb001
+		cmb = self.rigging_ui.cmb001
 
 		if index is 'setMenu':
 			list_ = ['Joints','Locator','IK Handle', 'Lattice', 'Cluster']
@@ -81,33 +78,33 @@ class Rigging(Init):
 		'''Scale Joint
 		'''
 		self.toggleWidgets(setUnChecked='chk001-2')
-		# self.parentUi.tb000.menu_.s000.setValue(pm.jointDisplayScale(query=1)) #init global joint display size
+		# self.rigging_ui.tb000.menu_.s000.setValue(pm.jointDisplayScale(query=1)) #init global joint display size
 
 
 	def chk001(self, state=None):
 		'''Scale IK
 		'''
 		self.toggleWidgets(setUnChecked='chk000, chk002')
-		# self.parentUi.s000.setValue(pm.ikHandleDisplayScale(query=1)) #init IK handle display size
+		# self.rigging_ui.s000.setValue(pm.ikHandleDisplayScale(query=1)) #init IK handle display size
 		
 
 	def chk002(self, state=None):
 		'''Scale IK/FK
 		'''
 		self.toggleWidgets(setUnChecked='chk000-1')
-		# self.parentUi.s000.setValue(pm.jointDisplayScale(query=1, ikfk=1)) #init IKFK display size
+		# self.rigging_ui.s000.setValue(pm.jointDisplayScale(query=1, ikfk=1)) #init IKFK display size
 
 
 	def s000(self, value=None):
 		'''Scale Joint/IK/FK
 		'''
-		value = self.parentUi.s000.value()
+		value = self.rigging_ui.s000.value()
 
-		# if self.parentUi.chk000.isChecked():
+		# if self.rigging_ui.chk000.isChecked():
 		# 	pm.jointDisplayScale(value) #set global joint display size
-		# elif self.parentUi.chk001.isChecked():
+		# elif self.rigging_ui.chk001.isChecked():
 		# 	pm.ikHandleDisplayScale(value) #set global IK handle display size
-		# else: #self.parentUi.chk002.isChecked():
+		# else: #self.rigging_ui.chk002.isChecked():
 		# 	pm.jointDisplayScale(value, ikfk=1) #set global IKFK display size
 
 
@@ -115,7 +112,7 @@ class Rigging(Init):
 	def tb000(self, state=None):
 		'''Toggle Display Local Rotation Axes
 		'''
-		tb = self.currentUi.tb000
+		tb = self.current_ui.tb000
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='Joints', setObjectName='chk000', setChecked=True, setToolTip='Display Joints.')
 			tb.menu_.add('QCheckBox', setText='IK', setObjectName='chk001', setChecked=True, setToolTip='Display IK.')
@@ -144,7 +141,7 @@ class Rigging(Init):
 	def tb001(self, state=None):
 		'''Orient Joints
 		'''
-		tb = self.currentUi.tb001
+		tb = self.current_ui.tb001
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='Align world', setObjectName='chk003', setToolTip='Align joints with the worlds transform.')
 			return

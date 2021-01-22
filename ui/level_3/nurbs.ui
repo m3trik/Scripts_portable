@@ -604,7 +604,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="b032">
+             <widget class="TkToolButton" name="tb000">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -635,7 +635,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="b034">
+             <widget class="TkToolButton" name="tb001">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -1218,6 +1218,11 @@
    <class>TkComboBox</class>
    <extends>QComboBox</extends>
    <header>widgets.tkcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>TkToolButton</class>
+   <extends>QToolButton</extends>
+   <header>widgets.tktoolbutton.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

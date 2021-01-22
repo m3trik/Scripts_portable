@@ -32,7 +32,7 @@ class Selection(Init):
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.selection.draggable_header
+		draggable_header = self.selection_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb001', setToolTip='')
@@ -47,7 +47,7 @@ class Selection(Init):
 	def txt001(self):
 		'''Select By Name
 		'''
-		searchStr = str(self.selection.txt001.text()) #asterisk denotes startswith*, *endswith, *contains* 
+		searchStr = str(self.selection_ui.txt001.text()) #asterisk denotes startswith*, *endswith, *contains* 
 		if searchStr:
 			selection = rt.select(searchStr)
 
@@ -55,7 +55,7 @@ class Selection(Init):
 	def lbl000(self):
 		'''Selection Sets: Create New
 		'''
-		cmb = self.selection.cmb000
+		cmb = self.selection_ui.cmb000
 		if not cmb.isEditable():
 			cmb.addItems_('', ascending=True)
 			cmb.setEditable(True)
@@ -70,7 +70,7 @@ class Selection(Init):
 	def lbl001(self):
 		'''Selection Sets: Modify Current
 		'''
-		cmb = self.selection.cmb000
+		cmb = self.selection_ui.cmb000
 		if not cmb.isEditable():
 			name = cmb.currentText()
 			self._oldSetName = name
@@ -86,7 +86,7 @@ class Selection(Init):
 	def lbl002(self):
 		'''Selection Sets: Delete Current
 		'''
-		cmb = self.selection.cmb000
+		cmb = self.selection_ui.cmb000
 		name = cmb.currentText()
 
 		set_ = self.getSet(name)
@@ -119,7 +119,7 @@ class Selection(Init):
 	def lbl005(self):
 		'''Selection Sets: Select Current
 		'''
-		cmb = self.selection.cmb000
+		cmb = self.selection_ui.cmb000
 		name = cmb.currentText()
 
 		set_ = self.getSet(name)
@@ -138,7 +138,7 @@ class Selection(Init):
 	def s002(self, value=None):
 		'''Select Island: tolerance x
 		'''
-		tb = self.currentUi.tb002
+		tb = self.current_ui.tb002
 		if tb.menu_.chk003.isChecked():
 			text = tb.menu_.s002.value()
 			tb.menu_.s004.setValue(text)
@@ -148,7 +148,7 @@ class Selection(Init):
 	def s004(self, value=None):
 		'''Select Island: tolerance y
 		'''
-		tb = self.currentUi.tb002
+		tb = self.current_ui.tb002
 		if tb.menu_.chk003.isChecked():
 			text = tb.menu_.s004.value()
 			tb.menu_.s002.setValue(text)
@@ -158,7 +158,7 @@ class Selection(Init):
 	def s005(self, value=None):
 		'''Select Island: tolerance z
 		'''
-		tb = self.currentUi.tb002
+		tb = self.current_ui.tb002
 		if tb.menu_.chk003.isChecked():
 			text = tb.menu_.s005.value()
 			tb.menu_.s002.setValue(text)
@@ -201,7 +201,7 @@ class Selection(Init):
 		'''Select Style: Marquee
 		'''
 		self.toggleWidgets(setChecked='chk005', setUnChecked='chk006-7')
-		self.selection.cmb004.setCurrentIndex(0)
+		self.selection_ui.cmb004.setCurrentIndex(0)
 		return 'Select Style: <hl>Marquee</hl>'
 
 
@@ -210,7 +210,7 @@ class Selection(Init):
 		'''Select Style: Lasso
 		'''
 		self.toggleWidgets(setChecked='chk006', setUnChecked='chk005,chk007')
-		self.selection.cmb004.setCurrentIndex(3)
+		self.selection_ui.cmb004.setCurrentIndex(3)
 		return 'Select Style: <hl>Lasso</hl>'
 
 
@@ -219,7 +219,7 @@ class Selection(Init):
 		'''Select Style: Paint
 		'''
 		self.toggleWidgets(setChecked='chk007', setUnChecked='chk005-6')
-		self.selection.cmb004.setCurrentIndex(4)
+		self.selection_ui.cmb004.setCurrentIndex(4)
 		return 'Select Style: <hl>Paint</hl>'
 
 
@@ -238,7 +238,7 @@ class Selection(Init):
 	def cmb000(self, index=None):
 		'''Selection Sets
 		'''
-		cmb = self.selection.cmb000
+		cmb = self.selection_ui.cmb000
 
 		if index is 'setMenu':
 			cmb.contextMenu.add(wgts.TkLabel, setText='Select', setObjectName='lbl005', setToolTip='Select the current set elements.')
@@ -257,7 +257,7 @@ class Selection(Init):
 	def cmb001(self, index=None):
 		'''Editors
 		'''
-		cmb = self.selection.cmb001
+		cmb = self.selection_ui.cmb001
 		
 		if index is 'setMenu':
 			list_ = ['Selection Set Editor']
@@ -273,7 +273,7 @@ class Selection(Init):
 	def cmb002(self, index=None):
 		'''Select All Of Type
 		'''
-		cmb = self.selection.cmb002
+		cmb = self.selection_ui.cmb002
 	
 		if index is 'setMenu':
 			list_ = ['Geometry', 'Shapes', 'Lights', 'Cameras', 'Helpers', 'Space Warps', 'Particle Systems', 'Bone Objects']
@@ -304,7 +304,7 @@ class Selection(Init):
 	def cmb003(self, index=None):
 		'''Convert To
 		'''
-		cmb = self.selection.cmb003
+		cmb = self.selection_ui.cmb003
 
 		if index is 'setMenu':
 			list_ = ['Vertex', 'Edge', 'Border', 'Face', 'Element']
@@ -324,7 +324,7 @@ class Selection(Init):
 	def cmb004(self, index=None):
 		'''Select Style: Set Context
 		'''
-		cmb = self.selection.cmb004
+		cmb = self.selection_ui.cmb004
 
 		if index is 'setMenu':
 			list_ = ['Marquee', 'Circular', 'Fence', 'Lasso', 'Paint'] 
@@ -348,7 +348,7 @@ class Selection(Init):
 	def cmb005(self, index=None):
 		'''Selection Contraints
 		'''
-		cmb = self.selection.cmb005
+		cmb = self.selection_ui.cmb005
 
 		if index is 'setMenu':
 			list_ = ['Off', 'Angle', 'Border', 'Edge Loop', 'Edge Ring', 'Shell', 'UV Edge Loop']
@@ -375,7 +375,7 @@ class Selection(Init):
 	def cmb006(self, index=None):
 		'''Currently Selected Objects
 		'''
-		cmb = self.selection.cmb006
+		cmb = self.selection_ui.cmb006
 
 		if index is 'setMenu':
 			cmb.popupStyle = 'qmenu'
@@ -410,7 +410,7 @@ class Selection(Init):
 	def tb000(self, state=None):
 		'''Select Nth
 		'''
-		tb = self.currentUi.tb000
+		tb = self.current_ui.tb000
 		if state is 'setMenu':
 			tb.menu_.add('QRadioButton', setText='Component Ring', setObjectName='chk000', setToolTip='Select component ring.')
 			tb.menu_.add('QRadioButton', setText='Component Loop', setObjectName='chk001', setChecked=True, setToolTip='Select all contiguous components that form a loop with the current selection.')
@@ -447,7 +447,7 @@ class Selection(Init):
 	def tb001(self, state=None):
 		'''Select Similar
 		'''
-		tb = self.currentUi.tb001
+		tb = self.current_ui.tb001
 		if state is 'setMenu':
 			tb.menu_.add('QDoubleSpinBox', setPrefix='Tolerance: ', setObjectName='s000', setMinMax_='0.0-10 step.1', setValue=0.3, setToolTip='Select similar objects or components, depending on selection mode.')
 			return
@@ -459,7 +459,7 @@ class Selection(Init):
 	def tb002(self, state=None):
 		'''Select Island: Select Polygon Face Island
 		'''
-		tb = self.currentUi.tb002
+		tb = self.current_ui.tb002
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='Lock Values', setObjectName='chk003', setChecked=True, setToolTip='Keep values in sync.')
 			tb.menu_.add('QDoubleSpinBox', setPrefix='x: ', setObjectName='s002', setMinMax_='0.00-1 step.01', setValue=0.01, setToolTip='Normal X range.')
@@ -486,7 +486,7 @@ class Selection(Init):
 	def tb003(self, state=None):
 		'''Select Edges By Angle
 		'''
-		tb = tb = self.selection.tb003
+		tb = tb = self.selection_ui.tb003
 		if state is 'setMenu':
 			tb.menu_.add('QDoubleSpinBox', setPrefix='Angle Low:  ', setObjectName='s006', setMinMax_='0.0-180 step1', setValue=50, setToolTip='Normal angle low range.')
 			tb.menu_.add('QDoubleSpinBox', setPrefix='Angle High: ', setObjectName='s007', setMinMax_='0.0-180 step1', setValue=130, setToolTip='Normal angle high range.')
@@ -544,7 +544,7 @@ class Selection(Init):
 		'''
 		sel = self.currentSelection
 		if sel:
-			newName = self.selection.cmb000.currentText()
+			newName = self.selection_ui.cmb000.currentText()
 			if not newName:
 				newName = self.generateUniqueSetName()
 

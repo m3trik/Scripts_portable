@@ -19,9 +19,9 @@ class Slots(QtCore.QObject):
 		'''
 		:Parameters: (passed in via the switchboard module's 'getClassFromUiName' method.)
 			_ui (method) = returns the current ui for the current class; else the parent ui.
-			_currentUi (method) = returns the current ui.
-			name (ui) = ui of <name> ie. self.polygons for the ui of filename polygons
-			<name>_submenu (ui) = ui of <name_submenu> ie. self.polygons_submenu
+			_current_ui (method) = returns the current ui.
+			<name>_ui (ui) = ui of <name> ie. self.polygons for the ui of filename polygons
+			<name>_submenu_ui (ui) = ui of <name_submenu> ie. self.polygons_submenu
 			sb (class) = switchboard instance.
 			tk (class) = stacked widget instance.
 		'''
@@ -39,7 +39,7 @@ class Slots(QtCore.QObject):
 
 
 	@property
-	def currentUi(self):
+	def current_ui(self):
 		'''Get the current Ui.
 		'''
 		return self._currentUi()

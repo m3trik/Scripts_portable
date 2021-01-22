@@ -9,21 +9,18 @@ class Symmetry(Init):
 	def __init__(self, *args, **kwargs):
 		super(Symmetry, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('symmetry')
-		self.childUi = self.sb.getUi('symmetry_submenu')
-
 		try: #symmetry: set initial checked state
 			state = pm.symmetricModelling(query=True, symmetry=True) #application symmetry state
 			axis = pm.symmetricModelling(query=True, axis=True)
 			if axis == "x":
-				self.parentUi.chk000.setChecked(state)
-				self.childUi.chk000.setChecked(state)
+				self.symmetry_ui.chk000.setChecked(state)
+				self.symmetry_submenu_ui.chk000.setChecked(state)
 			if axis == "y":
-				self.parentUi.chk001.setChecked(state)
-				self.childUi.chk001.setChecked(state)
+				self.symmetry_ui.chk001.setChecked(state)
+				self.symmetry_submenu_ui.chk001.setChecked(state)
 			if axis == "z":
-				self.parentUi.chk002.setChecked(state)
-				self.childUi.chk002.setChecked(state)
+				self.symmetry_ui.chk002.setChecked(state)
+				self.symmetry_submenu_ui.chk002.setChecked(state)
 		except NameError:
 			pass
 
@@ -31,7 +28,7 @@ class Symmetry(Init):
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.parentUi.draggable_header
+		draggable_header = self.symmetry_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
@@ -41,7 +38,7 @@ class Symmetry(Init):
 	def cmb000(self, index=None):
 		'''Editors
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.symmetry_ui.cmb000
 
 		if index is 'setMenu':
 			list_ = ['']
@@ -56,9 +53,9 @@ class Symmetry(Init):
 
 	def setSymmetry(self, state, axis):
 		space = "world" #workd space
-		if self.parentUi.chk004.isChecked(): #object space
+		if self.symmetry_ui.chk004.isChecked(): #object space
 			space = "object"
-		elif self.parentUi.chk005.isChecked(): #topological symmetry
+		elif self.symmetry_ui.chk005.isChecked(): #topological symmetry
 			space = "topo"
 
 		tolerance = 0.25
@@ -71,7 +68,7 @@ class Symmetry(Init):
 		'''Symmetry X
 		'''
 		self.toggleWidgets(setUnChecked='chk001,chk002')
-		state = self.currentUi.chk000.isChecked() #symmetry button state
+		state = self.current_ui.chk000.isChecked() #symmetry button state
 		self.setSymmetry(state, 'x')
 
 
@@ -80,7 +77,7 @@ class Symmetry(Init):
 		'''Symmetry Y
 		'''
 		self.toggleWidgets(setUnChecked='chk000,chk002')
-		state = self.currentUi.chk001.isChecked() #symmetry button state
+		state = self.current_ui.chk001.isChecked() #symmetry button state
 		self.setSymmetry(state, 'y')
 
 
@@ -89,22 +86,22 @@ class Symmetry(Init):
 		'''Symmetry Z
 		'''
 		self.toggleWidgets(setUnChecked='chk000,chk001')
-		state = self.currentUi.chk002.isChecked() #symmetry button state
+		state = self.current_ui.chk002.isChecked() #symmetry button state
 		self.setSymmetry(state, 'z')
 
 
 	def chk004(self, state=None):
 		'''Symmetry: Object
 		'''
-		self.parentUi.chk005.setChecked(False) #uncheck symmetry:topological
+		self.symmetry_ui.chk005.setChecked(False) #uncheck symmetry:topological
 	
 
 	@Slots.message
 	def chk005(self, state=None):
 		'''Symmetry: Topo
 		'''
-		self.parentUi.chk004.setChecked(False) #uncheck symmetry:object space
-		if any ([self.parentUi.chk000.isChecked(), self.parentUi.chk001.isChecked(), self.parentUi.chk002.isChecked()]): #(symmetry)
+		self.symmetry_ui.chk004.setChecked(False) #uncheck symmetry:object space
+		if any ([self.symmetry_ui.chk000.isChecked(), self.symmetry_ui.chk001.isChecked(), self.symmetry_ui.chk002.isChecked()]): #(symmetry)
 			pm.symmetricModelling(edit=True, symmetry=False)
 			self.toggleWidgets(setUnChecked='chk000,chk001,chk002')
 			return 'Note: First select a seam edge and then check the symmetry button to enable topographic symmetry'

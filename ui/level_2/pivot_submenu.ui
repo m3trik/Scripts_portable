@@ -136,8 +136,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>280</y>
+      <x>160</x>
+      <y>290</y>
       <width>71</width>
       <height>19</height>
      </rect>
@@ -232,54 +232,14 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="b003">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>280</y>
-      <width>111</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>111</width>
-      <height>19</height>
-     </size>
-    </property>
-    <property name="toolTip">
-     <string>Align pivots of selected objects to thier bounding box(s)</string>
-    </property>
-    <property name="text">
-     <string>Set to Bounding Box</string>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>18</width>
-      <height>18</height>
-     </size>
-    </property>
-    <property name="autoDefault">
-     <bool>false</bool>
-    </property>
-    <property name="default">
-     <bool>false</bool>
-    </property>
-    <property name="flat">
-     <bool>false</bool>
-    </property>
-   </widget>
    <widget class="TkToolButton" name="tb000">
     <property name="enabled">
      <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
-      <x>355</x>
-      <y>320</y>
+      <x>190</x>
+      <y>330</y>
       <width>56</width>
       <height>19</height>
      </rect>

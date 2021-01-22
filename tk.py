@@ -102,6 +102,7 @@ class Tk(QtWidgets.QStackedWidget):
 		p1 = widget.mapToGlobal(widget.rect().center()) #widget position before submenu change.
 
 		try: #set the ui to the submenu (if it exists).
+			self.initParentUi(name) #initialize the parent ui if not done so already.
 			self.setUi(name) #switch the stacked widget to the given submenu.
 		except ValueError: #if no submenu exists: ignore and return.
 			return None
@@ -121,7 +122,7 @@ class Tk(QtWidgets.QStackedWidget):
 		self.move(self.mapFromGlobal(currentPos +(p1 - p2))) #currentPos + difference
 
 		if name not in self.sb.previousName(as_list=1): #if the submenu ui called for the first time:
-			self.cloneWidgets(name) #re-construct any widgets from the previous ui that fall along the plotted path.
+			self.clonePathWidgets(name) #re-construct any widgets from the previous ui that fall along the plotted path.
 
 
 	def initParentUi(self, name):
@@ -132,8 +133,8 @@ class Tk(QtWidgets.QStackedWidget):
 		:Return:
 			(obj) the parent ui.
 		'''
-		parentUi = self.sb.getUi(name, level=3) #get the current ui's parent ui.
-		parentUiName = self.sb.getUiName(parentUi, level=3) #get the parent ui's name.
+		parentUiName = self.sb.getUiName(name, level=3) #get the parent ui's name.
+
 		if not parentUiName in self.sb.previousName(as_list=1):
 			return self.setUi(parentUiName)
 
@@ -152,7 +153,7 @@ class Tk(QtWidgets.QStackedWidget):
 			del self.widgetPath[-2:]
 
 
-	def cloneWidgets(self, name):
+	def clonePathWidgets(self, name):
 		'''Re-constructs the relevant buttons from the previous ui for the new ui, and positions them.
 		Initializes the new buttons by adding them to the switchboard dict, setting connections, event filters, and stylesheets.
 		The previous widget information is derived from the widget and draw paths.

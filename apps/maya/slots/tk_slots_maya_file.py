@@ -13,7 +13,7 @@ class File(Init):
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.file.draggable_header
+		draggable_header = self.file_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb005', setToolTip='')
@@ -27,7 +27,7 @@ class File(Init):
 	def cmb000(self, index=None):
 		'''Recent Files
 		'''
-		cmb = self.file.cmb000
+		cmb = self.file_ui.cmb000
 
 		if index is 'setMenu':
 			cmb.contextMenu.add('QPushButton', setObjectName='b001', setText='Last', setToolTip='Open the most recent file.')
@@ -48,7 +48,7 @@ class File(Init):
 	def cmb001(self, index=None):
 		'''Recent Projects
 		'''
-		cmb = self.file.cmb001
+		cmb = self.file_ui.cmb001
 
 		if index is 'setMenu':
 			return
@@ -65,7 +65,7 @@ class File(Init):
 	def cmb002(self, index=None):
 		'''Recent Autosave
 		'''
-		cmb = self.file.cmb002
+		cmb = self.file_ui.cmb002
 
 		if index is 'setMenu':
 			return
@@ -90,7 +90,7 @@ class File(Init):
 	def cmb003(self, index=None):
 		'''Import
 		'''
-		cmb = self.file.cmb003
+		cmb = self.file_ui.cmb003
 
 		if index is 'setMenu':
 			cmb.addItems_(['Import file', 'Import Options', 'FBX Import Presets', 'Obj Import Presets'], "Import")
@@ -112,7 +112,7 @@ class File(Init):
 	def cmb004(self, index=None):
 		'''Export
 		'''
-		cmb = self.file.cmb004
+		cmb = self.file_ui.cmb004
 
 		if index is 'setMenu':
 			list_ = ['Export Selection', 'Send to Unreal', 'Send to Unity', 'GoZ', 'Send to 3dsMax: As New Scene', 'Send to 3dsMax: Update Current', 
@@ -151,7 +151,7 @@ class File(Init):
 	def cmb005(self, index=None):
 		'''Editors
 		'''
-		cmb = self.file.cmb005
+		cmb = self.file_ui.cmb005
 
 		if index is 'setMenu':
 			list_ = []
@@ -171,7 +171,7 @@ class File(Init):
 	def cmb006(self, index=None):
 		'''Project Folder
 		'''
-		cmb = self.file.cmb006
+		cmb = self.file_ui.cmb006
 
 		if index is 'setMenu':
 			cmb.contextMenu.add(wgts.TkComboBox, setObjectName='cmb001', setToolTip='Current project directory root.')
@@ -194,7 +194,7 @@ class File(Init):
 	def tb000(self, state=None):
 		'''Save
 		'''
-		tb = self.currentUi.tb000
+		tb = self.current_ui.tb000
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='Wireframe', setObjectName='chk000', setToolTip='Set view to wireframe before save.')
 			tb.menu_.add('QCheckBox', setText='Increment', setObjectName='chk001', setChecked=True, setToolTip='Append and increment a unique integer value.')
@@ -286,10 +286,10 @@ class File(Init):
 	def b015(self):
 		'''Remove String From Object Names.
 		'''
-		from_ = str(self.file.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
-		to = str(self.file.t001.text())
-		replace = self.file.chk004.isChecked()
-		selected = self.file.chk005.isChecked()
+		from_ = str(self.file_ui.t000.text()) #asterisk denotes startswith*, *endswith, *contains* 
+		to = str(self.file_ui.t001.text())
+		replace = self.file_ui.chk004.isChecked()
+		selected = self.file_ui.chk005.isChecked()
 
 		objects = pm.ls (from_) #Stores a list of all objects starting with 'from_'
 		if selected:
@@ -377,7 +377,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	Save
 	# 	'''
-	# 	tb = self.currentUi.tb000
+	# 	tb = self.current_ui.tb000
 	# 	if state is 'setMenu':
 	# 		tb.menu_.add('QCheckBox', setText='ASCII', setObjectName='chk003', setChecked=True, setToolTip='Toggle ASCII or binary file type.')
 	# 		tb.menu_.add('QCheckBox', setText='Wireframe', setObjectName='chk000', setChecked=True, setToolTip='Set view to wireframe before save.')

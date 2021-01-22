@@ -22,8 +22,8 @@ class Create(Init):
 			return None
 
 		transform = selection[0]
-		if not self.create.txt003.text()==transform.name: #make sure the same field reflects the current working node.
-			self.create.txt003.setText(transform.name)
+		if not self.create_ui.txt003.text()==transform.name: #make sure the same field reflects the current working node.
+			self.create_ui.txt003.setText(transform.name)
 			self.constructAttributesForNode(transform) #update the attribute values for the current node.
 
 		return transform
@@ -32,7 +32,7 @@ class Create(Init):
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.create.draggable_header
+		draggable_header = self.create_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb003', setToolTip='')
@@ -42,7 +42,7 @@ class Create(Init):
 	def cmb003(self, index=None):
 		'''Editors
 		'''
-		cmb = self.create.cmb000
+		cmb = self.create_ui.cmb000
 
 		if index is 'setMenu':
 			list_ = ['']
@@ -57,13 +57,13 @@ class Create(Init):
 
 	def getAxis(self):
 		''''''
-		if self.create.chk000.isChecked():
+		if self.create_ui.chk000.isChecked():
 			axis = 'x'
-		elif self.create.chk001.isChecked():
+		elif self.create_ui.chk001.isChecked():
 			axis = 'y'
-		elif self.create.chk002.isChecked():
+		elif self.create_ui.chk002.isChecked():
 			axis = 'z'
-		if self.create.chk003.isChecked(): #negative
+		if self.create_ui.chk003.isChecked(): #negative
 			axis = '-'+axis
 		return axis
 
@@ -91,7 +91,7 @@ class Create(Init):
 		'''Set Translate X
 		'''
 		if self.node:
-			self.point[0] = float(self.create.s000.value())
+			self.point[0] = float(self.create_ui.s000.value())
 			self.node.pos = rt.point3(self.point[0], self.point[1], self.point[2])
 			rt.redrawViews()
 
@@ -100,7 +100,7 @@ class Create(Init):
 		'''Set Translate Y
 		'''
 		if self.node:
-			self.point[1] = float(self.create.s001.value())
+			self.point[1] = float(self.create_ui.s001.value())
 			self.node.pos = rt.point3(self.point[0], self.point[1], self.point[2])
 			rt.redrawViews()
 
@@ -109,7 +109,7 @@ class Create(Init):
 		'''Set Translate Z
 		'''
 		if self.node:
-			self.point[2] = float(self.create.s002.value())
+			self.point[2] = float(self.create_ui.s002.value())
 			self.node.pos = rt.point3(self.point[0], self.point[1], self.point[2])
 			rt.redrawViews()
 
@@ -118,7 +118,7 @@ class Create(Init):
 		'''Set Name
 		'''
 		if self.node:
-			self.node.name = self.create.txt003.text()
+			self.node.name = self.create_ui.txt003.text()
 
 
 	def chk000(self, state=None):
@@ -170,9 +170,9 @@ class Create(Init):
 			error = 1
 			self.point = [0,0,0]
 
-		self.create.s000.setValue(self.point[0])
-		self.create.s001.setValue(self.point[1])
-		self.create.s002.setValue(self.point[2])
+		self.create_ui.s000.setValue(self.point[0])
+		self.create_ui.s001.setValue(self.point[1])
+		self.create_ui.s002.setValue(self.point[2])
 
 		if error==1:
 			return 'Error: Nothing selected. Point set to origin [0,0,0].'
@@ -181,7 +181,7 @@ class Create(Init):
 	def cmb000(self, index=None):
 		'''Create: Select Base Type
 		'''
-		cmb = self.create.cmb000
+		cmb = self.create_ui.cmb000
 
 		if index is 'setMenu':
 			list_ = ['Mesh', 'Editable Poly', 'Editable Mesh', 'Editable Patch', 'NURBS', 'Light']
@@ -200,7 +200,7 @@ class Create(Init):
 
 	def cmb001(self, index=None):
 		''''''
-		cmb = self.create.cmb001
+		cmb = self.create_ui.cmb001
 
 		if index is 'setMenu':
 			list_ = ["Cube", "Sphere", "Cylinder", "Plane", "Circle", "Cone", "Pyramid", "Torus", "Tube", "GeoSphere", "Text"] 
@@ -227,8 +227,8 @@ class Create(Init):
 		'''Create Object
 		'''
 		axis = self.getAxis() #get axis as 'string'
-		type_ = self.create.cmb000.currentText()
-		index = self.create.cmb001.currentIndex()
+		type_ = self.create_ui.cmb000.currentText()
+		index = self.create_ui.cmb001.currentIndex()
 
 		if not type_:
 			type_ = 'Mesh' #set default type
@@ -313,9 +313,9 @@ class Create(Init):
 
 		#set name
 		if isinstance(node, (str,unicode)): #is type of:
-			self.create.txt003.setText(node)
+			self.create_ui.txt003.setText(node)
 		else:
-			self.create.txt003.setText(node.name)
+			self.create_ui.txt003.setText(node.name)
 
 		self.rotation['last']=[] #reset rotation history
 
@@ -324,7 +324,7 @@ class Create(Init):
 		#rotate
 		self.rotateAbsolute(axis, node)
 
-		# if self.create.cmb000.currentIndex() == 0: #if create type: polygon; convert to editable poly
+		# if self.create_ui.cmb000.currentIndex() == 0: #if create type: polygon; convert to editable poly
 		# 	rt.convertTo(node, rt.PolyMeshObject) #convert after adding primitive attributes to spinboxes
 
 		rt.select(node) #select the transform node so that you can see any edits
@@ -339,8 +339,8 @@ class Create(Init):
 			catagory1 (str) = type
 			catagory2 (str) = type
 		'''
-		cmb000 = self.create.cmb000
-		cmb001 = self.create.cmb001
+		cmb000 = self.create_ui.cmb000
+		cmb001 = self.create_ui.cmb001
 
 		cmb000.setCurrentIndex(cmb000.findText(catagory1))
 		cmb001.setCurrentIndex(cmb001.findText(catagory2))
@@ -400,7 +400,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 		clear (bool) = Clear any previous items.
 	# 		show (bool) = Show the popup menu immediately after adding items.
 	# 	'''
-	# 	cmb = self.create.cmb002
+	# 	cmb = self.create_ui.cmb002
 
 	# 	if index is 'setMenu':
 	# 		cmb.popupStyle = 'qmenu'
@@ -450,5 +450,5 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	:Parameters:
 	# 		index(int) = optional index of the spinbox that called this function. ie. 5 from s005
 	# 	'''
-	# 	spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.create.cmb002.children_()} #current spinbox values. ie. from s000 get the value of six and add it to the list
+	# 	spinboxValues = {s.prefix().rstrip(': '):s.value() for s in self.create_ui.cmb002.children_()} #current spinbox values. ie. from s000 get the value of six and add it to the list
 	# 	self.setAttributesMax(self.node, spinboxValues) #set attributes for the history node

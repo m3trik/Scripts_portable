@@ -19,8 +19,8 @@ class Create(Init):
 		'''
 		transform = Init.getTransformNode()
 		if transform:
-			if not self.create.txt003.text()==transform.name(): #make sure the same field reflects the current working node.
-				self.create.txt003.setText(transform.name())
+			if not self.create_ui.txt003.text()==transform.name(): #make sure the same field reflects the current working node.
+				self.create_ui.txt003.setText(transform.name())
 
 		return transform
 
@@ -28,7 +28,7 @@ class Create(Init):
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.create.draggable_header
+		draggable_header = self.create_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
@@ -38,7 +38,7 @@ class Create(Init):
 	def cmb003(self, index=None):
 		'''Editors
 		'''
-		cmb = self.create.cmb003
+		cmb = self.create_ui.cmb003
 		
 		if index is 'setMenu':
 			list_ = ['']
@@ -53,13 +53,13 @@ class Create(Init):
 
 	def getAxis(self):
 		''''''
-		if self.create.chk000.isChecked():
+		if self.create_ui.chk000.isChecked():
 			axis = 'x'
-		elif self.create.chk001.isChecked():
+		elif self.create_ui.chk001.isChecked():
 			axis = 'y'
-		elif self.create.chk002.isChecked():
+		elif self.create_ui.chk002.isChecked():
 			axis = 'z'
-		if self.create.chk003.isChecked(): #negative
+		if self.create_ui.chk003.isChecked(): #negative
 			axis = '-'+axis
 		return axis
 
@@ -83,7 +83,7 @@ class Create(Init):
 		'''Set Translate X
 		'''
 		if self.node:
-			self.point[0] = self.create.s000.value()
+			self.point[0] = self.create_ui.s000.value()
 			pm.xform(self.node, translation=self.point, worldSpace=1, absolute=1)
 
 
@@ -91,7 +91,7 @@ class Create(Init):
 		'''Set Translate Y
 		'''
 		if self.node:
-			self.point[1] = self.create.s001.value()
+			self.point[1] = self.create_ui.s001.value()
 			pm.xform(self.node, translation=self.point, worldSpace=1, absolute=1)
 
 
@@ -99,7 +99,7 @@ class Create(Init):
 		'''Set Translate Z
 		'''
 		if self.node:
-			self.point[2] = self.create.s002.value()
+			self.point[2] = self.create_ui.s002.value()
 			pm.xform (self.node, translation=self.point, worldSpace=1, absolute=1)
 
 
@@ -107,7 +107,7 @@ class Create(Init):
 		'''Set Name
 		'''
 		if self.node:
-			pm.rename(self.node.name(), self.create.txt003.text())
+			pm.rename(self.node.name(), self.create_ui.txt003.text())
 
 
 	def chk000(self, state=None):
@@ -152,14 +152,14 @@ class Create(Init):
 			self.point = [0,0,0]
 			print('Warning: Nothing selected. Point set to origin [0,0,0].')
 
-		self.create.s000.setValue(self.point[0])
-		self.create.s001.setValue(self.point[1])
-		self.create.s002.setValue(self.point[2])
+		self.create_ui.s000.setValue(self.point[0])
+		self.create_ui.s001.setValue(self.point[1])
+		self.create_ui.s002.setValue(self.point[2])
 
 
 	def cmb000(self, index=None):
 		''''''
-		cmb = self.create.cmb000
+		cmb = self.create_ui.cmb000
 
 		if index is 'setMenu':
 			list_ = ['Polygon', 'NURBS', 'Light']
@@ -178,7 +178,7 @@ class Create(Init):
 
 	def cmb001(self, index=None):
 		''''''
-		cmb = self.create.cmb001
+		cmb = self.create_ui.cmb001
 
 		if index is 'setMenu':
 			list_ = ["Cube", "Sphere", "Cylinder", "Plane", "Circle", "Cone", "Pyramid", "Torus", "Tube", "GeoSphere", "Platonic Solids", "Text"]
@@ -204,8 +204,8 @@ class Create(Init):
 		'''Create Object
 		'''
 		axis = self.rotation[self.getAxis()] #get axis as [int list]
-		type_ = self.create.cmb000.currentText()
-		index = self.create.cmb001.currentIndex()
+		type_ = self.create_ui.cmb000.currentText()
+		index = self.create_ui.cmb001.currentIndex()
 
 		#polygons
 		if type_=='Polygon':
@@ -260,9 +260,9 @@ class Create(Init):
 
 		#set name
 		if isinstance(node[0], (str,unicode)): #is type of:
-			self.create.txt003.setText(node[0])
+			self.create_ui.txt003.setText(node[0])
 		else:
-			self.create.txt003.setText(node[0].name())
+			self.create_ui.txt003.setText(node[0].name())
 
 		self.rotation['last']=[] #reset rotation history
 
@@ -280,8 +280,8 @@ class Create(Init):
 			type1 (str) = 
 			type2 (str) = 
 		'''
-		cmb000 = self.create.cmb000
-		cmb001 = self.create.cmb001
+		cmb000 = self.create_ui.cmb000
+		cmb001 = self.create_ui.cmb001
 
 		cmb000.setCurrentIndex(cmb000.findText(catagory1))
 		cmb001.setCurrentIndex(cmb001.findText(catagory2))

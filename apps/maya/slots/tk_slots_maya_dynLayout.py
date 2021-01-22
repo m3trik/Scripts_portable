@@ -13,7 +13,7 @@ class DynLayout(Init):
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.dynLayout.draggable_header
+		draggable_header = self.dynLayout_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
@@ -24,7 +24,7 @@ class DynLayout(Init):
 	def cmb000(self, index=None):
 		'''Editors
 		'''
-		cmb = self.dynLayout.cmb000
+		cmb = self.dynLayout_ui.cmb000
 		
 		if index is 'setMenu':
 			list_ = []

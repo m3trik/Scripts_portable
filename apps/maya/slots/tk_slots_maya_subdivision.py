@@ -13,7 +13,7 @@ class Subdivision(Init):
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.subdivision.draggable_header
+		draggable_header = self.subdivision_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='Maya Subdivision Editiors.')
@@ -25,7 +25,7 @@ class Subdivision(Init):
 	def cmb000(self, index=None):
 		'''Editors
 		'''
-		cmb = self.subdivision.cmb000
+		cmb = self.subdivision_ui.cmb000
 
 		if index is 'setMenu':
 			list_ = ['Polygon Display Options']
@@ -41,7 +41,7 @@ class Subdivision(Init):
 	def cmb001(self, index=None):
 		'''Smooth Proxy
 		'''
-		cmb = self.subdivision.cmb001
+		cmb = self.subdivision_ui.cmb001
 		
 		if index is 'setMenu':
 			list_ = ['Create Subdiv Proxy','Remove Subdiv Proxy Mirror','Crease Tool','Toggle Subdiv Proxy Display', 'Both Proxy and Subdiv Display']
@@ -65,7 +65,7 @@ class Subdivision(Init):
 	def cmb002(self, index=None):
 		'''Maya Subdivision Operations
 		'''
-		cmb = self.subdivision.cmb002
+		cmb = self.subdivision_ui.cmb002
 
 		if index is 'setMenu':
 			list_ = ['Reduce Polygons','Add Divisions','Smooth']
@@ -85,7 +85,7 @@ class Subdivision(Init):
 	def s000(self, value=None):
 		'''Division Level
 		'''
-		value = self.subdivision.s000.value()
+		value = self.subdivision_ui.s000.value()
 
 		shapes = pm.ls(sl=1, dag=1, leaf=1)
 		transforms = pm.listRelatives(shapes, p=True)
@@ -99,7 +99,7 @@ class Subdivision(Init):
 	def s001(self, value=None):
 		'''Tesselation Level
 		'''
-		value = self.subdivision.s001.value()
+		value = self.subdivision_ui.s001.value()
 
 		shapes = pm.ls(sl=1, dag=1, leaf=1)
 		transforms = pm.listRelatives(shapes, p=True)

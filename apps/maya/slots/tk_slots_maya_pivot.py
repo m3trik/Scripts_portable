@@ -9,14 +9,11 @@ class Pivot(Init):
 	def __init__(self, *args, **kwargs):
 		super(Pivot, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('pivot')
-		self.childUi = self.sb.getUi('pivot_submenu')
-
 
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.parentUi.draggable_header
+		draggable_header = self.pivot_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
@@ -26,36 +23,16 @@ class Pivot(Init):
 	def cmb000(self, index=None):
 		'''Editors
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.pivot_ui.cmb000
 
 		if index is 'setMenu':
 			list_ = ['']
 			cmb.addItems_(list_, '')
 			return
 
-		# if index>0:
-		# 	if index==cmb.items.index(''):
-		# 		pass
-		# 	cmb.setCurrentIndex(0)
-
-
-	def cmb001(self, index=None):
-		'''Center Pivot
-		'''
-		cmb = self.parentUi.cmb001
-
-		if index is 'setMenu':
-			list_ = ['Component', 'Object', 'World']
-			cmb.addItems_(list_, 'Center Pivot')
-			return
-
 		if index>0:
-			if index==cmb.items.index('Component'): #Set pivot points to the center of the component's bounding box.
-				pm.xform(centerPivotsOnComponents=1)
-			elif index==cmb.items.index('Object'): ##Set pivot points to the center of the object's bounding box
-				pm.xform(centerPivots=1)
-			elif index==cmb.items.index('World'):
-				pm.xform(worldSpace=1, pivots=[0,0,0])
+			if index==cmb.items.index(''):
+				pass
 			cmb.setCurrentIndex(0)
 
 
@@ -63,7 +40,7 @@ class Pivot(Init):
 	def tb000(self, state=None):
 		'''Reset Pivot
 		'''
-		tb = self.currentUi.tb000
+		tb = self.current_ui.tb000
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='Reset Pivot Position', setObjectName='chk000', setChecked=True, setToolTip='')
 			tb.menu_.add('QCheckBox', setText='Reset Pivot Orientation', setObjectName='chk001', setChecked=True, setToolTip='')
@@ -76,33 +53,54 @@ class Pivot(Init):
 		return 'Reset Pivot Position <hl>{0}</hl>.<br>Reset Pivot Orientation <hl>{1}</hl>.'.format(resetPivotPosition, resetPivotOrientation)
 
 
+	def tb001(self, state=None):
+		'''Center Pivot
+		'''
+		tb = self.pivot_ui.tb001
+		if state is 'setMenu':
+			tb.menu_.add('QRadioButton', setText='Component', setObjectName='chk002', setToolTip='Center the pivot on the center of the selected component\'s bounding box')
+			tb.menu_.add('QRadioButton', setText='Object', setObjectName='chk003', setChecked=True, setToolTip='Center the pivot on the center of the object\'s bounding box')
+			tb.menu_.add('QRadioButton', setText='World', setObjectName='chk004', setToolTip='Center the pivot on world origin.')
+			return
+
+		component = tb.menu_.chk002.isChecked()
+		object_ = tb.menu_.chk003.isChecked()
+		world = tb.menu_.chk004.isChecked()
+
+		if component: #Set pivot points to the center of the component's bounding box.
+			pm.xform(centerPivotsOnComponents=1)
+		elif object_: ##Set pivot points to the center of the object's bounding box
+			pm.xform(centerPivots=1)
+		elif world:
+			pm.xform(worldSpace=1, pivots=[0,0,0])
+
+
 	def b000(self):
 		'''Center Pivot: Object
 		'''
-		self.cmb001(index=2)
+		tb = self.pivot_ui.tb001
+		tb.menu_.chk003.setChecked()
+		self.tb001()
 
 
 	def b001(self):
 		'''Center Pivot: Component
 		'''
-		self.cmb001(index=1)
+		tb = self.pivot_ui.tb001
+		tb.menu_.chk002.setChecked()
+		self.tb001()
 
 
 	def b002(self):
 		'''Center Pivot: World
 		'''
-		self.cmb001(index=3)
-
-
-	def b003(self):
-		'''Center Pivot: Bounding Box
-		'''
-		self.cmb001(index=4)
+		tb = self.pivot_ui.tb001
+		tb.menu_.chk004.setChecked()
+		self.tb001()
 
 
 	def b004(self):
 		'''Bake Pivot
-
 		'''
 		mel.eval("BakeCustomPivot;")
 
@@ -110,12 +108,18 @@ class Pivot(Init):
 	@staticmethod
 	def resetPivotTransforms(objects):
 		'''Reset Pivot Transforms
-
 		'''
-		mel.eval('''
-		{ string $objs[] = `ls -sl -type transform -type geometryShape`;
-		if (size($objs) > 0) { xform -cp; } manipPivot -rp -ro; };
-		''')
+		objs = pm.ls(type=['transform', 'geometryShape'], sl=1)
+
+		if len(objs)>0:
+			pm.xform(cp=1)
+			
+		pm.manipPivot(ro=1, rp=1)
+
+
+
+
+
 
 
 

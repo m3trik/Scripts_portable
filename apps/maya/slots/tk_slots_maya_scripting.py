@@ -13,7 +13,7 @@ class Scripting(Init):
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.scripting.draggable_header
+		draggable_header = self.scripting_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
@@ -23,7 +23,7 @@ class Scripting(Init):
 	def cmb000(self, index=None):
 		'''Editors
 		'''
-		cmb = self.scripting.cmb000
+		cmb = self.scripting_ui.cmb000
 
 		if index is 'setMenu':
 			files = ['']
@@ -39,10 +39,10 @@ class Scripting(Init):
 	def chk000(self, state=None):
 		'''Toggle Mel/Python
 		'''
-		if self.scripting.chk000.isChecked():
-			self.scripting.chk000.setText("python")
+		if self.scripting_ui.chk000.isChecked():
+			self.scripting_ui.chk000.setText("python")
 		else:
-			self.scripting.chk000.setText("MEL")
+			self.scripting_ui.chk000.setText("MEL")
 
 
 	def b000(self):
@@ -68,17 +68,17 @@ class Scripting(Init):
 		'''New Tab
 		'''
 		label = "MEL"
-		if self.scripting.chk000.isChecked():
+		if self.scripting_ui.chk000.isChecked():
 			label = ".py"
-		# self.scripting.tabWidget.addTab(label)
-		self.scripting.tabWidget.insertTab(0, label)
+		# self.scripting_ui.tabWidget.addTab(label)
+		self.scripting_ui.tabWidget.insertTab(0, label)
 
 
 	def b004(self):
 		'''Delete Tab
 		'''
-		index = self.scripting.tabWidget.currentIndex()
-		self.scripting.tabWidget.removeTab(index)
+		index = self.scripting_ui.tabWidget.currentIndex()
+		self.scripting_ui.tabWidget.removeTab(index)
 
 
 

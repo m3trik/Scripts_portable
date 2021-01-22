@@ -9,21 +9,18 @@ class Subdivision(Init):
 	def __init__(self, *args, **kwargs):
 		super(Subdivision, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('subdivision')
-		self.childUi = self.sb.getUi('subdivision_submenu')
-
 		#Set 3ds Max specific naming
-		self.parentUi.gb000.setTitle('TurboSmooth')
-		self.parentUi.s000.setPrefix('Iterations:  ')
-		self.parentUi.s001.setPrefix('RenderIters: ')
-		self.parentUi.s000.setValue(0)
-		self.parentUi.s001.setValue(0)
+		self.subdivision_ui.gb000.setTitle('TurboSmooth')
+		self.subdivision_ui.s000.setPrefix('Iterations:  ')
+		self.subdivision_ui.s001.setPrefix('RenderIters: ')
+		self.subdivision_ui.s000.setValue(0)
+		self.subdivision_ui.s001.setValue(0)
 
 
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.parentUi.draggable_header
+		draggable_header = self.subdivision_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='Subdivision Modifiers')
@@ -33,7 +30,7 @@ class Subdivision(Init):
 	def cmb000(self, index=None):
 		'''Editors
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.subdivision_ui.cmb000
 
 		if index is 'setMenu':
 			list_ = ['TurboSmooth','TurboSmooth Pro','OpenSubDiv','Subdivide','Subdivide (WSM)','MeshSmooth','Optimize','Pro Optimizer','Add Divisions']
@@ -110,7 +107,7 @@ class Subdivision(Init):
 	def s000(self, value=None):
 		'''Division Level
 		'''
-		value = self.parentUi.s000.getValue()
+		value = self.subdivision_ui.s000.getValue()
 
 		geometry = rt.selection
 
@@ -123,7 +120,7 @@ class Subdivision(Init):
 	def s001(self, value=None):
 		'''Tesselation Level
 		'''
-		value = self.parentUi.s001.getValue()
+		value = self.subdivision_ui.s001.getValue()
 
 		geometry = rt.selection
 

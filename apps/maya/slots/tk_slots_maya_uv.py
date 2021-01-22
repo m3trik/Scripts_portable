@@ -13,7 +13,7 @@ class Uv(Init):
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.uv.draggable_header
+		draggable_header = self.uv_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='Maya UV Editors')
@@ -24,7 +24,7 @@ class Uv(Init):
 	def cmb000(self, index=None):
 		'''Editors
 		'''
-		cmb = self.uv.cmb000
+		cmb = self.uv_ui.cmb000
 
 		if index is 'setMenu':
 			list_ = ['UV Editor','UV Set Editor','UV Tool Kit','UV Linking: Texture-Centric','UV Linking: UV-Centric','UV Linking: Paint Effects/UV','UV Linking: Hair/UV','Flip UV']
@@ -55,7 +55,7 @@ class Uv(Init):
 	def cmb001(self, index=None):
 		'''Display
 		'''
-		cmb = self.uv.cmb001
+		cmb = self.uv_ui.cmb001
 
 		if index is 'setMenu':
 			cmb.popupStyle = 'qmenu'
@@ -78,7 +78,7 @@ class Uv(Init):
 	def cmb002(self, index=None):
 		'''Transform
 		'''
-		cmb = self.uv.cmb002
+		cmb = self.uv_ui.cmb002
 
 		if index is 'setMenu':
 			list_ = ['Flip U', 'Flip V', 'Align U Left', 'Align U Middle', 'Align U Right', 'Align V Top', 'Align V Middle', 'Align V Bottom', 'Linear Align']
@@ -111,7 +111,7 @@ class Uv(Init):
 	def chk001(self, state):
 		'''Auto Unwrap: Scale Mode CheckBox
 		'''
-		tb = self.currentUi.tb001
+		tb = self.current_ui.tb001
 		if state==0:
 			tb.menu_.chk001.setText('Scale Mode 0')
 		if state==1:
@@ -124,7 +124,7 @@ class Uv(Init):
 	def chk014(self):
 		'''Display: Checkered Pattern
 		'''
-		cmb = self.uv.cmb001
+		cmb = self.uv_ui.cmb001
 		state = cmb.menu_.chk014.isChecked()
 
 		panel = pm.getPanel(scriptType='polyTexturePlacementPanel')
@@ -134,7 +134,7 @@ class Uv(Init):
 	def chk015(self):
 		'''Display: Borders
 		'''
-		cmb = self.uv.cmb001
+		cmb = self.uv_ui.cmb001
 		state = cmb.menu_.chk015.isChecked()
 
 		borderWidth = pm.optionVar(query='displayPolyBorderEdgeSize')[1]
@@ -144,7 +144,7 @@ class Uv(Init):
 	def chk016(self):
 		'''Display: Distortion
 		'''
-		cmb = self.uv.cmb001
+		cmb = self.uv_ui.cmb001
 		state = cmb.menu_.chk016.isChecked()
 
 		panel = pm.getPanel(scriptType='polyTexturePlacementPanel')
@@ -172,7 +172,7 @@ class Uv(Init):
 			tileV (int),
 			translate (bool)
 		'''
-		tb = self.currentUi.tb000
+		tb = self.current_ui.tb000
 		if state is 'setMenu':
 			tb.menu_.add(wgts.TkCheckBox, setText='Pre-Scale Mode: 1', setObjectName='chk025', setTristate=True, setCheckState_=1, setToolTip='Allow shell scaling during packing.')
 			tb.menu_.add(wgts.TkCheckBox, setText='Pre-Rotate Mode: 1', setObjectName='chk007', setTristate=True, setCheckState_=1, setToolTip='Allow shell rotation during packing.')
@@ -216,7 +216,7 @@ class Uv(Init):
 	def tb001(self, state=None):
 		'''Auto Unwrap
 		'''
-		tb = self.currentUi.tb001
+		tb = self.current_ui.tb001
 		if state is 'setMenu':
 			tb.menu_.add('QRadioButton', setText='Standard', setObjectName='chk000', setChecked=True, setToolTip='Create UV texture coordinates for the selected object or faces by automatically finding the best UV placement using simultanious projections from multiple planes.')
 			tb.menu_.add('QCheckBox', setText='Scale Mode 1', setObjectName='chk001', setTristate=True, setChecked=True, setToolTip='0 - No scale is applied.<br>1 - Uniform scale to fit in unit square.<br>2 - Non proportional scale to fit in unit square.')
@@ -229,13 +229,13 @@ class Uv(Init):
 			# tb.menu_.chk001.toggled.connect(lambda state: self.toggleWidgets(tb.menu_, setUnChecked='chk002-3') if state==1 else None)
 			return
 
-		standardUnwrap = self.uv.chk000.isChecked()
-		scaleMode = self.uv.chk001.isChecked()
-		seamOnly = self.uv.chk002.isChecked()
-		planarUnwrap = self.uv.chk003.isChecked()
-		cylindricalUnwrap = self.uv.chk004.isChecked()
-		sphericalUnwrap = self.uv.chk005.isChecked()
-		normalBasedUnwrap = self.uv.chk006.isChecked()
+		standardUnwrap = self.uv_ui.chk000.isChecked()
+		scaleMode = self.uv_ui.chk001.isChecked()
+		seamOnly = self.uv_ui.chk002.isChecked()
+		planarUnwrap = self.uv_ui.chk003.isChecked()
+		cylindricalUnwrap = self.uv_ui.chk004.isChecked()
+		sphericalUnwrap = self.uv_ui.chk005.isChecked()
+		normalBasedUnwrap = self.uv_ui.chk006.isChecked()
 
 		selection = pm.ls(selection=1, flatten=1)
 		for obj in selection:
@@ -275,7 +275,7 @@ class Uv(Init):
 	def tb002(self, state=None):
 		'''Stack
 		'''
-		tb = tb = self.uv.tb002
+		tb = tb = self.uv_ui.tb002
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='Orient', setObjectName='chk021', setChecked=True, setToolTip='Orient UV shells to run parallel with the most adjacent U or V axis.')
 			tb.menu_.add('QCheckBox', setText='Stack Similar', setObjectName='chk022', setChecked=True, setToolTip='Stack only shells that fall within the set tolerance.')
@@ -298,7 +298,7 @@ class Uv(Init):
 	def tb003(self, state=None):
 		'''Select By Type
 		'''
-		tb = tb = self.uv.tb003
+		tb = tb = self.uv_ui.tb003
 		if state is 'setMenu':
 			tb.menu_.add('QRadioButton', setText='Back-Facing', setObjectName='chk008', setToolTip='Select all back-facing (using counter-clockwise winding order) components for the current selection.')
 			tb.menu_.add('QRadioButton', setText='Front-Facing', setObjectName='chk009', setToolTip='Select all front-facing (using counter-clockwise winding order) components for the current selection.')
@@ -308,12 +308,12 @@ class Uv(Init):
 			tb.menu_.add('QRadioButton', setText='Unmapped', setObjectName='chk013', setChecked=True, setToolTip='Select unmapped faces in the current uv set.')
 			return
 
-		back_facing = self.uv.chk008.isChecked()
-		front_facing = self.uv.chk009.isChecked()
-		overlapping = self.uv.chk010.isChecked()
-		nonOverlapping = self.uv.chk011.isChecked()
-		textureBorders = self.uv.chk012.isChecked()
-		unmapped = self.uv.chk013.isChecked()
+		back_facing = self.uv_ui.chk008.isChecked()
+		front_facing = self.uv_ui.chk009.isChecked()
+		overlapping = self.uv_ui.chk010.isChecked()
+		nonOverlapping = self.uv_ui.chk011.isChecked()
+		textureBorders = self.uv_ui.chk012.isChecked()
+		unmapped = self.uv_ui.chk013.isChecked()
 
 		if back_facing:
 			pm.mel.selectUVFaceOrientationComponents({}, 0, 2, 1)
@@ -351,7 +351,7 @@ class Uv(Init):
 		  -sa -surfangle           Float
 		  -tf -triangleflip        on|off
 		'''
-		tb = self.currentUi.tb004
+		tb = self.current_ui.tb004
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='Optimize', setObjectName='chk017', setToolTip='The Optimize UV Tool evens out the spacing between UVs on a mesh, fixing areas of distortion (overlapping UVs).')
 			tb.menu_.add('QSpinBox', setPrefix='Optimize Amount: ', setObjectName='s008', setMinMax_='0-100 step1', setValue=25, setToolTip='The number of times to run optimize on the unfolded mesh.')
@@ -371,7 +371,7 @@ class Uv(Init):
 	def tb005(self, state=None):
 		'''Straighten Uv
 		'''
-		tb = tb = self.uv.tb005
+		tb = tb = self.uv_ui.tb005
 		if state is 'setMenu':
 			tb.menu_.add('QSpinBox', setPrefix='Angle: ', setObjectName='s001', setMinMax_='0-360 step1', setValue=30, setToolTip='Set the maximum angle used for straightening uv\'s.')
 			tb.menu_.add('QCheckBox', setText='Straighten U', setObjectName='chk018', setChecked=True, setToolTip='Unfold UV\'s along a horizonal contraint.')
@@ -398,7 +398,7 @@ class Uv(Init):
 	def tb006(self, state=None):
 		'''Distribute
 		'''
-		tb = tb = self.uv.tb006
+		tb = tb = self.uv_ui.tb006
 		if state is 'setMenu':
 			tb.menu_.add('QRadioButton', setText='Distribute U', setObjectName='chk023', setChecked=True, setToolTip='Distribute along U.')
 			tb.menu_.add('QRadioButton', setText='Distribute V', setObjectName='chk024', setToolTip='Distribute along V.')
@@ -416,7 +416,7 @@ class Uv(Init):
 	def tb007(self, state=None):
 		'''Set Texel Density
 		'''
-		tb = tb = self.uv.tb007
+		tb = tb = self.uv_ui.tb007
 		if state is 'setMenu':
 			tb.menu_.add('QSpinBox', setPrefix='Map Size: ', setObjectName='s002', setMinMax_='512-8192 step512', setValue=2048, setToolTip='Set the map used as reference when getting texel density.')
 			tb.menu_.add('QDoubleSpinBox', setPrefix='Texel Density: ', setObjectName='s003', setMinMax_='0.00-128 step8', setValue=32, setToolTip='Set the desired texel density.')

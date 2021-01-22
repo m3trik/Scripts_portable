@@ -550,8 +550,6 @@ class Macros(Init):
 
 				else: #if object mode. merge all vertices on the selected object.
 					for n, obj in enumerate(selection):
-						if not self.polygons.progressBar.step(n, len(selection)): #register progress while checking for cancellation:
-							break
 
 						# get number of vertices
 						count = pm.polyEvaluate(obj, vertex=1)

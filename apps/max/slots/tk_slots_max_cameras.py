@@ -9,9 +9,6 @@ class Cameras(Init):
 	def __init__(self, *args, **kwargs):
 		super(Cameras, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('cameras')
-		self.childUi = self.sb.getUi('cameras_submenu')
-
 
 	@property
 	def clippingMenu(self):
@@ -21,7 +18,7 @@ class Cameras(Init):
 			(obj) menu as a property.
 		'''
 		if not hasattr(self, '_clippingMenu'):
-			self._clippingMenu = wgts.TkMenu(self.currentUi, position='cursorPos')
+			self._clippingMenu = wgts.TkMenu(self.current_ui, position='cursorPos')
 
 			self._clippingMenu.add(wgts.TkLabel, setText='Viewport Clip', setObjectName='lbl000', setToolTip='Toggle the clipping controls for the current viewport camera.')
 			self._clippingMenu.add('QPushButton', setText='Auto Clip', setObjectName='chk000', setCheckable=True, setToolTip='When Auto Clip is ON, geometry closer to the camera than 3 units is not displayed. Turn OFF to manually define.')
@@ -35,6 +32,7 @@ class Cameras(Init):
 		elif activeCamera.clipManually: #if clipManually is active:
 			self._clippingMenu.chk000.setChecked(True)
 			self.toggleWidgets(self._clippingMenu, setDisabled='s000-1')
+
 		nearClip = activeCamera.nearClip if activeCamera else 1.0
 		farClip = activeCamera.farClip  if activeCamera else 1000.0
 
@@ -92,7 +90,7 @@ class Cameras(Init):
 
 	def tree000(self, wItem=None, column=None):
 		''''''
-		tree = self.parentUi.tree000
+		tree = self.cameras_ui.tree000
 
 		if wItem is 'setMenu':
 			tree.expandOnHover = True
@@ -268,7 +266,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # 		'''
 		
 # 		'''
-# 		tree = self.parentUi.tree000
+# 		tree = self.cameras_ui.tree000
 
 # 		if not any([wItem, column]): #populate the tree columns.
 # 			if not tree.refresh: #static list items -----------
@@ -318,7 +316,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	Cameras
 	# 	'''
-	# 	cmb = self.parentUi.cmb001
+	# 	cmb = self.cameras_ui.cmb001
 		
 	# 	cameras = [cam.name for cam in rt.cameras if 'Target' not in cam.name] #List scene Cameras
 	# 	contents = cmb.addItems_(cameras, "Cameras:")
@@ -337,7 +335,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	Create
 	# 	'''
-	# 	cmb = self.parentUi.cmb002
+	# 	cmb = self.cameras_ui.cmb002
 		
 	# 	list_ = ['Custom Camera','Set Custom Camera','Camera From View']
 	# 	contents = cmb.addItems_(list_, "Create")
@@ -358,7 +356,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	Options
 	# 	'''
-	# 	cmb = self.parentUi.cmb003
+	# 	cmb = self.cameras_ui.cmb003
 		
 	# 	list_ = ['Group Cameras']
 	# 	contents = cmb.addItems_(list_, "Options")

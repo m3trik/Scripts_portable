@@ -9,41 +9,37 @@ class Convert(Init):
 	def __init__(self, *args, **kwargs):
 		super(Convert, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('convert')
-		self.childUi = self.sb.getUi('convert_submenu')
-
 
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.parentUi.draggable_header
+		draggable_header = self.convert_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
-
 			return
 
 
 	def cmb000(self, index=None):
 		'''Editors
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.convert_ui.cmb000
 
 		if index is 'setMenu':
 			list_ = ['']
 			cmb.addItems_(list_, '')
 			return
 
-		# if index>0:
-		# 	if index==cmb.items.index(''):
-		# 		pass
-		# 	cmb.setCurrentIndex(0)
+		if index>0:
+			if index==cmb.items.index(''):
+				pass
+			cmb.setCurrentIndex(0)
 
 
 	def cmb001(self, index=None):
 		'''Convert To
 		'''
-		cmb = self.parentUi.cmb001
+		cmb = self.convert_ui.cmb001
 
 		if index is 'setMenu':
 			list_ = ['NURBS to Polygons', 'NURBS to Subdiv', 'Polygons to Subdiv', 'Smooth Mesh Preview to Polygons', 'Polygon Edges to Curve', 'Type to Curves', 'Subdiv to Polygons', 'Subdiv to NURBS', 'NURBS Curve to Bezier', 'Bezier Curve to NURBS', 'Paint Effects to NURBS', 'Paint Effects to Curves', 'Texture to Geometry', 'Displacement to Polygons', 'Displacement to Polygons with History', 'Fluid to Polygons', 'nParticle to Polygons', 'Instance to Object', 'Geometry to Bounding Box', 'Convert XGen Primitives to Polygons'] 

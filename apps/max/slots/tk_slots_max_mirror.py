@@ -9,14 +9,11 @@ class Mirror(Init):
 	def __init__(self, *args, **kwargs):
 		super(Mirror, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('mirror')
-		self.childUi = self.sb.getUi('mirror_submenu')
-
 
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.parentUi.draggable_header
+		draggable_header = self.mirror_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
@@ -26,24 +23,24 @@ class Mirror(Init):
 	def cmb000(self, index=None):
 		'''Editors
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.mirror_ui.cmb000
 
 		if index is 'setMenu':
 			list_ = ['']
 			cmb.addItems_(list_, '')
 			return
 
-		# if index>0:
-		# 	if index==cmb.items.index(''):
-		# 		pass
-		# 	cmb.setCurrentIndex(0)
+		if index>0:
+			if index==cmb.items.index(''):
+				pass
+			cmb.setCurrentIndex(0)
 
 
 	def chk000_3(self):
 		'''Set the tb000's text according to the checkstates.
 		'''
 		axis = self.getAxisFromCheckBoxes('chk000-3')
-		self.parentUi.tb000.setText('Mirror '+axis)
+		self.mirror_ui.tb000.setText('Mirror '+axis)
 
 
 	@Slots.sync
@@ -57,7 +54,7 @@ class Mirror(Init):
 	def tb000(self, state=None):
 		'''Mirror Geometry
 		'''
-		tb = self.currentUi.tb000
+		tb = self.current_ui.tb000
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='-', setObjectName='chk000', setChecked=True, setToolTip='Perform mirror along negative axis.')
 			tb.menu_.add('QRadioButton', setText='X', setObjectName='chk001', setChecked=True, setToolTip='Perform mirror along X axis.')
@@ -142,14 +139,14 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	Delete: Negative Axis. Set Text Mirror Axis
 	# 	'''
 	# 	axis = "X"
-	# 	if self.parentUi.chk002.isChecked():
+	# 	if self.mirror_ui.chk002.isChecked():
 	# 		axis = "Y"
-	# 	if self.parentUi.chk003.isChecked():
+	# 	if self.mirror_ui.chk003.isChecked():
 	# 		axis = "Z"
-	# 	if self.parentUi.chk000.isChecked():
+	# 	if self.mirror_ui.chk000.isChecked():
 	# 		axis = '-'+axis
-	# 	self.parentUi.b000.setText('Mirror '+axis)
-	# 	self.parentUi.b008.setText('Delete '+axis)
+	# 	self.mirror_ui.b000.setText('Mirror '+axis)
+	# 	self.mirror_ui.b008.setText('Delete '+axis)
 
 
 	# #set check states
@@ -159,10 +156,10 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	self.toggleWidgets(setUnChecked='chk002,chk003')
 	# 	axis = "X"
-	# 	if self.parentUi.chk000.isChecked():
+	# 	if self.mirror_ui.chk000.isChecked():
 	# 		axis = '-'+axis
-	# 	self.parentUi.b000.setText('Mirror '+axis)
-	# 	self.parentUi.b008.setText('Delete '+axis)
+	# 	self.mirror_ui.b000.setText('Mirror '+axis)
+	# 	self.mirror_ui.b008.setText('Delete '+axis)
 
 
 	# def chk002(self, state=None):
@@ -171,10 +168,10 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	self.toggleWidgets(setUnChecked='chk001,chk003')
 	# 	axis = "Y"
-	# 	if self.parentUi.chk000.isChecked():
+	# 	if self.mirror_ui.chk000.isChecked():
 	# 		axis = '-'+axis
-	# 	self.parentUi.b000.setText('Mirror '+axis)
-	# 	self.parentUi.b008.setText('Delete '+axis)
+	# 	self.mirror_ui.b000.setText('Mirror '+axis)
+	# 	self.mirror_ui.b008.setText('Delete '+axis)
 
 
 	# def chk003(self, state=None):
@@ -183,7 +180,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	self.toggleWidgets(setUnChecked='chk001,chk002')
 	# 	axis = "Z"
-	# 	if self.parentUi.chk000.isChecked():
+	# 	if self.mirror_ui.chk000.isChecked():
 	# 		axis = '-'+axis
-	# 	self.parentUi.b000.setText('Mirror '+axis)
-	# 	self.parentUi.b008.setText('Delete '+axis)
+	# 	self.mirror_ui.b000.setText('Mirror '+axis)
+	# 	self.mirror_ui.b008.setText('Delete '+axis)

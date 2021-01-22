@@ -13,7 +13,7 @@ class Display(Init):
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.display.draggable_header
+		draggable_header = self.display_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
@@ -23,7 +23,7 @@ class Display(Init):
 	def cmb000(self, index=None):
 		'''Editors
 		'''
-		cmb = self.display.cmb000
+		cmb = self.display_ui.cmb000
 
 		if index is 'setMenu':
 			list_ = ['']
@@ -122,7 +122,7 @@ class Display(Init):
 	def b009(self):
 		'''Override Material
 		'''
-		if self.display.chk000.isChecked(): #override with UV checker material
+		if self.display_ui.chk000.isChecked(): #override with UV checker material
 			self.toggleMaterialOverride(checker=1)
 		else:
 			self.toggleMaterialOverride()

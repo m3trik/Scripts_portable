@@ -13,7 +13,7 @@ class Normals(Init):
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.normals.draggable_header
+		draggable_header = self.normals_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
@@ -23,7 +23,7 @@ class Normals(Init):
 	def cmb000(self, index=None):
 		'''Editors
 		'''
-		cmb = self.normals.cmb000
+		cmb = self.normals_ui.cmb000
 
 		if index is 'setMenu':
 			list_ = ['']
@@ -39,7 +39,7 @@ class Normals(Init):
 	def tb000(self, state=None):
 		'''Display Face Normals
 		'''
-		tb = self.currentUi.tb000
+		tb = self.current_ui.tb000
 		if state is 'setMenu':
 			tb.menu_.add('QSpinBox', setPrefix='Display Size: ', setObjectName='s001', setMinMax_='1-100 step1', setValue=1, setToolTip='Normal display size.')
 			return
@@ -71,7 +71,7 @@ class Normals(Init):
 	def tb001(self, state=None):
 		'''Harden Creased Edges
 		'''
-		tb = self.currentUi.tb001
+		tb = self.current_ui.tb001
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='Soften non-creased', setObjectName='chk000', setToolTip='Soften all non-creased edges.')
 			return
@@ -105,7 +105,7 @@ class Normals(Init):
 	def tb002(self, state=None):
 		'''Set Normals By Angle
 		'''
-		tb = self.currentUi.tb002
+		tb = self.current_ui.tb002
 		if state is 'setMenu':
 			tb.menu_.add('QSpinBox', setPrefix='Angle: ', setObjectName='s000', setMinMax_='1-180 step1', setValue=30, setToolTip='Angle degree.')
 			return
@@ -124,7 +124,7 @@ class Normals(Init):
 	def tb003(self, state=None):
 		'''Lock/Unlock Vertex Normals
 		'''
-		tb = tb = self.normals.tb003
+		tb = tb = self.normals_ui.tb003
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='All', setObjectName='chk001', setChecked=True, setToolTip='Lock/Unlock: all.')
 			return
@@ -165,7 +165,7 @@ class Normals(Init):
 	def tb004(self, state=None):
 		'''Average Normals
 		'''
-		tb = self.currentUi.tb004
+		tb = self.current_ui.tb004
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='By UV Shell', setObjectName='chk003', setToolTip='Average the normals of each object\'s faces per UV shell.')
 			return

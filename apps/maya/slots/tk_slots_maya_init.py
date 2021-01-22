@@ -27,7 +27,7 @@ class Init(Slots):
 		super().__init__(*args, **kwargs)
 
 		try:
-			self.init.hud.shown.connect(self.construct_hud)
+			self.init_ui.hud.shown.connect(self.construct_hud)
 		except AttributeError: #(an inherited class)
 			pass
 
@@ -36,7 +36,7 @@ class Init(Slots):
 		'''Add current scene attributes to the hud lineEdit.
 		Only those with relevant values will be displayed.
 		'''
-		hud = self.init.hud
+		hud = self.init_ui.hud
 
 		try:
 			selection = pm.ls(selection=1)
@@ -1605,6 +1605,180 @@ class Init(Slots):
 
 		pm.undoInfo (closeChunk=1)
 
+
+	@staticmethod
+	def resetXform(objects):
+		'''Reset the transformations on the given object(s).
+
+		:Parameters:
+			objects (str)(obj)(list) = The object(s) to reset transforms for.
+		'''
+		pm.undoInfo(openChunk=1)
+
+		for obj in pm.ls(objects):
+			pos = pm.objectCenter(obj) #get the object's current position.
+			Init.dropToGrid(obj, origin=1, centerPivot=1) #move to origin and center pivot.
+			pm.makeIdentity(obj, apply=1, t=1, r=1, s=1, n=0, pn=1) #bake transforms
+			pm.xform(obj, translation=pos) #move the object back to it's original position.
+
+		pm.undoInfo(closeChunk=1)
+
+
+	@staticmethod
+	def createCurveBetweenTwoObjects(start, end):
+		'''Create a bezier curve between starting and end object(s).
+
+		:Parameters:
+			start () = Starting object(s).
+			end () = Ending object(s).
+
+		:Return:
+			(obj) Bezier curve. 
+		'''
+		pm.undoInfo(openChunk=1)
+
+		p1 = pm.objectCenter(start)
+		p2 = pm.objectCenter(end)
+		hypotenuse = Init.getDistanceBetweenTwoPoints(p1, p2)
+
+		v1, v2 = Init.getCrossProductOfCurves([start, end], normalize=1, values=1)
+		v3a = Init.getVectorFromTwoPoints(p1, p2)
+		v3b = Init.getVectorFromTwoPoints(p2, p1)
+
+		a1 = Init.getAngleFrom2Vectors(v1, v3a, degree=1) #Init.getAngleFrom3Points(v1, p1, p2, degree=1)
+		a2 = Init.getAngleFrom2Vectors(v2, v3b, degree=1) #Init.getAngleFrom3Points(v2, p1, p2, degree=1)
+		a3 = Init.getAngleFrom2Vectors(v1, v2, degree=1)
+
+		d1, d2 = Init.getTwoSidesOfASATriangle(a2, a1, hypotenuse) #get length of sides 1 and 2.
+
+		p_from_v1 = Init.movePointAlongVectorTowardPoint(p1, p2, v1, d1)
+		p_from_v2 = Init.movePointAlongVectorTowardPoint(p2, p1, v2, d2)
+		p3 = Init.getCenterPointBetweenTwoPoints(p_from_v1, p_from_v2)
+
+		if d1<d2:
+			min_dist = d1
+			max_vect = Init.getVectorFromTwoPoints(p2, p3)
+		else:
+			min_dist = d2
+			max_vect = Init.getVectorFromTwoPoints(p1, p3)
+			p1, p2 = p2, p1
+
+		# pm.spaceLocator(position=p1); pm.spaceLocator(position=p2); pm.spaceLocator(position=p3)
+
+		p4 = Init.movePointRelative(p3, min_dist, max_vect); #pm.spaceLocator(position=p4)
+		p5 = Init.getCenterPointBetweenTwoPoints(p4, p1); #pm.spaceLocator(position=p5)
+		p6 = Init.getCenterPointBetweenTwoPoints(p3, p5); #pm.spaceLocator(position=p6)
+
+		#add weighting to the curve points.
+		p1w, p3w, p4w, p2w = [
+			(p1[0], p1[1], p1[2], 1),
+			(p3[0], p3[1], p3[2], 4),
+			(p4[0], p4[1], p4[2], 10),
+			(p2[0], p2[1], p2[2], 1),
+		]
+
+		result = pm.curve(pw=[p1w, p3w, p4w, p2w], k=[0,0,0,1,1,1], bezier=1)
+
+		pm.undoInfo(closeChunk=1)
+
+		return result
+
+
+	@staticmethod
+	def duplicateAlongCurve(path, start, count=6, geometry='Instancer'):
+		'''Duplicate objects along a given curve using MASH.
+
+		:Parameters:
+			path (obj) = The curve to use as a path.
+			start () = Starting object.
+			count (int) = The number of duplicated objects. (point count on the MASH network)
+			geometry (str) = Particle instancer or mesh instancer (Repro node). (valid: 'Mesh' (default), 'Instancer')
+
+		:Return:
+			(list) The duplicated objects in order of start to end.
+		'''
+		pm.undoInfo(openChunk=1)
+
+		#create a MASH network
+		import MASH_tools, MASH.api as mapi
+		mashNW = mapi.Network()
+		mashNW.MTcreateNetwork(start, geometry=geometry, hideOnCreate=False) #MASH_tools module (derived from 'createNetwork')
+
+		curveNode = pm.ls(mashNW.addNode('MASH_Curve').name)[0]
+		pm.connectAttr(path.worldSpace[0], curveNode.inCurves[0], force=1)
+
+		pm.setAttr(curveNode.stopAtEnd, 1) #0=off, 1=on
+		pm.setAttr(curveNode.clipStart, 0)
+		pm.setAttr(curveNode.clipEnd, 1)
+		pm.setAttr(curveNode.equalSpacing, 1)
+		pm.setAttr(curveNode.timeStep, 1)
+		pm.setAttr(curveNode.curveLengthAffectsSpeed, 1)
+
+		distNode = pm.ls(mashNW.distribute)[0]
+		pm.setAttr(distNode.pointCount, count)
+		pm.setAttr(distNode.amplitudeX, 0)
+
+		instNode = pm.ls(mashNW.instancer)[0]
+		baked_curves = mashNW.MTbakeInstancer(instNode) #MASH_tools module (derived from 'MASHbakeInstancer')
+
+		result=[start]
+		for curve in reversed(baked_curves):
+			result.append(curve)
+
+		pm.delete(mashNW.waiter.name()) #delete the MASH network.
+		pm.undoInfo(closeChunk=1)
+
+		return result
+
+
+	@staticmethod
+	def angleLoftBetweenTwoCurves(start, end, count=6, cleanup=False, 
+		uniform=1, close=0, autoReverse=0, degree=3, sectionSpans=1, range=0, polygon=1, reverseSurfaceNormals=0):
+		'''Perform a loft between two nurbs curves or polygon sets of edges (that will be extracted as curves).
+
+		:Parameters:
+			start (list) = Starting edges.
+			end (list) = Ending edges.
+			count (int) = Section count.
+			cleanup (bool) = Delete the start, end, and any additional construction curves upon completion.
+
+		:Return:
+			(list) Loft object name and node name.
+		'''
+		pm.undoInfo(openChunk=1)
+
+		if pm.objectType(start)=='mesh': #vs. 'nurbsCurve'
+			start, startNode = pm.polyToCurve(start, form=2, degree=3, conformToSmoothMeshPreview=1) #extract curve from mesh
+		Init.resetXform(start) #reset the transforms to world origin.
+
+		if pm.objectType(end)=='mesh': #vs. 'nurbsCurve'
+			end, endNode = pm.polyToCurve(end, form=2, degree=3, conformToSmoothMeshPreview=1) #extract curve from mesh
+		Init.resetXform(end) #reset the transforms to world origin.
+
+		path = Init.createCurveBetweenTwoObjects(start, end)
+		curves = Init.duplicateAlongCurve(path, start, count=count)
+
+		#align end
+		# find curve start using closestPointOnCurve method, 
+		# and rebuild the end curve to match the duplicated curves.
+		# then reverse.
+		# pm.reverseCurve(end, rpo=1)
+
+		result = pm.loft(curves, u=uniform, c=close, ar=autoReverse, d=degree, ss=sectionSpans, rn=range, po=polygon, rsn=reverseSurfaceNormals)
+
+		if cleanup: #perform cleanup by deleting construction curves.
+			try:
+				curves_parent = pm.listRelatives(curves[1], parent=1)
+				pm.delete(curves_parent)
+				pm.delete(end)
+				pm.delete(path)
+				pm.delete(start)
+			except Exception as e:
+				print(e)
+
+		pm.undoInfo(closeChunk=1)
+
+		return result
 
 
 

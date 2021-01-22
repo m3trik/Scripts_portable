@@ -18,7 +18,7 @@ class Cameras(Init):
 			(obj) menu as a property.
 		'''
 		if not hasattr(self, '_clippingMenu'):
-			self._clippingMenu = wgts.TkMenu(self.cameras, position='cursorPos')
+			self._clippingMenu = wgts.TkMenu(self.cameras_ui, position='cursorPos')
 
 			self._clippingMenu.add('QPushButton', setText='Auto Clip', setObjectName='chk000', setCheckable=True, setToolTip='When Auto Clip is ON, geometry closer to the camera than 3 units is not displayed. Turn OFF to manually define.')
 			self._clippingMenu.add('QDoubleSpinBox', setPrefix='Far Clip:  ', setObjectName='s000', setMinMax_='.01-10 step.1', setToolTip='Adjust the current cameras near clipping plane.')
@@ -84,7 +84,7 @@ class Cameras(Init):
 
 	def tree000(self, wItem=None, column=None):
 		''''''
-		tree = self.cameras.tree000
+		tree = self.cameras_ui.tree000
 
 		if wItem is 'setMenu':
 			tree.expandOnHover = True
@@ -358,7 +358,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # 		'''
 
 # 		'''
-# 		tree = self.cameras.tree000
+# 		tree = self.cameras_ui.tree000
 
 # 		if not any([wItem, column]):
 # 			if not tree.refresh: #static list items -----------
@@ -422,7 +422,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	Camera Editors
 
 	# 	'''
-	# 	cmb = self.cameras.cmb000
+	# 	cmb = self.cameras_ui.cmb000
 		
 	# 	list_ = ['Camera Sequencer', 'Camera Set Editor']
 	# 	contents = cmb.addItems_(list_, '')
@@ -454,7 +454,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	non_startup_cameras = map(str, non_startup_cameras_pynodes)
 	# 	non_startup_cameras_transforms = map(str, non_startup_cameras_transform_pynodes)
 
-	# 	cmb = self.cameras.cmb001
+	# 	cmb = self.cameras_ui.cmb001
 		
 	# 	contents = cmb.addItems_(non_startup_cameras, "Cameras")
 
@@ -470,7 +470,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	Create
 
 	# 	'''
-	# 	cmb = self.cameras.cmb002
+	# 	cmb = self.cameras_ui.cmb002
 		
 	# 	list_ = ['Custom Camera', 'Set Custom Camera', 'Camera From View']
 	# 	contents = cmb.addItems_(list_, "Create")
@@ -492,7 +492,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	Options
 
 	# 	'''
-	# 	cmb = self.cameras.cmb003
+	# 	cmb = self.cameras_ui.cmb003
 		
 	# 	list_ = ['Group Cameras']
 	# 	contents = cmb.addItems_(list_, "Options")

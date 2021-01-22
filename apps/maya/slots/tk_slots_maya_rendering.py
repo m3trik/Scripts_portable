@@ -9,14 +9,11 @@ class Rendering(Init):
 	def __init__(self, *args, **kwargs):
 		super(Rendering, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('rendering')
-		self.childUi = self.sb.getUi('rendering_submenu')
-
 
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.parentUi.draggable_header
+		draggable_header = self.rendering_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb001', setToolTip='')
@@ -26,7 +23,7 @@ class Rendering(Init):
 	def cmb001(self, index=None):
 		'''Editors
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.rendering_ui.cmb000
 		
 		if index is 'setMenu':
 			list_ = ['']
@@ -42,7 +39,7 @@ class Rendering(Init):
 	def cmb000(self, index=None):
 		'''Render: camera
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.rendering_ui.cmb000
 
 		# self.cams = [cam for cam in rt.cameras if 'Target' not in str(cam)]
 		# if self.cams:
@@ -53,7 +50,7 @@ class Rendering(Init):
 	def b000(self):
 		'''Render Current Frame
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.rendering_ui.cmb000
 		index = cmb.currentIndex()
 
 		try:

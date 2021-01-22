@@ -211,25 +211,18 @@ class Switchboard(QtCore.QObject):
 				pass
 
 
-	def setUniqueObjectName(self, widget, name=None):
+	def setUniqueObjectName(self, widget, name=None, _num=None):
 		'''Set a unique object name for the given widget based on the pattern name000.
 
 		:Parameters:
 			widget (obj) = The child widget to set an object name for.
 			name (str) = Ui name.
+			_num (int) = Integer to append to name. Internal use.
 
 		:Return:
 			(str) the widgets object name.
 		'''
-		if not name:
-			name = self.getUiName()
-
-		widgetType = widget.__class__.__name__
-		prefixTypes = {'QPushButton':'b', 'QPushButton':'v', 'QPushButton':'i', 'QToolButton':'tb', 'QComboBox':'cmb', 
-			'QCheckBox':'chk', 'QRadioButton':'chk', 'QPushButton(checkable)':'chk', 'QSpinBox':'s', 'QDoubleSpinBox':'s',
-			'QLabel':'lbl', 'QWidget':'w', 'QTreeWidget':'tree', 'QListWidget':'list', 'QLineEdit':'line', 'QTextEdit':'text'}
-
-		def nameGenerator(num):
+		if _num: #generate a unique three digit num
 			widgetNum = ('00'+str(num))[-3:] #remove prefixed zeros to keep the num three digits. ie. 001, 011, 111
 
 			if widgetType in prefixTypes:
@@ -239,8 +232,16 @@ class Switchboard(QtCore.QObject):
 
 			return '{0}{1}'.format(prefix, widgetNum) #append num. ie. widgetAction000
 
+		if not name:
+			name = self.getUiName()
+
+		widgetType = widget.__class__.__name__
+		prefixTypes = {'QPushButton':'b', 'QPushButton':'v', 'QPushButton':'i', 'QToolButton':'tb', 'QComboBox':'cmb', 
+			'QCheckBox':'chk', 'QRadioButton':'chk', 'QPushButton(checkable)':'chk', 'QSpinBox':'s', 'QDoubleSpinBox':'s',
+			'QLabel':'lbl', 'QWidget':'w', 'QTreeWidget':'tree', 'QListWidget':'list', 'QLineEdit':'line', 'QTextEdit':'text'}
+
 		num=0
-		widgetName = nameGenerator(num)
+		widgetName = self.setUniqueObjectName(_num=num)
 		while self.getWidget(widgetName, name): #if a widget of the same name already exists; increment by one and try again.
 			num+=1; widgetName = nameGenerator(num)
 
@@ -263,8 +264,8 @@ class Switchboard(QtCore.QObject):
 		submenu_name = self.getUiName(name, level=2)
 
 		kwargs = {
-			name: parentUi, #ie. 'polygons': <PySide2.QtWidgets.QMainWindow object at 0x000001D97BCEB0C8>
-			submenu_name: childUi, #ie. 'polygons_submenu': <PySide2.QtWidgets.QMainWindow object at 0x000001D978D8A708>
+			'{}_ui'.format(name): parentUi, #ie. 'polygons_ui': <PySide2.QtWidgets.QMainWindow object at 0x000001D97BCEB0C8>
+			'{}_ui'.format(submenu_name): childUi, #ie. 'polygons_submenu_ui': <PySide2.QtWidgets.QMainWindow object at 0x000001D978D8A708>
 
 			'_ui': lambda parentUi=parentUi: self.getUi()
 				if self.getUi() in [v for k, v in self.uiList().items() if self.getUiName(parentUi) in k] #if the current ui is not one of the parent ui's children or the parent ui itself, default to the parent ui.

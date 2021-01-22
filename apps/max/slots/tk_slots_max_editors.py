@@ -9,14 +9,14 @@ class Editors(Init):
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 
-		self.dynLayout = self.sb.getUi('dynLayout')
-		self.stackedWidget = self.dynLayout.stackedWidget
+		self.dynLayout_ui = self.sb.getUi('dynLayout')
+		self.stackedWidget = self.dynLayout_ui.stackedWidget
 
 
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.editors.draggable_header
+		draggable_header = self.editors_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
@@ -25,7 +25,7 @@ class Editors(Init):
 
 	def tree000(self, wItem=None, column=None):
 		''''''
-		tree = self.editors.tree000
+		tree = self.editors_ui.tree000
 
 		if wItem is 'setMenu':
 			tree.expandOnHover = True
@@ -191,7 +191,7 @@ class Editors(Init):
 	def cmb000(self, index=None):
 		'''Editors
 		'''
-		cmb = self.editors.cmb000
+		cmb = self.editors_ui.cmb000
 		
 		if index is 'setMenu':
 			list_ = ['']

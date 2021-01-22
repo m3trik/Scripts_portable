@@ -9,14 +9,11 @@ class Lighting(Init):
 	def __init__(self, *args, **kwargs):
 		super(Lighting, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('lighting')
-		self.childUi = self.sb.getUi('lighting_submenu')
-
 
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.parentUi.draggable_header
+		draggable_header = self.lighting_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
@@ -26,7 +23,7 @@ class Lighting(Init):
 	def cmb000(self, index=None):
 		'''Editors
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.lighting_ui.cmb000
 
 		if index is 'setMenu':
 			list_ = ['']

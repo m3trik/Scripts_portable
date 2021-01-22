@@ -109,10 +109,10 @@
      </size>
     </property>
     <property name="whatsThis">
-     <string>fx</string>
+     <string>vfx</string>
     </property>
     <property name="text">
-     <string>Fx</string>
+     <string>Vfx</string>
     </property>
    </widget>
    <widget class="QPushButton" name="i020">

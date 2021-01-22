@@ -12,7 +12,7 @@ class Main(Init):
 
 	def tree000(self, wItem=None, column=None):
 		''''''
-		tree = self.main.tree000
+		tree = self.main_ui.tree000
 
 		if wItem is 'setMenu':
 			tree.expandOnHover = True

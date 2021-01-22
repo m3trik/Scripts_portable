@@ -28,7 +28,7 @@ class Init(Slots):
 		super(Init, self).__init__(*args, **kwargs)
 
 		try:
-			self.init.hud.shown.connect(self.construct_hud)
+			self.init_ui.hud.shown.connect(self.construct_hud)
 		except AttributeError: #(an inherited class)
 			pass
 
@@ -37,7 +37,7 @@ class Init(Slots):
 		'''Add current scene attributes to a lineEdit.
 		Only those with relevant values will be displayed.
 		'''
-		hud = self.init.hud
+		hud = self.init_ui.hud
 
 		try:
 			selection = rt.selection
@@ -1044,7 +1044,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 		comboBox (str) = comboBox name (will also be used as the methods name).
 	# 		index = int or 'string' - text of the index to switch to.
 	# 	'''
-	# 	cmb = getattr(self.init, comboBox)
+	# 	cmb = getattr(self.init_ui, comboBox)
 	# 	method = getattr(self, comboBox)
 	# 	cmb.currentIndexChanged.connect(method)
 	# 	if not type(index)==int:

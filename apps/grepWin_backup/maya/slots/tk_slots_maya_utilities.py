@@ -1,22 +1,19 @@
 from __future__ import print_function
-from tk_slots_max_init import *
+from tk_slots_maya_init import *
 
 import os.path
 
 
 
-class Fx(Init):
+class Utilities(Init):
 	def __init__(self, *args, **kwargs):
-		super(Fx, self).__init__(*args, **kwargs)
-
-		self.parentUi = self.sb.getUi('fx')
-		self.childUi = self.sb.getUi('fx_submenu')
+		super(Utilities, self).__init__(*args, **kwargs)
 
 
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.parentUi.draggable_header
+		draggable_header = self.utilities.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
@@ -26,11 +23,11 @@ class Fx(Init):
 	def cmb000(self, index=None):
 		'''Editors
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.utilities.cmb000
 
 		if index is 'setMenu':
-			list_ = ['']
-			cmb.addItems_(list_, '')
+			files = ['']
+			cmb.addItems_(files, '')
 			return
 
 		# if index>0:
@@ -40,53 +37,28 @@ class Fx(Init):
 
 
 	def b000(self):
-		''''''
-		pass
+		'''Measure
+		'''
+		mel.eval("DistanceTool;")
 
 
 	def b001(self):
-		''''''
-		pass
+		'''Annotation
+		'''
+		mel.eval('CreateAnnotateNode;')
 
 
 	def b002(self):
-		''''''
-		pass
+		'''Calculator
+		'''
+		mel.eval('calculator;')
 
 
 	def b003(self):
-		''''''
-		pass
+		'''Grease Pencil
+		'''
+		mel.eval('greasePencilCtx;')
 
-
-	def b004(self):
-		''''''
-		pass
-
-
-	def b005(self):
-		''''''
-		pass
-
-
-	def b006(self):
-		''''''
-		pass
-
-
-	def b007(self):
-		''''''
-		pass
-
-
-	def b008(self):
-		''''''
-		pass
-
-
-	def b009(self):
-		''''''
-		pass
 
 
 

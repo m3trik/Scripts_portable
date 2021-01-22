@@ -9,13 +9,13 @@ class Preferences(Init):
 	def __init__(self, *args, **kwargs):
 		super(Preferences, self).__init__(*args, **kwargs)
 
-		self.preferences.b010.setText('3dsMax Preferences')
+		self.preferences_ui.b010.setText('3dsMax Preferences')
 
 
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.preferences.draggable_header
+		draggable_header = self.preferences_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb003', setToolTip='')
@@ -25,7 +25,7 @@ class Preferences(Init):
 	def cmb003(self, index=None):
 		'''Editors
 		'''
-		cmb = self.preferences.cmb003
+		cmb = self.preferences_ui.cmb003
 
 		if index is 'setMenu':
 			list_ = ['']
@@ -41,7 +41,7 @@ class Preferences(Init):
 	def cmb000(self, index=None):
 		'''Ui Style: Set main ui style using QStyleFactory
 		'''
-		cmb = self.preferences.cmb000
+		cmb = self.preferences_ui.cmb000
 
 		if index is 'setMenu':
 			from PySide2 import QtWidgets, QtCore
@@ -61,7 +61,7 @@ class Preferences(Init):
 	def cmb001(self, index=None):
 		'''Preferences:App - Set Working Units: Linear
 		'''
-		cmb = self.preferences.cmb001
+		cmb = self.preferences_ui.cmb001
 
 		if index is 'setMenu':
 			list_ = ['millimeter','centimeter','meter','kilometer','inch','foot','yard','mile']
@@ -80,7 +80,7 @@ class Preferences(Init):
 	def cmb002(self, index=None):
 		'''Preferences:App - Set Working Units: Time
 		'''
-		cmb = self.preferences.cmb002
+		cmb = self.preferences_ui.cmb002
 
 		if index is 'setMenu':
 			#store a corresponding value for each item in the comboBox list_.
@@ -141,7 +141,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	Custom Menu Set
 	# 	'''
-	# 	cmb = self.preferences.cmb000
+	# 	cmb = self.preferences_ui.cmb000
 		
 	# 	list_ = ['Modeling', 'Normals', 'Materials', 'UV'] #combobox list menu corresponding to the button text sets.
 	# 	contents = cmb.addItems_(list_, 'Menu Sets')

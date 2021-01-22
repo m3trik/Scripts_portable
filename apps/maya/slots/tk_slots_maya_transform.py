@@ -13,7 +13,7 @@ class Transform(Init):
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.transform.draggable_header
+		draggable_header = self.transform_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
@@ -23,7 +23,7 @@ class Transform(Init):
 	def cmb000(self, index=None):
 		'''Editors
 		'''
-		cmb = self.transform.cmb000
+		cmb = self.transform_ui.cmb000
 
 		if index is 'setMenu':
 			files = ['']
@@ -42,7 +42,7 @@ class Transform(Init):
 		constrain along normals #checkbox option for edge amd surface constaints
 		setXformConstraintAlongNormal false;
 		'''
-		cmb = self.transform.cmb001
+		cmb = self.transform_ui.cmb001
 
 		if index is 'setMenu':
 			cmb.popupStyle = 'qmenu'
@@ -67,7 +67,7 @@ class Transform(Init):
 	def cmb002(self, index=None):
 		'''Align To
 		'''
-		cmb = self.transform.cmb002
+		cmb = self.transform_ui.cmb002
 
 		if index is 'setMenu':
 			list_ = ['Point to Point', '2 Points to 2 Points', '3 Points to 3 Points', 'Align Objects', 'Position Along Curve', 'Align Tool', 'Snap Together Tool', 'Orient to Vertex/Edge Tool']
@@ -98,7 +98,7 @@ class Transform(Init):
 	def cmb003(self, index=None):
 		'''Transform Tool Snapping
 		'''
-		cmb = self.transform.cmb003
+		cmb = self.transform_ui.cmb003
 
 		if index is 'setMenu':
 			cmb.popupStyle = 'qmenu'
@@ -124,7 +124,7 @@ class Transform(Init):
 	def chk014(self, state=None):
 		'''Snap: Toggle Rotation 22.5
 		'''
-		cmb = self.transform.cmb003
+		cmb = self.transform_ui.cmb003
 		cmb.menu_.chk023.setChecked(True)
 		cmb.menu_.s023.setValue(22.5)
 		state = 1 if self.transform_submenu.chk014.isChecked() else 0
@@ -135,12 +135,12 @@ class Transform(Init):
 		'''Transform Tool Snap Settings: Move
 		'''
 		text = {0:'Move <b>Off</b>', 1:'Move <b>Relative</b>', 2:'Move <b>Absolute</b>'}
-		self.transform.chk021.setText(text[state])
-		self.transform.s021.setEnabled(state)
+		self.transform_ui.chk021.setText(text[state])
+		self.transform_ui.s021.setEnabled(state)
 		pm.manipMoveContext('Move', edit=1, snap=False if state is 0 else True, snapRelative=True if state is 1 else False) #state: 0=off, 1=relative, 2=absolute
 		pm.texMoveContext('texMoveContext', edit=1, snap=False if state is 0 else True) #uv move context
 
-		cmb = self.transform.cmb003
+		cmb = self.transform_ui.cmb003
 		cmb.setCurrentText('Off') if not any((state, cmb.menu_.chk022.isChecked(), cmb.menu_.chk023.isChecked())) else cmb.setCurrentText('On')
 
 
@@ -148,12 +148,12 @@ class Transform(Init):
 		'''Transform Tool Snap Settings: Scale
 		'''
 		text = {0:'Scale <b>Off</b>', 1:'Scale <b>Relative</b>', 2:'Scale <b>Absolute</b>'}
-		self.transform.chk022.setText(text[state])
-		self.transform.s022.setEnabled(state)
+		self.transform_ui.chk022.setText(text[state])
+		self.transform_ui.s022.setEnabled(state)
 		pm.manipScaleContext('Scale', edit=1, snap=False if state is 0 else True, snapRelative=True if state is 1 else False) #state: 0=off, 1=relative, 2=absolute
 		pm.texScaleContext('texScaleContext', edit=1, snap=False if state is 0 else True) #uv scale context
 
-		cmb = self.transform.cmb003
+		cmb = self.transform_ui.cmb003
 		cmb.setCurrentText('Off') if not any((state, cmb.menu_.chk021.isChecked(), cmb.menu_.chk023.isChecked())) else cmb.setCurrentText('On')
 
 
@@ -161,12 +161,12 @@ class Transform(Init):
 		'''Transform Tool Snap Settings: Rotate
 		'''
 		text = {0:'Rotate <b>Off</b>', 1:'Rotate <b>Relative</b>', 2:'Rotate <b>Absolute</b>'}
-		self.transform.chk023.setText(text[state])
-		self.transform.s023.setEnabled(state)
+		self.transform_ui.chk023.setText(text[state])
+		self.transform_ui.s023.setEnabled(state)
 		pm.manipRotateContext('Rotate', edit=1, snap=False if state is 0 else True, snapRelative=True if state is 1 else False) #state: 0=off, 1=relative, 2=absolute
 		pm.texRotateContext('texRotateContext', edit=1, snap=False if state is 0 else True) #uv rotate context
 
-		cmb = self.transform.cmb003
+		cmb = self.transform_ui.cmb003
 		cmb.setCurrentText('Off') if not any((state, cmb.menu_.chk021.isChecked(), cmb.menu_.chk022.isChecked())) else cmb.setCurrentText('On')
 
 
@@ -178,7 +178,7 @@ class Transform(Init):
 		else:
 			pm.xformConstraint(type='none') #pm.manipMoveSetXformConstraint(none=True);
 
-		cmb = self.transform.cmb001
+		cmb = self.transform_ui.cmb001
 		cmb.setCurrentText('Off') if not any((state, cmb.menu_.chk025.isChecked(), cmb.menu_.chk026.isChecked())) else cmb.setCurrentText('On')
 
 
@@ -190,14 +190,14 @@ class Transform(Init):
 		else:
 			pm.xformConstraint(type='none') #pm.manipMoveSetXformConstraint(none=True);
 
-		cmb = self.transform.cmb001
+		cmb = self.transform_ui.cmb001
 		cmb.setCurrentText('Off') if not any((state, cmb.menu_.chk024.isChecked(), cmb.menu_.chk026.isChecked())) else cmb.setCurrentText('On')
 
 
 	def chk026(self, state=None):
 		'''Transform Contraints: Make Live
 		'''
-		cmb = self.transform.cmb001
+		cmb = self.transform_ui.cmb001
 		chk = cmb.menu_.chk026
 
 		selection = pm.ls(sl=1, objectsOnly=1)
@@ -238,7 +238,7 @@ class Transform(Init):
 	def chk010(self, state=None):
 		'''Align Vertices: Auto Align
 		'''
-		if self.transform.chk010.isChecked():
+		if self.transform_ui.chk010.isChecked():
 			self.toggleWidgets(setDisabled='chk029-31')
 		else:
 			self.toggleWidgets(setEnabled='chk029-31')
@@ -376,14 +376,14 @@ class Transform(Init):
 	def lbl000(self):
 		'''Transform Constraints: Disable All
 		'''
-		cmb = self.transform.cmb001
+		cmb = self.transform_ui.cmb001
 		cmb.setCurrentIndex(0)
 
 
 	def lbl001(self):
 		'''Transform Tool Snapping: Disable All
 		'''
-		cmb = self.transform.cmb003
+		cmb = self.transform_ui.cmb003
 		self.toggleWidgets(setUnChecked='chk021-23')
 		cmb.setCurrentText('Off') if not any((cmb.menu_.chk021.isChecked(), cmb.menu_.chk022.isChecked(), cmb.menu_.chk023.isChecked())) else cmb.setCurrentText('On')
 
@@ -391,7 +391,7 @@ class Transform(Init):
 	def lbl002(self):
 		'''Transform Tool Snapping: Disable All
 		'''
-		cmb = self.transform.cmb001
+		cmb = self.transform_ui.cmb001
 		self.toggleWidgets(setUnChecked='chk024-26')
 		cmb.setCurrentText('Off') if not any((cmb.menu_.chk024.isChecked(), cmb.menu_.chk025.isChecked(), cmb.menu_.chk026.isChecked())) else cmb.setCurrentText('On')
 
@@ -422,7 +422,7 @@ class Transform(Init):
 	def b012(self):
 		'''Make Live (Toggle)
 		'''
-		cmb = self.transform.cmb001
+		cmb = self.transform_ui.cmb001
 		selection = pm.ls(sl=1, objectsOnly=1)
 
 		if selection:
@@ -493,8 +493,8 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	Transform: Set Step
 	# 	'''
-	# 	value = self.transform.s002.value()
-	# 	self.transform.s000.setStep(value)
+	# 	value = self.transform_ui.s002.value()
+	# 	self.transform_ui.s000.setStep(value)
 
 	# def s000(self, value=None):
 		# '''
@@ -510,8 +510,8 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 
 	# 	'''
 	# 	self.toggleWidgets(setUnChecked='chk008-9', setChecked='chk000-2')
-	# 	self.transform.s000.setValue(2)
-	# 	self.transform.s000.setSingleStep(1)
+	# 	self.transform_ui.s000.setValue(2)
+	# 	self.transform_ui.s000.setSingleStep(1)
 
 
 	# def chk008(self, state=None):
@@ -520,8 +520,8 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 
 	# 	'''
 	# 	self.toggleWidgets(setUnChecked='chk005,chk009,chk000-2')
-	# 	self.transform.s000.setValue(0.1)
-	# 	self.transform.s000.setSingleStep(0.1)
+	# 	self.transform_ui.s000.setValue(0.1)
+	# 	self.transform_ui.s000.setSingleStep(0.1)
 
 
 	# def chk009(self, state=None):
@@ -530,18 +530,18 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 
 	# 	'''
 	# 	self.toggleWidgets(setUnChecked='chk005,chk008,chk000-2')
-	# 	self.transform.s000.setValue(45)
-	# 	self.transform.s000.setSingleStep(5)
+	# 	self.transform_ui.s000.setValue(45)
+	# 	self.transform_ui.s000.setSingleStep(5)
 
 	# def b000(self):
 	# 	'''
 	# 	Transform negative axis
 	# 	'''
 	# 	#change the textfield to neg value and call performTransformations
-	# 	textfield = float(self.transform.s000.value())
+	# 	textfield = float(self.transform_ui.s000.value())
 	# 	if textfield >=0:
 	# 		newText = -textfield
-	# 		self.transform.s000.setValue(newText)
+	# 		self.transform_ui.s000.setValue(newText)
 	# 	self.performTransformations()
 
 
@@ -550,10 +550,10 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	Transform positive axis
 	# 	'''
 	# 	#change the textfield to pos value and call performTransformations
-	# 	textfield = float(self.transform.s000.value())
+	# 	textfield = float(self.transform_ui.s000.value())
 	# 	if textfield <0:
 	# 		newText = abs(textfield)
-	# 		self.transform.s000.setValue(newText)
+	# 		self.transform_ui.s000.setValue(newText)
 	# 	self.performTransformations()
 
 
@@ -561,12 +561,12 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 	# 	Get the XYZ transform values from the various ui wgts.
 	# 	'''
-	# 	x = self.transform.chk000.isChecked()
-	# 	y = self.transform.chk001.isChecked()
-	# 	z = self.transform.chk002.isChecked()
-	# 	relative = self.transform.chk005.isChecked()
+	# 	x = self.transform_ui.chk000.isChecked()
+	# 	y = self.transform_ui.chk001.isChecked()
+	# 	z = self.transform_ui.chk002.isChecked()
+	# 	relative = self.transform_ui.chk005.isChecked()
 
-	# 	amount = self.transform.s002.value() #use the step as the transform amount
+	# 	amount = self.transform_ui.s002.value() #use the step as the transform amount
 	# 	floatX=floatY=floatZ = 0
 
 	# 	if relative: #else absolute.
@@ -590,12 +590,12 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	'''
 
 	# 	'''
-	# 	relative = bool(self.transform.chk003.isChecked())#Move absolute/relative toggle
-	# 	worldspace = bool(self.transform.chk004.isChecked())#Move object/worldspace toggle
+	# 	relative = bool(self.transform_ui.chk003.isChecked())#Move absolute/relative toggle
+	# 	worldspace = bool(self.transform_ui.chk004.isChecked())#Move object/worldspace toggle
 		
-	# 	scale = self.transform.chk005.isChecked()
-	# 	move = self.transform.chk008.isChecked()
-	# 	rotate = self.transform.chk009.isChecked()
+	# 	scale = self.transform_ui.chk005.isChecked()
+	# 	move = self.transform_ui.chk008.isChecked()
+	# 	rotate = self.transform_ui.chk009.isChecked()
 
 	# 	#Scale selected.
 	# 	if scale:
@@ -626,7 +626,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	constrain along normals #checkbox option for edge amd surface constaints
 	# 	setXformConstraintAlongNormal false;
 	# 	'''
-	# 	cmb = self.transform.cmb001
+	# 	cmb = self.transform_ui.cmb001
 
 	# 	if index is 'setMenu':
 	# 		cmb.contextMenu.add(wgts.TkLabel, setObjectName='lbl000', setText='Disable All', setToolTip='Disable all constraints.')

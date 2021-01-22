@@ -9,16 +9,13 @@ class Scene(Init):
 	def __init__(self, *args, **kwargs):
 		super(Scene, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('scene')
-		self.childUi = self.sb.getUi('scene_submenu')
-
-		self.parentUi.t000.returnPressed.connect(self.t001) #preform rename on returnPressed
+		self.scene_ui.t000.returnPressed.connect(self.t001) #preform rename on returnPressed
 
 
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.parentUi.draggable_header
+		draggable_header = self.scene_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='Maya Scene Editors')
@@ -28,7 +25,7 @@ class Scene(Init):
 	def cmb000(self, index=None):
 		'''Editors
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.scene_ui.cmb000
 
 		if index is 'setMenu':
 			items = ['Node Editor', 'Outlinder', 'Content Browser', 'Optimize Scene Size', 'Prefix Hierarchy Names', 'Search and Replace Names']
@@ -54,7 +51,7 @@ class Scene(Init):
 	def t000(self, state=None):
 		'''Find
 		'''
-		t000 = self.parentUi.t000
+		t000 = self.scene_ui.t000
 
 		if state is 'setMenu':
 			t000.contextMenu.add('QCheckBox', setText='Ignore Case', setObjectName='chk000', setToolTip='Search case insensitive.')
@@ -65,15 +62,15 @@ class Scene(Init):
 	def t001(self, state=None):
 		'''Replace
 		'''
-		t001 = self.parentUi.t001
+		t001 = self.scene_ui.t001
 
 		if state is 'setMenu':
 			return
 
-		find = self.parentUi.t000.text() #an asterisk denotes startswith*, *endswith, *contains* 
-		to = self.parentUi.t001.text()
-		regEx = self.parentUi.t000.contextMenu.chk001.isChecked()
-		ignoreCase = self.parentUi.t000.contextMenu.chk000.isChecked()
+		find = self.scene_ui.t000.text() #an asterisk denotes startswith*, *endswith, *contains* 
+		to = self.scene_ui.t001.text()
+		regEx = self.scene_ui.t000.contextMenu.chk001.isChecked()
+		ignoreCase = self.scene_ui.t000.contextMenu.chk000.isChecked()
 
 		Scene.rename(find, to, regEx=regEx, ignoreCase=ignoreCase)
 

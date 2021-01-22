@@ -17,9 +17,9 @@ class Crease(Init):
 		'''Crease Amount
 		Tracks the standard crease amount while toggles such as un-crease, and crease max temporarily change the spinbox value. 
 		'''
-		if not self.crease.chk002.isChecked(): #un-crease
-			if not self.crease.chk003.isChecked(): #toggle max
-				self.creaseValue = self.crease.s003.value()
+		if not self.crease_ui.chk002.isChecked(): #un-crease
+			if not self.crease_ui.chk003.isChecked(): #toggle max
+				self.creaseValue = self.crease_ui.s003.value()
 				text = self.ui.tb000.text().split(' ')[0]
 				self.ui.tb000.setText('{} {}'.format(text, self.creaseValue))
 
@@ -27,7 +27,7 @@ class Crease(Init):
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.crease.draggable_header
+		draggable_header = self.crease_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='3ds Max Crease Modifiers')
@@ -37,7 +37,7 @@ class Crease(Init):
 	def cmb000(self, index=None):
 		'''Editors
 		'''
-		cmb = self.crease.cmb000
+		cmb = self.crease_ui.cmb000
 
 		if index is 'setMenu':
 			list_ = ['Crease Modifier']
@@ -64,15 +64,15 @@ class Crease(Init):
 		'''Un-Crease
 		'''
 		if self.ui.chk002.isChecked():
-			self.crease.s003.setValue(0) #crease value
-			self.crease.s004.setValue(180) #normal angle
+			self.crease_ui.s003.setValue(0) #crease value
+			self.crease_ui.s004.setValue(180) #normal angle
 			self.toggleWidgets(setChecked='chk002', setUnChecked='chk003')
-			self.crease.s003.setDisabled(True)
+			self.crease_ui.s003.setDisabled(True)
 			self.ui.tb000.setText('Un-Crease 0')
 		else:
-			self.crease.s003.setValue(self.creaseValue) #crease value
-			self.crease.s004.setValue(30) #normal angle
-			self.crease.s003.setEnabled(True)
+			self.crease_ui.s003.setValue(self.creaseValue) #crease value
+			self.crease_ui.s004.setValue(30) #normal angle
+			self.crease_ui.s003.setEnabled(True)
 			self.ui.tb000.setText('{} {}'.format('Crease', self.creaseValue))
 
 
@@ -81,15 +81,15 @@ class Crease(Init):
 		'''Crease: Max
 		'''
 		if self.ui.chk003.isChecked():
-			self.crease.s003.setValue(10) #crease value
-			self.crease.s004.setValue(30) #normal angle
+			self.crease_ui.s003.setValue(10) #crease value
+			self.crease_ui.s004.setValue(30) #normal angle
 			self.toggleWidgets(setChecked='chk003', setUnChecked='chk002')
-			self.crease.s003.setDisabled(True)
+			self.crease_ui.s003.setDisabled(True)
 			self.ui.tb000.setText('Crease 10')
 		else:
-			self.crease.s003.setValue(self.creaseValue) #crease value
-			self.crease.s004.setValue(60) #normal angle
-			self.crease.s003.setEnabled(True)
+			self.crease_ui.s003.setValue(self.creaseValue) #crease value
+			self.crease_ui.s004.setValue(60) #normal angle
+			self.crease_ui.s003.setEnabled(True)
 			self.ui.tb000.setText('{} {}'.format('Crease', self.creaseValue))
 
 
@@ -163,7 +163,7 @@ class Crease(Init):
 	def b000(self):
 		'''Crease Set Transfer: Transform Node
 		'''
-		if self.crease.b001.isChecked():
+		if self.crease_ui.b001.isChecked():
 			newObject = str(pm.ls(selection=1)) #ex. [nt.Transform(u'pSphere1')]
 
 			index1 = newObject.find("u")
@@ -171,20 +171,20 @@ class Crease(Init):
 			newObject = newObject[index1+1:index2].strip("'") #ex. pSphere1
 
 			if newObject != "[":
-				self.crease.b001.setText(newObject)
+				self.crease_ui.b001.setText(newObject)
 			else:
-				self.crease.b001.setText("must select obj first")
+				self.crease_ui.b001.setText("must select obj first")
 				self.toggleWidgets(setUnChecked='b001')
-			if self.crease.b000.isChecked():
+			if self.crease_ui.b000.isChecked():
 				self.toggleWidgets(setEnabled='b052')
 		else:
-			self.crease.b001.setText("Object")
+			self.crease_ui.b001.setText("Object")
 
 
 	def b001(self):
 		'''Crease Set Transfer: Crease Set
 		'''
-		if self.crease.b000.isChecked():
+		if self.crease_ui.b000.isChecked():
 			creaseSet = str(pm.ls(selection=1)) #ex. [nt.CreaseSet(u'creaseSet1')]
 
 			index1 = creaseSet.find("u")
@@ -192,14 +192,14 @@ class Crease(Init):
 			creaseSet = creaseSet[index1+1:index2].strip("'") #ex. creaseSet1
 
 			if creaseSet != "[":
-				self.crease.b000.setText(creaseSet)
+				self.crease_ui.b000.setText(creaseSet)
 			else:
-				self.crease.b000.setText("must select set first")
+				self.crease_ui.b000.setText("must select set first")
 				self.toggleWidgets(setUnChecked='b000')
-			if self.crease.b001.isChecked():
+			if self.crease_ui.b001.isChecked():
 				self.toggleWidgets(setEnabled='b052')
 		else:
-			self.crease.b000.setText("Crease Set")
+			self.crease_ui.b000.setText("Crease Set")
 
 
 	def b002(self):
@@ -209,8 +209,8 @@ class Crease(Init):
 		# the use of separate buttons for donor and target mesh are obsolete
 		# add pm.polySoftEdge (angle=0, constructionHistory=0); #harden edge, when applying crease 
 
-		creaseSet = str(self.crease.b000.text())
-		newObject = str(self.crease.b001.text())
+		creaseSet = str(self.crease_ui.b000.text())
+		newObject = str(self.crease_ui.b001.text())
 
 		sets = pm.sets (creaseSet, query=1)
 
@@ -231,9 +231,9 @@ class Crease(Init):
 			# print("crease:", name)
 		pm.undoInfo (closeChunk=1)
 
-		self.toggleWidgets(setDisabled='b052', setUnChecked='b000')#,self.crease.b001])
-		self.crease.b000.setText("Crease Set")
-		# self.crease.b001.setText("Object")
+		self.toggleWidgets(setDisabled='b052', setUnChecked='b000')#,self.crease_ui.b001])
+		self.crease_ui.b000.setText("Crease Set")
+		# self.crease_ui.b001.setText("Object")
 
 
 

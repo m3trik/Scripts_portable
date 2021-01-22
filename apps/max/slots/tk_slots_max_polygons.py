@@ -9,9 +9,6 @@ class Polygons(Init):
 	def __init__(self, *args, **kwargs):
 		super(Polygons, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('polygons')
-		self.childUi = self.sb.getUi('polygons_submenu')
-
 
 	def chk008(self, state=None):
 		'''Divide Facet: Split U
@@ -34,7 +31,7 @@ class Polygons(Init):
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.parentUi.draggable_header
+		draggable_header = self.polygons_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
@@ -45,7 +42,7 @@ class Polygons(Init):
 	def cmb000(self, index=None):
 		'''3dsMax Polygon Operations
 		'''
-		cmb = self.polygons.draggable_header.contextMenu.cmb000
+		cmb = self.polygons_ui.draggable_header.contextMenu.cmb000
 
 		if index is 'setMenu':
 			list_ = ['Bridge','Extrude']
@@ -90,7 +87,7 @@ class Polygons(Init):
 	def tb000(self, state=None):
 		'''Merge Vertices
 		'''
-		tb = self.currentUi.tb000
+		tb = self.current_ui.tb000
 		if state is 'setMenu':
 			tb.menu_.add('QDoubleSpinBox', setPrefix='Distance: ', setObjectName='s002', setMinMax_='0.0000-10 step.001', setValue=0.001, setToolTip='Merge Distance.')
 			return
@@ -100,7 +97,7 @@ class Polygons(Init):
 
 		if selection:
 			for n, obj in enumerate(selection):
-				if not self.parentUi.progressBar.step(n, len(selection)): #register progress while checking for cancellation:
+				if not self.polygons_ui.progressBar.step(n, len(selection)): #register progress while checking for cancellation:
 					break
 
 				vertSelection = rt.getVertSelection(obj)
@@ -117,7 +114,7 @@ class Polygons(Init):
 	def tb001(self, state=None):
 		'''Bridge
 		'''
-		tb = self.currentUi.tb001
+		tb = self.current_ui.tb001
 		if state is 'setMenu':
 			tb.menu_.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s003', setMinMax_='0-10000 step1', setValue=0.001, setToolTip='Divisions.')
 			return
@@ -132,7 +129,7 @@ class Polygons(Init):
 	def tb002(self, state=None):
 		'''Combine
 		'''
-		tb = self.currentUi.tb002
+		tb = self.current_ui.tb002
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='Merge', setObjectName='chk000', setChecked=True, setToolTip='Combine selected meshes and merge any coincident verts/edges.')
 			return
@@ -168,7 +165,7 @@ class Polygons(Init):
 	def tb003(self, state=None):
 		'''Extrude
 		'''
-		tb = self.currentUi.tb003
+		tb = self.current_ui.tb003
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='Keep Faces Together', setObjectName='chk002', setChecked=True, setToolTip='Keep edges/faces together.')
 			return
@@ -183,7 +180,7 @@ class Polygons(Init):
 	def tb004(self, state=None):
 		'''Bevel (Chamfer)
 		'''
-		tb = self.currentUi.tb004
+		tb = self.current_ui.tb004
 		if state is 'setMenu':
 			tb.menu_.add('QDoubleSpinBox', setPrefix='Width: ', setObjectName='s000', setMinMax_='0.00-100 step.01', setValue=0.01, setToolTip='Bevel Width.')
 			return
@@ -191,7 +188,7 @@ class Polygons(Init):
 		width = float(tb.menu_.s000.value())
 
 		rt.macros.run('Ribbon - Modeling', 'EPoly_Chamfer')
-		# width = float(self.parentUi.s000.value())
+		# width = float(self.polygons_ui.s000.value())
 		# chamfer = True
 
 		# if chamfer:
@@ -203,7 +200,7 @@ class Polygons(Init):
 	def tb005(self, state=None):
 		'''Detach
 		'''
-		tb = self.currentUi.tb005
+		tb = self.current_ui.tb005
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='Delete Original', setObjectName='chk007', setChecked=True, setToolTip='Delete original selected faces.')
 			return
@@ -232,7 +229,7 @@ class Polygons(Init):
 	def tb006(self, state=None):
 		'''Inset Face Region
 		'''
-		tb = self.currentUi.tb006
+		tb = self.current_ui.tb006
 		if state is 'setMenu':
 			tb.menu_.add('QDoubleSpinBox', setPrefix='Offset: ', setObjectName='s001', setMinMax_='0.00-100 step.01', setValue=2.00, setToolTip='Offset amount.')
 			return
@@ -253,7 +250,7 @@ class Polygons(Init):
 	def tb007(self, state=None):
 		'''Divide Facet
 		'''
-		tb = self.currentUi.tb007
+		tb = self.current_ui.tb007
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='U', setObjectName='chk008', setChecked=True, setToolTip='Divide facet: U coordinate.')
 			tb.menu_.add('QCheckBox', setText='V', setObjectName='chk009', setChecked=True, setToolTip='Divide facet: V coordinate.')
@@ -284,7 +281,7 @@ class Polygons(Init):
 	def tb008(self, state=None):
 		'''Boolean Operation
 		'''
-		tb = self.polygons.tb008
+		tb = self.polygons_ui.tb008
 		if state is 'setMenu':
 			tb.menu_.add('QRadioButton', setText='Union', setObjectName='chk011', setToolTip='Fuse two objects together.')
 			tb.menu_.add('QRadioButton', setText='Difference', setObjectName='chk012', setChecked=True, setToolTip='Indents one object with the shape of another at the point of their intersection.')
@@ -305,7 +302,7 @@ class Polygons(Init):
 	def tb009(self, state=None):
 		'''Snap Closest Verts
 		'''
-		tb = self.polygons.tb009
+		tb = self.polygons_ui.tb009
 		if state is 'setMenu':
 			tb.menu_.add('QDoubleSpinBox', setPrefix='Tolerance: ', setObjectName='s005', setMinMax_='.000-100 step.05', setValue=10, setToolTip='Set the max Snap Distance. Vertices with a distance exceeding this value will be ignored.')
 			tb.menu_.add('QCheckBox', setText='Freeze Transforms', setObjectName='chk016', setChecked=True, setToolTip='Freeze Transformations on the object that is being snapped to.')

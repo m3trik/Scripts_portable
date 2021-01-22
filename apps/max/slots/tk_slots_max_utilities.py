@@ -9,14 +9,11 @@ class Utilities(Init):
 	def __init__(self, *args, **kwargs):
 		super(Utilities, self).__init__(*args, **kwargs)
 
-		self.parentUi = self.sb.getUi('utilities')
-		self.childUi = self.sb.getUi('utilities_submenu')
-
 
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.parentUi.draggable_header
+		draggable_header = self.utilities_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
@@ -26,17 +23,17 @@ class Utilities(Init):
 	def cmb000(self, index=None):
 		'''Editors
 		'''
-		cmb = self.parentUi.cmb000
+		cmb = self.utilities_ui.cmb000
 
 		if index is 'setMenu':
 			list_ = ['']
 			items = cmb.addItems_(list_, '')
 			return
 
-		# if index>0:
-		# 	if index==cmb.items.index(''):
-		# 		pass
-		# 	cmb.setCurrentIndex(0)
+		if index>0:
+			if index==cmb.items.index(''):
+				pass
+			cmb.setCurrentIndex(0)
 
 
 	def b000(self):

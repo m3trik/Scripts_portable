@@ -13,7 +13,7 @@ class Edit(Init):
 	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		draggable_header = self.edit.draggable_header
+		draggable_header = self.edit_ui.draggable_header
 
 		if state is 'setMenu':
 			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
@@ -23,7 +23,7 @@ class Edit(Init):
 	def cmb000(self, index=None):
 		'''Editors
 		'''
-		cmb = self.edit.cmb000
+		cmb = self.edit_ui.cmb000
 
 		if index is 'setMenu':
 			list_ = ['']
@@ -40,7 +40,7 @@ class Edit(Init):
 		'''Set the toolbutton's text according to the checkstates.
 		'''
 		axis = self.getAxisFromCheckBoxes('chk006-9')
-		self.edit.tb003.setText('Delete '+axis)
+		self.edit_ui.tb003.setText('Delete '+axis)
 
 
 	def tb000(self, state=None):

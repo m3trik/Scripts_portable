@@ -68,7 +68,8 @@ pm.workspaceControl("AttributeEditor", edit=1, minimumWidth=False)
 mel.eval("source \"C:/Users/Public/Pixologic/GoZApps/Maya/GoZScript.mel\"");
 
 
-
+#MASH tools
+import MASH_tools
 
 
 # ------------------------------------------------
