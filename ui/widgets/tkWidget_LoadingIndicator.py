@@ -1,16 +1,18 @@
 from __future__ import print_function
+from builtins import super
+
 from PySide2 import QtWidgets, QtGui, QtCore
 
 from widgets import Attributes
 
 
 
-class TkWidget_ProgressIndicator(QtWidgets.QWidget, Attributes):
+class TkWidget_LoadingIndicator(QtWidgets.QWidget, Attributes):
 	''''''
 	def __init__(self, parent=None, angle=0, timerId=-1, delay=50, displayedWhenStopped=False, color='black', **kwargs):
 		'''
 		'''
-		super(TkWidget_ProgressIndicator, self).__init__(parent)
+		super().__init__(parent)
 
 		self.angle = angle
 		self.timerId = timerId
@@ -21,7 +23,6 @@ class TkWidget_ProgressIndicator(QtWidgets.QWidget, Attributes):
 		self.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
 		self.setFocusPolicy(QtCore.Qt.NoFocus)
 
-		# self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint)
 		self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
 		# self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 		self.setAttribute(QtCore.Qt.WA_SetStyle) #Indicates that the widget has a style of its own.
@@ -117,7 +118,7 @@ if __name__ == "__main__":
 	import sys
 	app = QtWidgets.QApplication(sys.argv)
 
-	w = TkWidget_ProgressIndicator(color='blue', start=True, setPosition_='cursor')
+	w = TkWidget_LoadingIndicator(color='blue', start=True, setPosition_='cursor')
 	# w.setDelay(70)
 	# w.start()
 	# w.stop()

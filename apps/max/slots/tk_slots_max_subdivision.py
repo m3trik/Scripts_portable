@@ -1,13 +1,14 @@
 from __future__ import print_function
-from tk_slots_max_init import *
-
+from builtins import super
 import os.path
+
+from tk_slots_maya_init import *
 
 
 
 class Subdivision(Init):
 	def __init__(self, *args, **kwargs):
-		super(Subdivision, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 
 		#Set 3ds Max specific naming
 		self.subdivision_ui.gb000.setTitle('TurboSmooth')

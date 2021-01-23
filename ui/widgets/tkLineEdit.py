@@ -1,3 +1,6 @@
+from __future__ import print_function
+from builtins import super
+
 from PySide2 import QtCore, QtGui, QtWidgets
 
 from widgets import Menu, Attributes
@@ -27,7 +30,7 @@ class TkLineEdit(QtWidgets.QLineEdit, Menu, Attributes):
 	hidden = QtCore.Signal()
 
 	def __init__(self, parent=None, **kwargs):
-		super(TkLineEdit, self).__init__(parent)
+		super().__init__(parent)
 
 		# self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
 		self.setAttributes(kwargs)

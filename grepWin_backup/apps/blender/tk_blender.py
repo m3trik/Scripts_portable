@@ -1,5 +1,3 @@
-from __future__ import print_function
-from builtins import super
 import sys
 
 from PySide2 import QtWidgets, QtCore
@@ -13,7 +11,7 @@ if not app:
 # import maya.OpenMayaUI as OpenMayaUI
 
 from tk import Tk
-from ui import widgets as wgts
+from tk_ui import widgets as wgts
 
 
 

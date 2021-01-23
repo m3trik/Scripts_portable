@@ -1,4 +1,5 @@
 from __future__ import print_function
+from builtins import super
 import sys
 
 from PySide2 import QtWidgets, QtCore
@@ -30,7 +31,7 @@ class Tk_maya(Tk):
 			except Exception as error:
 				print(self.__class__.__name__, error)
 
-		super(Tk_maya, self).__init__(parent)
+		super().__init__(parent)
 
 
 	def getMainWindow(self):

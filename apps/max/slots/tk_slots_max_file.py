@@ -1,14 +1,16 @@
 from __future__ import print_function
-from tk_slots_max_init import *
+from builtins import super
+import os.path
+
+from tk_slots_maya_init import *
 
 from datetime import datetime
-import os.path
 
 
 
 class File(Init):
 	def __init__(self, *args, **kwargs):
-		super(File, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 
 
 		#get recent file list. #convert to python

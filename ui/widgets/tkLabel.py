@@ -1,3 +1,6 @@
+from __future__ import print_function
+from builtins import super
+
 from PySide2 import QtWidgets, QtCore
 
 from widgets import Menu, Attributes
@@ -11,10 +14,9 @@ class TkLabel(QtWidgets.QLabel, Menu, Attributes):
 	released = QtCore.Signal()
 
 	def __init__(self, parent=None, **kwargs):
-		super(TkLabel, self).__init__(parent)
+		super().__init__(parent)
 
 		self.setTextFormat(QtCore.Qt.RichText)
-
 		self.setAttributes(kwargs)
 
 

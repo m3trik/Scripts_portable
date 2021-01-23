@@ -1,3 +1,6 @@
+from __future__ import print_function
+from builtins import super
+
 from PySide2 import QtCore, QtGui, QtWidgets
 
 from widgets import Attributes
@@ -26,7 +29,7 @@ class TkProgressBar(QtWidgets.QProgressBar, Attributes):
 				break
 	'''
 	def __init__(self, parent=None, **kwargs):
-		super(TkProgressBar, self).__init__(parent)
+		super().__init__(parent)
 
 		self.setVisible(False)
 
@@ -67,7 +70,7 @@ class TkProgressBar(QtWidgets.QProgressBar, Attributes):
 		if value>=100:
 			self.setVisible(False)
 
-		print value
+		print(value)
 		return True
 
 

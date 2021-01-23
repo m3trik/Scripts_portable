@@ -1,4 +1,4 @@
 import widgets
 import icons
 from tk_uiLoader import UiLoader
-import level_0, level_1, level_2, level_3
+import uiLvl_0, uiLvl_1, uiLvl_2, uiLvl_3

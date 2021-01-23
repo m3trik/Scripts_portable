@@ -1,3 +1,6 @@
+from __future__ import print_function
+from builtins import super
+
 from PySide2 import QtCore, QtGui, QtWidgets
 
 from widgets import Menu, Attributes, RichText
@@ -11,7 +14,7 @@ class TkPushButton_Draggable(QtWidgets.QPushButton, Menu, Attributes, RichText):
 	__mousePressPos = QtCore.QPoint()
 
 	def __init__(self, parent=None, **kwargs):
-		super(TkPushButton_Draggable, self).__init__(parent)
+		super().__init__(parent)
 
 		self.setCheckable(True)
 

@@ -1,7 +1,8 @@
 from __future__ import print_function
-from tk_slots_max_init import *
-
+from builtins import super
 import os.path
+
+from tk_slots_maya_init import *
 
 
 

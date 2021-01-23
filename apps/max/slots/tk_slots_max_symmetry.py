@@ -1,13 +1,14 @@
 from __future__ import print_function
-from tk_slots_max_init import *
-
+from builtins import super
 import os.path
+
+from tk_slots_maya_init import *
 
 
 
 class Symmetry(Init):
 	def __init__(self, *args, **kwargs):
-		super(Symmetry, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 
 		#symmetry: set initial checked state
 		# state = pm.symmetricModelling(query=True, symmetry=True) #application symmetry state

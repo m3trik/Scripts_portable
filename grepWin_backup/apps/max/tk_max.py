@@ -1,5 +1,4 @@
 from __future__ import print_function
-from builtins import super
 
 from PySide2 import QtCore, QtWidgets
 
@@ -9,7 +8,7 @@ except ImportError as error:
 	print(error)
 
 from tk import Tk
-from ui import widgets as wgts
+from tk_ui import widgets as wgts
 
 
 
@@ -29,7 +28,7 @@ class Tk_max(Tk):
 			except Exception as error:
 				print(self.__class__.__name__, error)
 
-		super().__init__(parent)
+		super(Tk_max, self).__init__(parent)
 
 
 	def getMainWindow(self):

@@ -1,4 +1,6 @@
 from __future__ import print_function
+from builtins import super
+
 from PySide2 import QtCore, QtGui, QtWidgets
 
 from widgets import Attributes
@@ -9,12 +11,10 @@ class TkListWidget(QtWidgets.QListWidget, Attributes):
 	'''
 	'''
 	def __init__(self, parent=None, **kwargs):
-		super(TkListWidget, self).__init__(parent) 
+		super().__init__(parent) 
 
 		# self.setViewMode(QtWidgets.QListView.IconMode)
-
 		self.clear()
-
 		self.setAttributes(kwargs)
 
 

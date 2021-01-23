@@ -1,13 +1,16 @@
 from __future__ import print_function
-from tk_slots_max_init import *
+from builtins import super
+import os.path
+
+from tk_slots_maya_init import *
 
 import traceback
-import os.path
+
 
 
 class Display(Init):
 	def __init__(self, *args, **kwargs):
-		super(Display, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 
 
 	def draggable_header(self, state=None):

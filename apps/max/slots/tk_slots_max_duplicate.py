@@ -1,13 +1,14 @@
 from __future__ import print_function
-from tk_slots_max_init import *
-
+from builtins import super
 import os.path
+
+from tk_slots_maya_init import *
 
 
 
 class Duplicate(Init):
 	def __init__(self, *args, **kwargs):
-		super(Duplicate, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 
 		self.duplicate_ui.s000.valueChanged.connect(self.radialArray) #update radial array
 		self.duplicate_ui.s001.valueChanged.connect(self.radialArray) 

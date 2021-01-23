@@ -1,10 +1,11 @@
 from __future__ import print_function
+from builtins import super
+import sys
+
 from PySide2 import QtCore, QtGui, QtWidgets
 
 try: import shiboken2
 except: from PySide2 import shiboken2
-
-import sys
 
 from widgets import Attributes
 
@@ -41,7 +42,7 @@ class TkTreeWidget_ExpandableList(QtWidgets.QTreeWidget, Attributes):
 
 
 	def __init__(self, parent=None, stepColumns=True, expandOnHover=False, **kwargs):
-		super (TkTreeWidget_ExpandableList, self).__init__(parent)
+		super().__init__(parent)
 
 		self.refresh=False
 		self._mouseGrabber=None

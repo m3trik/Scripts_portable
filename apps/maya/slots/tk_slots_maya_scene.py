@@ -1,13 +1,14 @@
 from __future__ import print_function
-from tk_slots_maya_init import *
-
+from builtins import super
 import os.path
+
+from tk_slots_maya_init import *
 
 
 
 class Scene(Init):
 	def __init__(self, *args, **kwargs):
-		super(Scene, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 
 		self.scene_ui.t000.returnPressed.connect(self.t001) #preform rename on returnPressed
 

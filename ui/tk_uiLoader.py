@@ -12,7 +12,7 @@ import sys, os.path
 #globals
 UI_DIR = 'ui'
 WIDGET_DIR = 'widgets'
-MENU_DIR_PREFIX = 'level_'
+UI_LEVEL_PREFIX = 'uiLvl_'
 WIDGET_MODULE_PREFIX = 'tk'
 
 
@@ -94,7 +94,7 @@ class UiLoader(QUiLoader):
 			#get the ui level from it's directory location.
 			d = dirPath.split('\\'+UI_DIR+'\\')[-1] #ie. base_menus from fullpath\ui\base_menus
 			try:
-				uiLevel = int(d.strip(MENU_DIR_PREFIX))
+				uiLevel = int(d.strip(UI_LEVEL_PREFIX))
 				self.uiDict[uiName] = {'ui':ui, 'level':uiLevel}
 
 			except KeyError: #not a valid ui dir.

@@ -1,5 +1,8 @@
 # !/usr/bin/python
 # coding=utf-8
+from __future__ import print_function
+from builtins import super
+
 from PySide2 import QtWidgets, QtCore, QtGui
 
 from widgets import Attributes
@@ -18,14 +21,11 @@ class TkWidget_MultiWidget(QtWidgets.QWidget, Attributes):
 	hoverLeave_ = QtCore.QEvent(QtCore.QEvent.HoverLeave)
 
 	def __init__(self, parent=None, layoutType='QHBoxLayout', **kwargs):
-		super(TkWidget_MultiWidget, self).__init__(parent)
+		super().__init__(parent)
 
 		self.layoutType = layoutType
-
 		self._mouseGrabber=None
-
 		# self.setMouseTracking(True)
-
 		self.setAttributes(kwargs) #set any additional given keyword args for the widget.
 
 

@@ -1,13 +1,14 @@
 from __future__ import print_function
-from tk_slots_maya_init import *
-
+from builtins import super
 import os.path
+
+from tk_slots_maya_init import *
 
 
 
 class Polygons(Init):
 	def __init__(self, *args, **kwargs):
-		super(Polygons, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 
 
 	def chk008(self, state=None):

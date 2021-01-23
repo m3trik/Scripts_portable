@@ -1,7 +1,8 @@
 from __future__ import print_function
-from PySide2 import QtCore, QtGui, QtWidgets
-
+from builtins import super
 import sys, os.path
+
+from PySide2 import QtCore, QtGui, QtWidgets
 
 from tk_switchboard import Switchboard
 from tk_overlay import OverlayFactoryFilter
@@ -9,6 +10,20 @@ from tk_styleSheet import StyleSheet
 from tk_childEvents import EventFactoryFilter
 from ui import widgets as wgts
 
+# class Worker(QtCore.QObject):
+# 	'''Subclassing QtCore.QObject and using moveToThread
+# 	http://blog.qt.digia.com/blog/2007/07/05/qthreads-no-longer-abstract
+# 	'''
+# 	finished = QtCore.Signal()
+# 	# loadingIndicator = wgts.LoadingIndicator(color='white', setPosition_='cursor', start=True)
+# 	loadingIndicator = wgts.GifPlayer()
+
+# 	def start(self):
+# 		self.loadingIndicator.start()
+# 		# self.finished.emit()
+
+# 	def end(self):
+# 		self.loadingIndicator.end()
 
 # ------------------------------------------------
 # 	Construct the Widget Stack
@@ -25,13 +40,20 @@ class Tk(QtWidgets.QStackedWidget):
 		parent (obj) = The parent application's top level window.
 	'''
 	def __init__(self, parent=None, preventHide=False, key_show=QtCore.Qt.Key_F12):
-		super(Tk, self).__init__(parent)
+		super().__init__(parent)
 
-		self.progressIndicator = wgts.ProgressIndicator(color='white', setPosition_='cursor', start=True)
+		# thread = QtCore.QThread()
+		# obj = Worker()
+		# obj.moveToThread(thread)
+		# obj.finished.connect(thread.quit)
+		# thread.started.connect(obj.start)
+		# thread.finished.connect(obj.end)
+		# thread.start()
 
 		self.preventHide = preventHide
 		self.key_show = key_show
 		self.key_undo = QtCore.Qt.Key_Z
+		self.key_close = QtCore.Qt.Key_Escape
 		QtWidgets.QApplication.setDoubleClickInterval(400)
 		QtWidgets.QApplication.setKeyboardInputInterval(400)
 
@@ -51,22 +73,40 @@ class Tk(QtWidgets.QStackedWidget):
 
 		self.centerPos = lambda: QtGui.QCursor.pos() - self.rect().center() #the center point of the widget at any given time.
 
-		self.progressIndicator.stop()
+		# thread.quit()
 
 
-	def setUi(self, name='init'):
-		'''Set the stacked Widget's index to the ui of the given name.
+	def initUi(self, name, level=None):
+		'''Adds the given ui to the stacked widget (if it has not been set before), and constructs any additional dependancies.
 
 		:Parameters:
-			name (str) = name of ui.
-		'''
-		ui = self.sb.getUi(name, setAsCurrent=True) #Get the ui of the given name, and set it as the current ui in the switchboard module, which amoung other things, sets connections.
+			name (str) = The name of the ui. ie. 'polygons_component_submenu'
+			level (int) = The desired returned ui level. If None, then the level will be derived from the name.
 
-		if not name in self.sb.previousName(as_list=1): #if ui(name) hasn't been set before:
+		:Return:
+			(obj) ui.
+		'''
+		ui = self.sb.getUi(name, level=level) #get the parent ui.
+		name = self.sb.getUiName(name, level=level) #get the parent ui's name.
+
+		if self.indexOf(ui) is -1: #if the given widget is not a child of the QStackedWidget.
 			self.addWidget(ui) #add the ui to the stackedLayout.
 			self.childEvents.initWidgets(name)
 
-		self.resize(self.sb.sizeX, self.sb.sizeY) #Stored ui sizes allow for correct individual resizing where otherwise size would be constrained to the largest widget in the stack)
+		return ui
+
+
+	def setUi(self, name):
+		'''Set the stacked Widget's index to the ui of the given name.
+
+		:Parameters:
+			name (str) = The name of the ui to set the stacked widget index to.
+		'''
+		ui = self.sb.getUi(name, setAsCurrent=True) #Get the ui of the given name, and set it as the current ui in the switchboard module, which amoung other things, sets connections.
+
+		self.initUi(name) #add the ui to the stackedLayout (if it has not already been set).
+
+		self.resize(self.sb.sizeX, self.sb.sizeY) #The ui sizes for individual ui's are stored in sizeX and sizeY properties. Otherwise size would be constrained to the largest widget in the stack)
 
 		if self.sb.uiLevel>2:
 			self.move(self.centerPos().x(), self.centerPos().y()+(self.sb.sizeY/2.15)) #self.move(self.centerPos() - ui.draggable_header.mapToGlobal(ui.draggable_header.rect().center()))
@@ -102,7 +142,7 @@ class Tk(QtWidgets.QStackedWidget):
 		p1 = widget.mapToGlobal(widget.rect().center()) #widget position before submenu change.
 
 		try: #set the ui to the submenu (if it exists).
-			self.initParentUi(name) #initialize the parent ui if not done so already.
+			self.initUi(name, level=3) #initialize the parent ui if not done so already.
 			self.setUi(name) #switch the stacked widget to the given submenu.
 		except ValueError: #if no submenu exists: ignore and return.
 			return None
@@ -123,20 +163,6 @@ class Tk(QtWidgets.QStackedWidget):
 
 		if name not in self.sb.previousName(as_list=1): #if the submenu ui called for the first time:
 			self.clonePathWidgets(name) #re-construct any widgets from the previous ui that fall along the plotted path.
-
-
-	def initParentUi(self, name):
-		'''Sets the parent ui of a submenu, if it has not been set before.
-		Setting the parent ui first constructs dependancies needed for the submenu.
-		:Parameters:
-			name (str) = The name of the child ui. ie. 'polygons_component_submenu'
-		:Return:
-			(obj) the parent ui.
-		'''
-		parentUiName = self.sb.getUiName(name, level=3) #get the parent ui's name.
-
-		if not parentUiName in self.sb.previousName(as_list=1):
-			return self.setUi(parentUiName)
 
 
 	def removeFromPath(self, name):
@@ -184,8 +210,11 @@ class Tk(QtWidgets.QStackedWidget):
 			event = <QEvent>
 		'''
 		if not event.isAutoRepeat():
-			modifiers = QtWidgets.QApplication.keyboardModifiers()	
+			modifiers = QtWidgets.QApplication.keyboardModifiers()
 
+			if event.key()==self.key_close:
+				self.close()
+				sys.exit()
 
 		return QtWidgets.QStackedWidget.keyPressEvent(self, event)
 
@@ -364,7 +393,7 @@ class Tk(QtWidgets.QStackedWidget):
 
 
 
-			
+
 
 
 
@@ -376,9 +405,6 @@ if __name__ == '__main__':
 
 	Tk().show()
 	sys.exit(app.exec_())
-
-
-
 
 
 

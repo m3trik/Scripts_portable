@@ -3,12 +3,11 @@ from PySide2 import QtCore, QtGui, QtWidgets
 
 import sys, os.path
 
+from tk_ui import widgets as wgts
 from tk_switchboard import Switchboard
 from tk_overlay import OverlayFactoryFilter
 from tk_styleSheet import StyleSheet
 from tk_childEvents import EventFactoryFilter
-from widgets.tkPushButton import TkPushButton
-
 
 
 # ------------------------------------------------
@@ -25,9 +24,10 @@ class Tk(QtWidgets.QStackedWidget):
 	:Parameters:
 		parent (obj) = The parent application's top level window.
 	'''
-
 	def __init__(self, parent=None, preventHide=False, key_show=QtCore.Qt.Key_F12):
 		super(Tk, self).__init__(parent)
+
+		self.progressIndicator = wgts.ProgressIndicator(color='white', setPosition_='cursor', start=True)
 
 		self.preventHide = preventHide
 		self.key_show = key_show
@@ -51,6 +51,8 @@ class Tk(QtWidgets.QStackedWidget):
 
 		self.centerPos = lambda: QtGui.QCursor.pos() - self.rect().center() #the center point of the widget at any given time.
 
+		self.progressIndicator.stop()
+
 
 	def setUi(self, name='init'):
 		'''Set the stacked Widget's index to the ui of the given name.
@@ -67,7 +69,7 @@ class Tk(QtWidgets.QStackedWidget):
 		self.resize(self.sb.sizeX, self.sb.sizeY) #Stored ui sizes allow for correct individual resizing where otherwise size would be constrained to the largest widget in the stack)
 
 		if self.sb.uiLevel>2:
-			self.move(self.centerPos().x(), self.centerPos().y()+(self.sb.sizeY/2.15)) #self.move(self.centerPos() - ui.d000.mapToGlobal(ui.d000.rect().center()))
+			self.move(self.centerPos().x(), self.centerPos().y()+(self.sb.sizeY/2.15)) #self.move(self.centerPos() - ui.draggable_header.mapToGlobal(ui.draggable_header.rect().center()))
 		# else:
 		# 	self.showFullScreen()
 		# print('keyboardGrabber:', self.keyboardGrabber())
@@ -100,6 +102,7 @@ class Tk(QtWidgets.QStackedWidget):
 		p1 = widget.mapToGlobal(widget.rect().center()) #widget position before submenu change.
 
 		try: #set the ui to the submenu (if it exists).
+			self.initParentUi(name) #initialize the parent ui if not done so already.
 			self.setUi(name) #switch the stacked widget to the given submenu.
 		except ValueError: #if no submenu exists: ignore and return.
 			return None
@@ -119,7 +122,7 @@ class Tk(QtWidgets.QStackedWidget):
 		self.move(self.mapFromGlobal(currentPos +(p1 - p2))) #currentPos + difference
 
 		if name not in self.sb.previousName(as_list=1): #if the submenu ui called for the first time:
-			self.cloneWidgets(name) #re-construct any widgets from the previous ui that fall along the plotted path.
+			self.clonePathWidgets(name) #re-construct any widgets from the previous ui that fall along the plotted path.
 
 
 	def initParentUi(self, name):
@@ -130,8 +133,8 @@ class Tk(QtWidgets.QStackedWidget):
 		:Return:
 			(obj) the parent ui.
 		'''
-		parentUi = self.sb.getUi(name, level=3) #get the current ui's parent ui.
-		parentUiName = self.sb.getUiName(parentUi, level=3) #get the parent ui's name.
+		parentUiName = self.sb.getUiName(name, level=3) #get the parent ui's name.
+
 		if not parentUiName in self.sb.previousName(as_list=1):
 			return self.setUi(parentUiName)
 
@@ -150,7 +153,7 @@ class Tk(QtWidgets.QStackedWidget):
 			del self.widgetPath[-2:]
 
 
-	def cloneWidgets(self, name):
+	def clonePathWidgets(self, name):
 		'''Re-constructs the relevant buttons from the previous ui for the new ui, and positions them.
 		Initializes the new buttons by adding them to the switchboard dict, setting connections, event filters, and stylesheets.
 		The previous widget information is derived from the widget and draw paths.
@@ -158,13 +161,13 @@ class Tk(QtWidgets.QStackedWidget):
 		:Parameters:
 			name (str) = The name of ui to duplicate the widgets to.
 		'''
-		w0 = TkPushButton(parent=self.sb.getUi(name), setObjectName='return_area', setSize_=(45, 45), setPosition_=self.drawPath[0]) #create an invisible return button at the start point.
+		w0 = wgts.TkPushButton(parent=self.sb.getUi(name), setObjectName='return_area', setSize_=(45, 45), setPosition_=self.drawPath[0]) #create an invisible return button at the start point.
 		self.childEvents.addWidgets(name, w0) #initialize the widget to set things like the event filter and styleSheet.
 
 		if self.sb.getUiLevel(self.sb.previousName(omitLevel=3))==2: #if submenu: recreate widget/s from the previous ui that are in the current path.
 			for i in range(2, len(self.widgetPath)+1): #for index in widgetPath starting at 2:
 				prevWidget = self.widgetPath[-i][0] #assign the index a neg value to count from the back of the list (starting at -2).
-				w1 = TkPushButton(parent=self.sb.getUi(name), copy_=prevWidget, setPosition_=self.widgetPath[-i][1], setVisible=True)
+				w1 = wgts.TkPushButton(parent=self.sb.getUi(name), copy_=prevWidget, setPosition_=self.widgetPath[-i][1], setVisible=True)
 				self.childEvents.addWidgets(name, w1) #initialize the widget to set things like the event filter and styleSheet.
 				self.childEvents._mouseOver.append(w1)
 				w1.grabMouse() #set widget to receive mouse events.

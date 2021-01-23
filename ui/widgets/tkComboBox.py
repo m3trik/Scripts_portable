@@ -1,3 +1,6 @@
+from __future__ import print_function
+from builtins import super
+
 from PySide2 import QtCore, QtGui, QtWidgets
 
 from widgets import Menu, Attributes
@@ -11,7 +14,7 @@ class TkComboBox(QtWidgets.QComboBox, Menu, Attributes):
 	beforePopupHidden = QtCore.Signal()
 
 	def __init__(self, parent=None, popupStyle='modelView', **kwargs):
-		super(TkComboBox, self).__init__(parent)
+		super().__init__(parent)
 		'''
 		:Parameters:
 			popupStyle (str) = specify the type of popup menu. default is the standard 'modelView'.

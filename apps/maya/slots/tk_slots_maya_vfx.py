@@ -1,4 +1,6 @@
 from __future__ import print_function
+from builtins import super
+
 from tk_slots_maya_init import *
 
 import os.path
@@ -7,7 +9,7 @@ import os.path
 
 class Vfx(Init):
 	def __init__(self, *args, **kwargs):
-		super(Vfx, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 
 
 	def draggable_header(self, state=None):

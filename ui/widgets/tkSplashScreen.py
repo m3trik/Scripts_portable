@@ -1,4 +1,6 @@
 from __future__ import print_function
+from builtins import super
+
 from PySide2 import QtWidgets, QtGui, QtCore
 
 from multiprocessing import Pool

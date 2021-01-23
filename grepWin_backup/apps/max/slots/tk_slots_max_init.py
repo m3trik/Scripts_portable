@@ -4,7 +4,7 @@ import os
 
 from PySide2 import QtGui, QtWidgets, QtCore
 
-from ui import widgets as wgts
+from tk_ui import widgets as wgts
 from tk_slots import Slots
 
 # 3ds Max dependancies
@@ -25,7 +25,7 @@ class Init(Slots):
 	'''App specific methods inherited by all other slot classes.
 	'''
 	def __init__(self, *args, **kwargs):
-		super().__init__(*args, **kwargs)
+		super(Init, self).__init__(*args, **kwargs)
 
 		try:
 			self.init_ui.hud.shown.connect(self.construct_hud)

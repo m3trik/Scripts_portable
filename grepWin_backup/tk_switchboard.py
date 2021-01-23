@@ -211,25 +211,18 @@ class Switchboard(QtCore.QObject):
 				pass
 
 
-	def setUniqueObjectName(self, widget, name=None):
+	def setUniqueObjectName(self, widget, name=None, _num=None):
 		'''Set a unique object name for the given widget based on the pattern name000.
 
 		:Parameters:
 			widget (obj) = The child widget to set an object name for.
 			name (str) = Ui name.
+			_num (int) = Integer to append to name. Internal use.
 
 		:Return:
 			(str) the widgets object name.
 		'''
-		if not name:
-			name = self.getUiName()
-
-		widgetType = widget.__class__.__name__
-		prefixTypes = {'QPushButton':'b', 'QPushButton':'v', 'QPushButton':'i', 'QToolButton':'tb', 'QComboBox':'cmb', 
-			'QCheckBox':'chk', 'QRadioButton':'chk', 'QPushButton(checkable)':'chk', 'QSpinBox':'s', 'QDoubleSpinBox':'s',
-			'QLabel':'lbl', 'QWidget':'w', 'QTreeWidget':'tree', 'QListWidget':'list', 'QLineEdit':'line', 'QTextEdit':'text'}
-
-		def nameGenerator(num):
+		if _num: #generate a unique three digit num
 			widgetNum = ('00'+str(num))[-3:] #remove prefixed zeros to keep the num three digits. ie. 001, 011, 111
 
 			if widgetType in prefixTypes:
@@ -239,8 +232,16 @@ class Switchboard(QtCore.QObject):
 
 			return '{0}{1}'.format(prefix, widgetNum) #append num. ie. widgetAction000
 
+		if not name:
+			name = self.getUiName()
+
+		widgetType = widget.__class__.__name__
+		prefixTypes = {'QPushButton':'b', 'QPushButton':'v', 'QPushButton':'i', 'QToolButton':'tb', 'QComboBox':'cmb', 
+			'QCheckBox':'chk', 'QRadioButton':'chk', 'QPushButton(checkable)':'chk', 'QSpinBox':'s', 'QDoubleSpinBox':'s',
+			'QLabel':'lbl', 'QWidget':'w', 'QTreeWidget':'tree', 'QListWidget':'list', 'QLineEdit':'line', 'QTextEdit':'text'}
+
 		num=0
-		widgetName = nameGenerator(num)
+		widgetName = self.setUniqueObjectName(_num=num)
 		while self.getWidget(widgetName, name): #if a widget of the same name already exists; increment by one and try again.
 			num+=1; widgetName = nameGenerator(num)
 
@@ -263,8 +264,8 @@ class Switchboard(QtCore.QObject):
 		submenu_name = self.getUiName(name, level=2)
 
 		kwargs = {
-			name: parentUi, #ie. 'polygons': <PySide2.QtWidgets.QMainWindow object at 0x000001D97BCEB0C8>
-			submenu_name: childUi, #ie. 'polygons_submenu': <PySide2.QtWidgets.QMainWindow object at 0x000001D978D8A708>
+			'{}_ui'.format(name): parentUi, #ie. 'polygons_ui': <PySide2.QtWidgets.QMainWindow object at 0x000001D97BCEB0C8>
+			'{}_ui'.format(submenu_name): childUi, #ie. 'polygons_submenu_ui': <PySide2.QtWidgets.QMainWindow object at 0x000001D978D8A708>
 
 			'_ui': lambda parentUi=parentUi: self.getUi()
 				if self.getUi() in [v for k, v in self.uiList().items() if self.getUiName(parentUi) in k] #if the current ui is not one of the parent ui's children or the parent ui itself, default to the parent ui.
@@ -1553,7 +1554,7 @@ sbDict = {
 		'<PySide2.QtWidgets.QWidget object at 0x0000000003D070C8>': {'widgetType': 'QWidget', 'widgetName': 'mainWindow', 'derivedType': 'QWidget', 'signalInstance': None, 'docString': None, 'prefix': 'mainWindow', 'method': None}, 
 		'<widgets.tkProgressBar.TkProgressBar object at 0x0000000003D07088>': {'widgetType': 'TkProgressBar', 'widgetName': 'progressBar', 'derivedType': 'QProgressBar', 'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000000002A463F0>', 'docString': None, 'prefix': 'progressBar', 'method': None}, 
 		'<widgets.tkComboBox.TkComboBox object at 0x0000000003D04F08>': {'widgetType': 'TkComboBox', 'widgetName': 'cmb002', 'derivedType': 'QComboBox', 'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000000002A46378>', 'docString': '\n\t\tMaterial list\n\n\t\t:Parameters:\n\t\t\tindex (int) = parameter on activated, currentIndexChanged, and highlighted signals.\n\t\t', 'prefix': 'cmb', 'method': '<bound method Materials.cmb002 of <tk_slots_max_materials.Materials object at 0x0000000003D547C8>>'}, 
-		'<widgets.tkPushButton_Draggable.TkPushButton_Draggable object at 0x0000000003D04D88>': {'widgetType': 'TkPushButton_Draggable', 'widgetName': 'd000', 'derivedType': 'QPushButton', 'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000000002A463A8>', 'docString': '\n\t\tContext menu\n\t\t', 'prefix': 'd000', 'method': '<bound method Materials.d000 of <tk_slots_max_materials.Materials object at 0x0000000003D547C8>>'}, 
+		'<widgets.tkPushButton_Draggable.TkPushButton_Draggable object at 0x0000000003D04D88>': {'widgetType': 'TkPushButton_Draggable', 'widgetName': 'draggable_header', 'derivedType': 'QPushButton', 'signalInstance': '<PySide2.QtCore.SignalInstance object at 0x0000000002A463A8>', 'docString': '\n\t\tContext menu\n\t\t', 'prefix': 'draggable_header', 'method': '<bound method Materials.draggable_header of <tk_slots_max_materials.Materials object at 0x0000000003D547C8>>'}, 
 		'<PySide2.QtWidgets.QGridLayout object at 0x0000000003D07148>': {'widgetType': 'QGridLayout', 'widgetName': 'gridLayout_2', 'derivedType': 'QGridLayout', 'signalInstance': None, 'docString': None, 'prefix': None, 'method': None}, 
 		'<PySide2.QtWidgets.QHBoxLayout object at 0x0000000003D07188>': {'widgetType': 'QHBoxLayout', 'widgetName': 'horizontalLayout', 'derivedType': 'QHBoxLayout', 'signalInstance': None, 'docString': None, 'prefix': 'horizontalLayout', 'method': None}, 
 		'<PySide2.QtWidgets.QVBoxLayout object at 0x0000000003D071C8>': {'widgetType': 'QVBoxLayout', 'widgetName': 'verticalLayout', 'derivedType': 'QVBoxLayout', 'signalInstance': None, 'docString': None, 'prefix': 'verticalLayout', 'method': None}, 

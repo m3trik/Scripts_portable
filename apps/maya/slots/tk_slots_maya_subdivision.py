@@ -1,13 +1,16 @@
 from __future__ import print_function
+from builtins import super
+import os.path
+
 from tk_slots_maya_init import *
 
 import traceback
-import os.path
+
 
 
 class Subdivision(Init):
 	def __init__(self, *args, **kwargs):
-		super(Subdivision, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 
 
 	def draggable_header(self, state=None):

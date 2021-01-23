@@ -1,3 +1,6 @@
+from __future__ import print_function
+from builtins import super
+
 from PySide2 import QtCore, QtGui, QtWidgets
 
 from widgets import Menu, Attributes, RichText
@@ -8,7 +11,7 @@ class TkToolButton(QtWidgets.QToolButton, Menu, Attributes, RichText):
 	'''
 	'''
 	def __init__(self, parent=None, showMenuOnMouseOver=False, **kwargs):
-		super(TkToolButton, self).__init__(parent)
+		super().__init__(parent)
 		RichText.__init__(self, alignment='AlignCenter')
 
 		self.showMenuOnMouseOver=showMenuOnMouseOver

@@ -1,3 +1,6 @@
+from __future__ import print_function
+from builtins import super
+
 from PySide2 import QtCore, QtGui, QtWidgets
 
 from widgets import Attributes
@@ -13,7 +16,7 @@ class TkMenu(QtWidgets.QMenu, Attributes):
 		menu_type (str) = Menu style. valid parameters are: 'standard', 'context'
 	'''
 	def __init__(self, parent=None, position='bottomLeft', menu_type='standard', **kwargs):
-		super(TkMenu, self).__init__(parent)
+		super().__init__(parent)
 
 		self.position=position
 		self.menu_type=menu_type

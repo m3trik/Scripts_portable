@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+# !/usr/bin/python
+# coding=utf-8
 # import os, pkgutil
 # from pydoc import locate
 
@@ -15,7 +16,9 @@ from widgets.tkCheckBox import TkCheckBox
 from widgets.tkPushButton import TkPushButton
 from widgets.tkToolButton import TkToolButton
 from widgets.tkWidget_MultiWidget import TkWidget_MultiWidget as MultiWidget
-from widgets.tkWidget_ProgressIndicator import TkWidget_ProgressIndicator as ProgressIndicator
+from widgets.tkWidget_GifPlayer import TkWidget_GifPlayer as GifPlayer
+from widgets.tkWidget_LoadingIndicator import TkWidget_LoadingIndicator as LoadingIndicator
+
 
 
 

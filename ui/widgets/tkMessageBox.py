@@ -1,3 +1,6 @@
+from __future__ import print_function
+from builtins import super
+
 from PySide2 import QtCore, QtGui, QtWidgets
 
 from widgets import Attributes
@@ -28,7 +31,7 @@ class TkMessageBox(QtWidgets.QMessageBox, Attributes):
 		timeout (int) = time in seconds before the messagebox auto closes.
 	'''
 	def __init__(self, parent=None, location='topMiddle', timeout=2, **kwargs):
-		super(TkMessageBox, self).__init__(parent)
+		super().__init__(parent)
 
 		self.setWindowFlags(QtCore.Qt.Tool|QtCore.Qt.FramelessWindowHint|QtCore.Qt.WindowStaysOnTopHint) #QtCore.Qt.CustomizeWindowHint|QtCore.Qt.WindowTitleHint
 		self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
