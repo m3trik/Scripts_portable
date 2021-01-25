@@ -2,7 +2,7 @@ from __future__ import print_function
 from builtins import super
 import os.path
 
-from tk_slots_maya_init import *
+from tk_slots_max_init import *
 
 
 
@@ -144,7 +144,7 @@ class Materials(Init):
 	def tb000(self, state=None):
 		'''Select By Material Id
 		'''
-		tb = self.ui.tb000
+		tb = self.current_ui.tb000
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='Current Material', setObjectName='chk010', setChecked=True, setToolTip='Use the current material, <br>else use the current viewport selection to get a material.')
 			tb.menu_.add('QCheckBox', setText='All Objects', setObjectName='chk003', setToolTip='Search all scene objects, or only those currently selected.')

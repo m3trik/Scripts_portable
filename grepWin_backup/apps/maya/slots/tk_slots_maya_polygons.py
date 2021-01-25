@@ -1,13 +1,14 @@
 from __future__ import print_function
-from tk_slots_maya_init import *
-
+from builtins import super
 import os.path
+
+from tk_slots_maya_init import *
 
 
 
 class Polygons(Init):
 	def __init__(self, *args, **kwargs):
-		super(Polygons, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 
 
 	def chk008(self, state=None):
@@ -28,20 +29,20 @@ class Polygons(Init):
 		self.toggleWidgets(setUnChecked='chk008-9')
 
 
-	def d000(self, state=None):
+	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		d000 = self.polygons.d000
+		draggable_header = self.polygons_ui.draggable_header
 
 		if state is 'setMenu':
-			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
+			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
 			return
 
 
 	def cmb000(self, index=None):
 		'''Maya Polygon Operations
 		'''
-		cmb = self.polygons.d000.contextMenu.cmb000
+		cmb = self.polygons_ui.draggable_header.contextMenu.cmb000
 
 		if index is 'setMenu':
 			list_ = ['Extrude','Bevel','Bridge','Combine','Merge Vertex','Offset Edgeloop','Edit Edgeflow','Extract Curve','Poke','Wedge','Assign Invisible']
@@ -100,7 +101,7 @@ class Polygons(Init):
 
 			else: #if object mode. merge all vertices on the selected object.
 				for n, vert in enumerate(object_vert_sel):
-					if not self.polygons.progressBar.step(n, len(object_vert_sel)): #register progress while checking for cancellation:
+					if not self.polygons_ui.progressBar.step(n, len(object_vert_sel)): #register progress while checking for cancellation:
 						break
 
 					# get number of vertices
@@ -285,7 +286,7 @@ class Polygons(Init):
 	def tb008(self, state=None):
 		'''Boolean Operation
 		'''
-		tb = self.polygons.tb008
+		tb = self.polygons_ui.tb008
 		if state is 'setMenu':
 			tb.menu_.add('QRadioButton', setText='Union', setObjectName='chk011', setHeight_=20, setToolTip='Fuse two objects together.')
 			tb.menu_.add('QRadioButton', setText='Difference', setObjectName='chk012', setChecked=True, setHeight_=20, setToolTip='Indents one object with the shape of another at the point of their intersection.')
@@ -306,7 +307,7 @@ class Polygons(Init):
 	def tb009(self, state=None):
 		'''Snap Closest Verts
 		'''
-		tb = self.polygons.tb009
+		tb = self.polygons_ui.tb009
 		if state is 'setMenu':
 			tb.menu_.add('QDoubleSpinBox', setPrefix='Tolerance: ', setObjectName='s005', setMinMax_='.000-100 step.05', setValue=10, setToolTip='Set the max Snap Distance. Vertices with a distance exceeding this value will be ignored.')
 			tb.menu_.add('QCheckBox', setText='Freeze Transforms', setObjectName='chk016', setChecked=True, setToolTip='Freeze Transformations on the object that is being snapped to.')

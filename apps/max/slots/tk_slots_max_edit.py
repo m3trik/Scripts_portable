@@ -2,7 +2,7 @@ from __future__ import print_function
 from builtins import super
 import os.path
 
-from tk_slots_maya_init import *
+from tk_slots_max_init import *
 
 
 
@@ -47,7 +47,7 @@ class Edit(Init):
 	def tb000(self, state=None):
 		'''Mesh Cleanup
 		'''
-		tb = self.ui.tb000
+		tb = self.current_ui.tb000
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='N-Gons', setObjectName='chk002', setToolTip='Find N-gons.')
 			tb.menu_.add('QCheckBox', setText='Isolated Vertex', setObjectName='chk003', setChecked=True, setToolTip='Find isolated vertices within specified angle threshold.')
@@ -67,7 +67,7 @@ class Edit(Init):
 	def tb001(self, state=None):
 		'''Delete History
 		'''
-		tb = self.ui.tb001
+		tb = self.current_ui.tb001
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='For All Objects', setObjectName='chk018', setChecked=True, setToolTip='Delete history on All objects or just those selected.')
 			tb.menu_.add('QCheckBox', setText='Delete Unused Nodes', setObjectName='chk019', setChecked=True, setToolTip='Delete unused nodes.')
@@ -109,7 +109,7 @@ class Edit(Init):
 	def tb002(self, state=None):
 		'''Delete
 		'''
-		tb = self.ui.tb002
+		tb = self.current_ui.tb002
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='Delete Loop', setObjectName='chk001', setToolTip='Delete the entire edge loop of any components selected.')
 			return
@@ -283,7 +283,7 @@ class Edit(Init):
 	def tb003(self, state=None):
 		'''Delete Along Axis
 		'''
-		tb = self.ui.tb003
+		tb = self.current_ui.tb003
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='-', setObjectName='chk006', setChecked=True, setToolTip='Perform delete along negative axis.')
 			tb.menu_.add('QRadioButton', setText='X', setObjectName='chk007', setChecked=True, setToolTip='Perform delete along X axis.')

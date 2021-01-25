@@ -1,29 +1,30 @@
 from __future__ import print_function
-from tk_slots_maya_init import *
-
+from builtins import super
 import os.path
+
+from tk_slots_maya_init import *
 
 
 
 class Edit(Init):
 	def __init__(self, *args, **kwargs):
-		super(Edit, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 
 
-	def d000(self, state=None):
+	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		d000 = self.edit.d000
+		draggable_header = self.edit_ui.draggable_header
 
 		if state is 'setMenu':
-			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='Maya Editors')
+			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='Maya Editors')
 			return
 
 
 	def cmb000(self, index=None):
 		'''Editors
 		'''
-		cmb = self.edit.cmb000
+		cmb = self.edit_ui.cmb000
 
 		if index is 'setMenu':
 			list_ = ['Cleanup', 'Transfer: Attribute Values', 'Transfer: Shading Sets']
@@ -131,7 +132,7 @@ class Edit(Init):
 	def tb001(self, state=None):
 		'''Delete History
 		'''
-		tb = self.edit.tb001
+		tb = self.edit_ui.tb001
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='For All Objects', setObjectName='chk018', setChecked=True, setToolTip='Delete history on All objects or just those selected.')
 			tb.menu_.add('QCheckBox', setText='Delete Unused Nodes', setObjectName='chk019', setChecked=True, setToolTip='Delete unused nodes.')

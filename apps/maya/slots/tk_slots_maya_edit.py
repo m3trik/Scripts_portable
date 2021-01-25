@@ -45,7 +45,7 @@ class Edit(Init):
 	def chk006_9(self):
 		'''Set the toolbutton's text according to the checkstates.
 		'''
-		tb = self.ui.tb003
+		tb = self.current_ui.tb003
 		axis = self.getAxisFromCheckBoxes('chk006-9', tb.menu_)
 		tb.setText('Delete '+axis)
 
@@ -53,7 +53,7 @@ class Edit(Init):
 	def tb000(self, state=None):
 		'''Mesh Cleanup
 		'''
-		tb = self.ui.tb000
+		tb = self.current_ui.tb000
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='All Geometry', setObjectName='chk005', setToolTip='Clean All scene geometry.')
 			tb.menu_.add(wgts.TkCheckBox, setText='Select Only', setObjectName='chk004', setTristate=True, setCheckState_=2, setToolTip='Select and/or Repair matching geometry. <br>0: Repair Only<br>1: Repair and Select<br>2: Select Only')
@@ -173,7 +173,7 @@ class Edit(Init):
 	def tb002(self, state=None):
 		'''Delete
 		'''
-		tb = self.ui.tb002
+		tb = self.current_ui.tb002
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='Delete Edge Loop', setObjectName='chk001', setToolTip='Delete the edge loops of any edges selected.')
 			tb.menu_.add('QCheckBox', setText='Delete Edge Ring', setObjectName='chk000', setToolTip='Delete the edge rings of any edges selected.')
@@ -214,7 +214,7 @@ class Edit(Init):
 	def tb003(self, state=None):
 		'''Delete Along Axis
 		'''
-		tb = self.ui.tb003
+		tb = self.current_ui.tb003
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='-', setObjectName='chk006', setChecked=True, setToolTip='Perform delete along negative axis.')
 			tb.menu_.add('QRadioButton', setText='X', setObjectName='chk007', setChecked=True, setToolTip='Perform delete along X axis.')

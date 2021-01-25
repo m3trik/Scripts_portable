@@ -1,29 +1,30 @@
 from __future__ import print_function
-from tk_slots_max_init import *
-
+from builtins import super
 import os.path
+
+from tk_slots_maya_init import *
 
 
 
 class Edit(Init):
 	def __init__(self, *args, **kwargs):
-		super(Edit, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 
 
-	def d000(self, state=None):
+	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		d000 = self.edit.d000
+		draggable_header = self.edit_ui.draggable_header
 
 		if state is 'setMenu':
-			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
+			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb000', setToolTip='')
 			return
 
 
 	def cmb000(self, index=None):
 		'''Editors
 		'''
-		cmb = self.edit.cmb000
+		cmb = self.edit_ui.cmb000
 
 		if index is 'setMenu':
 			list_ = ['']
@@ -40,7 +41,7 @@ class Edit(Init):
 		'''Set the toolbutton's text according to the checkstates.
 		'''
 		axis = self.getAxisFromCheckBoxes('chk006-9')
-		self.edit.tb003.setText('Delete '+axis)
+		self.edit_ui.tb003.setText('Delete '+axis)
 
 
 	def tb000(self, state=None):

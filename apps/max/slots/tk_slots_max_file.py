@@ -2,7 +2,7 @@ from __future__ import print_function
 from builtins import super
 import os.path
 
-from tk_slots_maya_init import *
+from tk_slots_max_init import *
 
 from datetime import datetime
 
@@ -12,31 +12,9 @@ class File(Init):
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 
-
-		#get recent file list. #convert to python
-		maxEval('''
-		Fn getRecentFiles =
-			(
-			local recentfiles = (getdir #maxData) + "RecentDocuments.xml"
-			if doesfileexist recentfiles then
-				(
-				XMLArray = #()		
-				xDoc = dotnetobject "system.xml.xmldocument"	
-				xDoc.Load recentfiles
-				Rootelement = xDoc.documentelement
-
-				XMLArray = for i = 0 to rootelement.childnodes.item[4].childnodes.itemof[0].childnodes.count-1 collect 
-					(
-					rootelement.childnodes.item[4].childnodes.itemof[0].childnodes.itemof[i].childnodes.itemof[3].innertext	
-					)
-					
-				Return XMLArray
-				LRXML = Undefined
-				XDoc = Undefined
-				XDoc = nothing	
-				)
-			)
-			''')
+		#set the text for the open last file button to the last file's name.
+		recentFiles = self.getRecentFiles()
+		self.file_submenu_ui.b001.setText(self.getNameFromFullPath(recentFiles[0])) if recentFiles else self.file_submenu_ui.b001.setVisible(False)
 
 
 	def draggable_header(self, state=None):
@@ -62,11 +40,7 @@ class File(Init):
 			cmb.contextMenu.add('QPushButton', setObjectName='b001', setText='Last', setToolTip='Open the most recent file.')
 			return
 
-		recentFiles = [File.formatPath(f) for f in rt.getRecentfiles()]
-		items = cmb.addItems_(recentFiles, 'Recent Files:', clear=True)
-
-		#set the text for the open last file button to the last file's name.
-		self.file_submenu.b001.setText(File.getNameFromFullPath(recentFiles[0])) if recentFiles else self.file_submenu.b001.setVisible(False)
+		items = cmb.addItems_(self.getRecentFiles(), 'Recent Files:', clear=True)
 
 		if index>0:
 			# force=True; force if maxEval("maxFileName;") else not force #if sceneName prompt user to save; else force open.  also: checkForSave(); If the scene has been modified since the last file save (if any), calling this function displays the message box prompting the user that the scene has been modified and requests to save.
@@ -82,10 +56,7 @@ class File(Init):
 		if index is 'setMenu':
 			return
 
-		path = ''
-		list_ = []#[f for f in os.listdir(path)]
-
-		items = cmb.addItems_(list_, "Recent Projects", clear=True)
+		items = cmb.addItems_(self.getRecentAutosave(), "Recent Projects", clear=True)
 
 		if index>0:
 			maxEval('setProject "'+items[index]+'"')
@@ -100,11 +71,7 @@ class File(Init):
 		if index is 'setMenu':
 			return
 
-		path = MaxPlus.PathManager.GetAutobackDir()
-		files = [f for f in os.listdir(path) if f.endswith('.max') or f.endswith('.bak')] #get list of max autosave files
-
-		list_ = [f+'  '+datetime.fromtimestamp(os.path.getmtime(path+'\\'+f)).strftime('%H:%M  %m-%d-%Y') for f in files] #attach modified timestamp
-		items = cmb.addItems_(sorted(list_, reverse=1), "Recent Autosave", clear=True)
+		items = cmb.addItems_(self.getRecentAutosave(), "Recent Autosave", clear=True)
 
 		if index>0:
 			rt.loadMaxFile(path+'\\'+str(files[index-1]))
@@ -204,10 +171,10 @@ class File(Init):
 			cmb.contextMenu.add(wgts.TkLabel, setObjectName='lbl004', setText='Root', setToolTip='Open the project directory.')
 			return
 
-		path = File.formatPath(MaxPlus.PathManager.GetProjectFolderDir()) #current project path.
+		path = self.formatPath(MaxPlus.PathManager.GetProjectFolderDir()) #current project path.
 		list_ = [f for f in os.listdir(path)]
 
-		project = File.getNameFromFullPath(path) #add current project path string to label. strip path and trailing '/'
+		project = self.getNameFromFullPath(path) #add current project path string to label. strip path and trailing '/'
 
 		cmb.addItems_(list_, project, clear=True)
 
@@ -220,7 +187,7 @@ class File(Init):
 	def tb000(self, state=None):
 		'''Save
 		'''
-		tb = self.current_ui.tb000
+		tb = self.file_ui.tb000
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='ASCII', setObjectName='chk003', setChecked=True, setToolTip='Toggle ASCII or binary file type.')
 			tb.menu_.add('QCheckBox', setText='Wireframe', setObjectName='chk000', setChecked=True, setToolTip='Set view to wireframe before save.')
@@ -250,8 +217,8 @@ class File(Init):
 		path = fullPath[:index] #ie. O:/Cloud/____Graphics/______project_files/elise.proj/elise.scenes/.maya/
 
 		if increment: #increment filename
-			newName = File.incrementFileName(curFullName)
-			File.deletePreviousFiles(curFullName, path)
+			newName = self.incrementFileName(curFullName)
+			self.deletePreviousFiles(curFullName, path)
 			pm.saveAs (path+newName, force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
 			print('{0} {1}'.format('Result:', path+newName))
 		else:	#save without renaming
@@ -371,15 +338,15 @@ class File(Init):
 	def lbl004(self):
 		'''Open current project root
 		'''
-		dir_ = rt.getRecentfiles() #current project path.
-		dir_ = File.formatPath(dir_) #reformat for network address
+		dir_ = self.getRecentFiles() #current project path.
+		dir_ = self.formatPath(dir_) #reformat for network address
 		os.startfile(dir_)
 
 
 	def b001(self):
 		'''Recent Files: Open Last
 		'''
-		# files = rt.getRecentfiles()
+		# files = self.getRecentFiles()
 		# rt.loadMaxFile(str(files[0]))
 
 		self.cmb000(index=1)
@@ -420,35 +387,6 @@ class File(Init):
 		# 	if replace:
 		# 		newName = obj.replace(from_, to)
 		# 	pm.rename(obj, newName) #Rename the object with the new name
-
-
-	@staticmethod
-	def formatPath(dir_):
-		'''Assure a given directory path string is formatted correctly.
-		Replace any backslashes with forward slashes.
-		'''
-		formatted_dir = dir_.replace('/', '\\') #assure any single slash is forward.
-
-		return formatted_dir
-
-
-	@staticmethod
-	def getNameFromFullPath(fullPath):
-		'''Extract the file or dir name from a path string.
-
-		:Parameters:
-			fullPath (str) = A full path including file name.
-
-		:Return:
-			(str) the dir or file name including extension.
-		'''
-		name = fullPath.split('/')[-1]
-		if len(fullPath)==len(name):
-			name = fullPath.split('\\')[-1]
-			if not name:
-				name = fullPath.split('\\')[-2]
-
-		return name
 
 
 

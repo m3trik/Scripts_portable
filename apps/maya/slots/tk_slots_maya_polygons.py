@@ -79,7 +79,7 @@ class Polygons(Init):
 	def tb000(self, state=None):
 		'''Merge Vertices
 		'''
-		tb = self.ui.tb000
+		tb = self.current_ui.tb000
 		if state is 'setMenu':
 			tb.menu_.add('QDoubleSpinBox', setPrefix='Distance: ', setObjectName='s002', setMinMax_='0.000-10 step.001', setValue=0.001, setHeight_=20, setToolTip='Merge Distance.')
 			return
@@ -118,7 +118,7 @@ class Polygons(Init):
 	def tb001(self, state=None):
 		'''Bridge
 		'''
-		tb = self.ui.tb001
+		tb = self.current_ui.tb001
 		if state is 'setMenu':
 			tb.menu_.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s003', setMinMax_='0-10000 step1', setValue=0, setHeight_=20, setToolTip='Subdivision Amount.')
 			return
@@ -136,7 +136,7 @@ class Polygons(Init):
 	def tb002(self, state=None):
 		'''Combine
 		'''
-		tb = self.ui.tb002
+		tb = self.current_ui.tb002
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='Merge', setObjectName='chk000', setChecked=True, setHeight_=20, setToolTip='Combine selected meshes and merge any coincident verts/edges.')
 			return
@@ -152,7 +152,7 @@ class Polygons(Init):
 	def tb003(self, state=None):
 		'''Extrude
 		'''
-		tb = self.ui.tb003
+		tb = self.current_ui.tb003
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='Keep Faces Together', setObjectName='chk002', setChecked=True, setHeight_=20, setToolTip='Keep edges/faces together.')
 			tb.menu_.add('QSpinBox', setPrefix='Divisions: ', setObjectName='s004', setMinMax_='1-10000 step1', setValue=1, setHeight_=20, setToolTip='Subdivision Amount.')
@@ -182,7 +182,7 @@ class Polygons(Init):
 	def tb004(self, state=None):
 		'''Bevel (Chamfer)
 		'''
-		tb = self.ui.tb004
+		tb = self.current_ui.tb004
 		if state is 'setMenu':
 			tb.menu_.add('QDoubleSpinBox', setPrefix='Width: ', setObjectName='s000', setMinMax_='0.00-100 step.01', setValue=0.01, setHeight_=20, setToolTip='Bevel Width.')
 			return
@@ -200,7 +200,7 @@ class Polygons(Init):
 	def tb005(self, state=None):
 		'''Detach
 		'''
-		tb = self.ui.tb005
+		tb = self.current_ui.tb005
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='Duplicate', setObjectName='chk014', setChecked=True, setToolTip='Duplicate any selected faces, leaving the originals.')
 			tb.menu_.add('QCheckBox', setText='Separate', setObjectName='chk015', setChecked=True, setToolTip='Separate mesh objects after detaching faces.')
@@ -239,7 +239,7 @@ class Polygons(Init):
 	def tb006(self, state=None):
 		'''Inset Face Region
 		'''
-		tb = self.ui.tb006
+		tb = self.current_ui.tb006
 		if state is 'setMenu':
 			tb.menu_.add('QDoubleSpinBox', setPrefix='Offset: ', setObjectName='s001', setMinMax_='0.00-100 step.01', setValue=2.00, setHeight_=20, setToolTip='Offset amount.')
 			return
@@ -252,7 +252,7 @@ class Polygons(Init):
 	def tb007(self, state=None):
 		'''Divide Facet
 		'''
-		tb = self.ui.tb007
+		tb = self.current_ui.tb007
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='U', setObjectName='chk008', setChecked=True, setHeight_=20, setToolTip='Divide facet: U coordinate.')
 			tb.menu_.add('QCheckBox', setText='V', setObjectName='chk009', setChecked=True, setHeight_=20, setToolTip='Divide facet: V coordinate.')
@@ -532,7 +532,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 # 		'''
 # 		Detach
 # 		'''
-# 		tb = self.ui.tb005
+# 		tb = self.current_ui.tb005
 # 		if state is 'setMenu':
 # 			# tb.menu_.add('QCheckBox', setText='Delete Original', setObjectName='chk007', setChecked=True, setToolTip='Delete original selected faces.')
 # 			return

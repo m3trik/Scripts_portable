@@ -2,7 +2,7 @@ from __future__ import print_function
 from builtins import super
 import os.path
 
-from tk_slots_maya_init import *
+from tk_slots_max_init import *
 
 
 
@@ -258,7 +258,7 @@ class Transform(Init):
 	def tb000(self, state=None):
 		'''Drop To Grid
 		'''
-		tb = self.ui.tb000
+		tb = self.current_ui.tb000
 		if state is 'setMenu':
 			tb.menu_.add('QComboBox', addItems=['Min','Mid','Max'], setObjectName='cmb004', setToolTip='Choose which point of the bounding box to align to.')
 			tb.menu_.add('QCheckBox', setText='Move to Origin', setObjectName='chk014', setChecked=True, setToolTip='Move to origin (xyz 0,0,0).')
@@ -280,7 +280,7 @@ class Transform(Init):
 
 		Auto Align finds the axis with the largest variance, and set the axis checkboxes accordingly before performing a regular align.
 		'''
-		tb = self.ui.tb001
+		tb = self.current_ui.tb001
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='X Axis', setObjectName='chk029', setDisabled=True, setToolTip='Align X axis')
 			tb.menu_.add('QCheckBox', setText='Y Axis', setObjectName='chk030', setDisabled=True, setToolTip='Align Y axis')

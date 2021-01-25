@@ -1,61 +1,62 @@
 from __future__ import print_function
-from tk_slots_maya_init import *
-
+from builtins import super
 import os.path
+
+from tk_slots_maya_init import *
 
 
 
 class Materials(Init):
 	def __init__(self, *args, **kwargs):
-		super(Materials, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 
 		self.currentMats=None
 		self.randomMat=None
 
-		self.materials_submenu.b003.setVisible(False)
+		self.materials_submenu_ui.b003.setVisible(False)
 
 
 	@property
 	def currentMat(self):
 		'''Get the current material using the current index of the materials combobox.
 		'''
-		text = self.materials.cmb002.currentText()
+		text = self.materials_ui.cmb002.currentText()
 		return self.currentMats[text] if text else None
 
 
-	def d000(self, state=None):
+	def draggable_header(self, state=None):
 		'''Context menu
 		'''
-		d000 = self.materials.d000
+		draggable_header = self.materials_ui.draggable_header
 
 		if state is 'setMenu':
-			d000.contextMenu.add(wgts.TkComboBox, setObjectName='cmb001', setToolTip='Maya Material Editors')
-			d000.contextMenu.add(wgts.TkLabel, setText='Material Attributes', setObjectName='lbl004', setToolTip='Show the material attributes in the attribute editor.')
+			draggable_header.contextMenu.add(wgts.TkComboBox, setObjectName='cmb001', setToolTip='Maya Material Editors')
+			draggable_header.contextMenu.add(wgts.TkLabel, setText='Material Attributes', setObjectName='lbl004', setToolTip='Show the material attributes in the attribute editor.')
 			return
 
 
 	def chk007(self, state=None):
 		'''Assign Material: Current
 		'''
-		self.materials.tb002.setText('Assign Current')
+		self.materials_ui.tb002.setText('Assign Current')
 
 
 	def chk008(self, state=None):
 		'''Assign Material: Random
 		'''
-		self.materials.tb002.setText('Assign Random')
+		self.materials_ui.tb002.setText('Assign Random')
 
 
 	def chk009(self, state=None):
 		'''Assign Material: New
 		'''
-		self.materials.tb002.setText('Assign New')
+		self.materials_ui.tb002.setText('Assign New')
 
 
 	def cmb001(self, index=None):
 		'''Editors
 		'''
-		cmb = self.materials.cmb001
+		cmb = self.materials_ui.cmb001
 
 		if index is 'setMenu':
 			files = ['Hypershade']
@@ -74,9 +75,9 @@ class Materials(Init):
 		:Parameters:
 			index (int) = parameter on activated, currentIndexChanged, and highlighted signals.
 		'''
-		cmb = self.materials.cmb002
-		tb = self.materials.tb001
-		b = self.materials_submenu.b003
+		cmb = self.materials_ui.cmb002
+		tb = self.materials_ui.tb001
+		b = self.materials_submenu_ui.b003
 
 		if index is 'setMenu':
 			cmb.contextMenu.add(wgts.TkLabel, setText='Open in Editor', setObjectName='lbl000', setToolTip='Open material in editor.')
@@ -151,7 +152,7 @@ class Materials(Init):
 	def tb001(self, state=None):
 		'''Stored Material Options
 		'''
-		tb = self.materials.tb001
+		tb = self.materials_ui.tb001
 		if state is 'setMenu':
 			tb.menu_.add('QRadioButton', setText='All Scene Materials', setObjectName='chk000', setChecked=True, setToolTip='List all scene materials.') #Material mode: Scene Materials
 			tb.menu_.add('QRadioButton', setText='ID Map Materials', setObjectName='chk001', setToolTip='List ID map materials.') #Material mode: ID Map Materials
@@ -162,18 +163,18 @@ class Materials(Init):
 
 		#set the groupbox title to reflect the current mode.
 		if tb.menu_.chk000.isChecked():
-			self.materials.group000.setTitle(tb.menu_.chk000.text())
+			self.materials_ui.group000.setTitle(tb.menu_.chk000.text())
 		elif tb.menu_.chk001.isChecked():
-			self.materials.group000.setTitle(tb.menu_.chk001.text())
+			self.materials_ui.group000.setTitle(tb.menu_.chk001.text())
 		elif tb.menu_.chk002.isChecked():
-			self.materials.group000.setTitle(tb.menu_.chk002.text())
+			self.materials_ui.group000.setTitle(tb.menu_.chk002.text())
 
 
 	@Slots.message
 	def tb002(self, state=None):
 		'''Assign Material
 		'''
-		tb = self.materials.tb002
+		tb = self.materials_ui.tb002
 		if state is 'setMenu':
 			tb.menu_.add('QRadioButton', setText='Current Material', setObjectName='chk007', setChecked=True, setToolTip='Re-Assign the current stored material.')
 			tb.menu_.add('QRadioButton', setText='New Material', setObjectName='chk009', setToolTip='Assign a new material.')
@@ -201,11 +202,11 @@ class Materials(Init):
 
 			self.randomMat = mat
 
-			if self.materials.tb001.menu_.chk001.isChecked(): #ID map material mode
+			if self.materials_ui.tb001.menu_.chk001.isChecked(): #ID map material mode
 				self.cmb002() #refresh the combobox
 			else:
-				self.materials.tb001.menu_.chk001.setChecked(True) #set combobox to ID map mode. toggling the checkbox refreshes the combobox.
-			self.materials.cmb002.setCurrentItem(mat.name()) #set the combobox index to the new mat #self.cmb002.setCurrentIndex(self.cmb002.findText(name))
+				self.materials_ui.tb001.menu_.chk001.setChecked(True) #set combobox to ID map mode. toggling the checkbox refreshes the combobox.
+			self.materials_ui.cmb002.setCurrentItem(mat.name()) #set the combobox index to the new mat #self.cmb002.setCurrentIndex(self.cmb002.findText(name))
 
 		elif assignNew: #Assign New Material
 			mel.eval('buildObjectMenuItemsNow "MainPane|viewPanes|modelPanel4|modelPanel4|modelPanel4|modelPanel4ObjectPop";')
@@ -216,9 +217,9 @@ class Materials(Init):
 	def lbl000(self):
 		'''Open material in editor
 		'''
-		if self.materials.tb001.menu_.chk001.isChecked(): #ID map mode
+		if self.materials_ui.tb001.menu_.chk001.isChecked(): #ID map mode
 			try:
-				mat = self.currentMats[self.materials.cmb002.currentText()] #get object from string key
+				mat = self.currentMats[self.materials_ui.cmb002.currentText()] #get object from string key
 			except:
 				return '# Error: No stored material or no valid object selected.'
 		else: #Stored material mode
@@ -236,18 +237,18 @@ class Materials(Init):
 	def lbl001(self, setEditable=True):
 		'''Rename Material: Set cmb002 as editable and disable wgts.
 		'''
-		cmb = self.materials.cmb002
+		cmb = self.materials_ui.cmb002
 
 		if setEditable:
 			self._mat = self.currentMat
 			cmb.setEditable(True)
-			self.toggleWidgets(self.materials, setDisabled='b002,lbl000,tb000,tb002')
+			self.toggleWidgets(self.materials_ui, setDisabled='b002,lbl000,tb000,tb002')
 		else:
 			mat = self._mat
 			newMatName = cmb.currentText()
 			self.renameMaterial(mat, newMatName)
 			cmb.setEditable(False)
-			self.toggleWidgets(self.materials, setEnabled='b002,lbl000,tb000,tb002')
+			self.toggleWidgets(self.materials_ui, setEnabled='b002,lbl000,tb000,tb002')
 
 
 	def lbl002(self):
@@ -256,8 +257,8 @@ class Materials(Init):
 		mat = self.currentMat
 		mat = pm.delete(mat)
 
-		index = self.materials.cmb002.currentIndex()
-		self.materials.cmb002.setItemText(index, 'None') #self.materials.cmb002.removeItem(index)
+		index = self.materials_ui.cmb002.currentIndex()
+		self.materials_ui.cmb002.setItemText(index, 'None') #self.materials_ui.cmb002.removeItem(index)
 
 
 	def lbl003(self):
@@ -296,8 +297,8 @@ class Materials(Init):
 
 		mat = self.getMaterial()
 
-		self.materials.tb001.menu_.chk000.setChecked(True) #set the combobox to show all scene materials
-		cmb = self.materials.cmb002
+		self.materials_ui.tb001.menu_.chk000.setChecked(True) #set the combobox to show all scene materials
+		cmb = self.materials_ui.cmb002
 		self.cmb002() #refresh the combobox
 		cmb.setCurrentIndex(cmb.items.index(mat.name()))
 
@@ -305,24 +306,24 @@ class Materials(Init):
 	def b003(self):
 		'''Assign: Assign Current
 		'''
-		self.materials.tb002.menu_.chk007.setChecked(True)
-		self.materials.tb002.setText('Assign Current')
+		self.materials_ui.tb002.menu_.chk007.setChecked(True)
+		self.materials_ui.tb002.setText('Assign Current')
 		self.tb002()
 
 
 	def b004(self):
 		'''Assign: Assign Random
 		'''
-		self.materials.tb002.menu_.chk008.setChecked(True)
-		self.materials.tb002.setText('Assign Random')
+		self.materials_ui.tb002.menu_.chk008.setChecked(True)
+		self.materials_ui.tb002.setText('Assign Random')
 		self.tb002()
 
 
 	def b005(self):
 		'''Assign: Assign New
 		'''
-		self.materials.tb002.menu_.chk009.setChecked(True)
-		self.materials.tb002.setText('Assign New')
+		self.materials_ui.tb002.menu_.chk009.setChecked(True)
+		self.materials_ui.tb002.setText('Assign New')
 		self.tb002()
 
 
@@ -354,7 +355,7 @@ class Materials(Init):
 	def renameMaterial(self, mat, newMatName):
 		'''Rename Material
 		'''
-		cmb = self.materials.cmb002 #scene materials
+		cmb = self.materials_ui.cmb002 #scene materials
 
 		curMatName = mat.name()
 		if curMatName!=newMatName:
@@ -551,7 +552,7 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	Existing Materials
 
 	# 	'''
-	# 	cmb = self.materials.cmb000
+	# 	cmb = self.materials_ui.cmb000
 
 	# 	mats = [m for m in pm.ls(materials=1)]
 	# 	matNames = [m.name() for m in mats]

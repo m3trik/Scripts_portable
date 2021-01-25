@@ -2044,9 +2044,58 @@ class Init(Slots):
 
 
 	# ------------------------------------------------
-	' Ui'
+	'FILE'
 	# ------------------------------------------------
 
+	@staticmethod
+	def getRecentFiles():
+		'''Get a list of recently opened files.
+
+		:Return:
+			(list)
+		'''
+		files = pm.optionVar(query='RecentFilesList')
+		result = [Init.formatPath(f) for f in list(reversed(files)) if "Autosave" not in f]
+
+		return result
+
+
+	@staticmethod
+	def getRecentProjects():
+		'''Get a list of recently set projects.
+
+		:Return:
+			(list)
+		'''
+		files = pm.optionVar(query='RecentProjectsList')
+		result = [Init.formatPath(f) for f in list(reversed(files))]
+
+		return result
+
+
+	@staticmethod
+	def getRecentAutosave():
+		'''Get a list of autosave files.
+
+		:Return:
+			(list)
+		'''
+		dir1 = str(pm.workspace(query=1, rd=1))+'autosave' #current project path.
+		dir2 = os.environ.get('MAYA_AUTOSAVE_FOLDER').split(';')[0] #get autosave dir path from env variable.
+
+		files = self.getAbsoluteFilePaths(dir1, ['mb', 'ma']) + self.getAbsoluteFilePaths(dir2, ['mb', 'ma'])
+		result = [Init.formatPath(f) for f in list(reversed(files))]
+
+		return result
+
+
+
+
+
+
+	# ------------------------------------------------
+	' Ui'
+	# ------------------------------------------------
 
 	@staticmethod
 	def getMayaMainWindow():

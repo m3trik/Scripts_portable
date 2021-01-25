@@ -21,8 +21,8 @@ class Crease(Init):
 		if not self.crease_ui.chk002.isChecked(): #un-crease
 			if not self.crease_ui.chk003.isChecked(): #toggle max
 				self.creaseValue = self.crease_ui.s003.value()
-				text = self.ui.tb000.text().split(' ')[0]
-				self.ui.tb000.setText('{} {}'.format(text, self.creaseValue))
+				text = self.current_ui.tb000.text().split(' ')[0]
+				self.current_ui.tb000.setText('{} {}'.format(text, self.creaseValue))
 
 
 	def draggable_header(self, state=None):
@@ -57,41 +57,41 @@ class Crease(Init):
 	def chk002(self, state=None):
 		'''Un-Crease
 		'''
-		if self.ui.chk002.isChecked():
+		if self.current_ui.chk002.isChecked():
 			self.crease_ui.s003.setValue(0) #crease value
 			self.crease_ui.s004.setValue(180) #normal angle
 			self.toggleWidgets(self.crease_ui.tb000, self.crease_submenu.tb000, setChecked='chk002', setUnChecked='chk003')
 			self.crease_ui.s003.setDisabled(True)
-			self.ui.tb000.setText('Un-Crease 0')
+			self.current_ui.tb000.setText('Un-Crease 0')
 		else:
 			self.crease_ui.s003.setValue(self.creaseValue) #crease value
 			self.crease_ui.s004.setValue(30) #normal angle
 			self.crease_ui.s003.setEnabled(True)
-			self.ui.tb000.setText('{} {}'.format('Crease', self.creaseValue))
+			self.current_ui.tb000.setText('{} {}'.format('Crease', self.creaseValue))
 
 
 	@Slots.sync
 	def chk003(self, state=None):
 		'''Crease: Max
 		'''
-		if self.ui.chk003.isChecked():
+		if self.current_ui.chk003.isChecked():
 			self.crease_ui.s003.setValue(10) #crease value
 			self.crease_ui.s004.setValue(30) #normal angle
 			self.toggleWidgets(self.crease_ui.tb000, self.crease_submenu.tb000, setChecked='chk003', setUnChecked='chk002')
 			self.crease_ui.s003.setDisabled(True)
-			self.ui.tb000.setText('Crease 10')
+			self.current_ui.tb000.setText('Crease 10')
 		else:
 			self.crease_ui.s003.setValue(self.creaseValue) #crease value
 			self.crease_ui.s004.setValue(60) #normal angle
 			self.crease_ui.s003.setEnabled(True)
-			self.ui.tb000.setText('{} {}'.format('Crease', self.creaseValue))
+			self.current_ui.tb000.setText('{} {}'.format('Crease', self.creaseValue))
 
 
 	@Slots.sync
 	def chk011(self, state=None):
 		'''Crease: Auto
 		'''
-		if self.ui.chk011.isChecked():
+		if self.current_ui.chk011.isChecked():
 			self.toggleWidgets(setEnabled='s005,s006')
 		else:
 			self.toggleWidgets(setDisabled='s005,s006')
@@ -100,7 +100,7 @@ class Crease(Init):
 	def tb000(self, state=None):
 		'''Crease
 		'''
-		tb = self.ui.tb000
+		tb = self.current_ui.tb000
 
 		if state is 'setMenu':
 			tb.menu_.add('QSpinBox', setPrefix='Crease Amount: ', setObjectName='s003', setMinMax_='0-10 step1', setValue=10, setToolTip='Crease amount 0-10. Overriden if "max" checked.')

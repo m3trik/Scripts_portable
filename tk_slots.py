@@ -1,7 +1,8 @@
 from __future__ import print_function
-from PySide2 import QtCore
-
+from builtins import super
 import os.path, sys
+
+from PySide2 import QtCore
 
 
 
@@ -15,11 +16,11 @@ class Slots(QtCore.QObject):
 		return int(f)
 	'''
 	def __init__(self, parent=None, *args, **kwargs):
-		super(Slots, self).__init__(parent)
+		super().__init__(parent)
 		'''
-		:Parameters: (passed in via the switchboard module's 'getClassFromUiName' method.)
-			_ui (method) = returns the current ui for the current class; else the parent ui.
-			_current_ui (method) = returns the current ui.
+		:Parameters: 
+			**kwargs (passed in via the switchboard module's 'getClassFromUiName' method.)
+			_current_ui (method) = Returns the current ui if it is either the parent or a child ui for the class; else, return the parent ui.
 			<name>_ui (ui) = ui of <name> ie. self.polygons for the ui of filename polygons
 			<name>_submenu_ui (ui) = ui of <name_submenu> ie. self.polygons_submenu
 			sb (class) = switchboard instance.
@@ -30,19 +31,11 @@ class Slots(QtCore.QObject):
 
 
 	@property
-	def ui(self):
-		'''Get the current Ui if it is either the parent or
-		a child ui for the current class, else return the parent ui.
-		'''
-		# print (self.sb.getUiName(self._ui()))
-		return self._ui()
-
-
-	@property
 	def current_ui(self):
-		'''Get the current Ui.
+		'''Get the current ui if it is either the parent, or
+		a child ui for the class; else, return the parent ui for the class.
 		'''
-		return self._currentUi()
+		return self._current_ui()
 
 
 	@staticmethod
@@ -63,7 +56,7 @@ class Slots(QtCore.QObject):
 		objects=[]
 		for name in Slots.unpackNames(objectNames):
 			try:
-				objects.append(getattr(class_, name)) #equivilent to:(self.ui.m000)
+				objects.append(getattr(class_, name)) #equivilent to:(self.current_ui.m000)
 			except AttributeError as error: 
 				if showError_:
 					print("tk_slots: 'getObjects:' objects.append(getattr({0}, {1})) {2}".format(class_, name, error))
@@ -954,6 +947,61 @@ class Slots(QtCore.QObject):
 
 
 
+	# ------------------------------------------------
+	'FILE'
+	# ------------------------------------------------
+
+	@staticmethod
+	def getAbsoluteFilePaths(directory, endingWith=[]):
+		'''Get the absolute paths of all the files in a directory and it's sub-folders.
+
+		directory (str) = Root directory path.
+		endingWith (list) = Extension types (as strings) to include. ex. ['mb', 'ma']
+		
+		:Return:
+			(list) absolute file paths
+		'''
+		paths=[]
+		for dirpath, _, filenames in os.walk(directory):
+			for f in filenames:
+				if f.split('.')[-1] in endingWith:
+					paths.append(os.path.abspath(os.path.join(dirpath, f)))
+
+		return paths
+
+
+	@staticmethod
+	def formatPath(dir_):
+		'''Assure a given directory path string is formatted correctly.
+		Replace any backslashes with forward slashes.
+		'''
+		formatted_dir = dir_.replace('/', '\\') #assure any single slash is forward.
+
+		return formatted_dir
+
+
+	@staticmethod
+	def getNameFromFullPath(fullPath):
+		'''Extract the file or dir name from a path string.
+
+		:Parameters:
+			fullPath (str) = A full path including file name.
+
+		:Return:
+			(str) the dir or file name including extension.
+		'''
+		name = fullPath.split('/')[-1]
+		if len(fullPath)==len(name):
+			name = fullPath.split('\\')[-1]
+			if not name:
+				name = fullPath.split('\\')[-2]
+
+		return name
+
+
+
+
+
 
 
 
@@ -1180,7 +1228,7 @@ print (os.path.splitext(os.path.basename(__file__))[0])
 
 	# 	:Return:
 	# 		comboBox's current item list minus any title.
-	# 	ex. comboBox (self.ui.cmb003, ["Import file", "Import Options"], "Import")
+	# 	ex. comboBox (self.current_ui.cmb003, ["Import file", "Import Options"], "Import")
 	# 	'''
 	# 	comboBox.blockSignals(True) #to keep clear from triggering currentIndexChanged
 	# 	index = comboBox.currentIndex() #get current index before refreshing list

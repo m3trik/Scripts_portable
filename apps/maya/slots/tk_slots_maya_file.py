@@ -10,6 +10,10 @@ class File(Init):
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 
+		#set the text for the open last file button to the last file's name.
+		recentFiles = self.getRecentFiles()
+		self.file_submenu_ui.b001.setText(self.getNameFromFullPath(recentFiles[0])) if recentFiles else self.file_submenu_ui.b001.setVisible(False)
+
 
 	def draggable_header(self, state=None):
 		'''Context menu
@@ -34,11 +38,7 @@ class File(Init):
 			cmb.contextMenu.add('QPushButton', setObjectName='b001', setText='Last', setToolTip='Open the most recent file.')
 			return
 
-		recentFiles = [File.formatPath(f) for f in (list(reversed(pm.optionVar(query='RecentFilesList')))) if "Autosave" not in f]
-		cmb.addItems_(recentFiles, "Recent Files", clear=True)
-
-		#set the text for the open last file button to the last file's name.
-		self.file_submenu.b001.setText(File.getNameFromFullPath(recentFiles[0])) if recentFiles else self.file_submenu.b001.setVisible(False)
+		cmb.addItems_(self.getRecentFiles(), "Recent Files", clear=True)
 
 		if index>0:
 			force=True; force if str(pm.mel.file(query=1, sceneName=1, shortName=1)) else not force #if sceneName prompt user to save; else force open
@@ -54,8 +54,7 @@ class File(Init):
 		if index is 'setMenu':
 			return
 
-		files = (list(reversed(pm.optionVar(query='RecentProjectsList'))))
-		cmb.addItems_(files, "Recent Projects", clear=True)
+		cmb.addItems_(self.getRecentProjects(), "Recent Projects", clear=True)
 
 		if index>0:
 			pm.mel.setProject(cmb.items[index]) #mel.eval('setProject "'+items[index]+'"')
@@ -71,11 +70,7 @@ class File(Init):
 		if index is 'setMenu':
 			return
 
-		dir1 = str(pm.workspace(query=1, rd=1))+'autosave' #current project path.
-		dir2 = os.environ.get('MAYA_AUTOSAVE_FOLDER').split(';')[0] #get autosave dir path from env variable.
-
-		files = File.getAbsoluteFilePaths(dir1) + File.getAbsoluteFilePaths(dir2)
-		cmb.addItems_(files, 'Recent Autosave', clear=True)
+		cmb.addItems_(self.getRecentAutosave(), 'Recent Autosave', clear=True)
 
 		if index>0:
 			force=True
@@ -180,10 +175,10 @@ class File(Init):
 			cmb.contextMenu.add(wgts.TkLabel, setObjectName='lbl004', setText='Root', setToolTip='Open the project directory.')
 			return
 
-		path = File.formatPath(pm.workspace(query=1, rd=1)) #current project path.
+		path = self.formatPath(pm.workspace(query=1, rd=1)) #current project path.
 		list_ = [f for f in os.listdir(path)]
 
-		project = File.getNameFromFullPath(path) #add current project path string to label. strip path and trailing '/'
+		project = self.getNameFromFullPath(path) #add current project path string to label. strip path and trailing '/'
 
 		cmb.addItems_(list_, project, clear=True)
 
@@ -195,7 +190,7 @@ class File(Init):
 	def tb000(self, state=None):
 		'''Save
 		'''
-		tb = self.current_ui.tb000
+		tb = self.file_ui.tb000
 		if state is 'setMenu':
 			tb.menu_.add('QCheckBox', setText='Wireframe', setObjectName='chk000', setToolTip='Set view to wireframe before save.')
 			tb.menu_.add('QCheckBox', setText='Increment', setObjectName='chk001', setChecked=True, setToolTip='Append and increment a unique integer value.')
@@ -255,7 +250,7 @@ class File(Init):
 		'''Open current project root
 		'''
 		dir_ = pm.workspace(query=1, rd=1) #current project path.
-		os.startfile(File.formatPath(dir_))
+		os.startfile(self.formatPath(dir_))
 
 
 	def b001(self):
@@ -306,54 +301,6 @@ class File(Init):
 			if replace:
 				newName = obj.replace(from_, to)
 			pm.rename(obj, newName) #Rename the object with the new name
-
-
-	@staticmethod
-	def getAbsoluteFilePaths(directory, endingWith=['mb', 'ma']):
-		'''Get the absolute paths of all the files in a directory and it's sub-folders.
-
-		directory (str) = Root directory path.
-		endingWith (list) = Extension types (as strings) to include. ex. ['mb', 'ma']
-		
-		:Return:
-			(list) absolute file paths
-		'''
-		paths=[]
-		for dirpath, _, filenames in os.walk(directory):
-			for f in filenames:
-				if f.split('.')[-1] in endingWith:
-					paths.append(os.path.abspath(os.path.join(dirpath, f)))
-
-		return paths
-
-
-	@staticmethod
-	def formatPath(dir_):
-		'''Assure a given directory path string is formatted correctly.
-		Replace any backslashes with forward slashes.
-		'''
-		formatted_dir = dir_.replace('/', '\\') #assure any single slash is forward.
-
-		return formatted_dir
-
-
-	@staticmethod
-	def getNameFromFullPath(fullPath):
-		'''Extract the file or dir name from a path string.
-
-		:Parameters:
-			fullPath (str) = A full path including file name.
-
-		:Return:
-			(str) the dir or file name including extension.
-		'''
-		name = fullPath.split('/')[-1]
-		if len(fullPath)==len(name):
-			name = fullPath.split('\\')[-1]
-			if not name:
-				name = fullPath.split('\\')[-2]
-
-		return name
 
 
 
@@ -408,8 +355,8 @@ print(os.path.splitext(os.path.basename(__file__))[0])
 	# 	path = fullPath[:index] #ie. O:/Cloud/____Graphics/______project_files/elise.proj/elise.scenes/.maya/
 
 	# 	if increment: #increment filename
-	# 		newName = File.incrementFileName(curFullName)
-	# 		File.deletePreviousFiles(curFullName, path)
+	# 		newName = self.incrementFileName(curFullName)
+	# 		self.deletePreviousFiles(curFullName, path)
 	# 		pm.saveAs (path+newName, force=1, preSaveScript=preSaveScript, postSaveScript=postSaveScript, type=type_)
 	# 		print('{0} {1}'.format('Result:', path+newName))
 	# 	else:	#save without renaming
